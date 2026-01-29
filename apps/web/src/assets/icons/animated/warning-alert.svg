@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Warning Alert
+  Animación: Triángulo con signo de exclamación pulsando
+  Color: Warm beige/warning (#C4A882)
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <title>Advertencia</title>
+
+  <style>
+    .warning-triangle {
+      fill: none;
+      stroke: #C4A882;
+      stroke-width: 2.5;
+      stroke-linejoin: round;
+      stroke-dasharray: 150;
+      stroke-dashoffset: 150;
+      animation: triangle-draw 0.7s ease-out forwards;
+    }
+    .warning-triangle-bg {
+      fill: #C4A882;
+      opacity: 0;
+      animation: triangle-fill 0.3s ease-out 0.6s forwards;
+    }
+    .warning-exclamation {
+      fill: #FFFFFF;
+      opacity: 0;
+      animation: exclaim-appear 0.3s ease-out 0.8s forwards;
+    }
+    .warning-group {
+      animation: pulse 2s ease-in-out 1.2s infinite;
+    }
+
+    @keyframes triangle-draw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes triangle-fill {
+      to { opacity: 0.15; }
+    }
+    @keyframes exclaim-appear {
+      to { opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .warning-triangle {
+        stroke-dashoffset: 0;
+        animation: none;
+      }
+      .warning-triangle-bg {
+        opacity: 0.15;
+        animation: none;
+      }
+      .warning-exclamation {
+        opacity: 1;
+        animation: none;
+        fill: #C4A882;
+      }
+      .warning-group {
+        animation: none;
+      }
+    }
+  </style>
+
+  <g class="warning-group">
+    <!-- Fondo del triángulo -->
+    <path class="warning-triangle-bg" d="M30 8 L54 50 L6 50 Z"/>
+
+    <!-- Borde del triángulo -->
+    <path class="warning-triangle" d="M30 8 L54 50 L6 50 Z"/>
+
+    <!-- Signo de exclamación -->
+    <g class="warning-exclamation">
+      <rect x="27" y="22" width="6" height="16" rx="3"/>
+      <circle cx="30" cy="44" r="3"/>
+    </g>
+  </g>
+</svg>

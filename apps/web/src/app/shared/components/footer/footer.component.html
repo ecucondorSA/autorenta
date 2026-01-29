@@ -1,0 +1,138 @@
+<!-- Footer Container -->
+<footer data-testid="footer" class="footer">
+  <!-- Main Footer Content -->
+  <div class="footer-content">
+    <div class="footer-grid">
+      <!-- Footer Sections (Support, Community, Company) -->
+      @for (section of sections(); track section) {
+        <div class="footer-section">
+          <h3 class="footer-section-title font-bold font-satoshi">{{ section.title }}</h3>
+          <ul class="footer-links">
+            @for (link of section.links; track link) {
+              <li>
+                @if (!link.external) {
+                  <a [routerLink]="link.url" class="footer-link">
+                    {{ link.label }}
+                  </a>
+                }
+                @if (link.external) {
+                  <a
+                    [href]="link.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="footer-link"
+                  >
+                    {{ link.label }}
+                    <span class="external-icon">↗</span>
+                  </a>
+                }
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Footer Bottom Bar -->
+  <div class="footer-bottom">
+    <div class="footer-bottom-content">
+      <!-- Left: Copyright and Legal Links -->
+      <div class="footer-bottom-left">
+        <img
+          ngSrc="/assets/images/autorentar-logo.svg"
+          alt="Autorentar Logo"
+          class="footer-logo"
+          width="120"
+          height="30"
+        />
+        <p class="copyright">© {{ currentYear }} Autorentar · Hecho en Buenos Aires, Argentina</p>
+        <span class="separator">·</span>
+        <nav class="legal-links" aria-label="Vínculos legales">
+          @for (link of legalLinks(); track link; let isLast = $last) {
+            <a [routerLink]="link.url" class="legal-link">
+              {{ link.label }}
+              @if (!isLast) {
+                <span class="separator">·</span>
+              }
+            </a>
+          }
+        </nav>
+      </div>
+
+      <!-- Right: Language, Currency, Social, Apps -->
+      <div class="footer-bottom-right">
+        <!-- Language Selector -->
+        <button
+          type="button"
+          class="selector-button"
+          (click)="onLanguageChange()"
+          aria-label="Elegir idioma"
+        >
+          <app-icon name="globe" [size]="16" cssClass="selector-icon" />
+          <span class="selector-text">{{ currentLanguage() }}</span>
+        </button>
+
+        <!-- Currency Selector -->
+        <button
+          type="button"
+          class="selector-button"
+          (click)="onCurrencyChange()"
+          aria-label="Elegir moneda"
+        >
+          <app-icon name="money" [size]="16" cssClass="selector-icon" />
+          <span class="selector-text">{{ currentCurrency() }}</span>
+        </button>
+
+        <!-- Social Media Links -->
+        <div class="social-links" aria-label="Redes sociales">
+          @for (social of socialLinks(); track social) {
+            <a
+              [href]="social.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-link"
+              [attr.aria-label]="social.ariaLabel"
+            >
+              <app-icon [name]="social.icon" [size]="18" cssClass="social-icon" />
+            </a>
+          }
+        </div>
+
+        <!-- App Store Badges -->
+        <div class="app-badges">
+          <a
+            [href]="appStoreUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="app-badge"
+            aria-label="Descargar en App Store"
+          >
+            <img
+              src="/assets/images/badges/app-store-badge.svg"
+              alt="Descargar en App Store"
+              width="120"
+              height="40"
+              loading="lazy"
+            />
+          </a>
+          <a
+            [href]="playStoreUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="app-badge"
+            aria-label="Disponible en Google Play"
+          >
+            <img
+              src="/assets/images/badges/google-play-badge.svg"
+              alt="Disponible en Google Play"
+              width="135"
+              height="40"
+              loading="lazy"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

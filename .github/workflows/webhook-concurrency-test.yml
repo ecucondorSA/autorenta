@@ -1,0 +1,46 @@
+name: Webhook concurrency test
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Webhook URL (overrides secret WEBHOOK_URL)'
+        required: false
+      count:
+        description: 'Number of requests'
+        required: false
+        default: '20'
+      concurrency:
+        description: 'Concurrency level'
+        required: false
+        default: '5'
+      mode:
+        description: 'Mode: duplicate or unique'
+        required: false
+        default: 'duplicate'
+
+jobs:
+  run-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run concurrency test
+        env:
+          WEBHOOK_URL: ${{ inputs.url || secrets.WEBHOOK_URL }}
+          HMAC_SECRET: ${{ secrets.HMAC_SECRET }}
+        run: |
+          echo "Running webhook concurrency test against $WEBHOOK_URL"
+          chmod +x scripts/test_mp_webhook_concurrency.mjs || true
+          node scripts/test_mp_webhook_concurrency.mjs --count ${{ inputs.count }} --concurrency ${{ inputs.concurrency }} --mode ${{ inputs.mode }} 2>&1 | tee result.log
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: webhook-concurrency-log
+          path: result.log

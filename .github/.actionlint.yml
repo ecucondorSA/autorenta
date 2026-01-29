@@ -1,0 +1,20 @@
+# actionlint configuration
+# See: https://github.com/rhysd/actionlint/blob/main/docs/config.md
+
+self-hosted-runner:
+  # Labels of self-hosted runners
+  labels: []
+
+config-variables:
+  # Disable warnings about accessing secrets context
+  # These are valid GitHub Actions secrets configured in repo settings
+  disable-checks:
+    - expression
+
+# Ignore specific warnings for secrets context access
+ignore:
+  - 'Context access might be invalid: SUPABASE_URL'
+  - 'Context access might be invalid: SUPABASE_ANON_KEY'
+  - 'Context access might be invalid: MAPBOX_ACCESS_TOKEN'
+  - 'Context access might be invalid: MERCADOPAGO_PROD_PUBLIC_KEY'
+  - 'Context access might be invalid: CF_API_TOKEN'

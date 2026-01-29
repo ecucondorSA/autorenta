@@ -1,0 +1,42 @@
+.evidence-uploader {
+  border: 1px solid var(--ion-color-step-150, #e0e0e0);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--ion-color-step-50, #fafafa);
+}
+
+.evidence-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+.evidence-input {
+  display: block;
+  margin-top: 8px;
+}
+
+.uploading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.uploaded-list {
+  margin-top: 8px;
+}
+
+.uploaded-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-link {
+  color: var(--ion-color-primary, #2e7d32);
+  text-decoration: none;
+}
+
+.file-link:hover {
+  text-decoration: underline;
+}

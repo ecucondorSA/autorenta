@@ -1,0 +1,334 @@
+REPORTE DE TEXT-WHITE SOBRE FONDOS CLAROS
+Generado: 2025-12-01T16:19:25.369Z
+Total de problemas: 66
+
+1. apps/web/src/app/features/admin/settlements/admin-settlements.page.css:490 [MEDIUM]
+   Tipo: text-white
+   Contenido: color: var(--text-white, white);
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+2. apps/web/src/app/features/bookings/booking-detail-payment/booking-detail-payment.page.redesign.html:17 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+3. apps/web/src/app/features/bookings/booking-detail-payment/booking-detail-payment.page.redesign.html:26 [MEDIUM]
+   Tipo: text-white
+   Contenido: color: var(--text-white, white);
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+4. apps/web/src/app/features/bookings/claims/my-claims.page.css:59 [MEDIUM]
+   Tipo: text-white
+   Contenido: color: var(--text-white, white);
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+5. apps/web/src/app/features/bookings/owner-damage-report/owner-damage-report.page.css:198 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: #fffbeb;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+6. apps/web/src/app/features/bookings/pages/booking-checkout/booking-checkout.page.css:99 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+7. apps/web/src/app/features/bookings/pages/booking-checkout/booking-checkout.page.css:230 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+8. apps/web/src/app/features/bookings/pages/booking-checkout/booking-checkout.page.css:409 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+9. apps/web/src/app/features/bookings/pages/booking-checkout/booking-checkout.page.css:438 [MEDIUM]
+   Tipo: text-white
+   Contenido: color: var(--text-white, white);
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+10. apps/web/src/app/features/bookings/pages/booking-checkout/booking-checkout.page.css:610 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+11. apps/web/src/app/features/bookings/pages/booking-confirmation/booking-confirmation.page.css:191 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+12. apps/web/src/app/features/bookings/pages/booking-confirmation/booking-confirmation.page.css:285 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: #fffbeb;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+13. apps/web/src/app/features/bookings/pages/booking-confirmation/booking-confirmation.page.css:377 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+14. apps/web/src/app/features/bookings/pages/waitlist/waitlist.page.css:282 [HIGH]
+   Tipo: color: white
+   Contenido: color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+15. apps/web/src/app/features/bookings/pages/waitlist/waitlist.page.css:290 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+16. apps/web/src/app/features/bookings/pages/waitlist/waitlist.page.css:301 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+17. apps/web/src/app/features/cars/list/cars-list.page.html:34 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+18. apps/web/src/app/features/cars/list/cars-list.page.html:55 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+19. apps/web/src/app/features/cars/list/cars-list.page.html:76 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+20. apps/web/src/app/features/contracts/booking-contract.page.css:285 [HIGH]
+   Tipo: color: white
+   Contenido: color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+21. apps/web/src/app/features/disputes/pages/dispute-detail/dispute-detail.page.ts:60 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="btn btn-success btn-sm text-white"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+22. apps/web/src/app/features/disputes/pages/dispute-detail/dispute-detail.page.ts:67 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="btn btn-error btn-sm text-white"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+23. apps/web/src/app/features/disputes/pages/dispute-detail/dispute-detail.page.ts:74 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="btn btn-info btn-sm text-white"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+24. apps/web/src/app/features/explore/explore.page.html:55 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+25. apps/web/src/app/features/explore/explore.page.html:72 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+26. apps/web/src/app/features/explore/explore.page.html:99 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+27. apps/web/src/app/features/explore/explore.page.html:112 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+28. apps/web/src/app/features/explore/explore.page.html:125 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+29. apps/web/src/app/features/marketplace/components/ui/badge.component.ts:100 [HIGH]
+   Tipo: color: white
+   Contenido: color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+30. apps/web/src/app/features/marketplace/marketplace-v2.page.css:2167 [HIGH]
+   Tipo: text-white/opacity
+   Contenido: bg-white/5 border border-white/10 text-text-primary dark:text-white/80
+   Fix: Reemplazar con text-primary/opacity o text-secondary/opacity
+
+31. apps/web/src/app/features/marketplace/marketplace-v2.page.css:2168 [HIGH]
+   Tipo: text-white
+   Contenido: hover:bg-white/10 hover:border-cyan-500/30 hover:text-text-primary dark:hover:text-white
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+32. apps/web/src/app/features/marketplace/marketplace-v2.page.html:297 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="text-sm font-medium text-white group-hover:text-cyan-400 transition-colors">
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+33. apps/web/src/app/features/marketplace/marketplace-v2.page.html:300 [MEDIUM]
+   Tipo: text-white
+   Contenido: <p class="text-xs text-white/40 truncate mt-0.5">
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+34. apps/web/src/app/features/marketplace/marketplace-v2.page.html:324 [MEDIUM]
+   Tipo: text-white
+   Contenido: <p class="text-sm font-medium text-white">No encontramos esa ubicación</p>
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+35. apps/web/src/app/features/marketplace/marketplace-v2.page.html:325 [MEDIUM]
+   Tipo: text-white
+   Contenido: <p class="text-xs text-white/40 mt-1">Intenta con otra dirección</p>
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+36. apps/web/src/app/features/marketplace/marketplace-v2.page.html:781 [MEDIUM]
+   Tipo: text-white
+   Contenido: <svg class="w-8 h-8 text-amber-400 group-hover:text-white transition-colors"
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+37. apps/web/src/app/features/marketplace/marketplace-v2.page.html:1346 [MEDIUM]
+   Tipo: text-white
+   Contenido: <p class="text-white/60 text-sm mt-4">Explora autos con filtros avanzados</p>
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+38. apps/web/src/app/features/marketplace/marketplace-v2.page.html:1378 [MEDIUM]
+   Tipo: text-white
+   Contenido: <p class="text-white/60 text-sm mt-3 text-center">
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+39. apps/web/src/app/features/payouts/components/request-payout-modal.component.ts:427 [HIGH]
+   Tipo: color: white
+   Contenido: color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+40. apps/web/src/app/features/profile/location-settings.page.css:225 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+41. apps/web/src/app/features/profile/location-settings.page.css:384 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+42. apps/web/src/app/features/profile/location-settings.page.css:401 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+43. apps/web/src/app/features/profile/notifications-settings/notifications-settings.page.css:172 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+44. apps/web/src/app/features/verification/verification.page.ts:116 [MEDIUM]
+   Tipo: text-white
+   Contenido: <p class="text-white/90 max-w-2xl">
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+45. apps/web/src/app/features/verification/verification.page.ts:130 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white/90 hover:border-white hover:text-
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+46. apps/web/src/app/features/verification/verification.page.ts:137 [HIGH]
+   Tipo: text-white
+   Contenido: <p class="text-sm uppercase tracking-widest text-white/70 mb-1">Progreso</p>
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+47. apps/web/src/app/features/verification/verification.page.ts:137 [HIGH]
+   Tipo: text-white/opacity
+   Contenido: <p class="text-sm uppercase tracking-widest text-white/70 mb-1">Progreso</p>
+   Fix: Reemplazar con text-primary/opacity o text-secondary/opacity
+
+48. apps/web/src/app/features/verification/verification.page.ts:139 [HIGH]
+   Tipo: text-white
+   Contenido: <p class="text-white/80 text-sm">
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+49. apps/web/src/app/features/verification/verification.page.ts:139 [HIGH]
+   Tipo: text-white/opacity
+   Contenido: <p class="text-white/80 text-sm">
+   Fix: Reemplazar con text-primary/opacity o text-secondary/opacity
+
+50. apps/web/src/app/features/wallet/components/transfer-funds.component.css:18 [HIGH]
+   Tipo: color: white
+   Contenido: color: #fff;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+51. apps/web/src/app/features/wallet/components/transfer-funds.component.css:24 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: #fff3e0;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+52. apps/web/src/app/features/wallet/components/transfer-funds.component.css:33 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: #fff;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+53. apps/web/src/app/shared/components/cars-map/cars-map.component.css:240 [MEDIUM]
+   Tipo: text-white
+   Contenido: color: var(--text-white, #fefefe);
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+54. apps/web/src/app/shared/components/cars-map/cars-map.component.css:371 [MEDIUM]
+   Tipo: text-white
+   Contenido: color: var(--text-white, #ffffff) !important; /* Texto blanco para contraste */
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+55. apps/web/src/app/shared/components/cars-map/cars-map.component.css:434 [MEDIUM]
+   Tipo: text-white
+   Contenido: color: var(--text-white, #ffffff) !important; /* Color base blanco para dark mode */
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+56. apps/web/src/app/shared/components/cars-map/cars-map.component.css:461 [MEDIUM]
+   Tipo: text-white
+   Contenido: color: var(--text-white, #ffffff) !important; /* Blanco para contraste en dark mode */
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+57. apps/web/src/app/shared/components/cars-map/cars-map.component.css:609 [MEDIUM]
+   Tipo: text-white
+   Contenido: color: var(--text-white, #ffffff) !important;
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+58. apps/web/src/app/shared/components/cars-map/cars-map.component.css:655 [MEDIUM]
+   Tipo: text-white
+   Contenido: color: var(--text-white, #ffffff) !important;
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+59. apps/web/src/app/shared/components/distance-summary/distance-summary.component.css:24 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: #fffbeb;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+60. apps/web/src/app/shared/components/enhanced-map-tooltip/enhanced-map-tooltip.component.ts:205 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="w-full flex items-center justify-center gap-1.5 bg-[var(--brand-waze-default,#33CCFF)] hover:bg-[var(--brand-waze-hover,#2BB8EA)] text-white fo
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+61. apps/web/src/app/shared/components/map-booking-panel/map-booking-panel.component.ts:242 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="flex items-center justify-center gap-1.5 bg-[var(--brand-waze-default,#33CCFF)] hover:bg-[var(--brand-waze-hover,#2BB8EA)] text-white font-semi
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+62. apps/web/src/app/shared/components/map-booking-panel/map-booking-panel.component.ts:259 [MEDIUM]
+   Tipo: text-white
+   Contenido: class="flex items-center justify-center gap-1.5 bg-[var(--brand-google-maps-default,#4285F4)] hover:bg-[var(--brand-google-maps-hover,#3367D6)] text-w
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+63. apps/web/src/app/shared/components/pickup-location-selector/pickup-location-selector.component.css:159 [HIGH]
+   Tipo: color: white
+   Contenido: background-color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+64. apps/web/src/app/shared/components/price-transparency-modal/price-transparency-modal.component.ts:72 [MEDIUM]
+   Tipo: text-white
+   Contenido: <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+   Fix: Reemplazar text-white con text-primary o agregar dark:text-white
+
+65. apps/web/src/app/shared/components/protection-credit-explanation-modal/protection-credit-explanation-modal.component.ts:311 [HIGH]
+   Tipo: color: white
+   Contenido: color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+
+66. apps/web/src/app/shared/components/simple-checkout/simple-checkout.component.css:67 [HIGH]
+   Tipo: color: white
+   Contenido: color: white;
+   Fix: Reemplazar color: white con color: var(--text-primary, #050505)
+

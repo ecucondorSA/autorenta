@@ -1,14 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 
-import { AdminService } from '@core/services/admin.service';
+import { AdminService, VerificationStats } from '@core/services/admin/admin.service';
 import { Car, Booking } from '@core/models';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
+import { TranslateModule } from '@ngx-translate/core';
+import { formatDate } from '../../../shared/utils/date.utils';
 
 @Component({
   selector: 'autorenta-admin-dashboard-page',
   standalone: true,
-  imports: [CommonModule, MoneyPipe],
+  imports: [CommonModule, RouterLink, RouterLinkActive, MoneyPipe, TranslateModule],
   templateUrl: './admin-dashboard.page.html',
   styleUrl: './admin-dashboard.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,11 +28,18 @@ export class AdminDashboardPage implements OnInit {
 
   private readonly pendingCarsSignal = signal<Car[]>([]);
   private readonly bookingsSignal = signal<Booking[]>([]);
+  private readonly verificationStatsSignal = signal<VerificationStats | null>(null);
   private readonly loadingSignal = signal<boolean>(true);
 
   readonly pendingCars = computed(() => this.pendingCarsSignal());
   readonly bookings = computed(() => this.bookingsSignal());
+  readonly verificationStats = computed(() => this.verificationStatsSignal());
   readonly loading = computed(() => this.loadingSignal());
+
+  formatAdminDate(date?: string | Date | null): string {
+    if (!date) return '-';
+    return formatDate(date, { format: 'medium' });
+  }
 
   async ngOnInit(): Promise<void> {
     await this.loadData();
@@ -32,24 +49,41 @@ export class AdminDashboardPage implements OnInit {
     try {
       await this.adminService.approveCar(carId);
       await this.loadData();
-    } catch (error) {
-      console.error('Error al aprobar el auto', error);
+    } catch {
+      /* Silenced */
+    }
+  }
+
+  formatCancelledByRole(role: Booking['cancelled_by_role']): string {
+    switch (role) {
+      case 'renter':
+        return 'Locatario';
+      case 'owner':
+        return 'Propietario';
+      case 'admin':
+        return 'Administrador';
+      case 'system':
+        return 'Sistema';
+      default:
+        return 'Desconocido';
     }
   }
 
   private async loadData(): Promise<void> {
     this.loadingSignal.set(true);
     try {
-      const [cars, bookings] = await Promise.all([
+      const [cars, bookings, verificationStats] = await Promise.all([
         this.adminService.listPendingCars(),
         this.adminService.listRecentBookings(),
+        this.adminService.getVerificationStats(),
       ]);
       this.pendingCarsSignal.set(cars);
       this.bookingsSignal.set(bookings);
-    } catch (error) {
-      console.error('No se pudo cargar el panel admin', error);
+      this.verificationStatsSignal.set(verificationStats);
+    } catch {
       this.pendingCarsSignal.set([]);
       this.bookingsSignal.set([]);
+      this.verificationStatsSignal.set(null);
     } finally {
       this.loadingSignal.set(false);
     }

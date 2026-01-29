@@ -1,0 +1,226 @@
+[
+  {
+    "persona_id": "persona-001",
+    "persona_name": "Maximiliano",
+    "email": "ecucondor+maximiliano-001@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-002",
+    "persona_name": "Lucía",
+    "email": "ecucondor+lucía-002@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-003",
+    "persona_name": "Sebastián",
+    "email": "ecucondor+sebastián-003@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-004",
+    "persona_name": "Camila",
+    "email": "ecucondor+camila-004@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-005",
+    "persona_name": "Matías",
+    "email": "ecucondor+matías-005@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-006",
+    "persona_name": "Sofía",
+    "email": "ecucondor+sofía-006@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-007",
+    "persona_name": "Javier",
+    "email": "ecucondor+javier-007@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-008",
+    "persona_name": "Antonella",
+    "email": "ecucondor+antonella-008@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-009",
+    "persona_name": "Pablo",
+    "email": "ecucondor+pablo-009@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-010",
+    "persona_name": "Verónica",
+    "email": "ecucondor+verónica-010@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-011",
+    "persona_name": "Rodrigo",
+    "email": "ecucondor+rodrigo-011@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-012",
+    "persona_name": "Brenda",
+    "email": "ecucondor+brenda-012@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-013",
+    "persona_name": "Nicolás",
+    "email": "ecucondor+nicolás-013@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-014",
+    "persona_name": "Micaela",
+    "email": "ecucondor+micaela-014@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-015",
+    "persona_name": "Diego",
+    "email": "ecucondor+diego-015@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-016",
+    "persona_name": "Juliana",
+    "email": "ecucondor+juliana-016@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-017",
+    "persona_name": "Nicolás",
+    "email": "ecucondor+nicolás-017@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-018",
+    "persona_name": "Juliana",
+    "email": "ecucondor+juliana-018@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-019",
+    "persona_name": "Matías",
+    "email": "ecucondor+matías-019@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-020",
+    "persona_name": "Camila",
+    "email": "ecucondor+camila-020@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-021",
+    "persona_name": "Diego",
+    "email": "ecucondor+diego-021@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-022",
+    "persona_name": "Verónica",
+    "email": "ecucondor+verónica-022@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-023",
+    "persona_name": "Ignacio",
+    "email": "ecucondor+ignacio-023@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-024",
+    "persona_name": "María",
+    "email": "ecucondor+maría-024@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-025",
+    "persona_name": "Santiago",
+    "email": "ecucondor+santiago-025@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-026",
+    "persona_name": "Florencia",
+    "email": "ecucondor+florencia-026@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-027",
+    "persona_name": "Martín",
+    "email": "ecucondor+martín-027@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-028",
+    "persona_name": "Carolina",
+    "email": "ecucondor+carolina-028@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-029",
+    "persona_name": "Nicolás",
+    "email": "ecucondor+nicolás-029@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-030",
+    "persona_name": "Micaela",
+    "email": "ecucondor+micaela-030@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-031",
+    "persona_name": "Martín",
+    "email": "ecucondor+martín-031@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  },
+  {
+    "persona_id": "persona-032",
+    "persona_name": "Carolina",
+    "email": "ecucondor+carolina-032@gmail.com",
+    "type": "gmail_alias",
+    "forwardsTo": "ecucondor@gmail.com"
+  }
+]

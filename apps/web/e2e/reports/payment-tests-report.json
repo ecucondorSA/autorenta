@@ -1,0 +1,58 @@
+{
+  "timestamp": "2025-12-11T02:59:51.600Z",
+  "summary": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0,
+    "totalDuration": 79609
+  },
+  "environment": {
+    "baseUrl": "http://localhost:4200",
+    "headless": true,
+    "nodeVersion": "v22.21.0"
+  },
+  "results": [
+    {
+      "name": "marketplace-has-cars",
+      "suite": "payment",
+      "passed": true,
+      "duration": 4367
+    },
+    {
+      "name": "login-works",
+      "suite": "payment",
+      "passed": true,
+      "duration": 3165
+    },
+    {
+      "name": "payment-page-loads",
+      "suite": "payment",
+      "passed": true,
+      "duration": 13462
+    },
+    {
+      "name": "mp-brick-initializes",
+      "suite": "payment",
+      "passed": true,
+      "duration": 13602
+    },
+    {
+      "name": "payment-mode-toggle",
+      "suite": "payment",
+      "passed": true,
+      "duration": 14501
+    },
+    {
+      "name": "card-form-filling",
+      "suite": "payment",
+      "passed": true,
+      "duration": 20629
+    },
+    {
+      "name": "missing-parameters",
+      "suite": "payment",
+      "passed": true,
+      "duration": 9883
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@autorentar/e2e",
+  "version": "2.0.0",
+  "private": true,
+  "description": "E2E tests for AutoRenta using Patchright with Page Object Model",
+  "type": "module",
+  "scripts": {
+    "setup": "npx patchright install chromium",
+    "test": "tsx specs/auth/login.spec.ts && tsx specs/booking/browse-cars.spec.ts",
+    "test:login": "tsx specs/auth/login.spec.ts",
+    "test:marketplace": "tsx specs/booking/browse-cars.spec.ts",
+    "test:payment": "tsx specs/booking/payment.spec.ts",
+    "test:renter-owner": "tsx specs/booking/renter-owner-flow.spec.ts",
+    "test:headed": "HEADLESS=false tsx specs/auth/login.spec.ts",
+    "test:headed:marketplace": "HEADLESS=false tsx specs/booking/browse-cars.spec.ts",
+    "test:headed:payment": "HEADLESS=false tsx specs/booking/payment.spec.ts",
+    "test:headed:renter-owner": "HEADLESS=false tsx specs/booking/renter-owner-flow.spec.ts",
+    "test:stagehand": "tsx specs/stagehand/investigate-flaky-modules.ts",
+    "test:stagehand:daily": "tsx specs/stagehand/daily-platform-scan.ts",
+    "test:all": "npm run test:login && npm run test:marketplace && npm run test:payment",
+    "test:all:headed": "HEADLESS=false npm run test:all",
+    "test:ci": "HEADLESS=true CI=true npm run test:all",
+    "clean": "rm -rf reports/*.json reports/*.png .browser-profile",
+    "clean:profile": "rm -rf .browser-profile"
+  },
+  "dependencies": {
+    "patchright": "^1.49.1"
+  },
+  "devDependencies": {
+    "@browserbasehq/stagehand": "^3.0.7",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}

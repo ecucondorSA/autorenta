@@ -1,0 +1,8 @@
+{
+  "name": "Autorentar",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "autorentar-mobile"
+}

@@ -1,0 +1,405 @@
+/* Host element pinned to viewport - siempre visible */
+:host {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  z-index: 50 !important; /* Aumentado para asegurar que esté por encima */
+  pointer-events: none;
+  display: block !important;
+  /* Forzar que no esté afectado por transform de padres */
+  transform: none !important;
+  will-change: auto !important;
+  /* Aislar completamente del contexto de apilamiento de padres */
+  contain: layout style paint !important;
+  isolation: isolate !important;
+  /* Forzar posición absoluta respecto al viewport */
+  margin: 0 !important;
+  padding: 0 !important;
+  /* El safe area se maneja en .nav-container */
+  /* Prevenir scroll interno */
+  overflow: hidden !important;
+}
+
+:host(.hidden) {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  :host {
+    display: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🎨 MOBILE BOTTOM NAVIGATION - AUTORENT DARK MODE
+   ═══════════════════════════════════════════════════════════════ */
+
+.mobile-bottom-nav {
+  position: relative;
+  z-index: 1;
+  display: block;
+  pointer-events: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Container Principal
+   ───────────────────────────────────────────────────────────── */
+
+.nav-container {
+  display: grid;
+  /* 5 tabs iguales - patrón Airbnb */
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+
+  background-color: var(--surface-primary, #ffffff);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+  border-top: 1px solid rgba(167, 216, 244, 0.2);
+  /* Sin border-radius - pegado al borde inferior */
+  border-radius: 0;
+
+  /* Padding: arriba 8px, lados 8px, abajo = mínimo 28px o safe-area (gesture bar Android ~24-48px) */
+  padding: 8px 8px max(28px, calc(12px + env(safe-area-inset-bottom, 0px)));
+
+  box-shadow:
+    0 -8px 32px rgba(167, 216, 244, 0.15),
+    0 -4px 16px rgba(0, 0, 0, 0.08),
+    0 -1px 4px rgba(0, 0, 0, 0.04);
+
+  /* Efecto glassmorphism mejorado */
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border-default); /* Reemplazado gradiente con color sólido */
+}
+
+/* Dark mode */
+.dark .nav-container {
+  background-color: var(--surface-dark, #1e1e1e); /* Replaced gradient with solid color token */
+  border-top-color: rgba(167, 216, 244, 0.15);
+  box-shadow:
+    0 -8px 32px rgba(167, 216, 244, 0.1),
+    0 -4px 16px #7b7b7b,
+    0 -1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Nav Items
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  padding: 10px 6px;
+
+  text-decoration: none;
+  cursor: pointer;
+
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  position: relative;
+
+  /* Tap target mínimo iOS */
+  min-height: 60px;
+
+  /* Prevenir selección de texto */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  /* ✅ GPU Acceleration para animaciones suaves */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+
+  border-radius: 16px;
+}
+
+.nav-item:active {
+  transform: scale(0.92) translateZ(0);
+}
+
+.nav-item:hover:not(.nav-item--active) {
+  background: linear-gradient(135deg, rgba(167, 216, 244, 0.1) 0%, rgba(167, 216, 244, 0.05) 100%);
+  transform: translateY(-3px) scale(1.05) translateZ(0);
+  box-shadow: 0 8px 16px rgba(167, 216, 244, 0.15);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Icono Wrapper
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item__icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Iconos SVG
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item__icon {
+  width: 28px;
+  height: 28px;
+  color: var(--text-primary); /* High contrast for WCAG AA compliance */
+  opacity: 0.7; /* Slightly higher opacity for better visibility */
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  stroke-width: 2.25; /* Thicker strokes for better visibility */
+
+  /* ✅ GPU Acceleration */
+  will-change: transform, filter, color;
+  transform: translateZ(0);
+}
+
+.nav-item__icon--active {
+  color: var(--cta-default); /* Azul pastel del sistema */
+  opacity: 1; /* Full opacity for active state */
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 12px rgba(167, 216, 244, 0.6)); /* cta-default glow - static, no animation */
+  transform: translateZ(0) scale(1.15);
+  /* FIX: Removed infinite animation to prevent CLS/temblor */
+}
+
+/* Hover en items no activos */
+.nav-item:not(.nav-item--active):hover .nav-item__icon {
+  color: var(--cta-default);
+  opacity: 1; /* Full opacity on hover */
+  transform: scale(1.1) translateZ(0);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Labels de texto
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item__label {
+  font-size: 12px;
+  font-weight: 600; /* Bolder for better legibility at small size */
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+
+  color: var(--text-primary); /* High contrast for WCAG AA compliance */
+  opacity: 0.7; /* Higher opacity for better visibility */
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  max-width: 100%;
+}
+
+.nav-item__label--active {
+  color: var(--cta-default); /* Azul pastel del sistema */
+  opacity: 1; /* Full opacity for active state */
+  font-weight: 700;
+  transform: scale(1.05);
+}
+
+.nav-item:not(.nav-item--active):hover .nav-item__label {
+  color: var(--cta-default);
+  opacity: 1; /* Full opacity on hover */
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Indicador de activo (línea superior)
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item__indicator {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 36px;
+  height: 4px;
+
+  background: var(--cta-default); /* Reemplazado gradiente con color sólido */
+  border-radius: 0 0 4px 4px;
+
+  box-shadow:
+    0 2px 8px rgba(167, 216, 244, 0.6),
+    /* cta-default glow */ 0 0 16px rgba(167, 216, 244, 0.3);
+
+  animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Badge de notificaciones
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item__badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+
+  background: var(--error-default); /* Reemplazado gradiente con color sólido */
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.25;
+
+  border-radius: 10px;
+  border: 2.5px solid var(--surface-raised);
+
+  box-shadow:
+    0 2px 8px rgba(239, 68, 68, 0.6),
+    0 0 12px rgba(239, 68, 68, 0.4);
+
+  /* FIX: Removed infinite animation to prevent CLS/temblor */
+  z-index: 10;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Shadow superior para transición suave
+   ───────────────────────────────────────────────────────────── */
+
+.nav-shadow {
+  position: absolute;
+  top: -24px;
+  left: 0;
+  right: 0;
+  height: 24px;
+
+  background: var(--surface-primary-alpha-60); /* Reemplazado gradiente con color sólido */
+  pointer-events: none;
+}
+
+.dark .nav-shadow {
+  background: var(--surface-dark-alpha-70); /* Reemplazado gradiente con color sólido */
+}
+/* ─────────────────────────────────────────────────────────────
+   Estados especiales del item activo
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item--active {
+  background: var(--cta-alpha-15); /* Reemplazado gradiente con color sólido */
+  border-radius: 16px;
+  box-shadow:
+    inset 0 2px 8px rgba(167, 216, 244, 0.1),
+    0 4px 12px rgba(167, 216, 244, 0.15);
+  transform: translateY(-2px) translateZ(0);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Responsive - Ajustes para pantallas muy pequeñas
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 360px) {
+  .nav-item__icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .nav-item__label {
+    font-size: 12px;
+  }
+
+  .nav-item {
+    padding: 4px 2px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Animación de entrada inicial
+   ───────────────────────────────────────────────────────────── */
+
+.mobile-bottom-nav {
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Auto-hide on scroll */
+.mobile-bottom-nav--hidden {
+  transform: translateY(100%);
+  pointer-events: none;
+}
+
+.mobile-bottom-nav--hidden .nav-shadow {
+  opacity: 0;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Soporte para notch/safe area en iPhone/Android
+   ───────────────────────────────────────────────────────────── */
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  .nav-container {
+    /* Mínimo 28px para gesture bar + safe-area si es mayor */
+    padding-bottom: max(28px, calc(12px + env(safe-area-inset-bottom, 0px)));
+  }
+}
+
+/* Android/iOS standalone: asegurar padding suficiente para gesture bar */
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  .nav-container {
+    /* Mínimo 32px para apps instaladas */
+    padding-bottom: max(32px, calc(12px + env(safe-area-inset-bottom, 20px)));
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Ajustes para 5 columnas - Patrón Airbnb
+   ───────────────────────────────────────────────────────────── */
+
+.nav-item {
+  /* Ajustar padding para 5 items */
+  padding: 8px 4px;
+  min-height: 56px; /* Material Design spec */
+}
+
+.nav-item__icon {
+  width: 26px;
+  height: 26px;
+}

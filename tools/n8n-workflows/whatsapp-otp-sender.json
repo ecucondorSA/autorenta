@@ -1,0 +1,415 @@
+{
+  "name": "AutoRenta - WhatsApp OTP Sender",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "send-otp",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": false
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "OTP Request",
+      "type": "n8n-nodes-base.webhook",
+      "position": [0, 300],
+      "webhookId": "otp-sender",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "validate-secret",
+              "leftValue": "={{ $json.headers['x-webhook-secret'] }}",
+              "rightValue": "={{ $env.WEBHOOK_SECRET }}",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "validate-auth",
+      "name": "Validate Secret",
+      "type": "n8n-nodes-base.if",
+      "position": [220, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": false, \"error\": \"Unauthorized\" }",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "unauthorized-response",
+      "name": "401 Unauthorized",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [440, 500],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\n\n// Validate required fields\nif (!body.phone) {\n  throw new Error('Phone number required');\n}\n\nif (!body.otp) {\n  throw new Error('OTP code required');\n}\n\n// Format phone for WhatsApp (remove spaces, ensure + prefix)\nlet phone = body.phone.replace(/\\s/g, '');\nif (!phone.startsWith('+')) {\n  // Assume Argentina if no country code\n  phone = '+54' + phone.replace(/^0/, '');\n}\n\n// Build message\nconst message = `🚗 *AutoRenta* - Tu código de verificación es: *${body.otp}*\\n\\nEste código expira en 10 minutos.\\nNo compartas este código con nadie.`;\n\nreturn [{\n  json: {\n    phone: phone,\n    whatsappPhone: `whatsapp:${phone}`,\n    otp: body.otp,\n    message: message,\n    userId: body.user_id,\n    channel: body.channel || 'whatsapp'\n  }\n}];"
+      },
+      "id": "prepare-message",
+      "name": "Prepare Message",
+      "type": "n8n-nodes-base.code",
+      "position": [440, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "is-whatsapp",
+              "leftValue": "={{ $json.channel }}",
+              "rightValue": "whatsapp",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "channel-switch",
+      "name": "WhatsApp or SMS?",
+      "type": "n8n-nodes-base.if",
+      "position": [660, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.twilio.com/2010-04-01/Accounts/{{ $env.TWILIO_ACCOUNT_SID }}/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "From", "value": "={{ $env.TWILIO_WHATSAPP_NUMBER }}" },
+            { "name": "To", "value": "={{ $json.whatsappPhone }}" },
+            { "name": "Body", "value": "={{ $json.message }}" }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "send-whatsapp",
+      "name": "Send WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [880, 200],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "twilio-auth",
+          "name": "Twilio Auth"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.twilio.com/2010-04-01/Accounts/{{ $env.TWILIO_ACCOUNT_SID }}/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "From", "value": "={{ $env.TWILIO_SMS_NUMBER }}" },
+            { "name": "To", "value": "={{ $json.phone }}" },
+            { "name": "Body", "value": "AutoRenta: Tu código es {{ $json.otp }}. Expira en 10 min." }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "send-sms",
+      "name": "Send SMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [880, 400],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "twilio-auth",
+          "name": "Twilio Auth"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "check-success",
+              "leftValue": "={{ $json.sid }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-whatsapp-success",
+      "name": "WhatsApp Success?",
+      "type": "n8n-nodes-base.if",
+      "position": [1100, 200],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/otp_delivery_logs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"user_id\": \"{{ $('Prepare Message').item.json.userId }}\",\n  \"phone\": \"{{ $('Prepare Message').item.json.phone }}\",\n  \"channel\": \"whatsapp\",\n  \"status\": \"sent\",\n  \"provider_message_id\": \"{{ $json.sid }}\",\n  \"sent_at\": \"{{ new Date().toISOString() }}\"\n}",
+        "options": {}
+      },
+      "id": "log-success",
+      "name": "Log Success",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1320, 100],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": true, \"channel\": \"whatsapp\", \"message_id\": \"{{ $json.sid }}\" }",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "success-response",
+      "name": "200 Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1540, 100],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.twilio.com/2010-04-01/Accounts/{{ $env.TWILIO_ACCOUNT_SID }}/Messages.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "From", "value": "={{ $env.TWILIO_SMS_NUMBER }}" },
+            { "name": "To", "value": "={{ $('Prepare Message').item.json.phone }}" },
+            { "name": "Body", "value": "AutoRenta: Tu código es {{ $('Prepare Message').item.json.otp }}. Expira en 10 min." }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "fallback-sms",
+      "name": "Fallback to SMS",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1320, 300],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "twilio-auth",
+          "name": "Twilio Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/otp_delivery_logs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"user_id\": \"{{ $('Prepare Message').item.json.userId }}\",\n  \"phone\": \"{{ $('Prepare Message').item.json.phone }}\",\n  \"channel\": \"sms_fallback\",\n  \"status\": \"sent\",\n  \"provider_message_id\": \"{{ $json.sid }}\",\n  \"sent_at\": \"{{ new Date().toISOString() }}\",\n  \"notes\": \"WhatsApp failed, fell back to SMS\"\n}",
+        "options": {}
+      },
+      "id": "log-fallback",
+      "name": "Log Fallback",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1540, 300],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": true, \"channel\": \"sms\", \"fallback\": true, \"message_id\": \"{{ $json.sid }}\" }",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "fallback-response",
+      "name": "200 Fallback OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1760, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "check-sms-success",
+              "leftValue": "={{ $json.sid }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-sms-success",
+      "name": "SMS Success?",
+      "type": "n8n-nodes-base.if",
+      "position": [1100, 400],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/otp_delivery_logs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"user_id\": \"{{ $('Prepare Message').item.json.userId }}\",\n  \"phone\": \"{{ $('Prepare Message').item.json.phone }}\",\n  \"channel\": \"sms\",\n  \"status\": \"sent\",\n  \"provider_message_id\": \"{{ $json.sid }}\",\n  \"sent_at\": \"{{ new Date().toISOString() }}\"\n}",
+        "options": {}
+      },
+      "id": "log-sms-success",
+      "name": "Log SMS Success",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1320, 400],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": true, \"channel\": \"sms\", \"message_id\": \"{{ $json.sid }}\" }",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "sms-success-response",
+      "name": "200 SMS OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1540, 400],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": false, \"error\": \"Failed to send OTP via any channel\" }",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "id": "failure-response",
+      "name": "500 Failed",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1320, 550],
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "OTP Request": {
+      "main": [[{ "node": "Validate Secret", "type": "main", "index": 0 }]]
+    },
+    "Validate Secret": {
+      "main": [
+        [{ "node": "Prepare Message", "type": "main", "index": 0 }],
+        [{ "node": "401 Unauthorized", "type": "main", "index": 0 }]
+      ]
+    },
+    "Prepare Message": {
+      "main": [[{ "node": "WhatsApp or SMS?", "type": "main", "index": 0 }]]
+    },
+    "WhatsApp or SMS?": {
+      "main": [
+        [{ "node": "Send WhatsApp", "type": "main", "index": 0 }],
+        [{ "node": "Send SMS", "type": "main", "index": 0 }]
+      ]
+    },
+    "Send WhatsApp": {
+      "main": [
+        [{ "node": "WhatsApp Success?", "type": "main", "index": 0 }],
+        [{ "node": "Fallback to SMS", "type": "main", "index": 0 }]
+      ]
+    },
+    "WhatsApp Success?": {
+      "main": [
+        [{ "node": "Log Success", "type": "main", "index": 0 }],
+        [{ "node": "Fallback to SMS", "type": "main", "index": 0 }]
+      ]
+    },
+    "Log Success": {
+      "main": [[{ "node": "200 Success", "type": "main", "index": 0 }]]
+    },
+    "Fallback to SMS": {
+      "main": [[{ "node": "Log Fallback", "type": "main", "index": 0 }]]
+    },
+    "Log Fallback": {
+      "main": [[{ "node": "200 Fallback OK", "type": "main", "index": 0 }]]
+    },
+    "Send SMS": {
+      "main": [
+        [{ "node": "SMS Success?", "type": "main", "index": 0 }],
+        [{ "node": "500 Failed", "type": "main", "index": 0 }]
+      ]
+    },
+    "SMS Success?": {
+      "main": [
+        [{ "node": "Log SMS Success", "type": "main", "index": 0 }],
+        [{ "node": "500 Failed", "type": "main", "index": 0 }]
+      ]
+    },
+    "Log SMS Success": {
+      "main": [[{ "node": "200 SMS OK", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

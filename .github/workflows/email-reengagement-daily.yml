@@ -1,0 +1,49 @@
+name: Daily Re-engagement Check
+
+on:
+  schedule:
+    # Diariamente a las 10:00 UTC (5:00 AM Ecuador, 7:00 AM Argentina)
+    - cron: '0 10 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  trigger-reengagement:
+    name: Agregar usuarios inactivos a re-engagement
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Buscar usuarios inactivos
+        run: |
+          echo "🔍 Buscando usuarios inactivos (+30 días)..."
+
+          RESPONSE=$(curl -s -X POST \
+            "${{ secrets.SUPABASE_URL }}/functions/v1/trigger-reengagement" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{}')
+
+          echo "Respuesta: $RESPONSE"
+
+          # Check for errors
+          if echo "$RESPONSE" | grep -q '"error"'; then
+            echo "❌ Error en re-engagement"
+            exit 1
+          fi
+
+          ADDED=$(echo "$RESPONSE" | jq -r '.added // 0')
+          SKIPPED=$(echo "$RESPONSE" | jq -r '.skipped // 0')
+          TOTAL=$(echo "$RESPONSE" | jq -r '.total_inactive // 0')
+
+          echo "✅ Usuarios inactivos encontrados: $TOTAL"
+          echo "➕ Agregados a re-engagement: $ADDED"
+          echo "⏭️ Saltados (ya en secuencia): $SKIPPED"
+
+      - name: Registrar resultado
+        if: always()
+        run: |
+          echo "## Resultado de Re-engagement Diario" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Fecha (UTC):** $(date -u '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Estado:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY

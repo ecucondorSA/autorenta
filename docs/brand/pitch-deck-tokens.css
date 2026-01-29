@@ -1,0 +1,103 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   AUTORENTA PITCH DECK VISUAL TOKENS
+   Generated: 2026-01-13 21:34
+   Source: AutoRentar-PitchDeck-STRATEGIC-V14-ENGINEERING.pdf
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* Pitch Deck Mode - Dark Theme para presentaciones y materiales de inversores */
+.pitch-deck-mode,
+[data-theme="pitch-deck"] {
+  /* ─── Colores Primarios ─── */
+  --ar-primary: #22C55E;
+  --ar-primary-light: #4ADE80;
+  --ar-primary-dark: #16A34A;
+  --ar-primary-hover: #16A34A;
+
+  /* ─── Acentos ─── */
+  --ar-accent-lime: #D4ED31;
+  --ar-accent-cyan: #2DD4BF;
+  --ar-accent-cyan-dark: #14B8A6;
+
+  /* ─── Fondos ─── */
+  --ar-bg-dark: #0F172A;
+  --ar-bg-card: #1E293B;
+  --ar-bg-elevated: #334155;
+  --ar-bg-hover: #475569;
+
+  /* ─── Texto ─── */
+  --ar-text-primary: #FFFFFF;
+  --ar-text-secondary: #94A3B8;
+  --ar-text-muted: #64748B;
+  --ar-text-inverse: #0F172A;
+
+  /* ─── Semánticos ─── */
+  --ar-success: #22C55E;
+  --ar-error: #EF4444;
+  --ar-error-light: #F87171;
+  --ar-warning: #F59E0B;
+  --ar-info: #3B82F6;
+
+  /* ─── Espaciado ─── */
+  --ar-radius-sm: 6px;
+  --ar-radius-md: 8px;
+  --ar-radius-lg: 12px;
+  --ar-radius-xl: 16px;
+
+  /* ─── Shadows ─── */
+  --ar-shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --ar-shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── Utility Classes para Pitch Deck ─── */
+.ar-bg-primary { background-color: var(--ar-primary); }
+.ar-bg-primary-dark { background-color: var(--ar-primary-dark); }
+.ar-bg-dark { background-color: var(--ar-bg-dark); }
+.ar-bg-card { background-color: var(--ar-bg-card); }
+.ar-bg-elevated { background-color: var(--ar-bg-elevated); }
+
+.ar-text-primary { color: var(--ar-text-primary); }
+.ar-text-secondary { color: var(--ar-text-secondary); }
+.ar-text-muted { color: var(--ar-text-muted); }
+.ar-text-lime { color: var(--ar-accent-lime); }
+.ar-text-cyan { color: var(--ar-accent-cyan); }
+
+.ar-text-success { color: var(--ar-success); }
+.ar-text-error { color: var(--ar-error); }
+.ar-text-warning { color: var(--ar-warning); }
+
+.ar-border-cyan { border-color: var(--ar-accent-cyan); }
+.ar-border-primary { border-color: var(--ar-primary); }
+
+/* ─── Componentes Pitch Deck ─── */
+.ar-card {
+  background-color: var(--ar-bg-card);
+  border-radius: var(--ar-radius-md);
+  padding: 24px;
+}
+
+.ar-card-highlighted {
+  background-color: var(--ar-bg-card);
+  border-radius: var(--ar-radius-md);
+  padding: 24px;
+  border: 1px solid var(--ar-accent-cyan);
+}
+
+.ar-metric-box {
+  background-color: var(--ar-bg-card);
+  border-radius: var(--ar-radius-md);
+  padding: 16px 24px;
+}
+
+.ar-label-section {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ar-accent-lime);
+}
+
+.ar-metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ar-primary);
+}

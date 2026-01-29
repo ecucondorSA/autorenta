@@ -7,14 +7,211 @@ node_modules
 /.output
 /apps/web/.angular/cache
 /apps/web/dist
+/apps/web/out-tsc
+/out-tsc
+
+# Cloudflare Workers build artifacts (may contain secrets)
+functions/workers/*/dist
+functions/workers/*/.wrangler
 
 # Env
 .env
 .env.*
 .supabase
 
+# Supabase temp files (anywhere in the project)
+**/.temp/
+**/supabase/.temp/
+
 # Editor/OS
 .DS_Store
 .idea
 .vscode/*
 !.vscode/extensions.json
+# ONNX models (too large for GitHub)
+apps/web/src/assets/models/*.onnx
+test-results/
+e2e/artifacts/
+
+# Patchright/Playwright (workspace-specific)
+apps/web/e2e/reports/
+apps/web/e2e/test-results/
+apps/web/e2e/.browser-profile/
+apps/web/e2e/auth/
+
+# Package manager lockfiles (pnpm workspace uses pnpm-lock.yaml)
+**/package-lock.json
+
+# Temporary files and archives
+*.log
+*.png
+!apps/web/android/app/src/main/res/**/splash.png
+!apps/web/android/app/src/main/res/drawable*/ic_launcher*.png
+!apps/web/android/app/src/main/res/mipmap*/ic_launcher*.png
+!apps/web/src/assets/images/design-assets/*.png
+*.backup
+*.tar.gz
+scripts/temp/
+database/temp/
+docs/archived/logs/
+docs/archived/screenshots/
+.migration-backups/
+
+# Database backups (may contain sensitive data)
+logs/
+logs/**
+**/logs/db-backups/**
+
+# Temporary root-level files
+/test-*.sh
+/test-*.js
+/test-*.py
+/test-*.mjs
+/verify-*.sh
+/verify-*.js
+/check-*.js
+/check-*.mjs
+/check-*.ts
+/debug-*.js
+/debug-*.mjs
+/debug-*.html
+/apply-*.sh
+/apply-*.mjs
+/deploy-*.sh
+/capture-*.ts
+/capture-*.py
+/fix-*.ts
+/update-*.ts
+/inspect-*.ts
+/trigger-*.sh
+/monitor-*.sh
+/setup-*.sh
+/find-*.ts
+/find-*.sh
+/confirm-*.sh
+/confirm-*.mjs
+/create-test-*.mjs
+/execute-*.js
+/view-*.js
+/watch-*.sh
+/reinject-*.sh
+/sql-*.sh
+/investigate-*.sh
+/comprehensive-*.sh
+/plan-*.sh
+/generate*.sh
+/generar*.sh
+
+# Temporary root-level output files
+/screenshot-*.png
+/deployment-*.png
+/homepage-*.png
+/publish-*.png
+/login-*.png
+/test-*.png
+/browser-capture-*.json
+/deployment-*.json
+/generated-*.html
+/interior-*.html
+/debug-*.png
+/gemini-*.log
+/gemini-*.txt
+/lint-output.txt
+/typecheck-output.log
+/build.log
+/accounting_export.log
+/app_start.log
+/migration-*.log
+/playwright-execution.log
+/real-payment-*.log
+/webhook-test-*.log
+
+# Temporary root-level directories
+/test-results-*/
+/claude-autorenta/
+/console_logs_backup_*.tar.gz
+
+# Session summaries (should be in docs/archived/)
+/*_SUMMARY*.txt
+/RESUMEN_*.txt
+/FINAL_*.txt
+/MOBILE_*.txt
+/BOOKING_*.txt
+/REVIEWS_*.txt
+/DECISION_*.txt
+/PHASE*.sh
+/review.txt
+
+# TOON Format (Token-Oriented Object Notation)
+# Generated .toon files should be regenerated with tools/toon-convert.mjs
+# Exception: Keep these for version control
+**/*.toon
+!.claude/config.toon
+!docs/REFERENCE_DATA.toon
+
+# Limpieza automática - temporal/debug files
+debug-artifacts/
+playwright-report/
+.wrangler/
+*.log
+*_output*.txt
+apps/web/tools/binance-p2p-mcp/
+
+# Local MercadoPago MCP tooling (configs/daemons)
+apps/web/tools/mercadopago-mcp/
+
+# MercadoPago P2P automation: ignore local runtime artifacts and secrets
+apps/web/tools/mercadopago-mcp/**/node_modules/
+apps/web/tools/mercadopago-mcp/**/venv/
+apps/web/tools/mercadopago-mcp/**/__pycache__/
+apps/web/tools/mercadopago-mcp/**/.env*
+apps/web/tools/mercadopago-mcp/**/p2p_config*.json
+apps/web/tools/mercadopago-mcp/**/p2p_daemon*.py
+apps/web/tools/mercadopago-mcp/**/*.log
+apps/web/tools/mercadopago-mcp/**/screenshots/
+apps/web/tools/mercadopago-mcp/**/reports/
+
+# P2P automation (includes Produbanco browser automation): ignore local runtime state
+apps/web/tools/p2p-automation/**/node_modules/
+apps/web/tools/p2p-automation/**/venv/
+apps/web/tools/p2p-automation/**/__pycache__/
+apps/web/tools/p2p-automation/**/.env*
+apps/web/tools/p2p-automation/**/*.log
+apps/web/tools/p2p-automation/**/data/
+apps/web/tools/p2p-automation/**/tmp/
+apps/web/tools/p2p-automation/**/screenshots/
+
+# Large analysis files
+tripwip_base.zip
+tripwip_base_extracted/
+
+# Private Documentation
+SUPABASE_ACCESS.md
+
+# MCP Configuration (contains secrets - API keys, access tokens)
+mcp_config.json
+mcp_config.*.json
+
+# Development environment files that may contain secrets
+*.local.json
+**/config.local.json
+
+# Build outputs (all dist folders)
+**/dist/
+*.tsbuildinfo
+.turbo/
+
+# Temporary folders
+**/tmp/
+**/hdri_temp/
+
+# IDE specific
+.cursor/
+.agent/
+
+# Pitch decks (don't belong in repo)
+*.pptx
+deck-assets/
+
+# Android signing keys - NEVER commit
+apps/web/android/keystore/

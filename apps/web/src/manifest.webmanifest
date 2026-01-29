@@ -1,0 +1,120 @@
+{
+  "name": "AutoRenta - Alquiler de Autos entre Personas",
+  "short_name": "AutoRenta",
+  "description": "Alquilá autos entre personas en Argentina y Uruguay. Plataforma peer-to-peer segura con wallet integrada.",
+  "theme_color": "#2c4a52",
+  "background_color": "#FAF9F6",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay"],
+  "scope": "/",
+  "start_url": "/",
+  "orientation": "any",
+  "lang": "es-AR",
+  "dir": "ltr",
+  "categories": ["business", "travel", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Buscar Autos",
+      "short_name": "Buscar",
+      "description": "Encuentra autos disponibles para alquilar",
+      "url": "/cars",
+      "icons": [
+        {
+          "src": "/icons/shortcut-search.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Mis Reservas",
+      "short_name": "Reservas",
+      "description": "Ver tus reservas activas",
+      "url": "/bookings",
+      "icons": [
+        {
+          "src": "/icons/shortcut-bookings.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Wallet",
+      "short_name": "Wallet",
+      "description": "Gestiona tu saldo",
+      "url": "/wallet",
+      "icons": [
+        {
+          "src": "/icons/shortcut-wallet.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Publicar Auto",
+      "short_name": "Publicar",
+      "description": "Publica tu auto para alquilar",
+      "url": "/cars/publish",
+      "icons": [
+        {
+          "src": "/icons/shortcut-publish.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}

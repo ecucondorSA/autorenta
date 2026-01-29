@@ -1,0 +1,175 @@
+{
+  "name": "AutoRenta - WhatsApp Outreach Campaign",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Every 5 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [0, 300],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_contacts",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "status", "value": "eq.new" },
+            { "name": "select", "value": "id,phone,whatsapp_id,first_name,full_name" },
+            { "name": "limit", "value": "1" },
+            { "name": "order", "value": "created_at.asc" }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-next-contact",
+      "name": "Get Next Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [220, 300],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "has-contact",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-has-contact",
+      "name": "Has Contact?",
+      "type": "n8n-nodes-base.filter",
+      "position": [440, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const contact = $input.first().json;\nconst name = contact.first_name || contact.full_name?.split(' ')[0] || 'Hola';\n\nconst message = `Hola ${name}! 👋\n\n¿Tenés un segundo auto que usás poco? 🚗\n\nCon AutoRentar podés convertirlo en tu *micro-flota unipersonal* y generar ingresos pasivos sin complicaciones.\n\n🛡️ *Sin franquicia* - Entre todos aportamos a un fondo comunitario para protegernos\n💵 Incluso si no alquilás pero dejás tu auto disponible, ganás\n\n💰 Un auto gama media se alquila desde $70.000/día\n📅 Con solo 10 días al mes, son +$700.000 de ingreso extra\n📱 Vos elegís cuándo alquilar y a quién\n\nTu segundo auto puede trabajar para vos y AutoRentar lo gestiona.\n\n¿Te cuento más?\n\n👉 autorentar.com`;\n\nreturn [{\n  json: {\n    contactId: contact.id,\n    phone: contact.phone,\n    whatsappId: contact.whatsapp_id || `${contact.phone}@c.us`,\n    name: name,\n    message: message\n  }\n}];"
+      },
+      "id": "prepare-message",
+      "name": "Prepare Message",
+      "type": "n8n-nodes-base.code",
+      "position": [660, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://waha:3000/api/sendText",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "X-Api-Key", "value": "={{ $env.WAHA_API_KEY }}" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chatId\": \"{{ $json.whatsappId }}\",\n  \"text\": {{ JSON.stringify($json.message) }},\n  \"session\": \"default\"\n}",
+        "options": {}
+      },
+      "id": "send-whatsapp",
+      "name": "Send WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [880, 300],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_contacts?id=eq.{{ $('Prepare Message').item.json.contactId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"status\": \"contacted\",\n  \"messages_sent\": 1,\n  \"last_message_sent_at\": \"{{ new Date().toISOString() }}\",\n  \"first_contact_at\": \"{{ new Date().toISOString() }}\"\n}",
+        "options": {}
+      },
+      "id": "update-contact-status",
+      "name": "Update Contact Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1100, 300],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contact_id\": \"{{ $('Prepare Message').item.json.contactId }}\",\n  \"direction\": \"outbound\",\n  \"message_type\": \"outreach\",\n  \"content\": {{ JSON.stringify($('Prepare Message').item.json.message) }},\n  \"template_used\": \"micro_flota_v1\",\n  \"status\": \"sent\"\n}",
+        "options": {}
+      },
+      "id": "log-message",
+      "name": "Log Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1100, 500],
+      "typeVersion": 4.2
+    }
+  ],
+  "connections": {
+    "Every 5 Minutes": {
+      "main": [[{ "node": "Get Next Contact", "type": "main", "index": 0 }]]
+    },
+    "Get Next Contact": {
+      "main": [[{ "node": "Has Contact?", "type": "main", "index": 0 }]]
+    },
+    "Has Contact?": {
+      "main": [[{ "node": "Prepare Message", "type": "main", "index": 0 }]]
+    },
+    "Prepare Message": {
+      "main": [[{ "node": "Send WhatsApp", "type": "main", "index": 0 }]]
+    },
+    "Send WhatsApp": {
+      "main": [
+        [
+          { "node": "Update Contact Status", "type": "main", "index": 0 },
+          { "node": "Log Message", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

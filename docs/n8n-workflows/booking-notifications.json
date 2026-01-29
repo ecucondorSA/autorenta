@@ -1,0 +1,448 @@
+{
+  "name": "AutoRenta - Booking Notifications",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "booking-status-change",
+        "options": {}
+      },
+      "id": "webhook-booking-change",
+      "name": "Webhook - Booking Status Change",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.template_code }}",
+              "operation": "equals",
+              "value2": "booking_confirmed"
+            }
+          ]
+        }
+      },
+      "id": "switch-confirmed",
+      "name": "If Confirmed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [500, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.template_code }}",
+              "operation": "equals",
+              "value2": "booking_started"
+            }
+          ]
+        }
+      },
+      "id": "switch-started",
+      "name": "If Started",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [500, 350]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.template_code }}",
+              "operation": "equals",
+              "value2": "return_reminder"
+            }
+          ]
+        }
+      },
+      "id": "switch-return",
+      "name": "If Return Reminder",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [500, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.template_code }}",
+              "operation": "equals",
+              "value2": "booking_completed"
+            }
+          ]
+        }
+      },
+      "id": "switch-completed",
+      "name": "If Completed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [500, 650]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/functions/v1/notify-multi-channel",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $json.renter.id }}"
+            },
+            {
+              "name": "channels",
+              "value": "={{ $json.channels.renter }}"
+            },
+            {
+              "name": "template_code",
+              "value": "={{ $json.template_code }}"
+            },
+            {
+              "name": "variables",
+              "value": "={{ JSON.stringify({ car_name: $json.car.brand + ' ' + $json.car.model, start_date: $json.booking.start_date, end_date: $json.booking.end_date, total_price: $json.booking.currency + ' ' + $json.booking.total_price }) }}"
+            }
+          ]
+        }
+      },
+      "id": "notify-renter-confirmed",
+      "name": "Notify Renter - Confirmed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [750, 150],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/functions/v1/notify-multi-channel",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $json.owner.id }}"
+            },
+            {
+              "name": "channels",
+              "value": "={{ $json.channels.owner }}"
+            },
+            {
+              "name": "template_code",
+              "value": "={{ $json.template_code }}"
+            },
+            {
+              "name": "variables",
+              "value": "={{ JSON.stringify({ car_name: $json.car.brand + ' ' + $json.car.model, start_date: $json.booking.start_date, end_date: $json.booking.end_date, total_price: $json.booking.currency + ' ' + $json.booking.total_price, renter_name: $json.renter.full_name }) }}"
+            }
+          ]
+        }
+      },
+      "id": "notify-owner-confirmed",
+      "name": "Notify Owner - Confirmed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [750, 250],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/functions/v1/notify-multi-channel",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $json.renter.id }}"
+            },
+            {
+              "name": "channels",
+              "value": "=['push']"
+            },
+            {
+              "name": "template_code",
+              "value": "booking_started"
+            },
+            {
+              "name": "variables",
+              "value": "={{ JSON.stringify({ car_name: $json.car.brand + ' ' + $json.car.model, end_date: $json.booking.end_date }) }}"
+            }
+          ]
+        }
+      },
+      "id": "notify-renter-started",
+      "name": "Notify Renter - Started",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [750, 350],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/functions/v1/notify-multi-channel",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $json.renter.id }}"
+            },
+            {
+              "name": "channels",
+              "value": "={{ $json.channels.renter }}"
+            },
+            {
+              "name": "template_code",
+              "value": "return_reminder"
+            },
+            {
+              "name": "variables",
+              "value": "={{ JSON.stringify({ car_name: $json.car.brand + ' ' + $json.car.model, end_date: $json.booking.end_date }) }}"
+            }
+          ]
+        }
+      },
+      "id": "notify-renter-return",
+      "name": "Notify Renter - Return",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [750, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/functions/v1/notify-multi-channel",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $json.renter.id }}"
+            },
+            {
+              "name": "channels",
+              "value": "={{ $json.channels.renter }}"
+            },
+            {
+              "name": "template_code",
+              "value": "booking_completed"
+            },
+            {
+              "name": "variables",
+              "value": "={{ JSON.stringify({ car_name: $json.car.brand + ' ' + $json.car.model }) }}"
+            }
+          ]
+        }
+      },
+      "id": "notify-renter-completed",
+      "name": "Notify Renter - Completed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [750, 600],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/functions/v1/notify-multi-channel",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $json.owner.id }}"
+            },
+            {
+              "name": "channels",
+              "value": "={{ $json.channels.owner }}"
+            },
+            {
+              "name": "template_code",
+              "value": "booking_completed"
+            },
+            {
+              "name": "variables",
+              "value": "={{ JSON.stringify({ car_name: $json.car.brand + ' ' + $json.car.model, renter_name: $json.renter.full_name }) }}"
+            }
+          ]
+        }
+      },
+      "id": "notify-owner-completed",
+      "name": "Notify Owner - Completed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [750, 700],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "supabase-service-key",
+          "name": "Supabase Service Key"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Booking Status Change": {
+      "main": [
+        [
+          {
+            "node": "If Confirmed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If Started",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If Return Reminder",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Confirmed": {
+      "main": [
+        [
+          {
+            "node": "Notify Renter - Confirmed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify Owner - Confirmed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Started": {
+      "main": [
+        [
+          {
+            "node": "Notify Renter - Started",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Return Reminder": {
+      "main": [
+        [
+          {
+            "node": "Notify Renter - Return",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Completed": {
+      "main": [
+        [
+          {
+            "node": "Notify Renter - Completed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify Owner - Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "booking",
+      "createdAt": "2026-01-29T00:00:00.000Z"
+    },
+    {
+      "name": "notifications",
+      "createdAt": "2026-01-29T00:00:00.000Z"
+    }
+  ],
+  "triggerCount": 0,
+  "versionId": "1.0.0",
+  "_documentation": {
+    "description": "Workflow para manejar notificaciones de cambios de estado en bookings",
+    "setup_instructions": [
+      "1. Importar este workflow en n8n",
+      "2. Configurar la credencial 'Supabase Service Key' con el header 'Authorization: Bearer {SERVICE_ROLE_KEY}'",
+      "3. Configurar la variable de entorno SUPABASE_URL en n8n",
+      "4. Activar el workflow",
+      "5. Configurar el webhook URL en Supabase: N8N_WEBHOOK_URL=https://your-n8n.com/webhook/booking-status-change"
+    ],
+    "events_handled": [
+      "booking_confirmed: Notifica a renter y owner",
+      "booking_started: Notifica a renter (push)",
+      "return_reminder: Notifica a renter (push + email + whatsapp)",
+      "booking_completed: Notifica a renter y owner, solicita reseña"
+    ],
+    "channels": {
+      "push": "Firebase Cloud Messaging via send-push-notification",
+      "email": "Via send-booking-confirmation-email y similares",
+      "whatsapp": "Via whatsapp-followup"
+    }
+  }
+}

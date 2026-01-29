@@ -1,0 +1,16 @@
+-- 2025-11-17: Crear tabla mp_webhook_logs y índice único para deduplicación
+-- Esta migración crea una tabla ligera para registrar webhooks entrantes de MercadoPago
+-- y un índice único sobre event_id (x-request-id) para permitir deduplicación atómica.
+
+CREATE TABLE IF NOT EXISTS mp_webhook_logs (
+  id BIGSERIAL PRIMARY KEY,
+  event_id TEXT NOT NULL,
+  mp_id TEXT,
+  type TEXT,
+  payload JSONB,
+  ip INET,
+  received_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Índice único para evitar reprocesamiento de webhooks (deduplicación atómica)
+CREATE UNIQUE INDEX IF NOT EXISTS idx_mp_webhook_logs_event_id_unique ON mp_webhook_logs (event_id);

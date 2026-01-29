@@ -1,0 +1,82 @@
+/* ═══════════════════════════════════════════════════════════════
+   🔠 AUTORENTAR FONT SYSTEM - Simplified (2 fonts only)
+
+   Based on industry leaders analysis (Airbnb, Turo, Zapier, Booking):
+   - Leaders use 1-2 fonts maximum
+   - Satoshi: Modern geometric sans for all UI
+   - JetBrains Mono: Technical data, prices, codes
+   ═══════════════════════════════════════════════════════════════ */
+
+/* 🔠 Satoshi - Primary UI Font (Variable)
+   Used for: Headers, body, buttons, navigation, everything */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/assets/fonts/satoshi/satoshi-variable.woff2') format('woff2-variations');
+  font-weight: 300 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* 🔠 JetBrains Mono - Technical/Data Font
+   Used for: Prices, codes, IDs, technical data only */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/assets/fonts/jetbrains-mono/JetBrainsMono-Variable.woff2') format('woff2-variations');
+  font-weight: 100 800;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Font Stack Definitions
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Primary font stack - Used everywhere */
+  --font-sans: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Mono font stack - Used for prices, codes, IDs */
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Font Utility Classes
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Default font for body */
+body {
+  font-family: var(--font-sans);
+}
+
+/* Mono font utility */
+.font-mono,
+.font-jetbrains {
+  font-family: var(--font-mono);
+}
+
+/* Satoshi font utility (explicit) */
+.font-satoshi,
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* Price/Money display - always mono */
+.price,
+.money,
+.balance,
+.amount,
+[data-type="price"],
+[data-type="money"] {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Code/ID display */
+.code,
+.booking-id,
+.reference,
+[data-type="code"] {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}

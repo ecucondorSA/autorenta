@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "timezone": "America/Argentina/Buenos_Aires",
+  "schedule": ["before 10am on Monday"],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "labels": ["dependencies"],
+  "assignees": ["@ecucondorSA"],
+  "reviewers": ["@ecucondorSA"],
+  "packageRules": [
+    {
+      "description": "Group Angular packages",
+      "groupName": "Angular",
+      "matchPackagePatterns": ["^@angular"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": "Group Ionic packages",
+      "groupName": "Ionic",
+      "matchPackagePatterns": ["^@ionic", "ionicons"]
+    },
+    {
+      "description": "Group testing packages",
+      "groupName": "Testing",
+      "matchPackagePatterns": ["playwright", "jasmine", "karma"]
+    },
+    {
+      "description": "Auto-merge patch updates for dev dependencies",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"],
+    "assignees": ["@ecucondorSA"]
+  }
+}

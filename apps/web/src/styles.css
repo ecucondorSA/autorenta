@@ -1,12 +1,1851 @@
+/* ============================================ */
+/* ALL @import RULES MUST COME FIRST */
+/* ============================================ */
+
+/* 🎨 Brand Colors - Single Source of Truth for Brand Colors */
+@import './styles/brand-colors.css';
+
+/* ♿ Accessibility - WCAG 2.2 Compliant Utilities */
+@import './styles/accessibility.css';
+
+/* 🔠 Font System - Simplified (Satoshi + JetBrains Mono only)
+   See fonts.css for full documentation */
+@import './styles/fonts.css';
+
+/* 🎚️ Responsive Tokens - CSS custom properties */
+@import './styles/responsive-tokens.css';
+
+/* 🎨 Fluid Design System - Modern fluid typography & spacing */
+@import './styles/fluid-design.css';
+
+/* 🔧 Responsive Utilities - Global responsive helpers */
+@import './styles/responsive-utilities.css';
+
+/* 🗺️ Map Tokens - Sistema Centralizado de Tokens */
+@import './styles/map-tokens.css';
+
+/* 🗺️ Autorent Custom Map Theme - Dark Minimal + Brand Accent */
+@import './styles/map-theme.css';
+
+/* 🗺️ Map Marketplace Theme - Neutral conversion-optimized */
+@import './styles/map-marketplace-theme.css';
+
+/* Shepherd.js Tours CSS */
+@import './styles/shepherd-custom.scss';
+
+/* 📱 Mobile Optimizations - Professional mobile experience */
+@import './styles/mobile-optimizations.css';
+
+/* 📱 Mobile Navigation - Bottom Bar */
+@import './styles/mobile-nav.css';
+
+/* 📱 Mobile Transitions - View Transitions API */
+@import './styles/mobile-transitions.css';
+
+/* 📦 Container Queries - Component-level responsive design */
+@import './styles/container-queries.css';
+
+/* 🎬 Animation System - Enter/leave transitions */
+@import './styles/animations.css';
+
+/* 🪟 Glassmorphism System - 2026 UI Trend */
+@import './styles/glass.css';
+
+/* ============================================ */
+/* CSS RULES START HERE */
+/* ============================================ */
+
+/* Ionic customizations - Removido: componentes de Ionic eliminados */
+
+/* 🐛 Mobile Overflow Debug & Fixes */
+/* Comentado - archivo de debug removido */
+
+/* 🚨 URGENT FIX: Force body scroll to be enabled */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden !important; /* App Shell: Prevent body scroll */
+  background-color: var(--surface-base);
+  color: var(--text-primary);
+  overscroll-behavior-y: none; /* Prevent pull-to-refresh on body */
+}
+
+/* Fix for PWA/Mobile viewport height */
+@supports (height: 100svh) {
+  body,
+  html {
+    height: 100svh !important;
+  }
+}
+
+app-root,
+#app-root {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: hidden; /* App Shell: Contain children */
+  background-color: var(--surface-base);
+  transform: none !important;
+  will-change: auto !important;
+  isolation: auto !important;
+}
+
+/* Prevent any scroll locking classes from blocking */
+body.p-overflow-hidden,
+body.modal-open,
+body.no-scroll {
+  overflow-y: auto !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ♿ ACCESSIBILITY - SKIP LINK & FOCUS MANAGEMENT (WCAG 2.4.1)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Skip Link - Hidden until focused */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 50;
+  padding: 1rem 1.5rem;
+  background-color: var(--cta-default);
+  color: var(--cta-text);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-4);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.skip-link:focus {
+  position: fixed;
+  left: 50%;
+  top: 1rem;
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  overflow: visible;
+  outline: 3px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Make focusable but visually hidden */
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Decorative SVG icons should be hidden from assistive tech */
+svg[aria-hidden='true'],
+.icon-decorative {
+  pointer-events: none;
+}
+
+/* Focus visible enhancement for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Remove outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ♿ WCAG 2.5.5 - MINIMUM TOUCH TARGET SIZE (44x44px)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Global minimum touch target for interactive elements */
+button:not(.no-min-touch),
+a:not(.no-min-touch):not(.sr-only),
+input[type='button']:not(.no-min-touch),
+input[type='submit']:not(.no-min-touch),
+input[type='reset']:not(.no-min-touch),
+[role='button']:not(.no-min-touch) {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Links with text need min-height but can be narrower */
+a:not(.no-min-touch):not(.sr-only):not([role='button']) {
+  min-height: 44px;
+  min-width: auto;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Range inputs need special handling */
+input[type='range'] {
+  min-height: 44px;
+  cursor: pointer;
+}
+
+/* Ensure inline links in text don't break layout */
+p a,
+li a,
+span a,
+td a {
+  min-height: auto;
+  min-width: auto;
+  display: inline;
+}
+
+/* Icon-only buttons need explicit sizing */
+.icon-button,
+button[aria-label]:not(:has(*:not(svg))):not(:has(*:not(ion-icon))) {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ♿ FOCUS INDICATORS - Enhanced for all interactive elements
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Default focus ring for all interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role='button']:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--border-focus, #3b82f6);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* High contrast focus for critical actions */
+.btn-primary:focus-visible,
+.cta-button:focus-visible,
+button[type='submit']:focus-visible {
+  outline: 3px solid var(--border-focus, #3b82f6);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ♿ MINIMUM SPACING BETWEEN INTERACTIVE ELEMENTS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Utility class for proper spacing in button groups */
+.button-group,
+.action-buttons,
+.toolbar-actions {
+  gap: 8px;
+}
+
+/* Navigation links spacing */
+nav a + a,
+.nav-links a + a {
+  margin-left: 8px;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  height: 100%;
+/* ═══════════════════════════════════════════════════════════════
+   ✅ P1-020: DISABLED BUTTON STYLES
+   ═══════════════════════════════════════════════════════════════ */
+@layer components {
+  /* Universal disabled state for all buttons */
+  button:disabled,
+  button[disabled],
+  a[disabled],
+  .btn:disabled,
+  .btn[disabled] {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    filter: grayscale(30%) !important;
+  }
+
+  /* Disabled state for input elements */
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    background-color: var(--surface-secondary) !important;
+    color: var(--text-muted) !important;
+  }
 }
 
-body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+/* ═══════════════════════════════════════════════════════════════
+   Toasts (Ionic) – compact, premium styling near the header
+   ═══════════════════════════════════════════════════════════════ */
+ion-toast.toast-modern {
+  --width: min(420px, calc(100vw - 32px));
+  --max-width: 420px;
+  --border-radius: 14px;
+  --box-shadow: 0 18px 40px -18px rgba(15, 23, 42, 0.55);
+  --color: var(--text-primary);
+  --button-color: inherit;
+  --z-index: 11000; /* above header */
+}
+
+ion-toast.toast-modern::part(container) {
+  background: color-mix(in srgb, var(--surface-raised, #ffffff) 94%, #0f172a 6%);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px) saturate(110%);
+  padding: 14px 16px;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+ion-toast.toast-modern::part(header) {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+ion-toast.toast-modern::part(message) {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+ion-toast.toast-modern::part(button) {
+  opacity: 0.9;
+}
+
+/* Type accents */
+ion-toast.toast-modern.toast-success::part(container) {
+  border-color: rgba(34, 197, 94, 0.25);
+  box-shadow: 0 18px 40px -18px rgba(34, 197, 94, 0.45);
+}
+
+ion-toast.toast-modern.toast-error::part(container) {
+  border-color: rgba(239, 68, 68, 0.32);
+  box-shadow: 0 18px 42px -18px rgba(239, 68, 68, 0.55);
+}
+
+ion-toast.toast-modern.toast-warning::part(container) {
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: 0 18px 40px -18px rgba(245, 158, 11, 0.55);
+}
+
+ion-toast.toast-modern.toast-info::part(container) {
+  border-color: rgba(59, 130, 246, 0.28);
+  box-shadow: 0 18px 40px -18px rgba(59, 130, 246, 0.5);
+}
+
+/* Slight offset from very top so it feels closer to the action */
+ion-toast.toast-modern {
+  top: 18px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🎨 SISTEMA DE DISEÑO - AUTORENTAR
+   ═══════════════════════════════════════════════════════════════ */
+
+@layer base {
+  /* ─────────────────────────────────────────────────────────────
+     Variables CSS - Sistema Unificado con Tokens Semánticos
+     ═══════════════════════════════════════════════════════════
+     Los valores provienen de src/config/theme/colors.ts
+     Ver docs/brand-colors.md para documentación completa
+     ───────────────────────────────────────────────────────────── */
+  :root {
+    /* ─── Safe Area Insets (Mobile) ─── */
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-left: env(safe-area-inset-left, 0px);
+    --safe-area-right: env(safe-area-inset-right, 0px);
+
+    /* ─── Superficies (Surfaces) ─── */
+    --surface-base: #ffffff; /* Pure White - Dominante (v2.1) */
+    --surface-raised: #ffffff; /* White - Tarjetas elevadas */
+    --surface-secondary: #f9fafb; /* Warm Gray - Fondos suaves (v2.1) */
+    --surface-elevated: #f5f5f5; /* Gray G05 - Elevación */
+    --surface-hover: #f8f4ec; /* Ivory - Hover state */
+    --surface-pressed: #e3e3e3; /* Gray G10 - Pressed state */
+
+    /* ─── Textos ─── */
+    --text-primary: #000000; /* Pure Black (v2.1) */
+    --text-secondary: #1a1a1a; /* Soft Dark (v2.1) */
+    --text-muted: #7b7b7b; /* Gray G40 */
+    --text-inverse: #ffffff; /* White */
+    --text-link: #0066ff; /* Safety Blue */
+    --text-link-hover: #0052cc; /* Blue hover */
+    --text-placeholder: #7b7b7b; /* Gray G40 */
+
+    /* ─── Bordes ─── */
+    --border-default: #e3e3e3; /* Gray G10 */
+    --border-muted: #f3f4f6; /* Gray 50 */
+    --border-focus: #00D95F; /* Verde Neón Unificado */
+    --border-hover: #1a1a1a; /* Dark hover */
+    --border-error: #ff2a2a; /* Digital Red */
+    --border-success: #00D95F; /* Verde Neón Unificado */
+
+    /* ─── CTAs y Acciones - Verde Neón Unificado ─── */
+    --cta-default: #00D95F; /* Verde Neón - Primary Action */
+    --cta-hover: #00C553; /* Hover state */
+    --cta-pressed: #00B048; /* Pressed state */
+    --cta-text: #000000; /* Negro para máximo contraste */
+
+    /* ─── CTA Secondary (Outline/Ghost) ─── */
+    --cta-secondary: transparent;
+    --cta-secondary-hover: rgba(0, 217, 95, 0.1);
+    --cta-secondary-text: #000000;
+
+    /* ─── CTA Info / Safety (Azul) ─── */
+    --cta-info: #0066ff; /* Safety Blue */
+    --cta-info-text: #ffffff; /* Blanco */
+
+    /* ─── CTA Neon (Alias para compatibilidad) ─── */
+    --cta-neon: #00D95F; /* Verde Neón */
+    --cta-neon-hover: #00C553;
+    --cta-neon-pressed: #00B048;
+    --cta-neon-text: #000000;
+
+    /* ─── Estados y Feedback ─── */
+    --info-50: #eff6ff;
+    --info-100: #dbeafe;
+    --info-200: #bfdbfe;
+    --info-300: #93c5fd;
+    --info-400: #60a5fa;
+    --info-500: #0066ff; /* Safety Blue */
+    --info-600: #2563eb;
+    --info-700: #1d4ed8;
+    --info-800: #1e40af;
+    --info-900: #1e1b4b;
+
+    --success-50: #f0fdf4;
+    --success-100: #dcfce7;
+    --success-200: #bbf7d0;
+    --success-300: #86efac;
+    --success-400: #4ade80;
+    --success-500: #00D95F; /* Verde Neón Unificado */
+    --success-600: #16a34a;
+    --success-700: #15803d;
+    --success-800: #166534;
+    --success-900: #14532d;
+
+    --warning-50: #fefce8;
+    --warning-100: #fef9c3;
+    --warning-200: #fef08a;
+    --warning-300: #fde047;
+    --warning-400: #facc15;
+    --warning-500: #F59E0B; /* Amber Warning */
+    --warning-600: #ca8a04;
+    --warning-700: #a16207;
+    --warning-800: #854d0e;
+    --warning-900: #713f12;
+
+    --error-50: #fef2f2;
+    --error-100: #fee2e2;
+    --error-200: #fecaca;
+    --error-300: #fca5a5;
+    --error-400: #f87171;
+    --error-500: #ff2a2a; /* Digital Red */
+    --error-600: #dc2626;
+    --error-700: #b91c1c;
+    --error-800: #991b1b;
+    --error-900: #7f1d1d;
+
+    /* ─── Semantic Border Colors ─── */
+    --border-error: var(--error-500);
+    --border-success: var(--success-500);
+    --border-warning: var(--warning-500);
+
+    /* ─── Semantic Error/Warning/Success Tokens ─── */
+    /* Error states */
+    --error-text: var(--error-700);
+    --error-text-strong: var(--error-800);
+    --error-bg: var(--error-50);
+    --error-bg-hover: var(--error-100);
+    --error-border: var(--error-200);
+    --error-icon: var(--error-600);
+
+    /* Warning states */
+    --warning-text: var(--warning-800);
+    --warning-text-strong: var(--warning-900);
+    --warning-bg: var(--warning-50);
+    --warning-bg-hover: var(--warning-100);
+    --warning-border: var(--warning-200);
+    --warning-icon: var(--warning-600);
+
+    /* Success states */
+    --success-text: var(--success-700);
+    --success-text-strong: var(--success-800);
+    --success-bg: var(--success-50);
+    --success-bg-hover: var(--success-100);
+    --success-border: var(--success-200);
+    --success-icon: var(--success-600);
+
+    /* Info states */
+    --info-text: var(--info-700);
+    --info-text-strong: var(--info-800);
+    --info-bg: var(--info-50);
+    --info-bg-hover: var(--info-100);
+    --info-border: var(--info-200);
+    --info-icon: var(--info-600);
+
+    /* ─── Overlays ─── */
+    --overlay-dark: rgba(0, 0, 0, 0.6); /* Standard dark overlay */
+    --overlay-light: rgba(255, 255, 255, 0.9); /* Standard light overlay */
+    --surface-overlay: rgba(0, 0, 0, 0.6);
+
+    /* ─── Elevation System (4 niveles simplificados) ─── */
+    --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --elevation-2: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --elevation-3: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --elevation-4: 0 16px 32px rgba(0, 0, 0, 0.14);
+    --elevation-5: var(--elevation-4); /* Alias para compatibilidad */
+
+    /* ─── Focus Rings (Accesibilidad) ─── */
+    --ring-focus: 0 0 0 3px rgba(0, 217, 95, 0.3); /* Verde Neón Focus */
+    --ring-error: 0 0 0 3px rgba(255, 42, 42, 0.3); /* Error Red Focus */
+
+    /* ─── Typography Tokens ─── */
+    /* Font sizes, weights, and line-heights are defined in tailwind.config.js
+       as single source of truth to avoid duplication. Use Tailwind classes:
+       text-xs, text-sm, text-base, font-normal, font-medium, etc. */
+
+    /* Monospace font family for code, numbers, IDs */
+    --font-mono: 'JetBrains Mono', 'Monaco', 'Courier New', 'Consolas', monospace;
+
+    /* ─── Border Radius Tokens ─── */
+    --radius-sm: 0.25rem; /* 4px */
+    --radius-md: 0.5rem; /* 8px */
+    --radius-lg: 0.75rem; /* 12px */
+    --radius-xl: 1rem; /* 16px */
+    --radius-2xl: 1.5rem; /* 24px */
+    --radius-full: 9999px; /* Circular */
+
+    /* ─── Legacy Compatibility ─── */
+    --info-light: var(--info-500); /* Safety Blue */
+    --info-dark: #3385ff;
+    --success-light: #00a86b; /* Jade Green for texts */
+    --warning-light: var(--warning-500); /* Voltage Yellow */
+    --error-light: var(--error-500); /* Digital Red */
+
+    /* ─── Variables Legacy (Compatibilidad) ─── */
+    /* TODO: Migrar gradualmente a tokens semánticos */
+    --bg-primary: var(--surface-base);
+    --bg-secondary: var(--surface-secondary);
+    --bg-elevated: var(--surface-raised);
+    --text-primary: var(--text-primary);
+    --text-secondary: var(--text-secondary);
+    --text-disabled: var(--text-muted);
+    --border-color: var(--border-default);
+    --accent-primary: var(--cta-default);
+    --accent-warm: #b08968; /* Mantener para compatibilidad */
+
+    /* ─── Sistema de Espaciados ─── */
+    --spacing-xs: 0.25rem; /* 4px */
+    --spacing-sm: 0.5rem; /* 8px */
+    --spacing-md: 0.75rem; /* 12px */
+    --spacing-base: 1rem; /* 16px */
+    --spacing-lg: 1.25rem; /* 20px */
+    --spacing-xl: 1.5rem; /* 24px */
+    --spacing-2xl: 2rem; /* 32px */
+    --spacing-3xl: 3rem; /* 48px */
+
+    /* ─── Sistema de Contenedores ─── */
+    --spacing-container: 1rem; /* Mobile default */
+    --spacing-section: 1.5rem; /* Mobile default */
+
+    /* ─── Sistema de Animaciones ─── */
+    --duration-instant: 75ms;
+    --duration-fast: 150ms;
+    --duration-normal: 250ms;
+    --duration-slow: 350ms;
+    --duration-slower: 500ms;
+
+    /* Transition Timings */
+    --ease-default: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Legacy easing aliases */
+    --easing-standard: var(--ease-default);
+    --easing-decelerate: var(--ease-out);
+    --easing-accelerate: var(--ease-in);
+    --easing-sharp: cubic-bezier(0.4, 0, 0.6, 1);
+
+    /* ─── Alturas de Layout ─── */
+    --header-height: 80px;
+    --search-bar-height: 120px;
+    --footer-height: 280px;
+
+    /* ─── Section Spacing (Landing Page) ─── */
+    --section-py: 4rem; /* 64px - Padding vertical de secciones */
+    --section-py-lg: 6rem; /* 96px - Secciones grandes */
+    --section-gap: 3rem; /* 48px - Gap entre elementos de sección */
+    --card-gap: 1.5rem; /* 24px - Gap entre cards */
+  }
+
+  /* ─── Responsive Spacing Adjustments ─── */
+  @media (min-width: 768px) {
+    :root {
+      --spacing-container: 1.5rem; /* 24px */
+      --spacing-section: 2rem; /* 32px */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --spacing-container: 2rem; /* 32px */
+      --spacing-section: 3rem; /* 48px */
+    }
+  }
+
+  @media (max-width: 375px) {
+    :root {
+      --header-height: 72px;
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Preferencias de Accesibilidad
+     ───────────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Base HTML Elements
+     ───────────────────────────────────────────────────────────── */
+  html,
+  body {
+    height: 100%;
+  }
+
+  html {
+    font-family:
+      'Satoshi',
+      'Inter',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      'Helvetica Neue',
+      Arial,
+      sans-serif;
+    /* Ligatures y features avanzadas para texto editorial */
+    font-feature-settings:
+      'liga' 1,
+      /* Standard ligatures (fi, fl) */ 'kern' 1,
+      /* Kerning pairs */ 'calt' 1,
+      /* Contextual alternates */ 'cv11' 1; /* Inter stylistic set */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Optical Sizing - Inter Variable Font ajusta automáticamente
+       grosor y espaciado según el tamaño para máxima legibilidad */
+    @supports (font-variation-settings: normal) {
+      font-optical-sizing: auto;
+      font-variation-settings: 'opsz' auto;
+    }
+  }
+
+  body {
+    @apply bg-surface-base antialiased;
+    color: var(--text-primary);
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: 0.003em;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* ─── Ionic Font Inheritance ─── */
+  ion-app,
+  ion-content,
+  ion-item,
+  ion-input,
+  ion-textarea,
+  ion-button,
+  ion-label,
+  ion-title,
+  ion-segment-button,
+  ion-tab-button {
+    font-family: inherit !important;
+  }
+
+  /* Dark mode text-primary y bg-surface-secondary eliminados para evitar circular dependency */
+  /* Tailwind maneja el dark mode automáticamente a través de las variables CSS */
+  /* Las variables CSS ya están definidas en :root y .dark, por lo que no necesitamos reglas adicionales */
+
+  /* ─────────────────────────────────────────────────────────────
+     Sistema Tipográfico - Escala Modular 1.250 (Major Third)
+     Base: 16px
+     ───────────────────────────────────────────────────────────── */
+
+  h1,
+  .h1 {
+    @apply text-4xl font-black text-text-primary;
+    /* Clamp evita títulos desbordados en móvil sin perder presencia en desktop */
+    font-size: clamp(2rem, 4vw + 0.5rem, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.04em; /* Tracking Satoshi: Tight & Bold */
+    margin: 0;
+  }
+
+  h2,
+  .h2 {
+    @apply text-3xl font-bold text-text-primary;
+    font-size: clamp(1.75rem, 3vw + 0.4rem, 2.25rem);
+    line-height: 1.2;
+    letter-spacing: -0.03em; /* Tracking Satoshi */
+    margin: 0;
+  }
+
+  h3,
+  .h3 {
+    @apply text-2xl font-bold text-text-primary;
+    font-size: clamp(1.5rem, 2.5vw + 0.35rem, 1.875rem);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  h4,
+  .h4 {
+    @apply text-xl font-semibold text-text-primary;
+    font-size: clamp(1.25rem, 2vw + 0.3rem, 1.5rem);
+    line-height: 1.4;
+    letter-spacing: -0.005em; /* Tracking sutil */
+    margin: 0;
+  }
+
+  h5,
+  .h5 {
+    @apply text-lg font-semibold text-text-primary;
+    font-size: clamp(1.125rem, 1.5vw + 0.25rem, 1.25rem);
+    line-height: 1.4;
+    letter-spacing: 0em; /* Neutral */
+    margin: 0;
+  }
+
+  h6,
+  .h6 {
+    @apply text-base font-semibold text-text-primary;
+    line-height: 1.5;
+    letter-spacing: 0em; /* Neutral */
+    margin: 0;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Micro-tipografía CSS Moderna - Calidad Editorial
+     ───────────────────────────────────────────────────────────── */
+
+  /* Balance de líneas en headings - evita líneas sueltas */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6 {
+    text-wrap: balance;
+  }
+
+  /* Pretty text wrapping en párrafos - evita orphans/widows */
+  p,
+  li,
+  blockquote,
+  figcaption {
+    text-wrap: pretty;
+    hyphens: auto; /* Guiones inteligentes en español */
+    hyphenate-limit-chars: 6 3 2; /* min-word-length min-before min-after */
+    widows: 2; /* Mínimo 2 líneas al final de página */
+    orphans: 2; /* Mínimo 2 líneas al inicio de página */
+  }
+
+  /* Hanging punctuation - comillas fuera del bloque */
+  @supports (hanging-punctuation: first) {
+    p,
+    blockquote {
+      hanging-punctuation: first last;
+    }
+  }
+
+  /* Quotes profesionales */
+  blockquote {
+    quotes: '"' '"' '' ' ' '';
+  }
+
+  /* Code blocks - sin wrapping ni ligatures */
+  code,
+  pre {
+    text-wrap: nowrap;
+    hyphens: none;
+    font-feature-settings:
+      'liga' 0,
+      'calt' 0; /* Sin ligatures en código */
+    font-variant-ligatures: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🔧 BRIDGE UTILITIES - TOKENS COMO CLASES TAILWIND PERSONALIZADAS
+   ═══════════════════════════════════════════════════════════════
+   El plugin angular-css necesita que las utilidades usadas con
+   @apply existan explícitamente dentro de un @layer, así evitamos
+   falsos positivos cuando usamos tokens personalizados.
+   Estas clases simplememente mapean a las CSS variables del theme.
+   ═══════════════════════════════════════════════════════════════ */
+@layer utilities {
+  .bg-surface-base {
+    background-color: var(--surface-base);
+  }
+
+  .bg-surface-raised {
+    background-color: var(--surface-raised);
+  }
+
+  .bg-surface-secondary {
+    background-color: var(--surface-secondary);
+  }
+
+  .bg-surface-elevated {
+    background-color: var(--surface-elevated);
+  }
+
+  .bg-cta-default {
+    background-color: var(--cta-default);
+  }
+
+  .bg-cta-hover {
+    background-color: var(--cta-hover);
+  }
+
+  .text-primary {
+    color: var(--text-primary);
+  }
+
+  .text-text-primary {
+    color: var(--text-primary);
+  }
+
+  .text-text-secondary {
+    color: var(--text-secondary);
+  }
+
+  .text-text-muted {
+    color: var(--text-muted);
+  }
+
+  .text-text-inverse {
+    color: var(--text-inverse);
+  }
+
+  .text-cta-text {
+    color: var(--cta-text);
+  }
+
+  .border-border-default {
+    border-color: var(--border-default);
+  }
+
+  .border-border-muted {
+    border-color: var(--border-muted);
+  }
+
+  .border-border-focus {
+    border-color: var(--border-focus);
+  }
+
+  /* ─── Semantic State Utilities (Phase 3) ─── */
+  /* Error utilities */
+  .text-error-text {
+    color: var(--error-text);
+  }
+  .text-error-strong {
+    color: var(--error-text-strong);
+  }
+  .bg-error-bg {
+    background-color: var(--error-bg);
+  }
+  .bg-error-hover {
+    background-color: var(--error-bg-hover);
+  }
+  .border-error-border {
+    border-color: var(--error-border);
+  }
+
+  /* Warning utilities */
+  .text-warning-text {
+    color: var(--warning-text);
+  }
+  .text-warning-strong {
+    color: var(--warning-text-strong);
+  }
+  .bg-warning-bg {
+    background-color: var(--warning-bg);
+  }
+  .bg-warning-hover {
+    background-color: var(--warning-bg-hover);
+  }
+  .border-warning-border {
+    border-color: var(--warning-border);
+  }
+
+  /* Success utilities */
+  .text-success-text {
+    color: var(--success-text);
+  }
+  .text-success-strong {
+    color: var(--success-text-strong);
+  }
+  .bg-success-bg {
+    background-color: var(--success-bg);
+  }
+  .bg-success-hover {
+    background-color: var(--success-bg-hover);
+  }
+  .border-success-border {
+    border-color: var(--success-border);
+  }
+
+  /* Info utilities */
+  .text-info-text {
+    color: var(--info-text);
+  }
+  .text-info-strong {
+    color: var(--info-text-strong);
+  }
+  .bg-info-bg {
+    background-color: var(--info-bg);
+  }
+  .bg-info-hover {
+    background-color: var(--info-bg-hover);
+  }
+  .border-info-border {
+    border-color: var(--info-border);
+  }
+
+  /* ─── Typography Utilities - Números Tabulares ─── */
+  /* Números con ancho fijo para alineación perfecta en tablas/precios */
+  .tabular-nums {
+    font-feature-settings:
+      'tnum' 1,
+      'lnum' 1;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* Números proporcionales (default) */
+  .proportional-nums {
+    font-feature-settings: 'pnum' 1;
+    font-variant-numeric: proportional-nums;
+  }
+
+  /* Números con slash para fracciones */
+  .slashed-zero {
+    font-feature-settings: 'zero' 1;
+  }
+
+  /* Fracciones automáticas 1/2 → ½ */
+  .fractions {
+    font-feature-settings: 'frac' 1;
+  }
+
+  /* ─── Text Truncation Utilities ─── */
+  /* Single line truncation */
+  .truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Multi-line truncation with line-clamp */
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ─── Typography Utilities - Measure (Line Length) ─── */
+  /* Ancho óptimo para legibilidad - Estudios UX muestran 45-75ch es ideal */
+
+  /* Measure estrecho - Para sidebars, columnas laterales */
+  .measure-narrow {
+    max-width: 45ch;
+  }
+
+  /* Measure óptimo - Para body text, artículos, blog posts */
+  .measure {
+    max-width: 65ch;
+  }
+
+  /* Measure amplio - Para textos técnicos, tablas, código */
+  .measure-wide {
+    max-width: 85ch;
+  }
+
+  /* Measure responsive - Usa min() para adaptarse */
+  .measure-responsive {
+    max-width: min(65ch, 100%);
+  }
+
+  /* ─── Stack helpers - sistema de espaciado 8pt mobile-first ─── */
+  .stack-xs > * + * {
+    margin-top: var(--spacing-xs);
+  }
+
+  .stack-sm > * + * {
+    margin-top: var(--spacing-sm);
+  }
+
+  .stack-md > * + * {
+    margin-top: var(--spacing-md);
+  }
+
+  .stack-lg > * + * {
+    margin-top: var(--spacing-base);
+  }
+
+  @media (min-width: 768px) {
+    .stack-lg > * + * {
+      margin-top: var(--spacing-lg);
+    }
+  }
+
+  /* ─── Typography Utilities - Ligatures Contextuales ─── */
+
+  /* Sin ligatures - Para código, IDs, números de serie */
+  .no-ligatures {
+    font-feature-settings:
+      'liga' 0,
+      'calt' 0;
+    font-variant-ligatures: none;
+  }
+
+  /* Ligatures completas - Texto editorial */
+  .ligatures-full {
+    font-feature-settings:
+      'liga' 1,
+      'calt' 1,
+      'dlig' 1;
+    font-variant-ligatures: common-ligatures discretionary-ligatures;
+  }
+
+  /* Solo ligatures comunes - Default balanceado */
+  .ligatures-common {
+    font-feature-settings:
+      'liga' 1,
+      'calt' 1;
+    font-variant-ligatures: common-ligatures;
+  }
+
+  /* ─── Typography Utilities - Variable Font Control ─── */
+
+  /* Control fino de peso para hover/animaciones suaves */
+  .hover-weight-lift {
+    transition: font-variation-settings 250ms ease;
+  }
+
+  .hover-weight-lift:hover {
+    font-variation-settings: 'wght' calc(var(--font-weight) + 100);
+  }
+
+  /* Emphasis con peso intermedio (450) */
+  .font-emphasis {
+    font-weight: 450;
+  }
+
+  /* Hero titles con peso custom (750) */
+  .font-hero {
+    font-weight: 750;
+    letter-spacing: -0.025em;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🎯 COMPONENTES Y UTILITIES - AUTORENTAR
+   ═══════════════════════════════════════════════════════════════ */
+
+@layer components {
+  /* ─────────────────────────────────────────────────────────────
+     Sistema Tipográfico - Utility Classes
+     ───────────────────────────────────────────────────────────── */
+
+  .text-display {
+    @apply text-5xl font-bold tracking-tight text-text-primary;
+    line-height: 1.1;
+  }
+
+  .text-lead {
+    @apply text-xl font-normal text-text-secondary;
+    line-height: 1.6;
+  }
+
+  .text-body {
+    @apply text-base text-text-secondary;
+    line-height: 1.6;
+  }
+
+  .text-caption {
+    @apply text-sm text-text-muted;
+    line-height: 1.5;
+  }
+
+  .text-overline {
+    @apply text-xs uppercase tracking-wide font-semibold text-text-muted;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Sistema de Contenedores
+     ───────────────────────────────────────────────────────────── */
+
+  .container-page {
+    @apply mx-auto max-w-7xl w-full;
+  }
+
+  .container-narrow {
+    @apply mx-auto max-w-5xl w-full;
+  }
+
+  .container-wide {
+    @apply mx-auto w-full;
+    max-width: 1440px;
+  }
+
+  /* Padding System - Mobile first */
+  .px-container {
+    padding-left: var(--spacing-container);
+    padding-right: var(--spacing-container);
+  }
+
+  .py-section {
+    padding-top: var(--spacing-section);
+    padding-bottom: var(--spacing-section);
+  }
+
+  .py-section-sm {
+    @apply py-0 md:py-2 lg:py-4;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Sistema de Botones - 3 Variantes Profesionales
+     ───────────────────────────────────────────────────────────── */
+
+  .btn-base {
+    @apply px-6 py-3 rounded-xl font-semibold text-sm;
+    @apply transition-all;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    transition-duration: var(--duration-fast);
+    min-height: 44px; /* WCAG touch target */
+  }
+
+  /* Primary: Verde neón, texto negro - Para CTAs principales */
+  .btn-primary {
+    @apply btn-base;
+    background-color: var(--cta-default);
+    color: var(--cta-text);
+    @apply hover:shadow-elevation-2;
+    @apply active:scale-[0.98];
+    --tw-ring-color: var(--cta-default);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--cta-hover);
+  }
+
+  .btn-primary:active {
+    background-color: var(--cta-pressed);
+  }
+
+  /* Secondary: Outline negro - Para acciones secundarias */
+  .btn-secondary {
+    @apply btn-base bg-white text-text-primary;
+    @apply border border-border-default;
+    @apply hover:bg-surface-secondary hover:border-text-primary;
+    @apply active:scale-[0.98];
+    --tw-ring-color: var(--text-primary);
+  }
+
+  /* Ghost: Sin borde, sutil - Para links y cancelar */
+  .btn-ghost {
+    @apply btn-base bg-transparent text-text-secondary;
+    @apply hover:bg-surface-secondary hover:text-text-primary;
+    @apply active:scale-[0.98];
+    --tw-ring-color: var(--text-secondary);
+  }
+
+  /* Accent: Alias de primary para compatibilidad */
+  .btn-accent {
+    @apply btn-primary;
+  }
+
+  /* Icon buttons - WCAG 2.5.5 compliant (44x44px minimum) */
+  .icon-button {
+    @apply p-3 rounded-xl;
+    @apply text-text-secondary;
+    @apply hover:bg-surface-secondary;
+    @apply transition-all active:scale-95;
+    @apply focus-visible:outline-none focus-visible:ring-2;
+    --tw-ring-color: var(--cta-default);
+    transition-duration: var(--duration-fast);
+    /* Ensure minimum tap target for accessibility */
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Button states */
+  .btn-loading {
+    @apply opacity-70 pointer-events-none;
+  }
+
+  /* Disabled state - WCAG AA compliant contrast (min 3:1) */
+  .btn-disabled {
+    @apply text-text-muted cursor-not-allowed pointer-events-none;
+    background-color: var(--border-default);
+    border-color: var(--border-default);
+    @apply border;
+    box-shadow: none !important;
+    transform: none !important;
+    opacity: 1; /* Use explicit colors instead of opacity for better contrast */
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Cards - Sistema Secure Energy
+     ───────────────────────────────────────────────────────────── */
+
+  .card-premium {
+    @apply bg-surface-base rounded-xl overflow-hidden;
+    @apply border border-border-default;
+    @apply transition-all duration-300;
+  }
+
+  .card-premium:hover {
+    @apply border-black shadow-hard;
+    transform: translateY(-4px);
+  }
+
+  .card-premium:active {
+    @apply shadow-hard-sm;
+    transform: translateY(-2px);
+  }
+
+  .card-premium.selected {
+    @apply border-2 border-cta-default shadow-neon-glow;
+    z-index: 10;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Inputs - Sistema Mejorado
+     ───────────────────────────────────────────────────────────── */
+
+  .input-premium {
+    @apply w-full px-4 py-3 rounded-xl;
+    @apply bg-surface-raised border-2;
+    @apply text-text-primary placeholder:text-text-secondary;
+    @apply transition-all focus:ring-4 focus-visible:outline-none;
+    border-color: var(--border-default);
+    transition-duration: var(--duration-fast);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ✅ WCAG Accessibility: Darker Placeholder Text
+     ═══════════════════════════════════════════════════════════════ */
+  input::placeholder,
+  textarea::placeholder,
+  select::placeholder {
+    color: var(--text-secondary) !important;
+    opacity: 1;
+  }
+
+  .input-premium:focus {
+    border-color: var(--cta-default);
+    --tw-ring-color: rgba(57, 255, 20, 0.15);
+  }
+
+  .input-premium:hover {
+    border-color: rgba(78, 78, 78, 0.3); /* text-secondary con opacidad */
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Badges y Status - Sistema Neutral Premium
+     ───────────────────────────────────────────────────────────── */
+
+  .badge-status {
+    @apply inline-flex items-center px-3 py-1 rounded-full;
+    @apply text-xs font-semibold uppercase tracking-wide;
+    @apply transition-all;
+    transition-duration: var(--duration-fast);
+  }
+
+  /* Badge de información - Azul safety */
+  .badge-info {
+    @apply border;
+    background-color: rgba(0, 102, 255, 0.1); /* safety-blue/10 */
+    color: var(--info-500);
+    border-color: rgba(0, 102, 255, 0.2);
+  }
+
+  /* Badge de éxito - Verde Neón */
+  .badge-success {
+    @apply border;
+    background-color: rgba(57, 255, 20, 0.1); /* neon/10 */
+    color: #008000; /* Darker green for text readability on neon bg */
+    border-color: rgba(57, 255, 20, 0.3);
+  }
+
+  /* Badge de advertencia - Voltage */
+  .badge-warning {
+    @apply border;
+    background-color: rgba(250, 255, 0, 0.1); /* voltage/10 */
+    color: #856404; /* Dark gold for text */
+    border-color: rgba(250, 255, 0, 0.3);
+  }
+
+  /* Badge de peligro - Error */
+  .badge-danger {
+    @apply border;
+    background-color: rgba(255, 42, 42, 0.1); /* error/10 */
+    color: var(--error-500);
+    border-color: rgba(255, 42, 42, 0.3);
+  }
+
+  /* Badge neutral - Sistema gris */
+  .badge-neutral {
+    @apply bg-surface-secondary text-text-secondary border;
+    border-color: var(--border-default);
+  }
+
+  /* Variante con ícono */
+  .badge-status svg {
+    @apply w-3.5 h-3.5 mr-1;
+  }
+
+  /* Info Cards - Sistema Neutral */
+  .info-card {
+    @apply bg-surface-raised rounded-xl shadow-soft;
+    @apply border p-4 transition-all;
+    border-color: var(--border-default);
+    transition-duration: var(--duration-fast);
+  }
+
+  .info-card:hover {
+    @apply shadow-medium;
+    transform: translateY(-2px);
+  }
+
+  /* Info card cta variant */
+  .info-card-petrol {
+    @apply info-card;
+    background-color: rgba(0, 102, 255, 0.05); /* safety-blue/5 */
+    border-color: rgba(0, 102, 255, 0.2);
+  }
+
+  /* Info card warning variant */
+  .info-card-warm {
+    @apply info-card;
+    background-color: rgba(250, 255, 0, 0.05); /* voltage/5 */
+    border-color: rgba(250, 255, 0, 0.2);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Transiciones y Animaciones
+     ───────────────────────────────────────────────────────────── */
+
+  .transition-base {
+    transition: all var(--duration-fast) var(--easing-standard);
+  }
+
+  .app-main {
+    padding-bottom: calc(var(--spacing-section) + env(safe-area-inset-bottom, 0));
+  }
+
+  .app-main.full-bleed-safe {
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Router Outlet Layout
+     (Evita colapsos de altura con `ion-content` y mejora el scroll)
+     ───────────────────────────────────────────────────────────── */
+
+  .route-viewport > router-outlet + * {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .route-viewport > router-outlet + * > ion-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+  }
+
+  @media (max-width: 375px) {
+    header.sticky .container-page {
+      padding-left: calc(var(--spacing-container) + env(safe-area-inset-left, 0));
+      padding-right: calc(var(--spacing-container) + env(safe-area-inset-right, 0));
+      gap: 0.75rem;
+    }
+
+    header.sticky .icon-button,
+    header.sticky .btn-accent {
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    header.sticky .group img {
+      height: 2.5rem;
+    }
+  }
+
+  .transition-smooth {
+    transition: all var(--duration-normal) var(--easing-standard);
+  }
+
+  .transition-slow {
+    transition: all var(--duration-slow) var(--easing-decelerate);
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    transition:
+      transform var(--duration-fast) var(--easing-standard),
+      box-shadow var(--duration-fast) var(--easing-standard);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+  }
+
+  .hover-lift-sm:hover {
+    transform: translateY(-2px);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Loading States
+     ───────────────────────────────────────────────────────────── */
+
+  .loading-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* Skeleton loader */
+  .skeleton {
+    @apply bg-gradient-to-r from-surface-secondary to-surface-secondary;
+    background-image: linear-gradient(
+      to right,
+      var(--surface-secondary),
+      rgba(227, 227, 227, 0.3),
+      /* border-default con opacidad */ var(--surface-secondary)
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-loading {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  /* Spinner */
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--border-muted);
+    border-top-color: var(--cta-default);
+    border-right-color: var(--warning-light);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  .spinner-sm {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Focus States y Accesibilidad
+     ───────────────────────────────────────────────────────────── */
+
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    --tw-ring-color: var(--cta-default);
+    --tw-ring-offset-color: var(--surface-raised);
+  }
+
+  .focus-ring-white {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    --tw-ring-color: var(--text-inverse);
+    --tw-ring-offset-color: var(--cta-default);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Navegación y Links
+     ───────────────────────────────────────────────────────────── */
+
+  .nav-link {
+    @apply inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-base;
+    @apply text-text-secondary;
+    @apply hover:bg-surface-secondary/70;
+  }
+
+  .nav-link:hover {
+    color: var(--cta-default);
+  }
+
+  .nav-link svg {
+    @apply w-4 h-4;
+  }
+
+  .nav-link-primary {
+    background-color: var(--surface-raised);
+    color: #000000 !important;
+    font-weight: 700;
+    border: 1px solid var(--border-muted);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .nav-link-primary:hover {
+    background-color: var(--surface-secondary);
+    border-color: var(--border-default);
+    color: #000000 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .nav-link-highlight {
+    /* Verde Neón Unificado */
+    background-color: #00D95F !important;
+    color: #000000 !important;
+    box-shadow: 0 8px 25px rgba(0, 217, 95, 0.3);
+    border: none;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .nav-link-highlight:hover {
+    background-color: #00C553 !important;
+    box-shadow: 0 12px 30px rgba(0, 217, 95, 0.4);
+    color: #000000 !important;
+    transform: translateY(-1px);
+  }
+
+  .nav-link-active {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    color: #000000 !important;
+    font-weight: 800;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Profile Dropdown Menu Items
+     ───────────────────────────────────────────────────────────── */
+
+  .menu-item {
+    @apply flex items-center gap-3 px-4 py-2.5 text-sm text-text-primary;
+    @apply hover:bg-surface-secondary/50 transition-colors;
+    @apply cursor-pointer;
+  }
+
+  .menu-icon {
+    @apply flex items-center justify-center w-9 h-9 rounded-xl;
+    @apply transition-colors;
+  }
+
+  .menu-chevron {
+    @apply text-text-muted opacity-0 group-hover:opacity-100;
+    @apply transition-opacity;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Backgrounds y Secciones
+     ───────────────────────────────────────────────────────────── */
+
+  .section-alt {
+    @apply bg-surface-secondary;
+  }
+
+  .section-elevated {
+    @apply bg-surface-raised;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Dividers
+     ───────────────────────────────────────────────────────────── */
+
+  .divider-horizontal {
+    @apply h-px;
+    background-color: var(--border-default);
+  }
+
+  .divider-vertical {
+    @apply w-px;
+    background-color: var(--border-default);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🎯 SHEPHERD.JS TOURS - PRODUCT TOURS
+   ═══════════════════════════════════════════════════════════════ */
+/* Shepherd.js styles imported at top of file */
+
+/* ============================================================================
+   WhatsApp Chat Styles
+   ============================================================================ */
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🎨 SISTEMA DE TOKENS CSS - VARIABLES CENTRALIZADAS
+   ═══════════════════════════════════════════════════════════════
+   Define todas las variables CSS para el sistema de diseño
+   Ver: src/config/theme/colors.ts para valores fuente
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Dark Mode Overrides */
+
+/* Scroll suave para el área de mensajes */
+.whatsapp-bg {
+  scroll-behavior: smooth;
+}
+
+/* Ocultar scrollbar pero mantener funcionalidad */
+.whatsapp-bg::-webkit-scrollbar {
+  width: 6px;
+}
+
+.whatsapp-bg::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.whatsapp-bg::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.whatsapp-bg::-webkit-scrollbar-thumb:hover {
+  background: #7b7b7b;
+}
+
+/* Animación de aparición de mensajes */
+.message-sent,
+.message-received {
+  animation: message-appear 0.2s ease-out;
+}
+
+@keyframes message-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Fondo de chat similar a WhatsApp */
+
+/* Hide PWA install banner */
+app-pwa-install-banner,
+app-pwa-install-banner > div {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   📱 CARS LIST MAP VIEW - Hide details panel on mobile
+   Show horizontal carousel instead
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 1023px) {
+  /* Hide the left-side details panel when mobile carousel is shown */
+  app-cars-list-page app-cars-map .absolute.top-0.left-0.h-full.w-96,
+  app-cars-list-page app-cars-map app-map-details-panel {
+    display: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🔢 DATOS TÉCNICOS - JetBrains Mono Typography
+   Para precios, kilometraje, VINs, números de reserva, etc.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Clase base para todos los datos técnicos */
+.font-tech {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums slashed-zero;
+  letter-spacing: -0.01em;
+}
+
+/* Precios - Bold, visible, con tabular nums para alineación */
+.price {
+  @apply font-tech font-bold;
+  font-feature-settings:
+    'tnum' 1,
+    'zero' 1;
+}
+
+/* Números de identificación (VIN, booking ID, etc) */
+.tech-id {
+  @apply font-tech text-sm;
+  font-feature-settings:
+    'tnum' 1,
+    'zero' 1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Kilometraje y datos numéricos generales */
+.tech-metric {
+  @apply font-tech font-medium;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* Timestamps y fechas técnicas */
+.tech-timestamp {
+  @apply font-tech text-xs text-text-secondary;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* Modern approve confirmation (Ionic Alert) */
+.pending-approval-alert .alert-wrapper {
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow:
+    0 20px 40px rgba(15, 23, 42, 0.18),
+    0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.pending-approval-alert .alert-head h2 {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.pending-approval-alert .alert-message {
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.pending-approval-alert .alert-button-group {
+  padding: 0 16px 16px;
+  gap: 8px;
+}
+
+.pending-approval-alert .alert-button {
+  border-radius: 999px;
+  padding: 8px 18px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.pending-approval-alert .alert-button.alert-confirm {
+  border-color: #2ecc71;
+  background: #2ecc71;
+  color: #ffffff;
+  box-shadow: 0 6px 14px rgba(46, 204, 113, 0.28);
+}
+
+.pending-approval-alert .alert-button.alert-button-role-cancel {
+  background: #f8fafc;
+  color: #334155;
 }

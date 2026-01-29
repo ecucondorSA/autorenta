@@ -1,0 +1,177 @@
+name: Marketing Guerrilla - Post Comment
+
+on:
+  repository_dispatch:
+    types: [marketing_post_comment]
+
+jobs:
+  post-comment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: |
+          cd tools/marketing-automation
+          pnpm install --frozen-lockfile
+        env:
+          NODE_ENV: production
+
+      - name: Install Playwright browsers
+        run: |
+          cd tools/marketing-automation
+          pnpm exec playwright install chromium
+          pnpm exec playwright install-deps chromium
+
+      - name: Generate content with AI
+        id: generate
+        run: |
+          cd tools/marketing-automation/scripts
+          
+          RESULT=$(node generate-content.js \
+            "${{ github.event.client_payload.post_content }}" \
+            --persona-id "${{ github.event.client_payload.persona_id }}" \
+            --platform "${{ github.event.client_payload.platform }}" \
+            --type comment)
+          
+          echo "result=$RESULT" >> $GITHUB_OUTPUT
+          
+          # Parsear should_post
+          SHOULD_POST=$(echo "$RESULT" | jq -r '.should_post')
+          echo "should_post=$SHOULD_POST" >> $GITHUB_OUTPUT
+          
+          # Guardar contenido generado
+          CONTENT=$(echo "$RESULT" | jq -r '.content')
+          echo "content=$CONTENT" >> $GITHUB_OUTPUT
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+
+      - name: Update Supabase content record
+        if: steps.generate.outputs.should_post == 'true'
+        run: |
+          curl -X PATCH \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/marketing_content?id=eq.${{ github.event.client_payload.content_id }}" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"generated_content\": \"${{ steps.generate.outputs.content }}\", \"ai_model\": \"groq/llama-3.3-70b\", \"status\": \"approved\"}"
+
+      - name: Fetch persona cookies from Supabase
+        if: steps.generate.outputs.should_post == 'true'
+        id: cookies
+        run: |
+          # Obtener cookies de la persona desde Supabase
+          PERSONA=$(curl -X GET \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/marketing_personas?id=eq.${{ github.event.client_payload.persona_id }}" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" | jq -r '.[0]')
+          
+          # Guardar cookies en archivo temporal
+          echo "$PERSONA" | jq -r '.cookies_encrypted' > /tmp/cookies.json
+          
+          mkdir -p tools/marketing-automation/cookies
+          echo "$PERSONA" | jq -r '.cookies_encrypted' > "tools/marketing-automation/cookies/${{ github.event.client_payload.persona_id }}.json"
+
+      - name: Assign proxy to persona
+        if: steps.generate.outputs.should_post == 'true'
+        id: proxy
+        run: |
+          cd tools/marketing-automation/scripts
+          
+          PROXY=$(node proxy-rotator.js assign "${{ github.event.client_payload.persona_id }}")
+          echo "proxy=$PROXY" >> $GITHUB_OUTPUT
+          
+          PROXY_SERVER=$(echo "$PROXY" | jq -r '.server')
+          echo "proxy_server=$PROXY_SERVER" >> $GITHUB_OUTPUT
+
+      - name: Random delay (human behavior)
+        if: steps.generate.outputs.should_post == 'true'
+        run: |
+          # Delay aleatorio entre 15-45 minutos (en segundos)
+          DELAY=$((RANDOM % 1800 + 900))
+          echo "Waiting $DELAY seconds before posting..."
+          sleep $DELAY
+
+      - name: Post comment with Playwright
+        if: steps.generate.outputs.should_post == 'true'
+        id: post
+        run: |
+          cd tools/marketing-automation/scripts
+          
+          RESULT=$(node post-comment.js \
+            "${{ github.event.client_payload.persona_id }}" \
+            "${{ github.event.client_payload.post_url }}" \
+            "${{ steps.generate.outputs.content }}" \
+            "${{ steps.proxy.outputs.proxy_server }}")
+          
+          echo "result=$RESULT" >> $GITHUB_OUTPUT
+          
+          SUCCESS=$(echo "$RESULT" | jq -r '.success')
+          echo "success=$SUCCESS" >> $GITHUB_OUTPUT
+        env:
+          HEADLESS: true
+          SCREENSHOT_DIR: ./screenshots
+          COOKIES_DIR: ../cookies
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ github.event.client_payload.persona_id }}-${{ github.run_number }}
+          path: tools/marketing-automation/scripts/screenshots/**/*.png
+          retention-days: 7
+
+      - name: Update Supabase with result
+        if: always()
+        run: |
+          STATUS="posted"
+          if [ "${{ steps.post.outputs.success }}" != "true" ]; then
+            STATUS="failed"
+          fi
+          
+          curl -X PATCH \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/marketing_content?id=eq.${{ github.event.client_payload.content_id }}" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"status\": \"$STATUS\", \"posted_at\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\", \"post_url\": \"${{ github.event.client_payload.post_url }}\"}"
+
+      - name: Release proxy
+        if: always()
+        run: |
+          cd tools/marketing-automation/scripts
+          node proxy-rotator.js release "${{ github.event.client_payload.persona_id }}"
+
+      - name: Update persona stats
+        if: steps.post.outputs.success == 'true'
+        run: |
+          curl -X POST \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/rpc/update_persona_stats" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"p_persona_id\": \"${{ github.event.client_payload.persona_id }}\", \"p_action_type\": \"comment\"}"
+
+      - name: Create alert if failed
+        if: steps.post.outputs.success != 'true'
+        run: |
+          curl -X POST \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/marketing_alerts" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"alert_type\": \"content_flagged\", \"persona_id\": \"${{ github.event.client_payload.persona_id }}\", \"content_id\": \"${{ github.event.client_payload.content_id }}\", \"severity\": \"high\", \"message\": \"Failed to post comment\"}"

@@ -1,0 +1,173 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "appData": {
+    "version": "2.0.0",
+    "name": "Autorentar PWA",
+    "description": "Progressive Web App with advanced caching strategies"
+  },
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/favicon.png",
+          "/index.csr.html",
+          "/index.html",
+          "/offline.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js",
+          "!/env.js"
+        ],
+        "urls": [
+          "/cars",
+          "/cars/compare",
+          "/wallet",
+          "/bookings",
+          "/profile"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ],
+        "urls": []
+      }
+    },
+    {
+      "name": "media",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": [
+          "/assets/**/*.(mp4|webm)"
+        ]
+      }
+    },
+    {
+      "name": "icons",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/icons/**/*.png"
+        ]
+      }
+    },
+    {
+      "name": "3d-loaders",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/libs/draco/**/*.js",
+          "/libs/draco/**/*.wasm",
+          "/**/*.glb"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api-supabase-fresh",
+      "urls": [
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/payments*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_wallets*"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 50,
+        "maxAge": "5m",
+        "timeout": "5s"
+      }
+    },
+    {
+      "name": "api-supabase-performance",
+      "urls": [
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/cars*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/car_photos*",
+        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles*"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "30m",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "api-mapbox-tiles",
+      "urls": [
+        "https://api.mapbox.com/styles/**",
+        "https://api.mapbox.com/v4/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "30d"
+      }
+    },
+    {
+      "name": "api-mapbox-geocoding",
+      "urls": [
+        "https://api.mapbox.com/geocoding/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 50,
+        "maxAge": "7d",
+        "timeout": "8s"
+      }
+    },
+    {
+      "name": "cdn-images",
+      "urls": [
+        "https://*.supabase.co/storage/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 200,
+        "maxAge": "7d"
+      }
+    }
+  ],
+  "navigationUrls": [
+    "/**",
+    "!/**/*.*",
+    "!/**/*__*",
+    "!/**/*__*/**",
+    "!/env.js",
+    "!https://pisqjmoklivzpwufhscx.supabase.co/**",
+    "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_*",
+    "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/payment_*",
+    "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/booking_*",
+    "!https://api.mapbox.com/**",
+    "!https://events.mapbox.com/**",
+    "!https://connect.facebook.net/**",
+    "!https://www.facebook.com/**",
+    "!https://*.facebook.com/**",
+    "!https://*.facebook.net/**",
+    "!https://graph.facebook.com/**",
+    "!https://accounts.google.com/**",
+    "!https://oauth2.googleapis.com/**",
+    "!https://www.googletagmanager.com/**",
+    "!https://*.google-analytics.com/**",
+    "!https://i.pravatar.cc/**",
+    "!https://*.sentry.io/**",
+    "!https://*.ingest.sentry.io/**",
+    "!https://*.ingest.us.sentry.io/**",
+    "/auth/**"
+  ],
+  "navigationRequestStrategy": "freshness"
+}

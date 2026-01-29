@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Loading Spinner
+  Animación: Rotación continua con gradiente
+  Accesibilidad: prefers-reduced-motion respetado
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" fill="none">
+  <title>Cargando...</title>
+  <defs>
+    <linearGradient id="spinner-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#A7D8F4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#A7D8F4;stop-opacity:0.1" />
+    </linearGradient>
+  </defs>
+
+  <style>
+    .spinner-track {
+      stroke: #E3E3E3;
+    }
+    .spinner-progress {
+      stroke: url(#spinner-gradient);
+      stroke-linecap: round;
+      transform-origin: center;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .spinner-progress {
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 1; }
+      }
+    }
+  </style>
+
+  <!-- Track de fondo -->
+  <circle class="spinner-track" cx="25" cy="25" r="20" stroke-width="4" fill="none"/>
+
+  <!-- Arco animado -->
+  <circle class="spinner-progress" cx="25" cy="25" r="20" stroke-width="4" fill="none"
+          stroke-dasharray="80 45"/>
+</svg>

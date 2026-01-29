@@ -1,0 +1,52 @@
+/* WalletBalanceCardComponent Styles */
+
+.wallet-balance-card {
+  /* El componente usa principalmente Tailwind CSS */
+  /* Este archivo está disponible para estilos custom si son necesarios */
+}
+
+/* Animación para transiciones de balance */
+@keyframes balance-update {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.balance-updated {
+  animation: balance-update 0.3s ease-in-out;
+}
+
+/* Sombra suave para hover en botones */
+.wallet-balance-card button:hover {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Mejora de accesibilidad para foco */
+.wallet-balance-card button:focus {
+  outline: 2px solid var(--system-blue-default); /* Reemplazado hex con token semántico */
+  outline-offset: 2px;
+}
+
+/* Animación para notificación toast (slide in desde la derecha) */
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-out;
+}

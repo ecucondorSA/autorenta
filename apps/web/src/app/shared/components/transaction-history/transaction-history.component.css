@@ -1,0 +1,79 @@
+/* TransactionHistoryComponent Styles */
+
+.transaction-history {
+  /* El componente usa principalmente Tailwind CSS */
+}
+
+/* Animación para la rotación de la flecha */
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+/* Transición suave para las flechas de expansión */
+svg {
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Hover effect para transaction items */
+.transaction-item:hover {
+  background-color: #f5f5f5; /* Reemplazado hex con el valor de surfaceElevated */
+}
+
+/* Animación para el panel de detalles expandibles */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+/* Badges con bordes más suaves */
+.badge {
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Scrollbar personalizada para metadata JSON */
+pre {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) var(--surface-elevated); /* Reemplazado hex con tokens semánticos */
+}
+
+pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: var(--surface-elevated); /* Reemplazado hex con token semántico */
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: var(--border-default); /* Reemplazado hex con token semántico */
+  border-radius: 3px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted); /* Reemplazado hex con token semántico */
+}
+
+/* Mejora para truncate en IDs largos */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Estilo para montos negativos y positivos */
+.amount-positive {
+  color: #10b981;
+}
+
+.amount-negative {
+  color: var(--error-default); /* Reemplazado hex con token semántico */
+}

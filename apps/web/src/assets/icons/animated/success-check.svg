@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Success Check
+  Animación: Círculo que se dibuja + check que aparece (draw effect)
+  Color: Verde olive (#9DB38B)
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <title>Éxito</title>
+
+  <style>
+    .success-circle {
+      fill: none;
+      stroke: #9DB38B;
+      stroke-width: 3;
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      animation: circle-draw 0.6s ease-out forwards;
+    }
+    .success-circle-bg {
+      fill: #9DB38B;
+      opacity: 0;
+      animation: circle-fill 0.3s ease-out 0.5s forwards;
+    }
+    .success-check {
+      stroke: #FFFFFF;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 30;
+      stroke-dashoffset: 30;
+      animation: check-draw 0.4s ease-out 0.6s forwards;
+    }
+
+    @keyframes circle-draw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes circle-fill {
+      to { opacity: 0.15; }
+    }
+    @keyframes check-draw {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .success-circle {
+        stroke-dashoffset: 0;
+        animation: none;
+      }
+      .success-circle-bg {
+        opacity: 0.15;
+        animation: none;
+      }
+      .success-check {
+        stroke-dashoffset: 0;
+        animation: none;
+        stroke: #9DB38B;
+      }
+    }
+  </style>
+
+  <!-- Fondo del círculo -->
+  <circle class="success-circle-bg" cx="30" cy="30" r="26"/>
+
+  <!-- Borde del círculo -->
+  <circle class="success-circle" cx="30" cy="30" r="26"/>
+
+  <!-- Check mark -->
+  <polyline class="success-check" points="18,30 26,38 42,22"/>
+</svg>

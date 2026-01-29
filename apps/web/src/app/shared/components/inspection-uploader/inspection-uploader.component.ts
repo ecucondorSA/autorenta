@@ -1,0 +1,331 @@
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { BookingInspection, InspectionPhoto, InspectionStage } from '@core/models/fgo-v1-1.model';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { FileUploadService } from '@core/services/infrastructure/file-upload.service';
+import {
+  validateFiles,
+  allFilesValid,
+  getFirstError,
+  logFileUpload,
+} from '@core/utils/file-validation.util';
+import { IconComponent } from '../icon/icon.component';
+
+// Window extension for inspection callback
+interface WindowWithInspectionCallback extends Window {
+  inspectionUploaderCallback?: (data: unknown) => void;
+}
+
+/**
+ * Componente para subir inspecciones de vehículos (check-in/check-out)
+ *
+ * Standalone component que permite:
+ * - Subir fotos (mínimo 8)
+ * - Registrar odómetro
+ * - Registrar nivel de combustible
+ * - Firmar digitalmente
+ *
+ * Uso:
+ * ```typescript
+ * const modal = await this.modalCtrl.create({
+ *   component: InspectionUploaderComponent,
+ *   componentProps: { bookingId: '...', stage: 'check_in' }
+ * });
+ * ```
+ */
+@Component({
+  selector: 'app-inspection-uploader',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [IconComponent],
+  templateUrl: './inspection-uploader.component.html',
+  styleUrl: './inspection-uploader.component.css',
+})
+export class InspectionUploaderComponent implements OnInit {
+  @Input() bookingId!: string;
+  @Input() stage!: InspectionStage;
+  @Output() inspectionCompleted = new EventEmitter<BookingInspection>();
+  @Output() inspectionCancelled = new EventEmitter<void>();
+
+  private readonly fgoService = inject(FgoV1_1Service);
+  private readonly supabaseService = inject(SupabaseClientService);
+  private readonly fileUploadService = inject(FileUploadService);
+
+  // Estado del componente
+  readonly photos = signal<InspectionPhoto[]>([]);
+  readonly uploading = signal(false);
+  readonly saving = signal(false);
+  readonly error = signal<string | null>(null);
+
+  // Datos de la inspección (signals para que isValid computed se actualice)
+  readonly odometer = signal(0);
+  readonly fuelLevel = signal(100);
+
+  // Computed properties
+  readonly isValid = computed(() => {
+    // Photos are optional - users assume risk for disputes if no photos
+    return this.odometer() > 0 && this.fuelLevel() >= 0 && this.fuelLevel() <= 100;
+  });
+
+  readonly hasMinPhotos = computed(() => this.photos().length >= 8);
+  readonly showPhotoWarning = computed(() => !this.hasMinPhotos() && this.isValid());
+
+  readonly stageLabel = computed(() => {
+    if (this.stage === 'check_in') return 'Check-in';
+    if (this.stage === 'renter_check_in') return 'Recepción';
+    return 'Check-out';
+  });
+
+  readonly photoCount = computed(() => this.photos().length);
+
+  readonly missingPhotos = computed(() => {
+    const count = this.photoCount();
+    return count < 8 ? 8 - count : 0;
+  });
+
+  ngOnInit(): void {
+    if (!this.bookingId || !this.stage) {
+      this.error.set('Faltan parámetros requeridos: bookingId y stage');
+    }
+  }
+
+  /**
+   * Maneja la selección de fotos del input file
+   */
+  async onPhotosSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    this.uploading.set(true);
+    this.error.set(null);
+
+    try {
+      const files = Array.from(input.files);
+
+      // P0-014: Use centralized file validation (basic checks only)
+      const validationResults = validateFiles(files, {
+        maxSizeBytes: 50 * 1024 * 1024, // 50MB max (before compression)
+        allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'],
+        checkMimeType: true,
+      });
+
+      if (!allFilesValid(validationResults)) {
+        const errorMsg = getFirstError(validationResults);
+        this.error.set(errorMsg || 'Invalid file detected');
+
+        // Log failed validation attempts
+        validationResults.forEach((result) => {
+          if (!result.valid) {
+            logFileUpload(result.fileName, false, result.error);
+          }
+        });
+        return;
+      }
+
+      // Subir fotos a Supabase Storage con compresión automática
+      for (const file of files) {
+        const photo = await this.uploadPhotoWithCompression(file);
+        if (photo) {
+          this.photos.update((p) => [...p, photo]);
+          logFileUpload(file.name, true);
+        } else {
+          logFileUpload(file.name, false, 'Upload failed');
+        }
+      }
+    } catch {
+      this.error.set('Error al subir fotos. Intente nuevamente.');
+    } finally {
+      this.uploading.set(false);
+      // Limpiar input para permitir resubir las mismas fotos
+      input.value = '';
+    }
+  }
+
+  /**
+   * Sube una foto con compresión automática (Fix Sentry #610)
+   *
+   * Beneficios:
+   * - Reduce tamaño de fotos en 70-90%
+   * - Acepta fotos de alta resolución sin rechazarlas
+   * - Mejor UX (usuarios no comprimen manualmente)
+   */
+  private async uploadPhotoWithCompression(file: File): Promise<InspectionPhoto | null> {
+    try {
+      const supabase = this.supabaseService.getClient();
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+
+      if (!userId) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      // Usar FileUploadService con compresión automática
+      const result = await this.fileUploadService.uploadFile(file, {
+        storagePath: `${userId}/inspections`,
+        bucket: 'car-images',
+        maxSizeBytes: 50 * 1024 * 1024, // 50MB antes de compresión
+        compressImages: true,
+        targetSizeMB: 1, // Comprimir a ~1MB
+        maxImageDimension: 1920,
+        allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'],
+      });
+
+      if (!result.success || !result.url) {
+        this.error.set(result.error || 'Error al subir foto');
+        return null;
+      }
+
+      return {
+        url: result.url,
+        type: 'exterior',
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Sube una foto a Supabase Storage (método legacy - mantenido por compatibilidad)
+   * @deprecated Use uploadPhotoWithCompression instead
+   */
+  private async uploadPhoto(file: File): Promise<InspectionPhoto | null> {
+    try {
+      const supabase = this.supabaseService.getClient();
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+
+      if (!userId) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      // Generar nombre único
+      const timestamp = Date.now();
+      const extension = file.name.split('.').pop() ?? 'jpg';
+      const fileName = `${this.bookingId}_${this.stage}_${timestamp}.${extension}`;
+      const filePath = `${userId}/inspections/${fileName}`;
+
+      // Subir a bucket 'car-images' (reutilizamos el bucket existente)
+      const { error: uploadError } = await supabase.storage
+        .from('car-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // Obtener URL pública
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('car-images').getPublicUrl(filePath);
+
+      return {
+        url: publicUrl,
+        type: 'exterior', // Por defecto exterior, en versión avanzada podría categorizarse
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Elimina una foto de la lista
+   */
+  removePhoto(index: number): void {
+    this.photos.update((p) => p.filter((_, i) => i !== index));
+  }
+
+  /**
+   * Guarda la inspección y la firma
+   */
+  async save(): Promise<void> {
+    if (!this.isValid()) {
+      this.error.set('Complete todos los campos requeridos');
+      return;
+    }
+
+    this.saving.set(true);
+    this.error.set(null);
+
+    try {
+      // 1. Obtener ID del usuario actual (inspector)
+      const supabase = this.supabaseService.getClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      // 2. Crear inspección
+      const inspection = await firstValueFrom(
+        this.fgoService.createInspection({
+          bookingId: this.bookingId,
+          stage: this.stage,
+          inspectorId: user.id,
+          photos: this.photos(),
+          odometer: this.odometer(),
+          fuelLevel: this.fuelLevel(),
+        }),
+      );
+
+      if (!inspection) {
+        throw new Error('No se pudo crear la inspección');
+      }
+
+      // 3. Firmar inspección
+      const signed = await firstValueFrom(this.fgoService.signInspection(inspection.id));
+
+      if (!signed) {
+        throw new Error('No se pudo firmar la inspección');
+      }
+
+      // 4. Emitir evento de completado
+      this.inspectionCompleted.emit(inspection);
+
+      // 5. También mantener compatibilidad con callback window (legacy)
+      const win = window as WindowWithInspectionCallback;
+      if (win.inspectionUploaderCallback) {
+        win.inspectionUploaderCallback(inspection);
+      }
+    } catch (_error) {
+      this.error.set(
+        _error instanceof Error
+          ? _error.message
+          : 'Error al guardar inspección. Intente nuevamente.',
+      );
+    } finally {
+      this.saving.set(false);
+    }
+  }
+
+  /**
+   * Cancela y cierra el modal
+   */
+  cancel(): void {
+    if (this.photos().length > 0 || this.odometer() > 0) {
+      if (!confirm('¿Descartar inspección? Se perderán los datos ingresados.')) {
+        return;
+      }
+    }
+    this.inspectionCancelled.emit();
+
+    // También mantener compatibilidad con callback window (legacy)
+    const win = window as WindowWithInspectionCallback;
+    if (win.inspectionUploaderCallback) {
+      win.inspectionUploaderCallback(null);
+    }
+  }
+}

@@ -1,0 +1,131 @@
+<div class="pending-review-page">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">
+      <span>←</span>
+      <span>Volver</span>
+    </button>
+    <h1>Reservas en Revisión</h1>
+    <p class="subtitle">Confirmá la devolución del vehículo para liberar los fondos</p>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="bookings-list">
+      <app-skeleton-loader type="list" [count]="3"></app-skeleton-loader>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading() && !hasBookings()) {
+    <div class="empty-state">
+      <div class="empty-icon">✅</div>
+      <h2>No hay revisiones pendientes</h2>
+      <p>Todas las devoluciones han sido confirmadas</p>
+      <button class="btn-primary" routerLink="/bookings/owner">Ver mis reservas</button>
+    </div>
+  }
+
+  <!-- Bookings List -->
+  @if (!loading() && hasBookings()) {
+    <div class="bookings-list">
+      @for (booking of pendingReviews(); track booking.id) {
+        <div
+          class="booking-card"
+          [class.processing]="confirmingId() === booking.id"
+          (click)="navigateToBooking(booking.id)"
+        >
+          <!-- Status Badge with time -->
+          <div class="status-badge">
+            <span class="icon">🔍</span>
+            <span class="label">Pendiente de revisión</span>
+            @if (getTimeSinceReturn(booking)) {
+              <span class="time-badge">{{ getTimeSinceReturn(booking) }}</span>
+            }
+          </div>
+
+          <!-- Car Info -->
+          <div class="car-info">
+            @if (booking.car?.images?.[0]) {
+              <img
+                [src]="booking.car?.images?.[0]"
+                [alt]="booking.car_title"
+                class="car-thumbnail"
+                width="400"
+                height="300"
+              />
+            }
+            <div class="car-details">
+              <h3>{{ booking.car_title || booking.car?.brand + ' ' + booking.car?.model }}</h3>
+              <div class="booking-dates">
+                <span class="date-range">📅 {{ formatDateRange(booking) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Booking Details -->
+          <div class="booking-details">
+            <div class="detail-item">
+              <span class="label">Total:</span>
+              <span class="value amount"
+                >{{ booking.total_amount | money }} {{ booking.currency }}</span
+              >
+            </div>
+            @if (booking.returned_at) {
+              <div class="detail-item">
+                <span class="label">Devuelto:</span>
+                <span class="value">{{ booking.returned_at | date: 'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            }
+          </div>
+
+          <!-- Direct Actions -->
+          <div class="booking-actions">
+            <button
+              class="btn-success"
+              (click)="confirmReturnDirectly(booking.id, $event)"
+              [disabled]="confirmingId() !== null"
+            >
+              @if (confirmingId() === booking.id) {
+                <span class="spinner-small"></span>
+                <span>Procesando...</span>
+              } @else {
+                <app-icon name="check" [size]="18" />
+                <span>Sin daños</span>
+              }
+            </button>
+
+            <button
+              class="btn-warning"
+              (click)="reportDamages(booking.id, $event)"
+              [disabled]="confirmingId() !== null"
+            >
+              <app-icon name="alert-triangle" [size]="18" />
+              <span>Reportar daños</span>
+            </button>
+
+            <button
+              class="btn-view"
+              (click)="$event.stopPropagation(); navigateToBooking(booking.id)"
+            >
+              <app-icon name="eye" [size]="18" />
+              <span>Detalle</span>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Info Banner -->
+    <div class="info-banner">
+      <div class="info-icon">ℹ️</div>
+      <div class="info-content">
+        <p><strong>Importante:</strong></p>
+        <ul>
+          <li>Revisá el estado del vehículo antes de confirmar la devolución.</li>
+          <li>Si hay daños, podés reportarlos antes de confirmar.</li>
+          <li>Al confirmar ambas partes, los fondos se liberarán automáticamente.</li>
+        </ul>
+      </div>
+    </div>
+  }
+</div>

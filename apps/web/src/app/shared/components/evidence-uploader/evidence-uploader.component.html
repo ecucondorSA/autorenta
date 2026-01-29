@@ -1,0 +1,50 @@
+<div class="evidence-uploader">
+  <ion-item lines="none" class="evidence-item">
+    <ion-label position="stacked">Evidencias (opcional)</ion-label>
+    <input
+      class="evidence-input"
+      type="file"
+      [attr.accept]="accept"
+      [attr.multiple]="maxFiles > 1 ? '' : null"
+      [disabled]="disabled || uploading()"
+      (change)="onFilesSelected($event)"
+    />
+    <ion-note>Hasta {{ maxFiles }} archivos. JPG/PNG/PDF. Máx 5MB.</ion-note>
+  </ion-item>
+
+  @if (error()) {
+    <ion-text color="danger" class="ion-padding-top">
+      <p class="ion-no-margin">{{ error() }}</p>
+    </ion-text>
+  }
+
+  @if (uploading()) {
+    <div class="uploading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <span>Subiendo evidencia...</span>
+    </div>
+  }
+
+  @if (uploaded().length) {
+    <ion-list class="uploaded-list">
+      @for (item of uploaded(); track item.url) {
+        <ion-item lines="none">
+          <ion-label class="uploaded-name">
+            <a class="file-link" [href]="item.url" target="_blank" rel="noopener">
+              {{ item.name }}
+            </a>
+          </ion-label>
+          <ion-button
+            fill="clear"
+            color="danger"
+            size="small"
+            (click)="removeEvidence(item.url)"
+            [disabled]="disabled || uploading()"
+          >
+            Quitar
+          </ion-button>
+        </ion-item>
+      }
+    </ion-list>
+  }
+</div>

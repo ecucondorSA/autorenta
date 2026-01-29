@@ -5,15 +5,24 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class MoneyPipe implements PipeTransform {
-  transform(value: number | null | undefined, currency = 'ARS'): string {
+  /**
+   * Format a number as currency.
+   * Default is USD (platform base currency).
+   * Use 'ARS' for payment display.
+   */
+  transform(value: number | null | undefined, currency = 'USD'): string {
     if (value === null || value === undefined) {
       return '-';
     }
-    return new Intl.NumberFormat('es-AR', {
+
+    // Use appropriate locale based on currency
+    const locale = currency === 'ARS' ? 'es-AR' : 'en-US';
+
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency,
       currencyDisplay: 'symbol',
-      maximumFractionDigits: 0,
+      maximumFractionDigits: currency === 'USD' ? 2 : 0,
     }).format(value);
   }
 }

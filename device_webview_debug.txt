@@ -1,0 +1,40 @@
+01-24 23:01:43.566  7259  7414 D Capacitor: Handling local request: https://localhost/chunk-3FYBJTUO.js
+01-24 23:01:43.569  7259  7421 D Capacitor: Handling local request: https://localhost/chunk-UJQKFV3Z.js
+01-24 23:01:43.570  7259  7416 D Capacitor: Handling local request: https://localhost/chunk-H3B2HAJZ.js
+01-24 23:01:43.590  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-LFBQWM2F.js
+01-24 23:01:43.593  7259  7416 D Capacitor: Handling local request: https://localhost/chunk-RXZKYY2N.js
+01-24 23:01:43.614  7259  7414 D Capacitor: Handling local request: https://localhost/chunk-UZYSCW6Q.js
+01-24 23:01:43.616  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-YVDORQXR.js
+01-24 23:01:43.629  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-VDSAIOIK.js
+01-24 23:01:43.630  7259  7416 D Capacitor: Handling local request: https://localhost/chunk-K6X4C44N.js
+01-24 23:01:43.649  7259  7416 D Capacitor: Handling local request: https://localhost/chunk-UN5H763I.js
+01-24 23:01:43.649  7259  7414 D Capacitor: Handling local request: https://localhost/chunk-BESDRWPW.js
+01-24 23:01:43.663  7259  7419 D Capacitor: Handling local request: https://localhost/chunk-MOXTY72D.js
+01-24 23:01:43.665  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-GUPSWCIO.js
+01-24 23:01:43.677  7259  7414 D Capacitor: Handling local request: https://localhost/chunk-YHTMNP7N.js
+01-24 23:01:43.677  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-GJWKW5AF.js
+01-24 23:01:43.690  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-J2LXVM76.js
+01-24 23:01:43.690  7259  7416 D Capacitor: Handling local request: https://localhost/chunk-B3XY4LWB.js
+01-24 23:01:43.703  7259  7414 D Capacitor: Handling local request: https://localhost/chunk-AOHWNDKA.js
+01-24 23:01:43.705  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-WB3UA7UI.js
+01-24 23:01:43.706  7259  7416 D Capacitor: Handling local request: https://localhost/chunk-ZQDJ2GAN.js
+01-24 23:01:43.713  7259  7419 D Capacitor: Handling local request: https://localhost/chunk-C2G2IFBI.js
+01-24 23:01:43.728  7259  7416 D Capacitor: Handling local request: https://localhost/chunk-P7S6ULFX.js
+01-24 23:01:43.728  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-HCITJHQW.js
+01-24 23:01:43.745  7259  7414 D Capacitor: Handling local request: https://localhost/chunk-7AAYWCBN.js
+01-24 23:01:43.753  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-ICOLPGNY.js
+01-24 23:01:43.767  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-O2FJWSSD.js
+01-24 23:01:43.779  7259  7414 D Capacitor: Handling local request: https://localhost/chunk-CQKCGQT6.js
+01-24 23:01:43.782  7259  7416 D Capacitor: Handling local request: https://localhost/chunk-V66PRUCA.js
+01-24 23:01:43.793  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-CY6WYWG4.js
+01-24 23:01:43.796  7259  7414 D Capacitor: Handling local request: https://localhost/chunk-FTLMQTIU.js
+01-24 23:01:43.814  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-BYMMJ362.js
+01-24 23:01:43.824  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-PLW5IPCL.js
+01-24 23:01:43.828  7259  7414 D Capacitor: Handling local request: https://localhost/chunk-CLY7WUAL.js
+01-24 23:01:44.040  7259  7415 D Capacitor: Handling local request: https://localhost/chunk-FBR5LQDH.js
+01-24 23:01:44.062  7259  7259 E Capacitor/Console: File: https://localhost/main-OVGWJE5K.js - Line 44 - Msg: Bootstrap failed Error: NG0908
+01-24 23:01:44.115  7259  7419 D Capacitor: Handling local request: https://localhost/favicon.ico
+01-24 23:01:44.116  7259  7421 D Capacitor: Handling local request: https://localhost/favicon.svg
+01-24 23:01:44.119  7259  7416 D Capacitor: Handling local request: https://localhost/chunk-R4555DBD.js
+01-24 23:01:44.194   689 16977 W C2BqBuffer: last successful dequeue was 7361446192 us ago, 343795 consecutive failures
+01-24 23:01:44.997   689 13493 W C2BqBuffer: last successful dequeue was 7362662318 us ago, 343757 consecutive failures

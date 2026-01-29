@@ -1,0 +1,19 @@
+{
+  "name": "autorent-pdf-generator",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker para generar PDFs de contratos, recibos y facturas de AutoRenta",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241205.0",
+    "typescript": "^5.7.2",
+    "wrangler": "^3.99.0"
+  }
+}

@@ -1,0 +1,348 @@
+name: 📱 Build Android AAB
+
+# Automated Android build, verification, and deployment to Google Play
+# Features: Auto-bump versionCode, AD_ID security check, auto-commit
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - release
+          - debug
+      upload_to_play_store:
+        description: 'Upload to Google Play (closed_testing)'
+        type: boolean
+        default: false
+      auto_version_bump:
+        description: 'Auto-bump versionCode (recommended)'
+        type: boolean
+        default: true
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '10.22.0'
+  JAVA_VERSION: '21'
+
+jobs:
+  build-aab:
+    name: Build AAB
+    runs-on: ubuntu-latest
+    outputs:
+      aab_path: ${{ steps.build.outputs.aab_path }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Auto-Bump Version Code (if requested)
+        if: github.event.inputs.build_type == 'release' && github.event.inputs.auto_version_bump == 'true'
+        working-directory: apps/web/android
+        run: |
+          echo "🔄 Auto-bumping versionCode..."
+
+          # Get current version
+          CURRENT_CODE=$(grep 'versionCode' app/build.gradle | grep -o '[0-9]\+' | head -1)
+          NEXT_CODE=$((CURRENT_CODE + 1))
+
+          echo "Current versionCode: $CURRENT_CODE"
+          echo "Next versionCode: $NEXT_CODE"
+
+          # Update build.gradle
+          sed -i "s/versionCode $CURRENT_CODE/versionCode $NEXT_CODE/" app/build.gradle
+
+          # Verify update
+          VERIFIED=$(grep 'versionCode' app/build.gradle | grep -o '[0-9]\+' | head -1)
+
+          if [ "$VERIFIED" != "$NEXT_CODE" ]; then
+            echo "❌ Failed to update versionCode"
+            exit 1
+          fi
+
+          echo "✅ Version code bumped: $CURRENT_CODE → $NEXT_CODE"
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(grep 'versionName' apps/web/android/app/build.gradle | head -1 | sed 's/.*versionName "\(.*\)".*/\1/')
+          CODE=$(grep 'versionCode' apps/web/android/app/build.gradle | grep -o '[0-9]\+' | head -1)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "code=$CODE" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION (Code: $CODE)"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('apps/web/android/**/*.gradle*', 'apps/web/android/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web app
+        run: pnpm build:web
+        env:
+          NODE_ENV: production
+          # Core - with fallbacks to existing secrets
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL || secrets.SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY || secrets.SUPABASE_ANON_KEY }}
+          NG_APP_DEFAULT_CURRENCY: "ARS"
+          NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN || secrets.MAPBOX_ACCESS_TOKEN }}
+          NG_APP_MERCADOPAGO_PUBLIC_KEY: ${{ secrets.NG_APP_MERCADOPAGO_PUBLIC_KEY || secrets.MERCADOPAGO_PROD_PUBLIC_KEY }}
+          # Optional - will be empty if not configured
+          NG_APP_PAYMENTS_WEBHOOK_URL: ${{ secrets.NG_APP_PAYMENTS_WEBHOOK_URL }}
+          NG_APP_CAR_LOCATIONS_EDGE_FUNCTION: ${{ secrets.NG_APP_CAR_LOCATIONS_EDGE_FUNCTION }}
+          NG_APP_CLOUDFLARE_WORKER_URL: ${{ secrets.NG_APP_CLOUDFLARE_WORKER_URL }}
+          NG_APP_TIKTOK_CLIENT_ID: ${{ secrets.NG_APP_TIKTOK_CLIENT_ID }}
+          NG_APP_GOOGLE_CALENDAR_ID: ${{ secrets.NG_APP_GOOGLE_CALENDAR_ID }}
+          NG_APP_GOOGLE_CALENDAR_API_KEY: ${{ secrets.NG_APP_GOOGLE_CALENDAR_API_KEY }}
+          NG_APP_GOOGLE_CALENDAR_CLIENT_ID: ${{ secrets.NG_APP_GOOGLE_CALENDAR_CLIENT_ID }}
+          NG_APP_PAYPAL_CLIENT_ID: ${{ secrets.NG_APP_PAYPAL_CLIENT_ID }}
+          NG_APP_SENTRY_DSN: ${{ secrets.NG_APP_SENTRY_DSN }}
+          NG_APP_SENTRY_ENVIRONMENT: "production"
+
+      - name: Sync Capacitor
+        run: |
+          # Remove generated Capacitor files to ensure they are regenerated with correct pnpm paths
+          rm -f apps/web/android/capacitor.settings.gradle
+          rm -f apps/web/android/app/capacitor.build.gradle
+          pnpm --filter autorentar-web exec cap sync android
+
+      - name: Workaround for missing capacitor-cordova-android-plugins
+        run: |
+          CORDOVA_DIR="apps/web/android/capacitor-cordova-android-plugins"
+          mkdir -p "$CORDOVA_DIR/src/main/libs"
+
+          # Create cordova.variables.gradle
+          cat > "$CORDOVA_DIR/cordova.variables.gradle" << 'EOF'
+          // DO NOT EDIT THIS FILE! IT IS GENERATED EACH TIME "capacitor update" IS RUN
+          ext {
+            cdvMinSdkVersion = project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 23
+            // Plugin gradle extensions can append to this to have code run at the end.
+            cdvPluginPostBuildExtras = []
+            cordovaConfig = [:]
+          }
+          EOF
+
+          # Create build.gradle
+          cat > "$CORDOVA_DIR/build.gradle" << 'EOF'
+          ext {
+              androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.7.0'
+              cordovaAndroidVersion = project.hasProperty('cordovaAndroidVersion') ? rootProject.ext.cordovaAndroidVersion : '10.1.1'
+          }
+
+          buildscript {
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+              dependencies {
+                  classpath 'com.android.tools.build:gradle:8.7.2'
+              }
+          }
+
+          apply plugin: 'com.android.library'
+
+          android {
+              namespace "capacitor.cordova.android.plugins"
+              compileSdk project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 35
+              defaultConfig {
+                  minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 23
+                  targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 35
+                  versionCode 1
+                  versionName "1.0"
+              }
+              lintOptions {
+                  abortOnError false
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_21
+                  targetCompatibility JavaVersion.VERSION_21
+              }
+          }
+
+          repositories {
+              google()
+              mavenCentral()
+              flatDir{
+                  dirs 'src/main/libs', 'libs'
+              }
+          }
+
+          dependencies {
+              implementation fileTree(dir: 'src/main/libs', include: ['*.jar'])
+              implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+              implementation "org.apache.cordova:framework:$cordovaAndroidVersion"
+          }
+
+          apply from: "cordova.variables.gradle"
+
+          for (def func : cdvPluginPostBuildExtras) {
+              func()
+          }
+          EOF
+
+          echo "Created capacitor-cordova-android-plugins structure:"
+          ls -la "$CORDOVA_DIR"
+
+      - name: Decode Keystore
+        if: github.event.inputs.build_type == 'release'
+        run: |
+          mkdir -p apps/web/android/keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > apps/web/android/keystore/autorentar-release.keystore
+          ls -la apps/web/android/keystore/
+          file apps/web/android/keystore/autorentar-release.keystore
+
+      - name: Build Release AAB
+        id: build
+        if: github.event.inputs.build_type == 'release'
+        working-directory: apps/web/android
+        run: |
+          ls -la app/capacitor.build.gradle
+          ./gradlew bundleRelease --stacktrace --info
+          AAB_PATH="app/build/outputs/bundle/release/app-release.aab"
+          echo "aab_path=$AAB_PATH" >> $GITHUB_OUTPUT
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Build Debug APK
+        if: github.event.inputs.build_type == 'debug'
+        working-directory: apps/web/android
+        run: ./gradlew assembleDebug
+
+      - name: Verify AD_ID Permission Removal
+        if: github.event.inputs.build_type == 'release'
+        working-directory: apps/web/android
+        run: |
+          echo "🔍 Verifying AD_ID permission removal..."
+          ./verify-ad-id-removal.sh app/build/outputs/bundle/release/app-release.aab
+          echo ""
+          echo "✅ Security verification passed"
+
+      - name: Rename AAB
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          BUILD_TYPE="${{ github.event.inputs.build_type }}"
+
+          if [ "$BUILD_TYPE" = "release" ]; then
+            mv apps/web/android/app/build/outputs/bundle/release/app-release.aab \
+               apps/web/android/app/build/outputs/bundle/release/autorentar-${VERSION}-release.aab
+          else
+            echo "Debug builds use APK format"
+          fi
+
+      - name: Upload AAB Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: autorentar-${{ github.event.inputs.build_type }}-${{ steps.version.outputs.version }}
+          path: apps/web/android/app/build/outputs/bundle/${{ github.event.inputs.build_type }}/*.aab
+          retention-days: 90
+
+      - name: Build Summary
+        run: |
+          echo "## 📱 Android AAB Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Type:** ${{ github.event.inputs.build_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Format:** AAB (Android App Bundle)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Artifact:** autorentar-${{ github.event.inputs.build_type }}-${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+
+  upload-play-store:
+    name: Upload to Google Play
+    runs-on: ubuntu-latest
+    needs: build-aab
+    if: github.event.inputs.upload_to_play_store == 'true' && github.event.inputs.build_type == 'release'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download AAB
+        uses: actions/download-artifact@v4
+        with:
+          name: autorentar-release-${{ needs.build-aab.outputs.version }}
+          path: ./aab
+
+      - name: Upload to Google Play (Closed Testing Track)
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+          packageName: app.autorentar
+          releaseFiles: ./aab/*.aab
+          track: closed_testing
+          status: completed
+          changesNotSentForReview: true
+
+      - name: Auto-Commit Version Bump (if auto-bumped)
+        if: github.event.inputs.auto_version_bump == 'true'
+        run: |
+          # Configure git
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          # Check if there are changes
+          if git diff --quiet apps/web/android/app/build.gradle; then
+            echo "ℹ️ No version changes to commit"
+          else
+            # Get new version info
+            NEW_CODE=$(grep 'versionCode' apps/web/android/app/build.gradle | grep -o '[0-9]\+' | head -1)
+            NEW_NAME=$(grep 'versionName' apps/web/android/app/build.gradle | grep -oP '"\K[^"]+' | head -1)
+
+            echo "📝 Committing version bump to main..."
+            git add apps/web/android/app/build.gradle
+
+            git commit -m "chore(android): auto-bump versionCode for release" \
+              -m "Automatically incremented versionCode to prevent Google Play conflicts." \
+              -m "Version: $NEW_NAME" \
+              -m "Code: $NEW_CODE" \
+              -m "Track: closed_testing" \
+              -m "" \
+              -m "This was auto-generated by CI/CD workflow." \
+              -m "[skip ci]"
+
+            git push origin main
+
+            echo "✅ Version bump committed and pushed"
+          fi
+
+      - name: Upload Summary
+        run: |
+          echo "## 🚀 Google Play Upload" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Track:** closed_testing" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status:** completed" >> $GITHUB_STEP_SUMMARY
+          echo "- **Auto-Bump:** ${{ github.event.inputs.auto_version_bump }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ The AAB is now available in Google Play Console for closed testing." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.auto_version_bump }}" = "true" ]; then
+            echo "📌 Version code was automatically bumped and committed to main." >> $GITHUB_STEP_SUMMARY
+          fi

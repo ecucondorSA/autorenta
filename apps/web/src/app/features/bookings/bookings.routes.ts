@@ -1,14 +1,172 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from '@core/guards/auth.guard';
+import { VerificationGuard } from '@core/guards/verification.guard';
 
+/**
+ * BOOKINGS ROUTES CONFIGURATION
+ *
+ * Architecture Note (2026-01-24):
+ * This module is undergoing structural refactoring.
+ *
+ * - Main Renter Entry: '' -> BookingsHubPage (Smart Container)
+ * - Main Owner Entry: 'owner' -> OwnerBookingsPage
+ * - Detail View: ':id' -> BookingDetailPage (Shared "God Component" - pending refactor)
+ *
+ * Planned Structure:
+ * - /renter/* -> Renter specific flows
+ * - /owner/* -> Owner specific flows
+ * - /shared/* -> Shared views
+ */
 export const BOOKINGS_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./my-bookings/my-bookings.page').then((m) => m.MyBookingsPage),
+    data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
+    loadComponent: () => import('./bookings-hub/bookings-hub.page').then((m) => m.BookingsHubPage),
   },
   {
-    path: 'checkout/:bookingId',
-    loadComponent: () =>
-      import('./checkout/checkout.page').then((m) => m.CheckoutPage),
+    // Legacy route for direct access to my-bookings list
+    path: 'list',
+    loadComponent: () => import('./my-bookings/my-bookings.page').then((m) => m.MyBookingsPage),
   },
+  {
+    path: 'owner',
+    loadComponent: () =>
+      import('./owner-bookings/owner-bookings.page').then((m) => m.OwnerBookingsPage),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: 'owner/:id',
+    // Usa la misma página unificada de detalle (detecta rol automáticamente)
+    loadComponent: () =>
+      import('./booking-detail/booking-detail.page').then((m) => m.BookingDetailPage),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: 'pending-approval',
+    loadComponent: () =>
+      import('./pending-approval/pending-approval.page').then((m) => m.PendingApprovalPage),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: 'pending-review',
+    loadComponent: () =>
+      import('./pending-review/pending-review.page').then((m) => m.PendingReviewPage),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: 'request',
+    loadComponent: () =>
+      import('./booking-request/booking-request.page').then((m) => m.BookingRequestPage),
+    canMatch: [AuthGuard, VerificationGuard],
+  },
+  {
+    path: ':bookingId/request',
+    loadComponent: () =>
+      import('./booking-request/booking-request.page').then((m) => m.BookingRequestPage),
+    canMatch: [AuthGuard, VerificationGuard],
+  },
+  {
+    path: 'claims',
+    loadComponent: () => import('./claims/my-claims.page').then((m) => m.MyClaimsPage),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: 'calendar',
+    loadComponent: () => import('../calendar/calendar.page').then((m) => m.CalendarPage),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: 'success/:id',
+    loadComponent: () =>
+      import('./booking-success/booking-success.page').then((m) => m.BookingSuccessPage),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: 'urgent/:carId',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./urgent-booking/urgent-booking.page').then((m) => m.UrgentBookingPage),
+  },
+  {
+    path: ':id/check-in',
+    canMatch: [AuthGuard],
+    loadComponent: () => import('./check-in/check-in.page').then((m) => m.CheckInPage),
+  },
+  {
+    path: ':id/check-out',
+    canMatch: [AuthGuard],
+    loadComponent: () => import('./check-out/check-out.page').then((m) => m.CheckOutPage),
+  },
+  {
+    path: ':id/owner-check-in',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./owner-check-in/owner-check-in.page').then((m) => m.OwnerCheckInPage),
+  },
+  {
+    path: ':id/owner-check-out',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./owner-check-out/owner-check-out.page').then((m) => m.OwnerCheckOutPage),
+  },
+  {
+    path: ':id/owner-damage-report',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./owner-damage-report/owner-damage-report.page').then((m) => m.OwnerDamageReportPage),
+  },
+  {
+    path: ':id/active',
+    canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
+    loadComponent: () =>
+      import('./active-rental/active-rental.page').then((m) => m.ActiveRentalPage),
+  },
+  {
+    path: ':id/contract',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('../contracts/booking-contract.page').then((m) => m.BookingContractPage),
+  },
+  {
+    path: ':id/disputes',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./disputes/disputes-management.page').then((m) => m.DisputesManagementPage),
+  },
+  {
+    path: ':id',
+    data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
+    loadComponent: () =>
+      import('./booking-detail/booking-detail.page').then((m) => m.BookingDetailPage),
+  },
+  {
+    path: ':bookingId/checkout',
+    loadComponent: () =>
+      import('./pages/booking-checkout/booking-checkout.page').then((m) => m.BookingCheckoutPage),
+    canMatch: [AuthGuard, VerificationGuard],
+  },
+  {
+    // Redirect legacy /payment route to /request (component with full guarantee info)
+    path: ':bookingId/payment',
+    redirectTo: ':bookingId/request',
+    pathMatch: 'full',
+  },
+  {
+    path: ':bookingId/pending',
+    loadComponent: () =>
+      import('./booking-pending/booking-pending.page').then((m) => m.BookingPendingPage),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: ':bookingId/report-claim',
+    loadComponent: () => import('./report-claim/report-claim.page').then((m) => m.ReportClaimPage),
+    canMatch: [AuthGuard],
+  },
+  // {
+  //   path: ':id/voucher',
+  //   loadComponent: () =>
+  //     import('./booking-voucher/booking-voucher.page').then((m) => m.BookingVoucherPage),
+  //   canActivate: [AuthGuard],
+  // },
 ];

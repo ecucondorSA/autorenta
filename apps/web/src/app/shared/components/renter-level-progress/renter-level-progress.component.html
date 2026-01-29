@@ -1,0 +1,69 @@
+<div class="h-full flex flex-col p-4 rounded-xl border border-border-default/60 bg-white">
+  @if (loading()) {
+    <div class="flex-1 flex items-center justify-center">
+      <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-cta-default"></div>
+    </div>
+  }
+
+  @if (!loading() && nextLevelInfo()) {
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-sm font-bold text-text-primary uppercase tracking-wide font-satoshi">
+          Próximo Nivel: <span class="text-cta-default">{{ nextLevelInfo()!.label }}</span>
+        </h3>
+        <span class="text-xs font-semibold text-text-secondary">
+          {{ nextLevelInfo()!.progress.toFixed(0) }}%
+        </span>
+      </div>
+      <!-- Progress Bar -->
+      <div class="relative h-2 w-full bg-surface-secondary rounded-full overflow-hidden mb-4">
+        <div
+          class="absolute top-0 left-0 h-full bg-cta-default transition-all duration-500 ease-out"
+          [style.width.%]="nextLevelInfo()!.progress"
+        ></div>
+      </div>
+      <!-- Requirements List -->
+      <div class="space-y-3 flex-1 overflow-y-auto pr-1">
+        @for (req of nextLevelInfo()!.requirements; track req) {
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-surface-secondary/30">
+            <!-- Icon Status -->
+            <div class="flex-shrink-0">
+              <ion-icon
+                [name]="req.met ? 'checkmark-circle' : 'ellipse-outline'"
+                [class]="req.met ? 'text-emerald-500 text-lg' : 'text-text-muted text-lg'"
+              ></ion-icon>
+            </div>
+            <!-- Label and Value -->
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-text-primary truncate">{{ req.label }}</p>
+              <p class="text-xs text-text-secondary">
+                Actual:
+                <span [class]="req.met ? 'text-emerald-600' : 'text-amber-600'">
+                  @if (req.type === 'boolean') {
+                    {{ req.current ? 'Sí' : 'No' }}
+                  } @else {
+                    {{ $any(req.current) | number: (req.type === 'rating' ? '1.1-1' : '1.0-0') }}
+                  }
+                </span>
+                <span class="mx-1 text-text-muted">/</span>
+                Meta:
+                @if (req.type === 'boolean') {
+                  Sí
+                } @else {
+                  {{ $any(req.target) | number: (req.type === 'rating' ? '1.1-1' : '1.0-0') }}
+                }
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+      @if (nextLevelInfo()!.progress === 100) {
+        <div class="mt-4 p-3 bg-emerald-50/50 border border-emerald-100 rounded-lg text-center">
+          <p class="text-xs text-emerald-700 font-medium">
+            🎉 ¡Felicidades! Has alcanzado el nivel máximo.
+          </p>
+        </div>
+      }
+    </div>
+  }
+</div>

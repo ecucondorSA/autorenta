@@ -1,0 +1,697 @@
+/**
+ * Autorent Mapbox Custom Theme
+ * Estilo: Dark Minimal + Brand Accent
+ * Inspiración: Uber / Cabify / Airbnb
+ */
+
+/* ============================================================================
+   BASE MAP CONTAINER
+   ============================================================================ */
+
+.mapboxgl-map {
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+
+  /* Desktop: bordes redondeados */
+  @media (min-width: 768px) {
+    border-radius: 1rem;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.mapboxgl-canvas {
+  filter: brightness(var(--map-canvas-brightness, 0.95)) contrast(var(--map-canvas-contrast, 1.1))
+    saturate(var(--map-canvas-saturate, 0.95));
+}
+
+/* ============================================================================
+   CONTROLS (Zoom, Compass, etc)
+   ============================================================================ */
+
+.mapboxgl-control-container .mapboxgl-ctrl-group {
+  background-color: var(--map-control-bg, rgba(20, 20, 20, 0.85));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: var(--map-control-shadow, 0 4px 12px var(--shadow-dark-alpha-30, #7b7b7b));
+  border: 1px solid
+    var(--map-control-border, var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)));
+}
+
+.mapboxgl-ctrl-group button {
+  color: var(--map-control-text, #f0f0f0);
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.mapboxgl-ctrl-group button:hover {
+  background: var(--map-control-hover-bg, var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)));
+  color: var(--map-control-text, var(--surface-primary, var(--surface-primary, #ffffff) fff));
+}
+
+.mapboxgl-ctrl-group button:active {
+  background: var(--border-light-alpha-15, rgba(255, 255, 255, 0.15));
+}
+
+/* Compass */
+.mapboxgl-ctrl-compass .mapboxgl-ctrl-compass-arrow {
+  filter: invert(1) brightness(1.2);
+}
+
+/* ============================================================================
+   MARKERS - Autorent Brand Style
+   ============================================================================ */
+
+.mapboxgl-marker {
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.mapboxgl-marker:hover {
+  transform: scale(1.15);
+  z-index: 10;
+}
+
+/* Custom car markers */
+.car-marker {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--cta-default); /* Replaced gradient with solid color token */
+  border: 3px solid white;
+  box-shadow:
+    0 2px 8px rgba(79, 70, 229, 0.4),
+    0 8px 16px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.car-marker:hover {
+  transform: scale(1.2);
+  box-shadow:
+    0 4px 12px rgba(79, 70, 229, 0.6),
+    0 8px 24px var(--shadow-dark-alpha-30, #7b7b7b);
+}
+
+.car-marker--active {
+  transform: scale(1.25);
+  box-shadow:
+    0 0 0 4px rgba(79, 70, 229, 0.3),
+    0 4px 12px rgba(79, 70, 229, 0.6),
+    0 8px 24px var(--shadow-dark-alpha-30, #7b7b7b);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Simple circular markers (PRIORITY - for debugging) */
+.car-marker-simple {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.marker-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--cta-default); /* Replaced gradient with solid color token */
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+
+.marker-price-simple {
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.car-marker-simple:hover .marker-circle {
+  transform: scale(1.2);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.7);
+}
+
+/* Photo Markers (NEW - Premium Style) */
+.car-marker-photo {
+  width: 70px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 4px 8px var(--shadow-dark-alpha-20, rgba(0, 0, 0, 0.2)));
+}
+
+.car-marker-photo:hover {
+  transform: scale(1.12) translateY(-4px);
+  filter: drop-shadow(0 8px 16px var(--shadow-dark-alpha-30, #7b7b7b));
+  z-index: 1000;
+}
+
+.marker-image {
+  position: relative;
+  width: 70px;
+  height: 55px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px 10px 4px 4px;
+  border: 2.5px solid white;
+  overflow: hidden;
+}
+
+.marker-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(
+    --shadow-dark-alpha-40,
+    #7b7b7b
+  ); /* Replaced gradient with solid color token */
+  pointer-events: none;
+}
+
+.marker-price {
+  background-color: var(--cta-default); /* Replaced gradient with solid color token */
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 0 0 8px 8px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
+  letter-spacing: -0.3px;
+}
+
+/* Bounce animation on selection */
+@keyframes marker-bounce {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  25% {
+    transform: translateY(-20px) scale(1.25) rotate(3deg);
+  }
+  40% {
+    transform: translateY(-15px) scale(1.2) rotate(-3deg);
+  }
+  60% {
+    transform: translateY(-22px) scale(1.3) rotate(2deg);
+  }
+  80% {
+    transform: translateY(-10px) scale(1.15) rotate(-1deg);
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(0);
+  }
+}
+
+.marker-bounce {
+  animation: marker-bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Burst entrance animation */
+@keyframes marker-burst {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+.marker-burst {
+  animation: marker-burst 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* Mobile adjustments for photo markers */
+@media (max-width: 768px) {
+  .car-marker-photo {
+    width: 60px;
+  }
+
+  .marker-image {
+    width: 60px;
+    height: 48px;
+  }
+
+  .marker-price {
+    font-size: 12px;
+    padding: 2px 6px;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 4px rgba(79, 70, 229, 0.3),
+      0 4px 12px rgba(79, 70, 229, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 0 8px rgba(79, 70, 229, 0.2),
+      0 4px 16px rgba(79, 70, 229, 0.8);
+  }
+}
+
+/* Price marker (alternative style) */
+.car-marker-price {
+  background: white;
+  border-radius: 20px;
+  padding: 6px 12px;
+  box-shadow:
+    0 2px 8px var(--shadow-dark-alpha-15, rgba(0, 0, 0, 0.15)),
+    0 1px 3px var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1));
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary, #1f2937);
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.car-marker-price:hover {
+  border-color: var(--cta-default, #a7d8f4);
+  box-shadow:
+    0 4px 12px rgba(167, 216, 244, 0.3),
+    0 2px 6px var(--shadow-dark-alpha-15, rgba(0, 0, 0, 0.15));
+  transform: scale(1.08);
+}
+
+.car-marker-price--active {
+  background: var(--cta-default, #a7d8f4);
+  color: var(--cta-text, #050505);
+  border-color: var(--cta-default, #a7d8f4);
+  transform: scale(1.1);
+}
+
+/* User location marker */
+.user-location-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--system-blue-default, #3b82f6);
+  border: 4px solid white;
+  box-shadow:
+    0 0 0 4px rgba(59, 130, 246, 0.2),
+    0 2px 8px var(--shadow-dark-alpha-20, rgba(0, 0, 0, 0.2));
+  animation: pulse-blue 2s ease-in-out infinite;
+}
+
+@keyframes pulse-blue {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 4px rgba(59, 130, 246, 0.2),
+      0 2px 8px var(--shadow-dark-alpha-20, rgba(0, 0, 0, 0.2));
+  }
+  50% {
+    box-shadow:
+      0 0 0 8px rgba(59, 130, 246, 0.1),
+      0 2px 12px var(--shadow-dark-alpha-30, #7b7b7b);
+  }
+}
+
+/* ============================================================================
+   POPUPS / TOOLTIPS
+   ============================================================================ */
+
+.mapboxgl-popup {
+  max-width: 320px;
+  z-index: 20;
+}
+
+.mapboxgl-popup-content {
+  background: var(--map-popup-bg, rgba(20, 20, 20, 0.95));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--map-popup-text, #f0f0f0);
+  font-size: 0.9rem;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: var(--map-popup-shadow, 0 4px 12px var(--shadow-dark-alpha-40, #7b7b7b));
+  border: 1px solid var(--map-popup-border, var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)));
+  border-top: 3px solid var(--cta-default, #a7d8f4);
+}
+
+.mapboxgl-popup-content h3 {
+  color: var(--surface-primary, var(--surface-primary, #ffffff) fff);
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.mapboxgl-popup-content p {
+  margin: 4px 0;
+  color: var(--text-tertiary, #d1d5db);
+}
+
+.mapboxgl-popup-close-button {
+  color: var(--text-secondary, #9ca3b8);
+  font-size: 20px;
+  padding: 4px 8px;
+  transition: color 0.2s ease;
+}
+
+.mapboxgl-popup-close-button:hover {
+  color: var(--surface-primary, var(--surface-primary, #ffffff) fff);
+  background: var(--border-light-alpha-10, rgba(255, 255, 255, 0.1));
+}
+
+.mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-left .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
+  border-color: rgba(20, 20, 20, 0.95);
+}
+
+/* ============================================================================
+   GEOCODER (Search)
+   ============================================================================ */
+
+.mapboxgl-ctrl-geocoder {
+  max-width: 350px;
+  border-radius: 12px !important;
+  background-color: rgba(40, 40, 40, 0.95) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 4px 12px var(--shadow-dark-alpha-30, #7b7b7b),
+    0 0 1px var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)) !important;
+  border: 1px solid var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)) !important;
+}
+
+.mapboxgl-ctrl-geocoder--input {
+  color: white !important;
+  font-size: 14px !important;
+  padding: 8px 12px !important;
+}
+
+.mapboxgl-ctrl-geocoder--input::placeholder {
+  color: var(--text-secondary, #9ca3b8) !important;
+}
+
+.mapboxgl-ctrl-geocoder--icon-search {
+  fill: var(--text-secondary, #9ca3b8) !important;
+}
+
+.mapboxgl-ctrl-geocoder--button {
+  background: transparent !important;
+}
+
+.mapboxgl-ctrl-geocoder .suggestions {
+  background-color: rgba(30, 30, 30, 0.95) !important;
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  margin-top: 8px;
+  box-shadow: 0 4px 12px var(--shadow-dark-alpha-30, #7b7b7b);
+  border: 1px solid var(--border-light-alpha-10, rgba(255, 255, 255, 0.1));
+}
+
+.mapboxgl-ctrl-geocoder .suggestions > li > a {
+  color: #f0f0f0 !important;
+  padding: 8px 12px !important;
+}
+
+.mapboxgl-ctrl-geocoder .suggestions > li > a:hover {
+  background-color: rgba(79, 70, 229, 0.2) !important;
+}
+
+.mapboxgl-ctrl-geocoder .suggestions > .active > a {
+  background-color: rgba(79, 70, 229, 0.3) !important;
+  color: var(--surface-primary, var(--surface-primary, #ffffff) fff) !important;
+}
+
+/* ============================================================================
+   ATTRIBUTION (hide or style)
+   ============================================================================ */
+
+.mapboxgl-ctrl-logo {
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+}
+
+.mapboxgl-ctrl-logo:hover {
+  opacity: 1;
+}
+
+.mapboxgl-ctrl-attrib {
+  background-color: rgba(20, 20, 20, 0.7) !important;
+  backdrop-filter: blur(5px);
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.mapboxgl-ctrl-attrib-inner {
+  color: var(--text-secondary, #9ca3b8);
+}
+
+.mapboxgl-ctrl-attrib a {
+  color: var(--text-tertiary, #d1d5db);
+}
+
+/* Optional: hide if your Mapbox plan allows it */
+/* 
+.mapboxgl-ctrl-logo,
+.mapboxgl-ctrl-attrib {
+  display: none !important;
+}
+*/
+
+/* ============================================================================
+   DARK MODE ADJUSTMENTS
+   ============================================================================ */
+
+@media (prefers-color-scheme: light) {
+  .mapboxgl-canvas {
+    filter: brightness(var(--map-canvas-brightness, 1)) contrast(var(--map-canvas-contrast, 1))
+      saturate(var(--map-canvas-saturate, 1));
+  }
+
+  .mapboxgl-control-container .mapboxgl-ctrl-group {
+    background-color: var(--map-control-bg, var(--surface-primary-alpha-95, #e3e3e3));
+    border: 1px solid var(--map-control-border, var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)));
+  }
+
+  .mapboxgl-ctrl-group button {
+    color: var(--map-control-text, var(--text-primary, #1f2937));
+  }
+
+  .mapboxgl-ctrl-group button:hover {
+    background: var(--map-control-hover-bg, rgba(0, 0, 0, 0.05));
+  }
+
+  .mapboxgl-popup-content {
+    background: var(--map-popup-bg, white);
+    color: var(--map-popup-text, var(--text-primary, #1f2937));
+    border: 1px solid var(--map-popup-border, var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)));
+  }
+
+  .mapboxgl-popup-content h3 {
+    color: var(--map-popup-text, #111827);
+  }
+
+  .mapboxgl-popup-content p {
+    color: var(--map-popup-text, #6b7280);
+    opacity: 0.8;
+  }
+}
+
+/* ============================================================================
+   MOBILE OPTIMIZATIONS
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .mapboxgl-ctrl-top-right {
+    top: 70px; /* Below floating search */
+    right: 12px;
+  }
+
+  .mapboxgl-ctrl-group {
+    border-radius: 10px;
+  }
+
+  .mapboxgl-ctrl-group button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .car-marker {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+  }
+
+  .car-marker-price {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .mapboxgl-popup {
+    max-width: 280px;
+  }
+
+  .mapboxgl-popup-content {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+  }
+}
+
+/* ============================================================================
+   ANIMATIONS & EFFECTS
+   ============================================================================ */
+
+/* Smooth marker entrance */
+@keyframes marker-entrance {
+  from {
+    transform: scale(0) translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.car-marker--entering {
+  animation: marker-entrance 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Loading state for map */
+.mapboxgl-map.loading {
+  position: relative;
+}
+
+.mapboxgl-map.loading::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 3px solid rgba(79, 70, 229, 0.3);
+  border-top-color: var(--cta-default, #4f46e5);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  z-index: 100;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================================
+   RECOMMENDED CAROUSEL ENHANCEMENTS
+   ============================================================================ */
+
+.map-carousel-container:has(.map-carousel-heading__pill.recommended) {
+  bottom: 25px;
+}
+
+.map-carousel-heading__pill.recommended::before {
+  content: '🏆';
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+.map-carousel-heading__pill.recommended {
+  background-color: var(
+    --warning-default
+  ) !important; /* Replaced gradient with solid color token */
+  color: var(--text-primary, #1f2937) !important;
+  border: 1px solid var(--warning-alpha-30, rgba(245, 158, 11, 0.3)) !important;
+  box-shadow: 0 4px 12px var(--warning-alpha-30, rgba(245, 158, 11, 0.3)) !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  padding: 6px 12px !important;
+}
+
+.pill-subtitle {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* Enhanced cards for recommended carousel */
+.map-carousel-container:has(.map-carousel-heading__pill.recommended) .map-carousel-card {
+  position: relative;
+}
+
+.map-carousel-container:has(.map-carousel-heading__pill.recommended) .map-carousel-card::before {
+  content: '⭐';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--warning-default, #f59e0b);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 10;
+  box-shadow: 0 2px 4px var(--shadow-dark-alpha-20, rgba(0, 0, 0, 0.2));
+}
+
+/* Enhanced hover for recommended cards */
+.map-carousel-container:has(.map-carousel-heading__pill.recommended) .map-carousel-card:hover {
+  box-shadow:
+    0 12px 40px rgba(245, 158, 11, 0.3),
+    0 8px 32px var(--shadow-dark-alpha-30, #7b7b7b);
+}
+
+/* Top Rated card enhancements */
+.map-carousel-card-wrapper.top-rated .map-carousel-card {
+  border: 2px solid var(--warning-default, #f59e0b) !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4) !important;
+  position: relative;
+}
+
+.map-carousel-card-wrapper.top-rated .map-carousel-card::before {
+  content: '👑';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: var(--warning-default); /* Replaced gradient with solid color token */
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 10;
+  box-shadow: 0 2px 6px #7b7b7b;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.map-carousel-card-wrapper.top-rated .map-carousel-card:hover::before {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+.map-carousel-card-wrapper.top-rated:hover .map-carousel-card {
+  box-shadow:
+    0 16px 48px rgba(245, 158, 11, 0.5),
+    0 12px 40px var(--shadow-dark-alpha-30, #7b7b7b) !important;
+  transform: translateY(-6px) scale(1.03) !important;
+}

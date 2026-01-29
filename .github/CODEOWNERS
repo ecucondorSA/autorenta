@@ -1,4 +1,35 @@
-# Reemplazá con GitHub usernames
-*       @TODO_owner @TODO_partner
-/apps/web/   @TODO_frontend
-/supabase/   @TODO_backend
+# Code Owners - AutoRenta
+# Este archivo define quién debe revisar cambios en diferentes partes del código
+
+# Default owners para todo el repositorio
+*       @ecucondorSA
+
+# Frontend (Angular)
+/apps/web/                    @ecucondorSA
+/apps/web/src/                @ecucondorSA
+
+# Backend/Database
+/supabase/                    @ecucondorSA
+/apps/web/database/           @ecucondorSA
+/supabase/migrations/         @ecucondorSA
+/supabase/functions/          @ecucondorSA
+
+# Workflows y CI/CD
+/.github/workflows/           @ecucondorSA
+/.github/                     @ecucondorSA
+
+# Documentación
+/docs/                        @ecucondorSA
+*.md                          @ecucondorSA
+
+# Tests
+/tests/                       @ecucondorSA
+
+# Scripts
+/scripts/                     @ecucondorSA
+/tools/                       @ecucondorSA
+
+# Configuración crítica
+/.env.example                 @ecucondorSA
+/package.json                 @ecucondorSA
+/pnpm-lock.yaml               @ecucondorSA

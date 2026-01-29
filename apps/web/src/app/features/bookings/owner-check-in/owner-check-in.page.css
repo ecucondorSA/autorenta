@@ -1,0 +1,23 @@
+/* Host element needs proper sizing for Ionic layout */
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+canvas {
+  touch-action: none;
+  cursor: crosshair;
+}
+
+ion-range {
+  --bar-background: #e5e7eb;
+  --bar-background-active: var(--ion-color-primary);
+  --knob-background: var(--ion-color-primary);
+}
+
+.card-premium {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

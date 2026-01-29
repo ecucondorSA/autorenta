@@ -1,0 +1,64 @@
+{
+  "timestamp": "2025-12-11T01:44:35.708Z",
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "totalDuration": 113629
+  },
+  "environment": {
+    "baseUrl": "http://localhost:4200",
+    "headless": true,
+    "nodeVersion": "v22.21.0"
+  },
+  "results": [
+    {
+      "name": "marketplace-loads",
+      "suite": "marketplace",
+      "passed": true,
+      "duration": 3934
+    },
+    {
+      "name": "car-card-content",
+      "suite": "marketplace",
+      "passed": true,
+      "duration": 11793
+    },
+    {
+      "name": "car-card-navigation",
+      "suite": "marketplace",
+      "passed": true,
+      "duration": 6908
+    },
+    {
+      "name": "home-page-cars",
+      "suite": "marketplace",
+      "passed": true,
+      "duration": 8080
+    },
+    {
+      "name": "search",
+      "suite": "marketplace",
+      "passed": true,
+      "duration": 13260
+    },
+    {
+      "name": "multiple-car-cards",
+      "suite": "marketplace",
+      "passed": true,
+      "duration": 52804
+    },
+    {
+      "name": "empty-search-results",
+      "suite": "marketplace",
+      "passed": true,
+      "duration": 13567
+    },
+    {
+      "name": "api-calls",
+      "suite": "marketplace",
+      "passed": true,
+      "duration": 3283
+    }
+  ]
+}

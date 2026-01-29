@@ -1,0 +1,530 @@
+[
+  {
+    "file": "apps/web/src/app/features/admin/settlements/admin-settlements.page.css",
+    "line": 490,
+    "content": "color: var(--text-white, white);",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/booking-detail-payment/booking-detail-payment.page.redesign.html",
+    "line": 17,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/booking-detail-payment/booking-detail-payment.page.redesign.html",
+    "line": 26,
+    "content": "color: var(--text-white, white);",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/claims/my-claims.page.css",
+    "line": 59,
+    "content": "color: var(--text-white, white);",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/owner-damage-report/owner-damage-report.page.css",
+    "line": 198,
+    "content": "background-color: #fffbeb;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/pages/booking-checkout/booking-checkout.page.css",
+    "line": 99,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/pages/booking-checkout/booking-checkout.page.css",
+    "line": 230,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/pages/booking-checkout/booking-checkout.page.css",
+    "line": 409,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/pages/booking-checkout/booking-checkout.page.css",
+    "line": 438,
+    "content": "color: var(--text-white, white);",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/pages/booking-checkout/booking-checkout.page.css",
+    "line": 610,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/pages/booking-confirmation/booking-confirmation.page.css",
+    "line": 191,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/pages/booking-confirmation/booking-confirmation.page.css",
+    "line": 285,
+    "content": "background-color: #fffbeb;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/pages/booking-confirmation/booking-confirmation.page.css",
+    "line": 377,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/pages/waitlist/waitlist.page.css",
+    "line": 282,
+    "content": "color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/pages/waitlist/waitlist.page.css",
+    "line": 290,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/bookings/pages/waitlist/waitlist.page.css",
+    "line": 301,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/cars/list/cars-list.page.html",
+    "line": 34,
+    "content": "class=\"px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/cars/list/cars-list.page.html",
+    "line": 55,
+    "content": "class=\"px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/cars/list/cars-list.page.html",
+    "line": 76,
+    "content": "class=\"px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/contracts/booking-contract.page.css",
+    "line": 285,
+    "content": "color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/disputes/pages/dispute-detail/dispute-detail.page.ts",
+    "line": 60,
+    "content": "class=\"btn btn-success btn-sm text-white\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/disputes/pages/dispute-detail/dispute-detail.page.ts",
+    "line": 67,
+    "content": "class=\"btn btn-error btn-sm text-white\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/disputes/pages/dispute-detail/dispute-detail.page.ts",
+    "line": 74,
+    "content": "class=\"btn btn-info btn-sm text-white\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/explore/explore.page.html",
+    "line": 55,
+    "content": "class=\"px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/explore/explore.page.html",
+    "line": 72,
+    "content": "class=\"px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/explore/explore.page.html",
+    "line": 99,
+    "content": "class=\"p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/explore/explore.page.html",
+    "line": 112,
+    "content": "class=\"p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/explore/explore.page.html",
+    "line": 125,
+    "content": "class=\"p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/marketplace/components/ui/badge.component.ts",
+    "line": 100,
+    "content": "color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/marketplace/marketplace-v2.page.css",
+    "line": 2167,
+    "content": "bg-white/5 border border-white/10 text-text-primary dark:text-white/80",
+    "type": "text-white/opacity",
+    "severity": "HIGH",
+    "fix": "Reemplazar con text-primary/opacity o text-secondary/opacity"
+  },
+  {
+    "file": "apps/web/src/app/features/marketplace/marketplace-v2.page.css",
+    "line": 2168,
+    "content": "hover:bg-white/10 hover:border-cyan-500/30 hover:text-text-primary dark:hover:text-white",
+    "type": "text-white",
+    "severity": "HIGH",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/marketplace/marketplace-v2.page.html",
+    "line": 297,
+    "content": "class=\"text-sm font-medium text-white group-hover:text-cyan-400 transition-colors\">",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/marketplace/marketplace-v2.page.html",
+    "line": 300,
+    "content": "<p class=\"text-xs text-white/40 truncate mt-0.5\">",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/marketplace/marketplace-v2.page.html",
+    "line": 324,
+    "content": "<p class=\"text-sm font-medium text-white\">No encontramos esa ubicación</p>",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/marketplace/marketplace-v2.page.html",
+    "line": 325,
+    "content": "<p class=\"text-xs text-white/40 mt-1\">Intenta con otra dirección</p>",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/marketplace/marketplace-v2.page.html",
+    "line": 781,
+    "content": "<svg class=\"w-8 h-8 text-amber-400 group-hover:text-white transition-colors\"",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/marketplace/marketplace-v2.page.html",
+    "line": 1346,
+    "content": "<p class=\"text-white/60 text-sm mt-4\">Explora autos con filtros avanzados</p>",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/marketplace/marketplace-v2.page.html",
+    "line": 1378,
+    "content": "<p class=\"text-white/60 text-sm mt-3 text-center\">",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/payouts/components/request-payout-modal.component.ts",
+    "line": 427,
+    "content": "color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/profile/location-settings.page.css",
+    "line": 225,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/profile/location-settings.page.css",
+    "line": 384,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/profile/location-settings.page.css",
+    "line": 401,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/profile/notifications-settings/notifications-settings.page.css",
+    "line": 172,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/verification/verification.page.ts",
+    "line": 116,
+    "content": "<p class=\"text-white/90 max-w-2xl\">",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/verification/verification.page.ts",
+    "line": 130,
+    "content": "class=\"inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white/90 hover:border-white hover:text-",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/verification/verification.page.ts",
+    "line": 137,
+    "content": "<p class=\"text-sm uppercase tracking-widest text-white/70 mb-1\">Progreso</p>",
+    "type": "text-white",
+    "severity": "HIGH",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/verification/verification.page.ts",
+    "line": 137,
+    "content": "<p class=\"text-sm uppercase tracking-widest text-white/70 mb-1\">Progreso</p>",
+    "type": "text-white/opacity",
+    "severity": "HIGH",
+    "fix": "Reemplazar con text-primary/opacity o text-secondary/opacity"
+  },
+  {
+    "file": "apps/web/src/app/features/verification/verification.page.ts",
+    "line": 139,
+    "content": "<p class=\"text-white/80 text-sm\">",
+    "type": "text-white",
+    "severity": "HIGH",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/features/verification/verification.page.ts",
+    "line": 139,
+    "content": "<p class=\"text-white/80 text-sm\">",
+    "type": "text-white/opacity",
+    "severity": "HIGH",
+    "fix": "Reemplazar con text-primary/opacity o text-secondary/opacity"
+  },
+  {
+    "file": "apps/web/src/app/features/wallet/components/transfer-funds.component.css",
+    "line": 18,
+    "content": "color: #fff;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/wallet/components/transfer-funds.component.css",
+    "line": 24,
+    "content": "background-color: #fff3e0;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/features/wallet/components/transfer-funds.component.css",
+    "line": 33,
+    "content": "background-color: #fff;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "line": 240,
+    "content": "color: var(--text-white, #fefefe);",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "line": 371,
+    "content": "color: var(--text-white, #ffffff) !important; /* Texto blanco para contraste */",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "line": 434,
+    "content": "color: var(--text-white, #ffffff) !important; /* Color base blanco para dark mode */",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "line": 461,
+    "content": "color: var(--text-white, #ffffff) !important; /* Blanco para contraste en dark mode */",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "line": 609,
+    "content": "color: var(--text-white, #ffffff) !important;",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "line": 655,
+    "content": "color: var(--text-white, #ffffff) !important;",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/distance-summary/distance-summary.component.css",
+    "line": 24,
+    "content": "background-color: #fffbeb;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/enhanced-map-tooltip/enhanced-map-tooltip.component.ts",
+    "line": 205,
+    "content": "class=\"w-full flex items-center justify-center gap-1.5 bg-[var(--brand-waze-default,#33CCFF)] hover:bg-[var(--brand-waze-hover,#2BB8EA)] text-white fo",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/map-booking-panel/map-booking-panel.component.ts",
+    "line": 242,
+    "content": "class=\"flex items-center justify-center gap-1.5 bg-[var(--brand-waze-default,#33CCFF)] hover:bg-[var(--brand-waze-hover,#2BB8EA)] text-white font-semi",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/map-booking-panel/map-booking-panel.component.ts",
+    "line": 259,
+    "content": "class=\"flex items-center justify-center gap-1.5 bg-[var(--brand-google-maps-default,#4285F4)] hover:bg-[var(--brand-google-maps-hover,#3367D6)] text-w",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/pickup-location-selector/pickup-location-selector.component.css",
+    "line": 159,
+    "content": "background-color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/price-transparency-modal/price-transparency-modal.component.ts",
+    "line": 72,
+    "content": "<svg class=\"w-5 h-5 text-white\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">",
+    "type": "text-white",
+    "severity": "MEDIUM",
+    "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/protection-credit-explanation-modal/protection-credit-explanation-modal.component.ts",
+    "line": 311,
+    "content": "color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  },
+  {
+    "file": "apps/web/src/app/shared/components/simple-checkout/simple-checkout.component.css",
+    "line": 67,
+    "content": "color: white;",
+    "type": "color: white",
+    "severity": "HIGH",
+    "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
+  }
+]

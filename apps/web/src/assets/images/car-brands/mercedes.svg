@@ -1,0 +1,11 @@
+<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#00001C">
+  <title>Mercedes-Benz</title>
+  <!-- Outer circle -->
+  <circle cx="12" cy="12" r="11.5" fill="none" stroke="#00001C" stroke-width="1"/>
+  <!-- Inner circle -->
+  <circle cx="12" cy="12" r="10" fill="none" stroke="#00001C" stroke-width="0.8"/>
+  <!-- Three-pointed star -->
+  <path d="M12 2.5 L12.5 11.5 L12 12 L11.5 11.5 Z M12 12 L3.5 17.5 L3.8 16.6 L11.5 12.3 Z M12 12 L20.5 17.5 L20.2 16.6 L12.5 12.3 Z" fill="#00001C"/>
+  <!-- Center circle -->
+  <circle cx="12" cy="12" r="1.5" fill="#00001C"/>
+</svg>

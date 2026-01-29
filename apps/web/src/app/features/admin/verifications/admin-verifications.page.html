@@ -1,0 +1,683 @@
+<div class="min-h-screen bg-surface-base py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-text-primary tracking-tight font-satoshi">
+        Cola de Verificaciones
+      </h1>
+      <p class="mt-2 text-sm text-text-secondary">
+        Revisa y aprueba las solicitudes de verificación de identidad de usuarios
+      </p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+      <!-- Pending Reviews -->
+      <div class="bg-surface-raised overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="text-3xl">⏳</div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-text-secondary truncate">
+                  Pendientes de Revisión
+                </dt>
+                <dd class="text-lg font-semibold text-text-primary">
+                  @if (statsLoading()) {
+                    <span class="text-text-muted">...</span>
+                  } @else {
+                    {{ stats()?.pending_reviews ?? 0 }}
+                  }
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approved Today -->
+      <div class="bg-surface-raised overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="text-3xl">✅</div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-text-secondary truncate">Aprobadas Hoy</dt>
+                <dd class="text-lg font-semibold text-success-strong">
+                  @if (statsLoading()) {
+                    <span class="text-text-muted">...</span>
+                  } @else {
+                    {{ stats()?.approved_today ?? 0 }}
+                  }
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rejected Today -->
+      <div class="bg-surface-raised overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="text-3xl">⚠️</div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-text-secondary truncate">Rechazadas Hoy</dt>
+                <dd class="text-lg font-semibold text-warning-strong">
+                  @if (statsLoading()) {
+                    <span class="text-text-muted">...</span>
+                  } @else {
+                    {{ stats()?.rejected_today ?? 0 }}
+                  }
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Users -->
+      <div class="bg-surface-raised overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="text-3xl">👥</div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-text-secondary truncate">Total Usuarios</dt>
+                <dd class="text-lg font-semibold text-text-primary">
+                  @if (statsLoading()) {
+                    <span class="text-text-muted">...</span>
+                  } @else {
+                    {{ stats()?.total_users ?? 0 }}
+                  }
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-surface-raised shadow rounded-lg p-6 mb-6">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <!-- Type Filter -->
+        <div>
+          <label class="block text-sm font-medium text-text-primary mb-2"
+            >Tipo de Verificación</label
+          >
+          <div class="flex space-x-2">
+            <button
+              (click)="filterByType('all')"
+              [class.bg-cta-default]="filterType() === 'all'"
+              [class.text-text-inverse]="filterType() === 'all'"
+              [class.bg-surface-hover]="filterType() !== 'all'"
+              [class.text-text-primary]="filterType() !== 'all'"
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Todas
+            </button>
+            <button
+              (click)="filterByType('level_2')"
+              [class.bg-cta-default]="filterType() === 'level_2'"
+              [class.text-text-inverse]="filterType() === 'level_2'"
+              [class.bg-surface-hover]="filterType() !== 'level_2'"
+              [class.text-text-primary]="filterType() !== 'level_2'"
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Nivel 2 (DNI)
+            </button>
+            <button
+              (click)="filterByType('level_3')"
+              [class.bg-cta-default]="filterType() === 'level_3'"
+              [class.text-text-inverse]="filterType() === 'level_3'"
+              [class.bg-surface-hover]="filterType() !== 'level_3'"
+              [class.text-text-primary]="filterType() !== 'level_3'"
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Nivel 3 (Selfie)
+            </button>
+          </div>
+        </div>
+
+        <!-- Status Filter -->
+        <div>
+          <label class="block text-sm font-medium text-text-primary mb-2">Estado</label>
+          <div class="flex space-x-2">
+            <button
+              (click)="filterByStatus('PENDING')"
+              [class.bg-cta-default]="filterStatus() === 'PENDING'"
+              [class.text-text-inverse]="filterStatus() === 'PENDING'"
+              [class.bg-surface-hover]="filterStatus() !== 'PENDING'"
+              [class.text-text-primary]="filterStatus() !== 'PENDING'"
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Pendientes
+            </button>
+            <button
+              (click)="filterByStatus('APPROVED')"
+              [class.bg-cta-default]="filterStatus() === 'APPROVED'"
+              [class.text-text-inverse]="filterStatus() === 'APPROVED'"
+              [class.bg-surface-hover]="filterStatus() !== 'APPROVED'"
+              [class.text-text-primary]="filterStatus() !== 'APPROVED'"
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Aprobadas
+            </button>
+            <button
+              (click)="filterByStatus('REJECTED')"
+              [class.bg-cta-default]="filterStatus() === 'REJECTED'"
+              [class.text-text-inverse]="filterStatus() === 'REJECTED'"
+              [class.bg-surface-hover]="filterStatus() !== 'REJECTED'"
+              [class.text-text-primary]="filterStatus() !== 'REJECTED'"
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Rechazadas
+            </button>
+            <button
+              (click)="filterByStatus('all')"
+              [class.bg-cta-default]="filterStatus() === 'all'"
+              [class.text-text-inverse]="filterStatus() === 'all'"
+              [class.bg-surface-hover]="filterStatus() !== 'all'"
+              [class.text-text-primary]="filterStatus() !== 'all'"
+              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Todas
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verification Queue Table -->
+    <div class="bg-surface-raised shadow rounded-lg overflow-hidden">
+      @if (loading()) {
+        <div class="p-12 text-center">
+          <div class="text-text-muted text-lg">Cargando verificaciones...</div>
+        </div>
+      } @else if (verifications().length === 0) {
+        <div class="p-12 text-center">
+          <div class="text-6xl mb-4">🎉</div>
+          <div class="text-text-secondary text-lg">
+            No hay verificaciones
+            {{ filterStatus() === 'PENDING' ? 'pendientes' : 'en este estado' }}
+          </div>
+        </div>
+      } @else {
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-surface-base">
+              <tr>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  Usuario
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  Tipo
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  Fecha Envío
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  AI Score
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  Estado
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                >
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-surface-raised divide-y divide-gray-200">
+              @for (verification of verifications(); track verification.user_id) {
+                <tr class="hover:bg-surface-base transition-colors">
+                  <!-- User -->
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div>
+                        <div class="text-sm font-medium text-text-primary">
+                          {{ verification.full_name }}
+                        </div>
+                        <div class="text-sm text-text-secondary">
+                          {{ verification.email }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Type -->
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                      [ngClass]="{
+                        'bg-cta-default/20 text-cta-default':
+                          getVerificationLevel(verification) === 2,
+                        'bg-purple-100 text-purple-800': getVerificationLevel(verification) === 3,
+                      }"
+                    >
+                      {{ getVerificationLevelName(verification) }}
+                    </span>
+                    @if (isSuspicious(verification)) {
+                      <span
+                        class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-error-bg-hover text-error-strong"
+                      >
+                        🚩 Sospechoso
+                      </span>
+                    }
+                    @if (needsAdditionalDocs(verification)) {
+                      <span
+                        class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-warning-bg-hover text-warning-strong"
+                      >
+                        📄 Docs Requeridos
+                      </span>
+                    }
+                  </td>
+
+                  <!-- Date -->
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
+                    {{ formatDate(verification.updated_at) }}
+                  </td>
+
+                  <!-- AI Score -->
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    @if (verification.document_ai_score !== undefined) {
+                      <span
+                        class="text-sm font-medium"
+                        [ngClass]="getScoreColor(verification.document_ai_score)"
+                      >
+                        📄 {{ getScoreBadge(verification.document_ai_score) }}
+                      </span>
+                    }
+                    @if (verification.face_match_score !== undefined) {
+                      <div
+                        class="text-sm font-medium"
+                        [ngClass]="getScoreColor(verification.face_match_score)"
+                      >
+                        🤳 {{ getScoreBadge(verification.face_match_score) }}
+                      </div>
+                    }
+                    @if (!verification.document_ai_score && !verification.face_match_score) {
+                      <span class="text-sm text-text-muted">N/A</span>
+                    }
+                  </td>
+
+                  <!-- Status -->
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    @if (verification.manual_review_decision === 'APPROVED') {
+                      <span
+                        class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-success-light/20 text-success-strong"
+                      >
+                        ✅ Aprobada
+                      </span>
+                    } @else if (verification.manual_review_decision === 'REJECTED') {
+                      <span
+                        class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-error-bg-hover text-error-strong"
+                      >
+                        ❌ Rechazada
+                      </span>
+                    } @else {
+                      <span
+                        class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-warning-bg-hover text-warning-strong"
+                      >
+                        ⏳ Pendiente
+                      </span>
+                    }
+                  </td>
+
+                  <!-- Actions -->
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button
+                      (click)="selectVerification(verification)"
+                      class="text-cta-default hover:text-cta-default transition-colors"
+                    >
+                      Ver Detalles
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Load More Button -->
+        @if (canLoadMore()) {
+          <div class="px-6 py-4 border-t border-border-default bg-surface-base text-center">
+            <button
+              (click)="loadMore()"
+              class="px-4 py-2 bg-cta-default text-cta-text rounded-md hover:bg-cta-default transition-colors"
+            >
+              Cargar Más
+            </button>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Verification Detail Modal -->
+@if (selectedVerification()) {
+  <div
+    class="fixed z-50 inset-0 overflow-y-auto"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+    >
+      <!-- Background overlay -->
+      <div
+        class="fixed inset-0 bg-surface-base bg-opacity-75 transition-opacity"
+        (click)="closeModal()"
+      ></div>
+
+      <!-- Modal panel -->
+      <div
+        class="inline-block align-bottom bg-surface-raised rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full"
+      >
+        <div class="bg-surface-raised px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <!-- Header -->
+          <div class="flex justify-between items-start mb-6">
+            <div>
+              <h3
+                class="text-lg leading-6 font-medium text-text-primary font-satoshi"
+                id="modal-title"
+              >
+                Revisión de Verificación - {{ selectedVerification()!.full_name }}
+              </h3>
+              <p class="mt-1 text-sm text-text-secondary">
+                {{ getVerificationLevelName(selectedVerification()!) }}
+              </p>
+            </div>
+            <button (click)="closeModal()" class="text-text-muted hover:text-text-secondary">
+              <span class="text-2xl">&times;</span>
+            </button>
+          </div>
+
+          <!-- User Info -->
+          <div class="mb-6 bg-surface-base p-4 rounded-lg">
+            <h4 class="font-medium text-text-primary mb-2 font-satoshi">Información del Usuario</h4>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-text-secondary">Nombre:</span>
+                <span class="ml-2 font-medium">{{ selectedVerification()!.full_name }}</span>
+              </div>
+              <div>
+                <span class="text-text-secondary">Email:</span>
+                <span class="ml-2 font-medium">{{ selectedVerification()!.email }}</span>
+              </div>
+              <div>
+                <span class="text-text-secondary">Nivel Actual:</span>
+                <span class="ml-2 font-medium">{{ selectedVerification()!.current_level }}</span>
+              </div>
+              <div>
+                <span class="text-text-secondary">Fecha de Envío:</span>
+                <span class="ml-2 font-medium">{{
+                  formatDate(selectedVerification()!.updated_at)
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Level 2 Documents -->
+          @if (selectedVerification()!.document_front_url) {
+            <div class="mb-6">
+              <h4 class="font-medium text-text-primary mb-3 font-satoshi">
+                Documentos de Identidad (Nivel 2)
+              </h4>
+              <div class="grid grid-cols-2 gap-4">
+                <!-- Document Front -->
+                <div>
+                  <p class="text-sm text-text-secondary mb-2">Frente del Documento</p>
+                  <a [href]="documentFrontUrl()" target="_blank" class="block">
+                    <img
+                      [src]="documentFrontUrl()"
+                      alt="Frente del documento"
+                      class="w-full h-48 object-cover rounded-lg border border-border-muted hover:opacity-75 transition-opacity cursor-pointer"
+                      width="400"
+                      height="192"
+                    />
+                  </a>
+                </div>
+
+                <!-- Document Back -->
+                @if (selectedVerification()!.document_back_url) {
+                  <div>
+                    <p class="text-sm text-text-secondary mb-2">Dorso del Documento</p>
+                    <a [href]="documentBackUrl()" target="_blank" class="block">
+                      <img
+                        [src]="documentBackUrl()"
+                        alt="Dorso del documento"
+                        class="w-full h-48 object-cover rounded-lg border border-border-muted hover:opacity-75 transition-opacity cursor-pointer"
+                        width="400"
+                        height="192"
+                      />
+                    </a>
+                  </div>
+                }
+              </div>
+
+              <!-- Document Info -->
+              <div class="mt-4 grid grid-cols-3 gap-4 text-sm">
+                @if (selectedVerification()!.document_type) {
+                  <div>
+                    <span class="text-text-secondary">Tipo:</span>
+                    <span class="ml-2 font-medium">{{
+                      selectedVerification()!.document_type
+                    }}</span>
+                  </div>
+                }
+                @if (selectedVerification()!.document_number) {
+                  <div>
+                    <span class="text-text-secondary">Número:</span>
+                    <span class="ml-2 font-medium">{{
+                      selectedVerification()!.document_number
+                    }}</span>
+                  </div>
+                }
+                @if (selectedVerification()!.document_ai_score !== undefined) {
+                  <div>
+                    <span class="text-text-secondary">AI Score:</span>
+                    <span
+                      class="ml-2 font-medium"
+                      [ngClass]="getScoreColor(selectedVerification()!.document_ai_score)"
+                    >
+                      {{ getScoreBadge(selectedVerification()!.document_ai_score) }}
+                    </span>
+                  </div>
+                }
+              </div>
+
+              <!-- Extracted Data -->
+              @if (
+                selectedVerification()!.extracted_full_name ||
+                selectedVerification()!.extracted_birth_date
+              ) {
+                <div class="mt-4 p-3 bg-cta-default/10 rounded-lg">
+                  <p class="text-sm font-medium text-cta-default mb-2">Datos Extraídos por AI:</p>
+                  <div class="grid grid-cols-2 gap-2 text-sm">
+                    @if (selectedVerification()!.extracted_full_name) {
+                      <div>
+                        <span class="text-cta-default">Nombre:</span>
+                        <span class="ml-2 font-medium text-cta-default">{{
+                          selectedVerification()!.extracted_full_name
+                        }}</span>
+                      </div>
+                    }
+                    @if (selectedVerification()!.extracted_birth_date) {
+                      <div>
+                        <span class="text-cta-default">Fecha de Nac:</span>
+                        <span class="ml-2 font-medium text-cta-default">{{
+                          selectedVerification()!.extracted_birth_date
+                        }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Level 3 Selfie -->
+          @if (selectedVerification()!.selfie_url) {
+            <div class="mb-6">
+              <h4 class="font-medium text-text-primary mb-3 font-satoshi">
+                Selfie con Documento (Nivel 3)
+              </h4>
+              <div class="max-w-md">
+                <a [href]="selfieUrl()" target="_blank" class="block">
+                  <img
+                    [src]="selfieUrl()"
+                    alt="Selfie"
+                    class="w-full h-64 object-cover rounded-lg border border-border-muted hover:opacity-75 transition-opacity cursor-pointer"
+                    width="400"
+                    height="256"
+                  />
+                </a>
+              </div>
+
+              <!-- Selfie Scores -->
+              <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+                @if (selectedVerification()!.face_match_score !== undefined) {
+                  <div>
+                    <span class="text-text-secondary">Face Match Score:</span>
+                    <span
+                      class="ml-2 font-medium"
+                      [ngClass]="getScoreColor(selectedVerification()!.face_match_score)"
+                    >
+                      {{ getScoreBadge(selectedVerification()!.face_match_score) }}
+                    </span>
+                  </div>
+                }
+                @if (selectedVerification()!.liveness_score !== undefined) {
+                  <div>
+                    <span class="text-text-secondary">Liveness Score:</span>
+                    <span
+                      class="ml-2 font-medium"
+                      [ngClass]="getScoreColor(selectedVerification()!.liveness_score)"
+                    >
+                      {{ getScoreBadge(selectedVerification()!.liveness_score) }}
+                    </span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Previous Review Notes -->
+          @if (selectedVerification()!.manual_review_notes) {
+            <div class="mb-6 p-4 bg-warning-bg rounded-lg">
+              <h4 class="font-medium text-warning-strong mb-2 font-satoshi">
+                Notas de Revisión Anterior
+              </h4>
+              <p class="text-sm text-warning-strong">
+                {{ selectedVerification()!.manual_review_notes }}
+              </p>
+              @if (selectedVerification()!.manual_reviewed_at) {
+                <p class="text-xs text-warning-text mt-2">
+                  {{ formatDate(selectedVerification()!.manual_reviewed_at) }}
+                </p>
+              }
+            </div>
+          }
+
+          <!-- Approval Notes (optional) -->
+          @if (selectedVerification()!.manual_review_decision !== 'APPROVED') {
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-text-primary mb-2">
+                Notas de Aprobación (Opcional)
+              </label>
+              <textarea
+                [value]="actionNotes()"
+                (input)="updateActionNotes($any($event.target).value)"
+                rows="3"
+                class="w-full px-3 py-2 border border-border-muted rounded-md focus:outline-none focus:ring-2 focus:ring-border-focus"
+                placeholder="Agregar notas sobre la aprobación..."
+              ></textarea>
+            </div>
+          }
+
+          <!-- Rejection Reason (required for rejection) -->
+          @if (selectedVerification()!.manual_review_decision !== 'REJECTED') {
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-text-primary mb-2">
+                Motivo de Rechazo (Requerido para rechazar)
+              </label>
+              <textarea
+                [value]="rejectionReason()"
+                (input)="updateRejectionReason($any($event.target).value)"
+                rows="3"
+                class="w-full px-3 py-2 border border-border-muted rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                placeholder="Explica el motivo del rechazo (ej: 'Documento borroso', 'No coincide el nombre', etc.)"
+              ></textarea>
+            </div>
+          }
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="bg-surface-base px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
+          @if (selectedVerification()!.manual_review_decision !== 'APPROVED') {
+            <button
+              (click)="approveVerification(selectedVerification()!)"
+              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-success-light text-text-primary hover:bg-success-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-success-light sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+            >
+              ✅ Aprobar
+            </button>
+          }
+
+          @if (selectedVerification()!.manual_review_decision !== 'REJECTED') {
+            <button
+              (click)="rejectVerification(selectedVerification()!)"
+              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-error-600 text-base font-medium text-text-inverse hover:bg-error-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+            >
+              ❌ Rechazar
+            </button>
+          }
+
+          <button
+            (click)="requestAdditionalDocs(selectedVerification()!)"
+            class="w-full inline-flex justify-center rounded-md border border-border-muted shadow-sm px-4 py-2 bg-surface-raised text-base font-medium text-text-primary hover:bg-surface-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-border-focus sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+          >
+            📄 Solicitar Docs
+          </button>
+
+          <button
+            (click)="flagSuspicious(selectedVerification()!)"
+            class="w-full inline-flex justify-center rounded-md border border-border-muted shadow-sm px-4 py-2 bg-surface-raised text-base font-medium text-text-primary hover:bg-surface-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-border-focus sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+          >
+            🚩 Marcar Sospechoso
+          </button>
+
+          <button
+            (click)="closeModal()"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-border-muted shadow-sm px-4 py-2 bg-surface-raised text-base font-medium text-text-primary hover:bg-surface-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-border-focus sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

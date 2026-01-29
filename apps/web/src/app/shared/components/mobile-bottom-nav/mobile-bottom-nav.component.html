@@ -1,0 +1,49 @@
+<!--
+🎨 Mobile Bottom Navigation - Patrón Airbnb
+5 tabs: Explorar, Favoritos, Reservas, Mensajes, Perfil
+-->
+
+<nav
+  class="mobile-bottom-nav"
+  [class.mobile-bottom-nav--hidden]="isHidden() || isKeyboardVisible()"
+  role="navigation"
+  aria-label="Navegación principal móvil"
+>
+  <div class="nav-container">
+    @for (item of navItems; track item.id) {
+      <a
+        [routerLink]="item.route"
+        (click)="navigateWithHaptic($event, item)"
+        class="nav-item"
+        [class.nav-item--active]="isActive(item.route)"
+        [attr.aria-label]="item.label"
+        [attr.aria-current]="isActive(item.route) ? 'page' : null"
+      >
+        <div class="nav-item__icon-wrapper">
+          <app-nav-icon
+            [name]="item.icon"
+            [size]="26"
+            [active]="isActive(item.route)"
+            class="nav-item__icon"
+            [class.nav-item__icon--active]="isActive(item.route)"
+          />
+          <!-- Badge para notificaciones (mensajes) -->
+          @if (item.badgeSignal && item.badgeSignal() > 0) {
+            <span class="nav-item__badge" aria-label="{{ item.badgeSignal() }} sin leer">
+              {{ item.badgeSignal() > 99 ? '99+' : item.badgeSignal() }}
+            </span>
+          }
+        </div>
+        <span class="nav-item__label" [class.nav-item__label--active]="isActive(item.route)">
+          {{ item.label }}
+        </span>
+        @if (isActive(item.route)) {
+          <div class="nav-item__indicator" aria-hidden="true"></div>
+        }
+      </a>
+    }
+  </div>
+
+  <!-- Shadow/Blur overlay superior -->
+  <div class="nav-shadow" aria-hidden="true"></div>
+</nav>

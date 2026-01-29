@@ -1,0 +1,378 @@
+/* ═══════════════════════════════════════════════════════════════
+   Container Queries - Component-level Responsive Design
+   ═══════════════════════════════════════════════════════════════
+
+   Container queries permiten que los componentes respondan a su
+   contenedor en lugar del viewport. Útil para componentes reusables
+   que aparecen en diferentes contextos (sidebar, modal, grid, etc.)
+
+   Soporte: Chrome 105+, Safari 16+, Firefox 110+ (Feb 2023)
+   Polyfill: No necesario en 2025, >95% de navegadores lo soportan
+*/
+
+/* ─────────────────────────────────────────────────────────────
+   Container Root Definitions
+   ───────────────────────────────────────────────────────────── */
+
+/* Card containers - permiten queries basadas en ancho del card */
+.card-container,
+.booking-card,
+.car-card,
+[class*='card-'] {
+  container-type: inline-size;
+  container-name: card;
+}
+
+/* Sidebar/Panel containers */
+.sidebar,
+.panel,
+.filter-panel,
+[class*='sidebar'] {
+  container-type: inline-size;
+  container-name: sidebar;
+}
+
+/* Grid item containers */
+.grid-item,
+.list-item,
+[class*='grid-item'] {
+  container-type: inline-size;
+  container-name: grid-item;
+}
+
+/* Modal/Dialog containers */
+.modal-content,
+.dialog-content,
+[class*='modal'] [class*='content'] {
+  container-type: inline-size;
+  container-name: modal;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Card Component Queries
+   ───────────────────────────────────────────────────────────── */
+
+/* Card pequeño (<300px) - layout compacto vertical */
+@container card (max-width: 300px) {
+  .card-content {
+    padding: 0.75rem !important;
+    font-size: 0.875rem;
+  }
+
+  .card-title {
+    font-size: 1rem !important;
+    line-height: 1.25;
+  }
+
+  .card-description {
+    display: none; /* Ocultar descripciones en cards muy pequeños */
+  }
+
+  .card-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card-image {
+    aspect-ratio: 16/9 !important;
+  }
+}
+
+/* Card mediano (300-500px) - layout estándar */
+@container card (min-width: 300px) and (max-width: 500px) {
+  .card-content {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+  }
+
+  .card-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* Card grande (>500px) - layout horizontal */
+@container card (min-width: 500px) {
+  .card-inner {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    gap: 1.5rem;
+  }
+
+  .card-image {
+    aspect-ratio: 4/3 !important;
+  }
+
+  .card-content {
+    padding: 1.5rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Sidebar Component Queries
+   ───────────────────────────────────────────────────────────── */
+
+/* Sidebar colapsado (<250px) */
+@container sidebar (max-width: 250px) {
+  .sidebar-label {
+    display: none;
+  }
+
+  .sidebar-item {
+    justify-content: center;
+    padding: 0.5rem;
+  }
+
+  .sidebar-icon {
+    margin: 0;
+  }
+}
+
+/* Sidebar expandido (>250px) */
+@container sidebar (min-width: 250px) {
+  .sidebar-label {
+    display: inline-block;
+  }
+
+  .sidebar-item {
+    justify-content: flex-start;
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Grid Item Queries
+   ───────────────────────────────────────────────────────────── */
+
+/* Grid item pequeño (<200px) - solo icono/imagen */
+@container grid-item (max-width: 200px) {
+  .item-text {
+    font-size: 0.75rem;
+  }
+
+  .item-subtitle,
+  .item-description {
+    display: none;
+  }
+
+  .item-actions {
+    display: none;
+  }
+}
+
+/* Grid item mediano (200-400px) */
+@container grid-item (min-width: 200px) and (max-width: 400px) {
+  .item-text {
+    font-size: 0.875rem;
+  }
+
+  .item-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Grid item grande (>400px) - todo visible */
+@container grid-item (min-width: 400px) {
+  .item-text {
+    font-size: 1rem;
+  }
+
+  .item-description {
+    display: block;
+  }
+
+  .item-actions {
+    display: flex;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Modal/Dialog Queries
+   ───────────────────────────────────────────────────────────── */
+
+/* Modal pequeño (<400px) - layout mobile */
+@container modal (max-width: 400px) {
+  .modal-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+}
+
+/* Modal grande (>600px) - layout desktop */
+@container modal (min-width: 600px) {
+  .modal-header {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .modal-body {
+    padding: 2rem;
+  }
+
+  .modal-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Car Card Specific Queries (Autorenta)
+   ───────────────────────────────────────────────────────────── */
+
+@container card (max-width: 280px) {
+  /* Ultra-compacto: solo imagen + título + precio */
+  .car-specs,
+  .car-location,
+  .car-features {
+    display: none;
+  }
+
+  .car-price {
+    font-size: 1rem;
+  }
+}
+
+@container card (min-width: 280px) and (max-width: 400px) {
+  /* Compacto: imagen + info básica */
+  .car-features {
+    display: none;
+  }
+
+  .car-specs {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+@container card (min-width: 400px) {
+  /* Completo: toda la información */
+  .car-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .car-specs {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Booking Card Queries
+   ───────────────────────────────────────────────────────────── */
+
+@container card (max-width: 350px) {
+  .booking-details {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-timeline {
+    display: none;
+  }
+}
+
+@container card (min-width: 350px) and (max-width: 600px) {
+  .booking-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@container card (min-width: 600px) {
+  .booking-details {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .booking-timeline {
+    display: block;
+  }
+
+  .booking-inner {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Utility Classes
+   ───────────────────────────────────────────────────────────── */
+
+/* Forzar container type en elementos específicos */
+.container-inline {
+  container-type: inline-size;
+}
+
+.container-size {
+  container-type: size;
+}
+
+.container-normal {
+  container-type: normal;
+}
+
+/* Named containers para queries específicas */
+.container-card {
+  container-name: card;
+}
+
+.container-sidebar {
+  container-name: sidebar;
+}
+
+.container-modal {
+  container-name: modal;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Browser Support & Fallback
+   ───────────────────────────────────────────────────────────── */
+
+/*
+  Feature Detection:
+  @supports (container-type: inline-size) {
+    // Modern browsers con soporte nativo
+  }
+
+  @supports not (container-type: inline-size) {
+    // Fallback a media queries tradicionales
+  }
+*/
+
+/* Fallback para navegadores sin soporte (<5% en 2025) */
+@supports not (container-type: inline-size) {
+  /* Usar media queries como fallback */
+  @media (max-width: 640px) {
+    .card-inner {
+      display: block !important;
+    }
+
+    .sidebar-label {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .card-inner {
+      display: grid;
+      grid-template-columns: 40% 60%;
+    }
+  }
+}

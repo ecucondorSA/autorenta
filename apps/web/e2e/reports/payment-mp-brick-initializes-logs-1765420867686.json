@@ -1,0 +1,4502 @@
+{
+  "timestamp": "2025-12-11T02:41:07.687Z",
+  "networkLogs": [
+    {
+      "id": 315,
+      "timestamp": "2025-12-11T02:40:55.228Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fguarantee-options-info%2Fguarantee-options-info.component.ts%40GuaranteeOptionsInfoComponent&t=1765420855189",
+      "resourceType": "script"
+    },
+    {
+      "id": 316,
+      "timestamp": "2025-12-11T02:40:55.229Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwallet-account-number-card%2Fwallet-account-number-card.component.ts%40WalletAccountNumberCardComponent&t=1765420855191",
+      "resourceType": "script"
+    },
+    {
+      "id": 317,
+      "timestamp": "2025-12-11T02:40:55.231Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fcomponents%2Fwallet-faq.component.ts%40WalletFaqComponent&t=1765420855192",
+      "resourceType": "script"
+    },
+    {
+      "id": 318,
+      "timestamp": "2025-12-11T02:40:55.237Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fcomponents%2Fwallet-transfers.component.ts%40WalletTransfersComponent&t=1765420855193",
+      "resourceType": "script"
+    },
+    {
+      "id": 319,
+      "timestamp": "2025-12-11T02:40:55.240Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fwallet.page.ts%40WalletPage&t=1765420855199",
+      "resourceType": "script"
+    },
+    {
+      "id": 320,
+      "timestamp": "2025-12-11T02:40:55.254Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 202
+    },
+    {
+      "id": 321,
+      "timestamp": "2025-12-11T02:40:55.254Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 322,
+      "timestamp": "2025-12-11T02:40:55.256Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwallet-balance-card%2Fwallet-balance-card.component.ts%40WalletBalanceCardComponent&t=1765420855133",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 47
+    },
+    {
+      "id": 323,
+      "timestamp": "2025-12-11T02:40:55.260Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fdeposit-status-badge%2Fdeposit-status-badge.component.ts%40DepositStatusBadgeComponent&t=1765420855135",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 50
+    },
+    {
+      "id": 324,
+      "timestamp": "2025-12-11T02:40:55.387Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fbank-account-form%2Fbank-account-form.component.ts%40BankAccountFormComponent&t=1765420855158",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 172
+    },
+    {
+      "id": 325,
+      "timestamp": "2025-12-11T02:40:55.461Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/header-icons.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 326,
+      "timestamp": "2025-12-11T02:40:55.462Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 327,
+      "timestamp": "2025-12-11T02:40:55.465Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fbank-accounts-list%2Fbank-accounts-list.component.ts%40BankAccountsListComponent&t=1765420855160",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 244
+    },
+    {
+      "id": 328,
+      "timestamp": "2025-12-11T02:40:55.467Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ftransaction-history%2Ftransaction-history.component.ts%40TransactionHistoryComponent&t=1765420855163",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 244
+    },
+    {
+      "id": 329,
+      "timestamp": "2025-12-11T02:40:55.467Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwithdrawal-history%2Fwithdrawal-history.component.ts%40WithdrawalHistoryComponent&t=1765420855174",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 242
+    },
+    {
+      "id": 330,
+      "timestamp": "2025-12-11T02:40:55.472Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fguarantee-options-info%2Fguarantee-options-info.component.ts%40GuaranteeOptionsInfoComponent&t=1765420855189",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 244
+    },
+    {
+      "id": 331,
+      "timestamp": "2025-12-11T02:40:55.475Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwithdrawal-request-form%2Fwithdrawal-request-form.component.ts%40WithdrawalRequestFormComponent&t=1765420855176",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 248
+    },
+    {
+      "id": 332,
+      "timestamp": "2025-12-11T02:40:55.475Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwallet-account-number-card%2Fwallet-account-number-card.component.ts%40WalletAccountNumberCardComponent&t=1765420855191",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 246
+    },
+    {
+      "id": 333,
+      "timestamp": "2025-12-11T02:40:55.482Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fcomponents%2Fwallet-faq.component.ts%40WalletFaqComponent&t=1765420855192",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 251
+    },
+    {
+      "id": 334,
+      "timestamp": "2025-12-11T02:40:55.483Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fcomponents%2Fwallet-transfers.component.ts%40WalletTransfersComponent&t=1765420855193",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 246
+    },
+    {
+      "id": 335,
+      "timestamp": "2025-12-11T02:40:55.483Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fwallet.page.ts%40WalletPage&t=1765420855199",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 243
+    },
+    {
+      "id": 336,
+      "timestamp": "2025-12-11T02:40:55.484Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/header-icons.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 23
+    },
+    {
+      "id": 337,
+      "timestamp": "2025-12-11T02:40:55.485Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 231
+    },
+    {
+      "id": 338,
+      "timestamp": "2025-12-11T02:40:55.485Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 23
+    },
+    {
+      "id": 339,
+      "timestamp": "2025-12-11T02:40:55.632Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 340,
+      "timestamp": "2025-12-11T02:40:55.727Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 95
+    },
+    {
+      "id": 341,
+      "timestamp": "2025-12-11T02:40:55.740Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 342,
+      "timestamp": "2025-12-11T02:40:55.743Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bank_accounts?select=*&order=is_default.desc%2Ccreated_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 343,
+      "timestamp": "2025-12-11T02:40:55.747Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/withdrawal_requests?select=*&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 344,
+      "timestamp": "2025-12-11T02:40:55.829Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 89
+    },
+    {
+      "id": 345,
+      "timestamp": "2025-12-11T02:40:55.837Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bank_accounts?select=*&order=is_default.desc%2Ccreated_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 94
+    },
+    {
+      "id": 346,
+      "timestamp": "2025-12-11T02:40:55.878Z",
+      "type": "request",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 347,
+      "timestamp": "2025-12-11T02:40:55.884Z",
+      "type": "request",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 348,
+      "timestamp": "2025-12-11T02:40:55.886Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 349,
+      "timestamp": "2025-12-11T02:40:55.890Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 350,
+      "timestamp": "2025-12-11T02:40:55.904Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 351,
+      "timestamp": "2025-12-11T02:40:55.907Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/get_driver_profile",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 352,
+      "timestamp": "2025-12-11T02:40:55.911Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 353,
+      "timestamp": "2025-12-11T02:40:55.915Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 354,
+      "timestamp": "2025-12-11T02:40:55.921Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 355,
+      "timestamp": "2025-12-11T02:40:55.926Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/withdrawal_requests?select=*&order=created_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 179
+    },
+    {
+      "id": 356,
+      "timestamp": "2025-12-11T02:40:55.929Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 357,
+      "timestamp": "2025-12-11T02:40:55.992Z",
+      "type": "response",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "status": 200,
+      "statusText": "",
+      "duration": 108
+    },
+    {
+      "id": 358,
+      "timestamp": "2025-12-11T02:40:55.995Z",
+      "type": "error",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "error": "net::ERR_ABORTED",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 359,
+      "timestamp": "2025-12-11T02:40:56.017Z",
+      "type": "response",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 360,
+      "timestamp": "2025-12-11T02:40:56.017Z",
+      "type": "error",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "error": "net::ERR_ABORTED",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 361,
+      "timestamp": "2025-12-11T02:40:56.047Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": "",
+      "duration": 161
+    },
+    {
+      "id": 362,
+      "timestamp": "2025-12-11T02:40:56.062Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "status": 200,
+      "statusText": "",
+      "duration": 151
+    },
+    {
+      "id": 363,
+      "timestamp": "2025-12-11T02:40:56.062Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 364,
+      "timestamp": "2025-12-11T02:40:56.062Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 133
+    },
+    {
+      "id": 365,
+      "timestamp": "2025-12-11T02:40:56.062Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/get_driver_profile",
+      "status": 200,
+      "statusText": "",
+      "duration": 155
+    },
+    {
+      "id": 366,
+      "timestamp": "2025-12-11T02:40:56.071Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 181
+    },
+    {
+      "id": 367,
+      "timestamp": "2025-12-11T02:40:56.104Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 183
+    },
+    {
+      "id": 368,
+      "timestamp": "2025-12-11T02:40:56.223Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 369,
+      "timestamp": "2025-12-11T02:40:56.245Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 370,
+      "timestamp": "2025-12-11T02:40:56.272Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 371,
+      "timestamp": "2025-12-11T02:40:56.277Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 372,
+      "timestamp": "2025-12-11T02:40:56.288Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 373,
+      "timestamp": "2025-12-11T02:40:56.290Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 374,
+      "timestamp": "2025-12-11T02:40:56.295Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 375,
+      "timestamp": "2025-12-11T02:40:56.307Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A40%3A56.208Z",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 376,
+      "timestamp": "2025-12-11T02:40:56.345Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 68
+    },
+    {
+      "id": 377,
+      "timestamp": "2025-12-11T02:40:56.377Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": "",
+      "duration": 87
+    },
+    {
+      "id": 378,
+      "timestamp": "2025-12-11T02:40:56.396Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "status": 200,
+      "statusText": "",
+      "duration": 101
+    },
+    {
+      "id": 379,
+      "timestamp": "2025-12-11T02:40:56.411Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A40%3A56.208Z",
+      "status": 200,
+      "statusText": "",
+      "duration": 104
+    },
+    {
+      "id": 380,
+      "timestamp": "2025-12-11T02:40:56.426Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/cars",
+      "resourceType": "document"
+    },
+    {
+      "id": 381,
+      "timestamp": "2025-12-11T02:40:56.453Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 382,
+      "timestamp": "2025-12-11T02:40:56.479Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 383,
+      "timestamp": "2025-12-11T02:40:56.493Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/owner_bookings?select=id%2Ccar_title%2Crenter_name%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A40%3A56.208Z",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 384,
+      "timestamp": "2025-12-11T02:40:56.518Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://patchright-init-script-inject.internal/",
+      "status": 200,
+      "statusText": "OK"
+    },
+    {
+      "id": 385,
+      "timestamp": "2025-12-11T02:40:56.577Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@vite/client",
+      "resourceType": "script"
+    },
+    {
+      "id": 386,
+      "timestamp": "2025-12-11T02:40:56.685Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@vite/client",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 108
+    },
+    {
+      "id": 387,
+      "timestamp": "2025-12-11T02:40:56.693Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/fonts/inter-var.woff2",
+      "resourceType": "font"
+    },
+    {
+      "id": 388,
+      "timestamp": "2025-12-11T02:40:56.694Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/styles.css",
+      "resourceType": "stylesheet"
+    },
+    {
+      "id": 389,
+      "timestamp": "2025-12-11T02:40:56.695Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/env.js?v=20251209",
+      "resourceType": "script"
+    },
+    {
+      "id": 390,
+      "timestamp": "2025-12-11T02:40:56.695Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/node_modules/@angular/build/node_modules/vite/dist/client/env.mjs",
+      "resourceType": "script"
+    },
+    {
+      "id": 391,
+      "timestamp": "2025-12-11T02:40:56.759Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/styles.css",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 65
+    },
+    {
+      "id": 392,
+      "timestamp": "2025-12-11T02:40:56.761Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/fonts/inter-var.woff2",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 68
+    },
+    {
+      "id": 393,
+      "timestamp": "2025-12-11T02:40:56.771Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/env.js?v=20251209",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 76
+    },
+    {
+      "id": 394,
+      "timestamp": "2025-12-11T02:40:56.773Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/node_modules/@angular/build/node_modules/vite/dist/client/env.mjs",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 78
+    },
+    {
+      "id": 395,
+      "timestamp": "2025-12-11T02:40:56.808Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/main.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 396,
+      "timestamp": "2025-12-11T02:40:56.812Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6ZERN7JE.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 397,
+      "timestamp": "2025-12-11T02:40:56.815Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-NVM2SVIK.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 398,
+      "timestamp": "2025-12-11T02:40:56.827Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-IK3X6MM6.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 399,
+      "timestamp": "2025-12-11T02:40:56.828Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-TB4265QZ.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 400,
+      "timestamp": "2025-12-11T02:40:56.830Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-4GVQZJHB.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 401,
+      "timestamp": "2025-12-11T02:40:56.831Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-E3X3GCQG.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 402,
+      "timestamp": "2025-12-11T02:40:56.833Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-U7T5B7M7.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 403,
+      "timestamp": "2025-12-11T02:40:56.834Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BLU5V6RM.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 404,
+      "timestamp": "2025-12-11T02:40:56.835Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-KBYJEGI2.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 405,
+      "timestamp": "2025-12-11T02:40:56.837Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-PPGBPIBU.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 406,
+      "timestamp": "2025-12-11T02:40:56.870Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/main.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 62
+    },
+    {
+      "id": 407,
+      "timestamp": "2025-12-11T02:40:56.937Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-UJUWZUFT.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 408,
+      "timestamp": "2025-12-11T02:40:56.976Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-H6NRQYVP.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 409,
+      "timestamp": "2025-12-11T02:40:56.978Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-5K6F4UNG.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 410,
+      "timestamp": "2025-12-11T02:40:56.981Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6WXZTT4O.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 411,
+      "timestamp": "2025-12-11T02:40:56.983Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-B2EVFYMR.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 412,
+      "timestamp": "2025-12-11T02:40:56.985Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FXPD26T4.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 413,
+      "timestamp": "2025-12-11T02:40:56.986Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6ZERN7JE.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 174
+    },
+    {
+      "id": 414,
+      "timestamp": "2025-12-11T02:40:56.986Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-CRSZKZUS.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 415,
+      "timestamp": "2025-12-11T02:40:57.009Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-JG7FIDPY.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 416,
+      "timestamp": "2025-12-11T02:40:57.011Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-NVM2SVIK.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 196
+    },
+    {
+      "id": 417,
+      "timestamp": "2025-12-11T02:40:57.011Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BRJVUKQS.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 418,
+      "timestamp": "2025-12-11T02:40:57.013Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-73QO7RIH.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 419,
+      "timestamp": "2025-12-11T02:40:57.015Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-PPTLPU6R.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 420,
+      "timestamp": "2025-12-11T02:40:57.017Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-X3XFKAQ3.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 421,
+      "timestamp": "2025-12-11T02:40:57.019Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-MGUCVA4Y.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 422,
+      "timestamp": "2025-12-11T02:40:57.022Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-D225FZEF.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 423,
+      "timestamp": "2025-12-11T02:40:57.024Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-K2LOAVEX.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 424,
+      "timestamp": "2025-12-11T02:40:57.026Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-IKSXKRES.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 425,
+      "timestamp": "2025-12-11T02:40:57.027Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-ZYP4R4EL.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 426,
+      "timestamp": "2025-12-11T02:40:57.040Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FRGIE4UT.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 427,
+      "timestamp": "2025-12-11T02:40:57.041Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-SVVGM6CF.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 428,
+      "timestamp": "2025-12-11T02:40:57.043Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-RFV3G4NA.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 429,
+      "timestamp": "2025-12-11T02:40:57.044Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6AZZGOBW.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 430,
+      "timestamp": "2025-12-11T02:40:57.045Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-VV6LA4GU.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 431,
+      "timestamp": "2025-12-11T02:40:57.047Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-653SOEEV.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 432,
+      "timestamp": "2025-12-11T02:40:57.054Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-U7T5B7M7.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 221
+    },
+    {
+      "id": 433,
+      "timestamp": "2025-12-11T02:40:57.054Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BLU5V6RM.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 220
+    },
+    {
+      "id": 434,
+      "timestamp": "2025-12-11T02:40:57.054Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-KBYJEGI2.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 219
+    },
+    {
+      "id": 435,
+      "timestamp": "2025-12-11T02:40:57.054Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-PPGBPIBU.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 217
+    },
+    {
+      "id": 436,
+      "timestamp": "2025-12-11T02:40:57.054Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-IK3X6MM6.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 227
+    },
+    {
+      "id": 437,
+      "timestamp": "2025-12-11T02:40:57.054Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-TB4265QZ.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 226
+    },
+    {
+      "id": 438,
+      "timestamp": "2025-12-11T02:40:57.055Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-E3X3GCQG.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 224
+    },
+    {
+      "id": 439,
+      "timestamp": "2025-12-11T02:40:57.055Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-4GVQZJHB.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 225
+    },
+    {
+      "id": 440,
+      "timestamp": "2025-12-11T02:40:57.055Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-UJUWZUFT.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 118
+    },
+    {
+      "id": 441,
+      "timestamp": "2025-12-11T02:40:57.057Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-H6NRQYVP.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 81
+    },
+    {
+      "id": 442,
+      "timestamp": "2025-12-11T02:40:57.077Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-5K6F4UNG.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 99
+    },
+    {
+      "id": 443,
+      "timestamp": "2025-12-11T02:40:57.088Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6WXZTT4O.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 107
+    },
+    {
+      "id": 444,
+      "timestamp": "2025-12-11T02:40:57.095Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-B2EVFYMR.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 112
+    },
+    {
+      "id": 445,
+      "timestamp": "2025-12-11T02:40:57.105Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FXPD26T4.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 121
+    },
+    {
+      "id": 446,
+      "timestamp": "2025-12-11T02:40:57.107Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-CRSZKZUS.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 121
+    },
+    {
+      "id": 447,
+      "timestamp": "2025-12-11T02:40:57.110Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-JG7FIDPY.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 101
+    },
+    {
+      "id": 448,
+      "timestamp": "2025-12-11T02:40:57.128Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BRJVUKQS.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 117
+    },
+    {
+      "id": 449,
+      "timestamp": "2025-12-11T02:40:57.138Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-73QO7RIH.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 125
+    },
+    {
+      "id": 450,
+      "timestamp": "2025-12-11T02:40:57.139Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-PPTLPU6R.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 124
+    },
+    {
+      "id": 451,
+      "timestamp": "2025-12-11T02:40:57.139Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-X3XFKAQ3.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 122
+    },
+    {
+      "id": 452,
+      "timestamp": "2025-12-11T02:40:57.141Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-MGUCVA4Y.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 122
+    },
+    {
+      "id": 453,
+      "timestamp": "2025-12-11T02:40:57.142Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-D225FZEF.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 120
+    },
+    {
+      "id": 454,
+      "timestamp": "2025-12-11T02:40:57.152Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-K2LOAVEX.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 128
+    },
+    {
+      "id": 455,
+      "timestamp": "2025-12-11T02:40:57.158Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-IKSXKRES.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 132
+    },
+    {
+      "id": 456,
+      "timestamp": "2025-12-11T02:40:57.172Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-ZYP4R4EL.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 145
+    },
+    {
+      "id": 457,
+      "timestamp": "2025-12-11T02:40:57.191Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FRGIE4UT.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 151
+    },
+    {
+      "id": 458,
+      "timestamp": "2025-12-11T02:40:57.191Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-SVVGM6CF.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 150
+    },
+    {
+      "id": 459,
+      "timestamp": "2025-12-11T02:40:57.191Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-RFV3G4NA.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 148
+    },
+    {
+      "id": 460,
+      "timestamp": "2025-12-11T02:40:57.191Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6AZZGOBW.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 147
+    },
+    {
+      "id": 461,
+      "timestamp": "2025-12-11T02:40:57.191Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-VV6LA4GU.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 146
+    },
+    {
+      "id": 462,
+      "timestamp": "2025-12-11T02:40:57.192Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-653SOEEV.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 145
+    },
+    {
+      "id": 463,
+      "timestamp": "2025-12-11T02:40:57.460Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fheader-icon%2Fheader-icon.component.ts%40HeaderIconComponent&t=1765420857266",
+      "resourceType": "script"
+    },
+    {
+      "id": 464,
+      "timestamp": "2025-12-11T02:40:57.461Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fshare-button%2Fshare-button.component.ts%40ShareButtonComponent&t=1765420857267",
+      "resourceType": "script"
+    },
+    {
+      "id": 465,
+      "timestamp": "2025-12-11T02:40:57.463Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-titlebar%2Fpwa-titlebar.component.ts%40PwaTitlebarComponent&t=1765420857268",
+      "resourceType": "script"
+    },
+    {
+      "id": 466,
+      "timestamp": "2025-12-11T02:40:57.468Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ficon%2Ficon.component.ts%40IconComponent&t=1765420857269",
+      "resourceType": "script"
+    },
+    {
+      "id": 467,
+      "timestamp": "2025-12-11T02:40:57.470Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnav-icon%2Fnav-icon.component.ts%40NavIconComponent&t=1765420857272",
+      "resourceType": "script"
+    },
+    {
+      "id": 468,
+      "timestamp": "2025-12-11T02:40:57.472Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-bottom-nav%2Fmobile-bottom-nav.component.ts%40MobileBottomNavComponent&t=1765420857274",
+      "resourceType": "script"
+    },
+    {
+      "id": 469,
+      "timestamp": "2025-12-11T02:40:57.473Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ffooter%2Ffooter.component.ts%40FooterComponent&t=1765420857275",
+      "resourceType": "script"
+    },
+    {
+      "id": 470,
+      "timestamp": "2025-12-11T02:40:57.475Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fhelp-button%2Fhelp-button.component.ts%40HelpButtonComponent&t=1765420857276",
+      "resourceType": "script"
+    },
+    {
+      "id": 471,
+      "timestamp": "2025-12-11T02:40:57.476Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Flanguage-selector%2Flanguage-selector.component.ts%40LanguageSelectorComponent&t=1765420857277",
+      "resourceType": "script"
+    },
+    {
+      "id": 472,
+      "timestamp": "2025-12-11T02:40:57.477Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnotifications%2Fnotifications.component.ts%40NotificationsComponent&t=1765420857278",
+      "resourceType": "script"
+    },
+    {
+      "id": 473,
+      "timestamp": "2025-12-11T02:40:57.479Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpending-reviews-banner%2Fpending-reviews-banner.component.ts%40PendingReviewsBannerComponent&t=1765420857279",
+      "resourceType": "script"
+    },
+    {
+      "id": 474,
+      "timestamp": "2025-12-11T02:40:57.482Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-banner%2Fpwa-install-banner.component.ts%40PwaInstallBannerComponent&t=1765420857280",
+      "resourceType": "script"
+    },
+    {
+      "id": 475,
+      "timestamp": "2025-12-11T02:40:57.484Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-prompt%2Fpwa-install-prompt.component.ts%40PwaInstallPromptComponent&t=1765420857281",
+      "resourceType": "script"
+    },
+    {
+      "id": 476,
+      "timestamp": "2025-12-11T02:40:57.485Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-update-prompt%2Fpwa-update-prompt.component.ts%40PwaUpdatePromptComponent&t=1765420857282",
+      "resourceType": "script"
+    },
+    {
+      "id": 477,
+      "timestamp": "2025-12-11T02:40:57.487Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-badge%2Fverification-badge.component.ts%40VerificationBadgeComponent&t=1765420857283",
+      "resourceType": "script"
+    },
+    {
+      "id": 478,
+      "timestamp": "2025-12-11T02:40:57.488Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-prompt-banner%2Fverification-prompt-banner.component.ts%40VerificationPromptBannerComponent&t=1765420857285",
+      "resourceType": "script"
+    },
+    {
+      "id": 479,
+      "timestamp": "2025-12-11T02:40:57.489Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fsplash-screen%2Fsplash-screen.component.ts%40SplashScreenComponent&t=1765420857286",
+      "resourceType": "script"
+    },
+    {
+      "id": 480,
+      "timestamp": "2025-12-11T02:40:57.491Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmenu-icon%2Fmenu-icon.component.ts%40MenuIconComponent&t=1765420857287",
+      "resourceType": "script"
+    },
+    {
+      "id": 481,
+      "timestamp": "2025-12-11T02:40:57.493Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-menu-drawer%2Fmobile-menu-drawer.component.ts%40MobileMenuDrawerComponent&t=1765420857288",
+      "resourceType": "script"
+    },
+    {
+      "id": 482,
+      "timestamp": "2025-12-11T02:40:57.494Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fdebug-panel%2Fdebug-panel.component.ts%40DebugPanelComponent&t=1765420857290",
+      "resourceType": "script"
+    },
+    {
+      "id": 483,
+      "timestamp": "2025-12-11T02:40:57.495Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fapp.component.ts%40AppComponent&t=1765420857293",
+      "resourceType": "script"
+    },
+    {
+      "id": 484,
+      "timestamp": "2025-12-11T02:40:57.498Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BDQ6HASI.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 485,
+      "timestamp": "2025-12-11T02:40:57.506Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 486,
+      "timestamp": "2025-12-11T02:40:57.507Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 487,
+      "timestamp": "2025-12-11T02:40:57.562Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/images/autorentar-logo.svg",
+      "resourceType": "image"
+    },
+    {
+      "id": 488,
+      "timestamp": "2025-12-11T02:40:57.575Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-GG7SZJGN.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 489,
+      "timestamp": "2025-12-11T02:40:57.586Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-KAOKDY7H.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 490,
+      "timestamp": "2025-12-11T02:40:57.587Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-EK5Q67MI.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 491,
+      "timestamp": "2025-12-11T02:40:57.623Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fheader-icon%2Fheader-icon.component.ts%40HeaderIconComponent&t=1765420857266",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 163
+    },
+    {
+      "id": 492,
+      "timestamp": "2025-12-11T02:40:57.629Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnav-icon%2Fnav-icon.component.ts%40NavIconComponent&t=1765420857272",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 159
+    },
+    {
+      "id": 493,
+      "timestamp": "2025-12-11T02:40:57.629Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-bottom-nav%2Fmobile-bottom-nav.component.ts%40MobileBottomNavComponent&t=1765420857274",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 157
+    },
+    {
+      "id": 494,
+      "timestamp": "2025-12-11T02:40:57.629Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fshare-button%2Fshare-button.component.ts%40ShareButtonComponent&t=1765420857267",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 168
+    },
+    {
+      "id": 495,
+      "timestamp": "2025-12-11T02:40:57.629Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-titlebar%2Fpwa-titlebar.component.ts%40PwaTitlebarComponent&t=1765420857268",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 166
+    },
+    {
+      "id": 496,
+      "timestamp": "2025-12-11T02:40:57.629Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ficon%2Ficon.component.ts%40IconComponent&t=1765420857269",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 163
+    },
+    {
+      "id": 497,
+      "timestamp": "2025-12-11T02:40:57.637Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ffooter%2Ffooter.component.ts%40FooterComponent&t=1765420857275",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 164
+    },
+    {
+      "id": 498,
+      "timestamp": "2025-12-11T02:40:57.644Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fhelp-button%2Fhelp-button.component.ts%40HelpButtonComponent&t=1765420857276",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 169
+    },
+    {
+      "id": 499,
+      "timestamp": "2025-12-11T02:40:57.665Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Flanguage-selector%2Flanguage-selector.component.ts%40LanguageSelectorComponent&t=1765420857277",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 189
+    },
+    {
+      "id": 500,
+      "timestamp": "2025-12-11T02:40:57.668Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpending-reviews-banner%2Fpending-reviews-banner.component.ts%40PendingReviewsBannerComponent&t=1765420857279",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 189
+    },
+    {
+      "id": 501,
+      "timestamp": "2025-12-11T02:40:57.678Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnotifications%2Fnotifications.component.ts%40NotificationsComponent&t=1765420857278",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 201
+    },
+    {
+      "id": 502,
+      "timestamp": "2025-12-11T02:40:57.680Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-banner%2Fpwa-install-banner.component.ts%40PwaInstallBannerComponent&t=1765420857280",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 198
+    },
+    {
+      "id": 503,
+      "timestamp": "2025-12-11T02:40:57.680Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-prompt%2Fpwa-install-prompt.component.ts%40PwaInstallPromptComponent&t=1765420857281",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 196
+    },
+    {
+      "id": 504,
+      "timestamp": "2025-12-11T02:40:57.680Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-update-prompt%2Fpwa-update-prompt.component.ts%40PwaUpdatePromptComponent&t=1765420857282",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 195
+    },
+    {
+      "id": 505,
+      "timestamp": "2025-12-11T02:40:57.680Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-badge%2Fverification-badge.component.ts%40VerificationBadgeComponent&t=1765420857283",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 193
+    },
+    {
+      "id": 506,
+      "timestamp": "2025-12-11T02:40:57.683Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-prompt-banner%2Fverification-prompt-banner.component.ts%40VerificationPromptBannerComponent&t=1765420857285",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 195
+    },
+    {
+      "id": 507,
+      "timestamp": "2025-12-11T02:40:57.697Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fsplash-screen%2Fsplash-screen.component.ts%40SplashScreenComponent&t=1765420857286",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 208
+    },
+    {
+      "id": 508,
+      "timestamp": "2025-12-11T02:40:57.697Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmenu-icon%2Fmenu-icon.component.ts%40MenuIconComponent&t=1765420857287",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 206
+    },
+    {
+      "id": 509,
+      "timestamp": "2025-12-11T02:40:57.697Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-menu-drawer%2Fmobile-menu-drawer.component.ts%40MobileMenuDrawerComponent&t=1765420857288",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 204
+    },
+    {
+      "id": 510,
+      "timestamp": "2025-12-11T02:40:57.698Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fdebug-panel%2Fdebug-panel.component.ts%40DebugPanelComponent&t=1765420857290",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 204
+    },
+    {
+      "id": 511,
+      "timestamp": "2025-12-11T02:40:57.698Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fapp.component.ts%40AppComponent&t=1765420857293",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 203
+    },
+    {
+      "id": 512,
+      "timestamp": "2025-12-11T02:40:57.699Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-GG7SZJGN.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 124
+    },
+    {
+      "id": 513,
+      "timestamp": "2025-12-11T02:40:57.700Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BDQ6HASI.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 202
+    },
+    {
+      "id": 514,
+      "timestamp": "2025-12-11T02:40:57.735Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/images/autorentar-logo.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 173
+    },
+    {
+      "id": 515,
+      "timestamp": "2025-12-11T02:40:57.753Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 247
+    },
+    {
+      "id": 516,
+      "timestamp": "2025-12-11T02:40:57.763Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 256
+    },
+    {
+      "id": 517,
+      "timestamp": "2025-12-11T02:40:57.766Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-KAOKDY7H.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 180
+    },
+    {
+      "id": 518,
+      "timestamp": "2025-12-11T02:40:57.768Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-EK5Q67MI.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 181
+    },
+    {
+      "id": 519,
+      "timestamp": "2025-12-11T02:40:57.811Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/i18n/es.json",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 520,
+      "timestamp": "2025-12-11T02:40:57.813Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fcar-card%2Fcar-card.component.ts%40CarCardComponent&t=1765420857788",
+      "resourceType": "script"
+    },
+    {
+      "id": 521,
+      "timestamp": "2025-12-11T02:40:57.814Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fcars%2Fconversion%2Fcars-conversion.page.ts%40CarsConversionPage&t=1765420857790",
+      "resourceType": "script"
+    },
+    {
+      "id": 522,
+      "timestamp": "2025-12-11T02:40:57.879Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/manifest.webmanifest",
+      "resourceType": "manifest"
+    },
+    {
+      "id": 523,
+      "timestamp": "2025-12-11T02:40:57.882Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fcar-card%2Fcar-card.component.ts%40CarCardComponent&t=1765420857788",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 69
+    },
+    {
+      "id": 524,
+      "timestamp": "2025-12-11T02:40:57.882Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fcars%2Fconversion%2Fcars-conversion.page.ts%40CarsConversionPage&t=1765420857790",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 68
+    },
+    {
+      "id": 525,
+      "timestamp": "2025-12-11T02:40:57.882Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/i18n/es.json",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 71
+    },
+    {
+      "id": 526,
+      "timestamp": "2025-12-11T02:40:57.889Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 527,
+      "timestamp": "2025-12-11T02:40:57.938Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/manifest.webmanifest",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 59
+    },
+    {
+      "id": 528,
+      "timestamp": "2025-12-11T02:40:57.993Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/header-icons.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 529,
+      "timestamp": "2025-12-11T02:40:58.003Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 530,
+      "timestamp": "2025-12-11T02:40:58.005Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 531,
+      "timestamp": "2025-12-11T02:40:58.082Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/header-icons.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 89
+    },
+    {
+      "id": 532,
+      "timestamp": "2025-12-11T02:40:58.085Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 82
+    },
+    {
+      "id": 533,
+      "timestamp": "2025-12-11T02:40:58.086Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 81
+    },
+    {
+      "id": 534,
+      "timestamp": "2025-12-11T02:40:58.091Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 202
+    },
+    {
+      "id": 535,
+      "timestamp": "2025-12-11T02:40:58.096Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/icons/icon-192.png",
+      "resourceType": "other"
+    },
+    {
+      "id": 536,
+      "timestamp": "2025-12-11T02:40:58.103Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 537,
+      "timestamp": "2025-12-11T02:40:58.123Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/icons/icon-192.png",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 27
+    },
+    {
+      "id": 538,
+      "timestamp": "2025-12-11T02:40:58.189Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 86
+    },
+    {
+      "id": 539,
+      "timestamp": "2025-12-11T02:40:58.223Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/cars?select=*%2Ccar_photos%28*%29%2Cowner%3Aprofiles%21cars_owner_id_fkey%28id%2Cfull_name%2Cavatar_url%2Crating_avg%2Crating_count%2Ccreated_at%29&status=eq.active&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 540,
+      "timestamp": "2025-12-11T02:40:58.224Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 541,
+      "timestamp": "2025-12-11T02:40:58.234Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 542,
+      "timestamp": "2025-12-11T02:40:58.341Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 117
+    },
+    {
+      "id": 543,
+      "timestamp": "2025-12-11T02:40:58.341Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 107
+    },
+    {
+      "id": 544,
+      "timestamp": "2025-12-11T02:40:58.358Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 545,
+      "timestamp": "2025-12-11T02:40:58.374Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/cars?select=*%2Ccar_photos%28*%29%2Cowner%3Aprofiles%21cars_owner_id_fkey%28id%2Cfull_name%2Cavatar_url%2Crating_avg%2Crating_count%2Ccreated_at%29&status=eq.active&order=created_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 151
+    },
+    {
+      "id": 546,
+      "timestamp": "2025-12-11T02:40:58.460Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 547,
+      "timestamp": "2025-12-11T02:40:58.464Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/b288ed1c-9544-44e1-b159-8e3335425051/ai-generated-cover-1762661192198.png",
+      "resourceType": "image"
+    },
+    {
+      "id": 548,
+      "timestamp": "2025-12-11T02:40:58.465Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/9fe9a17d-f33c-48e9-9889-8d4f1e876fc6/ai-generated-cover-1762661193620.png",
+      "resourceType": "image"
+    },
+    {
+      "id": 549,
+      "timestamp": "2025-12-11T02:40:58.471Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/10326ee8-2bb1-41a5-ac6e-0f639126b797/ai-generated-cover-1762661194654.png",
+      "resourceType": "image"
+    },
+    {
+      "id": 550,
+      "timestamp": "2025-12-11T02:40:58.472Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/d2cfd10d-701b-4671-a75a-86a8b31fdb95/7d5cb4f0-e97f-424a-85eb-d6dc93115ec9.webp",
+      "resourceType": "image"
+    },
+    {
+      "id": 551,
+      "timestamp": "2025-12-11T02:40:58.477Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/96091859-8921-46fb-9466-ba409750acdf/eb80d98f-6ee8-4b2e-a349-8b282ba62b12.webp",
+      "resourceType": "image"
+    },
+    {
+      "id": 552,
+      "timestamp": "2025-12-11T02:40:58.479Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/e4b6542a-8bb9-466d-83bc-54b999a7aec9/bd702338-6d7a-4290-8e7d-306b8c5fa3f9.webp",
+      "resourceType": "image"
+    },
+    {
+      "id": 553,
+      "timestamp": "2025-12-11T02:40:58.508Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 150
+    },
+    {
+      "id": 554,
+      "timestamp": "2025-12-11T02:40:58.524Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/b288ed1c-9544-44e1-b159-8e3335425051/ai-generated-cover-1762661192198.png",
+      "status": 200,
+      "statusText": "",
+      "duration": 60
+    },
+    {
+      "id": 555,
+      "timestamp": "2025-12-11T02:40:58.539Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/9fe9a17d-f33c-48e9-9889-8d4f1e876fc6/ai-generated-cover-1762661193620.png",
+      "status": 200,
+      "statusText": "",
+      "duration": 74
+    },
+    {
+      "id": 556,
+      "timestamp": "2025-12-11T02:40:58.540Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 80
+    },
+    {
+      "id": 557,
+      "timestamp": "2025-12-11T02:40:58.544Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/get_driver_profile",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 558,
+      "timestamp": "2025-12-11T02:40:58.554Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 559,
+      "timestamp": "2025-12-11T02:40:58.556Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/10326ee8-2bb1-41a5-ac6e-0f639126b797/ai-generated-cover-1762661194654.png",
+      "status": 200,
+      "statusText": "",
+      "duration": 85
+    },
+    {
+      "id": 560,
+      "timestamp": "2025-12-11T02:40:58.561Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 561,
+      "timestamp": "2025-12-11T02:40:58.566Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/d2cfd10d-701b-4671-a75a-86a8b31fdb95/7d5cb4f0-e97f-424a-85eb-d6dc93115ec9.webp",
+      "status": 200,
+      "statusText": "",
+      "duration": 94
+    },
+    {
+      "id": 562,
+      "timestamp": "2025-12-11T02:40:58.566Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/96091859-8921-46fb-9466-ba409750acdf/eb80d98f-6ee8-4b2e-a349-8b282ba62b12.webp",
+      "status": 200,
+      "statusText": "",
+      "duration": 89
+    },
+    {
+      "id": 563,
+      "timestamp": "2025-12-11T02:40:58.574Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/e4b6542a-8bb9-466d-83bc-54b999a7aec9/bd702338-6d7a-4290-8e7d-306b8c5fa3f9.webp",
+      "status": 200,
+      "statusText": "",
+      "duration": 95
+    },
+    {
+      "id": 564,
+      "timestamp": "2025-12-11T02:40:58.629Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 565,
+      "timestamp": "2025-12-11T02:40:58.714Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "status": 200,
+      "statusText": "",
+      "duration": 160
+    },
+    {
+      "id": 566,
+      "timestamp": "2025-12-11T02:40:58.714Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 153
+    },
+    {
+      "id": 567,
+      "timestamp": "2025-12-11T02:40:58.718Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/get_driver_profile",
+      "status": 200,
+      "statusText": "",
+      "duration": 174
+    },
+    {
+      "id": 568,
+      "timestamp": "2025-12-11T02:40:58.749Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 120
+    },
+    {
+      "id": 569,
+      "timestamp": "2025-12-11T02:40:58.793Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 570,
+      "timestamp": "2025-12-11T02:40:58.815Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 571,
+      "timestamp": "2025-12-11T02:40:58.819Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 572,
+      "timestamp": "2025-12-11T02:40:58.826Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 573,
+      "timestamp": "2025-12-11T02:40:58.828Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 574,
+      "timestamp": "2025-12-11T02:40:58.833Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 575,
+      "timestamp": "2025-12-11T02:40:58.848Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A40%3A58.774Z",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 576,
+      "timestamp": "2025-12-11T02:40:58.897Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 78
+    },
+    {
+      "id": 577,
+      "timestamp": "2025-12-11T02:40:58.960Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": "",
+      "duration": 127
+    },
+    {
+      "id": 578,
+      "timestamp": "2025-12-11T02:40:58.961Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "status": 200,
+      "statusText": "",
+      "duration": 133
+    },
+    {
+      "id": 579,
+      "timestamp": "2025-12-11T02:40:58.962Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A40%3A58.774Z",
+      "status": 200,
+      "statusText": "",
+      "duration": 114
+    },
+    {
+      "id": 580,
+      "timestamp": "2025-12-11T02:40:59.008Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 581,
+      "timestamp": "2025-12-11T02:40:59.023Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 582,
+      "timestamp": "2025-12-11T02:40:59.030Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 583,
+      "timestamp": "2025-12-11T02:40:59.093Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 584,
+      "timestamp": "2025-12-11T02:40:59.118Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 95
+    },
+    {
+      "id": 585,
+      "timestamp": "2025-12-11T02:40:59.140Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/owner_bookings?select=id%2Ccar_title%2Crenter_name%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A40%3A58.774Z",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 586,
+      "timestamp": "2025-12-11T02:40:59.226Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/owner_bookings?select=id%2Ccar_title%2Crenter_name%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A40%3A58.774Z",
+      "status": 200,
+      "statusText": "",
+      "duration": 86
+    },
+    {
+      "id": 587,
+      "timestamp": "2025-12-11T02:40:59.433Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/bookings/detail-payment?carId=b288ed1c-9544-44e1-b159-8e3335425051&startDate=2025-12-13T00%3A00%3A00.000Z&endDate=2025-12-16T00%3A00%3A00.000Z",
+      "resourceType": "document"
+    },
+    {
+      "id": 588,
+      "timestamp": "2025-12-11T02:40:59.489Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://patchright-init-script-inject.internal/",
+      "status": 200,
+      "statusText": "OK"
+    },
+    {
+      "id": 589,
+      "timestamp": "2025-12-11T02:40:59.560Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@vite/client",
+      "resourceType": "script"
+    },
+    {
+      "id": 590,
+      "timestamp": "2025-12-11T02:40:59.645Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/fonts/inter-var.woff2",
+      "resourceType": "font"
+    },
+    {
+      "id": 591,
+      "timestamp": "2025-12-11T02:40:59.671Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@vite/client",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 111
+    },
+    {
+      "id": 592,
+      "timestamp": "2025-12-11T02:40:59.671Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/styles.css",
+      "resourceType": "stylesheet"
+    },
+    {
+      "id": 593,
+      "timestamp": "2025-12-11T02:40:59.674Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/env.js?v=20251209",
+      "resourceType": "script"
+    },
+    {
+      "id": 594,
+      "timestamp": "2025-12-11T02:40:59.691Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/node_modules/@angular/build/node_modules/vite/dist/client/env.mjs",
+      "resourceType": "script"
+    },
+    {
+      "id": 595,
+      "timestamp": "2025-12-11T02:40:59.702Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/fonts/inter-var.woff2",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 57
+    },
+    {
+      "id": 596,
+      "timestamp": "2025-12-11T02:40:59.708Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/styles.css",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 37
+    },
+    {
+      "id": 597,
+      "timestamp": "2025-12-11T02:40:59.740Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/env.js?v=20251209",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 66
+    },
+    {
+      "id": 598,
+      "timestamp": "2025-12-11T02:40:59.742Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/node_modules/@angular/build/node_modules/vite/dist/client/env.mjs",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 51
+    },
+    {
+      "id": 599,
+      "timestamp": "2025-12-11T02:40:59.762Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/main.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 600,
+      "timestamp": "2025-12-11T02:40:59.768Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-Q5CAZ3KG.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 601,
+      "timestamp": "2025-12-11T02:40:59.779Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-JGOUCJFB.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 602,
+      "timestamp": "2025-12-11T02:40:59.781Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-MWKAHZXX.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 603,
+      "timestamp": "2025-12-11T02:40:59.784Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-Q7BB43WW.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 604,
+      "timestamp": "2025-12-11T02:40:59.786Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-XYCU2ZFC.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 605,
+      "timestamp": "2025-12-11T02:40:59.788Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-GG7SZJGN.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 606,
+      "timestamp": "2025-12-11T02:40:59.790Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-KAOKDY7H.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 607,
+      "timestamp": "2025-12-11T02:40:59.799Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/main.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 37
+    },
+    {
+      "id": 608,
+      "timestamp": "2025-12-11T02:40:59.906Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-UJUWZUFT.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 609,
+      "timestamp": "2025-12-11T02:40:59.908Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-H6NRQYVP.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 610,
+      "timestamp": "2025-12-11T02:40:59.909Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-5K6F4UNG.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 611,
+      "timestamp": "2025-12-11T02:40:59.910Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6WXZTT4O.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 612,
+      "timestamp": "2025-12-11T02:40:59.917Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-B2EVFYMR.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 613,
+      "timestamp": "2025-12-11T02:40:59.918Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FXPD26T4.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 614,
+      "timestamp": "2025-12-11T02:40:59.920Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-CRSZKZUS.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 615,
+      "timestamp": "2025-12-11T02:40:59.921Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-JG7FIDPY.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 616,
+      "timestamp": "2025-12-11T02:40:59.923Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BRJVUKQS.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 617,
+      "timestamp": "2025-12-11T02:40:59.923Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-73QO7RIH.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 618,
+      "timestamp": "2025-12-11T02:40:59.924Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-PPTLPU6R.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 619,
+      "timestamp": "2025-12-11T02:40:59.925Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-X3XFKAQ3.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 620,
+      "timestamp": "2025-12-11T02:40:59.926Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-MGUCVA4Y.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 621,
+      "timestamp": "2025-12-11T02:40:59.928Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-D225FZEF.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 622,
+      "timestamp": "2025-12-11T02:40:59.930Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-K2LOAVEX.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 623,
+      "timestamp": "2025-12-11T02:40:59.931Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-IKSXKRES.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 624,
+      "timestamp": "2025-12-11T02:40:59.933Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-ZYP4R4EL.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 625,
+      "timestamp": "2025-12-11T02:40:59.934Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FRGIE4UT.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 626,
+      "timestamp": "2025-12-11T02:40:59.936Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-SVVGM6CF.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 627,
+      "timestamp": "2025-12-11T02:40:59.937Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-RFV3G4NA.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 628,
+      "timestamp": "2025-12-11T02:40:59.939Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6AZZGOBW.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 629,
+      "timestamp": "2025-12-11T02:40:59.952Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-VV6LA4GU.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 630,
+      "timestamp": "2025-12-11T02:40:59.957Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-653SOEEV.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 631,
+      "timestamp": "2025-12-11T02:40:59.959Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-Q5CAZ3KG.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 191
+    },
+    {
+      "id": 632,
+      "timestamp": "2025-12-11T02:40:59.971Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-GG7SZJGN.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 183
+    },
+    {
+      "id": 633,
+      "timestamp": "2025-12-11T02:40:59.972Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-KAOKDY7H.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 182
+    },
+    {
+      "id": 634,
+      "timestamp": "2025-12-11T02:40:59.972Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-MWKAHZXX.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 191
+    },
+    {
+      "id": 635,
+      "timestamp": "2025-12-11T02:40:59.972Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-Q7BB43WW.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 188
+    },
+    {
+      "id": 636,
+      "timestamp": "2025-12-11T02:40:59.972Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-XYCU2ZFC.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 186
+    },
+    {
+      "id": 637,
+      "timestamp": "2025-12-11T02:40:59.972Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-JGOUCJFB.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 193
+    },
+    {
+      "id": 638,
+      "timestamp": "2025-12-11T02:40:59.985Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-UJUWZUFT.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 79
+    },
+    {
+      "id": 639,
+      "timestamp": "2025-12-11T02:40:59.991Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-H6NRQYVP.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 83
+    },
+    {
+      "id": 640,
+      "timestamp": "2025-12-11T02:41:00.006Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-5K6F4UNG.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 97
+    },
+    {
+      "id": 641,
+      "timestamp": "2025-12-11T02:41:00.009Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6WXZTT4O.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 100
+    },
+    {
+      "id": 642,
+      "timestamp": "2025-12-11T02:41:00.017Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-B2EVFYMR.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 100
+    },
+    {
+      "id": 643,
+      "timestamp": "2025-12-11T02:41:00.026Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FXPD26T4.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 108
+    },
+    {
+      "id": 644,
+      "timestamp": "2025-12-11T02:41:00.027Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-CRSZKZUS.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 107
+    },
+    {
+      "id": 645,
+      "timestamp": "2025-12-11T02:41:00.041Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-JG7FIDPY.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 120
+    },
+    {
+      "id": 646,
+      "timestamp": "2025-12-11T02:41:00.043Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BRJVUKQS.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 120
+    },
+    {
+      "id": 647,
+      "timestamp": "2025-12-11T02:41:00.050Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-73QO7RIH.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 127
+    },
+    {
+      "id": 648,
+      "timestamp": "2025-12-11T02:41:00.051Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-PPTLPU6R.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 127
+    },
+    {
+      "id": 649,
+      "timestamp": "2025-12-11T02:41:00.055Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-X3XFKAQ3.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 130
+    },
+    {
+      "id": 650,
+      "timestamp": "2025-12-11T02:41:00.072Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-MGUCVA4Y.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 146
+    },
+    {
+      "id": 651,
+      "timestamp": "2025-12-11T02:41:00.077Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-D225FZEF.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 149
+    },
+    {
+      "id": 652,
+      "timestamp": "2025-12-11T02:41:00.087Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-K2LOAVEX.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 157
+    },
+    {
+      "id": 653,
+      "timestamp": "2025-12-11T02:41:00.100Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-IKSXKRES.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 169
+    },
+    {
+      "id": 654,
+      "timestamp": "2025-12-11T02:41:00.101Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-ZYP4R4EL.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 168
+    },
+    {
+      "id": 655,
+      "timestamp": "2025-12-11T02:41:00.105Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FRGIE4UT.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 171
+    },
+    {
+      "id": 656,
+      "timestamp": "2025-12-11T02:41:00.109Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-SVVGM6CF.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 173
+    },
+    {
+      "id": 657,
+      "timestamp": "2025-12-11T02:41:00.131Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-RFV3G4NA.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 194
+    },
+    {
+      "id": 658,
+      "timestamp": "2025-12-11T02:41:00.133Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6AZZGOBW.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 194
+    },
+    {
+      "id": 659,
+      "timestamp": "2025-12-11T02:41:00.135Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-VV6LA4GU.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 183
+    },
+    {
+      "id": 660,
+      "timestamp": "2025-12-11T02:41:00.135Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-653SOEEV.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 178
+    },
+    {
+      "id": 661,
+      "timestamp": "2025-12-11T02:41:00.366Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fheader-icon%2Fheader-icon.component.ts%40HeaderIconComponent&t=1765420860221",
+      "resourceType": "script"
+    },
+    {
+      "id": 662,
+      "timestamp": "2025-12-11T02:41:00.367Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fshare-button%2Fshare-button.component.ts%40ShareButtonComponent&t=1765420860222",
+      "resourceType": "script"
+    },
+    {
+      "id": 663,
+      "timestamp": "2025-12-11T02:41:00.369Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-titlebar%2Fpwa-titlebar.component.ts%40PwaTitlebarComponent&t=1765420860223",
+      "resourceType": "script"
+    },
+    {
+      "id": 664,
+      "timestamp": "2025-12-11T02:41:00.371Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ficon%2Ficon.component.ts%40IconComponent&t=1765420860224",
+      "resourceType": "script"
+    },
+    {
+      "id": 665,
+      "timestamp": "2025-12-11T02:41:00.372Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnav-icon%2Fnav-icon.component.ts%40NavIconComponent&t=1765420860228",
+      "resourceType": "script"
+    },
+    {
+      "id": 666,
+      "timestamp": "2025-12-11T02:41:00.374Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-bottom-nav%2Fmobile-bottom-nav.component.ts%40MobileBottomNavComponent&t=1765420860231",
+      "resourceType": "script"
+    },
+    {
+      "id": 667,
+      "timestamp": "2025-12-11T02:41:00.375Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ffooter%2Ffooter.component.ts%40FooterComponent&t=1765420860232",
+      "resourceType": "script"
+    },
+    {
+      "id": 668,
+      "timestamp": "2025-12-11T02:41:00.384Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fhelp-button%2Fhelp-button.component.ts%40HelpButtonComponent&t=1765420860234",
+      "resourceType": "script"
+    },
+    {
+      "id": 669,
+      "timestamp": "2025-12-11T02:41:00.386Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Flanguage-selector%2Flanguage-selector.component.ts%40LanguageSelectorComponent&t=1765420860235",
+      "resourceType": "script"
+    },
+    {
+      "id": 670,
+      "timestamp": "2025-12-11T02:41:00.388Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnotifications%2Fnotifications.component.ts%40NotificationsComponent&t=1765420860237",
+      "resourceType": "script"
+    },
+    {
+      "id": 671,
+      "timestamp": "2025-12-11T02:41:00.390Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpending-reviews-banner%2Fpending-reviews-banner.component.ts%40PendingReviewsBannerComponent&t=1765420860238",
+      "resourceType": "script"
+    },
+    {
+      "id": 672,
+      "timestamp": "2025-12-11T02:41:00.392Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-banner%2Fpwa-install-banner.component.ts%40PwaInstallBannerComponent&t=1765420860239",
+      "resourceType": "script"
+    },
+    {
+      "id": 673,
+      "timestamp": "2025-12-11T02:41:00.397Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-prompt%2Fpwa-install-prompt.component.ts%40PwaInstallPromptComponent&t=1765420860241",
+      "resourceType": "script"
+    },
+    {
+      "id": 674,
+      "timestamp": "2025-12-11T02:41:00.401Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-update-prompt%2Fpwa-update-prompt.component.ts%40PwaUpdatePromptComponent&t=1765420860241",
+      "resourceType": "script"
+    },
+    {
+      "id": 675,
+      "timestamp": "2025-12-11T02:41:00.402Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-badge%2Fverification-badge.component.ts%40VerificationBadgeComponent&t=1765420860242",
+      "resourceType": "script"
+    },
+    {
+      "id": 676,
+      "timestamp": "2025-12-11T02:41:00.403Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-prompt-banner%2Fverification-prompt-banner.component.ts%40VerificationPromptBannerComponent&t=1765420860243",
+      "resourceType": "script"
+    },
+    {
+      "id": 677,
+      "timestamp": "2025-12-11T02:41:00.422Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fsplash-screen%2Fsplash-screen.component.ts%40SplashScreenComponent&t=1765420860244",
+      "resourceType": "script"
+    },
+    {
+      "id": 678,
+      "timestamp": "2025-12-11T02:41:00.423Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmenu-icon%2Fmenu-icon.component.ts%40MenuIconComponent&t=1765420860245",
+      "resourceType": "script"
+    },
+    {
+      "id": 679,
+      "timestamp": "2025-12-11T02:41:00.424Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-menu-drawer%2Fmobile-menu-drawer.component.ts%40MobileMenuDrawerComponent&t=1765420860245",
+      "resourceType": "script"
+    },
+    {
+      "id": 680,
+      "timestamp": "2025-12-11T02:41:00.425Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fdebug-panel%2Fdebug-panel.component.ts%40DebugPanelComponent&t=1765420860246",
+      "resourceType": "script"
+    },
+    {
+      "id": 681,
+      "timestamp": "2025-12-11T02:41:00.427Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fapp.component.ts%40AppComponent&t=1765420860248",
+      "resourceType": "script"
+    },
+    {
+      "id": 682,
+      "timestamp": "2025-12-11T02:41:00.428Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BDQ6HASI.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 683,
+      "timestamp": "2025-12-11T02:41:00.429Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 684,
+      "timestamp": "2025-12-11T02:41:00.430Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 685,
+      "timestamp": "2025-12-11T02:41:00.472Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fheader-icon%2Fheader-icon.component.ts%40HeaderIconComponent&t=1765420860221",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 106
+    },
+    {
+      "id": 686,
+      "timestamp": "2025-12-11T02:41:00.473Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fshare-button%2Fshare-button.component.ts%40ShareButtonComponent&t=1765420860222",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 106
+    },
+    {
+      "id": 687,
+      "timestamp": "2025-12-11T02:41:00.473Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/images/autorentar-logo.svg",
+      "resourceType": "image"
+    },
+    {
+      "id": 688,
+      "timestamp": "2025-12-11T02:41:00.494Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-titlebar%2Fpwa-titlebar.component.ts%40PwaTitlebarComponent&t=1765420860223",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 126
+    },
+    {
+      "id": 689,
+      "timestamp": "2025-12-11T02:41:00.501Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ficon%2Ficon.component.ts%40IconComponent&t=1765420860224",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 130
+    },
+    {
+      "id": 690,
+      "timestamp": "2025-12-11T02:41:00.501Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnav-icon%2Fnav-icon.component.ts%40NavIconComponent&t=1765420860228",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 129
+    },
+    {
+      "id": 691,
+      "timestamp": "2025-12-11T02:41:00.501Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-bottom-nav%2Fmobile-bottom-nav.component.ts%40MobileBottomNavComponent&t=1765420860231",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 127
+    },
+    {
+      "id": 692,
+      "timestamp": "2025-12-11T02:41:00.513Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fhelp-button%2Fhelp-button.component.ts%40HelpButtonComponent&t=1765420860234",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 129
+    },
+    {
+      "id": 693,
+      "timestamp": "2025-12-11T02:41:00.517Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnotifications%2Fnotifications.component.ts%40NotificationsComponent&t=1765420860237",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 129
+    },
+    {
+      "id": 694,
+      "timestamp": "2025-12-11T02:41:00.522Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ffooter%2Ffooter.component.ts%40FooterComponent&t=1765420860232",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 147
+    },
+    {
+      "id": 695,
+      "timestamp": "2025-12-11T02:41:00.550Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Flanguage-selector%2Flanguage-selector.component.ts%40LanguageSelectorComponent&t=1765420860235",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 164
+    },
+    {
+      "id": 696,
+      "timestamp": "2025-12-11T02:41:00.609Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/i18n/es.json",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 697,
+      "timestamp": "2025-12-11T02:41:00.611Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpending-reviews-banner%2Fpending-reviews-banner.component.ts%40PendingReviewsBannerComponent&t=1765420860238",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 221
+    },
+    {
+      "id": 698,
+      "timestamp": "2025-12-11T02:41:00.622Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-banner%2Fpwa-install-banner.component.ts%40PwaInstallBannerComponent&t=1765420860239",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 230
+    },
+    {
+      "id": 699,
+      "timestamp": "2025-12-11T02:41:00.623Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-prompt%2Fpwa-install-prompt.component.ts%40PwaInstallPromptComponent&t=1765420860241",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 226
+    },
+    {
+      "id": 700,
+      "timestamp": "2025-12-11T02:41:00.625Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-update-prompt%2Fpwa-update-prompt.component.ts%40PwaUpdatePromptComponent&t=1765420860241",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 224
+    },
+    {
+      "id": 701,
+      "timestamp": "2025-12-11T02:41:00.625Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-badge%2Fverification-badge.component.ts%40VerificationBadgeComponent&t=1765420860242",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 223
+    },
+    {
+      "id": 702,
+      "timestamp": "2025-12-11T02:41:00.629Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-prompt-banner%2Fverification-prompt-banner.component.ts%40VerificationPromptBannerComponent&t=1765420860243",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 226
+    },
+    {
+      "id": 703,
+      "timestamp": "2025-12-11T02:41:00.648Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fapp.component.ts%40AppComponent&t=1765420860248",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 221
+    },
+    {
+      "id": 704,
+      "timestamp": "2025-12-11T02:41:00.652Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fsplash-screen%2Fsplash-screen.component.ts%40SplashScreenComponent&t=1765420860244",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 230
+    },
+    {
+      "id": 705,
+      "timestamp": "2025-12-11T02:41:00.652Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmenu-icon%2Fmenu-icon.component.ts%40MenuIconComponent&t=1765420860245",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 229
+    },
+    {
+      "id": 706,
+      "timestamp": "2025-12-11T02:41:00.654Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-menu-drawer%2Fmobile-menu-drawer.component.ts%40MobileMenuDrawerComponent&t=1765420860245",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 230
+    },
+    {
+      "id": 707,
+      "timestamp": "2025-12-11T02:41:00.658Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/images/autorentar-logo.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 185
+    },
+    {
+      "id": 708,
+      "timestamp": "2025-12-11T02:41:00.664Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fdebug-panel%2Fdebug-panel.component.ts%40DebugPanelComponent&t=1765420860246",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 239
+    },
+    {
+      "id": 709,
+      "timestamp": "2025-12-11T02:41:00.676Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BDQ6HASI.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 248
+    },
+    {
+      "id": 710,
+      "timestamp": "2025-12-11T02:41:00.702Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 273
+    },
+    {
+      "id": 711,
+      "timestamp": "2025-12-11T02:41:00.721Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 291
+    },
+    {
+      "id": 712,
+      "timestamp": "2025-12-11T02:41:00.730Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/i18n/es.json",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 121
+    },
+    {
+      "id": 713,
+      "timestamp": "2025-12-11T02:41:00.748Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/manifest.webmanifest",
+      "resourceType": "manifest"
+    },
+    {
+      "id": 714,
+      "timestamp": "2025-12-11T02:41:00.758Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 715,
+      "timestamp": "2025-12-11T02:41:00.775Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmercadopago-card-form%2Fmercadopago-card-form.component.ts%40MercadopagoCardFormComponent&t=1765420860740",
+      "resourceType": "script"
+    },
+    {
+      "id": 716,
+      "timestamp": "2025-12-11T02:41:00.777Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fcomponents%2Freembolsability-badge.component.ts%40ReembolsabilityBadgeComponent&t=1765420860741",
+      "resourceType": "script"
+    },
+    {
+      "id": 717,
+      "timestamp": "2025-12-11T02:41:00.779Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fcomponents%2Fcard-hold-panel.component.ts%40CardHoldPanelComponent&t=1765420860746",
+      "resourceType": "script"
+    },
+    {
+      "id": 718,
+      "timestamp": "2025-12-11T02:41:00.781Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fbooking-detail-payment.page.ts%40BookingDetailPaymentPage&t=1765420860749",
+      "resourceType": "script"
+    },
+    {
+      "id": 719,
+      "timestamp": "2025-12-11T02:41:00.787Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/manifest.webmanifest",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 39
+    },
+    {
+      "id": 720,
+      "timestamp": "2025-12-11T02:41:00.796Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/icons/icon-192.png",
+      "resourceType": "other"
+    },
+    {
+      "id": 721,
+      "timestamp": "2025-12-11T02:41:00.863Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/header-icons.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 722,
+      "timestamp": "2025-12-11T02:41:00.868Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 723,
+      "timestamp": "2025-12-11T02:41:00.879Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://api.binance.com/api/v3/ticker/price?symbol=USDTARS",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 724,
+      "timestamp": "2025-12-11T02:41:00.881Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 725,
+      "timestamp": "2025-12-11T02:41:00.919Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/icons/icon-192.png",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 123
+    },
+    {
+      "id": 726,
+      "timestamp": "2025-12-11T02:41:00.942Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/header-icons.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 79
+    },
+    {
+      "id": 727,
+      "timestamp": "2025-12-11T02:41:00.942Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 74
+    },
+    {
+      "id": 728,
+      "timestamp": "2025-12-11T02:41:00.947Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 66
+    },
+    {
+      "id": 729,
+      "timestamp": "2025-12-11T02:41:00.947Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmercadopago-card-form%2Fmercadopago-card-form.component.ts%40MercadopagoCardFormComponent&t=1765420860740",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 172
+    },
+    {
+      "id": 730,
+      "timestamp": "2025-12-11T02:41:00.948Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fcomponents%2Freembolsability-badge.component.ts%40ReembolsabilityBadgeComponent&t=1765420860741",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 171
+    },
+    {
+      "id": 731,
+      "timestamp": "2025-12-11T02:41:00.969Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fcomponents%2Fcard-hold-panel.component.ts%40CardHoldPanelComponent&t=1765420860746",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 190
+    },
+    {
+      "id": 732,
+      "timestamp": "2025-12-11T02:41:00.971Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fbooking-detail-payment.page.ts%40BookingDetailPaymentPage&t=1765420860749",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 190
+    },
+    {
+      "id": 733,
+      "timestamp": "2025-12-11T02:41:00.974Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 216
+    },
+    {
+      "id": 734,
+      "timestamp": "2025-12-11T02:41:00.992Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 735,
+      "timestamp": "2025-12-11T02:41:01.089Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 97
+    },
+    {
+      "id": 736,
+      "timestamp": "2025-12-11T02:41:01.121Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/cars?select=*&id=eq.b288ed1c-9544-44e1-b159-8e3335425051",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 737,
+      "timestamp": "2025-12-11T02:41:01.125Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 738,
+      "timestamp": "2025-12-11T02:41:01.137Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 739,
+      "timestamp": "2025-12-11T02:41:01.222Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 97
+    },
+    {
+      "id": 740,
+      "timestamp": "2025-12-11T02:41:01.228Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 741,
+      "timestamp": "2025-12-11T02:41:01.271Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 134
+    },
+    {
+      "id": 742,
+      "timestamp": "2025-12-11T02:41:01.272Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/cars?select=*&id=eq.b288ed1c-9544-44e1-b159-8e3335425051",
+      "status": 200,
+      "statusText": "",
+      "duration": 151
+    },
+    {
+      "id": 743,
+      "timestamp": "2025-12-11T02:41:01.354Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 126
+    },
+    {
+      "id": 744,
+      "timestamp": "2025-12-11T02:41:01.357Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://api.binance.com/api/v3/ticker/price?symbol=USDTARS",
+      "status": 200,
+      "statusText": "",
+      "duration": 478
+    },
+    {
+      "id": 745,
+      "timestamp": "2025-12-11T02:41:01.488Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 746,
+      "timestamp": "2025-12-11T02:41:01.584Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 96
+    },
+    {
+      "id": 747,
+      "timestamp": "2025-12-11T02:41:01.609Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 748,
+      "timestamp": "2025-12-11T02:41:01.622Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://sdk.mercadopago.com/js/v2",
+      "resourceType": "script"
+    },
+    {
+      "id": 749,
+      "timestamp": "2025-12-11T02:41:01.638Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 750,
+      "timestamp": "2025-12-11T02:41:01.658Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 751,
+      "timestamp": "2025-12-11T02:41:01.673Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 752,
+      "timestamp": "2025-12-11T02:41:01.682Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 753,
+      "timestamp": "2025-12-11T02:41:01.684Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 754,
+      "timestamp": "2025-12-11T02:41:01.688Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://sdk.mercadopago.com/js/v2",
+      "status": 200,
+      "statusText": "",
+      "duration": 66
+    },
+    {
+      "id": 755,
+      "timestamp": "2025-12-11T02:41:01.702Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A41%3A01.590Z",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 756,
+      "timestamp": "2025-12-11T02:41:01.733Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://api.mercadopago.com/v1/payment_methods/search?public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e&locale=es-AR&js_version=2.60.5&referer=http%3A%2F%2Flocalhost%3A4200&marketplace=NONE&status=active&product_id=BTR2N61O1F60OR8RLSGG&limit=1&public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 757,
+      "timestamp": "2025-12-11T02:41:01.735Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://api.mercadopago.com/v1/devices/widgets?public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e&locale=es-AR&js_version=2.60.5&referer=http%3A%2F%2Flocalhost%3A4200",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 758,
+      "timestamp": "2025-12-11T02:41:01.750Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 92
+    },
+    {
+      "id": 759,
+      "timestamp": "2025-12-11T02:41:01.756Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://api.mercadopago.com/bricks/new_theme?public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e&locale=es-AR&js_version=2.60.5&referer=http%3A%2F%2Flocalhost%3A4200&public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 760,
+      "timestamp": "2025-12-11T02:41:01.802Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": "",
+      "duration": 118
+    },
+    {
+      "id": 761,
+      "timestamp": "2025-12-11T02:41:01.804Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "status": 200,
+      "statusText": "",
+      "duration": 122
+    },
+    {
+      "id": 762,
+      "timestamp": "2025-12-11T02:41:01.815Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A41%3A01.590Z",
+      "status": 200,
+      "statusText": "",
+      "duration": 113
+    },
+    {
+      "id": 763,
+      "timestamp": "2025-12-11T02:41:01.877Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 764,
+      "timestamp": "2025-12-11T02:41:01.886Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 765,
+      "timestamp": "2025-12-11T02:41:01.888Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 766,
+      "timestamp": "2025-12-11T02:41:01.912Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 767,
+      "timestamp": "2025-12-11T02:41:02.000Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 114
+    },
+    {
+      "id": 768,
+      "timestamp": "2025-12-11T02:41:02.014Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/owner_bookings?select=id%2Ccar_title%2Crenter_name%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A41%3A01.590Z",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 769,
+      "timestamp": "2025-12-11T02:41:02.140Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/owner_bookings?select=id%2Ccar_title%2Crenter_name%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A41%3A01.590Z",
+      "status": 200,
+      "statusText": "",
+      "duration": 126
+    },
+    {
+      "id": 770,
+      "timestamp": "2025-12-11T02:41:02.411Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://api.mercadopago.com/bricks/new_theme?public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e&locale=es-AR&js_version=2.60.5&referer=http%3A%2F%2Flocalhost%3A4200&public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e",
+      "status": 200,
+      "statusText": "",
+      "duration": 656
+    },
+    {
+      "id": 771,
+      "timestamp": "2025-12-11T02:41:02.413Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://http2.mlstatic.com/frontend-assets/op-cho-bricks/build/3.9.1/i18n/es-ar/cardPayment/index.json",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 772,
+      "timestamp": "2025-12-11T02:41:02.414Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://api.mercadopago.com/v1/payment_methods/search?public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e&locale=es-AR&js_version=2.60.5&referer=http%3A%2F%2Flocalhost%3A4200&marketplace=NONE&status=active&product_id=C85Q6TGS4G718CFJS27G&limit=1",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 773,
+      "timestamp": "2025-12-11T02:41:02.420Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://http2.mlstatic.com/frontend-assets/op-cho-bricks/build/3.9.1/components/cardPayment.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 774,
+      "timestamp": "2025-12-11T02:41:02.484Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://api.mercadopago.com/v1/payment_methods/search?public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e&locale=es-AR&js_version=2.60.5&referer=http%3A%2F%2Flocalhost%3A4200&marketplace=NONE&status=active&product_id=BTR2N61O1F60OR8RLSGG&limit=1&public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e",
+      "status": 200,
+      "statusText": "",
+      "duration": 751
+    },
+    {
+      "id": 775,
+      "timestamp": "2025-12-11T02:41:02.485Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://api.mercadolibre.com/tracks",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 776,
+      "timestamp": "2025-12-11T02:41:02.489Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://api.mercadopago.com/v1/devices/widgets?public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e&locale=es-AR&js_version=2.60.5&referer=http%3A%2F%2Flocalhost%3A4200",
+      "status": 200,
+      "statusText": "",
+      "duration": 754
+    },
+    {
+      "id": 777,
+      "timestamp": "2025-12-11T02:41:02.493Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://http2.mlstatic.com/frontend-assets/op-cho-bricks/build/3.9.1/i18n/es-ar/cardPayment/index.json",
+      "status": 200,
+      "statusText": "",
+      "duration": 80
+    },
+    {
+      "id": 778,
+      "timestamp": "2025-12-11T02:41:02.498Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://http2.mlstatic.com/frontend-assets/op-cho-bricks/build/3.9.1/components/cardPayment.js",
+      "status": 200,
+      "statusText": "",
+      "duration": 78
+    },
+    {
+      "id": 779,
+      "timestamp": "2025-12-11T02:41:03.487Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://www.mercadolibre.com/jms/lgz/background/etid",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 780,
+      "timestamp": "2025-12-11T02:41:03.517Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://www.mercadolibre.com/jms/lgz/background?dps=armor.4e9669946eb8a8ab74fc1fa3b39dd0c5915ffeec346be4eb89a61903d9eeffd5d217ae2373ecfcdcc779e65b82654b9eeeadf82f17425af18a10df919d9e67de3d84aadbae11eb39437f106e6093e6e9cdbeb5d5b2400869fe72f0f8083e6512.17eebbdd39296a4e7b8e10f7a1cf177e",
+      "resourceType": "document"
+    },
+    {
+      "id": 781,
+      "timestamp": "2025-12-11T02:41:03.585Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://www.mercadolibre.com/jms/lgz/background/session/armor.4e9669946eb8a8ab74fc1fa3b39dd0c5915ffeec346be4eb89a61903d9eeffd5d217ae2373ecfcdcc779e65b82654b9eeeadf82f17425af18a10df919d9e67de3d84aadbae11eb39437f106e6093e6e9cdbeb5d5b2400869fe72f0f8083e6512.17eebbdd39296a4e7b8e10f7a1cf177e?background=armor.4e9669946eb8a8ab74fc1fa3b39dd0c5915ffeec346be4eb89a61903d9eeffd5d217ae2373ecfcdcc779e65b82654b9eeeadf82f17425af18a10df919d9e67de3d84aadbae11eb39437f106e6093e6e9cdbeb5d5b2400869fe72f0f8083e6512.17eebbdd39296a4e7b8e10f7a1cf177e&message=eyJqc190eXBlIjoianNfY29va2llIiwidmFsdWUiOiJ4In0%3D",
+      "resourceType": "image"
+    },
+    {
+      "id": 782,
+      "timestamp": "2025-12-11T02:41:03.612Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://api.mercadopago.com/v1/payment_methods/search?public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e&locale=es-AR&js_version=2.60.5&referer=http%3A%2F%2Flocalhost%3A4200&marketplace=NONE&status=active&product_id=C85Q6TGS4G718CFJS27G&limit=1",
+      "status": 200,
+      "statusText": "",
+      "duration": 1198
+    },
+    {
+      "id": 783,
+      "timestamp": "2025-12-11T02:41:03.621Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://api.mercadopago.com/op-frontend-metrics/v1/performance-metric",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 784,
+      "timestamp": "2025-12-11T02:41:03.622Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://api.mercadopago.com/bricks/card_payment_brick/initialization?public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e&product_id=C85Q6TGS4G718CFJS27G&amount=1058966",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 785,
+      "timestamp": "2025-12-11T02:41:03.623Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://http2.mlstatic.com/frontend-assets/op-cho-bricks/build/3.9.1/config/MLA.json",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 786,
+      "timestamp": "2025-12-11T02:41:03.623Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://api.mercadolibre.com/tracks",
+      "status": 200,
+      "statusText": "",
+      "duration": 1138
+    },
+    {
+      "id": 787,
+      "timestamp": "2025-12-11T02:41:03.654Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://http2.mlstatic.com/frontend-assets/op-cho-bricks/build/3.9.1/config/MLA.json",
+      "status": 200,
+      "statusText": "",
+      "duration": 31
+    },
+    {
+      "id": 788,
+      "timestamp": "2025-12-11T02:41:03.823Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://api.mercadopago.com/op-frontend-metrics/v1/performance-metric",
+      "status": 202,
+      "statusText": "",
+      "duration": 202
+    },
+    {
+      "id": 789,
+      "timestamp": "2025-12-11T02:41:03.976Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://api.mercadopago.com/bricks/card_payment_brick/initialization?public_key=APP_USR-c2e7a3be-34d9-4731-b049-4e89abdd097e&product_id=C85Q6TGS4G718CFJS27G&amount=1058966",
+      "status": 200,
+      "statusText": "",
+      "duration": 354
+    },
+    {
+      "id": 790,
+      "timestamp": "2025-12-11T02:41:04.041Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://http2.mlstatic.com/frontend-assets/op-cho-bricks/build/3.9.1/components/7951.7951.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 791,
+      "timestamp": "2025-12-11T02:41:04.044Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://http2.mlstatic.com/frontend-assets/op-cho-bricks/build/3.9.1/components/7754.7754.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 792,
+      "timestamp": "2025-12-11T02:41:04.267Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://secure-fields.mercadopago.com/",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 793,
+      "timestamp": "2025-12-11T02:41:04.370Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://api.mercadolibre.com/tracks",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 794,
+      "timestamp": "2025-12-11T02:41:04.422Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://http2.mlstatic.com/frontend-assets/op-cho-bricks/build/3.9.1/components/7951.7951.js",
+      "status": 200,
+      "statusText": "",
+      "duration": 381
+    },
+    {
+      "id": 795,
+      "timestamp": "2025-12-11T02:41:04.422Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://http2.mlstatic.com/frontend-assets/op-cho-bricks/build/3.9.1/components/7754.7754.js",
+      "status": 200,
+      "statusText": "",
+      "duration": 378
+    },
+    {
+      "id": 796,
+      "timestamp": "2025-12-11T02:41:04.450Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://secure-fields.mercadopago.com/",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 183
+    },
+    {
+      "id": 797,
+      "timestamp": "2025-12-11T02:41:04.571Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://secure-fields.mercadopago.com/",
+      "resourceType": "document"
+    },
+    {
+      "id": 798,
+      "timestamp": "2025-12-11T02:41:04.584Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://secure-fields.mercadopago.com/",
+      "resourceType": "document"
+    },
+    {
+      "id": 799,
+      "timestamp": "2025-12-11T02:41:04.588Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://secure-fields.mercadopago.com/",
+      "resourceType": "document"
+    },
+    {
+      "id": 800,
+      "timestamp": "2025-12-11T02:41:04.652Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://api.mercadolibre.com/tracks",
+      "status": 200,
+      "statusText": "",
+      "duration": 282
+    },
+    {
+      "id": 801,
+      "timestamp": "2025-12-11T02:41:04.787Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://patchright-init-script-inject.internal/",
+      "status": 200,
+      "statusText": "OK"
+    },
+    {
+      "id": 802,
+      "timestamp": "2025-12-11T02:41:04.790Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://patchright-init-script-inject.internal/",
+      "status": 200,
+      "statusText": "OK"
+    },
+    {
+      "id": 803,
+      "timestamp": "2025-12-11T02:41:04.799Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://patchright-init-script-inject.internal/",
+      "status": 200,
+      "statusText": "OK"
+    },
+    {
+      "id": 804,
+      "timestamp": "2025-12-11T02:41:05.055Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://www.mercadolibre.com/jms/lgz/background/session/armor.4e9669946eb8a8ab74fc1fa3b39dd0c5915ffeec346be4eb89a61903d9eeffd5d217ae2373ecfcdcc779e65b82654b9eeeadf82f17425af18a10df919d9e67de3d84aadbae11eb39437f106e6093e6e9cdbeb5d5b2400869fe72f0f8083e6512.17eebbdd39296a4e7b8e10f7a1cf177e?background=armor.4e9669946eb8a8ab74fc1fa3b39dd0c5915ffeec346be4eb89a61903d9eeffd5d217ae2373ecfcdcc779e65b82654b9eeeadf82f17425af18a10df919d9e67de3d84aadbae11eb39437f106e6093e6e9cdbeb5d5b2400869fe72f0f8083e6512.17eebbdd39296a4e7b8e10f7a1cf177e&message=eyJqc190eXBlIjoianNfY29va2llIiwidmFsdWUiOiJ4In0%3D",
+      "status": 200,
+      "statusText": "",
+      "duration": 1470
+    },
+    {
+      "id": 805,
+      "timestamp": "2025-12-11T02:41:05.086Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://www.mercadolivre.com/jms/mlb/lgz/background/session/armor.4e9669946eb8a8ab74fc1fa3b39dd0c5915ffeec346be4eb89a61903d9eeffd5d217ae2373ecfcdcc779e65b82654b9eeeadf82f17425af18a10df919d9e67de3d84aadbae11eb39437f106e6093e6e9cdbeb5d5b2400869fe72f0f8083e6512.17eebbdd39296a4e7b8e10f7a1cf177e?background=armor.4e9669946eb8a8ab74fc1fa3b39dd0c5915ffeec346be4eb89a61903d9eeffd5d217ae2373ecfcdcc779e65b82654b9eeeadf82f17425af18a10df919d9e67de3d84aadbae11eb39437f106e6093e6e9cdbeb5d5b2400869fe72f0f8083e6512.17eebbdd39296a4e7b8e10f7a1cf177e&message=eyJhZF9ibG9jayI6ZmFsc2UsImNhbnZhcyI6IjhjYzljODRlM2M3NTIwNDM2NGFkMTMyM2Y5ZTgzNzRhIiwiY29ubmVjdGlvbiI6eyJkb3dubGluayI6IjEuNDUiLCJydHQiOiI1MCIsInR5cGUiOiI0ZyJ9LCJjb29raWVfZW5hYmxlZCI6dHJ1ZSwiZGV2aWNlX21lbW9yeSI6OCwiZG9fbm90X3RyYWNrIjpudWxsLCJldGFnIjpudWxsLCJmb250cyI6eyJvcyI6LTI2ODMwNTAzOCwib3RoZXJfb3MiOiJbXSIsIm5vdF9vcyI6MTc5ODI4OTE0MX0sImhhcmR3YXJlX2NvbmN1cnJlbmN5Ijo0LCJoaXN0b3J5Ijo0LCJpbmNvZ25pdG8iOmZhbHNlLCJpc19tc2hvcHMiOmZhbHNlLCJqc190eXBlIjoianNfaGFzaCIsImxhbmciOiJlcy1BUiIsImxhbmd1YWdlcyI6WyJlcy1BUiJdLCJsaXRlcmFsX2NvbG9ycyI6LTk0ODgwODU3MSwibG9jYWxfc3RvcmFnZSI6dHJ1ZSwibWF0aF9udW1iZXIiOjExMDIzLjM4NzQwNjE1MDk0LCJvcGVuX2RhdGFiYXNlIjpmYWxzZSwicGl4ZWxfcmF0aW8iOjEsInBsYXRmb3JtIjoiTGludXggeDg2XzY0Iiwid2ViZ2wiOnsiaW1hZ2UiOiIyZDRlOTljYzMzNGFlYzJjYWIyYWY2NjdmM2Y4YjBmNSIsInJlcG9ydCI6IjAzOGMxMjQyNDAwNTljNGFlNDI3NTgxNTE4ODUxNDkxIiwidmVuZG9yIjoiR29vZ2xlIEluYy4gKEludGVsKSIsInJlbmRlcmVyIjoiQU5HTEUgKEludGVsLCBNZXNhIEludGVsKFIpIEhEIEdyYXBoaWNzIDYyMCAoS0JMIEdUMiksIE9wZW5HTCA0LjYpIn0sInBsdWdpbnMiOnt9LCJyZXNvbHV0aW9uIjoiNzIweDEyODB4MjQiLCJzY3JlZW4iOnsib3JpZW50YXRpb24iOjAsInR5cGUiOiJsYW5kc2NhcGUtcHJpbWFyeSIsImF2YWlsX2hlaWdodCI6NzIwLCJhdmFpbF9sZWZ0IjowLCJhdmFpbF90b3AiOjAsImF2YWlsX3dpZHRoIjoxMjgwfSwic2Vzc2lvbl9zdG9yYWdlIjp0cnVlLCJ0aW1lIjp7ImNhbnZhcyI6MTg4LCJ3ZWJnbCI6MTEzLCJ1c2VyZm9udHMiOjMwMywiYnJvd3NlcnBsdWdpbnMiOjIsInBsdWdpbnMiOjEsImluc3RhbGxlZGZvbnRzIjoyNTYsImhhc2giOjg5MCwidG90YWwiOjg5MX0sInRpbWVfYmFzZWRfZnAiOjAuMDk5OTk5OTk0MDM5NTM1NTIsInRpbWVfem9uZV9uYW1lIjoiQW1lcmljYS9CdWVub3NfQWlyZXMiLCJ0aW1lX3pvbmVfb2Zmc2V0IjoxODAsInRvdWNoX3BvaW50cyI6MCwidXNlcl9hZ2VudCI6Ik1vemlsbGEvNS4wIChYMTE7IExpbnV4IHg4Nl82NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzE0My4wLjAuMCBTYWZhcmkvNTM3LjM2IiwidmVuZG9yIjoiR29vZ2xlIEluYy4iLCJ3aW5kb3dfc2l6ZSI6eyJpbm5lciI6IjcyMHgxMjgwIiwib3V0ZXIiOiI4NTF4MTI4OCJ9LCJ3ZWJkcml2ZXIiOmZhbHNlLCJpbnN0YWxsZWRfZm9udHMiOlsiTVMgR290aGljIiwiTVMgUEdvdGhpYyIsIlRpbWVzIl0sImluc3RhbGxlZF9wbHVnaW5zIjpbIlBERiBWaWV3ZXI6OlBvcnRhYmxlIERvY3VtZW50IEZvcm1hdDo6YXBwbGljYXRpb24vcGRmfnBkZix0ZXh0L3BkZn5wZGYiLCJDaHJvbWUgUERGIFZpZXdlcjo6UG9ydGFibGUgRG9jdW1lbnQgRm9ybWF0OjphcHBsaWNhdGlvbi9wZGZ%2BcGRmLHRleHQvcGRmfnBkZiIsIkNocm9taXVtIFBERiBWaWV3ZXI6OlBvcnRhYmxlIERvY3VtZW50IEZvcm1hdDo6YXBwbGljYXRpb24vcGRmfnBkZix0ZXh0L3BkZn5wZGYiLCJNaWNyb3NvZnQgRWRnZSBQREYgVmlld2VyOjpQb3J0YWJsZSBEb2N1bWVudCBGb3JtYXQ6OmFwcGxpY2F0aW9uL3BkZn5wZGYsdGV4dC9wZGZ%2BcGRmIiwiV2ViS2l0IGJ1aWx0LWluIFBERjo6UG9ydGFibGUgRG9jdW1lbnQgRm9ybWF0OjphcHBsaWNhdGlvbi9wZGZ%2BcGRmLHRleHQvcGRmfnBkZiJdLCJsaWdodF92ZXJzaW9uIjpmYWxzZSwicmVmZXJlciI6bnVsbCwid2ViY2FtIjp0cnVlLCJkZXByZWNhdGlvbl9sYWJlbCI6ZmFsc2UsInJ3c19zY3JpcHQiOmZhbHNlLCJzZW5kX3RpbWUiOjE1NzEsImhhc19zZXNzaW9uX2lkIjp0cnVlfQ%3D%3D",
+      "resourceType": "image"
+    },
+    {
+      "id": 806,
+      "timestamp": "2025-12-11T02:41:05.088Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://patchright-init-script-inject.internal/",
+      "status": 200,
+      "statusText": "OK"
+    },
+    {
+      "id": 807,
+      "timestamp": "2025-12-11T02:41:05.177Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://www.mercadolibre.com/jms/lgz/background/jsuuid?current=791228e1-f1a0-3fdd-a44e-776b187d6f94-1765420375892",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 808,
+      "timestamp": "2025-12-11T02:41:05.378Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://api.mercadopago.com/op-frontend-metrics/v1/performance-metric",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 809,
+      "timestamp": "2025-12-11T02:41:05.449Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://www.mercadolibre.com/jms/lgz/background/etid",
+      "status": 200,
+      "statusText": "",
+      "duration": 1962
+    },
+    {
+      "id": 810,
+      "timestamp": "2025-12-11T02:41:05.583Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://api.mercadopago.com/op-frontend-metrics/v1/performance-metric",
+      "status": 202,
+      "statusText": "",
+      "duration": 205
+    },
+    {
+      "id": 811,
+      "timestamp": "2025-12-11T02:41:05.594Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://www.mercadolivre.com/jms/mlb/lgz/background/session/armor.4e9669946eb8a8ab74fc1fa3b39dd0c5915ffeec346be4eb89a61903d9eeffd5d217ae2373ecfcdcc779e65b82654b9eeeadf82f17425af18a10df919d9e67de3d84aadbae11eb39437f106e6093e6e9cdbeb5d5b2400869fe72f0f8083e6512.17eebbdd39296a4e7b8e10f7a1cf177e?background=armor.4e9669946eb8a8ab74fc1fa3b39dd0c5915ffeec346be4eb89a61903d9eeffd5d217ae2373ecfcdcc779e65b82654b9eeeadf82f17425af18a10df919d9e67de3d84aadbae11eb39437f106e6093e6e9cdbeb5d5b2400869fe72f0f8083e6512.17eebbdd39296a4e7b8e10f7a1cf177e&message=eyJhZF9ibG9jayI6ZmFsc2UsImNhbnZhcyI6IjhjYzljODRlM2M3NTIwNDM2NGFkMTMyM2Y5ZTgzNzRhIiwiY29ubmVjdGlvbiI6eyJkb3dubGluayI6IjEuNDUiLCJydHQiOiI1MCIsInR5cGUiOiI0ZyJ9LCJjb29raWVfZW5hYmxlZCI6dHJ1ZSwiZGV2aWNlX21lbW9yeSI6OCwiZG9fbm90X3RyYWNrIjpudWxsLCJldGFnIjpudWxsLCJmb250cyI6eyJvcyI6LTI2ODMwNTAzOCwib3RoZXJfb3MiOiJbXSIsIm5vdF9vcyI6MTc5ODI4OTE0MX0sImhhcmR3YXJlX2NvbmN1cnJlbmN5Ijo0LCJoaXN0b3J5Ijo0LCJpbmNvZ25pdG8iOmZhbHNlLCJpc19tc2hvcHMiOmZhbHNlLCJqc190eXBlIjoianNfaGFzaCIsImxhbmciOiJlcy1BUiIsImxhbmd1YWdlcyI6WyJlcy1BUiJdLCJsaXRlcmFsX2NvbG9ycyI6LTk0ODgwODU3MSwibG9jYWxfc3RvcmFnZSI6dHJ1ZSwibWF0aF9udW1iZXIiOjExMDIzLjM4NzQwNjE1MDk0LCJvcGVuX2RhdGFiYXNlIjpmYWxzZSwicGl4ZWxfcmF0aW8iOjEsInBsYXRmb3JtIjoiTGludXggeDg2XzY0Iiwid2ViZ2wiOnsiaW1hZ2UiOiIyZDRlOTljYzMzNGFlYzJjYWIyYWY2NjdmM2Y4YjBmNSIsInJlcG9ydCI6IjAzOGMxMjQyNDAwNTljNGFlNDI3NTgxNTE4ODUxNDkxIiwidmVuZG9yIjoiR29vZ2xlIEluYy4gKEludGVsKSIsInJlbmRlcmVyIjoiQU5HTEUgKEludGVsLCBNZXNhIEludGVsKFIpIEhEIEdyYXBoaWNzIDYyMCAoS0JMIEdUMiksIE9wZW5HTCA0LjYpIn0sInBsdWdpbnMiOnt9LCJyZXNvbHV0aW9uIjoiNzIweDEyODB4MjQiLCJzY3JlZW4iOnsib3JpZW50YXRpb24iOjAsInR5cGUiOiJsYW5kc2NhcGUtcHJpbWFyeSIsImF2YWlsX2hlaWdodCI6NzIwLCJhdmFpbF9sZWZ0IjowLCJhdmFpbF90b3AiOjAsImF2YWlsX3dpZHRoIjoxMjgwfSwic2Vzc2lvbl9zdG9yYWdlIjp0cnVlLCJ0aW1lIjp7ImNhbnZhcyI6MTg4LCJ3ZWJnbCI6MTEzLCJ1c2VyZm9udHMiOjMwMywiYnJvd3NlcnBsdWdpbnMiOjIsInBsdWdpbnMiOjEsImluc3RhbGxlZGZvbnRzIjoyNTYsImhhc2giOjg5MCwidG90YWwiOjg5MX0sInRpbWVfYmFzZWRfZnAiOjAuMDk5OTk5OTk0MDM5NTM1NTIsInRpbWVfem9uZV9uYW1lIjoiQW1lcmljYS9CdWVub3NfQWlyZXMiLCJ0aW1lX3pvbmVfb2Zmc2V0IjoxODAsInRvdWNoX3BvaW50cyI6MCwidXNlcl9hZ2VudCI6Ik1vemlsbGEvNS4wIChYMTE7IExpbnV4IHg4Nl82NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzE0My4wLjAuMCBTYWZhcmkvNTM3LjM2IiwidmVuZG9yIjoiR29vZ2xlIEluYy4iLCJ3aW5kb3dfc2l6ZSI6eyJpbm5lciI6IjcyMHgxMjgwIiwib3V0ZXIiOiI4NTF4MTI4OCJ9LCJ3ZWJkcml2ZXIiOmZhbHNlLCJpbnN0YWxsZWRfZm9udHMiOlsiTVMgR290aGljIiwiTVMgUEdvdGhpYyIsIlRpbWVzIl0sImluc3RhbGxlZF9wbHVnaW5zIjpbIlBERiBWaWV3ZXI6OlBvcnRhYmxlIERvY3VtZW50IEZvcm1hdDo6YXBwbGljYXRpb24vcGRmfnBkZix0ZXh0L3BkZn5wZGYiLCJDaHJvbWUgUERGIFZpZXdlcjo6UG9ydGFibGUgRG9jdW1lbnQgRm9ybWF0OjphcHBsaWNhdGlvbi9wZGZ%2BcGRmLHRleHQvcGRmfnBkZiIsIkNocm9taXVtIFBERiBWaWV3ZXI6OlBvcnRhYmxlIERvY3VtZW50IEZvcm1hdDo6YXBwbGljYXRpb24vcGRmfnBkZix0ZXh0L3BkZn5wZGYiLCJNaWNyb3NvZnQgRWRnZSBQREYgVmlld2VyOjpQb3J0YWJsZSBEb2N1bWVudCBGb3JtYXQ6OmFwcGxpY2F0aW9uL3BkZn5wZGYsdGV4dC9wZGZ%2BcGRmIiwiV2ViS2l0IGJ1aWx0LWluIFBERjo6UG9ydGFibGUgRG9jdW1lbnQgRm9ybWF0OjphcHBsaWNhdGlvbi9wZGZ%2BcGRmLHRleHQvcGRmfnBkZiJdLCJsaWdodF92ZXJzaW9uIjpmYWxzZSwicmVmZXJlciI6bnVsbCwid2ViY2FtIjp0cnVlLCJkZXByZWNhdGlvbl9sYWJlbCI6ZmFsc2UsInJ3c19zY3JpcHQiOmZhbHNlLCJzZW5kX3RpbWUiOjE1NzEsImhhc19zZXNzaW9uX2lkIjp0cnVlfQ%3D%3D",
+      "status": 200,
+      "statusText": "",
+      "duration": 508
+    },
+    {
+      "id": 812,
+      "timestamp": "2025-12-11T02:41:05.785Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://www.mercadolibre.com/jms/lgz/background/jsuuid?current=791228e1-f1a0-3fdd-a44e-776b187d6f94-1765420375892",
+      "status": 200,
+      "statusText": "",
+      "duration": 608
+    },
+    {
+      "id": 813,
+      "timestamp": "2025-12-11T02:41:05.786Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://www.mercadolibre.com/jms/lgz/background/session/armor.4e9669946eb8a8ab74fc1fa3b39dd0c5915ffeec346be4eb89a61903d9eeffd5d217ae2373ecfcdcc779e65b82654b9eeeadf82f17425af18a10df919d9e67de3d84aadbae11eb39437f106e6093e6e9cdbeb5d5b2400869fe72f0f8083e6512.17eebbdd39296a4e7b8e10f7a1cf177e/cross_domain/jsonp?_method=PUT&_body=%7B%22msg%22%3A%22eyJqc3V1aWQiOiJlZjUyZDY3Yi0wMWU2LTNjODMtYmY2ZS0zYTUxMzU0MmIxYTEtMTc2NTQyMDg2NTUwNCIsInN1cHBvcnRfaWRiIjp0cnVlLCJpZGJ1dWlkIjoiY2FhYzA2Y2EtZGRmOS00MGQ3LTllMDItYjVhYmRiOTM4NDMxLTE3NjU0MjAwMjEyNTgiLCJ0aW1lIjp7ImpzdXVpZCI6NjE4LCJpZGJ1dWlkIjoyMn19%22%7D",
+      "resourceType": "xhr"
+    },
+    {
+      "id": 814,
+      "timestamp": "2025-12-11T02:41:06.384Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://www.mercadolibre.com/jms/lgz/background/session/armor.4e9669946eb8a8ab74fc1fa3b39dd0c5915ffeec346be4eb89a61903d9eeffd5d217ae2373ecfcdcc779e65b82654b9eeeadf82f17425af18a10df919d9e67de3d84aadbae11eb39437f106e6093e6e9cdbeb5d5b2400869fe72f0f8083e6512.17eebbdd39296a4e7b8e10f7a1cf177e/cross_domain/jsonp?_method=PUT&_body=%7B%22msg%22%3A%22eyJqc3V1aWQiOiJlZjUyZDY3Yi0wMWU2LTNjODMtYmY2ZS0zYTUxMzU0MmIxYTEtMTc2NTQyMDg2NTUwNCIsInN1cHBvcnRfaWRiIjp0cnVlLCJpZGJ1dWlkIjoiY2FhYzA2Y2EtZGRmOS00MGQ3LTllMDItYjVhYmRiOTM4NDMxLTE3NjU0MjAwMjEyNTgiLCJ0aW1lIjp7ImpzdXVpZCI6NjE4LCJpZGJ1dWlkIjoyMn19%22%7D",
+      "status": 200,
+      "statusText": "",
+      "duration": 598
+    }
+  ],
+  "pageErrors": [],
+  "summary": {
+    "totalRequests": 246,
+    "totalResponses": 252,
+    "failedRequests": 2,
+    "pageErrors": 0,
+    "avgResponseTime": 185
+  }
+}

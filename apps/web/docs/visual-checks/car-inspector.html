@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h3>Sistema de Inspección Autorentar (Demo SVG Interactivo)</h3>
+<p>Haz clic en las partes del auto para reportar daños (Puerta, Capó, Rueda, Maletero).</p>
+
+<svg id="car-inspector" viewBox="0 0 600 300" style="width: 100%; max-width: 600px; border: 1px solid #ccc; border-radius: 10px;">
+  <defs>
+    <style>
+      /* Estilos base para las partes del auto */
+      .car-part {
+        fill: #f3f4f6; /* Gris claro */
+        stroke: #374151;
+        stroke-width: 2;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      /* Cuando pasas el mouse por encima */
+      .car-part:hover {
+        fill: #dbeafe; /* Azul muy claro */
+        transform: scale(1.01); /* Pequeño efecto pop */
+      }
+
+      /* Clase que se activa con JS al hacer clic (Daño reportado) */
+      .damaged {
+        fill: #ef4444 !important; /* Rojo alerta */
+        stroke: #991b1b;
+      }
+      
+      /* Texto de etiqueta */
+      .label {
+        font-family: sans-serif;
+        font-size: 12px;
+        fill: #6b7280;
+        opacity: 0; /* Oculto por defecto */
+        transition: opacity 0.3s;
+        pointer-events: none; /* El texto no interfiere con el clic */
+      }
+      
+      /* Mostrar etiqueta al hover del grupo */
+      g:hover .label {
+        opacity: 1;
+      }
+    </style>
+  </defs>
+
+  <g onclick="toggleDamage(this)">
+    <path id="hood" class="car-part" d="M50,130 L160,130 L150,80 C120,80 60,90 50,130 Z" />
+    <text x="80" y="70" class="label">CAPÓ</text>
+  </g>
+
+  <g onclick="toggleDamage(this)">
+    <path id="roof" class="car-part" d="M150,80 L350,80 L400,130 L160,130 Z" />
+    <text x="250" y="70" class="label">TECHO/CRISTAL</text>
+  </g>
+
+  <g onclick="toggleDamage(this)">
+    <path id="trunk" class="car-part" d="M400,130 L550,130 L550,160 L540,180 L490,180 L400,130 Z" />
+    <text x="500" y="120" class="label">MALETERO</text>
+  </g>
+
+  <g onclick="toggleDamage(this)">
+    <path id="door" class="car-part" d="M170,140 L390,140 L390,230 L170,230 Z" />
+    <text x="250" y="200" class="label">PUERTA</text>
+  </g>
+
+  <g onclick="toggleDamage(this)">
+    <path id="front" class="car-part" d="M50,130 L170,130 L170,230 L110,230 L50,180 Z" />
+    <text x="80" y="200" class="label">PARACHOQUES</text>
+  </g>
+
+  <g onclick="toggleDamage(this)">
+    <circle cx="450" cy="230" r="45" class="car-part" />
+    <text x="430" y="290" class="label">NEUMÁTICO T.</text>
+  </g>
+
+  <g onclick="toggleDamage(this)">
+    <circle cx="150" cy="230" r="45" class="car-part" />
+    <text x="130" y="290" class="label">NEUMÁTICO D.</text>
+  </g>
+
+</svg>
+
+<p id="status-log" style="font-family: monospace; color: #666; margin-top: 20px;">Partes dañadas: Ninguna</p>
+
+<script>
+  // Lógica de JavaScript simple para manejar el estado
+  let damagedParts = [];
+
+  function toggleDamage(element) {
+    // Selecciona el path o circle dentro del grupo
+    const part = element.querySelector('.car-part');
+    const partName = element.querySelector('.label').textContent;
+    
+    // Toggle de la clase visual
+    if (part.classList.contains('damaged')) {
+      part.classList.remove('damaged');
+      // Remover del array de datos
+      damagedParts = damagedParts.filter(p => p !== partName);
+    } else {
+      part.classList.add('damaged');
+      // Agregar al array de datos
+      damagedParts.push(partName);
+    }
+
+    // Actualizar log (Simulando envío a base de datos)
+    document.getElementById('status-log').innerText = 
+      "Partes dañadas: " + (damagedParts.length > 0 ? damagedParts.join(", ") : "Ninguna");
+  }
+</script>
+
+</body>
+</html>

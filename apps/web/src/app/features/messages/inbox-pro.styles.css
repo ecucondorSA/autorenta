@@ -1,0 +1,573 @@
+/**
+ * WhatsApp-style Inbox Styles
+ * Professional mobile messaging interface
+ */
+
+/* Container principal */
+.whatsapp-container {
+  min-height: 100%;
+  height: 100%;
+  background: #f8f4ec;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header estilo WhatsApp */
+.whatsapp-header {
+  background: #075e54;
+  color: white;
+  padding: 1rem 1rem 0.75rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.header-content {
+  max-width: 56rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.icon-btn:active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Avatar con glow effect */
+.space-y-2 > button img {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s;
+}
+
+.space-y-2 > button:hover img {
+  box-shadow: 0 6px 20px rgba(167, 216, 244, 0.4);
+  transform: scale(1.05);
+}
+
+/* Unread badge con pulse animation */
+.space-y-2 > button .bg-cta-default {
+  background: linear-gradient(135deg, #a7d8f4 0%, #75bae4 100%);
+  box-shadow:
+    0 2px 8px rgba(167, 216, 244, 0.4),
+    0 0 0 0 rgba(167, 216, 244, 0.7);
+  animation: badgePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes badgePulse {
+  0%,
+  100% {
+    box-shadow:
+      0 2px 8px rgba(167, 216, 244, 0.4),
+      0 0 0 0 rgba(167, 216, 244, 0.7);
+  }
+  50% {
+    box-shadow:
+      0 2px 12px rgba(167, 216, 244, 0.6),
+      0 0 0 8px rgba(167, 216, 244, 0);
+  }
+}
+
+/* Empty state mejorado */
+.py-16.text-center svg {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Conversations Container */
+.conversations-container {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+}
+
+.spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid rgba(7, 94, 84, 0.1);
+  border-top-color: #075e54;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+/* Error State */
+.error-state {
+  padding: 1rem;
+  margin: 1rem;
+  background: #fee;
+  border-radius: 0.5rem;
+}
+
+.error-text {
+  color: #c33;
+  font-size: 0.875rem;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 4rem;
+  height: 4rem;
+  color: #999;
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.empty-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.empty-subtitle {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+/* Conversation List */
+.conversation-list {
+  background: white;
+}
+
+/* Conversation Item - estilo WhatsApp */
+.conversation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: white;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  position: relative;
+}
+
+.conversation-item:active {
+  background: #f5f5f5;
+}
+
+/* Ripple effect */
+.conversation-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, transparent 70%);
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.conversation-item:active::before {
+  transform: scale(2);
+  opacity: 1;
+  transition:
+    transform 0.4s,
+    opacity 0.2s;
+}
+
+/* Avatar */
+.conversation-avatar {
+  flex-shrink: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a7d8f4 0%, #75bae4 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Content */
+.conversation-content {
+  flex: 1;
+  min-width: 0;
+  padding-top: 0.25rem;
+}
+
+.conversation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.125rem;
+}
+
+.conversation-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+}
+
+.conversation-item.unread .conversation-name {
+  font-weight: 600;
+}
+
+.conversation-time {
+  font-size: 0.75rem;
+  color: #999;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+}
+
+.conversation-item.unread .conversation-time {
+  color: #25d366;
+  font-weight: 500;
+}
+
+.conversation-car {
+  font-size: 0.8125rem;
+  color: #666;
+  margin-bottom: 0.125rem;
+}
+
+.conversation-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.conversation-message {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.conversation-item.unread .conversation-message {
+  color: #111;
+  font-weight: 500;
+}
+
+/* Unread Badge - estilo WhatsApp */
+.unread-badge {
+  flex-shrink: 0;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.375rem;
+  background: #25d366;
+  color: white;
+  border-radius: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(37, 211, 102, 0.4);
+}
+
+/* Bottom padding para el bottom nav - mínimo para FAB */
+.conversation-list {
+  padding-bottom: 1rem;
+}
+
+/* Floating Action Button Container */
+.fab-container {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+/* FAB Button - estilo WhatsApp */
+.fab-button {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #25d366 0%, #20ba5a 100%);
+  border: none;
+  box-shadow:
+    0 4px 12px rgba(37, 211, 102, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fab-button:active {
+  transform: scale(0.9);
+}
+
+.fab-button.rotated {
+  transform: rotate(45deg);
+}
+
+.fab-button.rotated:active {
+  transform: rotate(45deg) scale(0.9);
+}
+
+.fab-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: white;
+  transition: transform 0.3s;
+}
+
+.fab-button.rotated .fab-icon {
+  transform: rotate(-45deg);
+}
+
+/* Attach Menu - estilo WhatsApp */
+.attach-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.attach-option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 2rem;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.12),
+    0 2px 4px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #333;
+  transition: all 0.2s;
+  min-width: 10rem;
+}
+
+.attach-option:active {
+  transform: scale(0.95);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.attach-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.attach-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: white;
+}
+
+.attach-icon.document {
+  background: linear-gradient(135deg, #7f66ff 0%, #6b4fff 100%);
+}
+
+.attach-icon.photo {
+  background: linear-gradient(135deg, #1aafff 0%, #0b8ce8 100%);
+}
+
+.attach-icon.camera {
+  background: linear-gradient(135deg, #ff5e7a 0%, #e74a65 100%);
+}
+
+/* Animation for attach icon */
+.attach-icon {
+  animation: iconPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.attach-option:nth-child(1) .attach-icon {
+  animation-delay: 0.05s;
+}
+.attach-option:nth-child(2) .attach-icon {
+  animation-delay: 0.1s;
+}
+.attach-option:nth-child(3) .attach-icon {
+  animation-delay: 0.15s;
+}
+
+@keyframes iconPop {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Ripple effect en attach options */
+.attach-option::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 2rem;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, transparent 70%);
+  transform: scale(0);
+  opacity: 0;
+}
+
+.attach-option:active::before {
+  transform: scale(1);
+  opacity: 1;
+  transition:
+    transform 0.4s,
+    opacity 0.2s;
+}
+
+/* Dark mode support (opcional) */
+@media (prefers-color-scheme: dark) {
+  .whatsapp-container {
+    background: #0d1418;
+  }
+
+  .conversation-list {
+    background: #0d1418;
+  }
+
+  .conversation-item {
+    background: #111b21;
+    border-bottom-color: #2a3942;
+  }
+
+  .conversation-item:active {
+    background: #1f2c34;
+  }
+
+  .conversation-name {
+    color: #e9edef;
+  }
+
+  .conversation-message {
+    color: #8696a0;
+  }
+
+  .conversation-item.unread .conversation-message {
+    color: #d1d7db;
+  }
+
+  .attach-option {
+    background: #1f2c34;
+    color: #e9edef;
+  }
+}
+
+/* Responsive - ajustar FAB en mobile */
+@media (max-width: 640px) {
+  .fab-container {
+    right: 1rem;
+    bottom: 5rem;
+  }
+}

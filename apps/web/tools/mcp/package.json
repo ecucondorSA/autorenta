@@ -1,0 +1,27 @@
+{
+  "name": "binance-p2p-mcp",
+  "version": "1.0.0",
+  "description": "Binance P2P automation with persistent browser sessions",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "poll": "node polling-daemon.mjs",
+    "poll:once": "node polling-daemon.mjs --once"
+  },
+  "keywords": [
+    "mcp",
+    "playwright",
+    "binance",
+    "p2p",
+    "automation"
+  ],
+  "author": "AutoRenta",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.22.0",
+    "pg": "^8.11.3",
+    "playwright": "^1.40.0"
+  }
+}

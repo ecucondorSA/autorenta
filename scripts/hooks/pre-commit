@@ -1,0 +1,99 @@
+#!/bin/bash
+# =============================================================================
+# Pre-commit Hook: Detect Leaked Secrets
+# =============================================================================
+# This hook prevents commits that contain API keys, tokens, or other secrets.
+#
+# Patterns detected:
+# - Google API Keys (AIzaSy...)
+# - AWS Access Keys (AKIA...)
+# - Supabase Anon Keys (eyJhbG...)
+# - Private Keys (-----BEGIN)
+# - Generic API Keys (sk-..., pk_...)
+# =============================================================================
+
+echo "🔍 Checking for secrets in staged files..."
+
+# Get staged files (only text files, not deleted)
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts|jsx|tsx|py|json|env|yml|yaml|md|sql|sh)$')
+
+if [ -z "$STAGED_FILES" ]; then
+  exit 0
+fi
+
+# Define patterns to detect
+PATTERNS=(
+  # Google API Keys
+  'AIzaSy[A-Za-z0-9_-]{30,}'
+  # AWS Access Keys
+  'AKIA[A-Z0-9]{16}'
+  # AWS Secret Keys (potential)
+  'aws_secret_access_key\s*=\s*[A-Za-z0-9/+=]{40}'
+  # Generic private keys
+  '-----BEGIN (RSA |DSA |EC |OPENSSH |PGP )?PRIVATE KEY'
+  # Stripe Keys
+  'sk_live_[A-Za-z0-9]{20,}'
+  'rk_live_[A-Za-z0-9]{20,}'
+  # Twilio
+  'SK[a-f0-9]{32}'
+  # SendGrid
+  'SG\.[A-Za-z0-9_-]{22}\.[A-Za-z0-9_-]{43}'
+  # Slack
+  'xox[baprs]-[A-Za-z0-9-]{10,}'
+  # GitHub tokens
+  'ghp_[A-Za-z0-9]{36}'
+  'gho_[A-Za-z0-9]{36}'
+  # JWT tokens (potential Supabase anon keys)
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_-]{50,}'
+)
+
+FOUND_SECRETS=0
+
+for file in $STAGED_FILES; do
+  # Skip example/template files
+  if [[ "$file" == *".example"* ]] || [[ "$file" == *".template"* ]] || [[ "$file" == *".sample"* ]]; then
+    continue
+  fi
+
+  # Skip this hook file itself
+  if [[ "$file" == ".git/hooks/pre-commit" ]]; then
+    continue
+  fi
+
+  for pattern in "${PATTERNS[@]}"; do
+    # Check staged content (not the file on disk)
+    MATCHES=$(git diff --cached "$file" | grep -E "^\+" | grep -E "$pattern" | head -3)
+
+    if [ -n "$MATCHES" ]; then
+      echo ""
+      echo "❌ POTENTIAL SECRET DETECTED in: $file"
+      echo "   Pattern: $pattern"
+      echo "   Matches:"
+      echo "$MATCHES" | head -3 | sed 's/^/   /'
+      FOUND_SECRETS=1
+    fi
+  done
+done
+
+if [ $FOUND_SECRETS -eq 1 ]; then
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "🚫 COMMIT BLOCKED: Potential secrets detected!"
+  echo ""
+  echo "To fix this:"
+  echo "1. Move secrets to environment variables (.env.local)"
+  echo "2. Use process.env.VARIABLE_NAME instead of hardcoded values"
+  echo "3. Run: git reset HEAD <file> to unstage"
+  echo "4. Edit the file to remove secrets"
+  echo "5. Re-stage and commit"
+  echo ""
+  echo "If this is a FALSE POSITIVE, you can bypass with:"
+  echo "  git commit --no-verify"
+  echo ""
+  echo "But be VERY CAREFUL - exposed secrets are a serious security risk!"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  exit 1
+fi
+
+echo "✅ No secrets detected in staged files."
+exit 0

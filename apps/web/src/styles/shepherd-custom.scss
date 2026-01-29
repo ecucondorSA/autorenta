@@ -1,0 +1,315 @@
+/**
+ * Shepherd.js Custom Styles para AutoRenta
+ *
+ * v2.0 - Minimal & Immersive Design
+ * - Tooltips pequeños y no intrusivos
+ * - Glassmorphism sutil
+ * - Textos cortos y directos
+ */
+
+@import 'shepherd.js/dist/css/shepherd.css';
+
+/* ══════════════════════════════════════════════════════════════════════
+   VARIABLES
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --shepherd-primary: var(--cta-default, #00d95f);
+  --shepherd-primary-hover: var(--cta-hover, #00c553);
+  --shepherd-accent-warm: var(--surface-secondary, #f9fafb);
+  --shepherd-bg-light: #ffffff;
+  --shepherd-bg-secondary-light: var(--surface-raised, #ffffff);
+  --shepherd-text-dark: var(--text-primary, #000000);
+  --shepherd-text-medium: var(--text-secondary, #4b4b4b);
+  --shepherd-text-light: var(--text-muted, #8e8e8e);
+  --shepherd-border-light: var(--border-muted, #f3f4f6);
+  --shepherd-shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   OVERLAY - Más sutil
+   ══════════════════════════════════════════════════════════════════════ */
+
+.shepherd-modal-overlay-container {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  transition: opacity 0.2s ease;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   TOOLTIP - Compacto e inmersivo
+   ══════════════════════════════════════════════════════════════════════ */
+
+.shepherd-element {
+  background: var(--shepherd-bg-light);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shepherd-shadow-elevated);
+  max-width: 280px;
+  z-index: 10000;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+@media (max-width: 768px) {
+  .shepherd-element {
+    max-width: 85vw;
+    margin: 0.75rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   CONTENIDO - Compacto
+   ══════════════════════════════════════════════════════════════════════ */
+
+.shepherd-text {
+  padding: 1rem 1.25rem;
+  color: var(--shepherd-text-medium);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.tour-content h3 {
+  margin: 0 0 0.375rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--shepherd-text-dark);
+  line-height: 1.4;
+}
+
+.tour-content p {
+  margin: 0;
+  color: var(--shepherd-text-medium);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.tour-content p strong {
+  color: var(--shepherd-primary);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   BOTONES - Compactos e inline
+   ══════════════════════════════════════════════════════════════════════ */
+
+.shepherd-footer {
+  padding: 0.75rem 1.25rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.shepherd-button {
+  background: var(--shepherd-primary);
+  color: #000000;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.shepherd-button:hover {
+  background: var(--shepherd-primary-hover);
+  transform: translateY(-1px);
+}
+
+.shepherd-button:active {
+  transform: translateY(0);
+}
+
+.shepherd-button:focus {
+  outline: 2px solid var(--shepherd-primary);
+  outline-offset: 2px;
+}
+
+/* Botón secundario */
+.shepherd-button.shepherd-button-secondary {
+  background: transparent;
+  color: var(--shepherd-text-medium);
+  padding: 0.5rem 0.75rem;
+}
+
+.shepherd-button.shepherd-button-secondary:hover {
+  color: var(--shepherd-text-dark);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Botón icono (← para atrás) */
+.shepherd-button.shepherd-button-icon {
+  background: transparent;
+  color: var(--shepherd-text-medium);
+  padding: 0.5rem;
+  min-width: auto;
+  font-size: 1rem;
+}
+
+.shepherd-button.shepherd-button-icon:hover {
+  color: var(--shepherd-text-dark);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   CERRAR - Discreto
+   ══════════════════════════════════════════════════════════════════════ */
+
+.shepherd-cancel-icon {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  color: var(--shepherd-text-light);
+  opacity: 0.6;
+}
+
+.shepherd-cancel-icon:hover {
+  background: rgba(0, 0, 0, 0.08);
+  opacity: 1;
+  color: var(--shepherd-text-dark);
+}
+
+.shepherd-cancel-icon:focus {
+  outline: 2px solid var(--shepherd-primary);
+  outline-offset: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   FLECHA
+   ══════════════════════════════════════════════════════════════════════ */
+
+.shepherd-arrow::before {
+  background: var(--shepherd-bg-light);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   HEADER - Sin padding extra
+   ══════════════════════════════════════════════════════════════════════ */
+
+.shepherd-header {
+  padding: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   PROGRESS DOTS - Minimalista
+   ══════════════════════════════════════════════════════════════════════ */
+
+.shepherd-progress {
+  display: flex;
+  gap: 4px;
+  padding: 0 1.25rem 0.75rem;
+  justify-content: center;
+}
+
+.shepherd-progress-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.shepherd-progress-dot.active {
+  background: var(--shepherd-primary);
+  width: 16px;
+  border-radius: 3px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   ANIMACIONES - Sutiles
+   ══════════════════════════════════════════════════════════════════════ */
+
+@keyframes shepherd-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.shepherd-element.shepherd-enabled {
+  animation: shepherd-fade-in 0.2s ease-out;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   TARGET HIGHLIGHT - Sutil
+   ══════════════════════════════════════════════════════════════════════ */
+
+.shepherd-target {
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
+  transition: box-shadow 0.2s ease;
+  border-radius: 8px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   MOBILE
+   ══════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .shepherd-element {
+    border-radius: 12px;
+  }
+
+  .shepherd-text {
+    padding: 0.875rem 1rem;
+  }
+
+  .tour-content h3 {
+    font-size: 0.9375rem;
+  }
+
+  .tour-content p {
+    font-size: 0.75rem;
+  }
+
+  .shepherd-footer {
+    padding: 0.5rem 1rem 0.875rem;
+  }
+
+  .shepherd-button {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ══════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .shepherd-element,
+  .shepherd-button,
+  .shepherd-cancel-icon,
+  .shepherd-target,
+  .shepherd-modal-overlay-container {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .shepherd-element {
+    border: 2px solid var(--shepherd-primary);
+  }
+}

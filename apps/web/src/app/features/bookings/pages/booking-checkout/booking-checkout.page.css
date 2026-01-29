@@ -1,0 +1,84 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Booking Checkout Page - Minimal CSS (UI 2026)
+   ═══════════════════════════════════════════════════════════════════════════
+   La mayoría de estilos migrados a Tailwind + glass.css + fluid-design.css
+   Solo mantenemos animaciones y estilos que no tienen equivalente en Tailwind
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Spinner Animation
+   ───────────────────────────────────────────────────────────────────────── */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Payment Amount Gradient (custom para branding)
+   ───────────────────────────────────────────────────────────────────────── */
+.payment-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--cta-default, #a7d8f4) 0%,
+    var(--cta-pressed, #8fc9ed) 50%,
+    var(--neon-green, #39ff14) 100%
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   MercadoPago Button (brand color)
+   ───────────────────────────────────────────────────────────────────────── */
+.btn-mercadopago {
+  background-color: #009ee3;
+  transition:
+    background-color 200ms ease-out,
+    box-shadow 200ms ease-out;
+}
+
+.btn-mercadopago:hover:not(:disabled) {
+  background-color: #0088cc;
+  box-shadow: 0 4px 16px rgba(0, 158, 227, 0.35);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Bonus Protector Gradient (amber brand)
+   ───────────────────────────────────────────────────────────────────────── */
+.protector-gradient {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.protector-gradient:hover {
+  background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Safe Area Padding (iOS notch/home indicator)
+   ───────────────────────────────────────────────────────────────────────── */
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Reduced Motion: Disable all animations
+   ───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

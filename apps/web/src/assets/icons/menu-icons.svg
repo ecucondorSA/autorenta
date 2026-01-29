@@ -1,0 +1,892 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AutoRenta Menu Icons - Ultra Premium Edition
+  World-class icons for mobile menu drawer
+
+  Design Specifications:
+  ├── Grid: 24x24 optical
+  ├── Stroke: 1.75px primary, 1.25px details
+  ├── Style: Outlined with selective fills
+  └── Visual balance: Optimized for 20px display
+
+  Section Colors:
+  ├── Actividades: #3B82F6 (Blue)
+  ├── Comunicacion: #8B5CF6 (Violet)
+  ├── Finanzas: #10B981 (Emerald)
+  ├── Configuracion: #6B7280 (Gray)
+  ├── Ayuda: #F59E0B (Amber)
+  └── Logout: #EF4444 (Red)
+-->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="menuBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+
+    <linearGradient id="menuVioletGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#6D28D9"/>
+    </linearGradient>
+
+    <linearGradient id="menuEmeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <linearGradient id="menuAmberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+
+    <linearGradient id="menuRedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#DC2626"/>
+    </linearGradient>
+
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+
+    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E5E7EB"/>
+      <stop offset="50%" stop-color="#9CA3AF"/>
+      <stop offset="100%" stop-color="#6B7280"/>
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="menuGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur"/>
+      <feFlood flood-color="#3B82F6" flood-opacity="0.25"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1" stdDeviation="0.5" flood-color="#000" flood-opacity="0.1"/>
+    </filter>
+
+    <!-- Premium Inner Light -->
+    <filter id="innerLight" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0.5" result="blur"/>
+      <feOffset dx="0" dy="-1" result="offsetBlur"/>
+      <feFlood flood-color="white" flood-opacity="0.15"/>
+      <feComposite in2="offsetBlur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Neumorphism Effect -->
+    <filter id="neumorph" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="#000" flood-opacity="0.08"/>
+      <feDropShadow dx="-1" dy="-1" stdDeviation="1" flood-color="#fff" flood-opacity="0.5"/>
+    </filter>
+
+    <!-- Section-specific glows -->
+    <filter id="blueGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+      <feFlood flood-color="#3B82F6" flood-opacity="0.3"/>
+      <feComposite in2="offsetBlur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="violetGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+      <feFlood flood-color="#8B5CF6" flood-opacity="0.3"/>
+      <feComposite in2="offsetBlur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="emeraldGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+      <feFlood flood-color="#10B981" flood-opacity="0.3"/>
+      <feComposite in2="offsetBlur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Premium Shine Gradient -->
+    <linearGradient id="premiumShine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       MIS ACTIVIDADES - Blue Section
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Calendar - Mis Reservas -->
+  <symbol id="menu-calendar" viewBox="0 0 24 24">
+    <title>Mis Reservas</title>
+    <!-- Calendar body -->
+    <rect
+      x="3" y="5" width="18" height="17" rx="2.5"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <!-- Header separator -->
+    <path d="M3 10h18" stroke="currentColor" stroke-width="1.75"/>
+    <!-- Hooks with rings -->
+    <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="8" y1="3" x2="8" y2="7"/>
+      <line x1="16" y1="3" x2="16" y2="7"/>
+    </g>
+    <!-- Hook decorative rings -->
+    <circle cx="8" cy="5" r="0.6" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+    <circle cx="16" cy="5" r="0.6" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+    <!-- Date grid -->
+    <g fill="currentColor" opacity="0.35">
+      <circle cx="7" cy="13" r="0.7"/>
+      <circle cx="10.5" cy="13" r="0.7"/>
+      <circle cx="14" cy="13" r="0.7"/>
+      <circle cx="17.5" cy="13" r="0.7"/>
+      <circle cx="7" cy="16.5" r="0.7"/>
+      <circle cx="17.5" cy="16.5" r="0.7"/>
+      <circle cx="7" cy="19.5" r="0.7"/>
+    </g>
+    <!-- Selected date -->
+    <rect x="9.5" y="15" width="5" height="5" rx="1" fill="currentColor"/>
+    <circle cx="12" cy="17.5" r="0.5" fill="white"/>
+  </symbol>
+
+  <!-- Archive - Mis Autos -->
+  <symbol id="menu-archive" viewBox="0 0 24 24">
+    <title>Mis Autos</title>
+    <!-- Top box -->
+    <rect
+      x="2" y="3" width="20" height="5" rx="1.5"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <!-- Bottom container -->
+    <path
+      d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <!-- Folder tab inside -->
+    <rect x="8" y="12" width="8" height="3" rx="1" fill="currentColor" opacity="0.8"/>
+    <!-- Divider line -->
+    <line x1="8" y1="13.5" x2="16" y2="13.5" stroke="white" stroke-width="0.5" opacity="0.5"/>
+    <!-- Handle hint -->
+    <rect x="10" y="4.5" width="4" height="2" rx="0.5" fill="currentColor" opacity="0.3"/>
+  </symbol>
+
+  <!-- Calendar Days - Calendario -->
+  <symbol id="menu-calendar-days" viewBox="0 0 24 24">
+    <title>Calendario</title>
+    <!-- Calendar body -->
+    <rect
+      x="3" y="5" width="18" height="17" rx="2.5"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <!-- Header -->
+    <path d="M3 10h18" stroke="currentColor" stroke-width="1.75"/>
+    <!-- Hooks -->
+    <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="8" y1="3" x2="8" y2="7"/>
+      <line x1="16" y1="3" x2="16" y2="7"/>
+    </g>
+    <!-- Full date grid with varying opacity -->
+    <g fill="currentColor">
+      <!-- Row 1 -->
+      <rect x="5.5" y="12" width="2.5" height="2.5" rx="0.5" opacity="0.25"/>
+      <rect x="9" y="12" width="2.5" height="2.5" rx="0.5" opacity="0.35"/>
+      <rect x="12.5" y="12" width="2.5" height="2.5" rx="0.5" opacity="0.45"/>
+      <rect x="16" y="12" width="2.5" height="2.5" rx="0.5" opacity="0.55"/>
+      <!-- Row 2 -->
+      <rect x="5.5" y="15.5" width="2.5" height="2.5" rx="0.5" opacity="0.65"/>
+      <rect x="9" y="15.5" width="2.5" height="2.5" rx="0.5"/>
+      <rect x="12.5" y="15.5" width="2.5" height="2.5" rx="0.5" opacity="0.75"/>
+      <rect x="16" y="15.5" width="2.5" height="2.5" rx="0.5" opacity="0.45"/>
+      <!-- Row 3 -->
+      <rect x="5.5" y="19" width="2.5" height="2.5" rx="0.5" opacity="0.35"/>
+      <rect x="9" y="19" width="2.5" height="2.5" rx="0.5" opacity="0.25"/>
+    </g>
+    <!-- Today indicator -->
+    <circle cx="10.25" cy="16.75" r="0.6" fill="white"/>
+  </symbol>
+
+  <!-- Heart - Favoritos -->
+  <symbol id="menu-heart" viewBox="0 0 24 24">
+    <title>Favoritos</title>
+    <!-- Heart outline -->
+    <path
+      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+         2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+         C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5
+         c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Inner glow effect -->
+    <path
+      d="M12 19l-1-0.9C6.5 14 4 11.5 4 8.5c0-2 1.5-3.5 3.5-3.5
+         c1.2 0 2.4.6 3.1 1.5L12 8l1.4-1.5c.7-.9 1.9-1.5 3.1-1.5
+         c2 0 3.5 1.5 3.5 3.5c0 3-2.5 5.5-7 9.6L12 19z"
+      fill="currentColor"
+      opacity="0.08"
+    />
+    <!-- Shine highlight -->
+    <ellipse cx="8" cy="7" rx="1.5" ry="1" fill="currentColor" opacity="0.15" transform="rotate(-30 8 7)"/>
+  </symbol>
+
+  <!-- Heart Filled -->
+  <symbol id="menu-heart-filled" viewBox="0 0 24 24">
+    <title>Favoritos</title>
+    <path
+      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+         2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+         C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5
+         c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+      fill="currentColor"
+    />
+    <ellipse cx="8" cy="7" rx="2" ry="1.2" fill="white" opacity="0.3" transform="rotate(-30 8 7)"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       COMUNICACION - Violet Section
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Message - Mensajes -->
+  <symbol id="menu-message" viewBox="0 0 24 24">
+    <title>Mensajes</title>
+    <!-- Chat bubble -->
+    <path
+      d="M21 11.5c0 4.42-4.03 8-9 8-1.6 0-3.1-.35-4.4-.98L3 21l1.5-4.5
+         C3.56 15.13 3 13.62 3 12c0-4.42 4.03-8 9-8s9 3.58 9 7.5z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Inner depth -->
+    <path
+      d="M19 11c0 3.5-3.35 6.5-7.5 6.5c-1.3 0-2.5-.25-3.5-.7"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="0.5"
+      opacity="0.15"
+    />
+    <!-- Typing dots with animation feel -->
+    <circle cx="8.5" cy="11.5" r="1.1" fill="currentColor" opacity="0.5"/>
+    <circle cx="12" cy="11.5" r="1.1" fill="currentColor" opacity="0.7"/>
+    <circle cx="15.5" cy="11.5" r="1.1" fill="currentColor" opacity="0.9"/>
+    <!-- Dot highlights -->
+    <circle cx="8.2" cy="11.2" r="0.25" fill="currentColor" opacity="0.3"/>
+    <circle cx="11.7" cy="11.2" r="0.25" fill="currentColor" opacity="0.3"/>
+    <circle cx="15.2" cy="11.2" r="0.25" fill="currentColor" opacity="0.3"/>
+  </symbol>
+
+  <!-- Bell - Notificaciones -->
+  <symbol id="menu-bell" viewBox="0 0 24 24">
+    <title>Notificaciones</title>
+    <!-- Bell body -->
+    <path
+      d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Clapper -->
+    <path
+      d="M13.73 21a2 2 0 0 1-3.46 0"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+    />
+    <!-- Inner shine -->
+    <path
+      d="M8 8c0-2.2 1.8-4 4-4"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="0.5"
+      opacity="0.2"
+    />
+    <!-- Notification dot -->
+    <circle cx="17" cy="6" r="3.5" fill="#EF4444"/>
+    <circle cx="16.3" cy="5.3" r="1" fill="#FCA5A5" opacity="0.6"/>
+  </symbol>
+
+  <!-- Bell empty (no notification) -->
+  <symbol id="menu-bell-empty" viewBox="0 0 24 24">
+    <title>Notificaciones</title>
+    <path
+      d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M13.73 21a2 2 0 0 1-3.46 0"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+    />
+    <path
+      d="M8 8c0-2.2 1.8-4 4-4"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="0.5"
+      opacity="0.2"
+    />
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       FINANZAS - Emerald Section
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Wallet -->
+  <symbol id="menu-wallet" viewBox="0 0 24 24">
+    <title>Wallet</title>
+    <!-- Wallet shadow/depth layer -->
+    <rect
+      x="2.5" y="6.5" width="20" height="14" rx="2.5"
+      fill="currentColor" opacity="0.05"
+    />
+    <!-- Main wallet body -->
+    <rect
+      x="2" y="6" width="20" height="14" rx="2.5"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <!-- Leather texture hint -->
+    <rect x="2" y="6" width="20" height="14" rx="2.5" fill="currentColor" opacity="0.03"/>
+    <!-- Fold/flap with stitching effect -->
+    <path
+      d="M2 10h20"
+      stroke="currentColor" stroke-width="1.75"
+    />
+    <path
+      d="M4 10h16"
+      stroke="currentColor" stroke-width="0.3" stroke-dasharray="1.5 1"
+      opacity="0.25"
+    />
+    <!-- Card slot top -->
+    <path
+      d="M6 6V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"
+      stroke="currentColor" stroke-width="1.75"
+      fill="none"
+    />
+    <!-- Money bills stacked (premium detail) -->
+    <g opacity="0.9">
+      <rect x="4" y="12" width="9" height="2" rx="0.5" fill="currentColor" opacity="0.15"/>
+      <rect x="4.3" y="12.2" width="8.4" height="0.4" rx="0.2" fill="currentColor" opacity="0.1"/>
+      <rect x="4" y="15" width="7" height="1.5" rx="0.5" fill="currentColor" opacity="0.12"/>
+    </g>
+    <!-- Clasp/button with metallic shine -->
+    <circle cx="18" cy="14" r="2.2" fill="currentColor" opacity="0.08"/>
+    <circle cx="18" cy="14" r="2" fill="none" stroke="currentColor" stroke-width="1.25"/>
+    <circle cx="18" cy="14" r="0.9" fill="currentColor"/>
+    <ellipse cx="17.6" cy="13.6" rx="0.4" ry="0.3" fill="white" opacity="0.4"/>
+  </symbol>
+
+  <!-- Credit Card - Retiros -->
+  <symbol id="menu-credit-card" viewBox="0 0 24 24">
+    <title>Tarjeta</title>
+    <!-- Card body -->
+    <rect
+      x="2" y="4" width="20" height="16" rx="2.5"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <!-- Magnetic stripe -->
+    <rect x="2" y="8" width="20" height="3" fill="currentColor" opacity="0.9"/>
+    <!-- Chip -->
+    <rect x="5" y="13" width="4" height="3" rx="0.5" fill="currentColor" opacity="0.6"/>
+    <g stroke="currentColor" stroke-width="0.3" opacity="0.4">
+      <line x1="6" y1="13" x2="6" y2="16"/>
+      <line x1="7" y1="13" x2="7" y2="16"/>
+      <line x1="8" y1="13" x2="8" y2="16"/>
+    </g>
+    <!-- Card number dots -->
+    <g fill="currentColor" opacity="0.4">
+      <circle cx="5" cy="17.5" r="0.5"/>
+      <circle cx="6.5" cy="17.5" r="0.5"/>
+      <circle cx="8" cy="17.5" r="0.5"/>
+      <circle cx="9.5" cy="17.5" r="0.5"/>
+      <circle cx="12" cy="17.5" r="0.5"/>
+      <circle cx="13.5" cy="17.5" r="0.5"/>
+      <circle cx="15" cy="17.5" r="0.5"/>
+      <circle cx="16.5" cy="17.5" r="0.5"/>
+    </g>
+    <!-- Logo circles -->
+    <circle cx="17" cy="14" r="1.5" fill="currentColor" opacity="0.4"/>
+    <circle cx="19" cy="14" r="1.5" fill="currentColor" opacity="0.25"/>
+  </symbol>
+
+  <!-- Chart Bar - Mis Ganancias -->
+  <symbol id="menu-chart-bar" viewBox="0 0 24 24">
+    <title>Ganancias</title>
+
+    <!-- Grid lines (subtle background) -->
+    <g stroke="currentColor" stroke-width="0.3" opacity="0.1">
+      <line x1="2" y1="21" x2="22" y2="21"/>
+      <line x1="2" y1="16" x2="22" y2="16"/>
+      <line x1="2" y1="11" x2="22" y2="11"/>
+      <line x1="2" y1="6" x2="22" y2="6"/>
+    </g>
+
+    <!-- Bar 1 - Small -->
+    <rect
+      x="4" y="13" width="4" height="8" rx="1"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <rect x="4" y="13" width="4" height="8" rx="1" fill="currentColor" opacity="0.12"/>
+    <rect x="4.3" y="13.3" width="1.5" height="7.4" rx="0.3" fill="currentColor" opacity="0.08"/>
+
+    <!-- Bar 2 - Medium -->
+    <rect
+      x="10" y="8" width="4" height="13" rx="1"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <rect x="10" y="8" width="4" height="13" rx="1" fill="currentColor" opacity="0.2"/>
+    <rect x="10.3" y="8.3" width="1.5" height="12.4" rx="0.3" fill="currentColor" opacity="0.1"/>
+
+    <!-- Bar 3 - Tall (main highlight) -->
+    <rect
+      x="16" y="3" width="4" height="18" rx="1"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <rect x="16" y="3" width="4" height="18" rx="1" fill="currentColor" opacity="0.3"/>
+    <rect x="16.3" y="3.3" width="1.5" height="17.4" rx="0.3" fill="currentColor" opacity="0.15"/>
+    <!-- Shine on tallest bar -->
+    <rect x="16.5" y="3.5" width="0.8" height="4" rx="0.4" fill="white" opacity="0.2"/>
+
+    <!-- Growth trend line -->
+    <path
+      d="M6 12.5 L12 7.5 L18 2.5"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.25"
+      stroke-linecap="round"
+      opacity="0.5"
+    />
+
+    <!-- Growth arrow (pointing up-right) -->
+    <g transform="translate(18, 2.5)" opacity="0.6">
+      <circle r="1.8" fill="currentColor" opacity="0.15"/>
+      <path
+        d="M-1.5 0.8 L0 -0.7 L1.5 0.8"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.25"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </g>
+
+    <!-- Percentage indicator hint -->
+    <text
+      x="18"
+      y="7"
+      font-family="system-ui, -apple-system, sans-serif"
+      font-size="3"
+      font-weight="600"
+      fill="currentColor"
+      text-anchor="middle"
+      opacity="0.4"
+    >+%</text>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       CONFIGURACION - Gray Section
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- User - Editar Perfil -->
+  <symbol id="menu-user" viewBox="0 0 24 24">
+    <title>Perfil</title>
+    <!-- Head -->
+    <circle
+      cx="12" cy="8" r="4"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <!-- Face hint -->
+    <circle cx="12" cy="8" r="2.5" fill="currentColor" opacity="0.08"/>
+    <!-- Body -->
+    <path
+      d="M4 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+    />
+    <!-- Shirt collar hint -->
+    <path
+      d="M9 15 L12 17 L15 15"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="0.5"
+      opacity="0.3"
+    />
+  </symbol>
+
+  <!-- Location - Mi Direccion -->
+  <symbol id="menu-location" viewBox="0 0 24 24">
+    <title>Ubicacion</title>
+    <!-- Pin body -->
+    <path
+      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+    />
+    <!-- Inner circle -->
+    <circle cx="12" cy="9" r="2.5" fill="currentColor"/>
+    <!-- Highlight ring -->
+    <circle cx="12" cy="9" r="1" fill="white" opacity="0.5"/>
+    <!-- Shadow/depth on pin -->
+    <path
+      d="M8 9c0-2.2 1.8-4 4-4"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="0.5"
+      opacity="0.2"
+    />
+  </symbol>
+
+  <!-- Shield - Seguridad -->
+  <symbol id="menu-shield" viewBox="0 0 24 24">
+    <title>Seguridad</title>
+    <!-- Shield body -->
+    <path
+      d="M12 2L4 5v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V5l-8-3z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Inner glow -->
+    <path
+      d="M12 4L6 6.5v4.5c0 4 2.7 7.7 6 9"
+      fill="currentColor"
+      opacity="0.06"
+    />
+    <!-- Check mark -->
+    <path
+      d="M9 12l2 2 4-4"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
+  </symbol>
+
+  <!-- Settings - Preferencias -->
+  <symbol id="menu-settings" viewBox="0 0 24 24">
+    <title>Configuracion</title>
+    <!-- Outer gear -->
+    <path
+      d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+    />
+    <!-- Center dot -->
+    <circle cx="12" cy="12" r="1" fill="currentColor" opacity="0.5"/>
+    <!-- Gear teeth (simplified for clarity) -->
+    <path
+      d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06
+         a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09
+         a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06
+         a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09
+         a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06
+         a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09
+         a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06
+         a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09
+         a1.65 1.65 0 0 0-1.51 1z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </symbol>
+
+  <!-- Document - Conductor -->
+  <symbol id="menu-document" viewBox="0 0 24 24">
+    <title>Documentos</title>
+    <!-- Document body -->
+    <path
+      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Fold corner -->
+    <path
+      d="M14 2v6h6"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
+    <!-- Corner fill -->
+    <path d="M14 2L20 8H14V2Z" fill="currentColor" opacity="0.1"/>
+    <!-- Text lines -->
+    <line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" opacity="0.6"/>
+    <line x1="8" y1="17" x2="14" y2="17" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" opacity="0.4"/>
+    <!-- ID photo placeholder -->
+    <rect x="8" y="9" width="3" height="3" rx="0.5" fill="currentColor" opacity="0.25"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       AYUDA - Amber Section
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Help - Centro de Ayuda -->
+  <symbol id="menu-help" viewBox="0 0 24 24">
+    <title>Ayuda</title>
+    <!-- Circle -->
+    <circle
+      cx="12" cy="12" r="10"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <!-- Inner glow -->
+    <circle cx="12" cy="12" r="8" fill="currentColor" opacity="0.05"/>
+    <!-- Question mark -->
+    <path
+      d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Dot -->
+    <circle cx="12" cy="17" r="1" fill="currentColor"/>
+    <!-- Shine -->
+    <path
+      d="M8 8c0-1 .5-2 1.5-2.5"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="0.5"
+      opacity="0.2"
+    />
+  </symbol>
+
+  <!-- Phone - Contactar Soporte -->
+  <symbol id="menu-phone" viewBox="0 0 24 24">
+    <title>Telefono</title>
+    <!-- Phone body -->
+    <path
+      d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07
+         19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3
+         a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91
+         a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7
+         A2 2 0 0 1 22 16.92z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Signal waves -->
+    <path
+      d="M15 5a5 5 0 0 1 5 5"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.25"
+      stroke-linecap="round"
+      opacity="0.4"
+    />
+    <path
+      d="M17 3a8 8 0 0 1 8 8"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.25"
+      stroke-linecap="round"
+      opacity="0.25"
+    />
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       ACCIONES
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Logout - Cerrar Sesion -->
+  <symbol id="menu-logout" viewBox="0 0 24 24">
+    <title>Cerrar Sesion</title>
+    <!-- Door frame -->
+    <path
+      d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Door fill hint -->
+    <rect x="3" y="3" width="6" height="18" rx="1" fill="currentColor" opacity="0.06"/>
+    <!-- Arrow -->
+    <path
+      d="M16 17l5-5-5-5"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Arrow line -->
+    <path
+      d="M21 12H9"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+    />
+    <!-- Door handle -->
+    <circle cx="7" cy="12" r="0.8" fill="currentColor" opacity="0.5"/>
+  </symbol>
+
+  <!-- Close - Cerrar drawer -->
+  <symbol id="menu-close" viewBox="0 0 24 24">
+    <title>Cerrar</title>
+    <!-- Subtle circle background -->
+    <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.05"/>
+    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+    <!-- X mark -->
+    <path
+      d="M15 9l-6 6M9 9l6 6"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+  </symbol>
+
+  <!-- Chevron Right - Navegacion -->
+  <symbol id="menu-chevron-right" viewBox="0 0 24 24">
+    <title>Ir</title>
+    <path
+      d="M9 18l6-6-6-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       EXTRAS
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- User Circle - Avatar placeholder -->
+  <symbol id="menu-user-circle" viewBox="0 0 24 24">
+    <title>Usuario</title>
+    <!-- Outer circle -->
+    <circle
+      cx="12" cy="12" r="10"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <!-- Background fill -->
+    <circle cx="12" cy="12" r="9" fill="currentColor" opacity="0.05"/>
+    <!-- Head -->
+    <circle cx="12" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <!-- Body arc -->
+    <path
+      d="M6.168 18.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+    />
+  </symbol>
+
+  <!-- Check Circle - Verificado -->
+  <symbol id="menu-check-circle" viewBox="0 0 24 24">
+    <title>Verificado</title>
+    <circle
+      cx="12" cy="12" r="10"
+      fill="none" stroke="currentColor" stroke-width="1.75"
+    />
+    <circle cx="12" cy="12" r="8.5" fill="currentColor" opacity="0.08"/>
+    <path
+      d="M9 12l2 2 4-4"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
+  </symbol>
+
+  <!-- Star - Rating -->
+  <symbol id="menu-star" viewBox="0 0 24 24">
+    <title>Calificacion</title>
+    <path
+      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+      fill="currentColor"
+      opacity="0.1"
+    />
+  </symbol>
+
+  <!-- Star Filled -->
+  <symbol id="menu-star-filled" viewBox="0 0 24 24">
+    <title>Calificacion</title>
+    <path
+      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+      fill="url(#goldGrad)"
+      stroke="url(#goldGrad)"
+      stroke-width="1"
+    />
+    <!-- Shine -->
+    <ellipse cx="9" cy="8" rx="1.5" ry="1" fill="white" opacity="0.4" transform="rotate(-15 9 8)"/>
+  </symbol>
+
+  <!-- Gift - Rewards/Promo -->
+  <symbol id="menu-gift" viewBox="0 0 24 24">
+    <title>Regalo</title>
+    <!-- Box bottom -->
+    <rect x="3" y="12" width="18" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.75"/>
+    <!-- Box top -->
+    <rect x="3" y="8" width="18" height="4" rx="1" fill="none" stroke="currentColor" stroke-width="1.75"/>
+    <!-- Ribbon vertical -->
+    <line x1="12" y1="8" x2="12" y2="21" stroke="currentColor" stroke-width="1.5"/>
+    <!-- Ribbon horizontal -->
+    <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="0.5" opacity="0.3"/>
+    <!-- Bow -->
+    <path
+      d="M12 8c-1.5-1.5-1.5-4 0-5.5M12 8c1.5-1.5 1.5-4 0-5.5"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+    />
+    <circle cx="12" cy="8" r="1.5" fill="currentColor"/>
+  </symbol>
+
+</svg>

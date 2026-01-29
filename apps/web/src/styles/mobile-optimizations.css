@@ -1,0 +1,1269 @@
+/* ═══════════════════════════════════════════════════════════════
+   📱 MOBILE OPTIMIZATIONS - AUTORENT
+   Ajustes profesionales para experiencia móvil premium
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────
+   SCROLLBAR OCULTA - Mantiene scroll, oculta barra visual
+   ───────────────────────────────────────────────────────────── */
+
+/* Para todos los navegadores modernos */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Asegurar que el body y contenedores principales no muestren scrollbar */
+html,
+body,
+#app-scroller,
+.app-main,
+main {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#app-scroller::-webkit-scrollbar,
+.app-main::-webkit-scrollbar,
+main::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DESHABILITAR HYPHENS - Evitar cortes de palabras feos
+   ───────────────────────────────────────────────────────────── */
+
+/* Deshabilitar hyphens globalmente para evitar cortes como "estacio-nados" */
+p,
+h1, h2, h3, h4, h5, h6,
+span,
+a,
+li,
+blockquote {
+  hyphens: none !important;
+  -webkit-hyphens: none !important;
+  -ms-hyphens: none !important;
+  word-break: normal !important;
+  overflow-wrap: break-word;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DESIGN TOKENS - CSS Custom Properties
+   ───────────────────────────────────────────────────────────── */
+:root {
+  /* Layout */
+  --hero-min-height-mobile: 85svh;
+  --hero-min-height-desktop: 100svh;
+  --content-max-width: 80rem; /* 1280px */
+
+  /* Touch */
+  --touch-target-min: 44px;
+  --touch-target-comfortable: 48px;
+
+  /* Spacing */
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-top: env(safe-area-inset-top, 0px);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SCANNER OVERLAY - Hide ALL app UI when camera is open
+   Uses :has() selector for modern browsers (95%+ support)
+   Falls back to .scanner-open class for older browsers
+   ───────────────────────────────────────────────────────────── */
+
+/* Modern approach: Use :has() to detect when scanner exists */
+body:has(app-vehicle-scanner-live) {
+  overflow: hidden !important;
+}
+
+body:has(app-vehicle-scanner-live) ion-tab-bar,
+body:has(app-vehicle-scanner-live) ion-tabs,
+body:has(app-vehicle-scanner-live) .bottom-navigation,
+body:has(app-vehicle-scanner-live) ion-header:not(app-vehicle-scanner-live ion-header),
+body:has(app-vehicle-scanner-live) ion-footer:not(app-vehicle-scanner-live ion-footer) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Force scanner to be on top of EVERYTHING */
+app-vehicle-scanner-live {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important; /* Max 32-bit int */
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  contain: none !important;
+}
+
+/* Break out of any Ionic stacking contexts */
+body:has(app-vehicle-scanner-live) ion-app,
+body:has(app-vehicle-scanner-live) ion-router-outlet,
+body:has(app-vehicle-scanner-live) ion-content {
+  contain: none !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Fallback for older browsers using class */
+body.scanner-open {
+  overflow: hidden !important;
+}
+
+body.scanner-open ion-tab-bar,
+body.scanner-open ion-tabs,
+body.scanner-open .bottom-navigation {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   OVERFLOW FIX - Prevenir desbordamiento horizontal
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Prevenir overflow horizontal global */
+  html,
+  body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
+    background-color: var(--surface-base);
+  }
+
+  body {
+    /* Safe area se maneja en el bottom-nav, no en el body */
+    padding-bottom: 0;
+  }
+
+  /* Contenedores principales */
+  body > *,
+  #app-root,
+  .app-main,
+  main,
+  article,
+  section {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* Fix para containers con padding */
+  .container,
+  [class*='container-'] {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+  }
+
+  /* Prevenir overflow en grids sin columnas explícitas */
+  .grid:not([class*='grid-cols-']) {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    width: 100%;
+  }
+
+  /* Flex containers responsive (solo si ya usan wrap) */
+  .flex.flex-wrap {
+    gap: 12px !important;
+  }
+
+  /* Imágenes responsive */
+  img,
+  video,
+  iframe,
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Tablas scrollables */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevenir overflow en texto */
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  span,
+  div,
+  a,
+  li {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  /* Fix para media con width fijo */
+  img[style*='width'],
+  video[style*='width'],
+  iframe[style*='width'] {
+    max-width: 100% !important;
+  }
+
+  /* Cards y componentes */
+  .card,
+  [class*='card-'] {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Header Móvil Optimizado
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Header más compacto en móvil */
+  #main-header {
+    min-height: calc(56px + var(--safe-area-top));
+    padding-top: var(--safe-area-top);
+    background-color: var(--surface-base);
+  }
+
+  #main-header .container-page {
+    min-height: 56px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: var(--safe-area-top);
+  }
+
+  /* Logo más pequeño en móvil */
+  #main-header img {
+    height: 36px !important;
+  }
+
+  /* En móviles muy pequeños (<360px): compactar header, no ocultar */
+  @media (max-width: 360px) {
+    #main-header .container-page {
+      padding-left: 8px;
+      padding-right: 8px;
+      gap: 4px;
+    }
+
+    #main-header img {
+      height: 28px !important;
+    }
+  }
+
+  /* Botones de header más pequeños */
+  #main-header .icon-button {
+    height: 40px;
+    width: 40px;
+  }
+
+  #main-header .icon-button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Main Content - Espaciado Móvil
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .app-main {
+    /* Asegurar padding bottom para la bottom nav */
+    padding-bottom: calc(80px + var(--safe-area-bottom)) !important;
+    padding-top: max(8px, var(--safe-area-top));
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+
+  .app-main > *:first-child {
+    margin-top: 0 !important;
+    padding-top: max(0px, var(--safe-area-top));
+  }
+
+  /* Bottom nav styles están en el componente - no duplicar aquí */
+
+  /* Padding horizontal consistente */
+  .app-main[class*='px-container'] {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Reducir padding vertical en móvil */
+  .app-main[class*='py-section'] {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  /* Fix para páginas fullscreen */
+  .page-fullscreen,
+  [class*='fullscreen'] {
+    padding-bottom: 0 !important;
+  }
+
+  /* Fix para carruseles que sobresalen */
+  [class*='carousel'],
+  [class*='slider'],
+  .map-carousel {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100vw;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Footer Compacto en Móvil
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  footer {
+    padding-bottom: calc(80px + var(--safe-area-bottom)) !important;
+  }
+
+  /* Grid de 1 columna en móvil */
+  footer .grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  /* Ocultar columnas secundarias en móvil */
+  footer .grid > div:nth-child(3),
+  footer .grid > div:nth-child(4) {
+    display: none;
+  }
+
+  /* Hacer más compacto el padding */
+  footer > div {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+  }
+
+  /* Texto más pequeño en footer móvil */
+  footer p,
+  footer a,
+  footer li {
+    font-size: 13px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Sidebar Móvil Optimizado
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Reducir ancho del sidebar */
+  #mobile-sidebar {
+    width: 280px;
+  }
+
+  /* Quitar items duplicados de la bottom nav */
+  #mobile-sidebar nav a[href='/cars'],
+  #mobile-sidebar nav a[href='/bookings'],
+  #mobile-sidebar nav a[href='/wallet'],
+  #mobile-sidebar nav a[href='/profile'] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* Agregar nota informativa */
+  #mobile-sidebar nav::after {
+    content: 'Navegación principal en barra inferior';
+    display: block;
+    margin-top: 16px;
+    padding: 12px;
+    font-size: 12px;
+    text-align: center;
+    color: var(--text-muted, #9ca3af);
+    background: rgba(156, 163, 175, 0.1);
+    border-radius: 8px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Floating Actions - Z-index y Posición
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Badge de comparación */
+  .fixed.bottom-24 {
+    bottom: 85px !important;
+    right: 16px !important;
+    z-index: 45 !important;
+  }
+
+  /* Reducir tamaño de badges flotantes */
+  .fixed[class*='rounded-full'] {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+  }
+
+  .fixed[class*='rounded-full'] svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Scroll Behavior Optimizado
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body {
+    overscroll-behavior-y: contain;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none; /* Deshabilita el menú contextual en iOS */
+  }
+
+  /* Prevenir zoom en inputs */
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='number'],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Touch Targets - Mínimo 44x44px (WCAG 2.5.5)
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Asegurar touch targets mínimos para botones */
+  button,
+  a.btn,
+  a.icon-button,
+  .nav-link {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Touch-friendly form inputs - 44px minimum height */
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='number'],
+  input[type='password'],
+  input[type='search'],
+  input[type='url'],
+  input[type='date'],
+  input[type='time'],
+  textarea,
+  select,
+  .input-premium,
+  .form-control {
+    min-height: 44px;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    touch-action: manipulation;
+    -webkit-appearance: none;
+  }
+
+  /* Aumentar área táctil de links */
+  a:not(.btn):not(.icon-button) {
+    padding: 4px 0;
+  }
+
+  /* Checkboxes and radios - larger touch targets */
+  input[type='checkbox'],
+  input[type='radio'] {
+    width: 24px;
+    height: 24px;
+    margin: 2px 8px 2px 0;
+    cursor: pointer;
+  }
+
+  /* Labels should be tappable */
+  label {
+    cursor: pointer;
+    padding: 4px 0;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Typography - Escala Móvil
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Headings más pequeños */
+  h1,
+  .h1 {
+    font-size: 1.75rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+  }
+
+  h3,
+  .h3 {
+    font-size: 1.25rem !important;
+    line-height: 1.4 !important;
+  }
+
+  h4,
+  .h4 {
+    font-size: 1.125rem !important;
+  }
+
+  h5,
+  .h5 {
+    font-size: 1rem !important;
+  }
+
+  /* Body text optimizado */
+  body {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* Texto pequeño legible */
+  .text-sm {
+    font-size: 13px !important;
+  }
+
+  .text-xs {
+    font-size: 12px !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Cards y Componentes Móvil
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Cards más compactas */
+  .card-premium,
+  [class*='card'] {
+    border-radius: 12px !important;
+    padding: 16px !important;
+  }
+
+  /* Reducir gaps en grids */
+  .grid {
+    gap: 16px !important;
+  }
+
+  /* Imágenes responsive con lazy loading */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* ✅ Optimización de imágenes para móvil */
+  img:not([loading]) {
+    loading: lazy;
+  }
+
+  img {
+    content-visibility: auto;
+    contain-intrinsic-size: 400px 300px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Modals y Overlays Móvil
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Modals full screen en móvil */
+  [role='dialog'],
+  .modal {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Cerrar modals desde el bottom */
+  [role='dialog'] button[aria-label*='cerrar'],
+  [role='dialog'] button[aria-label*='close'] {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Forms Móvil Optimizados
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Inputs más cómodos */
+  input,
+  textarea,
+  select {
+    padding: 12px 16px !important;
+    font-size: 16px !important;
+  }
+
+  /* Labels más visibles */
+  label {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    margin-bottom: 6px !important;
+  }
+
+  /* Botones full width en móvil */
+  .btn:not(.icon-button) {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Animaciones Reducidas (Respeta preferencias)
+   ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Safe Area para iPhone X+
+   ───────────────────────────────────────────────────────────── */
+
+@supports (padding: max(0px)) {
+  @media (max-width: 768px) {
+    #main-header {
+      padding-left: max(12px, env(safe-area-inset-left));
+      padding-right: max(12px, env(safe-area-inset-right));
+    }
+
+    .app-main {
+      padding-left: max(16px, env(safe-area-inset-left));
+      padding-right: max(16px, env(safe-area-inset-right));
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Landscape Mode (Móvil Horizontal)
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) and (orientation: landscape) {
+  /* Header compacto en landscape - máximo aprovechamiento vertical */
+  #main-header {
+    min-height: calc(48px + var(--safe-area-top));
+    padding-top: var(--safe-area-top);
+    padding-bottom: 0.25rem;
+  }
+
+  #main-header .container-page {
+    min-height: 48px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: var(--safe-area-top);
+  }
+
+  #main-header img,
+  #main-header .logo {
+    height: 32px !important;
+  }
+
+  /* Bottom nav styles están en el componente - no duplicar aquí */
+
+  /* Reducir padding vertical agresivamente */
+  .app-main {
+    padding-top: max(4px, var(--safe-area-top)) !important;
+    padding-bottom: calc(56px + var(--safe-area-bottom)) !important;
+  }
+
+  /* Modales en landscape - full width, menos altura */
+  .modal-content,
+  [class*='modal'] {
+    max-height: 90vh;
+    width: 95vw;
+    max-width: none;
+  }
+
+  /* Cards en grid - 2 columnas en landscape */
+  .grid.grid-cols-1 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Reducir espaciado de secciones */
+  section,
+  .section {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  /* Forms compactos */
+  input,
+  textarea,
+  select {
+    padding: 0.5rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  /* Botones más pequeños */
+  button,
+  .btn {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  /* Hero sections reducidas */
+  .hero-header,
+  [class*='hero'] {
+    min-height: 300px !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  /* Imágenes aspect ratio ajustado */
+  .aspect-video,
+  [class*='aspect'] {
+    aspect-ratio: 16/9 !important;
+  }
+
+  /* Tablas scrollables horizontalmente */
+  table {
+    font-size: 0.75rem;
+  }
+
+  table th,
+  table td {
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* Carousels/Sliders más compactos */
+  .carousel,
+  .slider {
+    height: auto;
+    max-height: 50vh;
+  }
+
+  /* Maps reducidos */
+  [class*='map-container'],
+  .map-view {
+    height: 40vh !important;
+    min-height: 300px !important;
+  }
+
+  /* Toast/Notifications posicionadas mejor */
+  .toast,
+  [class*='notification'] {
+    top: 4px;
+    max-width: 90vw;
+    font-size: 0.875rem;
+  }
+
+  /* Sheets/Drawers menos altura */
+  [class*='sheet'],
+  [class*='drawer'] {
+    max-height: 70vh;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Loading States Optimizados
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Skeleton loaders más pequeños */
+  [class*='skeleton'],
+  [class*='loading'] {
+    height: 40px;
+    border-radius: 8px;
+  }
+
+  /* Spinners centrados */
+  .loading-spinner {
+    margin: 40px auto;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Dark Mode Móvil
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .dark {
+    /* Asegurar contraste en móvil */
+    color-scheme: dark;
+  }
+
+  .dark body {
+    background: var(--surface-dark, #1a1a1a);
+  }
+
+  /* Reducir brillo de elementos en dark mode */
+  .dark [class*='shadow'] {
+    box-shadow: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Landscape - Component Specific Optimizations
+   ───────────────────────────────────────────────────────────── */
+
+/* Booking cards en landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  .booking-card,
+  [class*='booking'] {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    gap: 1rem;
+  }
+
+  .booking-card img {
+    aspect-ratio: 4/3;
+    object-fit: cover;
+  }
+}
+
+/* Car cards optimizados para landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  .car-card,
+  [class*='car-card'] {
+    display: grid;
+    grid-template-columns: 35% 65%;
+    gap: 0.75rem;
+  }
+
+  .car-card img {
+    aspect-ratio: 3/2;
+  }
+
+  .car-card .card-content {
+    padding: 0.5rem;
+  }
+}
+
+/* Profile/Settings pages */
+@media (max-width: 768px) and (orientation: landscape) {
+  .profile-page,
+  .settings-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Dashboard widgets */
+@media (max-width: 768px) and (orientation: landscape) {
+  .dashboard-widget,
+  .stat-card {
+    min-height: auto !important;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* Chat/Messaging interfaces */
+@media (max-width: 768px) and (orientation: landscape) {
+  .chat-container {
+    height: calc(100vh - 120px) !important;
+  }
+
+  .message-input {
+    padding: 0.5rem;
+  }
+
+  .message-bubble {
+    max-width: 60%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Video players en landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  video,
+  iframe[src*='youtube'],
+  iframe[src*='vimeo'] {
+    height: 70vh !important;
+  }
+}
+
+/* Filter panels/Sidebars */
+@media (max-width: 768px) and (orientation: landscape) {
+  .filters-panel,
+  .sidebar {
+    width: 50vw;
+    max-width: 400px;
+  }
+}
+
+/* Search bars en landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  .search-bar,
+  [class*='search'] {
+    height: 36px;
+    font-size: 0.875rem;
+  }
+
+  .search-bar input {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Tabs navigation */
+@media (max-width: 768px) and (orientation: landscape) {
+  .tabs,
+  [role='tablist'] {
+    gap: 0.5rem;
+    padding: 0.25rem;
+  }
+
+  .tab,
+  [role='tab'] {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+@supports (height: 100svh) {
+  @media (max-width: 768px) {
+    .app-main {
+      min-height: calc(100svh - var(--safe-area-top));
+    }
+
+    /* Login page: sin min-height porque usa position:fixed */
+    .app-main:has(app-login-page) {
+      min-height: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* Login page: ocultar scroll del contenedor principal */
+    #app-scroller:has(app-login-page) {
+      overflow: hidden !important;
+    }
+
+    body {
+      min-height: 100svh;
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Login Page: Header Transparente Inmersivo
+   ───────────────────────────────────────────────────────────── */
+
+/* Header transparente cuando está en login page */
+body:has(app-login-page) header,
+body:has(app-login-page) #main-header {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-bottom: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  /* Fix: Header no debe bloquear clicks al contenido fixed de login */
+  pointer-events: none !important;
+  height: auto !important;
+  align-self: start !important;
+}
+
+/* Re-habilitar pointer-events en elementos interactivos del header */
+body:has(app-login-page) #main-header a,
+body:has(app-login-page) #main-header button {
+  pointer-events: auto !important;
+}
+
+/* Logo en blanco para contraste con HDRI */
+body:has(app-login-page) header .logo-text,
+body:has(app-login-page) #main-header .logo-text {
+  color: white !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Logo imagen en blanco */
+body:has(app-login-page) header img,
+body:has(app-login-page) #main-header img {
+  filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5)) !important;
+}
+
+/* Iconos del header en blanco */
+body:has(app-login-page) header svg,
+body:has(app-login-page) #main-header svg,
+body:has(app-login-page) header button,
+body:has(app-login-page) #main-header button {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Gradiente sutil en la parte superior para legibilidad del header */
+body:has(app-login-page) header::after,
+body:has(app-login-page) #main-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Marketplace Page: Ocultar header principal (tiene su propio header)
+   ───────────────────────────────────────────────────────────── */
+
+/* La página marketplace-v2 tiene su propio header flotante en el hero */
+body:has(app-marketplace-v2-page) > app-root > div > header,
+body:has(.hero-minimal) > app-root > div > header {
+  display: none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   UTILIDADES RESPONSIVE GLOBALES
+   Clases que se pueden usar en cualquier página/componente
+   ───────────────────────────────────────────────────────────── */
+
+/* Contenedor de página con padding bottom para bottom nav */
+.page-content {
+  min-height: 100svh;
+  padding-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .page-content {
+    padding-bottom: calc(88px + var(--safe-area-bottom, 0px)) !important;
+  }
+}
+
+/* Grids responsive automáticos */
+.grid-responsive {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (max-width: 639px) {
+  .grid-responsive {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .grid-responsive {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Botones full width en mobile */
+.btn-mobile-full {
+  width: auto;
+}
+
+@media (max-width: 639px) {
+  .btn-mobile-full {
+    width: 100% !important;
+    justify-content: center;
+  }
+}
+
+/* Stack en mobile, row en desktop */
+.stack-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .stack-mobile {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Ocultar en mobile */
+.hide-mobile {
+  display: block;
+}
+
+@media (max-width: 639px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Mostrar solo en mobile */
+.show-mobile {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .show-mobile {
+    display: block !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BOTTOM SHEET MODAL PATTERN
+   Para modales que deben comportarse como bottom sheets en mobile
+   ───────────────────────────────────────────────────────────── */
+
+.modal-bottom-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 639px) {
+  .modal-bottom-sheet {
+    align-items: flex-end !important;
+    padding-bottom: 88px; /* Espacio para bottom nav */
+  }
+
+  .modal-bottom-sheet > .modal-content,
+  .modal-bottom-sheet > div:first-child {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: calc(100dvh - 100px) !important;
+    border-radius: 24px 24px 0 0 !important;
+    margin: 0 !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   STICKY CTA PATTERN
+   Para botones de acción fijos en el bottom
+   ───────────────────────────────────────────────────────────── */
+
+.sticky-cta-bottom {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(to top, var(--surface-base, white) 80%, transparent);
+  z-index: 40;
+}
+
+@media (max-width: 768px) {
+  .sticky-cta-bottom {
+    position: fixed;
+    bottom: 80px; /* Altura del bottom nav */
+    padding-bottom: max(1rem, var(--safe-area-bottom, 0px));
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FORM LAYOUTS RESPONSIVE
+   ───────────────────────────────────────────────────────────── */
+
+/* Form grid que se apila en mobile */
+.form-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .form-grid .full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CARD RESPONSIVE VARIANTS
+   ───────────────────────────────────────────────────────────── */
+
+/* Card horizontal en desktop, vertical en mobile */
+.card-horizontal-desktop {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .card-horizontal-desktop {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .card-horizontal-desktop > .card-image {
+    width: 40%;
+    flex-shrink: 0;
+  }
+
+  .card-horizontal-desktop > .card-content {
+    flex: 1;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ASPECT RATIOS RESPONSIVE
+   ───────────────────────────────────────────────────────────── */
+
+.aspect-responsive {
+  aspect-ratio: 16/9;
+}
+
+@media (max-width: 639px) {
+  .aspect-responsive {
+    aspect-ratio: 4/3;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TEXT TRUNCATION HELPERS
+   ───────────────────────────────────────────────────────────── */
+
+.text-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 639px) {
+  .text-clamp-mobile-1 {
+    -webkit-line-clamp: 1 !important;
+  }
+}

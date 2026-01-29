@@ -1,0 +1,4520 @@
+{
+  "timestamp": "2025-12-11T02:34:01.012Z",
+  "networkLogs": [
+    {
+      "id": 59,
+      "timestamp": "2025-12-11T02:33:41.880Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-SVVGM6CF.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 60,
+      "timestamp": "2025-12-11T02:33:41.881Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-RFV3G4NA.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 61,
+      "timestamp": "2025-12-11T02:33:41.882Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6AZZGOBW.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 62,
+      "timestamp": "2025-12-11T02:33:41.901Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-VV6LA4GU.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 63,
+      "timestamp": "2025-12-11T02:33:41.903Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-653SOEEV.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 64,
+      "timestamp": "2025-12-11T02:33:41.904Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_common.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 65,
+      "timestamp": "2025-12-11T02:33:41.905Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_common_locales_es-AR.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 66,
+      "timestamp": "2025-12-11T02:33:41.907Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_platform-browser.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 67,
+      "timestamp": "2025-12-11T02:33:41.908Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_platform-browser_animations.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 68,
+      "timestamp": "2025-12-11T02:33:41.909Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_core.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 69,
+      "timestamp": "2025-12-11T02:33:41.910Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_core_rxjs-interop.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 70,
+      "timestamp": "2025-12-11T02:33:41.912Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_router.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 71,
+      "timestamp": "2025-12-11T02:33:41.913Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@ngx-translate_core.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 72,
+      "timestamp": "2025-12-11T02:33:41.914Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/rxjs.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 73,
+      "timestamp": "2025-12-11T02:33:41.915Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_common_locales_pt.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 74,
+      "timestamp": "2025-12-11T02:33:41.916Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_common_locales_en.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 75,
+      "timestamp": "2025-12-11T02:33:41.918Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_service-worker.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 76,
+      "timestamp": "2025-12-11T02:33:41.920Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@capacitor_core.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 77,
+      "timestamp": "2025-12-11T02:33:41.921Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@capacitor_push-notifications.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 78,
+      "timestamp": "2025-12-11T02:33:41.923Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_animations.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 79,
+      "timestamp": "2025-12-11T02:33:41.926Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@capacitor_status-bar.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 80,
+      "timestamp": "2025-12-11T02:33:41.929Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_forms.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 81,
+      "timestamp": "2025-12-11T02:33:41.931Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_common_http.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 82,
+      "timestamp": "2025-12-11T02:33:41.932Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_platform-browser_animations_async.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 83,
+      "timestamp": "2025-12-11T02:33:41.933Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@ionic_angular_standalone.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 84,
+      "timestamp": "2025-12-11T02:33:41.949Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-UJUWZUFT.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 102
+    },
+    {
+      "id": 85,
+      "timestamp": "2025-12-11T02:33:41.953Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-H6NRQYVP.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 104
+    },
+    {
+      "id": 86,
+      "timestamp": "2025-12-11T02:33:41.986Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-5K6F4UNG.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 126
+    },
+    {
+      "id": 87,
+      "timestamp": "2025-12-11T02:33:41.996Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@capacitor_haptics.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 88,
+      "timestamp": "2025-12-11T02:33:42.057Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6WXZTT4O.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 196
+    },
+    {
+      "id": 89,
+      "timestamp": "2025-12-11T02:33:42.107Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FXPD26T4.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 244
+    },
+    {
+      "id": 90,
+      "timestamp": "2025-12-11T02:33:42.107Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-JG7FIDPY.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 241
+    },
+    {
+      "id": 91,
+      "timestamp": "2025-12-11T02:33:42.108Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-B2EVFYMR.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 246
+    },
+    {
+      "id": 92,
+      "timestamp": "2025-12-11T02:33:42.108Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BRJVUKQS.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 241
+    },
+    {
+      "id": 93,
+      "timestamp": "2025-12-11T02:33:42.111Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_common.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 207
+    },
+    {
+      "id": 94,
+      "timestamp": "2025-12-11T02:33:42.111Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-CRSZKZUS.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 246
+    },
+    {
+      "id": 95,
+      "timestamp": "2025-12-11T02:33:42.116Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_platform-browser.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 209
+    },
+    {
+      "id": 96,
+      "timestamp": "2025-12-11T02:33:42.116Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_platform-browser_animations.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 208
+    },
+    {
+      "id": 97,
+      "timestamp": "2025-12-11T02:33:42.118Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_common_locales_es-AR.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 213
+    },
+    {
+      "id": 98,
+      "timestamp": "2025-12-11T02:33:42.137Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_core_rxjs-interop.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 227
+    },
+    {
+      "id": 99,
+      "timestamp": "2025-12-11T02:33:42.137Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/rxjs.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 223
+    },
+    {
+      "id": 100,
+      "timestamp": "2025-12-11T02:33:42.137Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_common_locales_pt.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 222
+    },
+    {
+      "id": 101,
+      "timestamp": "2025-12-11T02:33:42.137Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_router.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 225
+    },
+    {
+      "id": 102,
+      "timestamp": "2025-12-11T02:33:42.137Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_common_locales_en.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 221
+    },
+    {
+      "id": 103,
+      "timestamp": "2025-12-11T02:33:42.138Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@capacitor_core.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 218
+    },
+    {
+      "id": 104,
+      "timestamp": "2025-12-11T02:33:42.146Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@capacitor_push-notifications.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 225
+    },
+    {
+      "id": 105,
+      "timestamp": "2025-12-11T02:33:42.146Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@ngx-translate_core.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 233
+    },
+    {
+      "id": 106,
+      "timestamp": "2025-12-11T02:33:42.146Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_service-worker.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 228
+    },
+    {
+      "id": 107,
+      "timestamp": "2025-12-11T02:33:42.147Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@capacitor_status-bar.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 221
+    },
+    {
+      "id": 108,
+      "timestamp": "2025-12-11T02:33:42.150Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_forms.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 221
+    },
+    {
+      "id": 109,
+      "timestamp": "2025-12-11T02:33:42.151Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_animations.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 228
+    },
+    {
+      "id": 110,
+      "timestamp": "2025-12-11T02:33:42.151Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_common_http.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 220
+    },
+    {
+      "id": 111,
+      "timestamp": "2025-12-11T02:33:42.180Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_platform-browser_animations_async.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 248
+    },
+    {
+      "id": 112,
+      "timestamp": "2025-12-11T02:33:42.180Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@angular_core.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 271
+    },
+    {
+      "id": 113,
+      "timestamp": "2025-12-11T02:33:42.206Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-CEUCGMJY.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 114,
+      "timestamp": "2025-12-11T02:33:42.208Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-CYIUJTKM.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 115,
+      "timestamp": "2025-12-11T02:33:42.209Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-IFNK555L.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 116,
+      "timestamp": "2025-12-11T02:33:42.210Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-744YGJ7Y.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 117,
+      "timestamp": "2025-12-11T02:33:42.211Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-5ILP76E2.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 118,
+      "timestamp": "2025-12-11T02:33:42.212Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-IFKRHWPH.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 119,
+      "timestamp": "2025-12-11T02:33:42.215Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-CQIRSUFU.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 120,
+      "timestamp": "2025-12-11T02:33:42.239Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-X5JLU75P.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 121,
+      "timestamp": "2025-12-11T02:33:42.248Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-6557X473.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 122,
+      "timestamp": "2025-12-11T02:33:42.252Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-73QO7RIH.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 384
+    },
+    {
+      "id": 123,
+      "timestamp": "2025-12-11T02:33:42.252Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-X4AQC3RM.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 124,
+      "timestamp": "2025-12-11T02:33:42.254Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-ZK7V7E5W.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 125,
+      "timestamp": "2025-12-11T02:33:42.255Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-PPTLPU6R.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 386
+    },
+    {
+      "id": 126,
+      "timestamp": "2025-12-11T02:33:42.256Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-X3XFKAQ3.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 385
+    },
+    {
+      "id": 127,
+      "timestamp": "2025-12-11T02:33:42.256Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-D225FZEF.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 383
+    },
+    {
+      "id": 128,
+      "timestamp": "2025-12-11T02:33:42.256Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-K2LOAVEX.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 382
+    },
+    {
+      "id": 129,
+      "timestamp": "2025-12-11T02:33:42.256Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-IKSXKRES.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 381
+    },
+    {
+      "id": 130,
+      "timestamp": "2025-12-11T02:33:42.256Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-ZYP4R4EL.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 379
+    },
+    {
+      "id": 131,
+      "timestamp": "2025-12-11T02:33:42.256Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-MGUCVA4Y.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 385
+    },
+    {
+      "id": 132,
+      "timestamp": "2025-12-11T02:33:42.257Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-VV6LA4GU.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 356
+    },
+    {
+      "id": 133,
+      "timestamp": "2025-12-11T02:33:42.257Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6AZZGOBW.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 375
+    },
+    {
+      "id": 134,
+      "timestamp": "2025-12-11T02:33:42.257Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FRGIE4UT.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 379
+    },
+    {
+      "id": 135,
+      "timestamp": "2025-12-11T02:33:42.257Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-RFV3G4NA.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 376
+    },
+    {
+      "id": 136,
+      "timestamp": "2025-12-11T02:33:42.280Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-SVVGM6CF.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 400
+    },
+    {
+      "id": 137,
+      "timestamp": "2025-12-11T02:33:42.281Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-7CLFVLZG.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 138,
+      "timestamp": "2025-12-11T02:33:42.284Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-R5HFY7DD.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 139,
+      "timestamp": "2025-12-11T02:33:42.285Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-B2WU2SIA.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 140,
+      "timestamp": "2025-12-11T02:33:42.288Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-K3RDKLTC.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 141,
+      "timestamp": "2025-12-11T02:33:42.293Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-HTVNAPNK.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 142,
+      "timestamp": "2025-12-11T02:33:42.296Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-BWQNZELL.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 143,
+      "timestamp": "2025-12-11T02:33:42.300Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-2VWVQTPK.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 144,
+      "timestamp": "2025-12-11T02:33:42.302Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-ERVM6TZD.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 145,
+      "timestamp": "2025-12-11T02:33:42.303Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-653SOEEV.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 400
+    },
+    {
+      "id": 146,
+      "timestamp": "2025-12-11T02:33:42.303Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@capacitor_haptics.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 307
+    },
+    {
+      "id": 147,
+      "timestamp": "2025-12-11T02:33:42.303Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/rxjs_operators.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 148,
+      "timestamp": "2025-12-11T02:33:42.305Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/uuid.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 149,
+      "timestamp": "2025-12-11T02:33:42.313Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@supabase_supabase-js.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 150,
+      "timestamp": "2025-12-11T02:33:42.316Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-GOG5Z6ME.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 151,
+      "timestamp": "2025-12-11T02:33:42.433Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-CYIUJTKM.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 225
+    },
+    {
+      "id": 152,
+      "timestamp": "2025-12-11T02:33:42.435Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-CEUCGMJY.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 229
+    },
+    {
+      "id": 153,
+      "timestamp": "2025-12-11T02:33:42.440Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-744YGJ7Y.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 230
+    },
+    {
+      "id": 154,
+      "timestamp": "2025-12-11T02:33:42.443Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-5ILP76E2.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 232
+    },
+    {
+      "id": 155,
+      "timestamp": "2025-12-11T02:33:42.447Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-IFKRHWPH.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 235
+    },
+    {
+      "id": 156,
+      "timestamp": "2025-12-11T02:33:42.447Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-CQIRSUFU.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 232
+    },
+    {
+      "id": 157,
+      "timestamp": "2025-12-11T02:33:42.449Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-X5JLU75P.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 210
+    },
+    {
+      "id": 158,
+      "timestamp": "2025-12-11T02:33:42.500Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-X4AQC3RM.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 248
+    },
+    {
+      "id": 159,
+      "timestamp": "2025-12-11T02:33:42.514Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@ionic_angular_standalone.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 581
+    },
+    {
+      "id": 160,
+      "timestamp": "2025-12-11T02:33:42.532Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-6557X473.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 284
+    },
+    {
+      "id": 161,
+      "timestamp": "2025-12-11T02:33:42.533Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-ZK7V7E5W.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 279
+    },
+    {
+      "id": 162,
+      "timestamp": "2025-12-11T02:33:42.534Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-7CLFVLZG.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 253
+    },
+    {
+      "id": 163,
+      "timestamp": "2025-12-11T02:33:42.553Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-R5HFY7DD.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 269
+    },
+    {
+      "id": 164,
+      "timestamp": "2025-12-11T02:33:42.598Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-IUXA2G6D.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 165,
+      "timestamp": "2025-12-11T02:33:42.610Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-G5UZVNUA.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 166,
+      "timestamp": "2025-12-11T02:33:42.612Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-IKS2SDKY.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 167,
+      "timestamp": "2025-12-11T02:33:42.613Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-6KROHRIK.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 168,
+      "timestamp": "2025-12-11T02:33:42.615Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-L6ISKHKK.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 169,
+      "timestamp": "2025-12-11T02:33:42.616Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-FJGI5WCJ.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 170,
+      "timestamp": "2025-12-11T02:33:42.616Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-6U2AQA2C.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 171,
+      "timestamp": "2025-12-11T02:33:42.619Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-K3RDKLTC.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 331
+    },
+    {
+      "id": 172,
+      "timestamp": "2025-12-11T02:33:42.619Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-B2WU2SIA.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 334
+    },
+    {
+      "id": 173,
+      "timestamp": "2025-12-11T02:33:42.631Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-BWQNZELL.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 335
+    },
+    {
+      "id": 174,
+      "timestamp": "2025-12-11T02:33:42.631Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-KRPMOSGQ.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 175,
+      "timestamp": "2025-12-11T02:33:42.634Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-KQTYSIV5.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 176,
+      "timestamp": "2025-12-11T02:33:42.638Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-SHATENJJ.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 177,
+      "timestamp": "2025-12-11T02:33:42.639Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-KMGEQWHO.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 178,
+      "timestamp": "2025-12-11T02:33:42.641Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-5H5HPI56.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 179,
+      "timestamp": "2025-12-11T02:33:42.642Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-4554YRK6.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 180,
+      "timestamp": "2025-12-11T02:33:42.644Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-QEE7QVES.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 181,
+      "timestamp": "2025-12-11T02:33:42.645Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-2H3NLAAY.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 182,
+      "timestamp": "2025-12-11T02:33:42.648Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-HTVNAPNK.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 355
+    },
+    {
+      "id": 183,
+      "timestamp": "2025-12-11T02:33:42.650Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-ERVM6TZD.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 348
+    },
+    {
+      "id": 184,
+      "timestamp": "2025-12-11T02:33:42.650Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/rxjs_operators.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 347
+    },
+    {
+      "id": 185,
+      "timestamp": "2025-12-11T02:33:42.655Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/uuid.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 350
+    },
+    {
+      "id": 186,
+      "timestamp": "2025-12-11T02:33:42.655Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-GOG5Z6ME.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 339
+    },
+    {
+      "id": 187,
+      "timestamp": "2025-12-11T02:33:42.655Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-IFNK555L.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 446
+    },
+    {
+      "id": 188,
+      "timestamp": "2025-12-11T02:33:42.656Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-2VWVQTPK.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 356
+    },
+    {
+      "id": 189,
+      "timestamp": "2025-12-11T02:33:42.656Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@supabase_supabase-js.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 343
+    },
+    {
+      "id": 190,
+      "timestamp": "2025-12-11T02:33:42.658Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-IUXA2G6D.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 60
+    },
+    {
+      "id": 191,
+      "timestamp": "2025-12-11T02:33:42.685Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-IKS2SDKY.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 73
+    },
+    {
+      "id": 192,
+      "timestamp": "2025-12-11T02:33:42.693Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-G5UZVNUA.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 83
+    },
+    {
+      "id": 193,
+      "timestamp": "2025-12-11T02:33:42.694Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-6KROHRIK.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 81
+    },
+    {
+      "id": 194,
+      "timestamp": "2025-12-11T02:33:42.696Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-L6ISKHKK.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 82
+    },
+    {
+      "id": 195,
+      "timestamp": "2025-12-11T02:33:42.700Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-6U2AQA2C.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 84
+    },
+    {
+      "id": 196,
+      "timestamp": "2025-12-11T02:33:42.700Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-FJGI5WCJ.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 84
+    },
+    {
+      "id": 197,
+      "timestamp": "2025-12-11T02:33:42.707Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-KRPMOSGQ.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 76
+    },
+    {
+      "id": 198,
+      "timestamp": "2025-12-11T02:33:42.711Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-KMGEQWHO.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 72
+    },
+    {
+      "id": 199,
+      "timestamp": "2025-12-11T02:33:42.713Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-SHATENJJ.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 75
+    },
+    {
+      "id": 200,
+      "timestamp": "2025-12-11T02:33:42.714Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-4554YRK6.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 72
+    },
+    {
+      "id": 201,
+      "timestamp": "2025-12-11T02:33:42.714Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-QEE7QVES.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 70
+    },
+    {
+      "id": 202,
+      "timestamp": "2025-12-11T02:33:42.714Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-KQTYSIV5.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 80
+    },
+    {
+      "id": 203,
+      "timestamp": "2025-12-11T02:33:42.715Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-2H3NLAAY.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 70
+    },
+    {
+      "id": 204,
+      "timestamp": "2025-12-11T02:33:42.721Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-5H5HPI56.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 80
+    },
+    {
+      "id": 205,
+      "timestamp": "2025-12-11T02:33:43.249Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fheader-icon%2Fheader-icon.component.ts%40HeaderIconComponent&t=1765420422860",
+      "resourceType": "script"
+    },
+    {
+      "id": 206,
+      "timestamp": "2025-12-11T02:33:43.259Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fshare-button%2Fshare-button.component.ts%40ShareButtonComponent&t=1765420422862",
+      "resourceType": "script"
+    },
+    {
+      "id": 207,
+      "timestamp": "2025-12-11T02:33:43.260Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-titlebar%2Fpwa-titlebar.component.ts%40PwaTitlebarComponent&t=1765420422863",
+      "resourceType": "script"
+    },
+    {
+      "id": 208,
+      "timestamp": "2025-12-11T02:33:43.261Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ficon%2Ficon.component.ts%40IconComponent&t=1765420422864",
+      "resourceType": "script"
+    },
+    {
+      "id": 209,
+      "timestamp": "2025-12-11T02:33:43.263Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnav-icon%2Fnav-icon.component.ts%40NavIconComponent&t=1765420422866",
+      "resourceType": "script"
+    },
+    {
+      "id": 210,
+      "timestamp": "2025-12-11T02:33:43.264Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-bottom-nav%2Fmobile-bottom-nav.component.ts%40MobileBottomNavComponent&t=1765420422867",
+      "resourceType": "script"
+    },
+    {
+      "id": 211,
+      "timestamp": "2025-12-11T02:33:43.265Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ffooter%2Ffooter.component.ts%40FooterComponent&t=1765420422869",
+      "resourceType": "script"
+    },
+    {
+      "id": 212,
+      "timestamp": "2025-12-11T02:33:43.266Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fhelp-button%2Fhelp-button.component.ts%40HelpButtonComponent&t=1765420422872",
+      "resourceType": "script"
+    },
+    {
+      "id": 213,
+      "timestamp": "2025-12-11T02:33:43.267Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Flanguage-selector%2Flanguage-selector.component.ts%40LanguageSelectorComponent&t=1765420422873",
+      "resourceType": "script"
+    },
+    {
+      "id": 214,
+      "timestamp": "2025-12-11T02:33:43.269Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnotifications%2Fnotifications.component.ts%40NotificationsComponent&t=1765420422876",
+      "resourceType": "script"
+    },
+    {
+      "id": 215,
+      "timestamp": "2025-12-11T02:33:43.270Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpending-reviews-banner%2Fpending-reviews-banner.component.ts%40PendingReviewsBannerComponent&t=1765420422877",
+      "resourceType": "script"
+    },
+    {
+      "id": 216,
+      "timestamp": "2025-12-11T02:33:43.271Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-banner%2Fpwa-install-banner.component.ts%40PwaInstallBannerComponent&t=1765420422879",
+      "resourceType": "script"
+    },
+    {
+      "id": 217,
+      "timestamp": "2025-12-11T02:33:43.273Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-prompt%2Fpwa-install-prompt.component.ts%40PwaInstallPromptComponent&t=1765420422880",
+      "resourceType": "script"
+    },
+    {
+      "id": 218,
+      "timestamp": "2025-12-11T02:33:43.274Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-update-prompt%2Fpwa-update-prompt.component.ts%40PwaUpdatePromptComponent&t=1765420422881",
+      "resourceType": "script"
+    },
+    {
+      "id": 219,
+      "timestamp": "2025-12-11T02:33:43.281Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-badge%2Fverification-badge.component.ts%40VerificationBadgeComponent&t=1765420422882",
+      "resourceType": "script"
+    },
+    {
+      "id": 220,
+      "timestamp": "2025-12-11T02:33:43.282Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-prompt-banner%2Fverification-prompt-banner.component.ts%40VerificationPromptBannerComponent&t=1765420422883",
+      "resourceType": "script"
+    },
+    {
+      "id": 221,
+      "timestamp": "2025-12-11T02:33:43.283Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fsplash-screen%2Fsplash-screen.component.ts%40SplashScreenComponent&t=1765420422887",
+      "resourceType": "script"
+    },
+    {
+      "id": 222,
+      "timestamp": "2025-12-11T02:33:43.285Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmenu-icon%2Fmenu-icon.component.ts%40MenuIconComponent&t=1765420422888",
+      "resourceType": "script"
+    },
+    {
+      "id": 223,
+      "timestamp": "2025-12-11T02:33:43.286Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-menu-drawer%2Fmobile-menu-drawer.component.ts%40MobileMenuDrawerComponent&t=1765420422889",
+      "resourceType": "script"
+    },
+    {
+      "id": 224,
+      "timestamp": "2025-12-11T02:33:43.287Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fdebug-panel%2Fdebug-panel.component.ts%40DebugPanelComponent&t=1765420422891",
+      "resourceType": "script"
+    },
+    {
+      "id": 225,
+      "timestamp": "2025-12-11T02:33:43.288Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fapp.component.ts%40AppComponent&t=1765420422894",
+      "resourceType": "script"
+    },
+    {
+      "id": 226,
+      "timestamp": "2025-12-11T02:33:43.290Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BDQ6HASI.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 227,
+      "timestamp": "2025-12-11T02:33:43.291Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 228,
+      "timestamp": "2025-12-11T02:33:43.292Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 229,
+      "timestamp": "2025-12-11T02:33:43.560Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 269
+    },
+    {
+      "id": 230,
+      "timestamp": "2025-12-11T02:33:43.561Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/images/autorentar-logo.svg",
+      "resourceType": "image"
+    },
+    {
+      "id": 231,
+      "timestamp": "2025-12-11T02:33:43.583Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 291
+    },
+    {
+      "id": 232,
+      "timestamp": "2025-12-11T02:33:43.628Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fheader-icon%2Fheader-icon.component.ts%40HeaderIconComponent&t=1765420422860",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 379
+    },
+    {
+      "id": 233,
+      "timestamp": "2025-12-11T02:33:43.629Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fshare-button%2Fshare-button.component.ts%40ShareButtonComponent&t=1765420422862",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 370
+    },
+    {
+      "id": 234,
+      "timestamp": "2025-12-11T02:33:43.632Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-titlebar%2Fpwa-titlebar.component.ts%40PwaTitlebarComponent&t=1765420422863",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 372
+    },
+    {
+      "id": 235,
+      "timestamp": "2025-12-11T02:33:43.633Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ficon%2Ficon.component.ts%40IconComponent&t=1765420422864",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 372
+    },
+    {
+      "id": 236,
+      "timestamp": "2025-12-11T02:33:43.635Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnav-icon%2Fnav-icon.component.ts%40NavIconComponent&t=1765420422866",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 372
+    },
+    {
+      "id": 237,
+      "timestamp": "2025-12-11T02:33:43.635Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fhelp-button%2Fhelp-button.component.ts%40HelpButtonComponent&t=1765420422872",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 369
+    },
+    {
+      "id": 238,
+      "timestamp": "2025-12-11T02:33:43.635Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-bottom-nav%2Fmobile-bottom-nav.component.ts%40MobileBottomNavComponent&t=1765420422867",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 371
+    },
+    {
+      "id": 239,
+      "timestamp": "2025-12-11T02:33:43.635Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ffooter%2Ffooter.component.ts%40FooterComponent&t=1765420422869",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 370
+    },
+    {
+      "id": 240,
+      "timestamp": "2025-12-11T02:33:43.636Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-banner%2Fpwa-install-banner.component.ts%40PwaInstallBannerComponent&t=1765420422879",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 365
+    },
+    {
+      "id": 241,
+      "timestamp": "2025-12-11T02:33:43.639Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Flanguage-selector%2Flanguage-selector.component.ts%40LanguageSelectorComponent&t=1765420422873",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 372
+    },
+    {
+      "id": 242,
+      "timestamp": "2025-12-11T02:33:43.639Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnotifications%2Fnotifications.component.ts%40NotificationsComponent&t=1765420422876",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 370
+    },
+    {
+      "id": 243,
+      "timestamp": "2025-12-11T02:33:43.640Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpending-reviews-banner%2Fpending-reviews-banner.component.ts%40PendingReviewsBannerComponent&t=1765420422877",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 370
+    },
+    {
+      "id": 244,
+      "timestamp": "2025-12-11T02:33:43.640Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-prompt%2Fpwa-install-prompt.component.ts%40PwaInstallPromptComponent&t=1765420422880",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 367
+    },
+    {
+      "id": 245,
+      "timestamp": "2025-12-11T02:33:43.640Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-update-prompt%2Fpwa-update-prompt.component.ts%40PwaUpdatePromptComponent&t=1765420422881",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 366
+    },
+    {
+      "id": 246,
+      "timestamp": "2025-12-11T02:33:43.640Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-badge%2Fverification-badge.component.ts%40VerificationBadgeComponent&t=1765420422882",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 359
+    },
+    {
+      "id": 247,
+      "timestamp": "2025-12-11T02:33:43.640Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-prompt-banner%2Fverification-prompt-banner.component.ts%40VerificationPromptBannerComponent&t=1765420422883",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 358
+    },
+    {
+      "id": 248,
+      "timestamp": "2025-12-11T02:33:43.640Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fsplash-screen%2Fsplash-screen.component.ts%40SplashScreenComponent&t=1765420422887",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 357
+    },
+    {
+      "id": 249,
+      "timestamp": "2025-12-11T02:33:43.640Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmenu-icon%2Fmenu-icon.component.ts%40MenuIconComponent&t=1765420422888",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 355
+    },
+    {
+      "id": 250,
+      "timestamp": "2025-12-11T02:33:43.640Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-menu-drawer%2Fmobile-menu-drawer.component.ts%40MobileMenuDrawerComponent&t=1765420422889",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 354
+    },
+    {
+      "id": 251,
+      "timestamp": "2025-12-11T02:33:43.640Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fdebug-panel%2Fdebug-panel.component.ts%40DebugPanelComponent&t=1765420422891",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 353
+    },
+    {
+      "id": 252,
+      "timestamp": "2025-12-11T02:33:43.640Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fapp.component.ts%40AppComponent&t=1765420422894",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 352
+    },
+    {
+      "id": 253,
+      "timestamp": "2025-12-11T02:33:43.641Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BDQ6HASI.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 351
+    },
+    {
+      "id": 254,
+      "timestamp": "2025-12-11T02:33:43.641Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/images/autorentar-logo.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 80
+    },
+    {
+      "id": 255,
+      "timestamp": "2025-12-11T02:33:43.641Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/manifest.webmanifest",
+      "resourceType": "manifest"
+    },
+    {
+      "id": 256,
+      "timestamp": "2025-12-11T02:33:43.756Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 257,
+      "timestamp": "2025-12-11T02:33:43.757Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/manifest.webmanifest",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 116
+    },
+    {
+      "id": 258,
+      "timestamp": "2025-12-11T02:33:43.821Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 65
+    },
+    {
+      "id": 259,
+      "timestamp": "2025-12-11T02:33:43.905Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/icons/icon-192.png",
+      "resourceType": "other"
+    },
+    {
+      "id": 260,
+      "timestamp": "2025-12-11T02:33:43.924Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/i18n/es.json",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 261,
+      "timestamp": "2025-12-11T02:33:43.929Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-GG7SZJGN.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 262,
+      "timestamp": "2025-12-11T02:33:43.933Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-KAOKDY7H.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 263,
+      "timestamp": "2025-12-11T02:33:43.943Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-EK5Q67MI.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 264,
+      "timestamp": "2025-12-11T02:33:43.944Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@ionic_angular.js?v=f87f7b7d",
+      "resourceType": "script"
+    },
+    {
+      "id": 265,
+      "timestamp": "2025-12-11T02:33:43.955Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/icons/icon-192.png",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 50
+    },
+    {
+      "id": 266,
+      "timestamp": "2025-12-11T02:33:43.961Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 267,
+      "timestamp": "2025-12-11T02:33:43.979Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/i18n/es.json",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 55
+    },
+    {
+      "id": 268,
+      "timestamp": "2025-12-11T02:33:44.007Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-GG7SZJGN.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 78
+    },
+    {
+      "id": 269,
+      "timestamp": "2025-12-11T02:33:44.012Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-KAOKDY7H.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 79
+    },
+    {
+      "id": 270,
+      "timestamp": "2025-12-11T02:33:44.019Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-EK5Q67MI.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 76
+    },
+    {
+      "id": 271,
+      "timestamp": "2025-12-11T02:33:44.041Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/@ionic_angular.js?v=f87f7b7d",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 97
+    },
+    {
+      "id": 272,
+      "timestamp": "2025-12-11T02:33:44.048Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-NQ4STAVC.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 273,
+      "timestamp": "2025-12-11T02:33:44.055Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-EBPEC6TQ.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 274,
+      "timestamp": "2025-12-11T02:33:44.056Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-34QX6F67.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 275,
+      "timestamp": "2025-12-11T02:33:44.057Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-ILBEEVNL.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 276,
+      "timestamp": "2025-12-11T02:33:44.058Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-J2B2WGYI.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 277,
+      "timestamp": "2025-12-11T02:33:44.059Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-B3NZTMYH.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 278,
+      "timestamp": "2025-12-11T02:33:44.071Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-32EFUL7U.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 279,
+      "timestamp": "2025-12-11T02:33:44.073Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-YGKAU3RO.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 280,
+      "timestamp": "2025-12-11T02:33:44.074Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-Z3OEOVFM.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 281,
+      "timestamp": "2025-12-11T02:33:44.076Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-QA2SYHF5.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 282,
+      "timestamp": "2025-12-11T02:33:44.083Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-TLKZ3VI2.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 283,
+      "timestamp": "2025-12-11T02:33:44.085Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-ZFJSVZ54.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 284,
+      "timestamp": "2025-12-11T02:33:44.086Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-25IFEQCZ.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 285,
+      "timestamp": "2025-12-11T02:33:44.087Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-NTHZNZRB.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 286,
+      "timestamp": "2025-12-11T02:33:44.089Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-7V7JVVLP.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 287,
+      "timestamp": "2025-12-11T02:33:44.090Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-LCMILTBF.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 288,
+      "timestamp": "2025-12-11T02:33:44.091Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-G7PQ6SQU.js?v=5e9ac531",
+      "resourceType": "script"
+    },
+    {
+      "id": 289,
+      "timestamp": "2025-12-11T02:33:44.092Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-NQ4STAVC.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 44
+    },
+    {
+      "id": 290,
+      "timestamp": "2025-12-11T02:33:44.094Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-EBPEC6TQ.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 39
+    },
+    {
+      "id": 291,
+      "timestamp": "2025-12-11T02:33:44.118Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-34QX6F67.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 62
+    },
+    {
+      "id": 292,
+      "timestamp": "2025-12-11T02:33:44.121Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-J2B2WGYI.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 63
+    },
+    {
+      "id": 293,
+      "timestamp": "2025-12-11T02:33:44.128Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-ILBEEVNL.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 71
+    },
+    {
+      "id": 294,
+      "timestamp": "2025-12-11T02:33:44.129Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-B3NZTMYH.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 70
+    },
+    {
+      "id": 295,
+      "timestamp": "2025-12-11T02:33:44.169Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-32EFUL7U.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 98
+    },
+    {
+      "id": 296,
+      "timestamp": "2025-12-11T02:33:44.174Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-YGKAU3RO.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 101
+    },
+    {
+      "id": 297,
+      "timestamp": "2025-12-11T02:33:44.175Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-Z3OEOVFM.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 101
+    },
+    {
+      "id": 298,
+      "timestamp": "2025-12-11T02:33:44.183Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-QA2SYHF5.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 107
+    },
+    {
+      "id": 299,
+      "timestamp": "2025-12-11T02:33:44.191Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-ZFJSVZ54.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 106
+    },
+    {
+      "id": 300,
+      "timestamp": "2025-12-11T02:33:44.197Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-NTHZNZRB.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 110
+    },
+    {
+      "id": 301,
+      "timestamp": "2025-12-11T02:33:44.197Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-25IFEQCZ.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 111
+    },
+    {
+      "id": 302,
+      "timestamp": "2025-12-11T02:33:44.198Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-TLKZ3VI2.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 115
+    },
+    {
+      "id": 303,
+      "timestamp": "2025-12-11T02:33:44.199Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-LCMILTBF.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 109
+    },
+    {
+      "id": 304,
+      "timestamp": "2025-12-11T02:33:44.199Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-7V7JVVLP.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 110
+    },
+    {
+      "id": 305,
+      "timestamp": "2025-12-11T02:33:44.200Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/.angular/cache/20.3.13/web/vite/deps/chunk-G7PQ6SQU.js?v=5e9ac531",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 109
+    },
+    {
+      "id": 306,
+      "timestamp": "2025-12-11T02:33:44.275Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwallet-balance-card%2Fwallet-balance-card.component.ts%40WalletBalanceCardComponent&t=1765420424203",
+      "resourceType": "script"
+    },
+    {
+      "id": 307,
+      "timestamp": "2025-12-11T02:33:44.277Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fdeposit-status-badge%2Fdeposit-status-badge.component.ts%40DepositStatusBadgeComponent&t=1765420424205",
+      "resourceType": "script"
+    },
+    {
+      "id": 308,
+      "timestamp": "2025-12-11T02:33:44.298Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fbank-account-form%2Fbank-account-form.component.ts%40BankAccountFormComponent&t=1765420424232",
+      "resourceType": "script"
+    },
+    {
+      "id": 309,
+      "timestamp": "2025-12-11T02:33:44.300Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fbank-accounts-list%2Fbank-accounts-list.component.ts%40BankAccountsListComponent&t=1765420424236",
+      "resourceType": "script"
+    },
+    {
+      "id": 310,
+      "timestamp": "2025-12-11T02:33:44.301Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ftransaction-history%2Ftransaction-history.component.ts%40TransactionHistoryComponent&t=1765420424239",
+      "resourceType": "script"
+    },
+    {
+      "id": 311,
+      "timestamp": "2025-12-11T02:33:44.311Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwithdrawal-history%2Fwithdrawal-history.component.ts%40WithdrawalHistoryComponent&t=1765420424242",
+      "resourceType": "script"
+    },
+    {
+      "id": 312,
+      "timestamp": "2025-12-11T02:33:44.313Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwithdrawal-request-form%2Fwithdrawal-request-form.component.ts%40WithdrawalRequestFormComponent&t=1765420424244",
+      "resourceType": "script"
+    },
+    {
+      "id": 313,
+      "timestamp": "2025-12-11T02:33:44.314Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fguarantee-options-info%2Fguarantee-options-info.component.ts%40GuaranteeOptionsInfoComponent&t=1765420424253",
+      "resourceType": "script"
+    },
+    {
+      "id": 314,
+      "timestamp": "2025-12-11T02:33:44.316Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwallet-account-number-card%2Fwallet-account-number-card.component.ts%40WalletAccountNumberCardComponent&t=1765420424255",
+      "resourceType": "script"
+    },
+    {
+      "id": 315,
+      "timestamp": "2025-12-11T02:33:44.317Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fcomponents%2Fwallet-faq.component.ts%40WalletFaqComponent&t=1765420424259",
+      "resourceType": "script"
+    },
+    {
+      "id": 316,
+      "timestamp": "2025-12-11T02:33:44.318Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fcomponents%2Fwallet-transfers.component.ts%40WalletTransfersComponent&t=1765420424262",
+      "resourceType": "script"
+    },
+    {
+      "id": 317,
+      "timestamp": "2025-12-11T02:33:44.322Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fwallet.page.ts%40WalletPage&t=1765420424265",
+      "resourceType": "script"
+    },
+    {
+      "id": 318,
+      "timestamp": "2025-12-11T02:33:44.327Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 366
+    },
+    {
+      "id": 319,
+      "timestamp": "2025-12-11T02:33:44.328Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 320,
+      "timestamp": "2025-12-11T02:33:44.331Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwallet-balance-card%2Fwallet-balance-card.component.ts%40WalletBalanceCardComponent&t=1765420424203",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 56
+    },
+    {
+      "id": 321,
+      "timestamp": "2025-12-11T02:33:44.331Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fdeposit-status-badge%2Fdeposit-status-badge.component.ts%40DepositStatusBadgeComponent&t=1765420424205",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 54
+    },
+    {
+      "id": 322,
+      "timestamp": "2025-12-11T02:33:44.472Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/header-icons.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 323,
+      "timestamp": "2025-12-11T02:33:44.474Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 324,
+      "timestamp": "2025-12-11T02:33:44.476Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fbank-account-form%2Fbank-account-form.component.ts%40BankAccountFormComponent&t=1765420424232",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 178
+    },
+    {
+      "id": 325,
+      "timestamp": "2025-12-11T02:33:44.477Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fbank-accounts-list%2Fbank-accounts-list.component.ts%40BankAccountsListComponent&t=1765420424236",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 177
+    },
+    {
+      "id": 326,
+      "timestamp": "2025-12-11T02:33:44.481Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ftransaction-history%2Ftransaction-history.component.ts%40TransactionHistoryComponent&t=1765420424239",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 180
+    },
+    {
+      "id": 327,
+      "timestamp": "2025-12-11T02:33:44.484Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwithdrawal-history%2Fwithdrawal-history.component.ts%40WithdrawalHistoryComponent&t=1765420424242",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 173
+    },
+    {
+      "id": 328,
+      "timestamp": "2025-12-11T02:33:44.485Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwithdrawal-request-form%2Fwithdrawal-request-form.component.ts%40WithdrawalRequestFormComponent&t=1765420424244",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 172
+    },
+    {
+      "id": 329,
+      "timestamp": "2025-12-11T02:33:44.488Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fguarantee-options-info%2Fguarantee-options-info.component.ts%40GuaranteeOptionsInfoComponent&t=1765420424253",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 174
+    },
+    {
+      "id": 330,
+      "timestamp": "2025-12-11T02:33:44.488Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fwallet-account-number-card%2Fwallet-account-number-card.component.ts%40WalletAccountNumberCardComponent&t=1765420424255",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 172
+    },
+    {
+      "id": 331,
+      "timestamp": "2025-12-11T02:33:44.489Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fcomponents%2Fwallet-faq.component.ts%40WalletFaqComponent&t=1765420424259",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 172
+    },
+    {
+      "id": 332,
+      "timestamp": "2025-12-11T02:33:44.491Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fcomponents%2Fwallet-transfers.component.ts%40WalletTransfersComponent&t=1765420424262",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 173
+    },
+    {
+      "id": 333,
+      "timestamp": "2025-12-11T02:33:44.495Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fwallet%2Fwallet.page.ts%40WalletPage&t=1765420424265",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 173
+    },
+    {
+      "id": 334,
+      "timestamp": "2025-12-11T02:33:44.512Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/header-icons.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 40
+    },
+    {
+      "id": 335,
+      "timestamp": "2025-12-11T02:33:44.512Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 38
+    },
+    {
+      "id": 336,
+      "timestamp": "2025-12-11T02:33:44.627Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 299
+    },
+    {
+      "id": 337,
+      "timestamp": "2025-12-11T02:33:44.638Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 338,
+      "timestamp": "2025-12-11T02:33:44.725Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 87
+    },
+    {
+      "id": 339,
+      "timestamp": "2025-12-11T02:33:44.732Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 340,
+      "timestamp": "2025-12-11T02:33:44.735Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bank_accounts?select=*&order=is_default.desc%2Ccreated_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 341,
+      "timestamp": "2025-12-11T02:33:44.742Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/withdrawal_requests?select=*&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 342,
+      "timestamp": "2025-12-11T02:33:44.816Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 84
+    },
+    {
+      "id": 343,
+      "timestamp": "2025-12-11T02:33:44.876Z",
+      "type": "request",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 344,
+      "timestamp": "2025-12-11T02:33:44.879Z",
+      "type": "request",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 345,
+      "timestamp": "2025-12-11T02:33:44.880Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 346,
+      "timestamp": "2025-12-11T02:33:44.882Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 347,
+      "timestamp": "2025-12-11T02:33:44.890Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 348,
+      "timestamp": "2025-12-11T02:33:44.892Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/get_driver_profile",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 349,
+      "timestamp": "2025-12-11T02:33:44.894Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 350,
+      "timestamp": "2025-12-11T02:33:44.895Z",
+      "type": "request",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 351,
+      "timestamp": "2025-12-11T02:33:44.899Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bank_accounts?select=*&order=is_default.desc%2Ccreated_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 164
+    },
+    {
+      "id": 352,
+      "timestamp": "2025-12-11T02:33:44.899Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/withdrawal_requests?select=*&order=created_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 157
+    },
+    {
+      "id": 353,
+      "timestamp": "2025-12-11T02:33:44.900Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 354,
+      "timestamp": "2025-12-11T02:33:44.916Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 355,
+      "timestamp": "2025-12-11T02:33:45.014Z",
+      "type": "response",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "status": 200,
+      "statusText": "",
+      "duration": 135
+    },
+    {
+      "id": 356,
+      "timestamp": "2025-12-11T02:33:45.046Z",
+      "type": "error",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "error": "net::ERR_ABORTED",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 357,
+      "timestamp": "2025-12-11T02:33:45.047Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": "",
+      "duration": 167
+    },
+    {
+      "id": 358,
+      "timestamp": "2025-12-11T02:33:45.053Z",
+      "type": "response",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 359,
+      "timestamp": "2025-12-11T02:33:45.054Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 172
+    },
+    {
+      "id": 360,
+      "timestamp": "2025-12-11T02:33:45.060Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "status": 200,
+      "statusText": "",
+      "duration": 165
+    },
+    {
+      "id": 361,
+      "timestamp": "2025-12-11T02:33:45.060Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 144
+    },
+    {
+      "id": 362,
+      "timestamp": "2025-12-11T02:33:45.060Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/get_driver_profile",
+      "status": 200,
+      "statusText": "",
+      "duration": 168
+    },
+    {
+      "id": 363,
+      "timestamp": "2025-12-11T02:33:45.060Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 160
+    },
+    {
+      "id": 364,
+      "timestamp": "2025-12-11T02:33:45.061Z",
+      "type": "response",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 365,
+      "timestamp": "2025-12-11T02:33:45.063Z",
+      "type": "error",
+      "method": "HEAD",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions?select=id&status=eq.pending&type=eq.deposit",
+      "error": "net::ERR_ABORTED",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 366,
+      "timestamp": "2025-12-11T02:33:45.157Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 367,
+      "timestamp": "2025-12-11T02:33:45.169Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 368,
+      "timestamp": "2025-12-11T02:33:45.265Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 96
+    },
+    {
+      "id": 369,
+      "timestamp": "2025-12-11T02:33:45.283Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 370,
+      "timestamp": "2025-12-11T02:33:45.292Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 371,
+      "timestamp": "2025-12-11T02:33:45.295Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 372,
+      "timestamp": "2025-12-11T02:33:45.301Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 373,
+      "timestamp": "2025-12-11T02:33:45.323Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 374,
+      "timestamp": "2025-12-11T02:33:45.325Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 375,
+      "timestamp": "2025-12-11T02:33:45.351Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/bookings/detail-payment",
+      "resourceType": "document"
+    },
+    {
+      "id": 376,
+      "timestamp": "2025-12-11T02:33:45.361Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A33%3A45.269Z",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 377,
+      "timestamp": "2025-12-11T02:33:45.414Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 119
+    },
+    {
+      "id": 378,
+      "timestamp": "2025-12-11T02:33:45.417Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": "",
+      "duration": 92
+    },
+    {
+      "id": 379,
+      "timestamp": "2025-12-11T02:33:45.438Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "status": 200,
+      "statusText": "",
+      "duration": 115
+    },
+    {
+      "id": 380,
+      "timestamp": "2025-12-11T02:33:45.497Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A33%3A45.269Z",
+      "status": 200,
+      "statusText": "",
+      "duration": 136
+    },
+    {
+      "id": 381,
+      "timestamp": "2025-12-11T02:33:45.499Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 382,
+      "timestamp": "2025-12-11T02:33:45.555Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 383,
+      "timestamp": "2025-12-11T02:33:45.555Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 384,
+      "timestamp": "2025-12-11T02:33:45.575Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://patchright-init-script-inject.internal/",
+      "status": 200,
+      "statusText": "OK"
+    },
+    {
+      "id": 385,
+      "timestamp": "2025-12-11T02:33:45.648Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@vite/client",
+      "resourceType": "script"
+    },
+    {
+      "id": 386,
+      "timestamp": "2025-12-11T02:33:45.749Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@vite/client",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 101
+    },
+    {
+      "id": 387,
+      "timestamp": "2025-12-11T02:33:45.765Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/fonts/inter-var.woff2",
+      "resourceType": "font"
+    },
+    {
+      "id": 388,
+      "timestamp": "2025-12-11T02:33:45.769Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/styles.css",
+      "resourceType": "stylesheet"
+    },
+    {
+      "id": 389,
+      "timestamp": "2025-12-11T02:33:45.784Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/env.js?v=20251209",
+      "resourceType": "script"
+    },
+    {
+      "id": 390,
+      "timestamp": "2025-12-11T02:33:45.785Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/node_modules/@angular/build/node_modules/vite/dist/client/env.mjs",
+      "resourceType": "script"
+    },
+    {
+      "id": 391,
+      "timestamp": "2025-12-11T02:33:45.872Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/styles.css",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 103
+    },
+    {
+      "id": 392,
+      "timestamp": "2025-12-11T02:33:45.872Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/fonts/inter-var.woff2",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 107
+    },
+    {
+      "id": 393,
+      "timestamp": "2025-12-11T02:33:45.872Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/env.js?v=20251209",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 88
+    },
+    {
+      "id": 394,
+      "timestamp": "2025-12-11T02:33:45.881Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@fs/home/edu/autorenta/apps/web/node_modules/@angular/build/node_modules/vite/dist/client/env.mjs",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 96
+    },
+    {
+      "id": 395,
+      "timestamp": "2025-12-11T02:33:45.920Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/main.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 396,
+      "timestamp": "2025-12-11T02:33:45.921Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-Q5CAZ3KG.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 397,
+      "timestamp": "2025-12-11T02:33:45.923Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-JGOUCJFB.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 398,
+      "timestamp": "2025-12-11T02:33:45.924Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-MWKAHZXX.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 399,
+      "timestamp": "2025-12-11T02:33:45.925Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-Q7BB43WW.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 400,
+      "timestamp": "2025-12-11T02:33:45.926Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-XYCU2ZFC.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 401,
+      "timestamp": "2025-12-11T02:33:45.927Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-GG7SZJGN.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 402,
+      "timestamp": "2025-12-11T02:33:45.932Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-KAOKDY7H.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 403,
+      "timestamp": "2025-12-11T02:33:45.964Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/main.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 44
+    },
+    {
+      "id": 404,
+      "timestamp": "2025-12-11T02:33:46.038Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-UJUWZUFT.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 405,
+      "timestamp": "2025-12-11T02:33:46.040Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-H6NRQYVP.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 406,
+      "timestamp": "2025-12-11T02:33:46.042Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-5K6F4UNG.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 407,
+      "timestamp": "2025-12-11T02:33:46.043Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6WXZTT4O.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 408,
+      "timestamp": "2025-12-11T02:33:46.044Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-B2EVFYMR.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 409,
+      "timestamp": "2025-12-11T02:33:46.046Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FXPD26T4.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 410,
+      "timestamp": "2025-12-11T02:33:46.047Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-CRSZKZUS.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 411,
+      "timestamp": "2025-12-11T02:33:46.050Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-JG7FIDPY.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 412,
+      "timestamp": "2025-12-11T02:33:46.051Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BRJVUKQS.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 413,
+      "timestamp": "2025-12-11T02:33:46.067Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-Q5CAZ3KG.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 146
+    },
+    {
+      "id": 414,
+      "timestamp": "2025-12-11T02:33:46.071Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-73QO7RIH.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 415,
+      "timestamp": "2025-12-11T02:33:46.075Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-PPTLPU6R.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 416,
+      "timestamp": "2025-12-11T02:33:46.110Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-X3XFKAQ3.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 417,
+      "timestamp": "2025-12-11T02:33:46.112Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-MGUCVA4Y.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 418,
+      "timestamp": "2025-12-11T02:33:46.115Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-D225FZEF.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 419,
+      "timestamp": "2025-12-11T02:33:46.116Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-K2LOAVEX.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 420,
+      "timestamp": "2025-12-11T02:33:46.117Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-IKSXKRES.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 421,
+      "timestamp": "2025-12-11T02:33:46.120Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-ZYP4R4EL.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 422,
+      "timestamp": "2025-12-11T02:33:46.122Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FRGIE4UT.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 423,
+      "timestamp": "2025-12-11T02:33:46.123Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-SVVGM6CF.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 424,
+      "timestamp": "2025-12-11T02:33:46.124Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-RFV3G4NA.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 425,
+      "timestamp": "2025-12-11T02:33:46.126Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6AZZGOBW.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 426,
+      "timestamp": "2025-12-11T02:33:46.127Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-VV6LA4GU.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 427,
+      "timestamp": "2025-12-11T02:33:46.129Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-653SOEEV.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 428,
+      "timestamp": "2025-12-11T02:33:46.130Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-GG7SZJGN.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 203
+    },
+    {
+      "id": 429,
+      "timestamp": "2025-12-11T02:33:46.131Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-KAOKDY7H.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 199
+    },
+    {
+      "id": 430,
+      "timestamp": "2025-12-11T02:33:46.131Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-JGOUCJFB.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 208
+    },
+    {
+      "id": 431,
+      "timestamp": "2025-12-11T02:33:46.131Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-Q7BB43WW.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 206
+    },
+    {
+      "id": 432,
+      "timestamp": "2025-12-11T02:33:46.131Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-XYCU2ZFC.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 205
+    },
+    {
+      "id": 433,
+      "timestamp": "2025-12-11T02:33:46.132Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-MWKAHZXX.js",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 208
+    },
+    {
+      "id": 434,
+      "timestamp": "2025-12-11T02:33:46.136Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-UJUWZUFT.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 98
+    },
+    {
+      "id": 435,
+      "timestamp": "2025-12-11T02:33:46.137Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-H6NRQYVP.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 97
+    },
+    {
+      "id": 436,
+      "timestamp": "2025-12-11T02:33:46.138Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-5K6F4UNG.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 96
+    },
+    {
+      "id": 437,
+      "timestamp": "2025-12-11T02:33:46.166Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6WXZTT4O.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 123
+    },
+    {
+      "id": 438,
+      "timestamp": "2025-12-11T02:33:46.166Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-B2EVFYMR.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 122
+    },
+    {
+      "id": 439,
+      "timestamp": "2025-12-11T02:33:46.171Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FXPD26T4.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 125
+    },
+    {
+      "id": 440,
+      "timestamp": "2025-12-11T02:33:46.172Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-CRSZKZUS.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 125
+    },
+    {
+      "id": 441,
+      "timestamp": "2025-12-11T02:33:46.172Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-JG7FIDPY.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 122
+    },
+    {
+      "id": 442,
+      "timestamp": "2025-12-11T02:33:46.173Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BRJVUKQS.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 122
+    },
+    {
+      "id": 443,
+      "timestamp": "2025-12-11T02:33:46.174Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-73QO7RIH.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 103
+    },
+    {
+      "id": 444,
+      "timestamp": "2025-12-11T02:33:46.174Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-PPTLPU6R.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 99
+    },
+    {
+      "id": 445,
+      "timestamp": "2025-12-11T02:33:46.210Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-X3XFKAQ3.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 100
+    },
+    {
+      "id": 446,
+      "timestamp": "2025-12-11T02:33:46.212Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-MGUCVA4Y.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 100
+    },
+    {
+      "id": 447,
+      "timestamp": "2025-12-11T02:33:46.213Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-D225FZEF.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 98
+    },
+    {
+      "id": 448,
+      "timestamp": "2025-12-11T02:33:46.245Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-K2LOAVEX.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 129
+    },
+    {
+      "id": 449,
+      "timestamp": "2025-12-11T02:33:46.260Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-IKSXKRES.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 143
+    },
+    {
+      "id": 450,
+      "timestamp": "2025-12-11T02:33:46.260Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-ZYP4R4EL.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 140
+    },
+    {
+      "id": 451,
+      "timestamp": "2025-12-11T02:33:46.265Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-RFV3G4NA.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 141
+    },
+    {
+      "id": 452,
+      "timestamp": "2025-12-11T02:33:46.272Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-FRGIE4UT.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 150
+    },
+    {
+      "id": 453,
+      "timestamp": "2025-12-11T02:33:46.272Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-SVVGM6CF.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 149
+    },
+    {
+      "id": 454,
+      "timestamp": "2025-12-11T02:33:46.292Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-6AZZGOBW.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 166
+    },
+    {
+      "id": 455,
+      "timestamp": "2025-12-11T02:33:46.293Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-VV6LA4GU.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 166
+    },
+    {
+      "id": 456,
+      "timestamp": "2025-12-11T02:33:46.298Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-653SOEEV.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 169
+    },
+    {
+      "id": 457,
+      "timestamp": "2025-12-11T02:33:46.628Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fheader-icon%2Fheader-icon.component.ts%40HeaderIconComponent&t=1765420426414",
+      "resourceType": "script"
+    },
+    {
+      "id": 458,
+      "timestamp": "2025-12-11T02:33:46.631Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fshare-button%2Fshare-button.component.ts%40ShareButtonComponent&t=1765420426414",
+      "resourceType": "script"
+    },
+    {
+      "id": 459,
+      "timestamp": "2025-12-11T02:33:46.642Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-titlebar%2Fpwa-titlebar.component.ts%40PwaTitlebarComponent&t=1765420426415",
+      "resourceType": "script"
+    },
+    {
+      "id": 460,
+      "timestamp": "2025-12-11T02:33:46.648Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ficon%2Ficon.component.ts%40IconComponent&t=1765420426417",
+      "resourceType": "script"
+    },
+    {
+      "id": 461,
+      "timestamp": "2025-12-11T02:33:46.688Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnav-icon%2Fnav-icon.component.ts%40NavIconComponent&t=1765420426419",
+      "resourceType": "script"
+    },
+    {
+      "id": 462,
+      "timestamp": "2025-12-11T02:33:46.696Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-bottom-nav%2Fmobile-bottom-nav.component.ts%40MobileBottomNavComponent&t=1765420426420",
+      "resourceType": "script"
+    },
+    {
+      "id": 463,
+      "timestamp": "2025-12-11T02:33:46.700Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ffooter%2Ffooter.component.ts%40FooterComponent&t=1765420426421",
+      "resourceType": "script"
+    },
+    {
+      "id": 464,
+      "timestamp": "2025-12-11T02:33:46.703Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fhelp-button%2Fhelp-button.component.ts%40HelpButtonComponent&t=1765420426422",
+      "resourceType": "script"
+    },
+    {
+      "id": 465,
+      "timestamp": "2025-12-11T02:33:46.706Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Flanguage-selector%2Flanguage-selector.component.ts%40LanguageSelectorComponent&t=1765420426423",
+      "resourceType": "script"
+    },
+    {
+      "id": 466,
+      "timestamp": "2025-12-11T02:33:46.707Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnotifications%2Fnotifications.component.ts%40NotificationsComponent&t=1765420426424",
+      "resourceType": "script"
+    },
+    {
+      "id": 467,
+      "timestamp": "2025-12-11T02:33:46.708Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpending-reviews-banner%2Fpending-reviews-banner.component.ts%40PendingReviewsBannerComponent&t=1765420426425",
+      "resourceType": "script"
+    },
+    {
+      "id": 468,
+      "timestamp": "2025-12-11T02:33:46.712Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-banner%2Fpwa-install-banner.component.ts%40PwaInstallBannerComponent&t=1765420426426",
+      "resourceType": "script"
+    },
+    {
+      "id": 469,
+      "timestamp": "2025-12-11T02:33:46.719Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-prompt%2Fpwa-install-prompt.component.ts%40PwaInstallPromptComponent&t=1765420426427",
+      "resourceType": "script"
+    },
+    {
+      "id": 470,
+      "timestamp": "2025-12-11T02:33:46.724Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-update-prompt%2Fpwa-update-prompt.component.ts%40PwaUpdatePromptComponent&t=1765420426427",
+      "resourceType": "script"
+    },
+    {
+      "id": 471,
+      "timestamp": "2025-12-11T02:33:46.726Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-badge%2Fverification-badge.component.ts%40VerificationBadgeComponent&t=1765420426428",
+      "resourceType": "script"
+    },
+    {
+      "id": 472,
+      "timestamp": "2025-12-11T02:33:46.727Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-prompt-banner%2Fverification-prompt-banner.component.ts%40VerificationPromptBannerComponent&t=1765420426430",
+      "resourceType": "script"
+    },
+    {
+      "id": 473,
+      "timestamp": "2025-12-11T02:33:46.729Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fsplash-screen%2Fsplash-screen.component.ts%40SplashScreenComponent&t=1765420426431",
+      "resourceType": "script"
+    },
+    {
+      "id": 474,
+      "timestamp": "2025-12-11T02:33:46.731Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmenu-icon%2Fmenu-icon.component.ts%40MenuIconComponent&t=1765420426433",
+      "resourceType": "script"
+    },
+    {
+      "id": 475,
+      "timestamp": "2025-12-11T02:33:46.732Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-menu-drawer%2Fmobile-menu-drawer.component.ts%40MobileMenuDrawerComponent&t=1765420426434",
+      "resourceType": "script"
+    },
+    {
+      "id": 476,
+      "timestamp": "2025-12-11T02:33:46.734Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fdebug-panel%2Fdebug-panel.component.ts%40DebugPanelComponent&t=1765420426436",
+      "resourceType": "script"
+    },
+    {
+      "id": 477,
+      "timestamp": "2025-12-11T02:33:46.735Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fapp.component.ts%40AppComponent&t=1765420426438",
+      "resourceType": "script"
+    },
+    {
+      "id": 478,
+      "timestamp": "2025-12-11T02:33:46.737Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BDQ6HASI.js",
+      "resourceType": "script"
+    },
+    {
+      "id": 479,
+      "timestamp": "2025-12-11T02:33:46.739Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 480,
+      "timestamp": "2025-12-11T02:33:46.741Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 481,
+      "timestamp": "2025-12-11T02:33:46.765Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/images/autorentar-logo.svg",
+      "resourceType": "image"
+    },
+    {
+      "id": 482,
+      "timestamp": "2025-12-11T02:33:46.839Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fheader-icon%2Fheader-icon.component.ts%40HeaderIconComponent&t=1765420426414",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 211
+    },
+    {
+      "id": 483,
+      "timestamp": "2025-12-11T02:33:46.840Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fshare-button%2Fshare-button.component.ts%40ShareButtonComponent&t=1765420426414",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 209
+    },
+    {
+      "id": 484,
+      "timestamp": "2025-12-11T02:33:46.840Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-titlebar%2Fpwa-titlebar.component.ts%40PwaTitlebarComponent&t=1765420426415",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 198
+    },
+    {
+      "id": 485,
+      "timestamp": "2025-12-11T02:33:46.843Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ficon%2Ficon.component.ts%40IconComponent&t=1765420426417",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 198
+    },
+    {
+      "id": 486,
+      "timestamp": "2025-12-11T02:33:46.861Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnav-icon%2Fnav-icon.component.ts%40NavIconComponent&t=1765420426419",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 173
+    },
+    {
+      "id": 487,
+      "timestamp": "2025-12-11T02:33:46.865Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-bottom-nav%2Fmobile-bottom-nav.component.ts%40MobileBottomNavComponent&t=1765420426420",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 169
+    },
+    {
+      "id": 488,
+      "timestamp": "2025-12-11T02:33:46.931Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Ffooter%2Ffooter.component.ts%40FooterComponent&t=1765420426421",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 231
+    },
+    {
+      "id": 489,
+      "timestamp": "2025-12-11T02:33:46.931Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fhelp-button%2Fhelp-button.component.ts%40HelpButtonComponent&t=1765420426422",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 228
+    },
+    {
+      "id": 490,
+      "timestamp": "2025-12-11T02:33:46.931Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Flanguage-selector%2Flanguage-selector.component.ts%40LanguageSelectorComponent&t=1765420426423",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 225
+    },
+    {
+      "id": 491,
+      "timestamp": "2025-12-11T02:33:46.941Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fnotifications%2Fnotifications.component.ts%40NotificationsComponent&t=1765420426424",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 234
+    },
+    {
+      "id": 492,
+      "timestamp": "2025-12-11T02:33:46.943Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpending-reviews-banner%2Fpending-reviews-banner.component.ts%40PendingReviewsBannerComponent&t=1765420426425",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 235
+    },
+    {
+      "id": 493,
+      "timestamp": "2025-12-11T02:33:46.944Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-banner%2Fpwa-install-banner.component.ts%40PwaInstallBannerComponent&t=1765420426426",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 232
+    },
+    {
+      "id": 494,
+      "timestamp": "2025-12-11T02:33:46.960Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-install-prompt%2Fpwa-install-prompt.component.ts%40PwaInstallPromptComponent&t=1765420426427",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 241
+    },
+    {
+      "id": 495,
+      "timestamp": "2025-12-11T02:33:46.960Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fpwa-update-prompt%2Fpwa-update-prompt.component.ts%40PwaUpdatePromptComponent&t=1765420426427",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 236
+    },
+    {
+      "id": 496,
+      "timestamp": "2025-12-11T02:33:46.971Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-badge%2Fverification-badge.component.ts%40VerificationBadgeComponent&t=1765420426428",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 245
+    },
+    {
+      "id": 497,
+      "timestamp": "2025-12-11T02:33:46.979Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fverification-prompt-banner%2Fverification-prompt-banner.component.ts%40VerificationPromptBannerComponent&t=1765420426430",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 252
+    },
+    {
+      "id": 498,
+      "timestamp": "2025-12-11T02:33:47.072Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/images/autorentar-logo.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 307
+    },
+    {
+      "id": 499,
+      "timestamp": "2025-12-11T02:33:47.108Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 369
+    },
+    {
+      "id": 500,
+      "timestamp": "2025-12-11T02:33:47.163Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 422
+    },
+    {
+      "id": 501,
+      "timestamp": "2025-12-11T02:33:47.163Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fsplash-screen%2Fsplash-screen.component.ts%40SplashScreenComponent&t=1765420426431",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 434
+    },
+    {
+      "id": 502,
+      "timestamp": "2025-12-11T02:33:47.163Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmenu-icon%2Fmenu-icon.component.ts%40MenuIconComponent&t=1765420426433",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 432
+    },
+    {
+      "id": 503,
+      "timestamp": "2025-12-11T02:33:47.163Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmobile-menu-drawer%2Fmobile-menu-drawer.component.ts%40MobileMenuDrawerComponent&t=1765420426434",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 431
+    },
+    {
+      "id": 504,
+      "timestamp": "2025-12-11T02:33:47.163Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fdebug-panel%2Fdebug-panel.component.ts%40DebugPanelComponent&t=1765420426436",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 429
+    },
+    {
+      "id": 505,
+      "timestamp": "2025-12-11T02:33:47.163Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fapp.component.ts%40AppComponent&t=1765420426438",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 428
+    },
+    {
+      "id": 506,
+      "timestamp": "2025-12-11T02:33:47.169Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/chunk-BDQ6HASI.js",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 432
+    },
+    {
+      "id": 507,
+      "timestamp": "2025-12-11T02:33:47.189Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/i18n/es.json",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 508,
+      "timestamp": "2025-12-11T02:33:47.193Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/manifest.webmanifest",
+      "resourceType": "manifest"
+    },
+    {
+      "id": 509,
+      "timestamp": "2025-12-11T02:33:47.225Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/i18n/es.json",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 36
+    },
+    {
+      "id": 510,
+      "timestamp": "2025-12-11T02:33:47.245Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 511,
+      "timestamp": "2025-12-11T02:33:47.254Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmercadopago-card-form%2Fmercadopago-card-form.component.ts%40MercadopagoCardFormComponent&t=1765420427233",
+      "resourceType": "script"
+    },
+    {
+      "id": 512,
+      "timestamp": "2025-12-11T02:33:47.255Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fcomponents%2Freembolsability-badge.component.ts%40ReembolsabilityBadgeComponent&t=1765420427235",
+      "resourceType": "script"
+    },
+    {
+      "id": 513,
+      "timestamp": "2025-12-11T02:33:47.260Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fcomponents%2Fcard-hold-panel.component.ts%40CardHoldPanelComponent&t=1765420427237",
+      "resourceType": "script"
+    },
+    {
+      "id": 514,
+      "timestamp": "2025-12-11T02:33:47.265Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fbooking-detail-payment.page.ts%40BookingDetailPaymentPage&t=1765420427241",
+      "resourceType": "script"
+    },
+    {
+      "id": 515,
+      "timestamp": "2025-12-11T02:33:47.277Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/manifest.webmanifest",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 84
+    },
+    {
+      "id": 516,
+      "timestamp": "2025-12-11T02:33:47.309Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Fshared%2Fcomponents%2Fmercadopago-card-form%2Fmercadopago-card-form.component.ts%40MercadopagoCardFormComponent&t=1765420427233",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 55
+    },
+    {
+      "id": 517,
+      "timestamp": "2025-12-11T02:33:47.312Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fcomponents%2Freembolsability-badge.component.ts%40ReembolsabilityBadgeComponent&t=1765420427235",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 57
+    },
+    {
+      "id": 518,
+      "timestamp": "2025-12-11T02:33:47.318Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fcomponents%2Fcard-hold-panel.component.ts%40CardHoldPanelComponent&t=1765420427237",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 58
+    },
+    {
+      "id": 519,
+      "timestamp": "2025-12-11T02:33:47.319Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/@ng/component?c=src%2Fapp%2Ffeatures%2Fbookings%2Fbooking-detail-payment%2Fbooking-detail-payment.page.ts%40BookingDetailPaymentPage&t=1765420427241",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 54
+    },
+    {
+      "id": 520,
+      "timestamp": "2025-12-11T02:33:47.330Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/icons/icon-192.png",
+      "resourceType": "other"
+    },
+    {
+      "id": 521,
+      "timestamp": "2025-12-11T02:33:47.406Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/header-icons.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 522,
+      "timestamp": "2025-12-11T02:33:47.416Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 523,
+      "timestamp": "2025-12-11T02:33:47.418Z",
+      "type": "request",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "resourceType": "other"
+    },
+    {
+      "id": 524,
+      "timestamp": "2025-12-11T02:33:47.420Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://api.binance.com/api/v3/ticker/price?symbol=USDTARS",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 525,
+      "timestamp": "2025-12-11T02:33:47.442Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/icons/icon-192.png",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 112
+    },
+    {
+      "id": 526,
+      "timestamp": "2025-12-11T02:33:47.443Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 198
+    },
+    {
+      "id": 527,
+      "timestamp": "2025-12-11T02:33:47.483Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/header-icons.svg",
+      "status": 200,
+      "statusText": "OK",
+      "duration": 77
+    },
+    {
+      "id": 528,
+      "timestamp": "2025-12-11T02:33:47.484Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 68
+    },
+    {
+      "id": 529,
+      "timestamp": "2025-12-11T02:33:47.485Z",
+      "type": "response",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/bottom-nav.svg",
+      "status": 304,
+      "statusText": "Not Modified",
+      "duration": 67
+    },
+    {
+      "id": 530,
+      "timestamp": "2025-12-11T02:33:47.513Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 531,
+      "timestamp": "2025-12-11T02:33:47.616Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 103
+    },
+    {
+      "id": 532,
+      "timestamp": "2025-12-11T02:33:47.625Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 533,
+      "timestamp": "2025-12-11T02:33:47.720Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 95
+    },
+    {
+      "id": 534,
+      "timestamp": "2025-12-11T02:33:47.731Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 535,
+      "timestamp": "2025-12-11T02:33:47.836Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 105
+    },
+    {
+      "id": 536,
+      "timestamp": "2025-12-11T02:33:47.858Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 537,
+      "timestamp": "2025-12-11T02:33:47.913Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://api.binance.com/api/v3/ticker/price?symbol=USDTARS",
+      "status": 200,
+      "statusText": "",
+      "duration": 493
+    },
+    {
+      "id": 538,
+      "timestamp": "2025-12-11T02:33:47.948Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 90
+    },
+    {
+      "id": 539,
+      "timestamp": "2025-12-11T02:33:47.959Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 540,
+      "timestamp": "2025-12-11T02:33:47.964Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 541,
+      "timestamp": "2025-12-11T02:33:47.974Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 542,
+      "timestamp": "2025-12-11T02:33:47.977Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 543,
+      "timestamp": "2025-12-11T02:33:47.981Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 544,
+      "timestamp": "2025-12-11T02:33:47.990Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 545,
+      "timestamp": "2025-12-11T02:33:47.996Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 546,
+      "timestamp": "2025-12-11T02:33:48.008Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A33%3A47.954Z",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 547,
+      "timestamp": "2025-12-11T02:33:48.042Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 68
+    },
+    {
+      "id": 548,
+      "timestamp": "2025-12-11T02:33:48.081Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "status": 200,
+      "statusText": "",
+      "duration": 104
+    },
+    {
+      "id": 549,
+      "timestamp": "2025-12-11T02:33:48.085Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": "",
+      "duration": 89
+    },
+    {
+      "id": 550,
+      "timestamp": "2025-12-11T02:33:48.098Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "status": 200,
+      "statusText": "",
+      "duration": 108
+    },
+    {
+      "id": 551,
+      "timestamp": "2025-12-11T02:33:48.145Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 552,
+      "timestamp": "2025-12-11T02:33:48.146Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 553,
+      "timestamp": "2025-12-11T02:33:48.154Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A33%3A47.954Z",
+      "status": 200,
+      "statusText": "",
+      "duration": 146
+    },
+    {
+      "id": 554,
+      "timestamp": "2025-12-11T02:33:48.163Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 555,
+      "timestamp": "2025-12-11T02:33:48.212Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "statusText": ""
+    },
+    {
+      "id": 556,
+      "timestamp": "2025-12-11T02:33:48.247Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "statusText": "",
+      "duration": 101
+    },
+    {
+      "id": 557,
+      "timestamp": "2025-12-11T02:33:48.272Z",
+      "type": "request",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/owner_bookings?select=id%2Ccar_title%2Crenter_name%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A33%3A47.954Z",
+      "resourceType": "fetch"
+    },
+    {
+      "id": 558,
+      "timestamp": "2025-12-11T02:33:48.393Z",
+      "type": "response",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/owner_bookings?select=id%2Ccar_title%2Crenter_name%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T02%3A33%3A47.954Z",
+      "status": 200,
+      "statusText": "",
+      "duration": 121
+    }
+  ],
+  "pageErrors": [],
+  "summary": {
+    "totalRequests": 241,
+    "totalResponses": 257,
+    "failedRequests": 2,
+    "pageErrors": 0,
+    "avgResponseTime": 203
+  }
+}

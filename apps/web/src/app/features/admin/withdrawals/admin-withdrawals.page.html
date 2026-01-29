@@ -1,0 +1,473 @@
+<div class="min-h-screen bg-surface-base py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-text-primary tracking-tight font-satoshi">
+        Gestión de Retiros
+      </h1>
+      <p class="mt-2 text-text-secondary">
+        Administra las solicitudes de retiro de fondos de los locadores
+      </p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-surface-raised rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 bg-warning-bg0 rounded-md p-3">
+            <svg
+              class="h-6 w-6 text-text-inverse"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-text-secondary">Retiros Pendientes</p>
+            <p class="text-2xl font-semibold text-text-primary">{{ pendingCount() }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-surface-raised rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 bg-success-light rounded-md p-3">
+            <svg
+              class="h-6 w-6 text-text-inverse"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-text-secondary">Monto Total Pendiente</p>
+            <p class="text-2xl font-semibold text-text-primary">
+              {{ totalPendingAmount() | money }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-surface-raised rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 bg-cta-default rounded-md p-3">
+            <svg
+              class="h-6 w-6 text-text-inverse"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-text-secondary">Total Solicitudes</p>
+            <p class="text-2xl font-semibold text-text-primary">{{ withdrawals().length }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters and Actions -->
+    <div class="bg-surface-raised rounded-lg shadow mb-6 p-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex gap-2 flex-wrap">
+          <button
+            (click)="filterByStatus('')"
+            [class]="
+              filterStatus() === ''
+                ? 'bg-cta-default text-cta-text'
+                : 'bg-surface-hover text-text-primary hover:bg-surface-pressed'
+            "
+            class="px-4 py-2 rounded-md font-medium transition-colors"
+          >
+            Todos
+          </button>
+          <button
+            (click)="filterByStatus('pending')"
+            [class]="
+              filterStatus() === 'pending'
+                ? 'bg-warning-600 text-text-inverse'
+                : 'bg-surface-hover text-text-primary hover:bg-surface-pressed'
+            "
+            class="px-4 py-2 rounded-md font-medium transition-colors"
+          >
+            Pendientes
+          </button>
+          <button
+            (click)="filterByStatus('approved')"
+            [class]="
+              filterStatus() === 'approved'
+                ? 'bg-cta-default text-cta-text'
+                : 'bg-surface-hover text-text-primary hover:bg-surface-pressed'
+            "
+            class="px-4 py-2 rounded-md font-medium transition-colors"
+          >
+            Aprobados
+          </button>
+          <button
+            (click)="filterByStatus('completed')"
+            [class]="
+              filterStatus() === 'completed'
+                ? 'bg-success-light text-text-primary'
+                : 'bg-surface-hover text-text-primary hover:bg-surface-pressed'
+            "
+            class="px-4 py-2 rounded-md font-medium transition-colors"
+          >
+            Completados
+          </button>
+        </div>
+
+        <button
+          (click)="exportToCSV()"
+          class="bg-success-light text-text-primary px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
+        >
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
+          </svg>
+          Exportar CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- Withdrawals Table -->
+    <div class="bg-surface-raised rounded-lg shadow overflow-hidden">
+      @if (loading()) {
+        <div class="flex justify-center items-center p-12">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default"></div>
+        </div>
+      } @else if (withdrawals().length === 0) {
+        <div class="text-center py-12">
+          <svg
+            class="mx-auto h-12 w-12 text-text-muted"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-text-primary font-satoshi">
+            No hay solicitudes de retiro
+          </h3>
+          <p class="mt-1 text-sm text-text-secondary">
+            @if (filterStatus()) {
+              Prueba cambiando el filtro.
+            } @else {
+              Las solicitudes aparecerán aquí cuando los usuarios las creen.
+            }
+          </p>
+        </div>
+      } @else {
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-surface-base">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">
+                  Fecha
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">
+                  Usuario
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase">
+                  Cuenta Bancaria
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase">
+                  Monto
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase">
+                  Comisión
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase">
+                  Neto
+                </th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-text-secondary uppercase">
+                  Estado
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-surface-raised divide-y divide-gray-200">
+              @for (withdrawal of withdrawals(); track withdrawal.id) {
+                <tr class="hover:bg-surface-base">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-text-primary">
+                    {{ withdrawal.created_at | date: 'short' }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-text-primary">
+                      {{ withdrawal.user_name || 'N/A' }}
+                    </div>
+                    <div class="text-sm text-text-secondary">
+                      {{ withdrawal.user_email || 'N/A' }}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-text-primary">
+                      {{ formatAccountType(withdrawal.bank_account?.account_type || '') }}:
+                      {{ withdrawal.bank_account?.account_number || 'N/A' }}
+                    </div>
+                    <div class="text-sm text-text-secondary">
+                      {{ withdrawal.bank_account?.account_holder_name || 'N/A' }}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-text-primary">
+                    {{ withdrawal.amount | money: withdrawal.currency }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-text-secondary">
+                    -{{ withdrawal.fee_amount | money: withdrawal.currency }}
+                  </td>
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-text-primary"
+                  >
+                    {{ withdrawal.net_amount | money: withdrawal.currency }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-center">
+                    <span
+                      [class]="getStatusBadgeClass(withdrawal.status)"
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    >
+                      {{ getStatusText(withdrawal.status) }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button
+                      (click)="selectWithdrawal(withdrawal)"
+                      class="text-cta-default hover:text-cta-default"
+                    >
+                      Ver detalles
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Detalles -->
+@if (selectedWithdrawal()) {
+  <div
+    class="fixed inset-0 bg-surface-base bg-opacity-75 flex items-center justify-center p-4 z-50"
+  >
+    <div
+      class="bg-surface-raised rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+    >
+      <div class="px-6 py-4 border-b border-border-default">
+        <div class="flex justify-between items-start">
+          <h3 class="text-lg font-medium text-text-primary font-satoshi">
+            Detalles de Solicitud de Retiro
+          </h3>
+          <button (click)="closeModal()" class="text-text-muted hover:text-text-secondary">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="px-6 py-4">
+        <!-- User Info -->
+        <div class="mb-6">
+          <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Usuario</h4>
+          <p class="text-sm text-text-primary">{{ selectedWithdrawal()!.user_name || 'N/A' }}</p>
+          <p class="text-sm text-text-secondary">
+            {{ selectedWithdrawal()!.user_email || 'N/A' }}
+          </p>
+        </div>
+
+        <!-- Bank Account Info -->
+        <div class="mb-6">
+          <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Cuenta Bancaria</h4>
+          <div class="bg-surface-base rounded p-3">
+            <p class="text-sm">
+              <span class="font-medium">Tipo:</span>
+              {{ formatAccountType(selectedWithdrawal()!.bank_account?.account_type || '') }}
+            </p>
+            <p class="text-sm">
+              <span class="font-medium">Número:</span>
+              {{ selectedWithdrawal()!.bank_account?.account_number || 'N/A' }}
+            </p>
+            <p class="text-sm">
+              <span class="font-medium">Titular:</span>
+              {{ selectedWithdrawal()!.bank_account?.account_holder_name || 'N/A' }}
+            </p>
+            <p class="text-sm">
+              <span class="font-medium">Documento:</span>
+              {{ selectedWithdrawal()!.bank_account?.account_holder_document || 'N/A' }}
+            </p>
+            @if (selectedWithdrawal()!.bank_account?.bank_name) {
+              <p class="text-sm">
+                <span class="font-medium">Banco:</span>
+                {{ selectedWithdrawal()!.bank_account!.bank_name }}
+              </p>
+            }
+          </div>
+        </div>
+
+        <!-- Amounts -->
+        <div class="mb-6">
+          <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Montos</h4>
+          <div class="bg-surface-base rounded p-3">
+            <div class="flex justify-between text-sm mb-1">
+              <span>Monto solicitado:</span>
+              <span class="font-medium">{{
+                selectedWithdrawal()!.amount | money: selectedWithdrawal()!.currency
+              }}</span>
+            </div>
+            <div class="flex justify-between text-sm mb-1">
+              <span>Comisión (1.5%):</span>
+              <span class="text-error-text"
+                >-{{
+                  selectedWithdrawal()!.fee_amount | money: selectedWithdrawal()!.currency
+                }}</span
+              >
+            </div>
+            <div
+              class="flex justify-between text-sm font-medium pt-2 border-t border-border-default"
+            >
+              <span>Monto neto a transferir:</span>
+              <span class="text-success-strong">{{
+                selectedWithdrawal()!.net_amount | money: selectedWithdrawal()!.currency
+              }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status and Dates -->
+        <div class="mb-6">
+          <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Estado</h4>
+          <span
+            [class]="getStatusBadgeClass(selectedWithdrawal()!.status)"
+            class="px-3 py-1 inline-flex text-sm font-semibold rounded-full"
+          >
+            {{ getStatusText(selectedWithdrawal()!.status) }}
+          </span>
+          <p class="text-sm text-text-secondary mt-2">
+            Creado: {{ selectedWithdrawal()!.created_at | date: 'medium' }}
+          </p>
+          @if (selectedWithdrawal()!.approved_at) {
+            <p class="text-sm text-text-secondary">
+              Aprobado: {{ selectedWithdrawal()!.approved_at | date: 'medium' }}
+            </p>
+          }
+          @if (selectedWithdrawal()!.completed_at) {
+            <p class="text-sm text-text-secondary">
+              Completado: {{ selectedWithdrawal()!.completed_at | date: 'medium' }}
+            </p>
+          }
+        </div>
+
+        <!-- User Notes -->
+        @if (selectedWithdrawal()!.user_notes) {
+          <div class="mb-6">
+            <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">
+              Notas del Usuario
+            </h4>
+            <p class="text-sm text-text-primary bg-cta-default/10 rounded p-3">
+              {{ selectedWithdrawal()!.user_notes }}
+            </p>
+          </div>
+        }
+
+        <!-- Admin Notes -->
+        @if (selectedWithdrawal()!.admin_notes) {
+          <div class="mb-6">
+            <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Notas del Admin</h4>
+            <p class="text-sm text-text-primary bg-warning-bg rounded p-3">
+              {{ selectedWithdrawal()!.admin_notes }}
+            </p>
+          </div>
+        }
+
+        <!-- Action Notes Input -->
+        @if (
+          selectedWithdrawal()!.status === 'pending' || selectedWithdrawal()!.status === 'approved'
+        ) {
+          <div class="mb-6">
+            <label for="actionNotes" class="block text-sm font-medium text-text-primary mb-2">
+              Notas para esta acción
+            </label>
+            <textarea
+              id="actionNotes"
+              [value]="actionNotes()"
+              (input)="updateActionNotes($any($event.target).value)"
+              rows="3"
+              class="w-full border border-border-muted rounded-md shadow-sm p-2 focus:ring-cta-default focus:border-cta-default"
+              placeholder="Ingrese notas adicionales..."
+            ></textarea>
+          </div>
+        }
+      </div>
+
+      <!-- Actions -->
+      <div class="px-6 py-4 bg-surface-base border-t border-border-default flex justify-end gap-2">
+        @if (selectedWithdrawal()!.status === 'pending') {
+          <button
+            (click)="rejectWithdrawal(selectedWithdrawal()!)"
+            class="px-4 py-2 border border-error-300 text-error-strong rounded-md hover:bg-error-bg"
+          >
+            Rechazar
+          </button>
+          <button
+            (click)="approveWithdrawal(selectedWithdrawal()!)"
+            class="px-4 py-2 bg-cta-default text-cta-text rounded-md hover:bg-cta-default"
+          >
+            Aprobar
+          </button>
+        }
+        @if (selectedWithdrawal()!.status === 'approved') {
+          <button
+            (click)="completeWithdrawal(selectedWithdrawal()!)"
+            class="px-4 py-2 bg-success-light text-text-primary rounded-md hover:bg-success-light"
+          >
+            Marcar como Completado
+          </button>
+        }
+        <button
+          (click)="closeModal()"
+          class="px-4 py-2 border border-border-muted text-text-primary rounded-md hover:bg-surface-base"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+}

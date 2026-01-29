@@ -1,0 +1,187 @@
+<div class="inspection-uploader" data-testid="inspection-uploader">
+  <!-- Header -->
+  <div class="header">
+    <h2>{{ stageLabel() }} del Vehículo</h2>
+    <button class="close-btn" (click)="cancel()" [disabled]="saving()">
+      <app-icon name="close" [size]="20" />
+    </button>
+  </div>
+
+  <!-- Error message -->
+  @if (error()) {
+    <div class="error-message">
+      <app-icon name="alert-circle" [size]="18" cssClass="inline-block mr-2" /> {{ error() }}
+    </div>
+  }
+
+  <!-- Photo upload section -->
+  <div class="photo-section">
+    <h3>Fotos del Vehículo</h3>
+    <p class="hint">
+      Subí al menos 8 fotos claras del vehículo: exterior (4 ángulos), interior, odómetro, nivel de
+      combustible, y cualquier daño existente.
+    </p>
+
+    <!-- Upload button -->
+    <div class="upload-btn-wrapper">
+      <label for="photo-input" class="upload-btn" [class.disabled]="uploading()">
+        @if (uploading()) {
+          <span class="spinner"></span>
+          Subiendo...
+        } @else {
+          <app-icon name="camera" [size]="16" cssClass="inline-block mr-1" /> Subir Fotos
+        }
+      </label>
+      <input
+        id="photo-input"
+        type="file"
+        multiple
+        accept="image/*"
+        (change)="onPhotosSelected($event)"
+        [disabled]="uploading() || saving()"
+      />
+    </div>
+
+    <!-- Photo count indicator -->
+    <div class="photo-count">
+      @if (photoCount() >= 8) {
+        <span class="success"
+          ><app-icon name="check-circle" [size]="16" cssClass="inline-block mr-1" />
+          {{ photoCount() }} fotos subidas</span
+        >
+      } @else {
+        <span class="text-amber-600">
+          <app-icon name="alert-circle" [size]="16" cssClass="inline-block mr-1" />
+          {{ photoCount() }} / 8 fotos (opcional)
+        </span>
+      }
+    </div>
+
+    <!-- Photo grid -->
+    @if (photos().length > 0) {
+      <div class="photo-grid">
+        @for (photo of photos(); track photo.url; let i = $index) {
+          <div class="photo-item">
+            <img
+              [src]="photo.url"
+              [alt]="'Foto de inspección del vehículo ' + (i + 1) + ' de ' + photos().length" width="400" height="300" />
+            <button class="remove-photo" (click)="removePhoto(i)" [disabled]="saving()">
+              <app-icon name="trash" [size]="18" />
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Vehicle data section -->
+  <div class="data-section">
+    <h3>Datos del Vehículo</h3>
+
+    <!-- Odometer -->
+    <div class="form-group">
+      <label for="odometer">Kilometraje</label>
+      <input
+        id="odometer"
+        type="number"
+        [value]="odometer()"
+        (input)="odometer.set(+$any($event.target).value)"
+        min="0"
+        step="1"
+        placeholder="Ej: 45000"
+        [disabled]="saving()"
+      aria-label="Ej: 45000" />
+      @if (odometer() <= 0) {
+        <span class="field-hint error"
+          ><app-icon name="alert-circle" [size]="14" cssClass="inline-block mr-1" /> Ingrese el
+          kilometraje</span
+        >
+      }
+    </div>
+
+    <!-- Fuel level -->
+    <div class="form-group">
+      <label for="fuel-level">Nivel de Combustible (%)</label>
+      <div class="fuel-input-wrapper">
+        <input
+          id="fuel-level"
+          type="range"
+          [value]="fuelLevel()"
+          (input)="fuelLevel.set(+$any($event.target).value)"
+          min="0"
+          max="100"
+          step="5"
+          [disabled]="saving()"
+        />
+        <span class="fuel-value">{{ fuelLevel() }}%</span>
+      </div>
+      <div class="fuel-indicator">
+        <div class="fuel-bar" [style.width.%]="fuelLevel()"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photo warning -->
+  @if (showPhotoWarning()) {
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+      <div class="flex items-start gap-3">
+        <app-icon
+          name="alert-triangle"
+          [size]="20"
+          cssClass="text-amber-600 flex-shrink-0 mt-0.5"
+        />
+        <div>
+          <p class="font-medium text-amber-800">Advertencia: Sin fotos documentadas</p>
+          <p class="text-sm text-amber-700 mt-1">
+            Continuar sin fotos significa asumir el riesgo en caso de disputas. Recomendamos subir
+            al menos 8 fotos del vehículo para proteger tus intereses.
+          </p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="btn btn-secondary" (click)="cancel()" [disabled]="saving()">Cancelar</button>
+
+    <button class="btn btn-primary" (click)="save()" [disabled]="!isValid() || saving()">
+      @if (saving()) {
+        <span class="spinner"></span>
+        Guardando...
+      } @else {
+        <app-icon name="check" [size]="16" cssClass="inline-block mr-1" /> Guardar y Firmar
+      }
+    </button>
+  </div>
+
+  <!-- Validation hints -->
+  @if (!isValid()) {
+    <div class="validation-hints">
+      <h4>Para continuar necesitás:</h4>
+      <ul>
+        @if (odometer() <= 0) {
+          <li>
+            <app-icon name="close-circle" [size]="14" cssClass="inline-block mr-1" /> Ingresar el
+            kilometraje
+          </li>
+        } @else {
+          <li>
+            <app-icon name="check-circle" [size]="14" cssClass="inline-block mr-1" /> Kilometraje
+            registrado
+          </li>
+        }
+
+        <li>
+          <app-icon name="check-circle" [size]="14" cssClass="inline-block mr-1" /> Nivel de
+          combustible: {{ fuelLevel() }}%
+        </li>
+
+        <li class="text-amber-600">
+          <app-icon name="alert-circle" [size]="14" cssClass="inline-block mr-1" /> Fotos:
+          {{ photoCount() }} (opcional, recomendado 8+)
+        </li>
+      </ul>
+    </div>
+  }
+</div>

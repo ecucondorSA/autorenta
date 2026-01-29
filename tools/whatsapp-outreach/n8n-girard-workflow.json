@@ -1,0 +1,423 @@
+{
+  "name": "autorentar - Sistema Girard WhatsApp",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "hours", "hoursInterval": 1 }]
+        }
+      },
+      "id": "schedule-hourly",
+      "name": "Cada Hora (9-21hs)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst hour = new Date(now.toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).getHours();\nif (hour < 9 || hour >= 21) return [];\nreturn [{ json: { hour, proceed: true } }];"
+      },
+      "id": "check-hours",
+      "name": "Verificar Horario",
+      "type": "n8n-nodes-base.code",
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "status", "value": "eq.new" },
+            { "name": "order", "value": "created_at.asc" },
+            { "name": "limit", "value": "5" }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $credentials.httpHeaderAuth.value }}" },
+            { "name": "Authorization", "value": "Bearer {{ $credentials.httpHeaderAuth.value }}" }
+          ]
+        }
+      },
+      "id": "get-new-contacts",
+      "name": "Obtener Contactos Nuevos",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [440, 0],
+      "credentials": {
+        "httpHeaderAuth": { "id": "supabase-key", "name": "Supabase Service Key" }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const contact = $input.item.json;\n\nconst templates = [\n  `Hola ${contact.first_name}!\\n\\nVi que alquilás tu auto. Te escribo porque estamos lanzando autorentar, una app con mejor comisión (solo 15% vs 25-30% de otras).\\n\\nEstamos sumando propietarios en ${contact.region === 'AMBA' ? 'Buenos Aires' : contact.province}. ¿Te interesa?\\n\\nEduardo - autorentar`,\n  \n  `Hola ${contact.first_name}, cómo estás?\\n\\nSoy Eduardo. Te contacto porque sos propietario que alquila su auto.\\n\\n¿Qué es lo que más te molesta de las apps de alquiler actuales?\\n\\nEstamos desarrollando algo diferente y tu feedback me ayudaría mucho.`,\n  \n  `Hola ${contact.first_name}!\\n\\n3 razones por las que propietarios eligen autorentar:\\n\\n1. Comisión 15% (vs 25-30%)\\n2. Cobrás en 24hs\\n3. Vos controlás precios\\n\\n¿Te cuento más?\\n\\nEduardo`\n];\n\nconst hash = (contact.phone || '').split('').reduce((a, b) => a + b.charCodeAt(0), 0);\nconst template = templates[hash % templates.length];\n\nreturn {\n  json: {\n    ...contact,\n    message: template,\n    chatId: contact.phone + '@c.us',\n    template_name: ['direct', 'feedback', 'value'][hash % 3]\n  }\n};"
+      },
+      "id": "generate-initial-message",
+      "name": "Generar Mensaje Inicial",
+      "type": "n8n-nodes-base.code",
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://waha:3000/api/sendText",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "X-Api-Key", "value": "autorenta-secret-key-2026" }]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"session\": \"default\",\n  \"chatId\": \"{{ $json.chatId }}\",\n  \"text\": {{ JSON.stringify($json.message) }}\n}"
+      },
+      "id": "send-whatsapp",
+      "name": "Enviar WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [880, 0]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts?id=eq.{{ $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $credentials.httpHeaderAuth.value }}" },
+            { "name": "Authorization", "value": "Bearer {{ $credentials.httpHeaderAuth.value }}" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"status\": \"contacted\",\n  \"messages_sent\": {{ ($json.messages_sent || 0) + 1 }},\n  \"last_message_sent_at\": \"{{ new Date().toISOString() }}\",\n  \"first_contact_at\": \"{{ $json.first_contact_at || new Date().toISOString() }}\",\n  \"next_followup_at\": \"{{ new Date(Date.now() + 3*24*60*60*1000).toISOString() }}\",\n  \"followup_reason\": \"Seguimiento 3 días - sin respuesta\"\n}"
+      },
+      "id": "update-contact-sent",
+      "name": "Actualizar Contacto",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1100, 0],
+      "credentials": {
+        "httpHeaderAuth": { "id": "supabase-key", "name": "Supabase Service Key" }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $credentials.httpHeaderAuth.value }}" },
+            { "name": "Authorization", "value": "Bearer {{ $credentials.httpHeaderAuth.value }}" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contact_id\": \"{{ $json.id }}\",\n  \"direction\": \"outbound\",\n  \"content\": {{ JSON.stringify($json.message) }},\n  \"template_used\": \"{{ $json.template_name }}\",\n  \"status\": \"sent\"\n}"
+      },
+      "id": "log-message",
+      "name": "Guardar Mensaje",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1100, 200],
+      "credentials": {
+        "httpHeaderAuth": { "id": "supabase-key", "name": "Supabase Service Key" }
+      }
+    },
+    {
+      "parameters": { "amount": 45, "unit": "seconds" },
+      "id": "wait-between",
+      "name": "Esperar 45s",
+      "type": "n8n-nodes-base.wait",
+      "position": [880, 200]
+    },
+
+    {
+      "parameters": {
+        "rule": { "interval": [{ "field": "hours", "hoursInterval": 2 }] }
+      },
+      "id": "schedule-followup",
+      "name": "Cada 2hs - Followups",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [0, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "next_followup_at", "value": "lte.{{ new Date().toISOString() }}" },
+            { "name": "status", "value": "in.(contacted,responded)" },
+            { "name": "order", "value": "next_followup_at.asc" },
+            { "name": "limit", "value": "3" }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $credentials.httpHeaderAuth.value }}" },
+            { "name": "Authorization", "value": "Bearer {{ $credentials.httpHeaderAuth.value }}" }
+          ]
+        }
+      },
+      "id": "get-followups",
+      "name": "Obtener Followups Pendientes",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [220, 400],
+      "credentials": {
+        "httpHeaderAuth": { "id": "supabase-key", "name": "Supabase Service Key" }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const contact = $input.item.json;\nconst daysSinceContact = Math.floor((Date.now() - new Date(contact.last_message_sent_at).getTime()) / (1000*60*60*24));\n\nlet message, nextFollowup, followupReason;\n\nif (daysSinceContact <= 4) {\n  // Followup suave a los 3 días\n  message = `Hola ${contact.first_name}! Te escribí hace unos días sobre autorentar. ¿Pudiste verlo? Cualquier duda estoy acá. Saludos!`;\n  nextFollowup = new Date(Date.now() + 7*24*60*60*1000);\n  followupReason = 'Seguimiento 7 días - valor';\n} else if (daysSinceContact <= 10) {\n  // Mensaje de valor a los 7 días\n  message = `Hola ${contact.first_name}! Dato rápido: propietarios en ${contact.region === 'AMBA' ? 'Buenos Aires' : contact.province} generan $150-300k/mes extra alquilando su auto. Si te interesa saber cómo, avisame. Eduardo`;\n  nextFollowup = new Date(Date.now() + 7*24*60*60*1000);\n  followupReason = 'Seguimiento 14 días - último intento';\n} else if (daysSinceContact <= 20) {\n  // Último intento\n  message = `Hola ${contact.first_name}, último mensaje, no quiero molestarte. Si en algún momento te interesa poner tu auto a trabajar, acá estoy. Éxitos!`;\n  nextFollowup = new Date(Date.now() + 60*24*60*60*1000);\n  followupReason = 'Reactivación 60 días';\n} else {\n  // Reactivación\n  message = `Hola ${contact.first_name}! Hace tiempo no hablamos. autorentar creció mucho y hay buena demanda en ${contact.region === 'AMBA' ? 'AMBA' : contact.province}. ¿Seguís con ganas de alquilar tu auto?`;\n  nextFollowup = null; // No más followups automáticos\n  followupReason = null;\n}\n\nreturn {\n  json: {\n    ...contact,\n    message,\n    chatId: contact.phone + '@c.us',\n    next_followup_at: nextFollowup?.toISOString(),\n    followup_reason: followupReason\n  }\n};"
+      },
+      "id": "generate-followup",
+      "name": "Generar Followup Girard",
+      "type": "n8n-nodes-base.code",
+      "position": [440, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://waha:3000/api/sendText",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "X-Api-Key", "value": "autorenta-secret-key-2026" }]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"session\": \"default\",\n  \"chatId\": \"{{ $json.chatId }}\",\n  \"text\": {{ JSON.stringify($json.message) }}\n}"
+      },
+      "id": "send-followup",
+      "name": "Enviar Followup",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [660, 400]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts?id=eq.{{ $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $credentials.httpHeaderAuth.value }}" },
+            { "name": "Authorization", "value": "Bearer {{ $credentials.httpHeaderAuth.value }}" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messages_sent\": {{ ($json.messages_sent || 0) + 1 }},\n  \"last_message_sent_at\": \"{{ new Date().toISOString() }}\",\n  \"next_followup_at\": {{ $json.next_followup_at ? '\"' + $json.next_followup_at + '\"' : 'null' }},\n  \"followup_reason\": {{ $json.followup_reason ? '\"' + $json.followup_reason + '\"' : 'null' }}\n}"
+      },
+      "id": "update-followup",
+      "name": "Actualizar Followup",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [880, 400],
+      "credentials": {
+        "httpHeaderAuth": { "id": "supabase-key", "name": "Supabase Service Key" }
+      }
+    },
+
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "waha-webhook",
+        "options": {}
+      },
+      "id": "webhook-inbound",
+      "name": "Webhook Respuestas WAHA",
+      "type": "n8n-nodes-base.webhook",
+      "position": [0, 700],
+      "webhookId": "waha-inbound"
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $input.item.json;\n\nif (payload.event !== 'message' || payload.payload?.fromMe) return [];\n\nconst msg = payload.payload;\nconst phone = msg.from?.replace('@c.us', '');\nconst text = (msg.body || '').toLowerCase();\n\n// Detectar intención (Sistema Girard - escuchar al cliente)\nlet intent = 'unknown';\nlet sentiment = 'neutral';\n\nif (text.match(/^(si|sí|dale|ok|bueno|contame|interesa|quiero)/)) {\n  intent = 'interested';\n  sentiment = 'positive';\n} else if (text.match(/^(no |no,|no$|no me|gracias pero|paso)/)) {\n  intent = 'not_interested';\n  sentiment = 'negative';\n} else if (text.match(/(cuanto|comision|porcentaje|cobran)/)) {\n  intent = 'question_commission';\n} else if (text.match(/(seguro|garantia|daño|accidente)/)) {\n  intent = 'question_insurance';\n} else if (text.match(/(como|empezar|registr|descargar|link)/)) {\n  intent = 'question_howto';\n} else if (text.match(/(pago|cobro|plata|cuando|transfieren)/)) {\n  intent = 'question_payment';\n} else if (text.match(/(auto|tengo|modelo|año)/)) {\n  intent = 'has_car_info';\n  sentiment = 'positive';\n} else if (text.length > 50) {\n  intent = 'detailed_response';\n  sentiment = 'positive';\n}\n\n// Extraer keywords para notas\nconst keywords = [];\nif (text.match(/auto|vehículo|coche/)) keywords.push('auto');\nif (text.match(/comision|porcentaje/)) keywords.push('comision');\nif (text.match(/seguro|garantia/)) keywords.push('seguro');\nif (text.match(/\\d{4}/)) keywords.push('mencionó_año');\n\nreturn [{\n  json: {\n    phone,\n    text: msg.body,\n    intent,\n    sentiment,\n    keywords,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "process-inbound",
+      "name": "Procesar Respuesta (Girard: Escuchar)",
+      "type": "n8n-nodes-base.code",
+      "position": [220, 700]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts?phone=eq.{{ $json.phone }}&limit=1",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $credentials.httpHeaderAuth.value }}" },
+            { "name": "Authorization", "value": "Bearer {{ $credentials.httpHeaderAuth.value }}" }
+          ]
+        }
+      },
+      "id": "find-contact",
+      "name": "Buscar Contacto",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [440, 700],
+      "credentials": {
+        "httpHeaderAuth": { "id": "supabase-key", "name": "Supabase Service Key" }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const inbound = $('Procesar Respuesta (Girard: Escuchar)').item.json;\nconst contacts = $input.item.json;\nconst contact = Array.isArray(contacts) ? contacts[0] : contacts;\n\nif (!contact?.id) {\n  // Contacto nuevo - crear\n  return [{ json: { ...inbound, isNew: true } }];\n}\n\n// Determinar nuevo status\nlet newStatus = contact.status;\nif (inbound.intent === 'interested' || inbound.sentiment === 'positive') {\n  newStatus = contact.status === 'new' || contact.status === 'contacted' ? 'responded' : \n              inbound.intent === 'interested' ? 'interested' : contact.status;\n}\nif (inbound.intent === 'not_interested') {\n  newStatus = 'not_interested';\n}\n\n// Actualizar notas (estilo libreta de Joe)\nlet notes = contact.notes || '';\nconst timestamp = new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' });\nnotes += `\\n[${timestamp}] Respondió: \"${inbound.text.substring(0, 100)}...\" (${inbound.intent})`;\n\nreturn [{\n  json: {\n    ...contact,\n    ...inbound,\n    newStatus,\n    updatedNotes: notes,\n    isNew: false\n  }\n}];"
+      },
+      "id": "merge-contact-data",
+      "name": "Merge + Notas Girard",
+      "type": "n8n-nodes-base.code",
+      "position": [660, 700]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts?id=eq.{{ $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $credentials.httpHeaderAuth.value }}" },
+            { "name": "Authorization", "value": "Bearer {{ $credentials.httpHeaderAuth.value }}" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"status\": \"{{ $json.newStatus }}\",\n  \"messages_received\": {{ ($json.messages_received || 0) + 1 }},\n  \"last_message_received_at\": \"{{ $json.timestamp }}\",\n  \"notes\": {{ JSON.stringify($json.updatedNotes) }},\n  \"engagement_score\": {{ Math.min(100, ($json.engagement_score || 0) + 15) }}\n}"
+      },
+      "id": "update-contact-response",
+      "name": "Actualizar Contacto",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [880, 700],
+      "credentials": {
+        "httpHeaderAuth": { "id": "supabase-key", "name": "Supabase Service Key" }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $credentials.httpHeaderAuth.value }}" },
+            { "name": "Authorization", "value": "Bearer {{ $credentials.httpHeaderAuth.value }}" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contact_id\": \"{{ $json.id }}\",\n  \"direction\": \"inbound\",\n  \"content\": {{ JSON.stringify($json.text) }},\n  \"detected_intent\": \"{{ $json.intent }}\",\n  \"sentiment\": \"{{ $json.sentiment }}\",\n  \"keywords\": {{ JSON.stringify($json.keywords) }}\n}"
+      },
+      "id": "log-inbound-message",
+      "name": "Guardar Mensaje Entrante",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [880, 900],
+      "credentials": {
+        "httpHeaderAuth": { "id": "supabase-key", "name": "Supabase Service Key" }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": false },
+          "conditions": [
+            { "leftValue": "={{ $json.intent }}", "rightValue": "interested", "operator": { "type": "string", "operation": "equals" } }
+          ]
+        }
+      },
+      "id": "is-interested",
+      "name": "¿Interesado?",
+      "type": "n8n-nodes-base.if",
+      "position": [1100, 700]
+    },
+    {
+      "parameters": {
+        "jsCode": "const contact = $input.item.json;\n\nconst response = `¡Genial ${contact.first_name}! Te cuento rápido:\n\nautorentar es alquiler de autos entre particulares. La diferencia:\n\n• Comisión 15% (otras cobran 25-30%)\n• Cobrás en 24hs después de cada alquiler\n• Vos ponés el precio\n• Cobertura incluida contra daños menores\n\n¿Querés que te mande el link para registrarte?`;\n\nreturn [{ json: { ...contact, response, chatId: contact.phone + '@c.us' } }];"
+      },
+      "id": "prepare-interested-response",
+      "name": "Preparar Respuesta Interesado",
+      "type": "n8n-nodes-base.code",
+      "position": [1320, 600]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://waha:3000/api/sendText",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "X-Api-Key", "value": "autorenta-secret-key-2026" }]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"session\": \"default\",\n  \"chatId\": \"{{ $json.chatId }}\",\n  \"text\": {{ JSON.stringify($json.response) }}\n}"
+      },
+      "id": "send-interested-response",
+      "name": "Responder Interesado",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1540, 600]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            { "leftValue": "={{ $json.intent }}", "rightValue": "question_", "operator": { "type": "string", "operation": "startsWith" } }
+          ]
+        }
+      },
+      "id": "is-question",
+      "name": "¿Pregunta?",
+      "type": "n8n-nodes-base.if",
+      "position": [1320, 800]
+    },
+    {
+      "parameters": {
+        "jsCode": "const contact = $input.item.json;\nconst intent = contact.intent;\n\nconst responses = {\n  question_commission: `La comisión de autorentar es 15% fijo.\\n\\nEsto incluye:\\n• 10% para la plataforma\\n• 5% para el Fondo de Garantía (cubre daños menores)\\n\\nOtras apps cobran 25-30% y encima seguro aparte.`,\n  \n  question_insurance: `El seguro funciona diferente en autorentar:\\n\\n1. Todo vehículo tiene cobertura automática del Fondo de Garantía\\n2. Cubre daños menores hasta cierto monto\\n3. Para daños mayores, el arrendatario paga un depósito reembolsable\\n\\nEl costo ya está incluido en el 15%.`,\n  \n  question_payment: `El pago funciona así:\\n\\n1. El arrendatario paga al reservar\\n2. El dinero queda en garantía hasta que termina el alquiler\\n3. A las 24hs de devolver el auto, se te transfiere a tu MercadoPago\\n\\nNada de esperar 7-14 días como en otras apps.`,\n  \n  question_howto: `Para empezar es súper simple:\\n\\n1. Descargás la app\\n2. Verificás tu identidad (foto DNI + selfie)\\n3. Cargás tu auto con fotos\\n4. Definís precio y disponibilidad\\n\\n¿Te mando el link para descargar?`\n};\n\nconst response = responses[intent] || `Buena pregunta! Dejame responderte en detalle. Dame unos minutos y te escribo. Eduardo`;\n\nreturn [{ json: { ...contact, response, chatId: contact.phone + '@c.us' } }];"
+      },
+      "id": "prepare-faq-response",
+      "name": "Preparar Respuesta FAQ",
+      "type": "n8n-nodes-base.code",
+      "position": [1540, 800]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://waha:3000/api/sendText",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "X-Api-Key", "value": "autorenta-secret-key-2026" }]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"session\": \"default\",\n  \"chatId\": \"{{ $json.chatId }}\",\n  \"text\": {{ JSON.stringify($json.response) }}\n}"
+      },
+      "id": "send-faq-response",
+      "name": "Responder FAQ",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1760, 800]
+    }
+  ],
+  "connections": {
+    "Cada Hora (9-21hs)": { "main": [[{ "node": "Verificar Horario", "type": "main", "index": 0 }]] },
+    "Verificar Horario": { "main": [[{ "node": "Obtener Contactos Nuevos", "type": "main", "index": 0 }]] },
+    "Obtener Contactos Nuevos": { "main": [[{ "node": "Generar Mensaje Inicial", "type": "main", "index": 0 }]] },
+    "Generar Mensaje Inicial": { "main": [[{ "node": "Enviar WhatsApp", "type": "main", "index": 0 }]] },
+    "Enviar WhatsApp": { "main": [[{ "node": "Update Contact + Log", "type": "main", "index": 0 }, { "node": "Esperar 45s", "type": "main", "index": 0 }]] },
+    "Update Contact + Log": { "main": [[{ "node": "Guardar Mensaje", "type": "main", "index": 0 }]] },
+    "Esperar 45s": { "main": [[{ "node": "Generar Mensaje Inicial", "type": "main", "index": 0 }]] },
+
+    "Cada 2hs - Followups": { "main": [[{ "node": "Obtener Followups Pendientes", "type": "main", "index": 0 }]] },
+    "Obtener Followups Pendientes": { "main": [[{ "node": "Generar Followup Girard", "type": "main", "index": 0 }]] },
+    "Generar Followup Girard": { "main": [[{ "node": "Enviar Followup", "type": "main", "index": 0 }]] },
+    "Enviar Followup": { "main": [[{ "node": "Actualizar Followup", "type": "main", "index": 0 }]] },
+
+    "Webhook Respuestas WAHA": { "main": [[{ "node": "Procesar Respuesta (Girard: Escuchar)", "type": "main", "index": 0 }]] },
+    "Procesar Respuesta (Girard: Escuchar)": { "main": [[{ "node": "Buscar Contacto", "type": "main", "index": 0 }]] },
+    "Buscar Contacto": { "main": [[{ "node": "Merge + Notas Girard", "type": "main", "index": 0 }]] },
+    "Merge + Notas Girard": { "main": [[{ "node": "Actualizar Contacto", "type": "main", "index": 0 }, { "node": "Guardar Mensaje Entrante", "type": "main", "index": 0 }]] },
+    "Actualizar Contacto": { "main": [[{ "node": "¿Interesado?", "type": "main", "index": 0 }]] },
+    "¿Interesado?": { "main": [[{ "node": "Preparar Respuesta Interesado", "type": "main", "index": 0 }], [{ "node": "¿Pregunta?", "type": "main", "index": 0 }]] },
+    "Preparar Respuesta Interesado": { "main": [[{ "node": "Responder Interesado", "type": "main", "index": 0 }]] },
+    "¿Pregunta?": { "main": [[{ "node": "Preparar Respuesta FAQ", "type": "main", "index": 0 }], []] },
+    "Preparar Respuesta FAQ": { "main": [[{ "node": "Responder FAQ", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1", "timezone": "America/Argentina/Buenos_Aires" }
+}

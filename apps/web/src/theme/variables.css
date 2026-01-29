@@ -1,0 +1,205 @@
+/* ═══════════════════════════════════════════════════════════════
+   🎨 AUTORENTAR DESIGN SYSTEM - Color Variables
+
+   Based on industry leaders analysis (Airbnb, Turo, Zapier, Booking):
+   - Strong, recognizable primary color
+   - Clean white backgrounds
+   - High contrast text
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ═══════════════════════════════════════════════════════════════
+     PRIMARY - Verde Neón (Brand Identity)
+     High impact, memorable, conversion-optimized
+     ═══════════════════════════════════════════════════════════════ */
+  --ion-color-primary: #00d95f;
+  --ion-color-primary-rgb: 0, 217, 95;
+  --ion-color-primary-contrast: #000000;
+  --ion-color-primary-contrast-rgb: 0, 0, 0;
+  --ion-color-primary-shade: #00bf54;
+  --ion-color-primary-tint: #1adf70;
+
+  /* ═══════════════════════════════════════════════════════════════
+     SECONDARY - Neutral Gray (Supporting)
+     ═══════════════════════════════════════════════════════════════ */
+  --ion-color-secondary: #6b7280;
+  --ion-color-secondary-rgb: 107, 114, 128;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #5e6470;
+  --ion-color-secondary-tint: #7a8290;
+
+  /* ═══════════════════════════════════════════════════════════════
+     SEMANTIC COLORS
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Success - Green */
+  --ion-color-success: #10b981;
+  --ion-color-success-rgb: 16, 185, 129;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #0ea572;
+  --ion-color-success-tint: #28c08e;
+
+  /* Warning - Amber */
+  --ion-color-warning: #f59e0b;
+  --ion-color-warning-rgb: 245, 158, 11;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #d88b0a;
+  --ion-color-warning-tint: #f6a823;
+
+  /* Danger - Red */
+  --ion-color-danger: #ef4444;
+  --ion-color-danger-rgb: 239, 68, 68;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #d23c3c;
+  --ion-color-danger-tint: #f15757;
+
+  /* ═══════════════════════════════════════════════════════════════
+     NEUTRAL COLORS
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Dark - Text Primary */
+  --ion-color-dark: #1a1a1a;
+  --ion-color-dark-rgb: 26, 26, 26;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #171717;
+  --ion-color-dark-tint: #313131;
+
+  /* Medium - Text Secondary */
+  --ion-color-medium: #6b7280;
+  --ion-color-medium-rgb: 107, 114, 128;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #5e6470;
+  --ion-color-medium-tint: #7a8290;
+
+  /* Light - Backgrounds */
+  --ion-color-light: #f7f7f7;
+  --ion-color-light-rgb: 247, 247, 247;
+  --ion-color-light-contrast: #1a1a1a;
+  --ion-color-light-contrast-rgb: 26, 26, 26;
+  --ion-color-light-shade: #d9d9d9;
+  --ion-color-light-tint: #ffffff;
+
+  /* ═══════════════════════════════════════════════════════════════
+     DESIGN TOKENS - Semantic (Use these in components)
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Backgrounds */
+  --surface-base: #ffffff;
+  --surface-secondary: #f7f7f7;
+  --surface-tertiary: #f0f0f0;
+  --surface-elevated: #ffffff;
+  --surface-overlay: rgba(0, 0, 0, 0.5);
+
+  /* Text */
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --text-inverse: #ffffff;
+  --text-disabled: #d1d5db;
+
+  /* Borders */
+  --border-default: #e5e7eb;
+  --border-muted: #f3f4f6;
+  --border-strong: #d1d5db;
+  --border-focus: #00d95f;
+
+  /* CTA (Call to Action) */
+  --cta-default: #00d95f;
+  --cta-hover: #00bf54;
+  --cta-active: #00a648;
+  --cta-text: #000000;
+
+  /* Brand */
+  --brand-primary: #00d95f;
+  --brand-secondary: #1a1a1a;
+
+  /* ═══════════════════════════════════════════════════════════════
+     TYPOGRAPHY SCALE (Standardized)
+     Based on Turo/Zapier: 16px base
+     ═══════════════════════════════════════════════════════════════ */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 2rem;      /* 32px */
+  --font-size-4xl: 2.5rem;    /* 40px */
+  --font-size-5xl: 3rem;      /* 48px */
+
+  /* ═══════════════════════════════════════════════════════════════
+     BORDER RADIUS (Unified)
+     Based on Airbnb/Turo: 8-12px standard
+     ═══════════════════════════════════════════════════════════════ */
+  --radius-none: 0;
+  --radius-sm: 0.375rem;      /* 6px */
+  --radius-md: 0.5rem;        /* 8px */
+  --radius-lg: 0.75rem;       /* 12px */
+  --radius-xl: 1rem;          /* 16px */
+  --radius-2xl: 1.5rem;       /* 24px */
+  --radius-full: 9999px;      /* Pills */
+
+  /* ═══════════════════════════════════════════════════════════════
+     SPACING SCALE (4px base)
+     ═══════════════════════════════════════════════════════════════ */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* ═══════════════════════════════════════════════════════════════
+     SHADOWS (Elevation)
+     ═══════════════════════════════════════════════════════════════ */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* ═══════════════════════════════════════════════════════════════
+     TRANSITIONS
+     ═══════════════════════════════════════════════════════════════ */
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   IONIC COMPONENT OVERRIDES
+   ═══════════════════════════════════════════════════════════════ */
+
+ion-content {
+  --background: var(--surface-base);
+}
+
+ion-toolbar {
+  --background: var(--surface-base);
+  --color: var(--text-primary);
+}
+
+ion-item {
+  --background: var(--surface-base);
+  --color: var(--text-primary);
+  --border-color: var(--border-default);
+}
+
+ion-button {
+  --border-radius: var(--radius-lg);
+}

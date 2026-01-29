@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+canvas {
+  touch-action: none;
+  cursor: crosshair;
+}
+
+ion-toggle {
+  --handle-width: 26px;
+  --handle-height: 26px;
+}

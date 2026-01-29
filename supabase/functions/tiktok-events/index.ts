@@ -1,0 +1,329 @@
+/**
+ * TikTok Events API - Supabase Edge Function
+ *
+ * Envía eventos de servidor a TikTok Pixel de manera segura.
+ * El access token se mantiene en el servidor y no se expone al cliente.
+ *
+ * Endpoint: /functions/v1/tiktok-events
+ * Method: POST
+ *
+ * @see https://business-api.tiktok.com/portal/docs?id=1771101027431425
+ */
+
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
+import { initSentry, captureError } from '../_shared/sentry.ts';
+
+// Timeout for TikTok API calls (15 seconds)
+const TIKTOK_API_TIMEOUT_MS = 15_000;
+
+const TIKTOK_PIXEL_ID = 'D4AHBBBC77U2U4VHPCO0';
+const TIKTOK_API_VERSION = 'v1.3';
+const TIKTOK_API_BASE_URL = 'https://business-api.tiktok.com';
+
+// Event types supported
+type TikTokEventType =
+  | 'ViewContent'
+  | 'AddToWishlist'
+  | 'Search'
+  | 'AddPaymentInfo'
+  | 'AddToCart'
+  | 'InitiateCheckout'
+  | 'PlaceAnOrder'
+  | 'CompleteRegistration'
+  | 'Purchase';
+
+interface TikTokEventData {
+  event: TikTokEventType;
+  event_id?: string;
+  event_time: number;
+  user: {
+    email?: string;
+    phone?: string;
+    external_id?: string;
+    ip?: string;
+    user_agent?: string;
+    ttclid?: string;
+  };
+  properties?: {
+    value?: number;
+    currency?: string;
+    content_id?: string;
+    content_type?: string;
+    content_name?: string;
+    search_string?: string;
+    url?: string;
+    contents?: Array<{
+      content_id: string;
+      content_name?: string;
+      quantity?: number;
+      price?: number;
+    }>;
+  };
+}
+
+interface TikTokAPIPayload {
+  pixel_code: string;
+  event: string;
+  event_id?: string;
+  timestamp: string;
+  context: {
+    user: {
+      external_id?: string;
+      email?: string;
+      phone?: string;
+    };
+    user_agent?: string;
+    ip?: string;
+  };
+  properties: Record<string, unknown>;
+}
+
+/**
+ * Fetch with timeout support
+ */
+async function fetchWithTimeout(
+  url: string,
+  options: RequestInit,
+  timeoutMs: number
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    return response;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+/**
+ * Hash data using SHA256 (TikTok requires hashed PII)
+ */
+async function hashSHA256(data: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const dataBuffer = encoder.encode(data.toLowerCase().trim());
+  const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * Send event to TikTok Events API
+ */
+async function sendTikTokEvent(
+  eventData: TikTokEventData,
+  accessToken: string
+): Promise<{ success: boolean; message?: string; tiktokResponse?: unknown }> {
+  try {
+    // Hash PII data (email, phone)
+    const hashedEmail = eventData.user.email
+      ? await hashSHA256(eventData.user.email)
+      : undefined;
+
+    const hashedPhone = eventData.user.phone
+      ? await hashSHA256(eventData.user.phone)
+      : undefined;
+
+    // Build TikTok API payload
+    const payload: TikTokAPIPayload = {
+      pixel_code: TIKTOK_PIXEL_ID,
+      event: eventData.event,
+      event_id: eventData.event_id || crypto.randomUUID(),
+      timestamp: new Date(eventData.event_time).toISOString(),
+      context: {
+        user: {
+          external_id: eventData.user.external_id,
+          email: hashedEmail,
+          phone: hashedPhone,
+        },
+        user_agent: eventData.user.user_agent,
+        ip: eventData.user.ip,
+      },
+      properties: {
+        ...eventData.properties,
+        contents: eventData.properties?.contents || [],
+      },
+    };
+
+    // Remove undefined values
+    Object.keys(payload.context.user).forEach(key => {
+      if (payload.context.user[key as keyof typeof payload.context.user] === undefined) {
+        delete payload.context.user[key as keyof typeof payload.context.user];
+      }
+    });
+
+    // Send to TikTok API with timeout
+    const url = `${TIKTOK_API_BASE_URL}/open_api/${TIKTOK_API_VERSION}/event/track/`;
+
+    const response = await fetchWithTimeout(
+      url,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Token': accessToken,
+        },
+        body: JSON.stringify({
+          event_source: 'web',
+          event_source_id: TIKTOK_PIXEL_ID,
+          data: [payload],
+        }),
+      },
+      TIKTOK_API_TIMEOUT_MS
+    );
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      console.error('TikTok API error:', responseData);
+      return {
+        success: false,
+        message: `TikTok API error: ${response.status}`,
+        tiktokResponse: responseData,
+      };
+    }
+
+    console.log('TikTok event sent successfully:', eventData.event);
+    return {
+      success: true,
+      tiktokResponse: responseData,
+    };
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.warn('TikTok API request timed out');
+      return {
+        success: false,
+        message: 'TikTok API request timed out',
+      };
+    }
+    console.error('Error sending TikTok event:', error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+serve(async (req) => {
+  // Initialize Sentry for error tracking
+  const sentry = initSentry('tiktok-events');
+
+  // CORS headers - wrap in try-catch for safety
+  let corsHeaders: Record<string, string>;
+  try {
+    corsHeaders = {
+      ...getCorsHeaders(req),
+      'Access-Control-Allow-Headers':
+        'authorization, x-client-info, apikey, content-type, x-forwarded-for, x-real-ip',
+    };
+  } catch {
+    // Fallback to production domain instead of wildcard for security
+    corsHeaders = {
+      'Access-Control-Allow-Origin': 'https://autorentar.com',
+      'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    };
+  }
+
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
+  try {
+    // Get TikTok access token from environment
+    const accessToken = Deno.env.get('TIKTOK_ACCESS_TOKEN');
+    if (!accessToken) {
+      // ✅ FIX: Silently skip - TikTok not configured (no error to Sentry)
+      console.log('TikTok Events: Access token not configured, skipping');
+      return new Response(
+        JSON.stringify({ success: true, message: 'TikTok Events disabled' }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+
+    // Parse request body with error handling
+    let eventData: TikTokEventData;
+    try {
+      eventData = await req.json();
+    } catch (parseError) {
+      // ✅ FIX: Use console.warn instead of console.error for non-critical issues
+      console.warn('TikTok Events: Failed to parse request body:', parseError);
+      return new Response(
+        JSON.stringify({ success: false, error: 'Invalid JSON body' }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+
+    // Validate required fields
+    if (!eventData.event) {
+      console.warn('TikTok Events: Missing event type');
+      return new Response(
+        JSON.stringify({ error: 'Event type is required' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    // Initialize user object if not present
+    if (!eventData.user) {
+      eventData.user = {};
+    }
+
+    if (!eventData.event_time) {
+      eventData.event_time = Date.now();
+    }
+
+    // Get user IP from request headers if not provided
+    if (!eventData.user.ip) {
+      eventData.user.ip = req.headers.get('x-forwarded-for') ||
+        req.headers.get('x-real-ip') ||
+        'unknown';
+    }
+
+    // Get user agent if not provided
+    if (!eventData.user.user_agent) {
+      eventData.user.user_agent = req.headers.get('user-agent') || 'unknown';
+    }
+
+    // Send event to TikTok
+    const result = await sendTikTokEvent(eventData, accessToken);
+
+    // ✅ FIX: Only capture to Sentry if it's a real API error (not configuration)
+    if (!result.success && result.message && !result.message.includes('TikTok Events disabled')) {
+      console.warn('TikTok Events: Failed to send event:', result.message);
+    }
+
+    return new Response(JSON.stringify(result), {
+      status: 200, // Tracking failures shouldn't break UX
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    // ✅ FIX: Only capture unexpected errors to Sentry, not tracking failures
+    console.warn('TikTok Events: Edge function error:', error);
+    if (sentry && error instanceof Error && error.message !== 'TikTok Events disabled') {
+      captureError(error, {
+        context: 'tiktok-events-handler',
+        level: 'warning', // Downgrade from error to warning
+      });
+    }
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: 'internal_error',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      }),
+      {
+        status: 200, // Avoid surfacing tracking errors to users
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      },
+    );
+  }
+});

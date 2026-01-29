@@ -1,0 +1,372 @@
+<!-- Active Rental Page -->
+<div class="active-rental-page min-h-screen bg-surface-base">
+  <!-- Header -->
+  <header class="sticky top-0 z-10 bg-surface-raised border-b border-border-default">
+    <div class="flex items-center gap-4 px-4 py-3">
+      <button
+        (click)="goBack()"
+        class="p-2 -ml-2 rounded-full hover:bg-surface-hover transition-colors"
+        aria-label="Volver"
+      >
+        <svg
+          class="w-6 h-6 text-text-primary"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+      <div class="flex-1">
+        <h1 class="text-lg font-semibold text-text-primary font-satoshi">Viaje en Curso</h1>
+        <p class="text-sm text-text-secondary">{{ carTitle() }}</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"
+      ></div>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error()) {
+    <div class="p-6 text-center">
+      <div class="text-6xl mb-4">😕</div>
+      <h2 class="text-xl font-semibold text-text-primary mb-2">{{ error() }}</h2>
+      <button
+        (click)="goBack()"
+        class="mt-4 px-6 py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors"
+      >
+        Volver
+      </button>
+    </div>
+  }
+
+  <!-- Main Content -->
+  @if (!loading() && !error() && booking()) {
+    <main class="pb-24">
+      <!-- Car Hero -->
+      <section
+        class="relative h-48 bg-gradient-to-b from-primary-900 to-primary-700 overflow-hidden"
+      >
+        <img
+          [src]="carImageUrl()"
+          [alt]="carTitle()"
+          class="absolute inset-0 w-full h-full object-cover opacity-30"
+          width="400"
+          height="192"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-4">
+          <h2 class="text-2xl font-bold text-white font-satoshi">{{ carTitle() }}</h2>
+          <p class="text-white/80 text-sm">Reserva activa</p>
+        </div>
+      </section>
+
+      <!-- Trip Timer -->
+      <section class="px-4 -mt-6 relative z-10">
+        <app-trip-timer [startDate]="startDate()" [endDate]="endDate()" />
+      </section>
+
+      <!-- Digital Key (Mock) -->
+      <section class="px-4 mt-6">
+        <app-digital-key />
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="px-4 mt-6">
+        <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">Acciones Rápidas</h3>
+        <app-quick-actions
+          [ownerPhone]="ownerPhone()"
+          [hasLocation]="!!carLocation()"
+          (action)="onQuickAction($event)"
+        />
+      </section>
+
+      <!-- Emergency Section -->
+      <section class="px-4 mt-8">
+        <button
+          (click)="toggleEmergencyPanel()"
+          class="w-full py-4 px-6 bg-red-500 hover:bg-red-600 text-white rounded-2xl font-semibold flex items-center justify-center gap-3 transition-colors shadow-lg"
+        >
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+          Emergencia SOS
+        </button>
+      </section>
+
+      <!-- Emergency Panel (Expandable) -->
+      @if (showEmergencyPanel()) {
+        <section class="px-4 mt-4">
+          <app-emergency-panel
+            [ownerName]="ownerName()"
+            [ownerPhone]="ownerPhone()"
+            [insuranceInfo]="insuranceInfo()"
+            (panelClose)="showEmergencyPanel.set(false)"
+          />
+        </section>
+      }
+
+      <!-- 📁 GUANTERA DIGITAL -->
+      <section class="px-4 mt-8">
+        <div
+          class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 border border-slate-700 shadow-xl"
+        >
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+              <svg
+                class="w-5 h-5 text-amber-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-white font-satoshi">Guantera Digital</h3>
+              <p class="text-xs text-slate-400">Documentos y recursos del viaje</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <!-- Contrato PDF -->
+            <a
+              [routerLink]="['/bookings', booking()?.id, 'contract']"
+              class="flex flex-col items-center gap-2 p-4 bg-slate-800/50 hover:bg-slate-700/50 rounded-xl border border-slate-700 transition-all hover:scale-105"
+            >
+              <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                <svg
+                  class="w-6 h-6 text-blue-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-white">Contrato</span>
+              <span class="text-xs text-slate-400">Ver/Descargar</span>
+            </a>
+
+            <!-- Póliza de Seguro -->
+            <a
+              href="/politica-seguros"
+              target="_blank"
+              class="flex flex-col items-center gap-2 p-4 bg-slate-800/50 hover:bg-slate-700/50 rounded-xl border border-slate-700 transition-all hover:scale-105"
+            >
+              <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
+                <svg
+                  class="w-6 h-6 text-green-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-white">Póliza</span>
+              <span class="text-xs text-slate-400">Seguro incluido</span>
+            </a>
+
+            <!-- Términos y Condiciones -->
+            <a
+              href="/terminos"
+              target="_blank"
+              class="flex flex-col items-center gap-2 p-4 bg-slate-800/50 hover:bg-slate-700/50 rounded-xl border border-slate-700 transition-all hover:scale-105"
+            >
+              <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+                <svg
+                  class="w-6 h-6 text-purple-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-white">Términos</span>
+              <span class="text-xs text-slate-400">Condiciones</span>
+            </a>
+
+            <!-- Contacto Emergencia -->
+            <button
+              (click)="toggleEmergencyPanel()"
+              class="flex flex-col items-center gap-2 p-4 bg-slate-800/50 hover:bg-red-900/30 rounded-xl border border-slate-700 hover:border-red-700 transition-all hover:scale-105"
+            >
+              <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
+                <svg
+                  class="w-6 h-6 text-red-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-white">Emergencias</span>
+              <span class="text-xs text-slate-400">Contactos SOS</span>
+            </button>
+          </div>
+
+          <!-- Info adicional -->
+          <div class="mt-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+            <div class="flex items-start gap-2">
+              <svg
+                class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <p class="text-xs text-amber-200/80">
+                Estos documentos están disponibles durante todo tu viaje. Podés acceder incluso sin
+                conexión si los descargás ahora.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Booking Info Card -->
+      <section class="px-4 mt-8">
+        <div class="bg-surface-raised rounded-2xl p-4 border border-border-default">
+          <h3 class="text-sm font-semibold text-text-secondary uppercase tracking-wide mb-3">
+            Información de la Reserva
+          </h3>
+          <dl class="space-y-3">
+            <div class="flex justify-between">
+              <dt class="text-text-secondary">Fecha de inicio</dt>
+              <dd class="text-text-primary font-medium">
+                {{ startDate() | date: 'dd/MM/yyyy HH:mm' }}
+              </dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-text-secondary">Fecha de devolución</dt>
+              <dd class="text-text-primary font-medium">
+                {{ endDate() | date: 'dd/MM/yyyy HH:mm' }}
+              </dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-text-secondary">Propietario</dt>
+              <dd class="text-text-primary font-medium">{{ ownerName() }}</dd>
+            </div>
+            @if (booking()?.car_city) {
+              <div class="flex justify-between">
+                <dt class="text-text-secondary">Ubicación</dt>
+                <dd class="text-text-primary font-medium text-right max-w-[60%]">
+                  {{ booking()?.car_city
+                  }}{{ booking()?.car_province ? ', ' + booking()?.car_province : '' }}
+                </dd>
+              </div>
+            }
+          </dl>
+        </div>
+      </section>
+
+      <!-- AI Assistant Panels -->
+      <section class="px-4 mt-8">
+        <div
+          class="rounded-2xl border border-border-default bg-surface-raised shadow-sm overflow-hidden"
+        >
+          <!-- Header -->
+          <div
+            class="flex items-center gap-2 border-b border-border-default bg-gradient-to-r from-indigo-500/10 to-purple-500/10 p-4"
+          >
+            <svg
+              class="h-5 w-5 text-indigo-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+              />
+            </svg>
+            <h3 class="text-sm font-semibold text-text-primary">Asistente IA</h3>
+          </div>
+
+          <!-- AI Panels -->
+          <app-ai-legal-panel
+            [booking]="booking()"
+            [isExpanded]="expandedAiPanel() === 'legal'"
+            (togglePanel)="toggleAiPanel('legal')"
+          />
+
+          <app-ai-trip-panel
+            [booking]="booking()"
+            [isExpanded]="expandedAiPanel() === 'trip'"
+            (togglePanel)="toggleAiPanel('trip')"
+          />
+
+          <app-ai-checklist-panel
+            [booking]="booking()"
+            inspectionType="check_out"
+            [isExpanded]="expandedAiPanel() === 'checklist'"
+            (togglePanel)="toggleAiPanel('checklist')"
+          />
+        </div>
+      </section>
+
+      <!-- Back to Booking Detail Link -->
+      <section class="px-4 mt-6 text-center">
+        <a
+          [routerLink]="['/bookings', booking()?.id]"
+          class="text-primary-500 hover:text-primary-600 font-medium"
+        >
+          Ver detalles completos de la reserva →
+        </a>
+      </section>
+    </main>
+  }
+</div>

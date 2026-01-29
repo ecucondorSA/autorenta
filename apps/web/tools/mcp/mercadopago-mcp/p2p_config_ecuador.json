@@ -1,0 +1,86 @@
+{
+  "dry_run": true,
+  "_comment_dry_run": "CAMBIAR A false SOLO en producción verificada",
+
+  "country": "EC",
+  "fiat": "USD",
+  "poll_interval_seconds": 30,
+  "price_check_interval_seconds": 60,
+
+  "browser_profile": "/home/edu/.produbanco-browser-profile",
+  "headless": false,
+  "log_file": "/tmp/p2p_daemon_ecuador.log",
+  "state_file": "/home/edu/autorenta/apps/web/tools/mercadopago-mcp/daemon_state_ecuador.json",
+
+  "_comment_optimization": "v1 Ecuador settings",
+  "price_cache_ttl_seconds": 30,
+  "min_price_change_for_update": 0.001,
+  "min_update_interval_seconds": 120,
+  "state_flush_interval_seconds": 30,
+
+  "produbanco": {
+    "login_url": "https://www.produbanco.com/produnet/?qsCanal=IN&qsBanca=E",
+    "account_number": "27059070809",
+    "account_type": "Pro Pyme",
+    "bank_code": "36"
+  },
+
+  "ads": [
+    {
+      "id": "ad_sell_usdt_ec",
+      "type": "sell",
+      "asset": "USDT",
+      "fiat": "USD",
+      "enabled": false,
+      "_comment": "Deshabilitado - Solo compramos en Ecuador",
+      "price_strategy": "top1",
+      "price_margin": 0.001,
+      "min_price": 0.98,
+      "max_price": 1.05,
+      "min_amount": 10,
+      "max_amount": 5000,
+      "payment_methods": ["Produbanco"],
+      "auto_reply": "Hola! Libero USDT en menos de 5 minutos una vez verificado el deposito."
+    },
+    {
+      "id": "ad_buy_usdt_ec",
+      "type": "buy",
+      "asset": "USDT",
+      "fiat": "USD",
+      "enabled": true,
+      "price_strategy": "top1",
+      "price_margin": 0.001,
+      "min_price": 0.99,
+      "max_price": 1.018,
+      "min_amount": 10,
+      "max_amount": 5000,
+      "payment_methods": ["Produbanco"],
+      "auto_reply": "Hola! Transfiero via Produbanco en menos de 5 minutos."
+    }
+  ],
+
+  "buy_flow": {
+    "auto_pay": true,
+    "mark_as_paid_after_transfer": true
+  },
+
+  "sell_flow": {
+    "verify_produbanco_deposit": true,
+    "auto_release": true,
+    "payment_verification_window_minutes": 30,
+    "require_exact_amount": false,
+    "amount_tolerance_percent": 1
+  },
+
+  "notifications": {
+    "sound": true,
+    "desktop": true
+  },
+
+  "safety": {
+    "max_single_order_usd": 5000,
+    "daily_volume_limit_usd": 50000,
+    "pause_on_error_count": 3,
+    "require_2fa_confirmation": true
+  }
+}

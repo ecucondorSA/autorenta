@@ -15,6 +15,10 @@
     "target": "ES2022",
     "module": "preserve",
     "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "incremental": true,
+    "tsBuildInfoFile": "../../node_modules/.cache/tsconfig.tsbuildinfo",
     "baseUrl": "./src",
     "paths": {
       "@app/*": [
@@ -31,6 +35,12 @@
       ],
       "@environment": [
         "environments/environment"
+      ],
+      "@contracts/*": [
+        "../../functions/contracts/*"
+      ],
+      "@test-helpers/*": [
+        "test-helpers/*"
       ]
     }
   },

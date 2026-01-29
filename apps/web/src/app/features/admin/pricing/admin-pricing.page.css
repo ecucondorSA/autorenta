@@ -1,0 +1,51 @@
+/* Pricing Management Styles */
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: var(--color-bg-secondary);
+}
+
+.container {
+  max-width: 1280px;
+}
+
+/* Form inputs */
+input[type='number'],
+input[type='text'],
+select {
+  transition: all 0.2s ease;
+}
+
+input[type='number']:focus,
+input[type='text']:focus,
+select:focus {
+  outline: none;
+}
+
+/* Tables */
+table tbody tr:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+/* Buttons */
+button {
+  transition: all 0.2s ease;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .overflow-x-auto {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

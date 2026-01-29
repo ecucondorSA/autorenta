@@ -1,0 +1,507 @@
+<div class="wallet-page min-h-screen bg-surface-base pb-20 sm:pb-0 pt-[env(safe-area-inset-top)]">
+  <!-- Compact Header for full-bleed mode -->
+  <header class="sticky top-0 z-40 bg-surface-base/95 backdrop-blur-sm border-b border-border-default/50">
+    <div class="flex items-center justify-between px-4 py-2">
+      <a routerLink="/" class="flex items-center">
+        <img src="/assets/images/autorentar-logo.svg" alt="AutoRentar" class="h-7" />
+      </a>
+      <div class="flex items-center gap-2">
+        <a routerLink="/notifications" class="p-2 rounded-full hover:bg-surface-secondary" aria-label="Notificaciones">
+          <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container-page px-3 sm:px-4 md:px-container space-y-6 sm:space-y-8 md:space-y-10 pt-0 pb-4 sm:py-6">
+    <!-- Error Alert -->
+    @if (walletError(); as error) {
+      <div
+        class="bg-error-bg border border-error-border rounded-lg p-4 transition-colors duration-300"
+      >
+        <div class="flex items-start space-x-3">
+          <svg
+            class="w-6 h-6 text-error-text flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-error-strong">Error al cargar el wallet</p>
+            <p class="mt-1 text-sm text-error-strong">{{ error.message }}</p>
+            <button
+              type="button"
+              (click)="refreshWalletData()"
+              class="mt-2 text-sm font-medium text-error-strong hover:text-error-strong underline"
+            >
+              Reintentar
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ============================================ -->
+    <!-- SECCIÓN 1: SALDO CASH (PRINCIPAL) -->
+    <!-- ============================================ -->
+    <section
+      appStaggerEnter
+      [staggerIndex]="1"
+      class="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8"
+    >
+      <!-- Header compacto - mobile optimized -->
+      <div class="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-0.5 sm:mb-1">
+              <svg
+                class="w-4 h-4 sm:w-5 sm:h-5 text-success-strong"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <p class="text-[10px] sm:text-xs uppercase tracking-widest text-text-secondary font-semibold">
+                Saldo Cash
+              </p>
+            </div>
+            <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-text-primary">Tu Billetera</h2>
+          </div>
+        </div>
+        <!-- Action buttons - full width on mobile -->
+        <div class="grid grid-cols-2 gap-2 sm:flex sm:gap-2">
+          <button
+            type="button"
+            (click)="openDepositModal()"
+            appPressScale
+            class="inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-3 sm:py-2.5 rounded-xl text-sm font-semibold bg-cta-default text-cta-text hover:bg-cta-hover transition-all shadow-sm active:scale-95"
+            data-testid="deposit-button-hero"
+          >
+            <app-icon name="plus" [size]="16" />
+            Depositar
+          </button>
+          <button
+            type="button"
+            (click)="goToTransfer()"
+            appPressScale
+            class="inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-3 sm:py-2.5 rounded-xl text-sm font-semibold glass-button active:scale-95"
+          >
+            <app-icon name="arrow-right-left" [size]="16" />
+            Transferir
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid de balances (Bento Layout) - 2 cols en móvil, 4 en desktop -->
+      <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <!-- Balance Total (Hero Card) -->
+        <div
+          appHoverLift
+          [liftAmount]="4"
+          class="col-span-2 sm:col-span-1 glass-card-elevated bg-gradient-to-br from-success-light/20 to-success-light/5 rounded-2xl p-4 sm:p-5 ring-2 ring-success-500/20"
+          data-tour-step="wallet-balance"
+        >
+          <p class="text-xs uppercase tracking-wider text-success-strong/80 font-semibold mb-1 sm:mb-2">
+            Disponible
+          </p>
+          <p class="text-2xl sm:text-3xl lg:text-4xl font-bold text-success-strong tabular-nums">
+            ${{ availableBalanceSummary() | number: '1.2-2' }}
+          </p>
+        </div>
+
+        <!-- Crédito Protegido -->
+        <div
+          appHoverLift
+          [liftAmount]="4"
+          class="glass-card bg-gradient-to-br from-warning-bg/40 to-warning-bg/10 rounded-2xl p-4 sm:p-5"
+        >
+          <div class="flex items-center justify-between mb-1 sm:mb-2">
+            <p class="text-[10px] sm:text-xs uppercase tracking-wider text-warning-strong/80 font-semibold">
+              Protegido
+            </p>
+            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-warning-bg flex items-center justify-center">
+              <app-icon name="lock" [size]="10" cssClass="text-warning-strong sm:hidden" />
+              <app-icon name="lock" [size]="12" cssClass="text-warning-strong hidden sm:block" />
+            </div>
+          </div>
+          <p class="text-lg sm:text-xl lg:text-2xl font-bold text-warning-strong tabular-nums">
+            ${{ protectedCreditBalance() | number: '1.2-2' }}
+          </p>
+          <div class="mt-2 sm:mt-3 w-full bg-warning-border/30 rounded-full h-1.5 sm:h-2 overflow-hidden">
+            <div
+              class="bg-gradient-to-r from-warning-500 to-warning-400 h-full rounded-full transition-all duration-500"
+              [style.width.%]="protectedCreditProgress()"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Transferible -->
+        <div
+          appHoverLift
+          [liftAmount]="4"
+          class="glass-card rounded-2xl p-4 sm:p-5"
+        >
+          <div class="flex items-center justify-between mb-1 sm:mb-2">
+            <p class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-semibold">
+              Transferible
+            </p>
+            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-secondary flex items-center justify-center">
+              <app-icon name="arrow-right-left" [size]="10" cssClass="text-text-secondary sm:hidden" />
+              <app-icon name="arrow-right-left" [size]="12" cssClass="text-text-secondary hidden sm:block" />
+            </div>
+          </div>
+          <p class="text-lg sm:text-xl lg:text-2xl font-bold text-text-primary tabular-nums">
+            ${{ transferableBalance() | number: '1.2-2' }}
+          </p>
+        </div>
+
+        <!-- Retirable -->
+        <div
+          appHoverLift
+          [liftAmount]="4"
+          class="glass-card rounded-2xl p-4 sm:p-5"
+        >
+          <div class="flex items-center justify-between mb-1 sm:mb-2">
+            <p class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-semibold">
+              Retirable
+            </p>
+            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-secondary flex items-center justify-center">
+              <app-icon name="arrow-up" [size]="10" cssClass="text-text-secondary sm:hidden" />
+              <app-icon name="arrow-up" [size]="12" cssClass="text-text-secondary hidden sm:block" />
+            </div>
+          </div>
+          <p class="text-lg sm:text-xl lg:text-2xl font-bold tabular-nums"
+             [class.text-text-primary]="withdrawableBalance() >= 0"
+             [class.text-text-tertiary]="withdrawableBalance() < 0">
+            @if (withdrawableBalance() >= 0) {
+              ${{ withdrawableBalance() | number: '1.2-2' }}
+            } @else {
+              <span class="text-text-tertiary">$0,00</span>
+            }
+          </p>
+        </div>
+      </div>
+
+      <!-- Depósitos pendientes -->
+      @if (pendingDepositsCount() > 0) {
+        <div
+          class="mt-4 flex items-center gap-2 text-sm text-warning-strong bg-warning-bg/30 rounded-lg px-4 py-3 border border-warning-border/50"
+        >
+          <app-icon name="clock" [size]="16" cssClass="animate-pulse" />
+          <span>{{ pendingDepositsCount() }} depósito(s) pendiente(s) de acreditación</span>
+          <button
+            type="button"
+            (click)="refreshWalletData()"
+            class="ml-auto text-xs font-semibold underline hover:no-underline"
+          >
+            Actualizar
+          </button>
+        </div>
+      }
+
+      <!-- WAN Card compacto -->
+      @if (walletAccountNumber()) {
+        <div class="mt-4">
+          <app-wallet-account-number-card
+            [walletAccountNumber]="walletAccountNumber()"
+            [copied]="copied()"
+            (copyWAN)="copyWalletAccountNumber()"
+          ></app-wallet-account-number-card>
+        </div>
+      }
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECCIÓN 2: TU ESTADO EN EL CLUB -->
+    <!-- ============================================ -->
+    <section class="rounded-2xl sm:rounded-3xl overflow-hidden">
+      <app-club-membership-card
+        (join)="handleJoinClub($event)"
+        (viewPlans)="handleViewClubPlans()"
+        (viewHistory)="handleViewClubHistory()"
+        (renew)="handleRenewClub()"
+        (recharge)="handleRechargeClub()"
+      ></app-club-membership-card>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECCIÓN 2B: PLANES DEL CLUB -->
+    <!-- ============================================ -->
+    <app-club-plans-preview></app-club-plans-preview>
+
+    <!-- ============================================ -->
+    <!-- SECCIÓN 3: HISTORIAL UNIFICADO -->
+    <!-- ============================================ -->
+    <section
+      appStaggerEnter
+      [staggerIndex]="2"
+      class="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8"
+    >
+      <!-- Header con Tabs -->
+      <div
+        class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 sm:pb-6 border-b border-border-default/30"
+      >
+        <div>
+          <h2 class="text-hero-md font-bold text-text-primary">Historial de Movimientos</h2>
+          <p class="text-sm text-text-secondary mt-1 hidden sm:block">
+            Todos tus movimientos en un solo lugar
+          </p>
+        </div>
+
+        <!-- Tabs -->
+        <div
+          class="flex gap-1 p-1 glass rounded-xl overflow-x-auto"
+        >
+          <button
+            type="button"
+            (click)="setActiveTab('transactions')"
+            appPressScale
+            [ngClass]="{
+              'bg-cta-default text-cta-text shadow-sm':
+                activeTab() === 'transactions',
+              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
+                activeTab() !== 'transactions',
+            }"
+            class="px-4 py-2.5 text-sm font-medium rounded-lg transition-all whitespace-nowrap"
+          >
+            <app-icon name="list" [size]="14" cssClass="inline-block mr-1.5" />
+            Transacciones
+          </button>
+          <button
+            type="button"
+            (click)="setActiveTab('transfers')"
+            appPressScale
+            [ngClass]="{
+              'bg-cta-default text-cta-text shadow-sm':
+                activeTab() === 'transfers',
+              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
+                activeTab() !== 'transfers',
+            }"
+            class="px-4 py-2.5 text-sm font-medium rounded-lg transition-all whitespace-nowrap"
+          >
+            <app-icon name="arrow-right-left" [size]="14" cssClass="inline-block mr-1.5" />
+            Transferencias
+          </button>
+          <button
+            type="button"
+            (click)="setActiveTab('withdrawals')"
+            appPressScale
+            [ngClass]="{
+              'bg-cta-default text-cta-text shadow-sm':
+                activeTab() === 'withdrawals',
+              'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
+                activeTab() !== 'withdrawals',
+            }"
+            class="px-4 py-2.5 text-sm font-medium rounded-lg transition-all whitespace-nowrap"
+            data-tour-step="withdraw-button"
+          >
+            <app-icon name="arrow-up" [size]="14" cssClass="inline-block mr-1.5" />
+            Retiros
+          </button>
+          @if (subscriptionService.subscription()) {
+            <button
+              type="button"
+              (click)="setActiveTab('coverage')"
+              appPressScale
+              [ngClass]="{
+                'bg-amber-500 text-white shadow-sm': activeTab() === 'coverage',
+                'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
+                  activeTab() !== 'coverage',
+              }"
+              class="px-4 py-2.5 text-sm font-medium rounded-lg transition-all whitespace-nowrap"
+            >
+              <app-icon name="shield" [size]="14" cssClass="inline-block mr-1.5" />
+              Cobertura
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="mt-6">
+        @if (activeTab() === 'transactions') {
+          <app-transaction-history></app-transaction-history>
+        }
+
+        @if (activeTab() === 'transfers') {
+          <app-wallet-transfers></app-wallet-transfers>
+        }
+
+        @if (activeTab() === 'withdrawals') {
+          <div class="space-y-6">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-lg font-semibold text-text-primary font-satoshi">
+                Gestión de Retiros
+              </h3>
+              <div class="flex gap-2">
+                <button
+                  type="button"
+                  (click)="setWithdrawalMode('form')"
+                  appPressScale
+                  [ngClass]="{
+                    'bg-cta-default text-cta-text shadow-sm': withdrawalMode() === 'form',
+                    'text-text-secondary hover:bg-surface-secondary/50':
+                      withdrawalMode() !== 'form',
+                  }"
+                  class="px-4 py-2.5 text-sm font-medium rounded-xl transition-all"
+                >
+                  Solicitar retiro
+                </button>
+                <button
+                  type="button"
+                  (click)="setWithdrawalMode('accounts')"
+                  appPressScale
+                  [ngClass]="{
+                    'bg-cta-default text-cta-text shadow-sm': withdrawalMode() === 'accounts',
+                    'text-text-secondary hover:bg-surface-secondary/50':
+                      withdrawalMode() !== 'accounts',
+                  }"
+                  class="px-4 py-2.5 text-sm font-medium rounded-xl transition-all"
+                >
+                  Cuentas bancarias
+                </button>
+              </div>
+            </div>
+
+            @if (withdrawalMode() === 'form') {
+              <div class="space-y-6">
+                <app-withdrawal-request-form
+                  [availableBalance]="availableBalanceSummary()"
+                  [withdrawableBalance]="withdrawableBalance()"
+                  [nonWithdrawableBalance]="protectedCreditBalance()"
+                  [accounts]="activeBankAccounts()"
+                  (submitWithdrawal)="handleWithdrawalRequest($event)"
+                ></app-withdrawal-request-form>
+
+                @if (activeBankAccounts().length === 0) {
+                  <div class="bg-warning-bg/30 border border-warning-border/50 rounded-lg p-4">
+                    <div class="flex items-start gap-3">
+                      <app-icon
+                        name="alert-triangle"
+                        [size]="20"
+                        cssClass="text-warning-strong mt-0.5 flex-shrink-0"
+                      />
+                      <div>
+                        <p class="text-sm text-text-primary">
+                          Aún no registraste cuentas bancarias.
+                        </p>
+                        <button
+                          type="button"
+                          (click)="setWithdrawalMode('accounts')"
+                          class="mt-2 text-sm font-medium text-warning-strong underline hover:no-underline transition"
+                        >
+                          Agregar cuenta bancaria
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <div class="border-t border-border-default pt-6">
+                  <app-withdrawal-history
+                    [requests]="withdrawalRequests()"
+                    [loading]="loading().fetchingRequests"
+                    (cancelRequest)="handleCancelWithdrawal($event)"
+                    (refresh)="handleRefreshWithdrawals()"
+                  ></app-withdrawal-history>
+                </div>
+              </div>
+            }
+
+            @if (withdrawalMode() === 'accounts') {
+              <div class="space-y-6">
+                <app-bank-accounts-list
+                  [accounts]="bankAccounts()"
+                  [loading]="loading().fetchingBankAccounts"
+                  (setDefault)="handleSetDefaultAccount($event)"
+                  (deleteAccount)="handleDeleteAccount($event)"
+                ></app-bank-accounts-list>
+
+                <div class="border-t border-border-default pt-6">
+                  <h4 class="text-base font-semibold mb-4 font-satoshi">Agregar nueva cuenta</h4>
+                  <app-bank-account-form
+                    (submitAccount)="handleAddBankAccount($event)"
+                  ></app-bank-account-form>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        @if (activeTab() === 'coverage' && subscriptionService.subscription()) {
+          <!-- Tab de Cobertura del Club -->
+          <div class="space-y-6">
+            <div class="bg-amber-50/50 rounded-xl p-6 border border-amber-200/50">
+              <div class="flex items-start gap-4">
+                <div
+                  class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center"
+                >
+                  <app-icon name="shield" [size]="24" cssClass="text-amber-600" />
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-lg font-semibold text-amber-900">
+                    Historial de uso de cobertura
+                  </h3>
+                  <p class="text-sm text-amber-700 mt-1">
+                    Aquí verás las deducciones realizadas de tu saldo de cobertura por daños o
+                    claims.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  (click)="handleViewClubHistory()"
+                  class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-amber-100 text-amber-700 hover:bg-amber-200 transition"
+                >
+                  Ver completo
+                  <app-icon name="external-link" [size]="14" />
+                </button>
+              </div>
+            </div>
+
+            <!-- Placeholder para historial de cobertura -->
+            <div class="text-center py-12 text-text-secondary">
+              <app-icon
+                name="shield-check"
+                [size]="48"
+                cssClass="mx-auto mb-4 text-success-strong/30"
+              />
+              <p class="text-lg font-medium">Sin deducciones registradas</p>
+              <p class="text-sm mt-1">Tu cobertura no ha sido utilizada aún. ¡Excelente!</p>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECCIÓN AYUDA -->
+    <!-- ============================================ -->
+    <section appStaggerEnter [staggerIndex]="3">
+      <app-wallet-faq></app-wallet-faq>
+    </section>
+
+    <section appStaggerEnter [staggerIndex]="4" class="text-center pb-4">
+      <p class="text-sm text-text-secondary">
+        ¿Necesitas ayuda?
+        <a
+          href="mailto:autorentardev@gmail.com"
+          class="text-cta-default hover:text-cta-hover font-semibold ml-1 transition-colors"
+          >Contacta a soporte</a
+        >
+      </p>
+    </section>
+  </div>
+</div>

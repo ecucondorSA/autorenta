@@ -1,0 +1,93 @@
+.payment-provider-selector {
+  width: 100%;
+}
+
+/* Provider Option */
+.provider-option {
+  transition: all 0.2s ease;
+}
+
+.provider-option:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.provider-option:active {
+  transform: translateY(0);
+}
+
+/* Radio Button Styling */
+input[type='radio'] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* Currency Badge */
+.rounded-full {
+  font-size: 0.65rem;
+  padding: 0.25rem 0.5rem;
+  letter-spacing: 0.025em;
+}
+
+/* Loading Spinner */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Info Banner */
+.bg-surface-base {
+  background-color: var(--surface-light-subtle, #f9fafb);
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .provider-option {
+    padding: 0.875rem;
+  }
+
+  .flex-wrap {
+    gap: 0.375rem;
+  }
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+  .provider-option {
+    background-color: var(--surface-dark, #1f2937);
+    border-color: var(--border-dark, #374151);
+  }
+
+  .provider-option.bg-cta-default-10 {
+    background-color: var(--cta-dark-alpha-10, #1e3a8a);
+  }
+
+  /* Colores en dark mode se heredan de tokens globales; no duplicamos aquí */
+}
+
+/* Focus States for Accessibility */
+.provider-option:focus-within {
+  outline: 2px solid var(--system-blue-default, #3b82f6);
+  outline-offset: 2px;
+}
+
+input[type='radio']:focus {
+  outline: 2px solid var(--system-blue-default, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Disabled State (if needed) */
+.provider-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

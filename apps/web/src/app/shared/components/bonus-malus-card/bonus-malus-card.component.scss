@@ -1,0 +1,35 @@
+.bonus-malus-dashboard {
+  ion-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .score-display {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--ion-color-step-150);
+  }
+
+  .metrics-breakdown ion-item,
+  .improvement-tips ion-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --inner-border-width: 0;
+    --background: transparent;
+  }
+
+  .metrics-breakdown ion-label,
+  .improvement-tips ion-label {
+    font-size: 0.9em;
+  }
+
+  .metrics-breakdown ion-badge {
+    min-width: 60px;
+    text-align: center;
+    margin-right: 8px;
+  }
+
+  .bonus-protector-info ion-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+  }
+}

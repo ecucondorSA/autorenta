@@ -1,0 +1,56 @@
+name: Process Email Sequences
+
+on:
+  schedule:
+    # Cada hora para procesar secuencias pendientes
+    - cron: '0 * * * *'
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Solo mostrar qué se enviaría (no enviar)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+jobs:
+  process-sequences:
+    name: Procesar secuencias de email
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Procesar secuencias pendientes
+        run: |
+          echo "🔄 Procesando secuencias de email..."
+
+          RESPONSE=$(curl -s -X POST \
+            "${{ secrets.SUPABASE_URL }}/functions/v1/process-email-sequences" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{}')
+
+          echo "Respuesta: $RESPONSE"
+
+          # Check for errors
+          if echo "$RESPONSE" | grep -q '"error"'; then
+            echo "❌ Error procesando secuencias"
+            exit 1
+          fi
+
+          SENT=$(echo "$RESPONSE" | jq -r '.sent // 0')
+          PROCESSED=$(echo "$RESPONSE" | jq -r '.processed // 0')
+
+          echo "✅ Procesados: $PROCESSED suscriptores"
+          echo "📧 Emails enviados: $SENT"
+
+      - name: Registrar resultado
+        if: always()
+        run: |
+          echo "## Resultado de procesamiento de secuencias" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Fecha (UTC):** $(date -u '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Estado:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY

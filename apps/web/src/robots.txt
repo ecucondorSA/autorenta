@@ -1,0 +1,44 @@
+# robots.txt for AutoRenta
+# https://autorenta-web.pages.dev
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /bookings/
+Disallow: /wallet/
+Disallow: /profile/
+Disallow: /auth/
+
+# Sitemaps
+Sitemap: https://autorenta-web.pages.dev/sitemap.xml
+
+# Crawl-delay (be nice to servers)
+Crawl-delay: 1
+
+# Allow Google and Bing to index
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /bookings/
+Disallow: /wallet/
+Disallow: /profile/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /bookings/
+Disallow: /wallet/
+Disallow: /profile/
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /

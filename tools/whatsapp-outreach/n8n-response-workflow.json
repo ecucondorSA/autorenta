@@ -1,0 +1,267 @@
+{
+  "name": "AutoRenta - WhatsApp Response Handler (Groq AI)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-incoming",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-incoming",
+      "name": "Webhook (WAHA)",
+      "type": "n8n-nodes-base.webhook",
+      "position": [0, 300],
+      "typeVersion": 2,
+      "webhookId": "whatsapp-incoming"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "is-message",
+              "leftValue": "={{ $json.event }}",
+              "rightValue": "message",
+              "operator": { "type": "string", "operation": "equals" }
+            },
+            {
+              "id": "is-incoming",
+              "leftValue": "={{ $json.payload?.fromMe }}",
+              "rightValue": false,
+              "operator": { "type": "boolean", "operation": "equals" }
+            },
+            {
+              "id": "is-not-group",
+              "leftValue": "={{ $json.payload?.from }}",
+              "rightValue": "@g.us",
+              "operator": { "type": "string", "operation": "notContains" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-incoming",
+      "name": "Is Incoming Message?",
+      "type": "n8n-nodes-base.filter",
+      "position": [220, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $input.first().json.payload;\n\nconst chatId = payload.from;\nconst phone = chatId.replace('@c.us', '');\nconst messageBody = payload.body || '';\nconst messageId = payload.id?.id || payload.id;\nconst timestamp = payload.timestamp;\n\nreturn [{\n  json: {\n    chatId,\n    phone,\n    messageBody,\n    messageId,\n    timestamp\n  }\n}];"
+      },
+      "id": "extract-message",
+      "name": "Extract Message Data",
+      "type": "n8n-nodes-base.code",
+      "position": [440, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_contacts",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "phone", "value": "=eq.{{ $json.phone }}" },
+            { "name": "select", "value": "id,phone,whatsapp_id,first_name,full_name,status,messages_sent,last_message_sent_at" },
+            { "name": "limit", "value": "1" }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-contact",
+      "name": "Get Contact from DB",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [660, 300],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contact_id\": \"{{ $('Get Contact from DB').first().json[0]?.id || null }}\",\n  \"direction\": \"inbound\",\n  \"message_type\": \"response\",\n  \"content\": {{ JSON.stringify($('Extract Message Data').first().json.messageBody) }},\n  \"status\": \"received\"\n}",
+        "options": {}
+      },
+      "id": "log-incoming",
+      "name": "Log Incoming Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [880, 500],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "=Bearer {{ $env.GROQ_API_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama-3.3-70b-versatile\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Sos Sofía, asistente virtual de AutoRentar. Respondés en español argentino, amigable y directo.\\n\\n## MODELO DE NEGOCIO (COMODATO)\\nAutoRentar usa el modelo COMODATO - un préstamo de uso gratuito con protección comunitaria:\\n\\n### Split del pago:\\n- 15% Plataforma (AutoRentar)\\n- 70% Pool de Rewards (se reparte entre TODOS los owners de la comunidad)\\n- 15% FGO - Fondo de protección comunitario (sin franquicia para nadie)\\n\\n### El owner NO recibe pago directo del booking\\nEl owner gana REWARDS MENSUALES basados en:\\n- Disponibilidad declarada de su auto\\n- Rating/reputación\\n- Antigüedad en la comunidad\\n- Referidos\\n- Tiempo de respuesta\\n\\n### Beneficios del modelo:\\n- SIN FRANQUICIA: Si hay daño, lo cubre el fondo comunitario\\n- Ganás aunque no alquiles: Solo por tener tu auto disponible ganás rewards\\n- Comunidad solidaria: Entre todos nos protegemos\\n- Ingresos pasivos: No tenés que hacer nada, solo declarar disponibilidad\\n\\n## WALLET - BILLETERA VIRTUAL\\nAutoRentar es la PRIMERA plataforma de alquiler de autos que NO EXCLUYE a personas sin tarjeta de crédito:\\n\\n### Cómo funciona:\\n- Cada usuario tiene su billetera virtual dentro de la app\\n- Podés cargar saldo con transferencia bancaria, efectivo en Rapipago/PagoFacil, o MercadoPago\\n- Los rewards mensuales se acreditan directo en tu wallet\\n- Podés retirar a tu cuenta bancaria cuando quieras\\n- Todo queda registrado con historial completo\\n\\n### Por qué es importante:\\n- En Argentina mucha gente no tiene tarjeta de crédito\\n- Otras plataformas te excluyen si no tenés tarjeta\\n- Con AutoRentar podés alquilar pagando desde tu wallet\\n- Los owners reciben sus rewards sin necesidad de tener cuenta en ningún lado específico\\n\\n### Para renters (inquilinos):\\n- Cargás saldo y pagás el alquiler desde la wallet\\n- Sin tarjeta de crédito requerida\\n- Depósito de garantía también desde wallet\\n\\n## DATOS CLAVE\\n- Precio promedio: US$50-100/día dependiendo del auto\\n- Con 50% ocupación y un auto gama media = ~US$700-1000/mes en rewards\\n- El owner elige cuándo y a quién alquilar\\n- Inspección bilateral antes y después de cada alquiler\\n- Web: autorentar.com\\n\\n## ESTILO\\n- Usá vos/vosotros\\n- Sé conciso (max 3-4 oraciones)\\n- No uses asteriscos ni formato markdown\\n- Incluí emojis ocasionales pero no exageres\\n- Si preguntan algo técnico, simplificalo\\n- Si preguntan precio exacto, decí que depende del auto y que pueden simular en la web\\n- Si preguntan por formas de pago, destacá que NO necesitan tarjeta de crédito\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify($('Extract Message Data').first().json.messageBody) }}\n    }\n  ],\n  \"temperature\": 0.7,\n  \"max_tokens\": 300\n}",
+        "options": {}
+      },
+      "id": "groq-ai",
+      "name": "Groq AI Response",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [880, 300],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "jsCode": "const groqResponse = $input.first().json;\nconst aiMessage = groqResponse.choices?.[0]?.message?.content || 'Lo siento, no pude procesar tu mensaje. Escribinos a hola@autorentar.com';\nconst chatId = $('Extract Message Data').first().json.chatId;\n\nreturn [{\n  json: {\n    chatId,\n    response: aiMessage\n  }\n}];"
+      },
+      "id": "prepare-response",
+      "name": "Prepare AI Response",
+      "type": "n8n-nodes-base.code",
+      "position": [1100, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://waha:3000/api/sendText",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "X-Api-Key", "value": "={{ $env.WAHA_API_KEY }}" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chatId\": \"{{ $json.chatId }}\",\n  \"text\": {{ JSON.stringify($json.response) }},\n  \"session\": \"default\"\n}",
+        "options": {}
+      },
+      "id": "send-response",
+      "name": "Send WhatsApp Response",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1320, 300],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contact_id\": \"{{ $('Get Contact from DB').first().json[0]?.id || null }}\",\n  \"direction\": \"outbound\",\n  \"message_type\": \"ai_response\",\n  \"content\": {{ JSON.stringify($('Prepare AI Response').first().json.response) }},\n  \"status\": \"sent\"\n}",
+        "options": {}
+      },
+      "id": "log-response",
+      "name": "Log AI Response",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1540, 300],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_contacts?phone=eq.{{ $('Extract Message Data').first().json.phone }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "apikey", "value": "={{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.SUPABASE_SERVICE_ROLE_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Prefer", "value": "return=minimal" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"status\": \"responded\",\n  \"last_response_at\": \"{{ new Date().toISOString() }}\"\n}",
+        "options": {}
+      },
+      "id": "update-contact",
+      "name": "Update Contact Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1540, 500],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "OK",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1760, 300],
+      "typeVersion": 1.1
+    }
+  ],
+  "connections": {
+    "Webhook (WAHA)": {
+      "main": [[{ "node": "Is Incoming Message?", "type": "main", "index": 0 }]]
+    },
+    "Is Incoming Message?": {
+      "main": [[{ "node": "Extract Message Data", "type": "main", "index": 0 }]]
+    },
+    "Extract Message Data": {
+      "main": [[{ "node": "Get Contact from DB", "type": "main", "index": 0 }]]
+    },
+    "Get Contact from DB": {
+      "main": [
+        [
+          { "node": "Groq AI Response", "type": "main", "index": 0 },
+          { "node": "Log Incoming Message", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Groq AI Response": {
+      "main": [[{ "node": "Prepare AI Response", "type": "main", "index": 0 }]]
+    },
+    "Prepare AI Response": {
+      "main": [[{ "node": "Send WhatsApp Response", "type": "main", "index": 0 }]]
+    },
+    "Send WhatsApp Response": {
+      "main": [
+        [
+          { "node": "Log AI Response", "type": "main", "index": 0 },
+          { "node": "Update Contact Status", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Log AI Response": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {}
+}

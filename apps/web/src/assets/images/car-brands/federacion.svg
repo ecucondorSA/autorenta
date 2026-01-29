@@ -1,0 +1,6 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect x="20" y="20" width="60" height="60" rx="6" fill="#003D7A" opacity="0.1"/>
+  <rect x="20" y="20" width="60" height="60" rx="6" fill="none" stroke="#003D7A" stroke-width="2.5"/>
+  <!-- Shield shape -->
+  <path d="M50 30 L65 38 L65 55 Q50 68 50 68 Q35 55 35 38 Z" fill="none" stroke="#003D7A" stroke-width="2"/>
+</svg>

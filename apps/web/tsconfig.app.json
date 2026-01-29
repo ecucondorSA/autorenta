@@ -4,12 +4,20 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "tsBuildInfoFile": "../../node_modules/.cache/web-app.tsbuildinfo",
+    "types": [
+      "node"
+    ]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.d.ts"
   ],
   "exclude": [
-    "src/**/*.spec.ts"
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "src/**/*.vitest.ts",
+    "src/testing/**/*",
+    "src/test-helpers/**/*"
   ]
 }

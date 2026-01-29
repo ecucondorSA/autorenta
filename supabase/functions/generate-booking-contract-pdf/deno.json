@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "lib": ["deno.window"],
+    "strict": true
+  },
+  "imports": {
+    "puppeteer": "https://deno.land/x/puppeteer@16.2.0/mod.ts",
+    "supabase": "https://esm.sh/@supabase/supabase-js@2"
+  }
+}

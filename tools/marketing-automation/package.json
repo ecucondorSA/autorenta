@@ -1,0 +1,35 @@
+{
+    "name": "@autorenta/marketing-automation",
+    "version": "1.0.0",
+    "description": "Guerrilla marketing automation system for AutoRenta",
+    "type": "module",
+    "scripts": {
+        "generate": "node scripts/generate-content.js",
+        "post": "node scripts/post-comment.js",
+        "proxy:check": "node scripts/proxy-rotator.js check",
+        "proxy:status": "node scripts/proxy-rotator.js status",
+        "seed": "node scripts/seed-personas.js",
+        "encrypt": "node scripts/encrypt-cookies.js",
+        "validate": "node scripts/validate-env.js",
+        "identities": "node scripts/generate-identities.js generate",
+        "emails": "node scripts/generate-emails.js gmail",
+        "accounts:create": "node scripts/create-accounts.js create",
+        "accounts:single": "node scripts/create-accounts.js single",
+        "warmup": "node scripts/warmup-protocol.js daily",
+        "warmup:single": "node scripts/warmup-protocol.js run"
+    },
+    "dependencies": {
+        "@supabase/supabase-js": "^2.39.0",
+        "dotenv": "^16.3.1",
+        "playwright": "^1.40.1"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.5"
+    },
+    "engines": {
+        "node": ">=20.0.0"
+    },
+    "author": "AutoRenta Team",
+    "license": "UNLICENSED",
+    "private": true
+}

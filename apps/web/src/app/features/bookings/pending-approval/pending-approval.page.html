@@ -1,0 +1,215 @@
+<div class="pending-approval-page">
+  <div class="header">
+    <h1>{{ 'PENDING_APPROVALS.TITLE' | translate }}</h1>
+    <p class="subtitle">{{ 'PENDING_APPROVALS.SUBTITLE' | translate }}</p>
+  </div>
+
+  <!-- Loading State - Skeleton List -->
+  @if (loading()) {
+    <div class="bookings-list">
+      <app-skeleton-loader type="list" [count]="3"></app-skeleton-loader>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading() && !hasBookings()) {
+    <div class="empty-state">
+      <div class="empty-icon">✅</div>
+      <h2>{{ 'PENDING_APPROVALS.NO_PENDING' | translate }}</h2>
+      <p>{{ 'PENDING_APPROVALS.NO_PENDING_DESC' | translate }}</p>
+      <button class="btn-primary" routerLink="/cars/my">
+        {{ 'PENDING_APPROVALS.VIEW_MY_CARS' | translate }}
+      </button>
+    </div>
+  }
+
+  <!-- Bookings List -->
+  @if (!loading() && hasBookings()) {
+    <div class="bookings-list">
+      @for (booking of pendingBookings(); track booking) {
+        <div
+          class="booking-card"
+          [class.processing]="processingBookingId() === booking.booking_id"
+          [class.urgent]="getUrgencyClass(booking.hours_remaining) === 'urgent'"
+          [class.warning]="getUrgencyClass(booking.hours_remaining) === 'warning'"
+        >
+          <!-- Urgency Badge -->
+          <div class="urgency-badge" [class]="getUrgencyClass(booking.hours_remaining)">
+            <span class="icon">⏰</span>
+            <span class="time">{{ formatTimeRemaining(booking.hours_remaining) }}</span>
+            <span class="label">restantes</span>
+          </div>
+          <!-- Car Info -->
+          <div class="car-info">
+            <h3>{{ booking.car_name }} ({{ booking.car_year }})</h3>
+            <div class="booking-dates">
+              <span class="date-range">
+                📅 {{ formatDate(booking.start_at) }} → {{ formatDate(booking.end_at) }}
+              </span>
+              <span class="days-count">{{ booking.days_count }} días</span>
+            </div>
+          </div>
+          <!-- Renter Profile Badge -->
+          <div class="renter-info">
+            <span class="renter-label">Solicitante:</span>
+            <app-renter-profile-badge [renterId]="booking.renter_id"></app-renter-profile-badge>
+          </div>
+          <!-- Booking Details -->
+          <div class="booking-details">
+            <div class="detail-item">
+              <span class="label">Total:</span>
+              <span class="value amount"
+                >{{ booking.total_amount | number: '1.2-2' }} {{ booking.currency }}</span
+              >
+            </div>
+            <div class="detail-item">
+              <span class="label">Solicitud:</span>
+              <span class="value">{{ formatDate(booking.booking_created_at) }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Expira:</span>
+              <span class="value expires">{{ formatDate(booking.approval_expires_at) }}</span>
+            </div>
+          </div>
+          <!-- Actions -->
+          <div class="booking-actions">
+            <button
+              class="btn-analyze"
+              (click)="openAnalysisPanel(booking)"
+              [disabled]="
+                processingBookingId() !== null || rejectingBookingId() === booking.booking_id
+              "
+            >
+              <app-icon name="user-check" [size]="18" />
+              Analizar Perfil
+            </button>
+            <button
+              class="btn-approve"
+              (click)="onApprove(booking.booking_id)"
+              [disabled]="
+                processingBookingId() !== null || rejectingBookingId() === booking.booking_id
+              "
+            >
+              @if (processingBookingId() !== booking.booking_id) {
+                <span>✅ Aprobar</span>
+              }
+              @if (processingBookingId() === booking.booking_id) {
+                <span class="processing">
+                  <div class="spinner-small"></div>
+                  Procesando...
+                </span>
+              }
+            </button>
+            @if (rejectingBookingId() !== booking.booking_id) {
+              <button
+                class="btn-reject"
+                (click)="onRejectClick(booking.booking_id)"
+                [disabled]="processingBookingId() !== null"
+              >
+                ❌ Rechazar
+              </button>
+            }
+          </div>
+
+          <!-- Inline Reject Form -->
+          @if (rejectingBookingId() === booking.booking_id) {
+            <div class="inline-reject-form">
+              <div class="reject-form-header">
+                <h4>Rechazar Reserva</h4>
+                <button class="close-inline-btn" (click)="onCancelReject()">
+                  <app-icon name="x" [size]="18" />
+                </button>
+              </div>
+
+              <div class="reason-options">
+                @for (reason of rejectionReasons; track reason.value) {
+                  <label
+                    class="reason-option"
+                    [class.selected]="rejectionReason() === reason.value"
+                  >
+                    <input
+                      type="radio"
+                      name="rejection-reason-{{ booking.booking_id }}"
+                      [value]="reason.value"
+                      [checked]="rejectionReason() === reason.value"
+                      (change)="rejectionReason.set(reason.value)"
+                    />
+                    <span>{{ reason.label }}</span>
+                  </label>
+                }
+              </div>
+
+              @if (rejectionReason() === 'other') {
+                <div class="custom-reason">
+                  <textarea
+                    [value]="customReason()"
+                    (input)="customReason.set($any($event.target).value)"
+                    placeholder="Especifica la razón..."
+                    rows="2"
+                  ></textarea>
+                </div>
+              }
+
+              <div class="reject-form-actions">
+                <button class="btn-cancel-reject" (click)="onCancelReject()">Cancelar</button>
+                <button
+                  class="btn-confirm-reject"
+                  (click)="onConfirmReject()"
+                  [disabled]="!rejectionReason() || processingBookingId() === booking.booking_id"
+                >
+                  @if (processingBookingId() === booking.booking_id) {
+                    <span class="spinner-small"></span>
+                  }
+                  Confirmar Rechazo
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Info Banner -->
+  @if (hasBookings()) {
+    <div class="info-banner">
+      <div class="info-icon">ℹ️</div>
+      <div class="info-content">
+        <p><strong>Importante:</strong></p>
+        <ul>
+          <li>Al aprobar, el pago se procesará automáticamente y la reserva quedará confirmada.</li>
+          <li>Al rechazar, los fondos se liberarán y el cliente recibirá una notificación.</li>
+          <li>
+            Si no respondes antes de que expire el tiempo, la reserva se cancelará automáticamente.
+          </li>
+        </ul>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Panel de Análisis del Renter -->
+@if (showAnalysisPanel() && selectedAnalysisBooking()) {
+  <div class="analysis-overlay" (click)="closeAnalysisPanel()">
+    <div class="analysis-drawer" (click)="$event.stopPropagation()">
+      <div class="drawer-header">
+        <div class="drawer-info">
+          <h2>Analisis del Locatario</h2>
+          <p class="drawer-subtitle">Solicitud para: {{ selectedAnalysisBooking()!.car_name }}</p>
+        </div>
+        <button class="close-btn" (click)="closeAnalysisPanel()">
+          <app-icon name="x" [size]="24" />
+        </button>
+      </div>
+      <div class="drawer-content">
+        <app-renter-analysis-panel
+          #analysisPanel
+          [renterId]="selectedAnalysisBooking()!.renter_id"
+          [bookingId]="selectedAnalysisBooking()!.booking_id"
+          (approve)="onAnalysisApprove()"
+          (reject)="onAnalysisReject()"
+        />
+      </div>
+    </div>
+  </div>
+}

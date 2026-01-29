@@ -1,0 +1,314 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   🪟 GLASSMORPHISM DESIGN SYSTEM - 2026 UI Trend
+   ═══════════════════════════════════════════════════════════════════════════
+   Superficies translúcidas con blur que crean profundidad y jerarquía visual.
+   Inspirado en Apple VisionOS, iOS 18, y tendencias de diseño 2026.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─────────────────────────────────────────────────────────────────────────
+     Glass Tokens - Variables base para glassmorphism
+     ───────────────────────────────────────────────────────────────────────── */
+
+  /* Blur intensities */
+  --glass-blur-sm: 8px;
+  --glass-blur-md: 16px;
+  --glass-blur-lg: 24px;
+  --glass-blur-xl: 40px;
+
+  /* Background opacities - Light mode */
+  --glass-bg-light: rgba(255, 255, 255, 0.7);
+  --glass-bg-light-subtle: rgba(255, 255, 255, 0.5);
+  --glass-bg-light-strong: rgba(255, 255, 255, 0.85);
+
+  /* Background opacities - Dark overlays */
+  --glass-bg-dark: rgba(0, 0, 0, 0.3);
+  --glass-bg-dark-subtle: rgba(0, 0, 0, 0.15);
+  --glass-bg-dark-strong: rgba(0, 0, 0, 0.5);
+
+  /* Border colors */
+  --glass-border-light: rgba(255, 255, 255, 0.3);
+  --glass-border-light-strong: rgba(255, 255, 255, 0.5);
+  --glass-border-dark: rgba(255, 255, 255, 0.1);
+
+  /* Shadows for depth */
+  --glass-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --glass-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --glass-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+  --glass-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.16), 0 8px 16px rgba(0, 0, 0, 0.08);
+
+  /* Gradient borders (premium effect) */
+  --glass-gradient-border: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.3) 100%
+  );
+
+  /* Accent glass (con color de marca) */
+  --glass-accent-blue: rgba(167, 216, 244, 0.3); /* Azul pastel AutoRenta */
+  --glass-accent-green: rgba(0, 217, 95, 0.2); /* Verde neón AutoRenta */
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Utility Classes - Glassmorphism aplicable via clases
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Glass Surfaces - Fondos translúcidos
+   ───────────────────────────────────────────────────────────────────────── */
+
+.glass {
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border-light);
+  box-shadow: var(--glass-shadow-sm);
+}
+
+.glass-subtle {
+  background: var(--glass-bg-light-subtle);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 1px solid var(--glass-border-light);
+}
+
+.glass-strong {
+  background: var(--glass-bg-light-strong);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border: 1px solid var(--glass-border-light-strong);
+  box-shadow: var(--glass-shadow-md);
+}
+
+.glass-dark {
+  background: var(--glass-bg-dark);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border-dark);
+  box-shadow: var(--glass-shadow-md);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Glass Cards - Cards con efecto vidrio
+   ───────────────────────────────────────────────────────────────────────── */
+
+.glass-card {
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--glass-shadow-md);
+  transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-lg);
+}
+
+.glass-card-elevated {
+  background: var(--glass-bg-light-strong);
+  backdrop-filter: blur(var(--glass-blur-xl));
+  -webkit-backdrop-filter: blur(var(--glass-blur-xl));
+  border: 1px solid var(--glass-border-light-strong);
+  border-radius: var(--radius-xl, 16px);
+  box-shadow: var(--glass-shadow-lg);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Glass Panels - Paneles flotantes (modales, sheets)
+   ───────────────────────────────────────────────────────────────────────── */
+
+.glass-panel {
+  background: var(--glass-bg-light-strong);
+  backdrop-filter: blur(var(--glass-blur-xl)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-xl)) saturate(180%);
+  border: 1px solid var(--glass-border-light-strong);
+  border-radius: var(--radius-xl, 16px);
+  box-shadow: var(--glass-shadow-xl);
+}
+
+.glass-panel-dark {
+  background: var(--glass-bg-dark-strong);
+  backdrop-filter: blur(var(--glass-blur-xl)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-xl)) saturate(180%);
+  border: 1px solid var(--glass-border-dark);
+  border-radius: var(--radius-xl, 16px);
+  box-shadow: var(--glass-shadow-xl);
+  color: white;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Glass Navbar/Header - Navegación translúcida
+   ───────────────────────────────────────────────────────────────────────── */
+
+.glass-navbar {
+  background: var(--glass-bg-light-strong);
+  backdrop-filter: blur(var(--glass-blur-lg)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(150%);
+  border-bottom: 1px solid var(--glass-border-light);
+  box-shadow: var(--glass-shadow-sm);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Glass Buttons - Botones con efecto vidrio
+   ───────────────────────────────────────────────────────────────────────── */
+
+.glass-button {
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-md, 8px);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.glass-button:hover {
+  background: var(--glass-bg-light-strong);
+  border-color: var(--glass-border-light-strong);
+  transform: translateY(-1px);
+}
+
+.glass-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Glass Badges/Pills - Badges con vidrio
+   ───────────────────────────────────────────────────────────────────────── */
+
+.glass-badge {
+  background: var(--glass-bg-light-subtle);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-full, 9999px);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.glass-badge-accent {
+  background: var(--glass-accent-blue);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 1px solid rgba(167, 216, 244, 0.4);
+  border-radius: var(--radius-full, 9999px);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Glass Input - Campos de entrada
+   ───────────────────────────────────────────────────────────────────────── */
+
+.glass-input {
+  background: var(--glass-bg-light-subtle);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-md, 8px);
+  padding: 0.75rem 1rem;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: var(--cta-default, #A7D8F4);
+  box-shadow: 0 0 0 3px rgba(167, 216, 244, 0.3);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Gradient Border Effect - Borde con gradiente premium
+   ───────────────────────────────────────────────────────────────────────── */
+
+.glass-gradient-border {
+  position: relative;
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border-radius: var(--radius-lg, 12px);
+  padding: 1px;
+}
+
+.glass-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--glass-gradient-border);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Bento Grid Glass Cards - Para layouts Bento con glass
+   ───────────────────────────────────────────────────────────────────────── */
+
+.bento-glass {
+  display: grid;
+  gap: 1rem;
+}
+
+.bento-glass > * {
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-lg, 12px);
+  padding: 1.5rem;
+  transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+}
+
+.bento-glass > *:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-md);
+}
+
+/* Hero card en bento (más grande y prominente) */
+.bento-glass > .bento-hero {
+  grid-column: span 2;
+  background: var(--glass-bg-light-strong);
+  backdrop-filter: blur(var(--glass-blur-xl));
+  -webkit-backdrop-filter: blur(var(--glass-blur-xl));
+  box-shadow: var(--glass-shadow-md);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Accessibility: Reduced Motion
+   ───────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-card,
+  .glass-card:hover,
+  .glass-button,
+  .glass-button:hover,
+  .bento-glass > * {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Fallback: No backdrop-filter support
+   ───────────────────────────────────────────────────────────────────────── */
+
+@supports not (backdrop-filter: blur(10px)) {
+  .glass,
+  .glass-card,
+  .glass-panel,
+  .glass-navbar {
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .glass-dark,
+  .glass-panel-dark {
+    background: rgba(30, 30, 30, 0.95);
+  }
+}

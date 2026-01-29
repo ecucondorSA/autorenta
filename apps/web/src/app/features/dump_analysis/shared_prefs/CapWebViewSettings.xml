@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="serverBasePath"></string>
+    <string name="lastBinaryVersionName">3.28.1</string>
+    <string name="lastBinaryVersionCode">131</string>
+</map>

@@ -1,0 +1,69 @@
+name: "⚙️ Auto Task"
+description: "Dispara el flujo automatizado para que los agentes preparen rama, PR y ejecuten validaciones."
+title: "auto: <resumen corto>"
+labels:
+  - auto-task
+  - needs-scope
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎯 Contexto
+        Completa todos los campos para que el bot pueda ejecutar la tarea end-to-end.
+  - type: input
+    id: scope
+    attributes:
+      label: Alcance
+      description: Describe qué parte del sistema se modifica (feature, servicio, worker, etc.).
+      placeholder: "Actualizar flujo de wallet para renters"
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptación
+      description: Lista validaciones funcionales/UX que deben cumplirse.
+      placeholder: |
+        - El botón "Depositar" muestra loading state
+        - Se registra transacción en wallet
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Pruebas obligatorias
+      description: Comandos o suites que deben correr antes del merge.
+      placeholder: |
+        - pnpm run lint
+        - pnpm run test:quick
+        - pnpm run e2e:wallet -- --project=renter
+    validations:
+      required: true
+  - type: checkboxes
+    id: guards
+    attributes:
+      label: Guardas previos al automerge
+      description: Marca lo que aplique; el workflow usará estos flags para decidir si procede.
+      options:
+        - label: No se tocan secrets ni claves productivas
+          required: true
+        - label: No hay migraciones o cambios de infraestructura sensibles
+          required: true
+        - label: Se cuenta con rollback descrito en el issue
+          required: false
+  - type: input
+    id: owner
+    attributes:
+      label: Dueño responsable
+      description: GitHub handle de quien validará el output antes de merge (humano).
+      placeholder: "@ecucondorSA"
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Notas adicionales
+      description: Links, diagramas o cualquier contexto adicional.
+      placeholder: "Adjuntar link a dashboard de métricas"
+    validations:
+      required: false

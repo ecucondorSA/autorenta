@@ -1,0 +1,332 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestión de Disputas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <ion-card>
+      <ion-card-content>
+        <p class="text-sm text-text-secondary">Abiertas</p>
+        <p class="text-2xl font-bold text-warning-text">{{ getStatusCount('open') }}</p>
+      </ion-card-content>
+    </ion-card>
+    <ion-card>
+      <ion-card-content>
+        <p class="text-sm text-text-secondary">En Revisión</p>
+        <p class="text-2xl font-bold text-cta-default">{{ getStatusCount('in_review') }}</p>
+      </ion-card-content>
+    </ion-card>
+    <ion-card>
+      <ion-card-content>
+        <p class="text-sm text-text-secondary">Resueltas</p>
+        <p class="text-2xl font-bold text-success-strong">{{ getStatusCount('resolved') }}</p>
+      </ion-card-content>
+    </ion-card>
+    <ion-card>
+      <ion-card-content>
+        <p class="text-sm text-text-secondary">Rechazadas</p>
+        <p class="text-2xl font-bold text-error-text">{{ getStatusCount('rejected') }}</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Filters -->
+  <ion-card class="mb-4">
+    <ion-card-header>
+      <ion-card-title>Filtros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <ion-item>
+          <ion-label position="stacked">Estado</ion-label>
+          <ion-select [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="status">
+            <ion-select-option value="">Todos</ion-select-option>
+            <ion-select-option value="open">Abierta</ion-select-option>
+            <ion-select-option value="in_review">En Revisión</ion-select-option>
+            <ion-select-option value="resolved">Resuelta</ion-select-option>
+            <ion-select-option value="rejected">Rechazada</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Tipo</ion-label>
+          <ion-select [(ngModel)]="filters" [ngModelOptions]="{ standalone: true }" name="kind">
+            <ion-select-option value="">Todos</ion-select-option>
+            <ion-select-option value="damage">Daños</ion-select-option>
+            <ion-select-option value="no_show">No se presentó</ion-select-option>
+            <ion-select-option value="late_return">Devolución tardía</ion-select-option>
+            <ion-select-option value="other">Otro</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Búsqueda</ion-label>
+          <ion-input
+            [(ngModel)]="filters"
+            [ngModelOptions]="{ standalone: true }"
+            name="searchTerm"
+            placeholder="Buscar..."
+          ></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="flex gap-2 mt-4">
+        <ion-button (click)="applyFilters()">Aplicar Filtros</ion-button>
+        <ion-button fill="outline" (click)="clearFilters()">Limpiar</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="flex flex-col items-center justify-center py-12">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p class="mt-4 text-text-secondary">Cargando disputas...</p>
+    </div>
+  }
+
+  <!-- Disputes List -->
+  @if (!loading()) {
+    <div>
+      @if (disputes().length === 0) {
+        <div class="text-center py-12 text-text-secondary">
+          <p>No hay disputas que coincidan con los filtros</p>
+        </div>
+      }
+      @if (disputes().length > 0) {
+        <div class="space-y-4">
+          @for (dispute of disputes(); track dispute) {
+            <ion-card class="mb-4">
+              <ion-card-header>
+                <div class="flex items-center justify-between">
+                  <ion-card-title class="text-base">
+                    Disputa #{{ dispute.id.slice(0, 8) }}
+                  </ion-card-title>
+                  <ion-badge [color]="getStatusColor(dispute.status)">
+                    {{ getStatusLabel(dispute.status) }}
+                  </ion-badge>
+                </div>
+                <ion-card-subtitle>
+                  {{ getKindLabel(dispute.kind) }} • Booking: {{ dispute.booking_id.slice(0, 8) }} •
+                  {{ formatDate(dispute.created_at) }}
+                </ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <p class="text-sm mb-4">{{ dispute.description || 'Sin descripción' }}</p>
+                <div class="flex gap-2">
+                  <ion-button fill="outline" size="small" (click)="openDetailModal(dispute)">
+                    <ion-icon name="eye" slot="start"></ion-icon>
+                    Ver Detalles
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Detail Modal -->
+  @if (showDetailModal()) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
+      (click)="closeDetailModal()"
+    >
+      <ion-card
+        class="max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()"
+      >
+        <ion-card-header>
+          <ion-card-title>Detalles de Disputa</ion-card-title>
+          <ion-card-subtitle>#{{ selectedDispute()?.id?.slice(0, 8) }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          @if (selectedDispute()) {
+            <div class="space-y-4">
+              <!-- Dispute Info -->
+              <div>
+                <h3 class="text-lg font-semibold mb-2 font-satoshi">Información</h3>
+                <div class="space-y-2">
+                  <p class="text-sm">
+                    <strong>Booking ID:</strong> {{ selectedDispute()!.booking_id }}
+                  </p>
+                  <p class="text-sm">
+                    <strong>Tipo:</strong> {{ getKindLabel(selectedDispute()!.kind) }}
+                  </p>
+                  <p class="text-sm">
+                    <strong>Estado:</strong> {{ getStatusLabel(selectedDispute()!.status) }}
+                  </p>
+                  <p class="text-sm">
+                    <strong>Descripción:</strong>
+                    {{ selectedDispute()!.description || 'Sin descripción' }}
+                  </p>
+                  <p class="text-sm">
+                    <strong>Creada:</strong> {{ formatDate(selectedDispute()?.created_at ?? null) }}
+                  </p>
+                  @if (selectedDispute()?.resolved_at) {
+                    <p class="text-sm">
+                      <strong>Resuelta:</strong>
+                      {{ formatDate(selectedDispute()?.resolved_at ?? null) }}
+                    </p>
+                  }
+                  <!-- NEW: Display Resolution Details -->
+                  @if (selectedDispute()?.dispute_resolution) {
+                    <p class="text-sm">
+                      <strong>Razón de Resolución:</strong>
+                      {{ selectedDispute()!.dispute_resolution }}
+                    </p>
+                  }
+                  @if (selectedDispute()?.resolution_amount) {
+                    <p class="text-sm">
+                      <strong>Monto de Resolución:</strong>
+                      {{
+                        selectedDispute()!.resolution_amount ?? 0
+                          | currency
+                            : selectedDispute()!.resolution_currency ?? 'USD'
+                            : 'symbol'
+                            : '1.2-2'
+                      }}
+                    </p>
+                  }
+                </div>
+              </div>
+              <!-- Evidence Gallery -->
+              <div>
+                <h3 class="text-lg font-semibold mb-2 font-satoshi">
+                  Evidencias ({{ evidence().length }})
+                </h3>
+                @if (evidence().length > 0) {
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @for (item of evidence(); track item) {
+                      <div
+                        class="relative p-3 rounded-lg border border-border-default bg-surface-base"
+                      >
+                        @if (item.path) {
+                          <div class="h-48">
+                            @if (isImage(item.path)) {
+                              <img
+                                [src]="item.path"
+                                [alt]="item.note || 'Evidencia'"
+                                class="w-full h-full object-cover rounded"
+                                width="400"
+                                height="192"
+                              />
+                            }
+                            @if (!isImage(item.path)) {
+                              <div
+                                class="w-full h-full bg-surface-raised rounded flex items-center justify-center"
+                              >
+                                <ion-icon
+                                  name="document"
+                                  class="text-4xl text-text-muted"
+                                ></ion-icon>
+                              </div>
+                            }
+                            @if (item.note) {
+                              <p class="text-xs text-text-secondary mt-2">{{ item.note }}</p>
+                            }
+                            <a
+                              [href]="item.path"
+                              target="_blank"
+                              class="text-xs text-cta-default mt-1 block"
+                            >
+                              Ver completo
+                            </a>
+                          </div>
+                        } @else {
+                          <div class="flex flex-col h-full justify-between">
+                            <div>
+                              <h4 class="font-semibold text-text-primary mb-1 font-satoshi">
+                                Comentario:
+                              </h4>
+                              <p class="text-sm text-text-secondary whitespace-pre-wrap">
+                                {{ item.note }}
+                              </p>
+                            </div>
+                            <p class="text-xs text-text-muted mt-2 text-right">
+                              {{ formatDate(item.created_at) }}
+                            </p>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+                @if (evidence().length === 0) {
+                  <div class="text-center py-8 text-text-secondary">
+                    <p>No hay evidencias</p>
+                  </div>
+                }
+              </div>
+              <!-- Actions -->
+              <div class="pt-4 border-t">
+                <h3 class="text-lg font-semibold mb-3 font-satoshi">Acciones</h3>
+                <!-- Resolution Inputs (conditional visibility) -->
+                @if (
+                  selectedDispute() && ['open', 'in_review'].includes(selectedDispute()!.status)
+                ) {
+                  <div>
+                    <ion-item class="mb-3">
+                      <ion-label position="stacked">Razón de Resolución (Opcional)</ion-label>
+                      <ion-textarea
+                        [(ngModel)]="resolutionReason"
+                        name="resolutionReason"
+                        rows="3"
+                        placeholder="Describe la razón de la resolución..."
+                      ></ion-textarea>
+                    </ion-item>
+                    <ion-item class="mb-4">
+                      <ion-label position="stacked">Monto de Resolución (USD, Opcional)</ion-label>
+                      <ion-input
+                        type="number"
+                        [(ngModel)]="resolutionAmount"
+                        name="resolutionAmount"
+                        placeholder="Ej: 15000.00"
+                      ></ion-input>
+                    </ion-item>
+                  </div>
+                }
+                <div class="flex flex-wrap gap-2">
+                  @if (selectedDispute()!.status !== 'in_review') {
+                    <ion-button
+                      color="primary"
+                      (click)="updateStatus(selectedDispute()!.id, 'in_review')"
+                    >
+                      Marcar en Revisión
+                    </ion-button>
+                  }
+                  @if (selectedDispute()!.status !== 'resolved') {
+                    <ion-button
+                      color="success"
+                      (click)="updateStatus(selectedDispute()!.id, 'resolved')"
+                    >
+                      Resolver
+                    </ion-button>
+                  }
+                  @if (selectedDispute()!.status !== 'rejected') {
+                    <ion-button
+                      color="danger"
+                      (click)="updateStatus(selectedDispute()!.id, 'rejected')"
+                    >
+                      Rechazar
+                    </ion-button>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+          <ion-button expand="block" fill="outline" class="mt-4" (click)="closeDetailModal()">
+            Cerrar
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  }
+</ion-content>

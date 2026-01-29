@@ -1,0 +1,461 @@
+{
+  "testName": "auth/login-page-loads",
+  "passed": false,
+  "error": {
+    "message": "page.waitForSelector: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]') to be visible\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]')\u001b[22m\n",
+    "stack": "page.waitForSelector: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]') to be visible\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"], input[name=\"email\"]')\u001b[22m\n\n    at AutoRentaTest.waitForVisible (/home/edu/autorenta/apps/web/e2e/utils/test-base.ts:183:21)\n    at testLoginPageLoads (/home/edu/autorenta/apps/web/e2e/auth/login.spec.ts:21:14)\n    at async runTest (/home/edu/autorenta/apps/web/e2e/utils/test-base.ts:255:5)\n    at async runTests (/home/edu/autorenta/apps/web/e2e/utils/test-base.ts:275:20)\n    at async main (/home/edu/autorenta/apps/web/e2e/auth/login.spec.ts:189:19)"
+  },
+  "timestamp": "2025-12-11T00:53:30.952Z",
+  "metrics": {
+    "totalLogs": 5,
+    "errorCount": 0,
+    "warnCount": 5,
+    "httpRequests": 96,
+    "slowRequests": 0
+  },
+  "logs": [
+    {
+      "id": 1,
+      "timestamp": "2025-12-11T00:53:00.243Z",
+      "level": "WARN",
+      "context": "Console",
+      "message": "[GroupMarkerNotSet(crbug.com/242999)!:A06022007C3A0000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content.",
+      "source": "console"
+    },
+    {
+      "id": 2,
+      "timestamp": "2025-12-11T00:53:00.243Z",
+      "level": "WARN",
+      "context": "Console",
+      "message": "[.WebGL-0x2df40012c200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+      "source": "console"
+    },
+    {
+      "id": 3,
+      "timestamp": "2025-12-11T00:53:01.780Z",
+      "level": "WARN",
+      "context": "Console",
+      "message": "[.WebGL-0x2df40012c200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+      "source": "console"
+    },
+    {
+      "id": 4,
+      "timestamp": "2025-12-11T00:53:02.208Z",
+      "level": "WARN",
+      "context": "Console",
+      "message": "[.WebGL-0x2df40012c200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+      "source": "console"
+    },
+    {
+      "id": 5,
+      "timestamp": "2025-12-11T00:53:02.383Z",
+      "level": "WARN",
+      "context": "Console",
+      "message": "[.WebGL-0x2df40012c200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)",
+      "source": "console"
+    }
+  ],
+  "httpLogs": [
+    {
+      "id": 47,
+      "timestamp": "2025-12-11T00:53:00.513Z",
+      "method": "OPTIONS",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "status": 200,
+      "duration": 47
+    },
+    {
+      "id": 48,
+      "timestamp": "2025-12-11T00:53:00.513Z",
+      "method": "OPTIONS",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "duration": 56
+    },
+    {
+      "id": 49,
+      "timestamp": "2025-12-11T00:53:00.516Z",
+      "method": "OPTIONS",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "duration": 64
+    },
+    {
+      "id": 50,
+      "timestamp": "2025-12-11T00:53:00.516Z",
+      "method": "OPTIONS",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "status": 200,
+      "duration": 68
+    },
+    {
+      "id": 51,
+      "timestamp": "2025-12-11T00:53:00.521Z",
+      "method": "OPTIONS",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "status": 200,
+      "duration": 63
+    },
+    {
+      "id": 52,
+      "timestamp": "2025-12-11T00:53:00.522Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "duration": 82
+    },
+    {
+      "id": 53,
+      "timestamp": "2025-12-11T00:53:00.554Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/cars?select=*%2Ccar_photos%28*%29%2Cowner%3Aprofiles%21cars_owner_id_fkey%28id%2Cfull_name%2Cavatar_url%2Crating_avg%2Crating_count%2Ccreated_at%29&status=eq.active&order=created_at.desc",
+      "status": 200,
+      "duration": 152
+    },
+    {
+      "id": 54,
+      "timestamp": "2025-12-11T00:53:00.565Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_verifications?select=user_id%2Crole%2Cstatus%2Cmissing_docs%2Cnotes%2Cmetadata%2Ccreated_at%2Cupdated_at&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=updated_at.desc",
+      "status": 200,
+      "duration": 123
+    },
+    {
+      "id": 55,
+      "timestamp": "2025-12-11T00:53:00.570Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "duration": 146
+    },
+    {
+      "id": 56,
+      "timestamp": "2025-12-11T00:53:00.575Z",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/get_driver_profile",
+      "status": 200,
+      "duration": 104
+    },
+    {
+      "id": 57,
+      "timestamp": "2025-12-11T00:53:00.580Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "duration": 239
+    },
+    {
+      "id": 58,
+      "timestamp": "2025-12-11T00:53:00.584Z",
+      "method": "POST",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_get_balance",
+      "status": 200,
+      "duration": 102
+    },
+    {
+      "id": 59,
+      "timestamp": "2025-12-11T00:53:00.584Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/v_wallet_history?select=*&order=transaction_date.desc",
+      "status": 200,
+      "duration": 114
+    },
+    {
+      "id": 60,
+      "timestamp": "2025-12-11T00:53:00.606Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "duration": 83
+    },
+    {
+      "id": 61,
+      "timestamp": "2025-12-11T00:53:00.701Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "duration": 101
+    },
+    {
+      "id": 62,
+      "timestamp": "2025-12-11T00:53:00.754Z",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/icons/sprite.svg",
+      "status": 304,
+      "duration": 46
+    },
+    {
+      "id": 63,
+      "timestamp": "2025-12-11T00:53:00.802Z",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/images/car-placeholder.svg",
+      "status": 200,
+      "duration": 17
+    },
+    {
+      "id": 64,
+      "timestamp": "2025-12-11T00:53:00.814Z",
+      "method": "GET",
+      "url": "http://localhost:4200/assets/images/default-avatar.svg",
+      "status": 200,
+      "duration": 28
+    },
+    {
+      "id": 65,
+      "timestamp": "2025-12-11T00:53:00.823Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/b288ed1c-9544-44e1-b159-8e3335425051/ai-generated-cover-1762661192198.png",
+      "status": 200,
+      "duration": 322
+    },
+    {
+      "id": 66,
+      "timestamp": "2025-12-11T00:53:00.828Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/4da4c7ed-33e9-4a30-92b8-342332d660a9/a2a72883-2afc-4dd1-a3b0-e2fe460e7720.webp",
+      "status": 200,
+      "duration": 346
+    },
+    {
+      "id": 67,
+      "timestamp": "2025-12-11T00:53:00.828Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/d8e47708-b9f9-460a-bf7b-81ed68bf601c/94b2f7a1-8cdd-4dd2-bcbd-8e74f6247283.webp",
+      "status": 200,
+      "duration": 300
+    },
+    {
+      "id": 68,
+      "timestamp": "2025-12-11T00:53:00.828Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/10326ee8-2bb1-41a5-ac6e-0f639126b797/ai-generated-cover-1762661194654.png",
+      "status": 200,
+      "duration": 918
+    },
+    {
+      "id": 69,
+      "timestamp": "2025-12-11T00:53:00.828Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/9fe9a17d-f33c-48e9-9889-8d4f1e876fc6/ai-generated-cover-1762661193620.png",
+      "status": 200,
+      "duration": 355
+    },
+    {
+      "id": 70,
+      "timestamp": "2025-12-11T00:53:00.832Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/d2cfd10d-701b-4671-a75a-86a8b31fdb95/7d5cb4f0-e97f-424a-85eb-d6dc93115ec9.webp",
+      "status": 200,
+      "duration": 316
+    },
+    {
+      "id": 71,
+      "timestamp": "2025-12-11T00:53:00.832Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/96091859-8921-46fb-9466-ba409750acdf/eb80d98f-6ee8-4b2e-a349-8b282ba62b12.webp",
+      "status": 200,
+      "duration": 343
+    },
+    {
+      "id": 72,
+      "timestamp": "2025-12-11T00:53:00.832Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/car-images/9dbf3b85-b085-44c9-ad07-51605af6d726/e4b6542a-8bb9-466d-83bc-54b999a7aec9/bd702338-6d7a-4290-8e7d-306b8c5fa3f9.webp",
+      "status": 200,
+      "duration": 920
+    },
+    {
+      "id": 73,
+      "timestamp": "2025-12-11T00:53:00.859Z",
+      "method": "OPTIONS",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "duration": 37
+    },
+    {
+      "id": 74,
+      "timestamp": "2025-12-11T00:53:00.866Z",
+      "method": "OPTIONS",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "duration": 37
+    },
+    {
+      "id": 75,
+      "timestamp": "2025-12-11T00:53:00.876Z",
+      "method": "OPTIONS",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "duration": 36
+    },
+    {
+      "id": 76,
+      "timestamp": "2025-12-11T00:53:00.876Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "duration": 77
+    },
+    {
+      "id": 77,
+      "timestamp": "2025-12-11T00:53:00.883Z",
+      "method": "OPTIONS",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "status": 200,
+      "duration": 36
+    },
+    {
+      "id": 78,
+      "timestamp": "2025-12-11T00:53:00.883Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles?select=*&id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726",
+      "status": 200,
+      "duration": 153
+    },
+    {
+      "id": 79,
+      "timestamp": "2025-12-11T00:53:00.883Z",
+      "method": "OPTIONS",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T00%3A53%3A00.852Z",
+      "status": 200,
+      "duration": 37
+    },
+    {
+      "id": 80,
+      "timestamp": "2025-12-11T00:53:00.898Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "duration": 83
+    },
+    {
+      "id": 81,
+      "timestamp": "2025-12-11T00:53:00.903Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "duration": 161
+    },
+    {
+      "id": 82,
+      "timestamp": "2025-12-11T00:53:00.912Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/messages?select=id%2Cbooking_id%2Ccar_id%2Csender_id%2Crecipient_id%2Cbody%2Ccreated_at&recipient_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&read_at=is.null&order=created_at.desc",
+      "status": 200,
+      "duration": 236
+    },
+    {
+      "id": 83,
+      "timestamp": "2025-12-11T00:53:00.920Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/notifications?select=*&user_id=eq.9dbf3b85-b085-44c9-ad07-51605af6d726&order=created_at.desc&limit=50",
+      "status": 200,
+      "duration": 80
+    },
+    {
+      "id": 84,
+      "timestamp": "2025-12-11T00:53:00.921Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/my_bookings?select=id%2Ccar_title%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T00%3A53%3A00.852Z",
+      "status": 200,
+      "duration": 101
+    },
+    {
+      "id": 85,
+      "timestamp": "2025-12-11T00:53:01.006Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/user",
+      "status": 200,
+      "duration": 83
+    },
+    {
+      "id": 86,
+      "timestamp": "2025-12-11T00:53:01.095Z",
+      "method": "OPTIONS",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/owner_bookings?select=id%2Ccar_title%2Crenter_name%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T00%3A53%3A00.852Z",
+      "status": 200,
+      "duration": 37
+    },
+    {
+      "id": 87,
+      "timestamp": "2025-12-11T00:53:01.132Z",
+      "method": "GET",
+      "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/owner_bookings?select=id%2Ccar_title%2Crenter_name%2Cend_at%2Cstatus&status=eq.completed&end_at=gte.2025-11-27T00%3A53%3A00.852Z",
+      "status": 200,
+      "duration": 87
+    },
+    {
+      "id": 88,
+      "timestamp": "2025-12-11T00:53:01.736Z",
+      "method": "GET",
+      "url": "https://api.mapbox.com/styles/v1/mapbox/standard/cearqi1fcr4p9hhmnba1yy3fr/iconset.pbf?access_token=pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg",
+      "status": 200,
+      "duration": 646
+    },
+    {
+      "id": 89,
+      "timestamp": "2025-12-11T00:53:01.741Z",
+      "method": "POST",
+      "url": "https://events.mapbox.com/events/v2?access_token=pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg",
+      "status": 204,
+      "duration": 1640
+    },
+    {
+      "id": 90,
+      "timestamp": "2025-12-11T00:53:04.646Z",
+      "method": "GET",
+      "url": "https://api.mapbox.com/fonts/v1/mapbox/DIN%20Pro%20Medium,Arial%20Unicode%20MS%20Bold/0-255.pbf?access_token=pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg",
+      "status": 200,
+      "duration": 544
+    },
+    {
+      "id": 91,
+      "timestamp": "2025-12-11T00:53:04.647Z",
+      "method": "GET",
+      "url": "https://api.mapbox.com/fonts/v1/mapbox/DIN%20Pro%20Medium,Arial%20Unicode%20MS%20Bold/8192-8447.pbf?access_token=pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg",
+      "status": 200,
+      "duration": 544
+    },
+    {
+      "id": 92,
+      "timestamp": "2025-12-11T00:53:04.647Z",
+      "method": "GET",
+      "url": "https://api.mapbox.com/fonts/v1/mapbox/DIN%20Pro%20Bold,Arial%20Unicode%20MS%20Bold/0-255.pbf?access_token=pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg",
+      "status": 200,
+      "duration": 544
+    },
+    {
+      "id": 93,
+      "timestamp": "2025-12-11T00:53:04.696Z",
+      "method": "GET",
+      "url": "https://api.mapbox.com/fonts/v1/mapbox/DIN%20Pro%20Italic,Arial%20Unicode%20MS%20Regular/0-255.pbf?access_token=pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg",
+      "status": 200,
+      "duration": 497
+    },
+    {
+      "id": 94,
+      "timestamp": "2025-12-11T00:53:08.478Z",
+      "method": "POST",
+      "url": "https://events.mapbox.com/events/v2?access_token=pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg",
+      "status": 204,
+      "duration": 509
+    },
+    {
+      "id": 95,
+      "timestamp": "2025-12-11T00:53:08.478Z",
+      "method": "POST",
+      "url": "https://events.mapbox.com/events/v2?access_token=pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg",
+      "status": 204,
+      "duration": 509
+    },
+    {
+      "id": 96,
+      "timestamp": "2025-12-11T00:53:08.731Z",
+      "method": "GET",
+      "url": "https://api.mapbox.com/map-sessions/v1?sku=101cEKTfVhblq&access_token=pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg",
+      "status": 200,
+      "duration": 879
+    }
+  ],
+  "errors": []
+}
