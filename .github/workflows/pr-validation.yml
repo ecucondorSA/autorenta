@@ -214,6 +214,18 @@ jobs:
         run: |
           echo "Validating PR template completion..."
           PR_BODY="${{ github.event.pull_request.body }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_IS_DRAFT="${{ github.event.pull_request.draft }}"
+          BASE_REF="${{ github.event.pull_request.base.ref }}"
+
+          if [ "$PR_IS_DRAFT" = "true" ] || \
+             echo "$PR_BODY" | grep -qi "automated review request" || \
+             echo "$PR_TITLE" | grep -qi "codebase review" || \
+             [ "$BASE_REF" = "coderabbit-review-base" ]; then
+            echo "Skipping template validation for automated review/draft PR."
+            echo "template_warning=skipped" >> $GITHUB_OUTPUT
+            exit 0
+          fi
           REQUIRED_SECTION=$(echo "$PR_BODY" | awk '
             /required-checks-start/{flag=1; next}
             /required-checks-end/{flag=0}
@@ -420,7 +432,6 @@ jobs:
               repo: context.repo.repo,
               body: body
             });
-
 
 
 

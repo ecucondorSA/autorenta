@@ -216,19 +216,19 @@ cmd_dev_stop() {
 cmd_test() {
     header "🧪 Running All Tests"
     cd "$WEB_DIR"
-    pnpm run test -- --watch=false --browsers=ChromeHeadless
+    pnpm exec ng test --watch=false --browsers=ChromeHeadless
 }
 
 cmd_test_quick() {
     header "🧪 Running Quick Tests (No Coverage)"
     cd "$WEB_DIR"
-    pnpm run test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage=false
+    pnpm exec ng test --watch=false --browsers=ChromeHeadlessCI --code-coverage=false
 }
 
 cmd_test_coverage() {
     header "🧪 Running Tests with Coverage"
     cd "$WEB_DIR"
-    pnpm run test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage=true
+    pnpm exec ng test --watch=false --browsers=ChromeHeadlessCI --code-coverage=true
     success "Coverage report: apps/web/coverage/index.html"
 }
 

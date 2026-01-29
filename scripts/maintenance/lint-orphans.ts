@@ -248,6 +248,15 @@ function findUnusedRpcFunctions(): UnusedRpc[] {
     }
   }
 
+  // Some RPCs are invoked via edge functions; track aliases to avoid false positives.
+  const rpcAliasPatterns: Record<string, string[]> = {
+    wallet_transfer: [
+      ".functions.invoke('wallet-transfer'",
+      '.functions.invoke("wallet-transfer"',
+      '.functions.invoke(`wallet-transfer`',
+    ],
+  };
+
   // Verificar cuáles se usan en frontend
   for (const [funcName, definedIn] of definedFunctions) {
     // Buscar .rpc('funcName' o .rpc("funcName"
@@ -255,9 +264,13 @@ function findUnusedRpcFunctions(): UnusedRpc[] {
     const rpcPattern2 = `.rpc("${funcName}"`;
     const rpcPattern3 = `.rpc(\`${funcName}\``;
 
+    const aliasPatterns = rpcAliasPatterns[funcName];
+    const isAliasUsed = aliasPatterns?.some(pattern => allTsContent.includes(pattern)) ?? false;
+
     const isUsed = allTsContent.includes(rpcPattern1) ||
                    allTsContent.includes(rpcPattern2) ||
-                   allTsContent.includes(rpcPattern3);
+                   allTsContent.includes(rpcPattern3) ||
+                   isAliasUsed;
 
     if (!isUsed) {
       unused.push({ name: funcName, definedIn });

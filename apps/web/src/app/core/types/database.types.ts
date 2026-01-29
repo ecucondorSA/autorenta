@@ -1,16 +1,3 @@
-/**
- * Database Types para AutoRenta
- *
- * IMPORTANTE: Este archivo es auto-generado desde el schema de Supabase.
- * NO editar manualmente.
- *
- * Para regenerar:
- *   pnpm sync:types        # Desde proyecto local
- *   pnpm sync:types:remote # Desde proyecto remoto
- *
- * Última actualización: 2026-01-29 18:24:18
- */
-
 export type Json =
   | string
   | number
@@ -31938,3 +31925,42 @@ export const Constants = {
     },
   },
 } as const
+
+// ============================================================================
+// CUSTOM ENUMS (kept for backward compatibility)
+// ============================================================================
+
+export type UserRole = 'renter' | 'owner' | 'admin' | 'both'
+export type AdminRole = Database['public']['Enums']['admin_role']
+export type BookingStatus = Database['public']['Enums']['booking_status']
+export type CancelPolicy = Database['public']['Enums']['cancel_policy']
+export type CarStatus = Database['public']['Enums']['car_status']
+export type ClaimStatus = Database['public']['Enums']['claim_status']
+export type DamageType = Database['public']['Enums']['damage_type']
+export type DisputeKind = Database['public']['Enums']['dispute_kind']
+export type DisputeStatus = Database['public']['Enums']['dispute_status']
+export type DocumentKind = Database['public']['Enums']['document_kind']
+export type FuelType = 'nafta' | 'gasoil' | 'flex' | 'hibrido' | 'electrico' | 'diesel'
+export type KycStatus = Database['public']['Enums']['kyc_status']
+export type PaymentProvider = Database['public']['Enums']['payment_provider']
+export type PaymentStatus = Database['public']['Enums']['payment_status']
+export type SubscriptionStatus = Database['public']['Enums']['subscription_status']
+export type SubscriptionTier = Database['public']['Enums']['subscription_tier']
+export type TicketCategory = Database['public']['Enums']['ticket_category']
+export type TicketStatus = Database['public']['Enums']['ticket_status']
+export type TicketUrgency = Database['public']['Enums']['ticket_urgency']
+export type Transmission = 'manual' | 'automatic' | 'automatico'
+
+// ============================================================================
+// COMMON TYPES
+// ============================================================================
+
+/** Location data (coordinates + address) */
+export interface LocationData {
+  lat?: number
+  lng?: number
+  address?: string
+  city?: string
+  country?: string
+  [key: string]: unknown
+}

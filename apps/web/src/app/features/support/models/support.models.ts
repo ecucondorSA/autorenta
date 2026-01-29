@@ -3,20 +3,8 @@
  * Types and constants for the support ticket system
  */
 
-// Support ticket types (defined locally as they may not be in database schema)
-export type TicketCategory =
-  | 'booking_issue'
-  | 'payment_issue'
-  | 'vehicle_issue'
-  | 'account_issue'
-  | 'verification_issue'
-  | 'technical_issue'
-  | 'suggestion'
-  | 'other';
-
-export type TicketUrgency = 'low' | 'medium' | 'high' | 'critical';
-
-export type TicketStatus = 'open' | 'in_progress' | 'waiting_user' | 'resolved' | 'closed';
+import type { TicketCategory, TicketStatus, TicketUrgency } from '@core/types/database.types';
+export type { TicketCategory, TicketStatus, TicketUrgency } from '@core/types/database.types';
 
 export interface SupportTicket {
   id: string;

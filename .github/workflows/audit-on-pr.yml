@@ -12,6 +12,7 @@ on:
 permissions:
   contents: read
   issues: write
+  pull-requests: write
 
 jobs:
   audit:
@@ -66,12 +67,22 @@ jobs:
 
               See: [AUDIT_MCP_INDEX.md](../../AUDIT_MCP_INDEX.md)`;
 
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: comment
-              });
+              const isFork = context.payload.pull_request?.head?.repo?.fork;
+              if (isFork) {
+                core.warning('Skipping audit reminder comment for forked PR.');
+                return;
+              }
+
+              try {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: comment
+                });
+              } catch (error) {
+                core.warning(`Failed to comment audit reminder: ${error.message}`);
+              }
             }
 
       - name: Validate PR description includes audit notes
