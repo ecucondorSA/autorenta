@@ -184,7 +184,82 @@ try {
 
 ---
 
-## 12. Post-Implementation Review (OBLIGATORIO)
+## 12. Protocolo Anti-Regresiones (CRÍTICO)
+
+> **Problema:** El "Whack-a-Mole Anti-Pattern" ocurre cuando arreglar un bug introduce otro, creando un ciclo vicioso sin fin.
+
+### Reglas Inquebrantables
+
+1. **UN DOMINIO A LA VEZ**
+   - No tocar `payments/` mientras se arregla `bookings/`
+   - No modificar servicios compartidos sin verificar dependientes
+   - Cambios en `core/` requieren ejecutar TODOS los tests
+
+2. **COMMITS COMO CHECKPOINTS**
+   ```bash
+   # Después de CADA cambio pequeño que funciona:
+   git add <archivos-específicos>
+   git commit -m "fix: descripción concisa"
+   ```
+   - Nunca acumular cambios sin commitear
+   - Si algo se rompe: `git diff HEAD~1` para ver qué cambió
+
+3. **TESTS EN WATCH MODE**
+   ```bash
+   # Mantener corriendo durante toda la sesión:
+   pnpm test:unit -- --watch
+   ```
+   - Si un test falla, PARAR y arreglar antes de continuar
+   - No agregar features nuevas con tests rotos
+
+4. **TAREAS ATÓMICAS**
+
+   | ❌ Incorrecto | ✅ Correcto |
+   |--------------|-------------|
+   | "Arreglá el flujo de booking" | "Arreglá la validación del form de booking" |
+   | "Mejorá el checkout" | "Arreglá el cálculo de precio en checkout" |
+   | "Refactorizá payments" | "Extraé helper para formatear moneda" |
+
+5. **LOOP DE VERIFICACIÓN**
+   ```
+   Leer código existente → Escribir cambio mínimo → Correr tests →
+   Verificar visualmente → Commit → Repetir
+   ```
+
+   **Invertir 60% del tiempo en VERIFICAR, no en generar código.**
+
+### Señales de Alerta (PARAR y Preguntar)
+
+- 🚨 Mismo archivo modificado 3+ veces en una sesión
+- 🚨 Test que pasaba ahora falla sin razón clara
+- 🚨 Cambio "simple" que toca más de 3 archivos
+- 🚨 Necesidad de "arreglar el arreglo"
+- 🚨 3+ iteraciones sin progreso real
+
+### Protocolo de Escape
+
+Si estás atrapado en el ciclo:
+
+1. **STOP** - No seguir iterando
+2. **STASH** - `git stash` para guardar cambios
+3. **RESET** - Volver al último commit estable
+4. **REPLANTEAR** - Bajar el nivel de abstracción del pedido
+5. **REINICIAR** - Nueva conversación con contexto fresco si es necesario
+
+### Preguntas de Auto-Diagnóstico
+
+Antes de cada cambio, el agente debe preguntarse:
+
+1. ¿Entiendo EXACTAMENTE qué bug estoy arreglando?
+2. ¿Tengo un plan claro de los archivos a modificar?
+3. ¿Hay tests que cubran este comportamiento?
+4. ¿Este cambio puede afectar otros dominios?
+
+Si la respuesta a cualquiera es "no", **investigar primero, codear después**.
+
+---
+
+## 13. Post-Implementation Review (OBLIGATORIO)
 
 Después de cada implementación de UI/UX, Claude DEBE ser autocrítico y verificar:
 
@@ -211,7 +286,7 @@ Después de cada implementación de UI/UX, Claude DEBE ser autocrítico y verifi
 
 ---
 
-## 13. FROZEN CODE - DO NOT MODIFY
+## 14. FROZEN CODE - DO NOT MODIFY
 
 The following files are **production-critical** and **FROZEN**. Do NOT modify them unless the user EXPLICITLY requests changes to these specific files AND provides a clear reason.
 
@@ -243,7 +318,7 @@ supabase/functions/process-payment-queue/index.ts
 
 ---
 
-## 14. Estructura del Proyecto
+## 15. Estructura del Proyecto
 
 ```
 autorenta/
@@ -262,7 +337,7 @@ autorenta/
 
 ---
 
-## 15. Dominios de Servicio (Service Domains)
+## 16. Dominios de Servicio (Service Domains)
 
 La aplicación está organizada en dominios de servicio bajo `core/services/`:
 
@@ -281,7 +356,7 @@ La aplicación está organizada en dominios de servicio bajo `core/services/`:
 
 ---
 
-## 16. Modelos Principales (Core Models)
+## 17. Modelos Principales (Core Models)
 
 | Modelo | Ubicación | Propósito |
 |--------|-----------|-----------|
@@ -295,7 +370,7 @@ La aplicación está organizada en dominios de servicio bajo `core/services/`:
 
 ---
 
-## 17. Edge Functions Críticas
+## 18. Edge Functions Críticas
 
 ### Pagos (MercadoPago)
 | Function | Trigger | Descripción |
@@ -332,7 +407,7 @@ La aplicación está organizada en dominios de servicio bajo `core/services/`:
 
 ---
 
-## 18. CI/CD Workflows
+## 19. CI/CD Workflows
 
 ### Críticos (Siempre deben pasar)
 | Workflow | Archivo | Descripción |
@@ -353,7 +428,7 @@ La aplicación está organizada en dominios de servicio bajo `core/services/`:
 
 ---
 
-## 19. Feature Modules
+## 20. Feature Modules
 
 La aplicación tiene 33 módulos de features bajo `features/`:
 
@@ -375,7 +450,7 @@ La aplicación tiene 33 módulos de features bajo `features/`:
 
 ---
 
-## 20. Estructura de Base de Datos
+## 21. Estructura de Base de Datos
 
 ### Schemas
 - **public**: Tablas principales de negocio
@@ -413,7 +488,7 @@ CREATE POLICY "Users can view own records"
 
 ---
 
-## 21. Estados de Booking (Booking States)
+## 22. Estados de Booking (Booking States)
 
 ```mermaid
 stateDiagram-v2
@@ -432,7 +507,7 @@ stateDiagram-v2
 
 ---
 
-## 22. UI Kit (Shared Components)
+## 23. UI Kit (Shared Components)
 
 La aplicación tiene **122 componentes reutilizables** en `shared/components/`.
 
@@ -479,7 +554,7 @@ La aplicación tiene **122 componentes reutilizables** en `shared/components/`.
 
 ---
 
-## 23. Guards & Interceptors
+## 24. Guards & Interceptors
 
 ### Guards (Protección de Rutas)
 | Guard | Propósito |
@@ -503,7 +578,7 @@ La aplicación tiene **122 componentes reutilizables** en `shared/components/`.
 
 ---
 
-## 24. Directivas & Pipes
+## 25. Directivas & Pipes
 
 ### Directivas
 | Directiva | Uso |
@@ -526,7 +601,7 @@ La aplicación tiene **122 componentes reutilizables** en `shared/components/`.
 
 ---
 
-## 25. Componentes AI (Gemini Integration)
+## 26. Componentes AI (Gemini Integration)
 
 Componentes que integran con Gemini API:
 
@@ -554,7 +629,7 @@ interface GeminiRequest {
 
 ---
 
-## 26. Signal Stores (Estado Global)
+## 27. Signal Stores (Estado Global)
 
 Stores basados en Angular Signals para estado global:
 
@@ -589,7 +664,7 @@ readonly bookings = inject(BookingsStore).activeBookings;
 
 ---
 
-## 27. Environment & Feature Flags
+## 28. Environment & Feature Flags
 
 ### Archivos de Configuración
 | Archivo | Uso |
@@ -630,7 +705,7 @@ if (environment.features.enableP2P) {
 
 ---
 
-## 28. Integraciones Externas
+## 29. Integraciones Externas
 
 | Servicio | Propósito | Edge Function |
 |----------|-----------|---------------|
@@ -645,7 +720,7 @@ if (environment.features.enableP2P) {
 
 ---
 
-## 29. Conventional Commits
+## 30. Conventional Commits
 
 | Prefijo | Uso |
 |---------|-----|
@@ -661,7 +736,7 @@ if (environment.features.enableP2P) {
 
 ---
 
-## 30. Workflows (Flujos de Trabajo)
+## 31. Workflows (Flujos de Trabajo)
 
 ### Nueva Feature
 1. **Planificación:** Crear `implementation_plan.md` con objetivos y cambios propuestos.
@@ -687,7 +762,7 @@ if (environment.features.enableP2P) {
 
 ---
 
-## 31. Quality Audits (Auditorías de Calidad)
+## 32. Quality Audits (Auditorías de Calidad)
 
 Auditorías periódicas recomendadas para mantener estándares profesionales.
 
@@ -832,4 +907,4 @@ Sentry.init({
 
 ---
 
-**© 2026 AutoRenta | Claude Agent Configuration v3.1**
+**© 2026 AutoRenta | Claude Agent Configuration v3.2**
