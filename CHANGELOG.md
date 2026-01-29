@@ -1,3 +1,8 @@
+## <small>3.37.3 (2026-01-29)</small>
+
+* fix: bump service worker version to force cache invalidation ([378aac0](https://github.com/ecucondorSA/autorenta/commit/378aac0))
+* docs(CLAUDE.md): add CI/CD and database types guidelines ([c2aedfc](https://github.com/ecucondorSA/autorenta/commit/c2aedfc))
+
 ## <small>3.37.2 (2026-01-29)</small>
 
 * fix(ci): resolve security scan and guardrails ([623241c](https://github.com/ecucondorSA/autorenta/commit/623241c))
