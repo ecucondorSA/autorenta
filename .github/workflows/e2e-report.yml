@@ -24,10 +24,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -65,18 +71,32 @@ jobs:
           fi
 
       - name: Generate summary
-        run: node scripts/summary-report.mjs test-results/results.json
+        if: always()
+        continue-on-error: true
+        run: |
+          if [ -f "scripts/summary-report.mjs" ]; then
+            node scripts/summary-report.mjs test-results/results.json
+          else
+            echo "⚠️ summary-report.mjs not found, skipping summary generation"
+          fi
 
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: e2e-test-results
-          path: test-results
+          path: test-results/
+          if-no-files-found: ignore
 
       - name: Post PR comment with summary
         if: ${{ github.event_name == 'pull_request' }}
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PR=${{ github.event.pull_request.number }}
-          node ./scripts/github-comment.mjs $PR
+          if [ -f "./scripts/github-comment.mjs" ]; then
+            PR=${{ github.event.pull_request.number }}
+            node ./scripts/github-comment.mjs $PR
+          else
+            echo "⚠️ github-comment.mjs not found, skipping PR comment"
+          fi
