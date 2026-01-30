@@ -1,3 +1,7 @@
+## 3.45.0 (2026-01-30)
+
+* feat: add comprehensive E2E test suite with Patchright ([7c06649](https://github.com/ecucondorSA/autorenta/commit/7c06649))
+
 ## <small>3.44.4 (2026-01-30)</small>
 
 * fix: update Play Store URL to correct app ID (app.autorentar) ([3864b35](https://github.com/ecucondorSA/autorenta/commit/3864b35))
