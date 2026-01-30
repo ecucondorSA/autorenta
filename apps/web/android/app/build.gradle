@@ -20,10 +20,16 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("../keystore/autorentar-release.keystore")
-            storePassword System.getenv("KEYSTORE_PASSWORD")
-            keyAlias "autorentar"
-            keyPassword System.getenv("KEY_PASSWORD")
+            def keystorePassword = System.getenv("KEYSTORE_PASSWORD")
+            def keyPwd = System.getenv("KEY_PASSWORD")
+
+            // Use release keystore if passwords available, otherwise will fallback to debug
+            if (keystorePassword != null && keyPwd != null) {
+                storeFile file("../keystore/autorentar-release.keystore")
+                storePassword keystorePassword
+                keyAlias "autorentar"
+                keyPassword keyPwd
+            }
         }
     }
 
@@ -35,7 +41,8 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            // Use release signing if available, otherwise debug
+            signingConfig System.getenv("KEYSTORE_PASSWORD") ? signingConfigs.release : signingConfigs.debug
             ndk {
                 debugSymbolLevel 'FULL'
             }

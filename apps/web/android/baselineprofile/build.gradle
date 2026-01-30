@@ -11,7 +11,7 @@ android {
     defaultConfig {
         minSdk 28  // Baseline profiles require API 28+
         targetSdk rootProject.ext.targetSdkVersion
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnit4"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
