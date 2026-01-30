@@ -122,6 +122,7 @@ export class BeaconService {
       console.error('[BeaconService] Initialization failed:', error);
       this._status.set('error');
       this._lastError.set(error instanceof Error ? error.message : 'Unknown error');
+      this.showDebugToast(`❌ BLE Error: ${error instanceof Error ? error.message : 'Unknown'}`, 'danger');
       return false;
     }
   }
@@ -369,7 +370,10 @@ export class BeaconService {
     console.log('[BeaconService] 🚨🚨🚨 AUTORENTA BEACON DETECTED! 🚨🚨🚨');
     console.log('[BeaconService] Device:', device.name, 'RSSI:', device.rssi, 'ID:', device.deviceId);
 
-    // Try to show an alert for immediate feedback
+    // Show prominent toast for AutoRenta beacon
+    this.showDebugToast(`🚨 ¡BEACON ${device.name} DETECTADO!`, 'danger');
+
+    // Also try alert for maximum visibility
     try {
       if (typeof alert !== 'undefined') {
         alert(`¡BEACON DETECTADO!\n${device.name}\nRSSI: ${device.rssi}`);
