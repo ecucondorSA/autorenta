@@ -1,3 +1,8 @@
+## <small>3.46.2 (2026-01-30)</small>
+
+* fix(android): remove background/experimental permissions to unblock google play release ([68d01ea](https://github.com/ecucondorSA/autorenta/commit/68d01ea))
+* docs: freeze android workflow and fipe pricing logic in CLAUDE.md ([45cbb8a](https://github.com/ecucondorSA/autorenta/commit/45cbb8a))
+
 ## <small>3.46.1 (2026-01-30)</small>
 
 * fix(ci): change Google Play track from closed_testing to beta (open testing) ([e1bff10](https://github.com/ecucondorSA/autorenta/commit/e1bff10))
