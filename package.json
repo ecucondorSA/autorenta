@@ -7,6 +7,8 @@
     "_comment_dev": "=== DEVELOPMENT ===",
     "dev": "./tools/dev/dev.sh",
     "dev:fast": "pnpm --filter autorentar-web ng serve -c development-low-spec",
+    "dev:safe": "./tools/dev/safe-dev.sh",
+    "dev:safe:fast": "./tools/dev/safe-dev.sh --fast",
     "dev:web": "./tools/run.sh dev:web",
     "dev:worker": "./tools/run.sh dev:worker",
     "dev:ssl": "pnpm --filter autorentar-web ng serve -c development --ssl",
