@@ -21,10 +21,11 @@ Full codebase review performed via PR #635 (CodeRabbit + DeepSource + Sentry).
 - `support_ticket_messages` - Private conversations
 - And 19 more...
 
-**Fix:** Enabled RLS on all 26 tables with:
+**Fix:** Enabled RLS on 26 of 27 tables:
 - `service_role` full access (for Edge Functions)
 - Public read where appropriate (pricing, catalogs)
 - Blocked anon access to sensitive data
+- **Excluded:** `spatial_ref_sys` (PostGIS system table - not application data)
 
 **Commit:** `5b6a4d474`
 
