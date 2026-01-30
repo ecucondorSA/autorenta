@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { interval } from 'rxjs';
 import { CarsService } from '@core/services/cars/cars.service';
 import { LocationService, type LocationData } from '@core/services/geo/location.service';
@@ -93,6 +93,7 @@ export class BrowseCarsPage {
   private locationService = inject(LocationService);
   private readonly logger = inject(LoggerService).createChildLogger('BrowseCarsPage');
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   readonly store = inject(BrowseStore);
 
@@ -100,6 +101,8 @@ export class BrowseCarsPage {
   readonly loading = this.store.loading;
   readonly selectedCarId = this.store.activeCarId;
   readonly viewMode = this.store.viewMode;
+  readonly searchFrom = signal<string>(new Date().toISOString());
+  readonly searchTo = signal<string>(new Date(Date.now() + 86400000).toISOString());
   /** Car currently being previewed in the carousel (scroll, not click) */
   readonly carouselPreviewId = signal<string | null>(null);
   /** The car to highlight on the map: selected car takes priority, then preview */
@@ -139,12 +142,28 @@ export class BrowseCarsPage {
   }
 
   constructor() {
+    this.initializeSearchRange();
     this.loadCars();
     interval(this.pollIntervalMs)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         void this.loadCars({ silent: true });
       });
+  }
+
+  private initializeSearchRange(): void {
+    const queryParams = this.route.snapshot.queryParamMap;
+    const startParam = queryParams.get('startDate');
+    const endParam = queryParams.get('endDate');
+
+    if (startParam && endParam) {
+      const start = new Date(startParam);
+      const end = new Date(endParam);
+      if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime()) && start <= end) {
+        this.searchFrom.set(start.toISOString());
+        this.searchTo.set(end.toISOString());
+      }
+    }
   }
 
   async loadCars(options: { silent?: boolean } = {}) {
@@ -157,8 +176,8 @@ export class BrowseCarsPage {
       const location = await this.resolveLocation();
       this.logger.debug('User location', location ?? {});
 
-      const searchFrom = new Date().toISOString();
-      const searchTo = new Date(Date.now() + 86400000).toISOString();
+      const searchFrom = this.searchFrom();
+      const searchTo = this.searchTo();
 
       const results = await this.carsService.getAvailableCarsWithDistance(searchFrom, searchTo, {
         lat: location?.lat,
@@ -212,7 +231,11 @@ export class BrowseCarsPage {
   onBookingConfirm() {
     const carId = this.selectedCarId();
     if (carId) {
-      void this.router.navigate(['/bookings/request'], { queryParams: { carId } });
+      const startDate = this.searchFrom();
+      const endDate = this.searchTo();
+      void this.router.navigate(['/bookings/request'], {
+        queryParams: { carId, startDate, endDate },
+      });
     }
   }
 
