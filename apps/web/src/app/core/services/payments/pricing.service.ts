@@ -346,19 +346,37 @@ export class PricingService {
   }
 
   /**
-   * Get all vehicle brands from FIPE API
-   * Calls public FIPE API directly (no auth required)
+   * Get all vehicle brands from FIPE API via Edge Function (with server-side caching)
+   *
+   * ✅ FIX (2026-01-30): Uses Edge Function proxy to prevent client rate limiting
+   * - Brands are cached for 24 hours on server
+   * - Falls back to direct API if Edge Function fails
    */
   async getFipeBrands(): Promise<FipeBrand[]> {
     try {
-      const response = await fetch('https://parallelum.com.br/fipe/api/v2/cars/brands');
+      // Try Edge Function first (cached)
+      const edgeFunctionUrl = `${environment.supabaseUrl}/functions/v1/get-fipe-catalog?action=brands`;
+      const response = await fetch(edgeFunctionUrl, {
+        headers: {
+          Authorization: `Bearer ${environment.supabaseAnonKey}`,
+        },
+      });
 
-      if (!response.ok) {
-        return [];
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success && result.data) {
+          console.log(`[PricingService] Got ${result.data.length} brands from Edge Function (cached)`);
+          return result.data;
+        }
       }
 
-      const brands: FipeBrand[] = await response.json();
-      return brands;
+      // Fallback to direct API (may hit rate limit)
+      console.warn('[PricingService] Edge Function failed, falling back to direct FIPE API');
+      const directResponse = await fetch('https://parallelum.com.br/fipe/api/v2/cars/brands');
+      if (!directResponse.ok) {
+        return [];
+      }
+      return await directResponse.json();
     } catch (error) {
       console.error('[PricingService] getFipeBrands failed:', error);
       return [];
@@ -366,21 +384,41 @@ export class PricingService {
   }
 
   /**
-   * Get all vehicle models for a specific brand from FIPE API
+   * Get all vehicle models for a specific brand via Edge Function (with server-side caching)
+   *
+   * ✅ FIX (2026-01-30): Uses Edge Function proxy to prevent client rate limiting
+   * - Models are cached for 6 hours on server per brand
+   * - Falls back to direct API if Edge Function fails
+   *
    * @param brandCode FIPE brand code (e.g., "59" for VW)
    */
   async getFipeModels(brandCode: string): Promise<FipeModel[]> {
     try {
-      const response = await fetch(
-        `https://parallelum.com.br/fipe/api/v2/cars/brands/${brandCode}/models`,
-      );
+      // Try Edge Function first (cached)
+      const edgeFunctionUrl = `${environment.supabaseUrl}/functions/v1/get-fipe-catalog?action=models&brandCode=${brandCode}`;
+      const response = await fetch(edgeFunctionUrl, {
+        headers: {
+          Authorization: `Bearer ${environment.supabaseAnonKey}`,
+        },
+      });
 
-      if (!response.ok) {
-        return [];
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success && result.data) {
+          console.log(`[PricingService] Got ${result.data.length} models for brand ${brandCode} from Edge Function (cached)`);
+          return result.data;
+        }
       }
 
-      const models: FipeModel[] = await response.json();
-      return models;
+      // Fallback to direct API (may hit rate limit)
+      console.warn(`[PricingService] Edge Function failed for brand ${brandCode}, falling back to direct FIPE API`);
+      const directResponse = await fetch(
+        `https://parallelum.com.br/fipe/api/v2/cars/brands/${brandCode}/models`,
+      );
+      if (!directResponse.ok) {
+        return [];
+      }
+      return await directResponse.json();
     } catch (error) {
       console.error(`[PricingService] getFipeModels failed for brand ${brandCode}:`, error);
       return [];
