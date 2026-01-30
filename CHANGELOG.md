@@ -1,3 +1,8 @@
+## <small>3.42.1 (2026-01-30)</small>
+
+* fix: clean security center lint warnings ([735a41e](https://github.com/ecucondorSA/autorenta/commit/735a41e))
+* fix: order beacon imports ([749bd16](https://github.com/ecucondorSA/autorenta/commit/749bd16))
+
 ## 3.42.0 (2026-01-30)
 
 * fix: improve beacon debug alerts ([b38c8a1](https://github.com/ecucondorSA/autorenta/commit/b38c8a1))
