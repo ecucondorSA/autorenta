@@ -385,7 +385,7 @@ export class PanicModePage implements OnInit, OnDestroy {
         void Haptics.impact({ style: ImpactStyle.Medium });
       } else {
         this.countdown.set(0);
-        clearInterval(this.countdownInterval);
+        if (this.countdownInterval) clearInterval(this.countdownInterval);
         void this.initializeEmergency();
       }
     }, 1000);

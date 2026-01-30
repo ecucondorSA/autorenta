@@ -240,7 +240,7 @@ interface InsightItem {
                   <p class="text-xs text-text-secondary">{{ item.label }}</p>
                   <p class="text-lg font-semibold text-text-primary mt-1">
                     @if (item.type === 'money') {
-                      {{ item.value | money }}
+                      {{ $any(item.value) | money }}
                     } @else {
                       {{ item.value }}
                     }
