@@ -1,3 +1,7 @@
+## <small>3.44.1 (2026-01-30)</small>
+
+* fix(security): enable RLS on 26 exposed tables + fix video bitrate ([5b6a4d4](https://github.com/ecucondorSA/autorenta/commit/5b6a4d4)), closes [#635](https://github.com/ecucondorSA/autorenta/issues/635) [#610](https://github.com/ecucondorSA/autorenta/issues/610)
+
 ## 3.44.0 (2026-01-30)
 
 * feat(brands): add BYD to popular brands and fallback list ([1feffbb](https://github.com/ecucondorSA/autorenta/commit/1feffbb))
