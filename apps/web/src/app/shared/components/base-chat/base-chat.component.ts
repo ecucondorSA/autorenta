@@ -7,6 +7,7 @@ import {
   input,
   output,
   signal,
+  computed,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   ElementRef,
@@ -45,6 +46,8 @@ interface AttachmentInfo {
   extension: string | null;
   caption?: string;
 }
+
+type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
 
 /**
  * Componente base para chats (booking y car)
@@ -101,6 +104,34 @@ interface AttachmentInfo {
 
         <!-- Action buttons -->
         <div class="flex items-center gap-1">
+          <!-- Search button -->
+          <button
+            type="button"
+            class="flex h-9 w-9 items-center justify-center rounded-full text-text-secondary hover:bg-surface-hover transition-colors"
+            (click)="toggleSearch()"
+            [title]="showSearch() ? 'Cerrar búsqueda' : 'Buscar'"
+          >
+            @if (!showSearch()) {
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-4.35-4.35m1.85-5.65a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            }
+            @if (showSearch()) {
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            }
+          </button>
           <!-- Block/Unblock button -->
           <button
             type="button"
@@ -132,6 +163,70 @@ interface AttachmentInfo {
           </button>
         </div>
       </div>
+
+      <!-- Search bar -->
+      @if (showSearch()) {
+        <div class="border-b border-border-default bg-surface-raised px-4 py-3 space-y-2">
+          <div class="flex items-center gap-2">
+            <div class="relative flex-1">
+              <span
+                class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-text-muted"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-4.35-4.35m1.85-5.65a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </span>
+              <input
+                type="text"
+                name="chatSearch"
+                [ngModel]="searchQuery()"
+                (ngModelChange)="onSearchQueryChange($event)"
+                placeholder="Buscar en esta conversación..."
+                class="w-full rounded-full bg-surface-base border border-border-default pl-10 pr-10 py-2 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-cta-default focus:border-cta-default transition-all"
+              />
+              @if (searchQuery().trim()) {
+                <button
+                  type="button"
+                  class="absolute inset-y-0 right-2 flex items-center text-text-muted hover:text-text-primary"
+                  (click)="clearSearchQuery()"
+                >
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            @for (option of searchFilters(); track option.value) {
+              <button
+                type="button"
+                class="rounded-full px-3 py-1 text-xs font-semibold border transition-all"
+                [class.border-green-300]="searchFilter() === option.value"
+                [class.text-green-700]="searchFilter() === option.value"
+                [class.bg-green-50]="searchFilter() === option.value"
+                [class.border-border-default]="searchFilter() !== option.value"
+                [class.text-text-secondary]="searchFilter() !== option.value"
+                [class.bg-white]="searchFilter() !== option.value"
+                (click)="setSearchFilter(option.value)"
+              >
+                {{ option.label }}
+              </button>
+            }
+          </div>
+        </div>
+      }
 
       <!-- Blocked user banner -->
       @if (blocked()) {
@@ -190,32 +285,56 @@ interface AttachmentInfo {
         }
 
         <!-- Empty state -->
-        @if (!loading() && messages().length === 0) {
+        @if (!loading() && filteredMessages().length === 0) {
           <div class="flex h-full flex-col items-center justify-center px-6 text-center">
-            <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
-              <svg
-                class="h-10 w-10 text-cta-default"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                />
-              </svg>
-            </div>
-            <h4 class="mb-1 text-base font-semibold text-text-primary">
-              {{ getEmptyStateTitle() }}
-            </h4>
-            <p class="text-sm text-text-secondary max-w-xs">{{ getEmptyStateSubtitle() }}</p>
+            @if (isSearchActive()) {
+              <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
+                <svg
+                  class="h-10 w-10 text-cta-default"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M21 21l-4.35-4.35m1.85-5.65a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <h4 class="mb-1 text-base font-semibold text-text-primary">
+                No encontramos resultados
+              </h4>
+              <p class="text-sm text-text-secondary max-w-xs">
+                Probá con otras palabras o cambiá el filtro.
+              </p>
+            } @else {
+              <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
+                <svg
+                  class="h-10 w-10 text-cta-default"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+              </div>
+              <h4 class="mb-1 text-base font-semibold text-text-primary">
+                {{ getEmptyStateTitle() }}
+              </h4>
+              <p class="text-sm text-text-secondary max-w-xs">{{ getEmptyStateSubtitle() }}</p>
+            }
           </div>
         }
 
         <!-- Messages list -->
-        @if (!loading() && messages().length > 0) {
+        @if (!loading() && filteredMessages().length > 0) {
           <div class="px-4 py-4 space-y-3 mt-auto">
             <!-- Date separator (first message) -->
             <div class="flex items-center justify-center mb-2">
@@ -226,7 +345,7 @@ interface AttachmentInfo {
               </span>
             </div>
 
-            @for (message of messages(); track message.id) {
+            @for (message of filteredMessages(); track message.id) {
               <div [class]="isOwnMessage(message) ? 'flex justify-end' : 'flex justify-start'">
                 <!-- Received message (left) -->
                 @if (!isOwnMessage(message)) {
@@ -314,14 +433,14 @@ interface AttachmentInfo {
                           </div>
                           @if (attachment.caption) {
                             <p
-                              class="mt-2 text-[15px] font-medium text-text-primary leading-relaxed whitespace-pre-wrap break-words"
+                              class="mt-2 text-base font-medium text-text-primary leading-relaxed whitespace-pre-wrap break-words"
                             >
                               {{ attachment.caption }}
                             </p>
                           }
                         } @else {
                           <p
-                            class="text-[15px] font-medium text-text-primary leading-relaxed whitespace-pre-wrap break-words"
+                            class="text-base font-medium text-text-primary leading-relaxed whitespace-pre-wrap break-words"
                           >
                             {{ message.body }}
                           </p>
@@ -346,7 +465,7 @@ interface AttachmentInfo {
                         @if (getAttachmentInfo(message); as attachment) {
                           @if (attachment.kind === 'image') {
                             <a
-                              class="block overflow-hidden rounded-2xl border border-white/20 bg-white/10"
+                              class="block overflow-hidden rounded-2xl border border-black/15 bg-black/5"
                               [href]="attachment.url"
                               target="_blank"
                               rel="noopener noreferrer"
@@ -360,7 +479,7 @@ interface AttachmentInfo {
                               />
                             </a>
                           } @else if (attachment.kind === 'video') {
-                            <div class="overflow-hidden rounded-2xl border border-white/20 bg-white/10">
+                            <div class="overflow-hidden rounded-2xl border border-black/15 bg-black/5">
                               <video
                                 class="block max-h-64 w-full"
                                 [src]="attachment.url"
@@ -375,7 +494,7 @@ interface AttachmentInfo {
                             [class.mt-2]="isAttachmentPreviewable(attachment)"
                           >
                             <span
-                              class="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white"
+                              class="flex h-10 w-10 items-center justify-center rounded-full bg-black/10 text-black"
                             >
                               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path
@@ -387,17 +506,17 @@ interface AttachmentInfo {
                               </svg>
                             </span>
                             <div class="min-w-0">
-                              <p class="text-sm font-semibold text-white truncate">
+                              <p class="text-sm font-semibold text-cta-text truncate">
                                 {{ attachment.name }}
                               </p>
-                              <p class="text-xs text-white/70">
+                              <p class="text-xs text-black/60">
                                 {{ getAttachmentTypeLabel(attachment) }}
                               </p>
                             </div>
                           </div>
                           <div class="mt-2 flex items-center gap-2">
                             <a
-                              class="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs text-white/90 hover:bg-white/20"
+                              class="rounded-full border border-black/20 bg-black/5 px-3 py-1 text-xs text-black/80 hover:bg-black/10"
                               [href]="attachment.url"
                               target="_blank"
                               rel="noopener noreferrer"
@@ -405,7 +524,7 @@ interface AttachmentInfo {
                               Abrir
                             </a>
                             <a
-                              class="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs text-white/90 hover:bg-white/20"
+                              class="rounded-full border border-black/20 bg-black/5 px-3 py-1 text-xs text-black/80 hover:bg-black/10"
                               [href]="attachment.url"
                               download
                             >
@@ -414,27 +533,27 @@ interface AttachmentInfo {
                           </div>
                           @if (attachment.caption) {
                             <p
-                              class="mt-2 text-[15px] font-medium text-white leading-relaxed whitespace-pre-wrap break-words"
+                              class="mt-2 text-base font-medium text-cta-text leading-relaxed whitespace-pre-wrap break-words"
                             >
                               {{ attachment.caption }}
                             </p>
                           }
                         } @else {
                           <p
-                            class="text-[15px] font-medium text-white leading-relaxed whitespace-pre-wrap break-words"
+                            class="text-base font-medium text-cta-text leading-relaxed whitespace-pre-wrap break-words"
                           >
                             {{ message.body }}
                           </p>
                         }
                         <div class="mt-1 flex items-center justify-end gap-1">
-                          <span class="text-xs text-white/70">{{
+                          <span class="text-xs text-black/60">{{
                             formatTime(message.created_at)
                           }}</span>
                           <!-- Status indicators -->
                           @if (getMessageStatus(message) === 'pending') {
                             <!-- Clock icon - pending/queued -->
                             <svg
-                              class="h-3.5 w-3.5 text-white/50 animate-pulse"
+                              class="h-3.5 w-3.5 text-black/40 animate-pulse"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -449,7 +568,7 @@ interface AttachmentInfo {
                           }
                           @if (getMessageStatus(message) === 'sent') {
                             <svg
-                              class="h-3.5 w-3.5 text-white/70"
+                              class="h-3.5 w-3.5 text-black/60"
                               fill="currentColor"
                               viewBox="0 0 16 15"
                             >
@@ -460,7 +579,7 @@ interface AttachmentInfo {
                           }
                           @if (getMessageStatus(message) === 'delivered') {
                             <svg
-                              class="h-3.5 w-3.5 text-white/70"
+                              class="h-3.5 w-3.5 text-black/60"
                               fill="currentColor"
                               viewBox="0 0 16 15"
                             >
@@ -471,7 +590,7 @@ interface AttachmentInfo {
                           }
                           @if (getMessageStatus(message) === 'read') {
                             <svg
-                              class="h-3.5 w-3.5 text-cyan-300"
+                              class="h-3.5 w-3.5 text-black/70"
                               fill="currentColor"
                               viewBox="0 0 16 15"
                             >
@@ -710,7 +829,7 @@ interface AttachmentInfo {
                     ? 'Te han bloqueado'
                     : 'Escribe un mensaje...'
               "
-              class="w-full rounded-full bg-surface-base border border-border-default px-4 py-2.5 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-cta-default focus:border-cta-default transition-all"
+              class="w-full rounded-full bg-surface-base border border-border-default px-4 py-2.5 text-base text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-cta-default focus:border-cta-default transition-all"
             />
           </div>
 
@@ -817,9 +936,39 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
   readonly loadingSuggestions = signal(false);
   readonly showSuggestions = signal(false);
   readonly showAttachMenu = signal(false);
+  readonly showSearch = signal(false);
+  readonly searchQuery = signal('');
+  readonly searchFilter = signal<ChatSearchFilter>('all');
+  readonly searchFilters = signal<Array<{ value: ChatSearchFilter; label: string }>>([
+    { value: 'all', label: 'Todos' },
+    { value: 'text', label: 'Texto' },
+    { value: 'image', label: 'Imágenes' },
+    { value: 'video', label: 'Videos' },
+    { value: 'document', label: 'Docs' },
+  ]);
 
   // Computed
   readonly currentUserId = signal<string | null>(null);
+  readonly filteredMessages = computed(() => {
+    const list = this.messages();
+    const query = this.normalizeQuery(this.searchQuery());
+    const filter = this.searchFilter();
+
+    if (!this.isSearchActive()) {
+      return list;
+    }
+
+    return list.filter((message) => {
+      const attachment = this.getAttachmentInfo(message);
+      const matchesType = this.matchesSearchFilter(filter, attachment);
+
+      if (!matchesType) return false;
+      if (!query) return true;
+
+      const haystack = this.buildSearchHaystack(message, attachment);
+      return haystack.includes(query);
+    });
+  });
 
   protected notificationTimeout: ReturnType<typeof setTimeout> | null = null;
   protected typingTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -1378,6 +1527,62 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
     return attachment.kind === 'image' || attachment.kind === 'video';
   }
 
+  toggleSearch(): void {
+    const next = !this.showSearch();
+    this.showSearch.set(next);
+    if (!next) {
+      this.clearSearch();
+    }
+  }
+
+  onSearchQueryChange(value: string): void {
+    this.searchQuery.set(value);
+  }
+
+  clearSearchQuery(): void {
+    this.searchQuery.set('');
+  }
+
+  setSearchFilter(filter: ChatSearchFilter): void {
+    this.searchFilter.set(filter);
+  }
+
+  isSearchActive(): boolean {
+    return (
+      this.showSearch() &&
+      (this.searchQuery().trim().length > 0 || this.searchFilter() !== 'all')
+    );
+  }
+
+  private clearSearch(): void {
+    this.searchQuery.set('');
+    this.searchFilter.set('all');
+  }
+
+  private matchesSearchFilter(
+    filter: ChatSearchFilter,
+    attachment: AttachmentInfo | null,
+  ): boolean {
+    if (filter === 'all') return true;
+    if (filter === 'text') return !attachment || Boolean(attachment.caption);
+    return attachment?.kind === filter;
+  }
+
+  private buildSearchHaystack(message: Message, attachment: AttachmentInfo | null): string {
+    if (attachment) {
+      return this.normalizeQuery([attachment.name, attachment.caption ?? ''].join(' '));
+    }
+    return this.normalizeQuery(message.body || '');
+  }
+
+  private normalizeQuery(value: string): string {
+    return value
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+  }
+
   private isValidUrl(url: string): boolean {
     try {
       const parsed = new URL(url);
@@ -1476,7 +1681,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
    * Obtiene la etiqueta de fecha para el separador de conversación
    */
   getConversationDateLabel(): string {
-    const msgs = this.messages();
+    const msgs = this.isSearchActive() ? this.filteredMessages() : this.messages();
     if (msgs.length === 0) return 'Hoy';
 
     const firstMsgDate = new Date(msgs[0].created_at);

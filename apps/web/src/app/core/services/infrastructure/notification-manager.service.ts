@@ -30,6 +30,7 @@ export interface NotificationOptions {
   sound?: boolean;
   groupKey?: string;
   data?: Record<string, unknown>;
+  skipGrouping?: boolean;
 }
 
 /**
@@ -67,6 +68,11 @@ export class NotificationManagerService {
   >([]);
   private readonly MAX_SIMULTANEOUS_TOASTS = 5;
   private readonly groupedNotifications = new Map<string, number>();
+  private readonly groupedPayloads = new Map<
+    string,
+    NotificationOptions & { type: 'success' | 'error' | 'warning' | 'info' }
+  >();
+  private readonly updatingGroups = new Set<string>();
 
   /**
    * Show a success notification
@@ -141,14 +147,21 @@ export class NotificationManagerService {
       sound = false,
       groupKey,
     } = options;
+    const kind = typeof options.data?.['kind'] === 'string' ? options.data['kind'] : null;
+    const isChatToast = kind === 'chat';
+    const skipGrouping = options.skipGrouping === true;
 
     // Handle grouping
     if (groupKey) {
+      this.groupedPayloads.set(groupKey, options);
+    }
+
+    if (groupKey && !skipGrouping) {
       const existingCount = this.groupedNotifications.get(groupKey) || 0;
       this.groupedNotifications.set(groupKey, existingCount + 1);
 
       if (existingCount > 0) {
-        await this.updateGroupedNotification(groupKey, existingCount + 1, title, message, type);
+        await this.updateGroupedNotification(groupKey, existingCount + 1);
         return;
       }
     }
@@ -179,6 +192,15 @@ export class NotificationManagerService {
       },
     }));
 
+    const toastClasses = [
+      'toast-modern',
+      `toast-${type}`,
+      `toast-priority-${priority}`,
+      kind ? `toast-${kind}` : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
+
     // Create Ionic Toast
     const toast = await this.toastController.create({
       header: title,
@@ -187,7 +209,7 @@ export class NotificationManagerService {
       position: 'top',
       color: this.mapTypeToColor(type),
       // Apply base + type + priority classes for styling
-      cssClass: `toast-modern toast-${type} toast-priority-${priority}`,
+      cssClass: toastClasses,
       buttons: buttons || [
         {
           icon: 'close',
@@ -195,6 +217,26 @@ export class NotificationManagerService {
         },
       ],
     });
+
+    if (isChatToast) {
+      const senderName =
+        typeof options.data?.['senderName'] === 'string' ? options.data['senderName'] : title;
+      const initials = this.getInitials(senderName);
+      toast.style.setProperty('--toast-initials', `"${initials}"`);
+      toast.style.setProperty('--toast-time', `"${this.getTimeLabel()}"`);
+      const count = options.data?.['count'];
+      if (typeof count === 'number' && count > 1) {
+        toast.style.setProperty('--toast-count', `"${count}"`);
+        toast.style.setProperty('--toast-count-visible', '1');
+      } else {
+        toast.style.setProperty('--toast-count', '""');
+        toast.style.setProperty('--toast-count-visible', '0');
+      }
+    }
+
+    if (kind === 'draft') {
+      toast.style.setProperty('--toast-icon', '"📝"');
+    }
 
     // Track notification
     this.trackNotification(id, type, priority, groupKey, toast);
@@ -314,36 +356,50 @@ export class NotificationManagerService {
   private removeNotification(id: string, groupKey?: string): void {
     this.activeNotifications.set(this.activeNotifications().filter((n) => n.id !== id));
 
-    if (groupKey) {
+    if (groupKey && !this.updatingGroups.has(groupKey)) {
       this.groupedNotifications.delete(groupKey);
+      this.groupedPayloads.delete(groupKey);
     }
 
     this.processQueue();
   }
 
-  private async updateGroupedNotification(
-    groupKey: string,
-    count: number,
-    title: string,
-    message: string,
-    type: 'success' | 'error' | 'warning' | 'info',
-  ): Promise<void> {
+  private async updateGroupedNotification(groupKey: string, count: number): Promise<void> {
     const existing = this.activeNotifications().find((n) => n.groupKey === groupKey);
+    const payload = this.groupedPayloads.get(groupKey);
 
-    if (existing) {
+    if (!payload || !existing) return;
+
+    this.updatingGroups.add(groupKey);
+
+    try {
       if (existing.toast) {
         await existing.toast.dismiss();
       }
 
-      const updatedMessage = `${message} (${count} similar)`;
-      await this.show({
-        title,
-        message: updatedMessage,
-        type,
+      const isChatToast = payload.data?.['kind'] === 'chat';
+      const updatedOptions: NotificationOptions & {
+        type: 'success' | 'error' | 'warning' | 'info';
+      } = {
+        ...payload,
+        message: payload.message,
         priority: existing.priority,
         groupKey,
         sound: false,
-      });
+        skipGrouping: true,
+        data: {
+          ...payload.data,
+          count,
+        },
+      };
+
+      if (!isChatToast) {
+        updatedOptions.message = `${payload.message} (${count} similares)`;
+      }
+
+      await this.show(updatedOptions);
+    } finally {
+      this.updatingGroups.delete(groupKey);
     }
   }
 
@@ -393,5 +449,22 @@ export class NotificationManagerService {
 
   private generateId(): string {
     return `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private getInitials(name: string): string {
+    const cleaned = name.trim();
+    if (!cleaned) return 'AR';
+    const parts = cleaned.split(/\s+/);
+    if (parts.length === 1) {
+      return parts[0].substring(0, 2).toUpperCase();
+    }
+    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+  }
+
+  private getTimeLabel(): string {
+    return new Date().toLocaleTimeString('es-AR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 }

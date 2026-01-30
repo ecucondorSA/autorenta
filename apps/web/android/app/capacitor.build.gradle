@@ -25,6 +25,8 @@ dependencies {
     implementation project(':capacitor-status-bar')
     implementation project(':capgo-capacitor-native-biometric')
     implementation project(':sentry-capacitor')
+    implementation project(':capacitor-community-keep-awake')
+    implementation project(':capgo-capacitor-bluetooth-low-energy')
 
 }
 

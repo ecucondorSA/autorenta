@@ -425,7 +425,15 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
 
   saveDraft(): void {
     this.formService.saveDraft();
-    this.notifications.success('Borrador', 'Tu progreso se guardó correctamente');
+    this.notifications.show({
+      title: 'Borrador',
+      message: 'Tu progreso se guardó correctamente',
+      type: 'success',
+      duration: 6000,
+      data: {
+        kind: 'draft',
+      },
+    });
   }
 
   // Question handlers

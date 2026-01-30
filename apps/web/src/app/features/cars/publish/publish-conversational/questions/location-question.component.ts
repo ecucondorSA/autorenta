@@ -189,6 +189,7 @@ export class LocationQuestionComponent implements OnInit {
   async useCurrentLocation(): Promise<void> {
     this.isLoading.set(true);
     this.locationState.set('acquiring');
+    this.stateAutoFilled.set(false);
 
     try {
       const coords = await this.locationService.useCurrentLocation();
@@ -206,6 +207,16 @@ export class LocationQuestionComponent implements OnInit {
           this.city = address.city;
           this.state = address.state;
           this.country = address.country || 'AR';
+
+          if (!this.state && this.city) {
+            const province = this.getProvinceForCity(this.city);
+            if (province) {
+              this.state = province;
+              this.stateAutoFilled.set(true);
+            }
+          } else if (this.state) {
+            this.stateAutoFilled.set(true);
+          }
           // Coordinates already set from GPS, just emit
           this.emitLocationImmediate();
         }
@@ -294,6 +305,12 @@ export class LocationQuestionComponent implements OnInit {
       if (fullAddress?.state && fullAddress.state !== this.state) {
         this.state = fullAddress.state;
         this.stateAutoFilled.set(true);
+      } else if (!this.state && this.city) {
+        const province = this.getProvinceForCity(this.city);
+        if (province) {
+          this.state = province;
+          this.stateAutoFilled.set(true);
+        }
       }
     }
 

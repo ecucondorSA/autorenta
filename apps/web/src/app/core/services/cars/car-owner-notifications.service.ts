@@ -44,17 +44,26 @@ export class CarOwnerNotificationsService {
     messagePreview?: string,
     chatUrl?: string,
   ): void {
-    const preview = messagePreview
-      ? `: "${messagePreview.substring(0, 50)}${messagePreview.length > 50 ? '...' : ''}"`
-      : '';
+    const safePreview = messagePreview?.trim();
+    const preview = safePreview
+      ? `"${safePreview.substring(0, 50)}${safePreview.length > 50 ? '...' : ''}"`
+      : 'Mensaje nuevo';
+    const subtitle = carName ? `Sobre ${carName}` : 'Nuevo mensaje';
 
     this.notificationManager.show({
-      title: '💬 Nuevo mensaje',
-      message: `${senderName} te escribió sobre tu ${carName}${preview}`,
+      title: senderName,
+      message: `${subtitle}\n${preview}`,
       type: 'info',
       priority: 'normal',
       duration: 8000,
       sound: true,
+      groupKey: chatUrl || `chat:${senderName}:${carName}`,
+      data: {
+        kind: 'chat',
+        senderName,
+        subtitle,
+        preview,
+      },
       actions: chatUrl
         ? [
             {

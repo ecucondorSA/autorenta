@@ -484,6 +484,20 @@
                       <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
                     </a>
                     <a
+                      routerLink="/dashboard/security"
+                      (click)="closeProfileMenu()"
+                      class="menu-item group"
+                      role="menuitem"
+                    >
+                      <div
+                        class="menu-icon bg-red-500/10 text-red-600 group-hover:bg-red-500/20"
+                      >
+                        <app-icon name="radar" [size]="18" />
+                      </div>
+                      <span class="flex-1">Security Center</span>
+                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+                    </a>
+                    <a
                       routerLink="/profile/preferences"
                       (click)="closeProfileMenu()"
                       class="menu-item group"
@@ -624,6 +638,19 @@
       <router-outlet #outlet="outlet"></router-outlet>
     </div>
   </main>
+
+  <!-- SOS Global Button -->
+  @if (!isPanicMode()) {
+    <button
+      class="sos-global-button"
+      type="button"
+      aria-label="Activar SOS Global"
+      title="SOS Global"
+      (click)="openPanicMode()"
+    >
+      SOS
+    </button>
+  }
 
   <!-- Floating Comparison Badge (ajustado para no chocar con bottom nav) -->
   @if (compareCountSig() > 0) {

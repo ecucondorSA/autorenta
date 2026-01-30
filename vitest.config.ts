@@ -7,6 +7,7 @@ export default defineConfig({
       'functions/**/*.spec.ts',
       'apps/web/src/app/shared/utils/**/*.test.ts',
       'apps/web/src/app/core/utils/**/*.test.ts',
+      'apps/web/src/app/core/services/**/*.spec.ts',
     ],
     exclude: ['**/node_modules/**', '**/dist/**', '**/coverage/**'],
     environment: 'node',

@@ -542,6 +542,20 @@ export const routes: Routes = [
     loadComponent: () => import('./features/support/support.page').then((m) => m.SupportPage),
   },
   {
+    path: 'panic',
+    data: { layout: 'full-bleed', hideHeader: true, hideFooter: true, hideMobileNav: true },
+    loadComponent: () =>
+      import('./features/dashboard/pages/security-center/panic-mode.page').then(
+        (m) => m.PanicModePage,
+      ),
+  },
+  {
+    path: 'beacon-test',
+    data: { layout: 'full-bleed', hideHeader: true, hideFooter: true, hideMobileNav: true },
+    loadComponent: () =>
+      import('./features/beacon-test/beacon-test.page').then((m) => m.BeaconTestPage),
+  },
+  {
     path: 'terminos',
     loadComponent: () => import('./features/legal/terms/terms.page').then((m) => m.TermsPage),
   },

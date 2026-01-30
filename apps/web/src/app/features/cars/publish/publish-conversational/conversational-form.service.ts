@@ -411,7 +411,15 @@ export class ConversationalFormService {
         this.formInstance.patchValue(draft.formValues);
       }
 
-      this.notifications.info('Borrador', 'Retomamos donde lo dejaste');
+      this.notifications.show({
+        title: 'Borrador',
+        message: 'Retomamos donde lo dejaste',
+        type: 'info',
+        duration: 7000,
+        data: {
+          kind: 'draft',
+        },
+      });
       return true;
     } catch (e) {
       console.warn('Failed to restore draft:', e);

@@ -170,6 +170,71 @@ import { OfflineBannerComponent } from './shared/components/offline-banner/offli
         color: var(--text-primary);
         box-shadow: none;
       }
+
+      .sos-global-button {
+        position: fixed;
+        left: 20px;
+        bottom: 96px;
+        z-index: 60;
+        width: 64px;
+        height: 64px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at top, #ff8b8b, #ff3b3b 55%, #b30f0f 100%);
+        color: #0b0b0b;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        font-size: 12px;
+        text-transform: uppercase;
+        box-shadow:
+          0 16px 30px rgba(255, 59, 59, 0.45),
+          inset 0 0 18px rgba(255, 255, 255, 0.35);
+      }
+
+      .sos-global-button::before {
+        content: '';
+        position: absolute;
+        inset: -10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 99, 99, 0.5);
+        box-shadow: 0 0 30px rgba(255, 69, 69, 0.45);
+        animation: sosPulse 2.6s ease-in-out infinite;
+      }
+
+      .sos-global-button::after {
+        content: '';
+        position: absolute;
+        inset: 6px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+      }
+
+      @media (min-width: 768px) {
+        .sos-global-button {
+          bottom: 32px;
+          left: 28px;
+        }
+      }
+
+      @keyframes sosPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: scale(1.08);
+          opacity: 0.2;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .sos-global-button::before {
+          animation: none;
+        }
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -229,6 +294,7 @@ export class AppComponent implements OnInit {
   readonly userProfile = signal<UserProfile | null>(null);
   readonly isOnVerificationPage = signal(false);
   readonly isHomePage = signal(false); // Header transparente en homepage
+  readonly isPanicMode = signal(false);
   readonly pendingApprovalCount = signal(0); // Contador de solicitudes pendientes para propietarios
 
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
@@ -285,6 +351,11 @@ export class AppComponent implements OnInit {
 
   goToNotifications(): void {
     this.router.navigate(['/notifications']);
+  }
+
+  openPanicMode(): void {
+    this.triggerHapticFeedback();
+    this.router.navigate(['/panic']);
   }
 
   ngOnInit(): void {
@@ -409,6 +480,7 @@ export class AppComponent implements OnInit {
     const currentUrl = this.router.url.split('?')[0]; // Ignorar query params
     const isHome = currentUrl === '/' || currentUrl === '';
     this.isHomePage.set(isHome);
+    this.isPanicMode.set(currentUrl.startsWith('/panic'));
   }
 
   private syncSidebarSideEffects(open: boolean): void {
