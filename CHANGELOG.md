@@ -1,3 +1,7 @@
+## <small>3.39.3 (2026-01-30)</small>
+
+* fix(ci): fix Android build by using cap copy instead of cap sync ([4370ead](https://github.com/ecucondorSA/autorenta/commit/4370ead))
+
 ## <small>3.39.2 (2026-01-30)</small>
 
 * fix(carousel): prevent accidental sheet open on swipe ([7c97ae3](https://github.com/ecucondorSA/autorenta/commit/7c97ae3))
