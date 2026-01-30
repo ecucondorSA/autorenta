@@ -1,3 +1,7 @@
+## 3.44.0 (2026-01-30)
+
+* feat(brands): add BYD to popular brands and fallback list ([1feffbb](https://github.com/ecucondorSA/autorenta/commit/1feffbb))
+
 ## <small>3.43.1 (2026-01-30)</small>
 
 * fix: resolve TypeScript build errors ([6f12ac2](https://github.com/ecucondorSA/autorenta/commit/6f12ac2))
