@@ -1,3 +1,8 @@
+## <small>3.37.10 (2026-01-30)</small>
+
+* chore: update pnpm-lock.yaml for stagehand-poc dependencies ([f081ddd](https://github.com/ecucondorSA/autorenta/commit/f081ddd))
+* fix(publish): fix AI photos not displaying and FIPE rate limiting ([6d87f84](https://github.com/ecucondorSA/autorenta/commit/6d87f84))
+
 ## <small>3.37.9 (2026-01-30)</small>
 
 * fix(marketing): add save_to_db to upload images to storage ([12c6680](https://github.com/ecucondorSA/autorenta/commit/12c6680))
