@@ -283,11 +283,21 @@ export class LocationQuestionComponent implements OnInit {
 
   /**
    * Geocode address and emit with coordinates
+   * Also auto-fills province from geocoding result for accuracy
    */
   private async geocodeAndEmit(): Promise<void> {
     const coords = await this.geocodeCurrentAddress();
 
-    // Emit again with coordinates
+    // If we got coordinates, reverse geocode to get accurate province
+    if (coords) {
+      const fullAddress = await this.locationService.reverseGeocode(coords.latitude, coords.longitude);
+      if (fullAddress?.state && fullAddress.state !== this.state) {
+        this.state = fullAddress.state;
+        this.stateAutoFilled.set(true);
+      }
+    }
+
+    // Emit with coordinates and potentially updated state
     const location: LocationAnswer = {
       street: this.street,
       streetNumber: this.streetNumber,
