@@ -1,3 +1,8 @@
+## <small>3.41.3 (2026-01-30)</small>
+
+* fix(android): improve baseline profile configuration ([8c27734](https://github.com/ecucondorSA/autorenta/commit/8c27734))
+* docs: update Android optimization checklist with completed items ([7b72231](https://github.com/ecucondorSA/autorenta/commit/7b72231))
+
 ## <small>3.41.2 (2026-01-30)</small>
 
 * perf(android): add Baseline Profile support for faster startup ([4dda609](https://github.com/ecucondorSA/autorenta/commit/4dda609))
