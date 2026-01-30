@@ -1,3 +1,7 @@
+## 3.39.0 (2026-01-30)
+
+* feat(browse): support date range from query params ([23219b0](https://github.com/ecucondorSA/autorenta/commit/23219b0))
+
 ## <small>3.38.3 (2026-01-30)</small>
 
 * fix(carousel): prevent accidental sheet open on swipe ([96d40d9](https://github.com/ecucondorSA/autorenta/commit/96d40d9))
