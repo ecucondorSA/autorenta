@@ -1,3 +1,7 @@
+## 3.38.0 (2026-01-30)
+
+* feat: add FIPE catalog Edge Function with server-side caching ([dc231fa](https://github.com/ecucondorSA/autorenta/commit/dc231fa))
+
 ## <small>3.37.11 (2026-01-30)</small>
 
 * fix: eliminate FIPE rate limiting by loading all models without year filter ([a8d2454](https://github.com/ecucondorSA/autorenta/commit/a8d2454))
