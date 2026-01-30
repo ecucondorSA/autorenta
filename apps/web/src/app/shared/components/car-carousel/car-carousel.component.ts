@@ -26,7 +26,10 @@ import { BrowseStore } from '../../../features/cars/browse/browse.store';
       } @else {
         <div #scrollContainer
              class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 hide-scrollbar items-center pr-[30vw]"
-             (scroll)="onScroll()">
+             (scroll)="onScroll()"
+             (touchstart)="onTouchStart($event)"
+             (touchmove)="onTouchMove($event)"
+             (touchend)="onTouchEnd()">
           @for (car of cars; track car.carId) {
             <div [id]="'card-' + car.carId"
                  class="snap-center shrink-0 min-w-[70vw] sm:min-w-[280px] h-full">
@@ -66,6 +69,12 @@ export class CarCarouselComponent {
   private scrollTimeout: ReturnType<typeof setTimeout> | null = null;
   private isProgrammaticScroll = false;
 
+  // Touch/swipe tracking to prevent accidental clicks during scroll
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private isSwipe = false;
+  private readonly SWIPE_THRESHOLD = 10; // pixels moved to consider it a swipe
+
   // Keyboard Navigation
   @HostListener('document:keydown.arrowLeft')
   onArrowLeft() { this.navigateCarousel(-1); }
@@ -104,7 +113,37 @@ export class CarCarouselComponent {
     });
   }
 
+  onTouchStart(event: TouchEvent) {
+    this.touchStartX = event.touches[0].clientX;
+    this.touchStartY = event.touches[0].clientY;
+    this.isSwipe = false;
+  }
+
+  onTouchMove(event: TouchEvent) {
+    if (this.isSwipe) return; // Already marked as swipe
+
+    const deltaX = Math.abs(event.touches[0].clientX - this.touchStartX);
+    const deltaY = Math.abs(event.touches[0].clientY - this.touchStartY);
+
+    // If finger moved more than threshold, it's a swipe not a tap
+    if (deltaX > this.SWIPE_THRESHOLD || deltaY > this.SWIPE_THRESHOLD) {
+      this.isSwipe = true;
+    }
+  }
+
+  onTouchEnd() {
+    // Reset after a short delay to allow click event to check isSwipe
+    setTimeout(() => {
+      this.isSwipe = false;
+    }, 100);
+  }
+
   onCardClick(carId: string) {
+    // Ignore clicks that were actually swipes
+    if (this.isSwipe) {
+      return;
+    }
+
     this.sound.play('click');
     this.store.setActiveCar(carId, 'carousel');
     this.scrollToCard(carId);
