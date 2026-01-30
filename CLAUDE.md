@@ -464,7 +464,23 @@ supabase/functions/mercadopago-process-deposit-payment/index.ts
 supabase/functions/mercadopago-create-preference/index.ts
 supabase/functions/mercadopago-create-booking-preference/index.ts
 supabase/functions/mercadopago-process-booking-payment/index.ts
+supabase/functions/mercadopago-process-booking-payment/index.ts
 supabase/functions/process-payment-queue/index.ts
+```
+
+### Mobile CI/CD Workflow (v1 - 2026-01-30)
+Critical release pipeline with fragile keystore and track configurations.
+
+```
+.github/workflows/build-android.yml
+```
+
+### FIPE Search & Pricing Core (v2 - 2026-01-28)
+Complex logic for Brazil vehicle pricing and model matching. Recently debugged and stable.
+
+```
+apps/web/src/app/shared/components/inputs/fipe-autocomplete/**
+apps/web/src/app/core/services/pricing.service.ts
 ```
 
 **Rules for frozen code:**

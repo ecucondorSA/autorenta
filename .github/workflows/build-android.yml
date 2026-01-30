@@ -346,7 +346,6 @@ jobs:
           releaseFiles: ./aab/*.aab
           track: beta
           status: completed
-          changesNotSentForReview: true
 
       - name: Auto-Commit Version Bump (if auto-bumped)
         if: github.event.inputs.auto_version_bump == 'true'
