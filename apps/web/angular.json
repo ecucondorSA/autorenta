@@ -99,7 +99,7 @@
               ],
               "outputHashing": "all",
               "optimization": true,
-              "serviceWorker": "ngsw-config.json",
+              "serviceWorker": false,
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true
