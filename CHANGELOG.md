@@ -1,3 +1,7 @@
+## <small>3.43.1 (2026-01-30)</small>
+
+* fix: resolve TypeScript build errors ([6f12ac2](https://github.com/ecucondorSA/autorenta/commit/6f12ac2))
+
 ## 3.43.0 (2026-01-30)
 
 * feat(brands): add BYD as car brand with official logo ([a3bfeac](https://github.com/ecucondorSA/autorenta/commit/a3bfeac))
