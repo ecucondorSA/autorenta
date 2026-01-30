@@ -1,3 +1,7 @@
+## <small>3.37.11 (2026-01-30)</small>
+
+* fix: eliminate FIPE rate limiting by loading all models without year filter ([a8d2454](https://github.com/ecucondorSA/autorenta/commit/a8d2454))
+
 ## <small>3.37.10 (2026-01-30)</small>
 
 * chore: update pnpm-lock.yaml for stagehand-poc dependencies ([f081ddd](https://github.com/ecucondorSA/autorenta/commit/f081ddd))
