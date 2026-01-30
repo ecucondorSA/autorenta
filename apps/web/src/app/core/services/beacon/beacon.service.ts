@@ -1,9 +1,9 @@
 import { Injectable, inject, signal, computed, NgZone } from '@angular/core';
 import { Platform, ToastController } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
-import { BeaconProtocol, BeaconMessage, BeaconMessageType } from './beacon-protocol';
 import { SupabaseClientService } from '../infrastructure/supabase-client.service';
 import { environment } from '../../../../environments/environment';
+import { BeaconProtocol, BeaconMessage, BeaconMessageType } from './beacon-protocol';
 
 // Types from @capgo/capacitor-bluetooth-low-energy
 interface BleDevice {
