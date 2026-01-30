@@ -12,13 +12,16 @@ import {
   ElementRef,
   viewChild,
   AfterViewChecked,
+  AfterViewInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { AuthService } from '@core/services/auth/auth.service';
 import { GeminiService } from '@core/services/ai/gemini.service';
 import { Message, MessagesService } from '@core/services/bookings/messages.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationSoundService } from '@core/services/infrastructure/notification-sound.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import type { AiBookingContext, ChatSuggestion } from '../../../core/models';
 
@@ -407,6 +410,98 @@ export interface ChatContext {
       <!-- Input Area -->
       <div class="border-t border-border-default bg-surface-raised px-4 py-3">
         <form (ngSubmit)="sendMessage()" class="flex items-center gap-3">
+          <!-- Attachments -->
+          <div class="relative flex items-center">
+            <button
+              type="button"
+              class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-text-secondary hover:bg-surface-hover transition-all"
+              [disabled]="blocked() || blockedBy()"
+              (click)="toggleAttachMenu()"
+              (mousedown)="$event.preventDefault()"
+              (touchstart)="$event.preventDefault()"
+              title="Adjuntar"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+                />
+              </svg>
+            </button>
+
+            @if (showAttachMenu()) {
+              <div
+                class="absolute bottom-12 left-0 z-20 flex flex-col gap-2 rounded-2xl bg-white border border-border-default shadow-lg p-2 w-52"
+              >
+                <button
+                  type="button"
+                  class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-surface-hover text-sm"
+                  (click)="triggerFileInput('document')"
+                  (mousedown)="$event.preventDefault()"
+                  (touchstart)="$event.preventDefault()"
+                >
+                  <span class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-white">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                  </span>
+                  Documento
+                </button>
+                <button
+                  type="button"
+                  class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-surface-hover text-sm"
+                  (click)="triggerFileInput('media')"
+                  (mousedown)="$event.preventDefault()"
+                  (touchstart)="$event.preventDefault()"
+                >
+                  <span class="flex h-8 w-8 items-center justify-center rounded-full bg-sky-500 text-white">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </span>
+                  Foto/Video
+                </button>
+                <button
+                  type="button"
+                  class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-surface-hover text-sm"
+                  (click)="triggerFileInput('camera')"
+                  (mousedown)="$event.preventDefault()"
+                  (touchstart)="$event.preventDefault()"
+                >
+                  <span class="flex h-8 w-8 items-center justify-center rounded-full bg-rose-500 text-white">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  </span>
+                  Cámara
+                </button>
+              </div>
+            }
+          </div>
+
           <!-- AI Sparkles button -->
           @if (bookingContextForAI()) {
             <button
@@ -414,7 +509,6 @@ export interface ChatContext {
               class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-all"
               [class.bg-indigo-100]="showSuggestions()"
               [class.text-indigo-600]="showSuggestions()"
-              [class."showSuggestions()"
               [class.text-text-secondary]="!showSuggestions()"
               [class.hover:bg-surface-hover]="!showSuggestions()"
               [disabled]="loadingSuggestions()"
@@ -435,11 +529,12 @@ export interface ChatContext {
           <!-- Text input -->
           <div class="flex-1 relative">
             <input
+              #messageInput
               type="text"
               [ngModel]="draftMessage"
               (ngModelChange)="onMessageDraftChange($event)"
               name="message"
-              [disabled]="sending() || blocked() || blockedBy()"
+              [disabled]="blocked() || blockedBy()"
               [placeholder]="
                 blocked()
                   ? 'Usuario bloqueado'
@@ -456,6 +551,8 @@ export interface ChatContext {
             type="submit"
             [disabled]="!draftMessage.trim() || sending() || blocked() || blockedBy()"
             class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-sm"
+            (mousedown)="$event.preventDefault()"
+            (touchstart)="$event.preventDefault()"
           >
             @if (!sending()) {
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -481,11 +578,35 @@ export interface ChatContext {
             }
           </button>
         </form>
+
+        <!-- Hidden file inputs -->
+        <input
+          id="documentInputChat"
+          type="file"
+          accept=".pdf,.doc,.docx,.txt,.xls,.xlsx"
+          (change)="handleFileSelect($event, 'document')"
+          style="display: none"
+        />
+        <input
+          id="imageInputChat"
+          type="file"
+          accept="image/*,video/*"
+          (change)="handleFileSelect($event, 'media')"
+          style="display: none"
+        />
+        <input
+          id="cameraInputChat"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          (change)="handleFileSelect($event, 'camera')"
+          style="display: none"
+        />
       </div>
     </div>
   `,
 })
-export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, AfterViewInit {
   // Inputs
   readonly context = input.required<ChatContext>();
   /** Contexto de booking para sugerencias IA (opcional) */
@@ -499,6 +620,8 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   // Services
   protected readonly messagesService = inject(MessagesService);
   protected readonly authService = inject(AuthService);
+  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly logger = inject(LoggerService).createChildLogger('BaseChatComponent');
   protected readonly notificationSound = inject(NotificationSoundService);
   protected readonly toastService = inject(ToastService);
   protected readonly geminiService = inject(GeminiService);
@@ -506,6 +629,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   // ViewChild for auto-scroll
   private readonly messagesContainer = viewChild<ElementRef<HTMLDivElement>>('messagesContainer');
+  private readonly messageInput = viewChild<ElementRef<HTMLInputElement>>('messageInput');
   private shouldScrollToBottom = true;
 
   // State
@@ -524,6 +648,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   readonly aiSuggestions = signal<ChatSuggestion[]>([]);
   readonly loadingSuggestions = signal(false);
   readonly showSuggestions = signal(false);
+  readonly showAttachMenu = signal(false);
 
   // Computed
   readonly currentUserId = signal<string | null>(null);
@@ -582,6 +707,10 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.scrollToBottom();
       this.shouldScrollToBottom = false;
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.focusComposer();
   }
 
   /**
@@ -782,6 +911,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   async sendMessage(): Promise<void> {
     const text = this.newMessage().trim();
     if (!text) return;
+    this.showAttachMenu.set(false);
     if (this.blocked()) {
       this.toastService.warning(
         'Usuario bloqueado',
@@ -821,6 +951,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     // Agregar optimistic y limpiar input visualmente
     this.messages.update((prev) => [...prev, optimisticMessage]);
     this.newMessage.set('');
+    this.focusComposer();
     // Scroll al fondo después de enviar
     this.shouldScrollToBottom = true;
     this.cdr.markForCheck();
@@ -865,7 +996,106 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     } finally {
       this.sending.set(false);
+      this.focusComposer();
     }
+  }
+
+  toggleAttachMenu(): void {
+    if (this.blocked() || this.blockedBy()) return;
+    this.showAttachMenu.update((show) => !show);
+  }
+
+  triggerFileInput(fileType: 'document' | 'media' | 'camera'): void {
+    this.showAttachMenu.set(false);
+    if (this.blocked() || this.blockedBy()) return;
+
+    const inputId =
+      fileType === 'document'
+        ? 'documentInputChat'
+        : fileType === 'camera'
+          ? 'cameraInputChat'
+          : 'imageInputChat';
+
+    const input = document.getElementById(inputId) as HTMLInputElement | null;
+    input?.click();
+  }
+
+  async handleFileSelect(event: Event, fileType: 'document' | 'media' | 'camera'): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) return;
+
+    // Validar tamaño (max 10MB)
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      this.toastService.warning(
+        'Archivo muy grande',
+        'El archivo supera el límite de 10MB. Por favor selecciona uno más pequeño.',
+      );
+      input.value = '';
+      return;
+    }
+
+    const userId = this.currentUserId();
+    if (!userId) {
+      this.toastService.error('Sesión expirada', 'Iniciá sesión para enviar archivos.');
+      input.value = '';
+      return;
+    }
+
+    try {
+      const ctx = this.context();
+      const timestamp = Date.now();
+      const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+      const fileName = `${timestamp}_${sanitizedName}`;
+      const filePath = `${userId}/messages/${fileName}`;
+      const bucket = fileType === 'document' ? 'documents' : 'avatars';
+
+      this.logger.debug('Subiendo archivo', { fileName, bucket });
+      this.toastService.info('Subiendo archivo', file.name);
+
+      const { error } = await this.supabase.storage.from(bucket).upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type,
+      });
+
+      if (error) {
+        throw new Error(error.message || 'Error al subir archivo');
+      }
+
+      const { data: urlData } = this.supabase.storage.from(bucket).getPublicUrl(filePath);
+      const publicUrl = urlData.publicUrl;
+
+      const messageBody = `Archivo: ${file.name}\n${publicUrl}`;
+      await this.messagesService.sendMessage({
+        recipientId: ctx.recipientId,
+        body: messageBody,
+        bookingId: ctx.type === 'booking' ? ctx.contextId : undefined,
+        carId: ctx.type === 'car' ? ctx.contextId : undefined,
+      });
+
+      this.toastService.success('Archivo enviado', 'Se compartió en el chat.');
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+      this.logger.error('Error subiendo archivo', { error: err });
+      this.toastService.error('Error al subir archivo', errorMessage);
+    } finally {
+      input.value = '';
+      this.focusComposer();
+    }
+  }
+
+  private focusComposer(): void {
+    const input = this.messageInput()?.nativeElement;
+    if (!input || input.disabled || this.blocked() || this.blockedBy()) return;
+    input.focus({ preventScroll: true });
+    queueMicrotask(() => {
+      if (document.activeElement !== input) {
+        input.focus({ preventScroll: true });
+      }
+    });
   }
 
   /**

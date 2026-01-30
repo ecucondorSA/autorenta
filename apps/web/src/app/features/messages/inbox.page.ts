@@ -7,19 +7,21 @@ import {
   inject,
   signal,
   ChangeDetectionStrategy,
+  DestroyRef,
 } from '@angular/core';
-import { Router } from '@angular/router';
-import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
+import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import type { ConversationDTO } from '@core/repositories/messages.repository';
 import { AuthService } from '@core/services/auth/auth.service';
 import { Message, MessagesService } from '@core/services/bookings/messages.service';
-import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import {
   ConnectionStatus,
   RealtimeConnectionService,
 } from '@core/services/infrastructure/realtime-connection.service';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { UnreadMessagesService } from '@core/services/bookings/unread-messages.service';
+import { BreakpointService } from '@core/services/ui/breakpoint.service';
+import { ChatThreadComponent } from './components/chat-thread.component';
 
 /**
  * 📬 Bandeja de entrada de mensajes
@@ -29,7 +31,7 @@ import { UnreadMessagesService } from '@core/services/bookings/unread-messages.s
   selector: 'app-inbox',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [],
+  imports: [ChatThreadComponent],
   styleUrls: ['./inbox-pro.styles.css'],
   template: `
     <!-- WhatsApp-style Messages Inbox -->
@@ -85,169 +87,96 @@ import { UnreadMessagesService } from '@core/services/bookings/unread-messages.s
             <p class="empty-subtitle">Cuando recibas mensajes aparecerán aquí</p>
           </div>
         } @else {
-          <div class="conversation-list">
-            @for (conv of conversations(); track conv['id']) {
-              <button
-                (click)="openConversation(conv)"
-                class="conversation-item"
-                [class.unread]="conv.unreadCount > 0"
-                type="button"
-              >
-                <!-- Avatar -->
-                <div class="conversation-avatar">
-                  @if (conv.otherUserAvatar) {
-                    <img
-                      [src]="conv.otherUserAvatar"
-                      [alt]="conv.otherUserName"
-                      class="avatar-img"
-                    />
-                  } @else {
-                    <div class="avatar-placeholder">
-                      {{ conv.otherUserName.charAt(0).toUpperCase() }}
+          <div class="messages-split">
+            <div class="conversation-list-panel">
+              <div class="conversation-list">
+                @for (conv of conversations(); track conv['id']) {
+                  <button
+                    (click)="openConversation(conv)"
+                    class="conversation-item"
+                    [class.unread]="conv.unreadCount > 0"
+                    [class.conversation-item--active]="isActiveConversation(conv)"
+                    type="button"
+                  >
+                    <!-- Avatar -->
+                    <div class="conversation-avatar">
+                      @if (conv.otherUserAvatar) {
+                        <img
+                          [src]="conv.otherUserAvatar"
+                          [alt]="conv.otherUserName"
+                          class="avatar-img"
+                        />
+                      } @else {
+                        <div class="avatar-placeholder">
+                          {{ conv.otherUserName.charAt(0).toUpperCase() }}
+                        </div>
+                      }
                     </div>
-                  }
-                </div>
 
-                <!-- Content -->
-                <div class="conversation-content">
-                  <div class="conversation-header">
-                    <span class="conversation-name">{{ conv.otherUserName }}</span>
-                    <span class="conversation-time">{{ formatDate(conv.lastMessageAt) }}</span>
-                  </div>
+                    <!-- Content -->
+                    <div class="conversation-content">
+                      <div class="conversation-header">
+                        <span class="conversation-name">{{ conv.otherUserName }}</span>
+                        <span class="conversation-time">{{ formatDate(conv.lastMessageAt) }}</span>
+                      </div>
 
-                  @if (conv.carBrand) {
-                    <div class="conversation-car">
-                      🚗 {{ conv.carBrand }} {{ conv.carModel }} {{ conv.carYear }}
+                      @if (conv.carBrand) {
+                        <div class="conversation-car">
+                          🚗 {{ conv.carBrand }} {{ conv.carModel }} {{ conv.carYear }}
+                        </div>
+                      }
+
+                      <div class="conversation-footer">
+                        <p class="conversation-message">
+                          {{ conv.lastMessage }}
+                        </p>
+                        @if (conv.unreadCount > 0) {
+                          <span class="unread-badge">
+                            {{ conv.unreadCount > 99 ? '99+' : conv.unreadCount }}
+                          </span>
+                        }
+                      </div>
                     </div>
-                  }
+                  </button>
+                }
+              </div>
+            </div>
 
-                  <div class="conversation-footer">
-                    <p class="conversation-message">
-                      {{ conv.lastMessage }}
-                    </p>
-                    @if (conv.unreadCount > 0) {
-                      <span class="unread-badge">
-                        {{ conv.unreadCount > 99 ? '99+' : conv.unreadCount }}
-                      </span>
-                    }
-                  </div>
-                </div>
-              </button>
-            }
+            <div class="chat-panel">
+              <app-chat-thread
+                [bookingId]="activeBookingId()"
+                [carId]="activeCarId()"
+                [recipientId]="activeRecipientId()"
+                [recipientName]="activeRecipientName()"
+                [showEmptyState]="true"
+              />
+            </div>
           </div>
         }
       </div>
 
-      <!-- Floating Action Button (estilo WhatsApp) -->
-      <div class="fab-container">
-        @if (showAttachMenu()) {
-          <div class="attach-menu" (click)="closeAttachMenu($event)">
-            <button class="attach-option" (click)="triggerFileInput()" type="button">
-              <div class="attach-icon document">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-              </div>
-              <span>Documento</span>
-            </button>
-            <button class="attach-option" (click)="triggerFileInput()" type="button">
-              <div class="attach-icon photo">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-              <span>Foto/Video</span>
-            </button>
-            <button class="attach-option" (click)="triggerFileInput()" type="button">
-              <div class="attach-icon camera">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </div>
-              <span>Cámara</span>
-            </button>
-          </div>
-        }
-
-        <button
-          class="fab-button"
-          [class.rotated]="showAttachMenu()"
-          (click)="toggleAttachMenu()"
-          type="button"
-        >
-          <svg class="fab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-            />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Hidden file inputs -->
-      <input
-        id="documentInput"
-        type="file"
-        accept=".pdf,.doc,.docx,.txt,.xls,.xlsx"
-        (change)="handleFileSelect($event, 'document')"
-        style="display: none"
-      />
-      <input
-        id="imageInput"
-        type="file"
-        accept="image/*,video/*"
-        (change)="handleFileSelect($event, 'media')"
-        style="display: none"
-      />
-      <input
-        id="cameraInput"
-        type="file"
-        accept="image/*"
-        capture="environment"
-        (change)="handleFileSelect($event, 'camera')"
-        style="display: none"
-      />
     </div>
   `,
 })
 export class InboxPage implements OnInit, OnDestroy {
   private readonly logger = inject(LoggerService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly messagesService = inject(MessagesService);
   private readonly authService = inject(AuthService);
   private readonly unreadMessagesService = inject(UnreadMessagesService);
   private readonly realtimeConnection = inject(RealtimeConnectionService);
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
-  private readonly notifications = inject(NotificationManagerService);
+  private readonly breakpoint = inject(BreakpointService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly conversations = signal<ConversationDTO[]>([]);
   readonly connectionStatus = signal<ConnectionStatus>('disconnected');
-  readonly showAttachMenu = signal(false);
+  readonly activeBookingId = signal<string | null>(null);
+  readonly activeCarId = signal<string | null>(null);
+  readonly activeRecipientId = signal<string | null>(null);
+  readonly activeRecipientName = signal<string | null>(null);
 
   private realtimeChannel?: RealtimeChannel;
 
@@ -260,6 +189,10 @@ export class InboxPage implements OnInit, OnDestroy {
 
     await this.loadConversations();
     this.subscribeToConversations(session['user']['id']);
+
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      this.syncActiveChatFromParams(params);
+    });
   }
 
   ngOnDestroy(): void {
@@ -386,7 +319,7 @@ export class InboxPage implements OnInit, OnDestroy {
         );
       });
     } catch (error) {
-      console.error('Error fetching new conversation:', error);
+      this.logger.error('Error fetching new conversation', { error });
     }
   }
 
@@ -405,8 +338,8 @@ export class InboxPage implements OnInit, OnDestroy {
 
       this.conversations.set(result.conversations);
     } catch (err) {
-      console.error('Error loading conversations:', err);
-      this['error'].set('Error inesperado');
+      this.logger.error('Error loading conversations', { error: err });
+      this.error.set('Error inesperado');
     } finally {
       this.loading.set(false);
     }
@@ -434,7 +367,44 @@ export class InboxPage implements OnInit, OnDestroy {
       this.unreadMessagesService.markConversationAsRead(conv['bookingId'], 'booking');
     }
 
+    if (this.breakpoint.isDesktop()) {
+      this.syncActiveChatFromParams(params);
+      void this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: params,
+        replaceUrl: true,
+      });
+      return;
+    }
+
     this.router.navigate(['/messages/chat'], { queryParams: params });
+  }
+
+  private syncActiveChatFromParams(params: Record<string, string | undefined>): void {
+    const bookingId = params['bookingId'] ?? null;
+    const carId = params['carId'] ?? null;
+
+    if (!bookingId && !carId) {
+      this.activeBookingId.set(null);
+      this.activeCarId.set(null);
+      this.activeRecipientId.set(null);
+      this.activeRecipientName.set(null);
+      return;
+    }
+
+    this.activeBookingId.set(bookingId);
+    this.activeCarId.set(carId);
+    this.activeRecipientId.set(params['userId'] ?? null);
+    this.activeRecipientName.set(params['userName'] ?? params['carName'] ?? 'Usuario');
+  }
+
+  isActiveConversation(conv: ConversationDTO): boolean {
+    const activeBookingId = this.activeBookingId();
+    const activeCarId = this.activeCarId();
+
+    if (activeBookingId && conv['bookingId'] === activeBookingId) return true;
+    if (activeCarId && conv['carId'] === activeCarId) return true;
+    return false;
   }
 
   /**
@@ -458,117 +428,5 @@ export class InboxPage implements OnInit, OnDestroy {
   formatDate(date: Date): string {
     // Usar método del servicio para formateo consistente
     return this.messagesService.formatRelativeDate(date);
-  }
-
-  toggleAttachMenu(): void {
-    this.showAttachMenu.update((show) => !show);
-
-    // Haptic feedback
-    if ('vibrate' in navigator) {
-      navigator.vibrate(10);
-    }
-  }
-
-  closeAttachMenu(event: Event): void {
-    event.stopPropagation();
-    this.showAttachMenu.set(false);
-  }
-
-  triggerFileInput(): void {
-    this.showAttachMenu.set(false);
-
-    // Haptic feedback
-    if ('vibrate' in navigator) {
-      navigator.vibrate([10, 20, 5]);
-    }
-
-    // En el Inbox no hay conversación activa - informar al usuario
-    this.notifications.info(
-      'Abrí una conversación',
-      'Para enviar archivos, primero abrí una conversación haciendo clic en ella.',
-      4000,
-    );
-  }
-
-  async handleFileSelect(event: Event, fileType: 'document' | 'media' | 'camera'): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-
-    if (!file) return;
-
-    // Validar tamaño (máx 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (file.size > maxSize) {
-      this.notifications.warning(
-        'Archivo muy grande',
-        'El archivo supera el límite de 10MB. Por favor selecciona uno más pequeño.',
-        4000,
-      );
-      input.value = '';
-      return;
-    }
-
-    try {
-      // Mostrar loading
-      this.loading.set(true);
-
-      const session = this.authService.session$();
-      if (!session) {
-        throw new Error('No hay sesión activa');
-      }
-
-      // Subir a Supabase Storage
-      const userId = session['user']['id'];
-      const timestamp = Date.now();
-
-      const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-      const fileName = `${timestamp}_${sanitizedName}`;
-      const filePath = `${userId}/messages/${fileName}`;
-
-      // Determinar el bucket según el tipo
-      const bucket = fileType === 'document' ? 'documents' : 'avatars';
-      const fileSize = (file.size / 1024).toFixed(2);
-
-      this.logger.debug(`📤 Subiendo archivo: ${fileName} (${fileSize}KB) al bucket ${bucket}`);
-
-      // Mostrar notificación de progreso
-      this.notifications.info('Subiendo archivo', `${file.name} (${fileSize}KB)`, 2000);
-
-      // Subir a Supabase Storage
-      const { data, error } = await this.supabase.storage.from(bucket).upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: false,
-        contentType: file.type,
-      });
-
-      if (error) {
-        console.error('❌ Error de Supabase Storage:', error);
-        throw new Error(error['message'] || 'Error al subir archivo');
-      }
-
-      this.logger.debug(`✅ Archivo subido exitosamente:`, data);
-
-      // Obtener URL pública del archivo
-      const { data: urlData } = this.supabase.storage.from(bucket).getPublicUrl(filePath);
-
-      this.logger.debug(`🔗 URL pública: ${urlData.publicUrl}`);
-
-      // Notificación de éxito profesional
-      this.notifications.success(
-        'Archivo subido',
-        `${file.name} se subió correctamente (${fileSize}KB)`,
-        5000,
-      );
-
-      // Limpiar input
-      input.value = '';
-    } catch (error) {
-      console.error('Error subiendo archivo:', error);
-      const errorMessage = error instanceof Error ? error['message'] : 'Error desconocido';
-
-      this.notifications['error']('Error al subir archivo', errorMessage, 5000);
-    } finally {
-      this.loading.set(false);
-    }
   }
 }
