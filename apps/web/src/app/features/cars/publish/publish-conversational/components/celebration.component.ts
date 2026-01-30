@@ -178,7 +178,7 @@ export class CelebrationComponent implements OnInit {
     '#00d95f', // green
     '#3b82f6', // blue
     '#f59e0b', // amber
-    '#ec4899', // pink
+    '#00bf54', // autorenta green hover
     '#8b5cf6', // violet
     '#10b981', // emerald
   ];

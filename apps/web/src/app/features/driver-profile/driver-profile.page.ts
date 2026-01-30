@@ -406,7 +406,7 @@ import { MetaService } from '@core/services/ui/meta.service';
         ); /* Replaced gradient with solid color token */
         --gradient-warning: var(
           --warning-default,
-          #f093fb
+          #00d95f
         ); /* Replaced gradient with solid color token */
         --gradient-danger: var(
           --error-default,

@@ -77,7 +77,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
       .with-surge .badge-content {
         background-color: var(
           --warning-default,
-          #f093fb
+          #00d95f
         ); /* Replaced gradient with solid color token */
       }
 

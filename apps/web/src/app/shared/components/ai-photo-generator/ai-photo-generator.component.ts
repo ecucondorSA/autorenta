@@ -24,7 +24,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
     <div class="ai-photo-generator bg-surface-base">
       <!-- Minimalist Header -->
       <div class="text-center mb-8">
-        <div class="w-16 h-16 bg-gradient-to-tr from-violet-500 to-fuchsia-500 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-violet-200">
+        <div class="w-16 h-16 bg-gradient-to-tr from-cta-default to-cta-hover rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-emerald-200">
            <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
            </svg>
@@ -50,7 +50,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
         type="button"
         (click)="generatePhotos()"
         [disabled]="generating() || !canGenerate()"
-        class="w-full py-5 rounded-2xl text-white font-black text-lg shadow-xl hover:shadow-violet-200 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:transform-none transition-all flex items-center justify-center gap-3 bg-gradient-to-r from-violet-600 to-fuchsia-600"
+        class="w-full py-5 rounded-2xl text-white font-black text-lg shadow-xl hover:shadow-emerald-200 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:transform-none transition-all flex items-center justify-center gap-3 bg-gradient-to-r from-cta-default to-cta-hover"
       >
         @if (generating()) {
           <svg class="animate-spin h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">

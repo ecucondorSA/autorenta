@@ -36,6 +36,16 @@ export interface ChatContext {
   headerSubtitle?: string; // Texto adicional para el header
 }
 
+type AttachmentKind = 'image' | 'video' | 'document' | 'other';
+
+interface AttachmentInfo {
+  name: string;
+  url: string;
+  kind: AttachmentKind;
+  extension: string | null;
+  caption?: string;
+}
+
 /**
  * Componente base para chats (booking y car)
  * Unifica la UI y lógica compartida entre ambos tipos de chat
@@ -57,7 +67,7 @@ export interface ChatContext {
         <!-- Avatar with Initials -->
         <div class="relative flex-shrink-0">
           <div
-            class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold text-lg"
+            class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-cta-default to-cta-hover text-white font-bold text-lg"
           >
             {{ getInitials() }}
           </div>
@@ -150,7 +160,7 @@ export interface ChatContext {
           <div class="flex h-full items-center justify-center">
             <div class="text-center">
               <div
-                class="mb-3 inline-block h-10 w-10 animate-spin rounded-full border-4 border-border-muted border-t-indigo-500"
+                class="mb-3 inline-block h-10 w-10 animate-spin rounded-full border-4 border-border-muted border-t-cta-default"
               ></div>
               <p class="text-sm text-text-secondary">Cargando mensajes...</p>
             </div>
@@ -182,9 +192,9 @@ export interface ChatContext {
         <!-- Empty state -->
         @if (!loading() && messages().length === 0) {
           <div class="flex h-full flex-col items-center justify-center px-6 text-center">
-            <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-indigo-50">
+            <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
               <svg
-                class="h-10 w-10 text-indigo-500"
+                class="h-10 w-10 text-cta-default"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -223,7 +233,7 @@ export interface ChatContext {
                   <div class="flex items-end gap-2 max-w-[80%]">
                     <!-- Small avatar -->
                     <div
-                      class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-xs font-bold mb-1"
+                      class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cta-default to-cta-hover text-white text-xs font-bold mb-1"
                     >
                       {{ getInitials() }}
                     </div>
@@ -231,11 +241,91 @@ export interface ChatContext {
                       <div
                         class="rounded-2xl rounded-bl-md bg-white border border-border-default px-4 py-2.5 shadow-sm"
                       >
-                        <p
-                          class="text-sm text-text-primary leading-relaxed whitespace-pre-wrap break-words"
-                        >
-                          {{ message.body }}
-                        </p>
+                        @if (getAttachmentInfo(message); as attachment) {
+                          @if (attachment.kind === 'image') {
+                            <a
+                              class="block overflow-hidden rounded-2xl border border-border-default bg-surface-base"
+                              [href]="attachment.url"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                class="block max-h-64 w-full object-cover"
+                                [src]="attachment.url"
+                                [alt]="attachment.name"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            </a>
+                          } @else if (attachment.kind === 'video') {
+                            <div
+                              class="overflow-hidden rounded-2xl border border-border-default bg-surface-base"
+                            >
+                              <video
+                                class="block max-h-64 w-full"
+                                [src]="attachment.url"
+                                controls
+                                preload="metadata"
+                                playsinline
+                              ></video>
+                            </div>
+                          }
+                          <div
+                            class="flex items-center gap-3"
+                            [class.mt-2]="isAttachmentPreviewable(attachment)"
+                          >
+                            <span
+                              class="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 text-cta-default"
+                            >
+                              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+                                />
+                              </svg>
+                            </span>
+                            <div class="min-w-0">
+                              <p class="text-sm font-semibold text-text-primary truncate">
+                                {{ attachment.name }}
+                              </p>
+                              <p class="text-xs text-text-muted">
+                                {{ getAttachmentTypeLabel(attachment) }}
+                              </p>
+                            </div>
+                          </div>
+                          <div class="mt-2 flex items-center gap-2">
+                            <a
+                              class="rounded-full border border-border-default bg-white px-3 py-1 text-xs text-text-secondary hover:bg-surface-hover"
+                              [href]="attachment.url"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Abrir
+                            </a>
+                            <a
+                              class="rounded-full border border-border-default bg-white px-3 py-1 text-xs text-text-secondary hover:bg-surface-hover"
+                              [href]="attachment.url"
+                              download
+                            >
+                              Descargar
+                            </a>
+                          </div>
+                          @if (attachment.caption) {
+                            <p
+                              class="mt-2 text-[15px] font-medium text-text-primary leading-relaxed whitespace-pre-wrap break-words"
+                            >
+                              {{ attachment.caption }}
+                            </p>
+                          }
+                        } @else {
+                          <p
+                            class="text-[15px] font-medium text-text-primary leading-relaxed whitespace-pre-wrap break-words"
+                          >
+                            {{ message.body }}
+                          </p>
+                        }
                         <div class="mt-1 flex items-center justify-end">
                           <span class="text-xs text-text-muted">{{
                             formatTime(message.created_at)
@@ -251,13 +341,91 @@ export interface ChatContext {
                   <div class="max-w-[80%]">
                     <div class="relative">
                       <div
-                        class="rounded-2xl rounded-br-md bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-2.5 shadow-sm"
+                        class="rounded-2xl rounded-br-md bg-gradient-to-r from-cta-default to-cta-hover px-4 py-2.5 shadow-sm"
                       >
-                        <p
-                          class="text-sm text-white leading-relaxed whitespace-pre-wrap break-words"
-                        >
-                          {{ message.body }}
-                        </p>
+                        @if (getAttachmentInfo(message); as attachment) {
+                          @if (attachment.kind === 'image') {
+                            <a
+                              class="block overflow-hidden rounded-2xl border border-white/20 bg-white/10"
+                              [href]="attachment.url"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                class="block max-h-64 w-full object-cover"
+                                [src]="attachment.url"
+                                [alt]="attachment.name"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            </a>
+                          } @else if (attachment.kind === 'video') {
+                            <div class="overflow-hidden rounded-2xl border border-white/20 bg-white/10">
+                              <video
+                                class="block max-h-64 w-full"
+                                [src]="attachment.url"
+                                controls
+                                preload="metadata"
+                                playsinline
+                              ></video>
+                            </div>
+                          }
+                          <div
+                            class="flex items-center gap-3"
+                            [class.mt-2]="isAttachmentPreviewable(attachment)"
+                          >
+                            <span
+                              class="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white"
+                            >
+                              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+                                />
+                              </svg>
+                            </span>
+                            <div class="min-w-0">
+                              <p class="text-sm font-semibold text-white truncate">
+                                {{ attachment.name }}
+                              </p>
+                              <p class="text-xs text-white/70">
+                                {{ getAttachmentTypeLabel(attachment) }}
+                              </p>
+                            </div>
+                          </div>
+                          <div class="mt-2 flex items-center gap-2">
+                            <a
+                              class="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs text-white/90 hover:bg-white/20"
+                              [href]="attachment.url"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Abrir
+                            </a>
+                            <a
+                              class="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs text-white/90 hover:bg-white/20"
+                              [href]="attachment.url"
+                              download
+                            >
+                              Descargar
+                            </a>
+                          </div>
+                          @if (attachment.caption) {
+                            <p
+                              class="mt-2 text-[15px] font-medium text-white leading-relaxed whitespace-pre-wrap break-words"
+                            >
+                              {{ attachment.caption }}
+                            </p>
+                          }
+                        } @else {
+                          <p
+                            class="text-[15px] font-medium text-white leading-relaxed whitespace-pre-wrap break-words"
+                          >
+                            {{ message.body }}
+                          </p>
+                        }
                         <div class="mt-1 flex items-center justify-end gap-1">
                           <span class="text-xs text-white/70">{{
                             formatTime(message.created_at)
@@ -329,7 +497,7 @@ export interface ChatContext {
               <div class="flex justify-start">
                 <div class="flex items-end gap-2">
                   <div
-                    class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-xs font-bold"
+                    class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cta-default to-cta-hover text-white text-xs font-bold"
                   >
                     {{ getInitials() }}
                   </div>
@@ -338,15 +506,15 @@ export interface ChatContext {
                   >
                     <div class="flex items-center gap-1">
                       <div
-                        class="h-2 w-2 animate-bounce rounded-full bg-indigo-400"
+                        class="h-2 w-2 animate-bounce rounded-full bg-cta-default"
                         style="animation-delay: 0ms"
                       ></div>
                       <div
-                        class="h-2 w-2 animate-bounce rounded-full bg-indigo-400"
+                        class="h-2 w-2 animate-bounce rounded-full bg-cta-default"
                         style="animation-delay: 150ms"
                       ></div>
                       <div
-                        class="h-2 w-2 animate-bounce rounded-full bg-indigo-400"
+                        class="h-2 w-2 animate-bounce rounded-full bg-cta-default"
                         style="animation-delay: 300ms"
                       ></div>
                     </div>
@@ -360,7 +528,7 @@ export interface ChatContext {
         <!-- Floating notification -->
         @if (notification()) {
           <div class="absolute left-1/2 top-4 z-10 -translate-x-1/2 transform animate-slide-down">
-            <div class="rounded-full bg-indigo-500 px-4 py-2 text-sm text-white shadow-lg">
+            <div class="rounded-full bg-cta-default px-4 py-2 text-sm text-white shadow-lg">
               {{ notification() }}
             </div>
           </div>
@@ -369,9 +537,9 @@ export interface ChatContext {
 
       <!-- AI Suggestions Bar -->
       @if (bookingContextForAI() && showSuggestions()) {
-        <div class="border-t border-border-default bg-indigo-50/50 px-4 py-2.5">
+        <div class="border-t border-border-default bg-green-50 px-4 py-2.5">
           @if (loadingSuggestions()) {
-            <div class="flex items-center gap-2 text-indigo-600">
+            <div class="flex items-center gap-2 text-green-700">
               <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle
                   class="opacity-25"
@@ -394,7 +562,7 @@ export interface ChatContext {
               @for (suggestion of aiSuggestions(); track suggestion.id) {
                 <button
                   type="button"
-                  class="rounded-full bg-white border border-indigo-200 px-3 py-1.5 text-xs font-medium text-indigo-600 transition-all hover:bg-indigo-50 hover:border-indigo-300 shadow-sm"
+                  class="rounded-full bg-white border border-green-200 px-3 py-1.5 text-xs font-medium text-green-700 transition-all hover:bg-green-50 hover:border-green-300 shadow-sm"
                   (click)="useSuggestion(suggestion)"
                 >
                   {{ suggestion.text }}
@@ -442,7 +610,7 @@ export interface ChatContext {
                   (mousedown)="$event.preventDefault()"
                   (touchstart)="$event.preventDefault()"
                 >
-                  <span class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-white">
+                  <span class="flex h-8 w-8 items-center justify-center rounded-full bg-cta-default text-white">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
@@ -507,8 +675,8 @@ export interface ChatContext {
             <button
               type="button"
               class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-all"
-              [class.bg-indigo-100]="showSuggestions()"
-              [class.text-indigo-600]="showSuggestions()"
+              [class.bg-green-100]="showSuggestions()"
+              [class.text-green-700]="showSuggestions()"
               [class.text-text-secondary]="!showSuggestions()"
               [class.hover:bg-surface-hover]="!showSuggestions()"
               [disabled]="loadingSuggestions()"
@@ -542,7 +710,7 @@ export interface ChatContext {
                     ? 'Te han bloqueado'
                     : 'Escribe un mensaje...'
               "
-              class="w-full rounded-full bg-surface-base border border-border-default px-4 py-2.5 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
+              class="w-full rounded-full bg-surface-base border border-border-default px-4 py-2.5 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-cta-default focus:border-cta-default transition-all"
             />
           </div>
 
@@ -550,7 +718,7 @@ export interface ChatContext {
           <button
             type="submit"
             [disabled]="!draftMessage.trim() || sending() || blocked() || blockedBy()"
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-sm"
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-cta-default to-cta-hover text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-sm"
             (mousedown)="$event.preventDefault()"
             (touchstart)="$event.preventDefault()"
           >
@@ -1163,6 +1331,79 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
     if (message.read_at) return 'read';
     if (message.delivered_at) return 'delivered';
     return 'sent';
+  }
+
+  protected getAttachmentInfo(message: Message): AttachmentInfo | null {
+    const body = (message.body || '').trim();
+    if (!body) return null;
+
+    const lines = body.split(/\r?\n/);
+    if (lines.length < 2) return null;
+
+    const firstLine = lines[0]?.trim() ?? '';
+    if (!firstLine.toLowerCase().startsWith('archivo:')) return null;
+
+    const name = firstLine.replace(/^archivo:\s*/i, '').trim();
+    const url = lines[1]?.trim() ?? '';
+
+    if (!name || !url || !this.isValidUrl(url)) return null;
+
+    const caption = lines.slice(2).join('\n').trim();
+    const extension = this.getFileExtension(name);
+    const kind = this.getAttachmentKind(extension);
+
+    return {
+      name,
+      url,
+      extension,
+      kind,
+      caption: caption || undefined,
+    };
+  }
+
+  protected getAttachmentTypeLabel(attachment: AttachmentInfo): string {
+    switch (attachment.kind) {
+      case 'image':
+        return 'Imagen adjunta';
+      case 'video':
+        return 'Video adjunto';
+      case 'document':
+        return 'Documento adjunto';
+      default:
+        return 'Archivo adjunto';
+    }
+  }
+
+  protected isAttachmentPreviewable(attachment: AttachmentInfo): boolean {
+    return attachment.kind === 'image' || attachment.kind === 'video';
+  }
+
+  private isValidUrl(url: string): boolean {
+    try {
+      const parsed = new URL(url);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }
+
+  private getFileExtension(fileName: string): string | null {
+    const match = fileName.toLowerCase().match(/\.([a-z0-9]+)$/);
+    return match ? match[1] : null;
+  }
+
+  private getAttachmentKind(extension: string | null): AttachmentKind {
+    if (!extension) return 'other';
+    if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'heic'].includes(extension)) {
+      return 'image';
+    }
+    if (['mp4', 'mov', 'avi', 'mkv', 'webm'].includes(extension)) {
+      return 'video';
+    }
+    if (['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'ppt', 'pptx'].includes(extension)) {
+      return 'document';
+    }
+    return 'other';
   }
 
   /**

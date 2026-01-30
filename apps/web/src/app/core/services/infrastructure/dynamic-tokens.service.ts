@@ -230,14 +230,14 @@ export class DynamicTokensService {
       tokens: {
         colorPrimary: '#fbbf24',
         colorSecondary: '#8b5cf6',
-        colorAccent: '#ec4899',
+        colorAccent: '#00d95f',
       },
     },
     carnival: {
       name: 'Carnaval',
       tokens: {
         colorPrimary: '#8b5cf6',
-        colorSecondary: '#ec4899',
+        colorSecondary: '#00d95f',
         colorAccent: '#22d3ee',
       },
     },

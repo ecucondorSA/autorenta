@@ -260,11 +260,37 @@ jobs:
             echo "Debug builds use APK format"
           fi
 
+      - name: Check for Native Debug Symbols
+        id: symbols
+        if: github.event.inputs.build_type == 'release'
+        run: |
+          SYMBOLS_PATH="apps/web/android/app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip"
+          if [ -f "$SYMBOLS_PATH" ]; then
+            echo "✅ Native debug symbols found"
+            echo "has_symbols=true" >> $GITHUB_OUTPUT
+            echo "symbols_path=$SYMBOLS_PATH" >> $GITHUB_OUTPUT
+            ls -lh "$SYMBOLS_PATH"
+          else
+            echo "ℹ️ No native debug symbols generated (normal for Capacitor apps with prebuilt SDKs)"
+            echo "has_symbols=false" >> $GITHUB_OUTPUT
+            # List what was generated
+            echo "Available outputs:"
+            find apps/web/android/app/build/outputs -name "*.zip" -o -name "*symbols*" 2>/dev/null || true
+          fi
+
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
           name: autorentar-${{ github.event.inputs.build_type }}-${{ steps.version.outputs.version }}
           path: apps/web/android/app/build/outputs/bundle/${{ github.event.inputs.build_type }}/*.aab
+          retention-days: 90
+
+      - name: Upload Native Debug Symbols (if available)
+        if: steps.symbols.outputs.has_symbols == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-debug-symbols-${{ steps.version.outputs.version }}
+          path: ${{ steps.symbols.outputs.symbols_path }}
           retention-days: 90
 
       - name: Build Summary
@@ -275,6 +301,16 @@ jobs:
           echo "- **Type:** ${{ github.event.inputs.build_type }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Format:** AAB (Android App Bundle)" >> $GITHUB_STEP_SUMMARY
           echo "- **Artifact:** autorentar-${{ github.event.inputs.build_type }}-${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.symbols.outputs.has_symbols }}" = "true" ]; then
+            echo "### 🔧 Native Debug Symbols" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Symbols generated and uploaded as separate artifact" >> $GITHUB_STEP_SUMMARY
+            echo "Upload to Play Console → App bundle explorer → Native debug symbols" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ℹ️ Native Debug Symbols" >> $GITHUB_STEP_SUMMARY
+            echo "No symbols generated (normal for Capacitor apps using prebuilt SDKs like Sentry/Facebook)" >> $GITHUB_STEP_SUMMARY
+            echo "This is a Play Console *warning*, not an error - your app can still be published" >> $GITHUB_STEP_SUMMARY
+          fi
 
   upload-play-store:
     name: Upload to Google Play
