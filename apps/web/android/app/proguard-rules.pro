@@ -1,93 +1,110 @@
-# ProGuard rules for AutoRenta (Capacitor + Ionic)
+# ProGuard/R8 Rules for AutoRenta (Capacitor + Ionic)
+# Optimized for R8 full mode - 2026-01-30
 # https://capacitorjs.com/docs/android/troubleshooting
 
 # ============================================
-# CRITICAL: Keep MainActivity and Application
+# AUTORENTAR APPLICATION
 # ============================================
--keep class app.autorentar.** { *; }
--keep class app.autorenta.io.** { *; }
+# Only keep MainActivity (required entry point)
+-keep class app.autorentar.MainActivity { *; }
 
 # ============================================
-# CAPACITOR CORE
+# CAPACITOR CORE (minimum required)
 # ============================================
-# Keep all Capacitor classes
--keep public class * extends com.getcapacitor.Plugin
--keep class com.getcapacitor.** { *; }
--keep class com.getcapacitor.plugin.** { *; }
+# Keep plugin methods annotated with @PluginMethod
+-keep public class * extends com.getcapacitor.Plugin {
+    @com.getcapacitor.PluginMethod public *;
+}
 
-# Keep BridgeActivity (parent of MainActivity)
+# Core Capacitor classes needed at runtime
 -keep class com.getcapacitor.BridgeActivity { *; }
+-keep class com.getcapacitor.Bridge { *; }
+-keep class com.getcapacitor.JSObject { *; }
+-keep class com.getcapacitor.PluginCall { *; }
+-keep class com.getcapacitor.PluginResult { *; }
 
-# Keep annotations used by Capacitor
+# Capacitor annotations
 -keepattributes *Annotation*
 -keepattributes Signature
 -keepattributes Exceptions
 
 # ============================================
-# CAPACITOR PLUGINS
+# CAPACITOR PLUGINS (specific classes only)
 # ============================================
-# Local Notifications
--keep class com.capacitorjs.plugins.localnotifications.** { *; }
+# Local Notifications - keep handlers
+-keep class com.capacitorjs.plugins.localnotifications.LocalNotificationIntentReceiver { *; }
 
-# Push Notifications
--keep class com.capacitorjs.plugins.pushnotifications.** { *; }
-
-# Biometric Authentication
--keep class ee.forgr.biometric.** { *; }
-
-# All Capacitor plugins (catch-all)
--keep class com.capacitorjs.plugins.** { *; }
+# Push Notifications - keep Firebase integration
+-keep class com.capacitorjs.plugins.pushnotifications.PushNotificationsPlugin { *; }
 
 # ============================================
-# SENTRY
+# SENTRY (official recommended rules)
 # ============================================
--keep class io.sentry.** { *; }
+# Keep Sentry Android core for crash reporting
+-keep class io.sentry.android.core.** { *; }
+-keep class io.sentry.SentryOptions { *; }
+-keep class io.sentry.protocol.** { *; }
+-keep class io.sentry.Breadcrumb { *; }
+-keep class io.sentry.SentryEvent { *; }
+# Keep for stack trace symbolication
+-keepattributes LineNumberTable,SourceFile
 -dontwarn io.sentry.**
 
 # ============================================
-# FIREBASE
+# FIREBASE (only messaging)
 # ============================================
--keep class com.google.firebase.** { *; }
+# Keep Firebase Cloud Messaging
+-keep class com.google.firebase.messaging.FirebaseMessagingService { *; }
+-keep class com.google.firebase.messaging.RemoteMessage { *; }
+-keep class com.google.firebase.iid.FirebaseInstanceId { *; }
+# Suppress warnings for unused Firebase modules
 -dontwarn com.google.firebase.**
--keep class com.google.android.gms.** { *; }
 -dontwarn com.google.android.gms.**
 
 # ============================================
-# FACEBOOK SDK
+# FACEBOOK SDK (only analytics and login)
 # ============================================
--keep class com.facebook.** { *; }
+# Keep App Events for analytics
+-keep class com.facebook.appevents.AppEventsLogger { *; }
+-keep class com.facebook.appevents.AppEventsConstants { *; }
+# Keep Facebook SDK initialization
+-keep class com.facebook.FacebookSdk { *; }
+-keep class com.facebook.FacebookContentProvider { *; }
+# Keep Login functionality
+-keep class com.facebook.login.LoginManager { *; }
+-keep class com.facebook.AccessToken { *; }
 -dontwarn com.facebook.**
 
 # ============================================
 # WEBVIEW & JAVASCRIPT INTERFACE
 # ============================================
-# Keep JavaScript interfaces
+# Keep all JavaScript interfaces (critical for Capacitor)
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
 }
 
-# Keep WebView related classes
+# Keep WebView methods accessed via reflection
 -keepclassmembers class * extends android.webkit.WebView {
     public *;
 }
 
 # ============================================
-# NATIVE LIBRARIES
+# NATIVE METHODS
 # ============================================
-# Prevent stripping of native methods
+# Prevent stripping of native method bindings
 -keepclasseswithmembernames class * {
     native <methods>;
 }
 
 # ============================================
-# SERIALIZATION / JSON
+# SERIALIZATION
 # ============================================
-# Keep fields for JSON serialization
+# Keep Gson serialization fields
 -keepclassmembers class * {
     @com.google.gson.annotations.SerializedName <fields>;
 }
 
-# Keep Enum values
+# Keep Enum values for serialization
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
@@ -101,26 +118,11 @@
 }
 
 # ============================================
-# REFLECTION
+# DEBUGGING & STACK TRACES
 # ============================================
-# Keep classes accessed via reflection
--keepnames class * implements java.io.Serializable
--keepclassmembers class * implements java.io.Serializable {
-    static final long serialVersionUID;
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
-}
-
-# ============================================
-# DEBUGGING
-# ============================================
-# Keep source file and line numbers for stack traces
+# Keep source file and line numbers for readable crash reports
 -keepattributes SourceFile,LineNumberTable
-
-# Hide original source file name (optional security)
+# Rename source file for security (optional obfuscation)
 -renamesourcefileattribute SourceFile
 
 # ============================================
@@ -128,5 +130,5 @@
 # ============================================
 -dontwarn javax.annotation.**
 -dontwarn org.conscrypt.**
--dontwarn okhttp3.**
+-dontwarn okhttp3.internal.platform.**
 -dontwarn retrofit2.**

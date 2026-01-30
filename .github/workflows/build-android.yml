@@ -278,6 +278,17 @@ jobs:
             find apps/web/android/app/build/outputs -name "*.zip" -o -name "*symbols*" 2>/dev/null || true
           fi
 
+      - name: Archive ProGuard Mapping Files
+        if: github.event.inputs.build_type == 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: proguard-mappings-${{ steps.version.outputs.version }}
+          path: |
+            apps/web/android/app/build/outputs/mapping/release/mapping.txt
+            apps/web/android/app/build/outputs/mapping/release/seeds.txt
+            apps/web/android/app/build/outputs/mapping/release/usage.txt
+          retention-days: 365
+
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
