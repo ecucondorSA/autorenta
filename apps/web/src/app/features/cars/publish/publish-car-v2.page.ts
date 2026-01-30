@@ -50,6 +50,7 @@ import { HostSupportInfoPanelComponent } from '../../../shared/components/host-s
 import {
   PhotoUploadAIComponent,
   PhotoWithAI,
+  PhotoPosition,
   VehicleAutoDetect,
 } from '../../../shared/components/photo-upload-ai/photo-upload-ai.component';
 import { DetectedVehicle } from '../../../shared/components/video-vehicle-recognition/video-vehicle-recognition.component';
@@ -198,6 +199,30 @@ export class PublishCarV2Page implements OnInit {
   readonly uploadedPhotos = this.photoService.uploadedPhotos;
   readonly isProcessingPhotos = this.photoService.isProcessingPhotos;
   readonly isGeneratingAIPhotos = this.photoService.isGeneratingAIPhotos;
+  readonly aiGenerationCountdown = this.photoService.aiGenerationCountdown;
+
+  // Convert PhotoPreview[] to PhotoWithAI[] for the component
+  // IDs are stable based on file name + size to avoid unnecessary re-renders
+  readonly uploadedPhotosForComponent = computed(() => {
+    const photos = this.uploadedPhotos();
+    return photos.map((p, index): PhotoWithAI => ({
+      id: `photo-${p.file.name}-${p.file.size}-${index}`,
+      file: p.file,
+      preview: p.preview,
+      position: (p.position as PhotoPosition) || 'cover',
+      status: 'valid' as const,
+      progress: 100,
+      quality: p.qualityResult ? {
+        score: p.qualityResult.quality.score,
+        issues: p.qualityResult.quality.issues.map(i => i.description),
+        isAcceptable: p.qualityResult.quality.is_acceptable,
+      } : undefined,
+      plates: p.platesBlurred ? {
+        detected: true,
+        count: p.platesCount || 0,
+      } : undefined,
+    }));
+  });
   readonly manualCoordinates = this.locationService.manualCoordinates;
   readonly autofilledFromLast = this.formService.autofilledFromLast;
 

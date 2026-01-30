@@ -136,6 +136,105 @@ try {
 
 ---
 
+## 7.1 E2E Testing con AI (Claude in Chrome + Stagehand)
+
+### Flujo de Trabajo Obligatorio
+
+**REGLA:** Para todo test E2E nuevo, seguir este flujo de 2 fases:
+
+#### Fase 1: Desarrollo/Debug con Claude in Chrome
+```
+Usuario solicita test E2E → Claude usa Claude in Chrome →
+Debug interactivo en browser real → Validar flujo funciona
+```
+
+**Ventajas:**
+- Ver errores de consola en tiempo real
+- Diagnóstico inmediato de problemas
+- El usuario ve exactamente lo que Claude hace
+- Iteración rápida
+
+#### Fase 2: Automatización con Stagehand
+```
+Flujo validado → Claude crea archivo Stagehand →
+Test reproducible para CI/CD → Integrar en GitHub Actions
+```
+
+**Ventajas:**
+- Scripts reproducibles
+- Funciona sin supervisión humana
+- Integrable en CI/CD nightly
+- Captura de screenshots y logs automática
+
+### Estructura de Archivos
+
+```
+tools/stagehand-poc/
+├── .env                    # API keys (GEMINI_API_KEY)
+├── test-{feature}.ts       # Tests de Stagehand
+├── screenshots/            # Capturas por paso
+└── logs/
+    ├── console-logs.json   # Logs de consola capturados
+    └── network-errors.json # Errores de red
+```
+
+### Plantilla de Test Stagehand
+
+```typescript
+// tools/stagehand-poc/test-{feature}.ts
+import { Stagehand } from '@browserbasehq/stagehand';
+
+const stagehand = new Stagehand({
+  env: 'LOCAL',
+  model: 'google/gemini-2.5-flash',
+  headless: true,  // true para CI, false para debug
+  verbose: 1,
+});
+
+// Capturar console logs
+page.on('console', (msg) => {
+  if (msg.type() === 'error') {
+    console.log(`🔴 Console Error: ${msg.text()}`);
+  }
+});
+
+// Usar act() con lenguaje natural
+await stagehand.act('click the green "Ingresar" button');
+await stagehand.act('type "user@email.com" in the email field');
+
+// Extraer datos con schema
+const data = await stagehand.extract('get the price', PriceSchema);
+```
+
+### Ejecución
+
+```bash
+# Desarrollo (con browser visible)
+cd tools/stagehand-poc
+GEMINI_API_KEY=xxx bun test-{feature}.ts
+
+# CI/CD (headless)
+GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }} bun test-{feature}.ts
+```
+
+### Cuándo Usar Cada Herramienta
+
+| Situación | Herramienta |
+|-----------|-------------|
+| Nuevo flujo E2E, primera vez | Claude in Chrome |
+| Debug de test que falla | Claude in Chrome |
+| Test automatizado para CI | Stagehand |
+| Smoke tests nocturnos | Stagehand |
+| Demo para stakeholders | Claude in Chrome |
+
+### Costo Estimado Stagehand + Gemini
+
+- ~$0.006 por ejecución de test (~80k tokens)
+- ~$0.18/día si corres 30 tests diarios
+- ~$5.40/mes para suite completa
+
+---
+
 ## 8. Performance Checklist
 
 - [ ] **Lazy Loading:** Todas las rutas principales usan `loadComponent`.

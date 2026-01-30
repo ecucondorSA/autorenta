@@ -3,6 +3,7 @@ import {
   inject,
   signal,
   computed,
+  effect,
   OnInit,
   OnDestroy,
   HostListener,
@@ -262,6 +263,30 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
 
   // Form
   private publishForm!: FormGroup;
+
+  constructor() {
+    // Sync AI-generated photos from service to local state
+    effect(() => {
+      const servicePhotos = this.photoService.uploadedPhotos();
+      if (servicePhotos.length > 0) {
+        // Convert service photos to PhotoWithAI format
+        const aiPhotos: PhotoWithAI[] = servicePhotos.map((p, i) => ({
+          id: crypto.randomUUID(),
+          file: p.file,
+          preview: p.preview,
+          position: (p.position as PhotoPosition) || this.guessPosition(i),
+          status: 'valid' as const,
+          progress: 100,
+        }));
+        this.photos.set(aiPhotos);
+      }
+    });
+  }
+
+  private guessPosition(index: number): PhotoPosition {
+    const positions: PhotoPosition[] = ['cover', 'front', 'rear', 'left', 'right', 'interior', 'dashboard', 'trunk'];
+    return positions[index] || 'detail';
+  }
 
   // Computed
   readonly completedSteps = computed(() => {

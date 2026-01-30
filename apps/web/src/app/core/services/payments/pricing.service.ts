@@ -388,8 +388,20 @@ export class PricingService {
   }
 
   /**
+   * Cache for model year availability to avoid repeated API calls
+   * Key format: "brandCode-modelCode" -> array of year codes
+   */
+  private readonly modelYearsCache = new Map<string, string[]>();
+
+  /**
    * Get FIPE models filtered by year availability
    * Only returns models that were available in the specified year
+   *
+   * ⚠️ RATE LIMITING FIX (2026-01-30):
+   * - Reduced batch size from 10 to 3 to avoid 429 errors
+   * - Added 500ms delay between batches
+   * - Added caching to avoid repeated requests
+   *
    * @param brandCode FIPE brand code
    * @param year Year to filter by (e.g., 2016)
    */
@@ -398,8 +410,9 @@ export class PricingService {
       const allModels = await this.getFipeModels(brandCode);
       if (allModels.length === 0) return [];
 
-      // Check year availability for each model in parallel batches
-      const BATCH_SIZE = 10;
+      // ✅ FIX: Reduced batch size to avoid rate limiting (429 errors)
+      const BATCH_SIZE = 3;
+      const DELAY_BETWEEN_BATCHES_MS = 500;
       const availableModels: FipeModel[] = [];
 
       for (let i = 0; i < allModels.length; i += BATCH_SIZE) {
@@ -411,6 +424,11 @@ export class PricingService {
           }),
         );
         availableModels.push(...results.filter((m): m is FipeModel => m !== null));
+
+        // ✅ FIX: Add delay between batches to respect rate limits
+        if (i + BATCH_SIZE < allModels.length) {
+          await this.delay(DELAY_BETWEEN_BATCHES_MS);
+        }
       }
 
       return availableModels;
@@ -421,26 +439,69 @@ export class PricingService {
   }
 
   /**
+   * Helper to add delay between API calls
+   */
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  /**
    * Check if a specific year is available for a model
+   * Uses caching and retry with exponential backoff for 429 errors
    */
   private async checkModelYearAvailability(
     brandCode: string,
     modelCode: string,
     year: number,
   ): Promise<boolean> {
-    try {
-      const response = await fetch(
-        `https://parallelum.com.br/fipe/api/v2/cars/brands/${brandCode}/models/${modelCode}/years`,
-      );
+    const cacheKey = `${brandCode}-${modelCode}`;
 
-      if (!response.ok) return false;
-
-      const years: Array<{ code: string; name: string }> = await response.json();
-      // Year codes are like "2016-1" (gasoline) or "2016-3" (flex)
-      return years.some((y) => y.code.startsWith(`${year}-`) || y.name.includes(String(year)));
-    } catch {
-      return false;
+    // ✅ FIX: Check cache first
+    if (this.modelYearsCache.has(cacheKey)) {
+      const cachedYears = this.modelYearsCache.get(cacheKey)!;
+      return cachedYears.some((y) => y.startsWith(`${year}-`) || y.includes(String(year)));
     }
+
+    // Fetch with retry for rate limiting
+    const maxRetries = 3;
+    let lastError: Error | null = null;
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const response = await fetch(
+          `https://parallelum.com.br/fipe/api/v2/cars/brands/${brandCode}/models/${modelCode}/years`,
+        );
+
+        // ✅ FIX: Handle rate limiting with exponential backoff
+        if (response.status === 429) {
+          const backoffMs = Math.pow(2, attempt) * 1000; // 1s, 2s, 4s
+          console.warn(`[PricingService] Rate limited (429), retrying in ${backoffMs}ms...`);
+          await this.delay(backoffMs);
+          continue;
+        }
+
+        if (!response.ok) return false;
+
+        const years: Array<{ code: string; name: string }> = await response.json();
+        const yearCodes = years.map(y => y.code);
+
+        // ✅ FIX: Cache the result
+        this.modelYearsCache.set(cacheKey, yearCodes);
+
+        return yearCodes.some((y) => y.startsWith(`${year}-`) || y.includes(String(year)));
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        // Wait before retry on network errors
+        if (attempt < maxRetries - 1) {
+          await this.delay(500);
+        }
+      }
+    }
+
+    if (lastError) {
+      console.warn(`[PricingService] checkModelYearAvailability failed after ${maxRetries} attempts:`, lastError.message);
+    }
+    return false;
   }
 
   /**

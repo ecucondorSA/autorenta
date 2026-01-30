@@ -240,8 +240,13 @@ serve(async (req) => {
       // Generate image
       let imageContent: { url?: string; base64?: string } | undefined;
       let imageUploadError: string | undefined;
+      let imageDebug: string | undefined;
       if (generate_image) {
-        imageContent = await generateMarketingImage(carData, content_type);
+        console.log('[generate-marketing-content] generate_image=true, calling generateMarketingImage...');
+        console.log('[generate-marketing-content] GEMINI_API_KEY exists:', !!GEMINI_API_KEY);
+        const imageResult = await generateMarketingImage(carData, content_type);
+        imageContent = imageResult?.content;
+        imageDebug = imageResult?.debug;
 
         // Upload image if saving to DB and we have base64
         if (save_to_db && imageContent?.base64) {
@@ -271,6 +276,9 @@ serve(async (req) => {
       };
       if (imageUploadError) {
         resultItem.error = `Image upload failed: ${imageUploadError}`;
+      }
+      if (imageDebug) {
+        (resultItem as any)._imageDebug = imageDebug;
       }
 
       results.push(resultItem);
@@ -817,16 +825,16 @@ const MARKETING_IMAGE_PROMPTS: Record<ContentType, string[]> = {
 async function generateMarketingImage(
   carData: CarData | null,
   contentType: ContentType
-): Promise<{ url?: string; base64?: string } | undefined> {
+): Promise<{ content?: { url?: string; base64?: string }; debug?: string } | undefined> {
   // If car has existing images and it's car_spotlight, use them (50% chance to still generate AI art for variety)
   if (carData?.images && carData.images.length > 0 && contentType === 'car_spotlight' && Math.random() > 0.5) {
-    return { url: carData.images[0] };
+    return { content: { url: carData.images[0] }, debug: 'Used existing car image' };
   }
 
   // Generate with Gemini 2.5 Flash Image
   if (!GEMINI_API_KEY) {
     console.log('[generate-marketing-content] No Gemini API key, skipping image generation');
-    return undefined;
+    return { debug: 'NO_GEMINI_API_KEY' };
   }
 
   try {
@@ -856,16 +864,16 @@ async function generateMarketingImage(
 
     console.log('[generate-marketing-content] Generating image with PROMPT V2:', finalPrompt);
 
-    // Call Gemini 2.5 Flash Image for image generation
+    // Call Gemini 3 Pro Image Preview (Nano Banana Pro) for image generation
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: finalPrompt }] }],
           generationConfig: {
-            responseModalities: ['IMAGE'],
+            responseModalities: ['TEXT', 'IMAGE'],
             imageConfig: { aspectRatio: '1:1' }, // Square for social media
           },
         }),
@@ -875,7 +883,7 @@ async function generateMarketingImage(
     if (!response.ok) {
       const errorText = await response.text();
       console.error('[generate-marketing-content] Gemini image error:', errorText);
-      return undefined;
+      return { debug: `GEMINI_ERROR_${response.status}: ${errorText.substring(0, 200)}` };
     }
 
     const data = await response.json();
@@ -883,14 +891,20 @@ async function generateMarketingImage(
 
     if (!base64Data) {
       console.warn('[generate-marketing-content] No image data in response');
-      return undefined;
+      const debugInfo = JSON.stringify({
+        hasCandidate: !!data?.candidates?.[0],
+        hasContent: !!data?.candidates?.[0]?.content,
+        hasParts: !!data?.candidates?.[0]?.content?.parts?.[0],
+        partKeys: data?.candidates?.[0]?.content?.parts?.[0] ? Object.keys(data.candidates[0].content.parts[0]) : [],
+      });
+      return { debug: `NO_IMAGE_DATA: ${debugInfo}` };
     }
 
     console.log('[generate-marketing-content] Image generated successfully');
-    return { base64: base64Data };
+    return { content: { base64: base64Data }, debug: 'SUCCESS' };
   } catch (error) {
     console.error('[generate-marketing-content] Image generation error:', error);
-    return undefined;
+    return { debug: `EXCEPTION: ${error instanceof Error ? error.message : String(error)}` };
   }
 }
 
@@ -1147,14 +1161,14 @@ A comic-style speech bubble floating above/beside the man containing:
     console.log('[authority] Generating image with prompt:', finalPrompt.substring(0, 100) + '...');
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: finalPrompt }] }],
           generationConfig: {
-            responseModalities: ['IMAGE'],
+            responseModalities: ['TEXT', 'IMAGE'],
             imageConfig: { aspectRatio: '1:1' },
           },
         }),

@@ -590,12 +590,19 @@ export class PhotoUploadAIComponent {
   });
 
   constructor() {
-    // Initialize photos from initialPhotos input
+    // Sync photos from initialPhotos input (handles both initial load and AI-generated photos)
     effect(() => {
       const initial = this.initialPhotos();
-      if (initial.length > 0 && !this.initialized) {
-        this.initialized = true;
-        this.photos.set([...initial]);
+      // Only sync if there are photos AND they're different from current
+      // This handles: 1) initial load, 2) AI-generated photos pushed from parent
+      if (initial.length > 0) {
+        const currentIds = new Set(this.photos().map(p => p.id));
+        const hasNewPhotos = initial.some(p => !currentIds.has(p.id));
+
+        if (!this.initialized || hasNewPhotos) {
+          this.initialized = true;
+          this.photos.set([...initial]);
+        }
       }
     });
 
