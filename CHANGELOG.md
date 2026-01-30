@@ -1,3 +1,7 @@
+## <small>3.37.9 (2026-01-30)</small>
+
+* fix(marketing): add save_to_db to upload images to storage ([12c6680](https://github.com/ecucondorSA/autorenta/commit/12c6680))
+
 ## <small>3.37.8 (2026-01-30)</small>
 
 * fix(marketing): remove suspended platforms from daily social media workflow ([d56f25d](https://github.com/ecucondorSA/autorenta/commit/d56f25d))
