@@ -1,3 +1,8 @@
+## 3.46.0 (2026-01-30)
+
+* feat: add marketing demos, investor docs, and security migrations ([12dc14a](https://github.com/ecucondorSA/autorenta/commit/12dc14a))
+* docs: deployment status confirmation ([edf20ac](https://github.com/ecucondorSA/autorenta/commit/edf20ac))
+
 ## 3.45.0 (2026-01-30)
 
 * feat: add comprehensive E2E test suite with Patchright ([7c06649](https://github.com/ecucondorSA/autorenta/commit/7c06649))
