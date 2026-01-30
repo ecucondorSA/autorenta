@@ -1,3 +1,7 @@
+## <small>3.37.7 (2026-01-30)</small>
+
+* fix: add cache-busting query to service worker URL ([f7e6099](https://github.com/ecucondorSA/autorenta/commit/f7e6099))
+
 ## <small>3.37.6 (2026-01-30)</small>
 
 * fix: disable cache for ngsw-worker.js and ngsw.json ([528a599](https://github.com/ecucondorSA/autorenta/commit/528a599))
