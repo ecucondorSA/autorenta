@@ -234,14 +234,14 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
 
   private async loadModels(): Promise<void> {
     const brandCode = this.brandCode();
-    const year = this.year();
 
-    if (!brandCode || !year) return;
+    if (!brandCode) return;
 
     this.isLoading.set(true);
     try {
-      // Filter models by year availability
-      const models = await this.pricingService.getFipeModelsByYear(brandCode, year);
+      // ✅ FIX: Load all models without year filtering to avoid FIPE rate limiting (429)
+      // Year availability is validated when fetching FIPE value after model selection
+      const models = await this.pricingService.getFipeModels(brandCode);
       this.models.set(models);
 
       // Restore initial value if provided
