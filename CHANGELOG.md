@@ -1,3 +1,7 @@
+## <small>3.38.3 (2026-01-30)</small>
+
+* fix(carousel): prevent accidental sheet open on swipe ([96d40d9](https://github.com/ecucondorSA/autorenta/commit/96d40d9))
+
 ## <small>3.38.2 (2026-01-30)</small>
 
 * chore(dev): add memory-safe development scripts ([eae0d93](https://github.com/ecucondorSA/autorenta/commit/eae0d93))
