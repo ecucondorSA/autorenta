@@ -1,3 +1,8 @@
+## <small>3.46.1 (2026-01-30)</small>
+
+* fix(ci): change Google Play track from closed_testing to beta (open testing) ([e1bff10](https://github.com/ecucondorSA/autorenta/commit/e1bff10))
+* chore: add security lints fix migration ([3c40a25](https://github.com/ecucondorSA/autorenta/commit/3c40a25))
+
 ## 3.46.0 (2026-01-30)
 
 * feat: add marketing demos, investor docs, and security migrations ([12dc14a](https://github.com/ecucondorSA/autorenta/commit/12dc14a))
