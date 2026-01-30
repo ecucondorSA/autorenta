@@ -114,7 +114,7 @@ export class FooterComponent {
 
   // App store links
   appStoreUrl = 'https://apps.apple.com/app/autorentar';
-  playStoreUrl = 'https://play.google.com/store/apps/details?id=com.autorentar.app';
+  playStoreUrl = 'https://play.google.com/store/apps/details?id=app.autorentar';
 
   legalLinks = signal([
     { label: 'Privacidad', url: '/privacy' },
