@@ -104,4 +104,16 @@ FROM cron.job WHERE command LIKE '%net.http%';
 
 ---
 
+## Deployment Status
+
+| Migration | Status | Verified |
+|-----------|--------|----------|
+| `20260130175029_enable_rls_exposed_tables.sql` | ✅ Applied | 2026-01-30 21:30 UTC |
+| `20260130180500_fix_cron_jobs_auth.sql` | ✅ Applied | 2026-01-30 21:30 UTC |
+| `20260130181500_cleanup_duplicate_rls_policies.sql` | ✅ Applied | 2026-01-30 21:30 UTC |
+
+**CI/CD:** Deploy workflow completed successfully.
+
+---
+
 *Generated from PR #635 review session*
