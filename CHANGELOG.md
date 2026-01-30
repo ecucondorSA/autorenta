@@ -1,3 +1,8 @@
+## <small>3.39.2 (2026-01-30)</small>
+
+* fix(carousel): prevent accidental sheet open on swipe ([7c97ae3](https://github.com/ecucondorSA/autorenta/commit/7c97ae3))
+* fix(chat): improve layout overflow and responsive styling ([c08d082](https://github.com/ecucondorSA/autorenta/commit/c08d082))
+
 ## <small>3.39.1 (2026-01-30)</small>
 
 * fix(chat): make chat fill available screen height ([34be13f](https://github.com/ecucondorSA/autorenta/commit/34be13f))
