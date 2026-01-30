@@ -1,3 +1,7 @@
+## <small>3.41.2 (2026-01-30)</small>
+
+* perf(android): add Baseline Profile support for faster startup ([4dda609](https://github.com/ecucondorSA/autorenta/commit/4dda609))
+
 ## <small>3.41.1 (2026-01-30)</small>
 
 * perf(android): optimize R8 shrinking and add mapping backup ([6eb894d](https://github.com/ecucondorSA/autorenta/commit/6eb894d))
