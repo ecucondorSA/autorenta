@@ -1,3 +1,7 @@
+## 3.40.0 (2026-01-30)
+
+* feat(messages): add chat thread component and improve inbox styling ([25248ba](https://github.com/ecucondorSA/autorenta/commit/25248ba))
+
 ## <small>3.39.3 (2026-01-30)</small>
 
 * fix(ci): fix Android build by using cap copy instead of cap sync ([4370ead](https://github.com/ecucondorSA/autorenta/commit/4370ead))
