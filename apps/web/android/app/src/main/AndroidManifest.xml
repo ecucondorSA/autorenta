@@ -99,17 +99,13 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" tools:remove="android:maxSdkVersion" />
 
     <!-- BLE Permissions for AutoRenta Mesh (Android 12+) -->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
-    <!-- Note: neverForLocation removed to allow beacon detection -->
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" tools:targetApi="s" />
+    <!-- BLE Permissions for AutoRenta Mesh (Android 12+) -->
+    <!-- Note: neverForLocation added to avoid location permission requirement -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
-    <!-- Foreground Service for background BLE (Android 14+) -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
-
-    <!-- Background Location for beacon while app is backgrounded -->
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!-- Removed experimental permissions to unblock Release -->
+    <!-- BLUETOOTH_ADVERTISE, FOREGROUND_SERVICE, ACCESS_BACKGROUND_LOCATION removed -->
 
     <!-- Hardware Features -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
