@@ -1,3 +1,7 @@
+## <small>3.44.3 (2026-01-30)</small>
+
+* perf(rls): remove ~15 duplicate/redundant RLS policies ([3783a48](https://github.com/ecucondorSA/autorenta/commit/3783a48))
+
 ## <small>3.44.2 (2026-01-30)</small>
 
 * fix(cron): repair 3 cron jobs with broken authentication ([3929e09](https://github.com/ecucondorSA/autorenta/commit/3929e09))
