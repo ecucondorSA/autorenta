@@ -1,3 +1,8 @@
+## <small>3.44.4 (2026-01-30)</small>
+
+* fix: update Play Store URL to correct app ID (app.autorentar) ([3864b35](https://github.com/ecucondorSA/autorenta/commit/3864b35))
+* docs: security audit report 2026-01-30 ([07251c5](https://github.com/ecucondorSA/autorenta/commit/07251c5)), closes [#635](https://github.com/ecucondorSA/autorenta/issues/635) [#610](https://github.com/ecucondorSA/autorenta/issues/610)
+
 ## <small>3.44.3 (2026-01-30)</small>
 
 * perf(rls): remove ~15 duplicate/redundant RLS policies ([3783a48](https://github.com/ecucondorSA/autorenta/commit/3783a48))
