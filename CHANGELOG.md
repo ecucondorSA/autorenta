@@ -1,3 +1,7 @@
+## <small>3.37.6 (2026-01-30)</small>
+
+* fix: disable cache for ngsw-worker.js and ngsw.json ([528a599](https://github.com/ecucondorSA/autorenta/commit/528a599))
+
 ## <small>3.37.5 (2026-01-30)</small>
 
 * fix: add Clear-Site-Data header to force cache reset ([ecc6bfc](https://github.com/ecucondorSA/autorenta/commit/ecc6bfc))
