@@ -132,7 +132,7 @@ export const appConfig: ApplicationConfig = {
     // ✅ Async Animations - better initial load performance than standard animations
     provideAnimationsAsync(),
 
-    provideServiceWorker('ngsw-worker.js', {
+    provideServiceWorker('ngsw-worker.js?v=20260130-reset', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
