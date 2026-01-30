@@ -1,3 +1,7 @@
+## <small>3.39.1 (2026-01-30)</small>
+
+* fix(chat): make chat fill available screen height ([34be13f](https://github.com/ecucondorSA/autorenta/commit/34be13f))
+
 ## 3.39.0 (2026-01-30)
 
 * feat(browse): support date range from query params ([23219b0](https://github.com/ecucondorSA/autorenta/commit/23219b0))
