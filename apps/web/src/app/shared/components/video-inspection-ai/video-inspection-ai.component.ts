@@ -214,7 +214,10 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
 
       this.mediaRecorder = new MediaRecorder(this.mediaStream, {
         mimeType,
-        videoBitsPerSecond: 2500000, // 2.5 Mbps for good quality
+        // 750 kbps = calidad suficiente para inspecciones de vehículos
+        // Reduce tamaño de archivo en ~70% (3min: 56MB → 17MB)
+        // Fix: Sentry #610 - videos demasiado pesados causaban errores de upload
+        videoBitsPerSecond: 750000,
       });
 
       this.mediaRecorder.ondataavailable = (event) => {
