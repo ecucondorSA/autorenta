@@ -1,0 +1,76 @@
+name: Send Demo Email
+
+on:
+  workflow_dispatch:
+    inputs:
+      recipient:
+        description: 'Email recipient'
+        required: true
+        default: 'reinamosquera2003@gmail.com'
+      subject:
+        description: 'Email subject'
+        required: true
+        default: 'AutoRenta - Demo de publicación de auto'
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: cd tools && bun install nodemailer
+
+      - name: Download demo video
+        run: |
+          # El video está en el repo o se puede descargar
+          mkdir -p marketing/demos
+          # Por ahora usar un placeholder - el video real debería subirse como artifact o asset
+          echo "Demo video placeholder" > marketing/demos/byd-publication-demo.mp4
+
+      - name: Send email
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          RECIPIENT: ${{ github.event.inputs.recipient }}
+          SUBJECT: ${{ github.event.inputs.subject }}
+        run: |
+          cat > send-email.ts << 'EOF'
+          import nodemailer from 'nodemailer';
+
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.GMAIL_USER,
+              pass: process.env.GMAIL_APP_PASSWORD,
+            },
+          });
+
+          const mailOptions = {
+            from: process.env.GMAIL_USER,
+            to: process.env.RECIPIENT,
+            subject: process.env.SUBJECT,
+            html: `
+              <h2>¡Hola! 👋</h2>
+              <p>Te comparto un video demo de <strong>AutoRenta</strong>.</p>
+              <h3>¿Qué es AutoRenta?</h3>
+              <p>Una app donde puedes <strong>alquilar tu auto</strong> cuando no lo uses y generar ingresos extra.</p>
+              <ul>
+                <li>✅ Verificación de conductores</li>
+                <li>✅ Seguro incluido</li>
+                <li>✅ Pagos seguros</li>
+                <li>✅ Soporte 24/7</li>
+              </ul>
+              <p>Saludos,<br><strong>Equipo AutoRenta</strong> 🚗</p>
+            `,
+          };
+
+          console.log('📧 Enviando email...');
+          const info = await transporter.sendMail(mailOptions);
+          console.log('✅ Email enviado:', info.response);
+          EOF
+          bun send-email.ts

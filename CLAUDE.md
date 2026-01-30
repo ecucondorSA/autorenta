@@ -233,6 +233,48 @@ GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }} bun test-{feature}.ts
 - ~$0.18/día si corres 30 tests diarios
 - ~$5.40/mes para suite completa
 
+### 7.2 Patchright Streaming (Browser sin detección anti-bot)
+
+Patchright es Playwright parchado para evitar detección de automatización (CDP leaks). Útil para sitios con protección anti-bot como MercadoPago.
+
+**REGLA CRÍTICA: Aprovechar sesiones abiertas**
+
+```typescript
+// ✅ CORRECTO: Usar perfil persistente existente
+const userDataDir = '/home/edu/.patchright-profile';
+const browser = await chromium.launchPersistentContext(userDataDir, {
+  headless: false,
+  channel: 'chrome',  // Usar Google Chrome instalado (no Chromium)
+  // ... opciones
+});
+
+// ❌ INCORRECTO: Crear perfil temporal cada vez
+const userDataDir = `/tmp/patchright-${Date.now()}`;  // Pierde sesión!
+```
+
+**Usar Google Chrome en lugar de Chromium:**
+```typescript
+// Opción 1: Google Chrome
+channel: 'chrome'
+
+// Opción 2: Chrome Beta
+channel: 'chrome-beta'
+
+// Opción 3: Microsoft Edge
+channel: 'msedge'
+```
+
+**Beneficios de sesiones persistentes:**
+- Mantiene cookies y localStorage (no necesita re-login)
+- Evita triggers de "nuevo dispositivo" en servicios como MercadoPago
+- Más rápido al no cargar configuración desde cero
+
+**Ubicación del perfil:** `/home/edu/.patchright-profile`
+
+**MCP Server:** `tools/patchright-streaming-mcp/server.js`
+- Herramientas: `stream_navigate`, `stream_click`, `stream_type`, `stream_screenshot`
+- Incluye movimiento de mouse humanizado (curvas Bezier)
+
 ---
 
 ## 8. Performance Checklist
@@ -264,12 +306,34 @@ GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }} bun test-{feature}.ts
 |---------|-------------|
 | `pnpm dev` | Servidor de desarrollo |
 | `pnpm dev:fast` | Dev sin sourcemaps (máquinas lentas) |
+| `pnpm build:web` | Compilar solo la app web |
 | `pnpm lint` | Ejecutar ESLint |
 | `pnpm lint --fix` | Auto-fix linting |
 | `pnpm test:unit` | Tests unitarios (Vitest) |
 | `pnpm test:e2e` | Tests E2E |
 | `supabase db diff -f <name>` | Generar migración desde cambios |
 | `supabase gen types typescript` | Regenerar tipos de DB |
+
+### ⚠️ CUIDADO: Comandos de Build en Monorepo
+
+Este proyecto es un **monorepo con pnpm workspaces**. Usar el comando incorrecto puede colapsar la memoria del sistema.
+
+| Comando | Procesos | Memoria | Cuándo usar |
+|---------|----------|---------|-------------|
+| `pnpm build:web` | ~5 | ~2 GB | ✅ **Siempre** para compilar frontend |
+| `pnpm build` | ~17 | ~12 GB | ⛔ Solo CI/CD o cuando necesites TODO |
+
+**¿Por qué?**
+- `pnpm build` compila **TODOS** los workspaces en paralelo (4 paquetes)
+- Cada `ng build` crea ~4-5 workers para compilación paralela
+- Efecto multiplicador: 4 paquetes × 4 workers = **16-20 procesos simultáneos**
+
+**Si el sistema se congela:**
+```bash
+# Matar todos los procesos de build
+pkill -f "ng build"
+pkill -f "pnpm.*build"
+```
 
 ---
 
