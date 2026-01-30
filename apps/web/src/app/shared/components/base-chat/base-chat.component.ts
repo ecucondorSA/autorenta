@@ -45,7 +45,7 @@ export interface ChatContext {
   template: `
     <!-- Professional Chat Container -->
     <div
-      class="chat-container flex h-[550px] flex-col overflow-hidden rounded-2xl border border-border-default bg-surface-raised shadow-sm"
+      class="chat-container flex h-full flex-col overflow-hidden rounded-2xl border border-border-default bg-surface-raised shadow-sm"
     >
       <!-- Professional Header -->
       <div

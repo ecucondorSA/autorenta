@@ -30,15 +30,15 @@ import { CarChatComponent } from './components/car-chat.component';
   imports: [RouterLink, BookingChatComponent, CarChatComponent],
   hostDirectives: [],
   template: `
-    <div class="min-h-screen bg-surface-base">
+    <div class="h-[100dvh] flex flex-col bg-surface-base">
       <!-- Header -->
-      <div class="sticky top-0 z-10 bg-surface-raised shadow">
-        <div class="mx-auto max-w-4xl px-4 py-4">
+      <div class="flex-shrink-0 bg-surface-raised shadow z-10">
+        <div class="mx-auto max-w-4xl px-4 py-3">
           <div class="flex items-center gap-4">
             <!-- Back button -->
             <button
               (click)="goBack()"
-              class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-raised"
+              class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-hover"
               type="button"
             >
               <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,8 +67,8 @@ import { CarChatComponent } from './components/car-chat.component';
         </div>
       </div>
 
-      <!-- Content -->
-      <div class="mx-auto max-w-4xl p-4">
+      <!-- Content - fills remaining height -->
+      <div class="flex-1 overflow-hidden mx-auto max-w-4xl w-full p-4 pb-safe-bottom">
         <!-- Booking Context Card -->
         @if (hasBookingContext() && bookingContext()) {
           <div class="mb-4 rounded-lg border border-cta-default/40 bg-cta-default/10 p-4">
@@ -147,18 +147,22 @@ import { CarChatComponent } from './components/car-chat.component';
           </div>
         } @else if (bookingId() && recipientId() && recipientName()) {
           <!-- Booking chat -->
-          <app-booking-chat
-            [bookingId]="bookingId()!"
-            [recipientId]="recipientId()!"
-            [recipientName]="recipientName()!"
-          />
+          <div class="h-full">
+            <app-booking-chat
+              [bookingId]="bookingId()!"
+              [recipientId]="recipientId()!"
+              [recipientName]="recipientName()!"
+            />
+          </div>
         } @else if (carId() && recipientId() && recipientName()) {
           <!-- Car chat (pre-booking) -->
-          <app-car-chat
-            [carId]="carId()!"
-            [recipientId]="recipientId()!"
-            [recipientName]="recipientName()!"
-          />
+          <div class="h-full">
+            <app-car-chat
+              [carId]="carId()!"
+              [recipientId]="recipientId()!"
+              [recipientName]="recipientName()!"
+            />
+          </div>
         } @else {
           <div class="rounded-lg bg-warning-bg p-4">
             <p class="text-sm text-warning-strong">⚠️ Faltan parámetros para iniciar el chat</p>

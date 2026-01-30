@@ -17,12 +17,14 @@ import {
   imports: [BaseChatComponent],
   template: `
     <app-base-chat
+      class="block h-full"
       [context]="chatContext()"
       (messageSent)="onMessageSent($event)"
       (messageReceived)="onMessageReceived($event)"
       (menuClicked)="onMenuClicked()"
     />
   `,
+  styles: [`:host { display: block; height: 100%; }`],
 })
 export class CarChatComponent {
   private readonly logger = inject(LoggerService);

@@ -17,6 +17,7 @@ import { BaseChatComponent, ChatContext } from '../base-chat/base-chat.component
   imports: [BaseChatComponent],
   template: `
     <app-base-chat
+      class="block h-full"
       [context]="chatContext()"
       [bookingContextForAI]="aiContext()"
       (messageSent)="onMessageSent($event)"
@@ -24,6 +25,7 @@ import { BaseChatComponent, ChatContext } from '../base-chat/base-chat.component
       (menuClicked)="onMenuClicked()"
     />
   `,
+  styles: [`:host { display: block; height: 100%; }`],
 })
 export class BookingChatComponent {
   private readonly logger = inject(LoggerService);
