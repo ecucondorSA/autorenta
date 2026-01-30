@@ -1,3 +1,7 @@
+## <small>3.37.8 (2026-01-30)</small>
+
+* fix(marketing): remove suspended platforms from daily social media workflow ([d56f25d](https://github.com/ecucondorSA/autorenta/commit/d56f25d))
+
 ## <small>3.37.7 (2026-01-30)</small>
 
 * fix: add cache-busting query to service worker URL ([f7e6099](https://github.com/ecucondorSA/autorenta/commit/f7e6099))
