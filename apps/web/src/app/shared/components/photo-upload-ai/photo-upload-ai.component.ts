@@ -566,6 +566,8 @@ export class PhotoUploadAIComponent {
   // State
   readonly photos = signal<PhotoWithAI[]>([]);
   private initialized = false;
+  private suppressEmit = false;
+  private lastEmittedSignature = '';
   readonly isDragging = signal(false);
   readonly detectedVehicle = signal<VehicleAutoDetect | null>(null);
   readonly showAutoDetect = signal(true);
@@ -593,24 +595,34 @@ export class PhotoUploadAIComponent {
     // Sync photos from initialPhotos input (handles both initial load and AI-generated photos)
     effect(() => {
       const initial = this.initialPhotos();
+      if (initial.length === 0) {
+        return;
+      }
       // Only sync if there are photos AND they're different from current
       // This handles: 1) initial load, 2) AI-generated photos pushed from parent
-      if (initial.length > 0) {
-        const currentIds = new Set(this.photos().map(p => p.id));
-        const hasNewPhotos = initial.some(p => !currentIds.has(p.id));
+      const currentFiles = new Set(this.photos().map(p => this.getFileKey(p.file)));
+      const hasNewPhotos = initial.some(p => !currentFiles.has(this.getFileKey(p.file)));
 
-        if (!this.initialized || hasNewPhotos) {
-          this.initialized = true;
-          this.photos.set([...initial]);
-        }
+      if (!this.initialized || hasNewPhotos) {
+        this.initialized = true;
+        this.suppressEmit = true;
+        this.photos.set([...initial]);
+        this.suppressEmit = false;
       }
     });
 
     // Emit changes when photos update (skip initial empty emit)
     effect(() => {
       const currentPhotos = this.photos();
+      if (this.suppressEmit) {
+        return;
+      }
       if (this.initialized || currentPhotos.length > 0) {
-        this.photosChange.emit(currentPhotos);
+        const signature = this.buildEmitSignature(currentPhotos);
+        if (signature !== this.lastEmittedSignature) {
+          this.lastEmittedSignature = signature;
+          this.photosChange.emit(currentPhotos);
+        }
       }
     });
   }
@@ -841,6 +853,24 @@ export class PhotoUploadAIComponent {
   private guessPosition(index: number): PhotoPosition {
     const positions: PhotoPosition[] = ['cover', 'front', 'rear', 'left', 'right', 'interior', 'dashboard', 'trunk'];
     return positions[index] || 'detail';
+  }
+
+  private getFileKey(file: File): string {
+    return `${file.name}:${file.size}:${file.lastModified}`;
+  }
+
+  private buildEmitSignature(photos: PhotoWithAI[]): string {
+    return photos
+      .map((photo) => {
+        const status = photo.status === 'validating' ? 'pending' : photo.status;
+        const qualityScore = photo.quality?.score ?? '';
+        const plates = photo.plates?.detected ? `1:${photo.plates.count}` : '0';
+        const vehicle = photo.vehicle
+          ? `${photo.vehicle.brand ?? ''}:${photo.vehicle.model ?? ''}:${photo.vehicle.year ?? ''}:${photo.vehicle.color ?? ''}:${photo.vehicle.confidence}`
+          : '';
+        return `${photo.id}|${this.getFileKey(photo.file)}|${photo.position}|${status}|${qualityScore}|${plates}|${vehicle}`;
+      })
+      .join(',');
   }
 
   getPositionLabel(position: PhotoPosition): string {
