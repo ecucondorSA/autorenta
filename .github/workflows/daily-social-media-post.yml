@@ -125,6 +125,7 @@ jobs:
                 platform: platform,
                 language: 'es',
                 generate_image: true, // Always generate - required for Instagram/Facebook
+                save_to_db: true, // Required to upload image to storage and get URL
               }),
             });
 
