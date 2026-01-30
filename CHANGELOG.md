@@ -1,3 +1,8 @@
+## <small>3.38.2 (2026-01-30)</small>
+
+* chore(dev): add memory-safe development scripts ([eae0d93](https://github.com/ecucondorSA/autorenta/commit/eae0d93))
+* fix(publish): auto-fill province from geocoding for accuracy ([2ebd179](https://github.com/ecucondorSA/autorenta/commit/2ebd179))
+
 ## <small>3.38.1 (2026-01-30)</small>
 
 * fix(publish): prevent infinite loop in photo upload component ([85c00d9](https://github.com/ecucondorSA/autorenta/commit/85c00d9))
