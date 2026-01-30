@@ -243,6 +243,7 @@ export class VehicleQuestionComponent implements OnInit {
     'Citroën',
     'Mitsubishi',
     'Suzuki',
+    'BYD',
   ];
 
   readonly popularBrands = computed(() => {
@@ -281,6 +282,7 @@ export class VehicleQuestionComponent implements OnInit {
     { code: '13', name: 'Citroën' },
     { code: '41', name: 'Mitsubishi' },
     { code: '55', name: 'Suzuki' },
+    { code: '238', name: 'BYD' },
   ];
 
   async ngOnInit(): Promise<void> {
