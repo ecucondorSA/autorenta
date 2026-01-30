@@ -45,7 +45,7 @@ export interface ChatContext {
   template: `
     <!-- Professional Chat Container -->
     <div
-      class="chat-container flex h-full flex-col overflow-hidden rounded-2xl border border-border-default bg-surface-raised shadow-sm"
+      class="chat-container flex h-full min-h-0 flex-col overflow-hidden bg-surface-raised rounded-none border-0 shadow-none sm:rounded-2xl sm:border sm:border-border-default sm:shadow-sm"
     >
       <!-- Professional Header -->
       <div
@@ -138,7 +138,10 @@ export interface ChatContext {
       }
 
       <!-- Chat Messages Area -->
-      <div #messagesContainer class="relative flex-1 overflow-y-auto bg-surface-base flex flex-col">
+      <div
+        #messagesContainer
+        class="relative flex-1 min-h-0 overflow-y-auto bg-surface-base flex flex-col"
+      >
         <!-- Loading state -->
         @if (loading()) {
           <div class="flex h-full items-center justify-center">

@@ -30,7 +30,7 @@ import { CarChatComponent } from './components/car-chat.component';
   imports: [RouterLink, BookingChatComponent, CarChatComponent],
   hostDirectives: [],
   template: `
-    <div class="h-[100dvh] flex flex-col bg-surface-base">
+    <div class="h-[100dvh] flex flex-col bg-surface-base overflow-hidden">
       <!-- Header -->
       <div class="flex-shrink-0 bg-surface-raised shadow z-10">
         <div class="mx-auto max-w-4xl px-4 py-3">
@@ -68,7 +68,7 @@ import { CarChatComponent } from './components/car-chat.component';
       </div>
 
       <!-- Content - fills remaining height -->
-      <div class="flex-1 overflow-hidden mx-auto max-w-4xl w-full p-4 pb-safe-bottom">
+      <div class="flex-1 min-h-0 overflow-hidden w-full p-0 pb-safe-bottom sm:mx-auto sm:max-w-4xl sm:p-4">
         <!-- Booking Context Card -->
         @if (hasBookingContext() && bookingContext()) {
           <div class="mb-4 rounded-lg border border-cta-default/40 bg-cta-default/10 p-4">
@@ -147,7 +147,7 @@ import { CarChatComponent } from './components/car-chat.component';
           </div>
         } @else if (bookingId() && recipientId() && recipientName()) {
           <!-- Booking chat -->
-          <div class="h-full">
+          <div class="h-full min-h-0">
             <app-booking-chat
               [bookingId]="bookingId()!"
               [recipientId]="recipientId()!"
@@ -156,7 +156,7 @@ import { CarChatComponent } from './components/car-chat.component';
           </div>
         } @else if (carId() && recipientId() && recipientName()) {
           <!-- Car chat (pre-booking) -->
-          <div class="h-full">
+          <div class="h-full min-h-0">
             <app-car-chat
               [carId]="carId()!"
               [recipientId]="recipientId()!"
