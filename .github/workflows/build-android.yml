@@ -129,14 +129,7 @@ jobs:
           NG_APP_SENTRY_DSN: ${{ secrets.NG_APP_SENTRY_DSN }}
           NG_APP_SENTRY_ENVIRONMENT: "production"
 
-      - name: Sync Capacitor
-        run: |
-          # Remove generated Capacitor files to ensure they are regenerated with correct pnpm paths
-          rm -f apps/web/android/capacitor.settings.gradle
-          rm -f apps/web/android/app/capacitor.build.gradle
-          pnpm --filter autorentar-web exec cap sync android
-
-      - name: Workaround for missing capacitor-cordova-android-plugins
+      - name: Workaround for capacitor-cordova-android-plugins (BEFORE sync)
         run: |
           CORDOVA_DIR="apps/web/android/capacitor-cordova-android-plugins"
           mkdir -p "$CORDOVA_DIR/src/main/libs"
@@ -212,6 +205,13 @@ jobs:
 
           echo "Created capacitor-cordova-android-plugins structure:"
           ls -la "$CORDOVA_DIR"
+
+      - name: Copy web assets to Android
+        run: |
+          # Use cap copy instead of cap sync to avoid the Capacitor CLI bug
+          # cap copy only copies web assets, doesn't update native plugins
+          pnpm --filter autorentar-web exec cap copy android
+          echo "✅ Web assets copied to Android"
 
       - name: Decode Keystore
         if: github.event.inputs.build_type == 'release'
