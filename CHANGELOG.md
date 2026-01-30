@@ -1,3 +1,7 @@
+## <small>3.38.1 (2026-01-30)</small>
+
+* fix(publish): prevent infinite loop in photo upload component ([85c00d9](https://github.com/ecucondorSA/autorenta/commit/85c00d9))
+
 ## 3.38.0 (2026-01-30)
 
 * feat: add FIPE catalog Edge Function with server-side caching ([dc231fa](https://github.com/ecucondorSA/autorenta/commit/dc231fa))
