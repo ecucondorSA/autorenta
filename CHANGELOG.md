@@ -1,3 +1,8 @@
+## 3.41.0 (2026-01-30)
+
+* feat(android): add native debug symbols detection and upload ([3929f54](https://github.com/ecucondorSA/autorenta/commit/3929f54))
+* chore(android): add native debug symbols for Play Store ([17dc427](https://github.com/ecucondorSA/autorenta/commit/17dc427))
+
 ## 3.40.0 (2026-01-30)
 
 * feat(messages): add chat thread component and improve inbox styling ([25248ba](https://github.com/ecucondorSA/autorenta/commit/25248ba))
