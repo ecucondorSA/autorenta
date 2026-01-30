@@ -422,7 +422,7 @@ export class SecurityDashboardPage implements OnInit {
       }
       void this.beacon.startScanning(true);
       void this.syncLocationPermission();
-    } catch (error) {
+    } catch {
       this.meshOptIn.set(false);
     }
   }

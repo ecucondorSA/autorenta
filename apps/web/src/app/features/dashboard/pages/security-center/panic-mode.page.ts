@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 import { BeaconMessageType, BeaconService } from '@core/services/beacon';
 import { LocationService } from '@core/services/geo/location.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
@@ -343,8 +343,8 @@ export class PanicModePage implements OnInit, OnDestroy {
   readonly locationAccuracy = signal<number | null>(null);
   readonly beaconId = signal<string>('');
 
-  private countdownInterval?: any;
-  private blackoutTimer?: any;
+  private countdownInterval: ReturnType<typeof setInterval> | null = null;
+  private blackoutTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly statusMessage = computed((): string => {
     if (this.errorMessage()) return 'Error en el sistema de auxilio';
@@ -410,9 +410,10 @@ export class PanicModePage implements OnInit, OnDestroy {
     this.isStopping.set(true);
     try {
       await this.beacon.stopBroadcasting();
-      void Haptics.notification({ type: 'success' as any });
+      void Haptics.notification({ type: NotificationType.Success });
       await this.router.navigate(['/dashboard/security']);
     } catch (error) {
+      this.logger.error('Error al detener SOS', error);
       this.errorMessage.set('Error al detener la señal');
     } finally {
       this.isStopping.set(false);
@@ -421,8 +422,8 @@ export class PanicModePage implements OnInit, OnDestroy {
 
   private async initializeEmergency(): Promise<void> {
     try {
-      void Haptics.notification({ type: 'warning' as any });
-      
+      void Haptics.notification({ type: NotificationType.Warning });
+
       const ready = this.beacon.isReady() ? true : await this.beacon.initialize();
       if (!ready) throw new Error('BLE Init Failed');
 
