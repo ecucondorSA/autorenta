@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'androidx.baselineprofile'
 
 android {
     namespace "app.autorentar"
@@ -60,6 +61,15 @@ dependencies {
     implementation project(':capacitor-cordova-android-plugins')
     implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
     implementation "androidx.work:work-runtime:2.9.0"
+
+    // Baseline Profile - installs profiles at app install time
+    implementation "androidx.profileinstaller:profileinstaller:1.3.1"
+    baselineProfile project(':baselineprofile')
+}
+
+// Baseline Profile configuration
+baselineProfile {
+    dexLayoutOptimization = true
 }
 
 // ROBUSTNESS: Remove AD_ID permission at Gradle level (redundant with manifest merge, but explicit)
