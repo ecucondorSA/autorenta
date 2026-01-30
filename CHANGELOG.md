@@ -1,3 +1,8 @@
+## 3.42.0 (2026-01-30)
+
+* fix: improve beacon debug alerts ([b38c8a1](https://github.com/ecucondorSA/autorenta/commit/b38c8a1))
+* feat: elevate bookings hub ui and system updates ([f3f5e83](https://github.com/ecucondorSA/autorenta/commit/f3f5e83))
+
 ## <small>3.41.3 (2026-01-30)</small>
 
 * fix(android): improve baseline profile configuration ([8c27734](https://github.com/ecucondorSA/autorenta/commit/8c27734))
