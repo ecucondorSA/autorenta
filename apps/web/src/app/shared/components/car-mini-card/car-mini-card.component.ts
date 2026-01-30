@@ -8,12 +8,15 @@ import { CarMapLocation } from '@core/services/cars/car-locations.service';
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div 
+    <div
       class="relative group cursor-pointer transition-all duration-300 transform h-full preserve-3d"
       [class.scale-105]="isSelected"
       [class.z-30]="isSelected"
       [style.transform]="cardTransform"
-      (click)="cardClicked.emit()"
+      (click)="onClick($event)"
+      (touchstart)="onTouchStart($event)"
+      (touchmove)="onTouchMoveCard($event)"
+      (touchend)="onTouchEndCard()"
       (mouseenter)="onMouseEnter()"
       (mouseleave)="onMouseLeave()"
       (mousemove)="onMouseMove($event)">
@@ -108,6 +111,44 @@ export class CarMiniCardComponent {
 
   onImageLoad() {
     this.imageLoaded = true;
+  }
+
+  // Track touch to prevent click during swipe
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private wasSwiped = false;
+  private readonly TOUCH_MOVE_THRESHOLD = 5;
+
+  onTouchStart(event: TouchEvent) {
+    this.touchStartX = event.touches[0].clientX;
+    this.touchStartY = event.touches[0].clientY;
+    this.wasSwiped = false;
+  }
+
+  onTouchMoveCard(event: TouchEvent) {
+    if (this.wasSwiped) return;
+    const deltaX = Math.abs(event.touches[0].clientX - this.touchStartX);
+    const deltaY = Math.abs(event.touches[0].clientY - this.touchStartY);
+    if (deltaX > this.TOUCH_MOVE_THRESHOLD || deltaY > this.TOUCH_MOVE_THRESHOLD) {
+      this.wasSwiped = true;
+    }
+  }
+
+  onTouchEndCard() {
+    // Keep wasSwiped true for a bit to catch the click event
+    setTimeout(() => {
+      this.wasSwiped = false;
+    }, 150);
+  }
+
+  onClick(event: MouseEvent) {
+    // Don't emit click if this was triggered by a touch that moved (swipe)
+    if (this.wasSwiped) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    this.cardClicked.emit();
   }
 
   onMouseEnter() {

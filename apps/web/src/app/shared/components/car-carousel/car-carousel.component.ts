@@ -72,8 +72,10 @@ export class CarCarouselComponent {
   // Touch/swipe tracking to prevent accidental clicks during scroll
   private touchStartX = 0;
   private touchStartY = 0;
+  private touchStartScrollLeft = 0;
   private isSwipe = false;
-  private readonly SWIPE_THRESHOLD = 10; // pixels moved to consider it a swipe
+  private readonly SWIPE_THRESHOLD = 5; // pixels finger moved to consider it a swipe
+  private readonly SCROLL_THRESHOLD = 3; // pixels scroll moved to consider it a swipe
 
   // Keyboard Navigation
   @HostListener('document:keydown.arrowLeft')
@@ -116,6 +118,7 @@ export class CarCarouselComponent {
   onTouchStart(event: TouchEvent) {
     this.touchStartX = event.touches[0].clientX;
     this.touchStartY = event.touches[0].clientY;
+    this.touchStartScrollLeft = this.scrollContainer?.nativeElement?.scrollLeft ?? 0;
     this.isSwipe = false;
   }
 
@@ -132,10 +135,17 @@ export class CarCarouselComponent {
   }
 
   onTouchEnd() {
+    // Check if scroll position changed - this catches quick flicks that didn't trigger touchmove
+    const currentScrollLeft = this.scrollContainer?.nativeElement?.scrollLeft ?? 0;
+    const scrollDelta = Math.abs(currentScrollLeft - this.touchStartScrollLeft);
+    if (scrollDelta > this.SCROLL_THRESHOLD) {
+      this.isSwipe = true;
+    }
+
     // Reset after a short delay to allow click event to check isSwipe
     setTimeout(() => {
       this.isSwipe = false;
-    }, 100);
+    }, 150); // Increased from 100ms for more reliable detection
   }
 
   onCardClick(carId: string) {
