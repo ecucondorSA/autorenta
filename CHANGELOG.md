@@ -1,3 +1,7 @@
+## 3.43.0 (2026-01-30)
+
+* feat(brands): add BYD as car brand with official logo ([a3bfeac](https://github.com/ecucondorSA/autorenta/commit/a3bfeac))
+
 ## <small>3.42.1 (2026-01-30)</small>
 
 * fix: clean security center lint warnings ([735a41e](https://github.com/ecucondorSA/autorenta/commit/735a41e))
