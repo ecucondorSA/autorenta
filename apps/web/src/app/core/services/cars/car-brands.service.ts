@@ -30,6 +30,7 @@ export class CarBrandsService {
     { code: 'citroen', name: 'Citroën', logoPath: '/assets/images/car-brands/citroen.svg' },
     { code: 'mitsubishi', name: 'Mitsubishi', logoPath: '/assets/images/car-brands/mitsubishi.svg' },
     { code: 'suzuki', name: 'Suzuki', logoPath: '/assets/images/car-brands/suzuki.svg' },
+    { code: 'byd', name: 'BYD', logoPath: '/assets/images/car-brands/byd.svg' },
   ];
 
   private readonly INSURANCE_BRANDS: CarBrandOption[] = [
