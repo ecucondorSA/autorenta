@@ -1,3 +1,9 @@
+## <small>3.37.5 (2026-01-30)</small>
+
+* fix: add Clear-Site-Data header to force cache reset ([ecc6bfc](https://github.com/ecucondorSA/autorenta/commit/ecc6bfc))
+* fix: deploy safety worker to clear broken SW caches ([5fbd5da](https://github.com/ecucondorSA/autorenta/commit/5fbd5da))
+* chore: ignore codex artifacts ([d1e3cc1](https://github.com/ecucondorSA/autorenta/commit/d1e3cc1))
+
 ## <small>3.37.4 (2026-01-29)</small>
 
 * chore: fix import order ([febc38b](https://github.com/ecucondorSA/autorenta/commit/febc38b))
