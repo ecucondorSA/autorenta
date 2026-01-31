@@ -5,7 +5,9 @@ import {
   OnInit,
   signal,
   ChangeDetectionStrategy,
+  PLATFORM_ID,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProfileService } from '@core/services/auth/profile.service';
@@ -354,6 +356,8 @@ export class VerificationPromptBannerComponent implements OnInit {
   private readonly profileService = inject(ProfileService);
   private readonly verificationService = inject(VerificationService);
   private readonly router = inject(Router);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   private readonly dismissed = signal(false);
   readonly showBenefits = signal(false);
@@ -361,10 +365,12 @@ export class VerificationPromptBannerComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // Check if banner was dismissed in this session
-    const dismissed = sessionStorage.getItem('verification_banner_dismissed');
-    if (dismissed) {
-      this.dismissed.set(true);
-      return;
+    if (this.isBrowser) {
+      const dismissed = sessionStorage.getItem('verification_banner_dismissed');
+      if (dismissed) {
+        this.dismissed.set(true);
+        return;
+      }
     }
 
     // Load user profile
@@ -477,7 +483,10 @@ export class VerificationPromptBannerComponent implements OnInit {
     this.dismissed.set(true);
 
     // Guardar en localStorage para no mostrar en esta sesión
-    sessionStorage.setItem('verification_banner_dismissed', Date.now().toString());
+    // Guardar en localStorage para no mostrar en esta sesión
+    if (this.isBrowser) {
+      sessionStorage.setItem('verification_banner_dismissed', Date.now().toString());
+    }
   }
 
   viewBenefits(): void {

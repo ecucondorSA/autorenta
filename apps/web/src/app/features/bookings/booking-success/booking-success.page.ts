@@ -6,7 +6,9 @@ import {
   OnDestroy,
   OnInit,
   signal,
+  PLATFORM_ID,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
@@ -33,6 +35,8 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
   private readonly bookingsService = inject(BookingsService);
   private readonly bookingRealtime = inject(BookingRealtimeService);
   private readonly paymentsService = inject(PaymentsService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   readonly bookingId = signal<string>('');
   readonly booking = signal<Booking | null>(null);
@@ -104,17 +108,19 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     this.loadBooking(id);
 
     // ✅ OPTIMIZED: Realtime first, polling only as fallback
-    const fromMercadoPago = this.route.snapshot.queryParamMap.get('from_mp') === 'true';
-    if (fromMercadoPago) {
-      this.subscribeToRealtimeUpdates(id);
+    if (this.isBrowser) {
+      const fromMercadoPago = this.route.snapshot.queryParamMap.get('from_mp') === 'true';
+      if (fromMercadoPago) {
+        this.subscribeToRealtimeUpdates(id);
 
-      // Only start polling if realtime fails to connect within 5 seconds
-      this.realtimeConnectionTimeout = window.setTimeout(() => {
-        if (!this.realtimeConnected()) {
-          this.logger.debug('[BookingSuccess] Realtime timeout, starting polling fallback');
-          this.startPolling();
-        }
-      }, this.REALTIME_TIMEOUT_MS);
+        // Only start polling if realtime fails to connect within 5 seconds
+        this.realtimeConnectionTimeout = window.setTimeout(() => {
+          if (!this.realtimeConnected()) {
+            this.logger.debug('[BookingSuccess] Realtime timeout, starting polling fallback');
+            this.startPolling();
+          }
+        }, this.REALTIME_TIMEOUT_MS);
+      }
     }
   }
 
@@ -211,7 +217,7 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
   }
 
   private startAutoRedirect(): void {
-    if (this.autoRedirectActive() || this.autoRedirectSeconds() <= 0) {
+    if (this.autoRedirectActive() || this.autoRedirectSeconds() <= 0 || !this.isBrowser) {
       return;
     }
 

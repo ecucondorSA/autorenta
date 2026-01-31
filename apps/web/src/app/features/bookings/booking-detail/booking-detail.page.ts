@@ -7,7 +7,12 @@ import {
   computed,
   inject,
   signal,
+  PLATFORM_ID,
+  afterNextRender,
+  Injector,
+  runInInjectionContext,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Booking, BookingExtensionRequest, BookingStatus, TrafficInfraction } from '@core/models';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
@@ -223,6 +228,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly bookingRealtimeService = inject(BookingRealtimeService);
   private readonly pdfWorkerService = inject(PdfWorkerService);
   private readonly logger = inject(LoggerService).createChildLogger('BookingDetailPage');
+  private readonly injector = inject(Injector);
 
   constructor() {
     addIcons({
@@ -266,7 +272,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   deliveryTimeRemaining = signal<string | null>(null);
   returnChecklistItems = signal<ReturnChecklistItem[]>([]);
   showAllSteps = signal(false);
-  private readonly isBrowser = typeof window !== 'undefined';
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly returnChecklistStoragePrefix = 'autorenta:return-checklist:';
   private returnChecklistSaveTimeout: number | null = null;
 
@@ -1263,30 +1270,32 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   private loadReturnChecklist(booking: Booking): void {
     const bookingId = booking.id;
-    if (!this.isBrowser) {
-      this.returnChecklistItems.set(this.mergeChecklistFromMetadata(booking));
-      return;
-    }
-
-    const key = `${this.returnChecklistStoragePrefix}${bookingId}`;
-    const stored = window.localStorage.getItem(key);
     const base = this.mergeChecklistFromMetadata(booking);
 
-    if (!stored) {
-      this.returnChecklistItems.set(base);
-      return;
-    }
+    // Initial set with server data (prevents hydration mismatch)
+    this.returnChecklistItems.set(base);
 
-    try {
-      const parsed = JSON.parse(stored) as ReturnChecklistItem[];
-      const merged = base.map((item) => {
-        const storedItem = parsed.find((p) => p.id === item.id);
-        return storedItem ? { ...item, checked: !!storedItem.checked } : item;
+    // Client-side enhancement: read from localStorage after render
+    runInInjectionContext(this.injector, () => {
+      afterNextRender(() => {
+        const key = `${this.returnChecklistStoragePrefix}${bookingId}`;
+        const stored = localStorage.getItem(key);
+
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored) as ReturnChecklistItem[];
+            const merged = base.map((item) => {
+              const storedItem = parsed.find((p) => p.id === item.id);
+              return storedItem ? { ...item, checked: !!storedItem.checked } : item;
+            });
+            // Update signal only on client side
+            this.returnChecklistItems.set(merged);
+          } catch {
+            // Ignore parse errors
+          }
+        }
       });
-      this.returnChecklistItems.set(merged);
-    } catch {
-      this.returnChecklistItems.set(base);
-    }
+    });
   }
 
   private persistReturnChecklist(bookingId: string): void {
@@ -1548,6 +1557,8 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private startCountdown() {
     const booking = this.booking();
     if (!booking) return;
+
+    if (!this.isBrowser) return; // Guard: Never run intervals on server
 
     this.stopCountdown();
 

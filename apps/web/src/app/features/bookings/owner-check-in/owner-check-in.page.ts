@@ -6,7 +6,9 @@ import {
   OnInit,
   inject,
   signal,
+  PLATFORM_ID,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -52,6 +54,8 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
   private readonly locationTracking = inject(LocationTrackingService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   readonly loading = signal(true);
   readonly booking = signal<Booking | null>(null);
@@ -194,13 +198,15 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
           const distance = Number(renterSession.distance_remaining);
           if (distance < 500 && distance > 0) {
             // Only show once
-            const notificationKey = `renter-nearby-${bookingId}`;
-            if (!sessionStorage.getItem(notificationKey)) {
-              this.toastService.success(
-                '📍 Locatario cerca',
-                `${renterSession.user_name} está a menos de 500m`,
-              );
-              sessionStorage.setItem(notificationKey, 'true');
+            if (this.isBrowser) {
+              const notificationKey = `renter-nearby-${bookingId}`;
+              if (!sessionStorage.getItem(notificationKey)) {
+                this.toastService.success(
+                  '📍 Locatario cerca',
+                  `${renterSession.user_name} está a menos de 500m`,
+                );
+                sessionStorage.setItem(notificationKey, 'true');
+              }
             }
           }
         }
