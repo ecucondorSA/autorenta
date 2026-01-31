@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { formatMoney, Currency } from '@shared/utils/money.utils';
 import { ExchangeRateService } from './exchange-rate.service';
-import { formatMoney, Currency, CURRENCY_CONFIG } from '@shared/utils/money.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +36,7 @@ export class CurrencyService {
    */
   async formatUsdToDisplay(amountUsd: number): Promise<string> {
     const target = this.displayCurrency();
-    
+
     if (target === 'USD') {
       return formatMoney(amountUsd, 'USD');
     }
@@ -62,7 +62,7 @@ export class CurrencyService {
    * Synchronous helper for templates (requires rates to be loaded)
    * Returns null if rates are not ready
    */
-  getInstantRate(pair: 'USDARS' = 'USDARS'): number | null {
+  getInstantRate(_pair: 'USDARS' = 'USDARS'): number | null {
     const rates = this.exchangeRateService.getLastKnownBinanceRate();
     return rates;
   }
