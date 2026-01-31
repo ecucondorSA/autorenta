@@ -29,16 +29,26 @@ jobs:
             const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
             const query = async (endpoint) => {
-              const res = await fetch(supabaseUrl + '/rest/v1/' + endpoint, {
-                headers: {
-                  'apikey': supabaseKey,
-                  'Authorization': 'Bearer ' + supabaseKey,
-                  'Prefer': 'count=exact',
+              try {
+                const res = await fetch(supabaseUrl + '/rest/v1/' + endpoint, {
+                  headers: {
+                    'apikey': supabaseKey,
+                    'Authorization': 'Bearer ' + supabaseKey,
+                    'Prefer': 'count=exact',
+                  }
+                });
+                const count = res.headers.get('content-range')?.split('/')[1] || '0';
+                const data = await res.json();
+                // Ensure data is always an array (handle error responses)
+                if (!Array.isArray(data)) {
+                  console.warn('Query returned non-array for ' + endpoint + ':', JSON.stringify(data).slice(0, 200));
+                  return { data: [], count: 0 };
                 }
-              });
-              const count = res.headers.get('content-range')?.split('/')[1] || '0';
-              const data = await res.json();
-              return { data, count: parseInt(count) };
+                return { data, count: parseInt(count) };
+              } catch (err) {
+                console.warn('Query failed for ' + endpoint + ':', err.message);
+                return { data: [], count: 0 };
+              }
             };
 
             const today = new Date();
