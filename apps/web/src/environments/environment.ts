@@ -56,7 +56,7 @@ export const environment = buildEnvironment({
   // Google One Tap / Native Sign-In Configuration
   // El Web Client ID es necesario para validar ID Tokens en plataformas nativas (Android/iOS)
   googleOneTap: {
-    clientId: '1029437966017-8757s0ru3sj8dg5nua5su0916fhfsgik.apps.googleusercontent.com',
+    clientId: '199395590437-8e29faaapojqolscpqatotvn366pevdr.apps.googleusercontent.com',
     autoSelect: true,
     cancelOnTapOutside: true,
   },
