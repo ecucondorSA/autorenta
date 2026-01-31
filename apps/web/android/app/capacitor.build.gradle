@@ -27,6 +27,7 @@ dependencies {
     implementation project(':sentry-capacitor')
     implementation project(':capacitor-community-keep-awake')
     implementation project(':capgo-capacitor-bluetooth-low-energy')
+    implementation project(':capacitor-native-google-one-tap-signin')
 
 }
 

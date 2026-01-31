@@ -6,6 +6,8 @@ import { RateLimiterService } from '@core/services/infrastructure/rate-limiter.s
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { getErrorMessage } from '@core/utils/type-guards';
 import { environment } from '@environment';
+import { Capacitor } from '@capacitor/core';
+import { GoogleOneTapAuth } from 'capacitor-native-google-one-tap-signin';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 interface AuthState {
@@ -296,13 +298,21 @@ export class AuthService implements OnDestroy {
   }
 
   /**
-   * Inicia sesión con Google usando Supabase OAuth
-   * Redirige al usuario a la página de autenticación de Google
+   * Inicia sesión con Google
+   * - En plataformas nativas (Android/iOS): Usa Google One Tap nativo
+   * - En web: Usa OAuth redirect tradicional
    */
   async signInWithGoogle(): Promise<void> {
     if (!this.isBrowser) {
       throw new Error('OAuth solo disponible en browser');
     }
+
+    // En plataformas nativas, usar Google One Tap nativo
+    if (Capacitor.isNativePlatform()) {
+      return this.signInWithGoogleNative();
+    }
+
+    // Flujo web OAuth tradicional
     const { error } = await this.supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -316,6 +326,61 @@ export class AuthService implements OnDestroy {
 
     if (error) {
       throw this.mapError(error);
+    }
+  }
+
+  /**
+   * 🆕 Google Sign-In nativo para Android/iOS
+   * Usa el plugin capacitor-native-google-one-tap-signin para mostrar
+   * la UI nativa de Google dentro de la app (sin abrir Chrome)
+   */
+  private async signInWithGoogleNative(): Promise<void> {
+    const clientId = environment.googleOneTap?.clientId;
+
+    if (!clientId) {
+      this.logger.error('Google One Tap: clientId no configurado', 'AuthService');
+      throw new Error('Google Sign-In no configurado. Contacta al administrador.');
+    }
+
+    try {
+      // Inicializar el plugin con el Web Client ID
+      await GoogleOneTapAuth.initialize({ clientId });
+
+      // Intentar auto sign-in primero, luego One Tap
+      let result = await GoogleOneTapAuth.tryAutoOrOneTapSignIn();
+
+      // Si no funcionó, mostrar el flujo con botón nativo
+      if (!result.isSuccess) {
+        this.logger.debug('One Tap no disponible, intentando flujo con botón', 'AuthService');
+        result = await GoogleOneTapAuth.signInWithGoogleButtonFlowForNativePlatform();
+      }
+
+      if (!result.isSuccess || !result.success?.idToken) {
+        this.logger.warn('Google Sign-In falló o fue cancelado', 'AuthService', { noSuccess: result.noSuccess });
+        throw new Error('Inicio de sesión con Google cancelado');
+      }
+
+      this.logger.debug('Google ID Token obtenido, autenticando con Supabase', 'AuthService');
+
+      // Autenticar con Supabase usando el ID Token de Google
+      const { error } = await this.supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: result.success.idToken,
+      });
+
+      if (error) {
+        this.logger.error('Supabase signInWithIdToken falló', 'AuthService', error);
+        throw this.mapError(error);
+      }
+
+      this.logger.info('Google Sign-In nativo exitoso', 'AuthService');
+    } catch (err) {
+      // Cancelación del usuario - no logear como error
+      if (err instanceof Error && err.message.includes('cancelado')) {
+        throw err;
+      }
+      this.logger.error('Error en Google Sign-In nativo', 'AuthService', err);
+      throw err instanceof Error ? err : new Error('Error al iniciar sesión con Google');
     }
   }
 

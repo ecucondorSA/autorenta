@@ -114,6 +114,7 @@
     "@types/mapbox-gl": "^3.4.1",
     "@types/mercadopago": "^1.5.11",
     "browser-image-compression": "^2.0.2",
+    "capacitor-native-google-one-tap-signin": "^7.0.3",
     "date-fns": "^4.1.0",
     "flatpickr": "^4.6.13",
     "ionicons": "^8.0.13",

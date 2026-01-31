@@ -53,6 +53,14 @@ export const environment = buildEnvironment({
   // P0-027 FIX: Only public client ID - secret is backend-only
   paypalClientId: '', // Se configura via NG_APP_PAYPAL_CLIENT_ID
 
+  // Google One Tap / Native Sign-In Configuration
+  // El Web Client ID es necesario para validar ID Tokens en plataformas nativas (Android/iOS)
+  googleOneTap: {
+    clientId: '1029437966017-8757s0ru3sj8dg5nua5su0916fhfsgik.apps.googleusercontent.com',
+    autoSelect: true,
+    cancelOnTapOutside: true,
+  },
+
   // GCP Video Damage Detection (Vertex AI + Cloud Run)
   // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages después de desplegar GCP
   // NG_APP_VIDEO_INGESTION_URL - URL del Cloud Run service video-ingestion-service
