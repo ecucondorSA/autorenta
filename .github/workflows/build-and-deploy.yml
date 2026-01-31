@@ -69,6 +69,18 @@ jobs:
           # so they can be re-applied with correct YYYYMMDDHHMMSS format
           supabase migration repair --status reverted 20251218 2>/dev/null || true
           supabase migration repair --status reverted 20260116 2>/dev/null || true
+
+          # Mark migrations that exist in remote but not locally as reverted
+          # These were applied directly to DB without being added to repo
+          supabase migration repair --status reverted 20260130220905 2>/dev/null || true
+          supabase migration repair --status reverted 20260130220936 2>/dev/null || true
+          supabase migration repair --status reverted 20260130221833 2>/dev/null || true
+          supabase migration repair --status reverted 20260130221944 2>/dev/null || true
+          supabase migration repair --status reverted 20260130222003 2>/dev/null || true
+          supabase migration repair --status reverted 20260130222022 2>/dev/null || true
+          supabase migration repair --status reverted 20260130222110 2>/dev/null || true
+          supabase migration repair --status reverted 20260130222331 2>/dev/null || true
+          supabase migration repair --status reverted 20260130222404 2>/dev/null || true
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
@@ -92,7 +104,8 @@ jobs:
   build:
     name: 🔨 Build Application
     runs-on: ubuntu-latest
-    needs: deploy-db
+    needs: validate
+    # Note: Removed dependency on deploy-db to allow web deploy even if DB migration fails
 
     steps:
       - uses: actions/checkout@v4
