@@ -1,3 +1,7 @@
+## 3.50.0 (2026-01-31)
+
+* feat(mobile): advanced mobile optimization and checkout hardening ([3a5cccb](https://github.com/ecucondorSA/autorenta/commit/3a5cccb))
+
 ## <small>3.49.3 (2026-01-31)</small>
 
 * fix(ci): use build:web in E2E tests and improve error handling ([23d8052](https://github.com/ecucondorSA/autorenta/commit/23d8052))
