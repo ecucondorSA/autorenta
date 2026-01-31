@@ -1,0 +1,131 @@
+name: 📱 Build Debug APK (Signed with Release Key)
+
+# Build APK signed with release keystore for testing Google Sign-In
+on:
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '10.22.0'
+  JAVA_VERSION: '21'
+
+jobs:
+  build-apk:
+    name: Build Signed APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web app
+        run: pnpm build:web
+        env:
+          NODE_ENV: production
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL || secrets.SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY || secrets.SUPABASE_ANON_KEY }}
+          NG_APP_DEFAULT_CURRENCY: "ARS"
+          NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN || secrets.MAPBOX_ACCESS_TOKEN }}
+
+      - name: Workaround for capacitor-cordova-android-plugins
+        run: |
+          CORDOVA_DIR="apps/web/android/capacitor-cordova-android-plugins"
+          mkdir -p "$CORDOVA_DIR/src/main/libs"
+          cat > "$CORDOVA_DIR/cordova.variables.gradle" << 'EOF'
+          ext {
+            cdvMinSdkVersion = project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 23
+            cdvPluginPostBuildExtras = []
+            cordovaConfig = [:]
+          }
+          EOF
+          cat > "$CORDOVA_DIR/build.gradle" << 'EOF'
+          ext {
+              androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.7.0'
+              cordovaAndroidVersion = project.hasProperty('cordovaAndroidVersion') ? rootProject.ext.cordovaAndroidVersion : '10.1.1'
+          }
+          buildscript {
+              repositories { google(); mavenCentral() }
+              dependencies { classpath 'com.android.tools.build:gradle:8.7.2' }
+          }
+          apply plugin: 'com.android.library'
+          android {
+              namespace "capacitor.cordova.android.plugins"
+              compileSdk project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 35
+              defaultConfig {
+                  minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 23
+                  targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 35
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_21
+                  targetCompatibility JavaVersion.VERSION_21
+              }
+          }
+          repositories { google(); mavenCentral(); flatDir { dirs 'src/main/libs', 'libs' } }
+          dependencies {
+              implementation fileTree(dir: 'src/main/libs', include: ['*.jar'])
+              implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+              implementation "org.apache.cordova:framework:$cordovaAndroidVersion"
+          }
+          apply from: "cordova.variables.gradle"
+          for (def func : cdvPluginPostBuildExtras) { func() }
+          EOF
+
+      - name: Copy web assets to Android
+        run: pnpm --filter autorentar-web exec cap copy android
+
+      - name: Patch Google One Tap plugin
+        run: |
+          PLUGIN_PATH=$(find node_modules -path "*/capacitor-native-google-one-tap-signin/android/googleauth-plugin/build.gradle" 2>/dev/null | head -1)
+          if [ -n "$PLUGIN_PATH" ]; then
+            sed -i "s/id 'org.jetbrains.kotlin.android' version '1.9.25'/id 'org.jetbrains.kotlin.android'/" "$PLUGIN_PATH"
+            echo "✅ Patched Google One Tap plugin"
+          fi
+
+      - name: Decode Keystore
+        run: |
+          mkdir -p apps/web/android/keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > apps/web/android/keystore/autorentar-release.keystore
+
+      - name: Build Release APK
+        working-directory: apps/web/android
+        run: ./gradlew assembleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: autorentar-release-apk
+          path: apps/web/android/app/build/outputs/apk/release/*.apk
+          retention-days: 7
+
+      - name: Summary
+        run: |
+          echo "## 📱 APK Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Download the APK from the Artifacts section above." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Install on device: \`adb install -r app-release-unsigned.apk\`" >> $GITHUB_STEP_SUMMARY
