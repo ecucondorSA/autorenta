@@ -86,9 +86,11 @@ jobs:
 
       - name: Build application
         if: steps.check-secrets.outputs.has_secrets == 'true'
-        run: pnpm build
+        run: pnpm build:web
         env:
-          SKIP_ENV_VALIDATION: true
+          NODE_ENV: production
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
 
       - name: Start application server
         if: steps.check-secrets.outputs.has_secrets == 'true'
@@ -202,9 +204,11 @@ jobs:
 
       - name: Build application
         if: steps.check-secrets.outputs.has_secrets == 'true'
-        run: pnpm build
+        run: pnpm build:web
         env:
-          SKIP_ENV_VALIDATION: true
+          NODE_ENV: production
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
 
       - name: Start server
         if: steps.check-secrets.outputs.has_secrets == 'true'
