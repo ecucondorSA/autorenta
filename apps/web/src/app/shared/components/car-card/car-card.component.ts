@@ -80,7 +80,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
       const rates = this.currencyService.exchangeRates();
       // Fallback to a safe default if rates are not loaded yet to avoid 0/Infinity issues
       // ideally we should show a loader, but for now we fallback or wait
-      const rate = rates ? rates['USDARS'] : undefined; 
+      const rate = rates ? rates.binance : undefined; 
       
       if (rate && rate > 0) {
         return rawPrice / rate;

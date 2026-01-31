@@ -1,285 +1,233 @@
 <!-- Hero Search Section -->
-<section class="hero-section">
-  <div class="hero-content">
-    <div class="hero-text">
-      <h1 class="hero-title font-bold font-satoshi">Encuentra el auto ideal, cerca de ti.</h1>
-      <p class="hero-subtitle font-luxury">
-        Conecta con dueños locales y conduce el auto que realmente quieres. Seguro incluido en cada
-        viaje.
+<section class="hero-section bg-zinc-900 relative overflow-hidden min-h-[85vh] flex items-center">
+  <!-- Dynamic Background (Abstract Roads/Connection) -->
+  <div class="absolute inset-0 bg-[url('/assets/images/grid-noise.png')] opacity-10 pointer-events-none"></div>
+  <div class="absolute inset-0 bg-gradient-to-br from-zinc-800 via-zinc-900 to-black pointer-events-none"></div>
+  
+  <!-- Content -->
+  <div class="hero-content relative z-10 container mx-auto px-4 flex flex-col items-center text-center">
+    <div class="hero-text max-w-5xl mx-auto space-y-8 animate-fade-in-up">
+      
+      <!-- Community Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-2 shadow-lg">
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span>
+        </span>
+        <span class="text-xs font-bold text-white tracking-wide uppercase">Comunidad de confianza</span>
+      </div>
+
+      <!-- Main Title: Human & Impactful -->
+      <h1 class="hero-title text-5xl md:text-7xl lg:text-8xl font-black text-white font-satoshi leading-[0.95] tracking-tight">
+        TU VIAJE, <br/>
+        <span class="text-brand-primary">TU LIBERTAD.</span>
+      </h1>
+      
+      <!-- Subtitle: High Contrast & Value Prop -->
+      <p class="hero-subtitle text-zinc-100 text-lg md:text-2xl font-medium max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+        Alquila autos de vecinos de confianza cerca de ti. 
+        <br class="hidden md:block">
+        Sin papeleos eternos. <span class="text-brand-primary font-bold">Seguro total incluido.</span>
       </p>
-      <p class="hero-price font-luxury">Desde económicos a $15.000 hasta lujo.</p>
-      <div class="hero-cta">
-        <a routerLink="/cars/list" class="btn-primary btn-large font-friendly">Explorar autos</a>
+
+      <!-- Search Container (Floating & Modern) -->
+      <div class="hero-cta pt-10 w-full max-w-3xl mx-auto">
+        <div class="p-1 rounded-3xl bg-white/10 backdrop-blur-sm border border-white/10 shadow-2xl">
+          <div class="bg-white rounded-[20px] p-2 shadow-inner">
+             <!-- Note: Ensure SmartSearchBar handles light mode correctly internally or via inputs -->
+            <app-smart-search-bar (searchSubmit)="onSmartSearch($event)"></app-smart-search-bar>
+          </div>
+        </div>
+        <div class="mt-4 text-sm text-zinc-400 font-medium flex items-center justify-center gap-2 flex-wrap">
+          <span>Marcas populares:</span>
+          <button (click)="searchByBrand('Toyota')" class="text-zinc-300 hover:text-brand-primary hover:underline transition-colors">Toyota</button>
+          <span class="text-zinc-600">•</span>
+          <button (click)="searchByBrand('Fiat')" class="text-zinc-300 hover:text-brand-primary hover:underline transition-colors">Fiat</button>
+          <span class="text-zinc-600">•</span>
+          <button (click)="searchByBrand('Volkswagen')" class="text-zinc-300 hover:text-brand-primary hover:underline transition-colors">Volkswagen</button>
+          <span class="text-zinc-600">•</span>
+          <button (click)="searchByBrand('Ford')" class="text-zinc-300 hover:text-brand-primary hover:underline transition-colors">Ford</button>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Trust Badges Section -->
-<section class="trust-badges">
-  <div class="trust-container">
-    <div class="trust-badge">
-      <app-icon name="car" [size]="28" cssClass="trust-icon" />
-      <div class="trust-text">
-        <span class="trust-number">2,500+</span>
-        <span class="trust-label">Autos disponibles</span>
+<!-- Trust Badges Section (Light & Clean) -->
+<section class="py-12 bg-white border-b border-zinc-100">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div class="flex flex-col items-center text-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+          <app-icon name="shield-check" [size]="24" />
+        </div>
+        <div>
+          <span class="block text-2xl font-bold text-zinc-900">100%</span>
+          <span class="text-sm font-medium text-zinc-500">Viajes Asegurados</span>
+        </div>
       </div>
-    </div>
-    <div class="trust-divider"></div>
-    <div class="trust-badge">
-      <app-icon name="shield-check" [size]="28" cssClass="trust-icon" />
-      <div class="trust-text">
-        <span class="trust-number">100%</span>
-        <span class="trust-label">Asegurados</span>
+      <div class="flex flex-col items-center text-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-600">
+          <app-icon name="car" [size]="24" />
+        </div>
+        <div>
+          <span class="block text-2xl font-bold text-zinc-900">+2,500</span>
+          <span class="text-sm font-medium text-zinc-500">Autos Disponibles</span>
+        </div>
       </div>
-    </div>
-    <div class="trust-divider"></div>
-    <div class="trust-badge">
-      <app-icon name="star" [size]="28" cssClass="trust-icon" />
-      <div class="trust-text">
-        <span class="trust-number">4.8/5</span>
-        <span class="trust-label">Satisfacción</span>
+      <div class="flex flex-col items-center text-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-600">
+          <app-icon name="star" [size]="24" />
+        </div>
+        <div>
+          <span class="block text-2xl font-bold text-zinc-900">4.9/5</span>
+          <span class="text-sm font-medium text-zinc-500">Valoración Media</span>
+        </div>
       </div>
-    </div>
-    <div class="trust-divider"></div>
-    <div class="trust-badge">
-      <app-icon name="clock" [size]="28" cssClass="trust-icon" />
-      <div class="trust-text">
-        <span class="trust-number">24/7</span>
-        <span class="trust-label">Soporte</span>
+      <div class="flex flex-col items-center text-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+          <app-icon name="user-check" [size]="24" />
+        </div>
+        <div>
+          <span class="block text-2xl font-bold text-zinc-900">Verificados</span>
+          <span class="text-sm font-medium text-zinc-500">Usuarios & Dueños</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Featured Cars Section -->
-<section class="featured-cars">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title font-bold font-satoshi">Autos destacados</h2>
-      <a routerLink="/cars/list" class="view-all-link">
-        Ver todos
-        <app-icon name="arrow-right" [size]="18" />
+<!-- Featured Cars Section (Warm Gray Background) -->
+<section class="py-20 bg-zinc-50">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-bold font-satoshi text-zinc-900 mb-2">Autos listos para tu aventura</h2>
+        <p class="text-lg text-zinc-500">Encuentra el compañero perfecto para tu viaje familiar o escapada.</p>
+      </div>
+      <a routerLink="/cars/list" class="inline-flex items-center gap-2 text-brand-primary font-bold hover:text-green-600 transition-colors">
+        Ver todos los autos
+        <app-icon name="arrow-right" [size]="20" />
       </a>
     </div>
 
     @if (loading()) {
-      <div class="cars-loading">
-        <div class="skeleton-grid">
-          @for (i of [1, 2, 3, 4, 5, 6]; track i) {
-            <div class="skeleton-card">
-              <div class="skeleton-image"></div>
-              <div class="skeleton-content">
-                <div class="skeleton-line wide"></div>
-                <div class="skeleton-line medium"></div>
-                <div class="skeleton-line narrow"></div>
-              </div>
-            </div>
-          }
-        </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="bg-white rounded-2xl h-80 animate-pulse shadow-sm"></div>
+        }
       </div>
     } @else if (featuredCars().length > 0) {
-      <a routerLink="/cars/list" class="cars-grid-link">
-        <div class="cars-grid cars-grid-preview">
-          @for (car of featuredCars(); track car.id) {
-            <div class="car-preview-wrapper">
-              <app-car-card [car]="car" />
-              <div class="car-preview-overlay">
-                <span class="overlay-text">Ver en marketplace</span>
-              </div>
-            </div>
-          }
-        </div>
-        <div class="view-marketplace-banner">
-          <span>Explora todos los autos disponibles en el marketplace</span>
-          <app-icon name="arrow-right" [size]="20" />
-        </div>
-      </a>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @for (car of featuredCars(); track car.id) {
+          <app-car-card [car]="car" class="block h-full shadow-sm hover:shadow-xl transition-shadow duration-300 bg-white rounded-2xl overflow-hidden" />
+        }
+      </div>
+      
+      <div class="mt-12 text-center">
+        <a routerLink="/cars/list" class="inline-flex items-center justify-center px-8 py-4 bg-white border border-zinc-200 rounded-full text-zinc-900 font-bold hover:bg-zinc-50 hover:border-zinc-300 transition-all shadow-sm">
+          Explorar marketplace completo
+        </a>
+      </div>
     } @else {
-      <div class="no-cars">
-        <app-icon name="car" [size]="48" cssClass="no-cars-icon" />
-        <p>Pronto tendremos autos disponibles para vos</p>
-        <a routerLink="/publish" class="btn-secondary">Publicar mi auto</a>
+      <div class="text-center py-20 bg-white rounded-3xl border border-dashed border-zinc-200">
+        <app-icon name="car" [size]="48" cssClass="text-zinc-300 mb-4 mx-auto" />
+        <h3 class="text-xl font-bold text-zinc-900 mb-2">Pronto llegarán más autos</h3>
+        <p class="text-zinc-500 mb-6">Estamos ampliando nuestra flota en tu zona.</p>
+        <a routerLink="/publish" class="text-brand-primary font-bold hover:underline">Publicar mi auto</a>
       </div>
     }
   </div>
 </section>
 
-<!-- How It Works Section -->
-<section class="how-it-works">
-  <div class="container">
-    <h2 class="section-title font-bold font-satoshi">Cómo funciona</h2>
-    <p class="section-subtitle font-friendly">Alquila un auto en 3 simples pasos</p>
-
-    <!-- Process Illustration -->
-    <div class="flex justify-center mb-10">
-      <img
-        src="/assets/images/design-assets/process_illustration.png"
-        alt="Proceso de alquiler: Buscar, Reservar, Conducir"
-        class="max-w-md w-full h-auto rounded-2xl shadow-lg"
-        loading="lazy"
-      />
+<!-- How It Works Section (White Background) -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold font-satoshi text-zinc-900 mb-4">Simple, rápido y seguro</h2>
+      <p class="text-lg text-zinc-500">Olvídate de las agencias tradicionales. Aquí tratas con personas.</p>
     </div>
 
-    <div class="steps-grid">
+    <div class="grid md:grid-cols-3 gap-12 relative">
+      <!-- Connecting Line (Desktop) -->
+      <div class="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-transparent via-zinc-200 to-transparent -z-10"></div>
+
       <!-- Step 1 -->
-      <a routerLink="/cars/list" class="step-card step-card-clickable">
-        <div class="step-icon">
-          <app-icon name="search" [size]="48" cssClass="step-svg" />
+      <div class="flex flex-col items-center text-center group cursor-pointer">
+        <div class="w-24 h-24 rounded-2xl bg-white border border-zinc-100 shadow-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-brand-primary/30 transition-all duration-300 relative z-10">
+          <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-brand-primary text-black font-bold flex items-center justify-center shadow-lg">1</div>
+          <app-icon name="search" [size]="40" cssClass="text-zinc-800" />
         </div>
-        <h3 class="step-title font-bold font-satoshi">1. Busca tu auto</h3>
-        <p class="step-description">
-          Usa nuestros filtros para encontrar el auto perfecto para tu viaje. Compara precios,
-          ubicaciones y características.
-        </p>
-      </a>
+        <h3 class="text-xl font-bold text-zinc-900 mb-3">Encuentra tu auto</h3>
+        <p class="text-zinc-500 leading-relaxed">Filtra por ubicación, precio o modelo. Mira fotos reales y reseñas de otros usuarios.</p>
+      </div>
 
       <!-- Step 2 -->
-      <a routerLink="/cars/list" class="step-card step-card-clickable">
-        <div class="step-icon">
-          <app-icon name="calendar" [size]="48" cssClass="step-svg" />
+      <div class="flex flex-col items-center text-center group cursor-pointer">
+        <div class="w-24 h-24 rounded-2xl bg-white border border-zinc-100 shadow-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-brand-primary/30 transition-all duration-300 relative z-10">
+          <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-brand-primary text-black font-bold flex items-center justify-center shadow-lg">2</div>
+          <app-icon name="calendar" [size]="40" cssClass="text-zinc-800" />
         </div>
-        <h3 class="step-title font-bold font-satoshi">2. Reserva online</h3>
-        <p class="step-description">
-          Selecciona tus fechas y completa tu reserva en minutos. Pago seguro con confirmación
-          instantánea.
-        </p>
-      </a>
+        <h3 class="text-xl font-bold text-zinc-900 mb-3">Reserva al instante</h3>
+        <p class="text-zinc-500 leading-relaxed">Sin esperas. Pago seguro protegido por MercadoPago. Confirmación inmediata.</p>
+      </div>
 
       <!-- Step 3 -->
-      <a routerLink="/cars/list" class="step-card step-card-clickable">
-        <div class="step-icon">
-          <app-icon name="car" [size]="48" cssClass="step-svg" />
+      <div class="flex flex-col items-center text-center group cursor-pointer">
+        <div class="w-24 h-24 rounded-2xl bg-white border border-zinc-100 shadow-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-brand-primary/30 transition-all duration-300 relative z-10">
+          <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-brand-primary text-black font-bold flex items-center justify-center shadow-lg">3</div>
+          <app-icon name="key" [size]="40" cssClass="text-zinc-800" />
         </div>
-        <h3 class="step-title font-bold font-satoshi">3. Recoge y conduce</h3>
-        <p class="step-description">
-          Coordina con el anfitrión, recoge tu auto y disfruta tu viaje. Todo verificado y
-          asegurado.
-        </p>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- Why Autorentar Section -->
-<section class="why-autorentar">
-  <div class="container">
-    <h2 class="section-title font-bold font-satoshi">¿Por qué Autorentar?</h2>
-    <p class="section-subtitle">La forma más segura y conveniente de usar un auto</p>
-
-    <div class="benefits-grid">
-      <div class="benefit-card">
-        <div class="benefit-icon">
-          <app-icon name="shield-check" [size]="32" cssClass="benefit-svg" />
-        </div>
-        <h3 class="benefit-title font-bold font-satoshi">100% Asegurado</h3>
-        <p class="benefit-description">
-          Todos los viajes incluyen seguro contra daños y robo. Conduce tranquilo.
-        </p>
-      </div>
-
-      <div class="benefit-card">
-        <div class="benefit-icon">
-          <app-icon name="calendar" [size]="32" cssClass="benefit-svg" />
-        </div>
-        <h3 class="benefit-title font-bold font-satoshi">Cancelación gratis</h3>
-        <p class="benefit-description">
-          Cancela hasta 24 horas antes sin costo. Flexibilidad total.
-        </p>
-      </div>
-
-      <div class="benefit-card">
-        <div class="benefit-icon">
-          <app-icon name="user-check" [size]="32" cssClass="benefit-svg" />
-        </div>
-        <h3 class="benefit-title font-bold font-satoshi">Usuarios verificados</h3>
-        <p class="benefit-description">
-          Verificamos identidad y licencia de todos los conductores.
-        </p>
-      </div>
-
-      <div class="benefit-card">
-        <div class="benefit-icon">
-          <app-icon name="headset" [size]="32" cssClass="benefit-svg" />
-        </div>
-        <h3 class="benefit-title font-bold font-satoshi">Soporte 24/7</h3>
-        <p class="benefit-description">
-          Nuestro equipo está disponible las 24 horas para ayudarte.
-        </p>
+        <h3 class="text-xl font-bold text-zinc-900 mb-3">Disfruta el viaje</h3>
+        <p class="text-zinc-500 leading-relaxed">Coordina la entrega con el dueño. Tu viaje está cubierto por nuestro seguro total.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- App Download Section -->
-<section class="py-20 bg-gradient-to-br from-[#39FF14]/5 via-white to-[#39FF14]/10">
-  <div class="container mx-auto px-6">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
+<!-- App Download Section (Branded Dark) -->
+<section class="py-24 bg-zinc-900 relative overflow-hidden">
+  <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-brand-primary/10 to-transparent pointer-events-none"></div>
+  
+  <div class="container mx-auto px-6 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
       <!-- Text Content -->
-      <div class="text-center lg:text-left">
-        <span
-          class="inline-block px-4 py-1.5 rounded-full bg-[#39FF14]/10 text-[#39FF14] font-semibold text-sm mb-4"
-        >
-          Próximamente
-        </span>
-        <h2 class="text-3xl md:text-4xl font-black font-satoshi text-gray-900 mb-4">
-          Tu próximo viaje, en tu bolsillo
-        </h2>
-        <p class="text-gray-600 text-lg mb-8">
-          Busca, reserva y gestiona tus alquileres desde cualquier lugar. Notificaciones en tiempo
-          real y soporte instantáneo.
-        </p>
+      <div class="text-center lg:text-left space-y-8">
+        <div>
+          <span class="inline-block px-4 py-1.5 rounded-full bg-brand-primary/20 text-brand-primary font-bold text-sm mb-6 border border-brand-primary/20">
+            APP MÓVIL
+          </span>
+          <h2 class="text-4xl md:text-5xl font-black font-satoshi text-white mb-6">
+            Lleva la libertad <br/> en tu bolsillo.
+          </h2>
+          <p class="text-zinc-400 text-lg leading-relaxed max-w-lg mx-auto lg:mx-0">
+            Gestiona tus alquileres, abre el auto desde tu celular y recibe asistencia 24/7. La experiencia completa de AutoRenta.
+          </p>
+        </div>
+        
         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-          <a
-            href="#"
-            class="inline-flex items-center justify-center gap-2 bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors"
-          >
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"
-              />
-            </svg>
-            <div class="text-left">
-              <div class="text-xs opacity-70">Descargar en</div>
-              <div class="text-sm font-semibold">App Store</div>
+          <a href="#" class="inline-flex items-center justify-center gap-3 bg-white text-black px-6 py-3.5 rounded-xl hover:bg-zinc-100 transition-all transform hover:-translate-y-1 font-bold">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            <div class="text-left leading-tight">
+              <div class="text-[10px] uppercase tracking-wide opacity-60">Descargar en</div>
+              <div class="text-sm">App Store</div>
             </div>
           </a>
-          <a
-            href="#"
-            class="inline-flex items-center justify-center gap-2 bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors"
-          >
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"
-              />
-            </svg>
-            <div class="text-left">
-              <div class="text-xs opacity-70">Disponible en</div>
-              <div class="text-sm font-semibold">Google Play</div>
+          <a href="#" class="inline-flex items-center justify-center gap-3 bg-zinc-800 text-white px-6 py-3.5 rounded-xl border border-zinc-700 hover:bg-zinc-700 transition-all transform hover:-translate-y-1 font-bold">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>
+            <div class="text-left leading-tight">
+              <div class="text-[10px] uppercase tracking-wide opacity-60">Disponible en</div>
+              <div class="text-sm">Google Play</div>
             </div>
           </a>
         </div>
       </div>
-      <!-- App Mockup -->
-      <div class="flex justify-center lg:justify-end">
-        <img
-          src="/assets/images/design-assets/app_mockup_map.png"
-          alt="Autorentar App - Mapa de autos disponibles"
-          class="max-w-xs md:max-w-sm lg:max-w-md w-full h-auto drop-shadow-2xl"
-          loading="lazy"
-        />
+      
+      <!-- App Mockup Placeholder -->
+      <div class="hidden lg:flex justify-center relative">
+        <div class="absolute inset-0 bg-brand-primary/20 blur-[100px] rounded-full"></div>
+        <img src="/assets/images/design-assets/app_mockup_map.png" alt="App AutoRenta" class="relative z-10 max-w-sm drop-shadow-2xl rotate-[-5deg] hover:rotate-0 transition-transform duration-500 ease-out" loading="lazy">
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- Final CTA Section -->
-<section class="cta-final">
-  <div class="container">
-    <div class="cta-content">
-      <h2 class="cta-title font-bold font-satoshi font-friendly">¿Listo para tu próximo viaje?</h2>
-      <p class="cta-subtitle">Encuentra el auto perfecto ahora mismo</p>
-      <a routerLink="/cars/list" class="btn-primary btn-large"> Ver todos los autos disponibles </a>
     </div>
   </div>
 </section>

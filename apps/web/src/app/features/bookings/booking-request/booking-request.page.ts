@@ -40,9 +40,13 @@ import {
   PreauthorizationCalculation,
   SUBSCRIPTION_TIERS,
 } from '@core/models/subscription.model';
-import { Car } from '../../../core/models';
+import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 
 // Components
+import { DateRangePickerComponent } from '@shared/components/date-range-picker/date-range-picker.component';
+import { CarCarouselComponent } from '@shared/components/car-carousel/car-carousel.component';
+import { DateRange } from '@core/models/marketplace.model';
+import { Car } from '../../../core/models';
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
 
 // Extended FxSnapshot with dual rates
@@ -65,7 +69,15 @@ interface BookingInputData {
   selector: 'app-booking-request',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, RouterLink, CardHoldPanelComponent],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    RouterLink, 
+    CardHoldPanelComponent, 
+    SkeletonLoaderComponent,
+    DateRangePickerComponent,
+    CarCarouselComponent
+  ],
   templateUrl: './booking-request.page.html',
   styleUrls: ['./booking-request.page.css'],
 })
@@ -73,7 +85,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private pollInterval?: ReturnType<typeof setInterval>;
 
-  // Injected services
+  // ... (services remain the same)
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private fxService = inject(FxService);
@@ -95,7 +107,11 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   readonly processingPayment = signal(false); // Submitting request
   readonly error = signal<string | null>(null);
 
-  // Payment flow state
+  // Edit Mode State
+  readonly isEditingDates = signal(false);
+  readonly showPhotoGallery = signal(false);
+
+  // ... (rest of the state properties)
   readonly bookingCreated = signal(false);
   readonly bookingId = signal<string | null>(null);
   readonly fxRateLocked = signal(false); // FX rate is locked after booking creation
@@ -132,6 +148,53 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   // Wallet state (units, as returned by wallet_get_balance)
   readonly walletBalance = this.walletService.balance;
   readonly walletBalanceLoading = this.walletService.loading;
+
+  // ... (rest of the component logic)
+
+  // Edit Logic
+  toggleEditDates() {
+    this.isEditingDates.update(v => !v);
+  }
+
+  async onDatesChanged(range: DateRange) {
+    if (range.from && range.to) {
+      const startDate = new Date(range.from);
+      const endDate = new Date(range.to);
+      const currentInput = this.bookingInput();
+      
+      if (currentInput && !isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+        this.bookingInput.set({
+          ...currentInput,
+          startDate: startDate,
+          endDate: endDate
+        });
+        
+        // Recalculate risks/costs
+        await this.calculateRiskSnapshot();
+        
+        // Update URL query params without reloading to keep state consistent
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString()
+          },
+          queryParamsHandling: 'merge'
+        });
+      }
+    }
+  }
+
+  openPhotoGallery() {
+    this.showPhotoGallery.set(true);
+  }
+
+  closePhotoGallery() {
+    this.showPhotoGallery.set(false);
+  }
+
+  // ... (rest of methods)
+
 
   readonly walletAvailableBalance = computed(() => this.walletBalance()?.available_balance ?? 0);
   readonly walletCurrency = computed(() => this.walletBalance()?.currency ?? 'USD');

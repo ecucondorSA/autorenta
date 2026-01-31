@@ -2,348 +2,126 @@
   [routerLink]="['/cars', car.id]"
   [attr.data-car-id]="car.id"
   data-testid="car-card"
-  class="group relative flex flex-col bg-gradient-to-br from-surface-raised to-surface-secondary/50 rounded-3xl overflow-hidden border border-border-subtle hover:border-cta-default/30 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:scale-[1.02] hover:-translate-y-1"
+  class="group relative flex flex-col bg-zinc-900/90 backdrop-blur-sm rounded-3xl overflow-hidden border border-zinc-800 shadow-xl transition-all duration-300 cursor-pointer hover:border-zinc-600 hover:shadow-2xl hover:-translate-y-1"
   [class.ring-2]="selected"
-  [class.ring-cta-default]="selected"
+  [class.ring-brand-primary]="selected"
   [class.urgent-mode]="urgentMode"
   [class.map-mini-card]="mapVariant"
 >
-  <!-- Badge de Reserva Instantánea (Flotante) -->
-  @if (hasInstantBooking() && !urgentMode) {
-    <div
-      class="absolute top-3 left-3 z-20 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1.5 border border-white/20"
-    >
-      <svg
-        class="w-3.5 h-3.5"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2.5"
-          d="M13 10V3L4 14h7v7l9-11h-7z"
-        />
-      </svg>
-      RESERVA AL INSTANTE
-    </div>
-  }
-
-  <!-- Badge de urgencia (Flotante) -->
-  @if (urgentMode && urgentAvailability()?.available) {
-    <div
-      class="absolute top-3 left-3 z-20 bg-error-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1 animate-pulse border border-white/20"
-    >
-      <svg
-        class="w-3 h-3"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-      DISPONIBLE YA
-    </div>
-  }
-
-  <!-- Badge "Sin foto" para owners (Flotante) -->
-  @if (showOwnerActions && !hasRealPhotos()) {
-    <div
-      class="absolute top-3 left-3 z-20 bg-warning-500 text-black px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md flex items-center gap-1 border border-black/10"
-    >
-      <svg
-        class="w-3 h-3"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-        />
-      </svg>
-      SIN FOTO
-    </div>
-  }
-
-  <!-- Imagen del auto (Aspect Ratio dinámico) -->
+  <!-- Image Container -->
   <div
-    class="relative overflow-hidden bg-surface-secondary"
+    class="relative overflow-hidden bg-zinc-950"
     [ngClass]="mapVariant ? 'aspect-[2.5/1]' : 'aspect-[4/3]'"
   >
-    <!-- Imagen real -->
-    @if (displayImage() && !isBase64Image(displayImage()!.url)) {
+    <!-- Skeleton / Loading State -->
+    <div class="absolute inset-0 bg-zinc-900 animate-pulse" *ngIf="!displayImage()"></div>
+
+    <!-- Real Image -->
+    @if (displayImage(); as img) {
       <img
-        [ngSrc]="displayImage()!.url"
-        [alt]="displayImage()!.alt"
-        fill
-        [priority]="_priority()"
-        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-      />
-    }
-    @if (displayImage() && isBase64Image(displayImage()!.url)) {
-      <img
-        [src]="displayImage()!.url"
-        [alt]="displayImage()!.alt"
+        [src]="img.url"
+        [alt]="img.alt"
         loading="lazy"
-        width="400"
-        height="300"
-        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
       />
     }
 
-    <!-- Fallback -->
-    @if (!displayImage()) {
-      <div class="absolute inset-0 flex flex-col items-center justify-center bg-surface-secondary">
-        <svg
-          class="w-12 h-12 text-text-muted mb-2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
-        </svg>
-        <span class="text-xs text-text-muted font-mono uppercase tracking-widest">Sin imagen</span>
-      </div>
-    }
+    <!-- Gradient Overlay (Bottom) -->
+    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent opacity-80"></div>
 
-    <!-- Overlay gradiente en bottom para legibilidad de texto (si hubiera) -->
-    <div
-      class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-    ></div>
-
-    <!-- Badge de estado (Top Right) -->
-    <div class="absolute top-4 right-4 z-10">
-      <span
-        class="bg-surface-raised/95 backdrop-blur-lg px-3 py-1.5 rounded-xl text-[11px] font-bold uppercase tracking-wider shadow-lg border border-border-subtle"
-        [class]="car.status === 'active'
-          ? 'bg-green-500/10 text-green-700 border-green-200'
-          : 'bg-red-500/10 text-red-700 border-red-200'"
-      >
-        <span class="flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full"
-            [class]="car.status === 'active' ? 'bg-green-500' : 'bg-red-500'">
-          </span>
-          {{ car.status === 'active' ? 'Disponible' : 'Ocupado' }}
+    <!-- Top Badges -->
+    <div class="absolute top-3 right-3 z-10 flex flex-col gap-2 items-end">
+      @if (car.status !== 'active') {
+        <span class="bg-red-500/90 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-md shadow-lg border border-red-400/20">
+          Ocupado
         </span>
-      </span>
-    </div>
-  </div>
-
-  <!-- Contenido -->
-  <div
-    class="flex flex-col flex-1 p-4 space-y-4"
-    [class.p-3]="mapVariant"
-    [class.space-y-2]="mapVariant"
-  >
-    <!-- Header: Título y Rating -->
-    <div class="flex justify-between items-start gap-2">
-      <div class="min-w-0">
-        <h3
-          class="font-black text-lg text-text-primary leading-tight truncate font-satoshi group-hover:text-cta-default transition-colors"
-          [class.text-sm]="mapVariant"
-          [class.line-clamp-1]="mapVariant"
-        >
-          {{ displayTitle() }}
-        </h3>
-        <p class="text-xs text-text-muted mt-1 flex items-center gap-1 font-medium">
-          <svg
-            class="w-3.5 h-3.5 text-text-muted"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
+      } @else if (hasInstantBooking()) {
+        <span class="bg-emerald-500/90 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-md shadow-lg border border-emerald-400/20 flex items-center gap-1.5">
+          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <span class="truncate">{{ car.location_city }}</span>
-        </p>
-      </div>
-
-      <!-- Rating (Compacto) -->
+          Instant
+        </span>
+      }
+      
+      <!-- Rating Badge -->
       @if (car.rating_count > 0) {
-        <div
-          class="flex items-center gap-1 bg-surface-secondary px-2 py-1 rounded-lg border border-border-default flex-shrink-0"
-        >
-          <svg
-            class="w-3 h-3 text-warning-500 fill-current"
-            viewBox="0 0 20 20"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-            />
+        <div class="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 shadow-lg">
+          <svg class="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
           </svg>
-          <span class="text-xs font-black font-tech">{{ car.rating_avg | number: '1.1-1' }}</span>
+          <span class="text-xs font-bold text-white">{{ car.rating_avg | number: '1.1-1' }}</span>
         </div>
       }
     </div>
+  </div>
 
-    <!-- Specs Grid (Minimalista Tech - Oculto en mini-card para ahorrar espacio) -->
+  <!-- Content -->
+  <div class="flex flex-col flex-1 p-5 relative z-20 -mt-12">
+    <!-- Title & Location -->
+    <div class="mb-5">
+      <h3 class="font-black text-2xl text-white leading-none tracking-tight truncate font-satoshi group-hover:text-brand-primary transition-colors drop-shadow-md">
+        {{ displayTitle() }}
+      </h3>
+      <p class="text-sm font-medium text-zinc-300 mt-1.5 flex items-center gap-1.5 opacity-90">
+        <svg class="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        {{ car.location_city || 'Ubicación desconocida' }}
+      </p>
+    </div>
+
+    <!-- Specs Grid (Hidden in mini map variant) -->
     @if (!mapVariant) {
-      <div class="flex flex-wrap items-center gap-2">
-        <span
-          class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-secondary border border-border-default/50 font-tech text-[10px] font-bold text-text-secondary uppercase tracking-tighter"
-        >
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-            />
+      <div class="grid grid-cols-3 gap-3 mb-5">
+        <div class="bg-zinc-800/40 backdrop-blur-sm rounded-xl p-2.5 text-center border border-white/5 group-hover:border-white/10 transition-colors">
+          <svg class="w-4 h-4 text-zinc-500 mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
           </svg>
-          {{ car.transmission }}
-        </span>
-        <span
-          class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-secondary border border-border-default/50 font-tech text-[10px] font-bold text-text-secondary uppercase tracking-tighter"
-        >
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-            />
+          <span class="text-[11px] font-bold text-zinc-300 truncate block">{{ car.transmission === 'automatic' ? 'Auto' : 'Manual' }}</span>
+        </div>
+        <div class="bg-zinc-800/40 backdrop-blur-sm rounded-xl p-2.5 text-center border border-white/5 group-hover:border-white/10 transition-colors">
+           <svg class="w-4 h-4 text-zinc-500 mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
-          {{ car.seats }} PL.
-        </span>
-        <span
-          class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-secondary border border-border-default/50 font-tech text-[10px] font-bold text-text-secondary uppercase tracking-tighter"
-        >
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 10V3L4 14h7v7l9-11h-7z"
-            />
+          <span class="text-[11px] font-bold text-zinc-300 block">{{ car.seats }} Pas.</span>
+        </div>
+        <div class="bg-zinc-800/40 backdrop-blur-sm rounded-xl p-2.5 text-center border border-white/5 group-hover:border-white/10 transition-colors">
+           <svg class="w-4 h-4 text-zinc-500 mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          {{ car.fuel_type }}
-        </span>
+          <span class="text-[11px] font-bold text-zinc-300 truncate block">{{ car.fuel_type || 'Nafta' }}</span>
+        </div>
       </div>
     }
 
-    <!-- Footer: Precio y Acción -->
-    <div class="flex items-center justify-between mt-auto pt-4" [class.pt-2]="mapVariant">
-      <div class="flex flex-col">
-        @if (!mapVariant) {
-          <span class="text-[10px] text-text-muted font-bold uppercase tracking-wider mb-2 opacity-70"
-            >Precio por día</span
-          >
-        }
-        @if (hasValidPrice()) {
-          <div class="flex items-center gap-3">
-            <div class="relative group">
-              <div
-                class="bg-gradient-to-r from-cta-default via-cta-hover to-cta-default text-white px-4 py-2 rounded-2xl shadow-xl border-2 border-white/20 relative overflow-hidden transition-all duration-300 group-hover:shadow-2xl group-hover:scale-105"
-              >
-                <div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <span
-                  class="relative text-xl font-black font-tech tracking-tighter"
-                  [class.text-lg]="mapVariant"
-                >
-                  {{ displayPrice() | currency:'USD':'symbol':'1.0-0' }}
-                </span>
-              </div>
-              @if (priceSurgeIcon() && !mapVariant) {
-                <div class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center animate-bounce shadow-lg border-2 border-white">
-                  <span class="text-white text-xs font-bold">{{ priceSurgeIcon() }}</span>
-                </div>
-              }
-            </div>
-          </div>
-        } @else {
-          <span
-            class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 shadow-md border border-gray-300"
-          >
-            <svg class="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-            </svg>
-            Consultar precio
-          </span>
-        }
+    <!-- Footer: Price & CTA -->
+    <div class="mt-auto pt-4 flex items-end justify-between border-t border-zinc-800/50">
+      <div>
+        <p class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-0.5">Precio por día</p>
+        <div class="flex items-baseline gap-1">
+          <span class="text-sm font-bold text-zinc-400">USD</span>
+          @if (hasValidPrice()) {
+            <span class="text-2xl font-black text-white tracking-tighter font-satoshi">
+              {{ displayPrice() | number:'1.0-0' }}
+            </span>
+          } @else {
+            <span class="text-lg font-bold text-zinc-400">Consultar</span>
+          }
+        </div>
       </div>
 
-      <!-- Botón de Acción Moderna -->
       <button
-        *ngIf="!mapVariant"
-        class="hidden md:flex items-center justify-center w-12 h-12 bg-gradient-to-br from-gray-900 to-black text-white rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1 active:translate-y-0 transition-all duration-300 group relative overflow-hidden"
-        aria-label="Ver detalles del auto"
+        class="bg-white text-black hover:bg-zinc-200 active:scale-95 transition-all duration-200 rounded-2xl px-5 py-3 font-bold text-sm flex items-center gap-2 shadow-lg shadow-white/5"
+        (click)="$event.stopPropagation();" 
+        [routerLink]="['/cars', car.id]"
       >
-        <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <svg
-          class="w-5 h-5 relative z-10 transition-transform duration-300 group-hover:translate-x-0.5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2.5"
-            d="M14 5l7 7m0 0l-7 7m7-7H3"
-          />
+        <span>Reservar</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
       </button>
     </div>
-
-    <!-- Owner Actions (Ocultas por defecto, lógica preservada simplificada visualmente) -->
-    @if (showOwnerActions && !mapVariant) {
-      <div class="mt-3 pt-3 border-t border-border-default grid grid-cols-3 gap-2">
-        <button
-          (click)="onEdit($event)"
-          class="text-[10px] font-black uppercase tracking-widest py-2 rounded-lg bg-surface-secondary hover:bg-surface-hover transition-colors whitespace-nowrap overflow-hidden text-ellipsis border border-border-default"
-        >
-          Editar
-        </button>
-        <button
-          (click)="onToggleAvailability($event)"
-          class="text-[10px] font-black uppercase tracking-widest py-2 rounded-lg bg-surface-secondary hover:bg-warning-500/10 hover:text-warning-strong transition-colors whitespace-nowrap overflow-hidden text-ellipsis border border-border-default"
-        >
-          {{ car.status === 'active' ? 'Pausar' : 'Activar' }}
-        </button>
-        <button
-          (click)="onDelete($event)"
-          class="text-[10px] font-black uppercase tracking-widest py-2 rounded-lg bg-surface-secondary hover:bg-error-500/10 hover:text-error-text transition-colors whitespace-nowrap overflow-hidden text-ellipsis border border-border-default"
-        >
-          Eliminar
-        </button>
-      </div>
-    }
   </div>
 </article>

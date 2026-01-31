@@ -41,6 +41,10 @@ export interface CarMapLocation {
   depositAmount?: number;
   insuranceIncluded?: boolean;
   usesDynamicPricing?: boolean; // Car opts into dynamic pricing
+  // Specs
+  transmission?: string;
+  seats?: number;
+  fuelType?: string;
 }
 
 interface CacheEntry {

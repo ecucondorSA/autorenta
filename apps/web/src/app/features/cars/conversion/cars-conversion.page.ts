@@ -3,15 +3,17 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { CarsService } from '@core/services/cars/cars.service';
+import { DateRange } from '@core/models/marketplace.model';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
+import { SmartSearchBarComponent } from '../../../shared/components/smart-search-bar/smart-search-bar.component';
 import { Car } from '../../../core/models';
 
 @Component({
   selector: 'app-cars-conversion',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, IconComponent, FormsModule, CarCardComponent],
+  imports: [RouterLink, IconComponent, FormsModule, CarCardComponent, SmartSearchBarComponent],
   templateUrl: './cars-conversion.page.html',
   styleUrls: ['./cars-conversion.page.css'],
 })
@@ -54,7 +56,30 @@ export class CarsConversionPage implements OnInit {
     }
   }
 
+  onSmartSearch(event: { location: { lat: number; lng: number } | null; dates: DateRange }): void {
+    const queryParams: Record<string, string | number> = {};
+    
+    if (event.location) {
+      queryParams['lat'] = event.location.lat;
+      queryParams['lng'] = event.location.lng;
+    }
+    
+    if (event.dates.from) {
+      queryParams['from'] = String(event.dates.from);
+    }
+    
+    if (event.dates.to) {
+      queryParams['to'] = String(event.dates.to);
+    }
+
+    void this.router.navigate(['/cars/list'], { queryParams });
+  }
+
   navigateToList(): void {
     void this.router.navigate(['/cars/list']);
+  }
+
+  searchByBrand(brand: string): void {
+    void this.router.navigate(['/cars/list'], { queryParams: { q: brand } });
   }
 }

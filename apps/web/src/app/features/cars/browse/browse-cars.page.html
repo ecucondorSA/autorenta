@@ -1,70 +1,172 @@
 <!-- 
-  MAP-FIRST LAYOUT (Z-Layered Architecture)
-  Layer 0: Map (Full Screen)
-  Layer 10: Controls (Search/Filter)
-  Layer 20: Carousel (Bottom Interaction)
+  BROWSE CARS PAGE (Hybrid Map/List Architecture)
+  viewMode managed by BrowseStore (map | list)
 -->
-<div
-  class="relative w-full h-[100dvh] overflow-hidden bg-black text-white selection:bg-brand-primary selection:text-black">
-  <!-- LAYER 0: THE MAP (Base) -->
-  <div class="absolute inset-0 z-0">
-    <app-cars-map [cars]="mapLocations()" [selectedCarId]="selectedCarId()" [highlightedCarId]="mapHighlightedCarId()" (markerClick)="onMarkerClick($any($event))"
-      class="w-full h-full block" />
+<div class="relative w-full h-[100dvh] overflow-hidden bg-black text-white selection:bg-brand-primary selection:text-black">
+  
+  <!-- ================================================================================== -->
+  <!-- LAYER 0: MAP VIEW (Persistent in DOM for performance, hidden via CSS)             -->
+  <!-- ================================================================================== -->
+  <div class="absolute inset-0 z-0 transition-opacity duration-300"
+       [class.opacity-0]="viewMode() === 'list'"
+       [class.pointer-events-none]="viewMode() === 'list'">
+    <app-cars-map 
+      [cars]="mapLocations()" 
+      [selectedCarId]="selectedCarId()" 
+      [highlightedCarId]="mapHighlightedCarId()" 
+      (markerClick)="onMarkerClick($any($event))"
+      class="w-full h-full block" 
+    />
   </div>
 
-  <!-- LAYER 10: TOP BAR (Controls) -->
-  <header class="absolute top-0 inset-x-0 z-10 p-4 pt-safe-top pointer-events-none">
-    <div
-      class="pointer-events-auto bg-black/80 backdrop-blur-xl border border-white/10 rounded-full px-5 py-3 shadow-premium-lg flex items-center justify-between max-w-4xl mx-auto">
-      <!-- Logo / Brand -->
-      <div class="flex items-center gap-3">
-        <span class="text-brand-primary font-black tracking-tighter text-lg">AutoRentar</span>
-        <div class="h-4 w-px bg-white/20"></div>
+  <!-- ================================================================================== -->
+  <!-- LAYER 1: LIST VIEW (Conditional Render or Hidden)                                 -->
+  <!-- ================================================================================== -->
+  @if (viewMode() === 'list') {
+    <div class="absolute inset-0 z-0 bg-black pt-24 pb-safe-bottom overflow-y-auto scrollbar-hide animate-fade-in">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- List Header Info -->
+        <div class="flex items-center justify-between mb-8">
+          <h2 class="text-3xl font-black font-satoshi tracking-tight text-white">
+            {{ mapLocations().length }} vehículos
+            <span class="text-zinc-500 text-lg font-medium ml-2 block sm:inline">en tu zona</span>
+          </h2>
+          <div class="flex gap-2">
+            <!-- Filter Chips -->
+            <button class="px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-300 hover:bg-zinc-800 hover:text-white hover:border-zinc-600 transition-all shadow-lg">
+              Precio: Menor a Mayor
+            </button>
+            <button class="px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-300 hover:bg-zinc-800 hover:text-white hover:border-zinc-600 transition-all shadow-lg hidden sm:block">
+              Tipo: SUV
+            </button>
+          </div>
+        </div>
 
-        <!-- Animated Car Count Badge -->
-        @if (mapLocations().length > 0) {
-        <div
-          class="flex items-center gap-1.5 bg-brand-primary/10 border border-brand-primary/20 px-2.5 py-1 rounded-full">
-          <div class="w-2 h-2 bg-brand-primary rounded-full animate-pulse"></div>
-          <span class="text-xs font-bold text-brand-primary tabular-nums">{{
-            mapLocations().length
-            }}</span>
-          <span class="text-[10px] text-white/50 hidden sm:inline">autos</span>
+        <!-- Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20">
+          @if (loading()) {
+            <!-- Skeleton Grid -->
+            @for (i of [1,2,3,4,5,6]; track i) {
+              <app-skeleton-loader type="card" [height]="300"></app-skeleton-loader>
+            }
+          } @else {
+            @for (car of cars(); track car.id) {
+              <app-car-card 
+                [car]="car"
+                [showOwnerActions]="false"
+                [selected]="false"
+                id="car-{{car.id}}"
+              ></app-car-card>
+            }
+          }
         </div>
-        } @else if (loading()) {
-        <div class="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full">
-          <div class="w-2 h-2 bg-white/30 rounded-full animate-pulse"></div>
-          <span class="text-xs text-white/40">Cargando...</span>
+      </div>
+    </div>
+  }
+
+  <!-- ================================================================================== -->
+  <!-- LAYER 5: FLOATING CONTROLS (Map Only)                                             -->
+  <!-- ================================================================================== -->
+  @if (viewMode() === 'map') {
+    <button 
+      (click)="locateUser()" 
+      class="absolute bottom-[280px] md:bottom-8 right-4 z-30 bg-zinc-900/90 backdrop-blur text-white p-3 rounded-full shadow-lg border border-zinc-700 hover:bg-zinc-800 active:scale-95 transition-all flex items-center justify-center"
+      [class.opacity-50]="isLocating()"
+      [disabled]="isLocating()"
+      aria-label="Mi ubicación">
+      
+      @if (isLocating()) {
+        <svg class="animate-spin h-6 w-6 text-brand-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-200 hover:text-white">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+        </svg>
+      }
+    </button>
+  }
+
+  <!-- ================================================================================== -->
+  <!-- LAYER 10: TOP BAR (Controls & Toggle)                                             -->
+  <!-- ================================================================================== -->
+  <header class="absolute top-0 inset-x-0 z-50 p-4 pt-safe-top pointer-events-none">
+    <div class="pointer-events-auto bg-black/80 backdrop-blur-xl border border-white/10 rounded-full px-2 py-2 shadow-2xl flex items-center justify-between max-w-4xl mx-auto">
+      
+      <!-- Brand & Search Trigger -->
+      <div class="flex items-center gap-4 pl-3 flex-1 mr-4">
+        <div class="relative w-full max-w-md group">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-4 w-4 text-zinc-400 group-focus-within:text-brand-primary transition-colors" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input 
+            type="text" 
+            placeholder="Buscar por marca, modelo..." 
+            class="block w-full pl-10 pr-3 py-2 border border-transparent rounded-full leading-5 bg-zinc-800 text-white placeholder-zinc-400 focus:outline-none focus:bg-zinc-900 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary sm:text-sm transition-all shadow-inner"
+            (input)="onSearchQueryChange($any($event).target.value)"
+          >
         </div>
-        }
       </div>
 
-      <!-- Search Trigger -->
-      <button class="flex items-center gap-3 text-sm text-white/80 hover:text-white transition-colors group">
-        <span class="hidden sm:inline">Buenos Aires, 12-15 Ene</span>
-        <div
-          class="bg-brand-primary/10 text-brand-primary p-2 rounded-full group-hover:bg-brand-primary group-hover:text-black transition-all">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      <!-- View Toggle -->
+      <div class="bg-zinc-900 rounded-full p-1 flex items-center border border-zinc-800">
+        <button 
+          (click)="toggleView()" 
+          class="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300"
+          [class.bg-white]="viewMode() === 'map'"
+          [class.text-black]="viewMode() === 'map'"
+          [class.text-zinc-400]="viewMode() !== 'map'"
+          [class.hover:text-white]="viewMode() !== 'map'"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.806-.98l-4.553-2.276M15 7v13" />
           </svg>
-        </div>
-      </button>
+          <span class="hidden sm:inline">Mapa</span>
+        </button>
+        <button 
+          (click)="toggleView()" 
+          class="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300"
+          [class.bg-white]="viewMode() === 'list'"
+          [class.text-black]="viewMode() === 'list'"
+          [class.text-zinc-400]="viewMode() !== 'list'"
+          [class.hover:text-white]="viewMode() !== 'list'"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+          </svg>
+          <span class="hidden sm:inline">Lista</span>
+        </button>
+      </div>
+
     </div>
   </header>
 
-  <!-- LAYER 20: BOTTOM CAROUSEL (Mobile & Desktop Unified) -->
-  <div
-    class="absolute bottom-0 inset-x-0 z-20 pb-safe-bottom pt-20 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none">
-    <app-car-carousel [cars]="mapLocations()" [selectedCarId]="selectedCarId()" [loading]="loading()" (previewChange)="onCarouselPreviewChange($event)">
-    </app-car-carousel>
+  <!-- ================================================================================== -->
+  <!-- LAYER 20: BOTTOM CAROUSEL (Only in Map Mode)                                      -->
+  <!-- ================================================================================== -->
+  <div 
+    class="absolute bottom-0 inset-x-0 z-20 pb-safe-bottom pt-20 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none transition-transform duration-500"
+    [class.translate-y-full]="viewMode() === 'list'"
+  >
+    <app-car-carousel 
+      [cars]="mapLocations()" 
+      [selectedCarId]="selectedCarId()" 
+      [loading]="loading()" 
+      (previewChange)="onCarouselPreviewChange($event)"
+    />
   </div>
 
-  <!-- BOOKING SHEET (Lazy Loaded) -->
+  <!-- BOOKING SHEET (Shared) -->
   @if (store.activeCarMapLocation()) {
-  <app-booking-sheet [car]="store.activeCarMapLocation()!" (sheetClosed)="onMarkerClick(null)"
-    (confirmed)="onBookingConfirm()">
-  </app-booking-sheet>
+    <app-booking-sheet 
+      [car]="store.activeCarMapLocation()!" 
+      (sheetClosed)="onMarkerClick(null)"
+      (confirmed)="onBookingConfirm()"
+    />
   }
 </div>

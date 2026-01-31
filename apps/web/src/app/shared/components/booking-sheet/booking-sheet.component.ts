@@ -1,13 +1,12 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, inject, ElementRef, ViewChild, HostListener, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, inject, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { SoundService } from '@core/services/ui/sound.service';
-import { ARPreviewComponent } from '../ar-preview/ar-preview.component';
 
 @Component({
   selector: 'app-booking-sheet',
   standalone: true,
-  imports: [CommonModule, ARPreviewComponent],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (car) {
@@ -30,19 +29,9 @@ import { ARPreviewComponent } from '../ar-preview/ar-preview.component';
           <div class="w-12 h-1 bg-white/30 rounded-full mx-auto mb-6 cursor-grab active:cursor-grabbing hover:bg-white/50 transition-colors"></div>
 
           <div class="flex gap-4">
-            <!-- Large Photo with AR Badge -->
-            <div class="w-24 h-24 rounded-2xl overflow-hidden bg-surface-secondary border border-white/10 shadow-lg shrink-0 relative group cursor-pointer"
-                 (click)="openARPreview()">
+            <!-- Large Photo -->
+            <div class="w-24 h-24 rounded-2xl overflow-hidden bg-surface-secondary border border-white/10 shadow-lg shrink-0 relative group">
                <img [src]="car.photoUrl || '/assets/images/car-placeholder.svg'" class="w-full h-full object-cover" />
-               <!-- AR Badge -->
-               <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                 <div class="flex flex-col items-center gap-1 text-white">
-                   <svg class="w-6 h-6 text-brand-primary" viewBox="0 0 24 24" fill="currentColor">
-                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                   </svg>
-                   <span class="text-[10px] font-bold">Ver en AR</span>
-                 </div>
-               </div>
             </div>
 
             <div class="flex-1">
@@ -58,57 +47,48 @@ import { ARPreviewComponent } from '../ar-preview/ar-preview.component';
                  }
                  <span class="text-white/60 text-sm">{{ car.city }}</span>
               </div>
-              
-              <!-- AR Quick Action -->
-              <button (click)="openARPreview()" 
-                      class="mt-2 text-xs text-brand-primary flex items-center gap-1 hover:underline">
-                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                </svg>
-                Vista 3D / AR
-              </button>
             </div>
           </div>
 
           <!-- Specs Grid -->
-          <div class="grid grid-cols-3 gap-2 mt-6">
-             <div class="bg-white/5 rounded-xl p-3 text-center border border-white/5">
-                <div class="text-white/50 text-xs uppercase font-bold tracking-wider">Motor</div>
-                <div class="text-white font-bold mt-1">2.0L Turbo</div>
+          <div class="grid grid-cols-3 gap-3 mt-6">
+             <div class="bg-zinc-800/40 backdrop-blur-md rounded-2xl p-3 text-center border border-white/5">
+                <div class="text-zinc-500 text-[10px] uppercase font-bold tracking-wider mb-1">Caja</div>
+                <div class="text-white font-bold text-sm">{{ car.transmission === 'automatic' ? 'Auto' : 'Manual' }}</div>
              </div>
-             <div class="bg-white/5 rounded-xl p-3 text-center border border-white/5">
-                <div class="text-white/50 text-xs uppercase font-bold tracking-wider">Asientos</div>
-                <div class="text-white font-bold mt-1 whitespace-nowrap">4 plazas</div>
+             <div class="bg-zinc-800/40 backdrop-blur-md rounded-2xl p-3 text-center border border-white/5">
+                <div class="text-zinc-500 text-[10px] uppercase font-bold tracking-wider mb-1">Asientos</div>
+                <div class="text-white font-bold text-sm">{{ car.seats || 5 }}</div>
              </div>
-             <div class="bg-white/5 rounded-xl p-3 text-center border border-white/5">
-                <div class="text-white/50 text-xs uppercase font-bold tracking-wider">0-100</div>
-                <div class="text-white font-bold mt-1">4.5s</div>
+             <div class="bg-zinc-800/40 backdrop-blur-md rounded-2xl p-3 text-center border border-white/5">
+                <div class="text-zinc-500 text-[10px] uppercase font-bold tracking-wider mb-1">Motor</div>
+                <div class="text-white font-bold text-sm truncate capitalize">{{ car.fuelType || 'Nafta' }}</div>
              </div>
           </div>
 
+          <!-- Description (If available) -->
+          @if (car.description) {
+            <p class="mt-6 text-zinc-400 text-sm leading-relaxed line-clamp-3 font-medium">
+              {{ car.description }}
+            </p>
+          }
+
           <!-- Final Action -->
-          <div class="mt-8 flex items-center justify-between gap-4">
+          <div class="mt-8 flex items-center justify-between gap-4 border-t border-white/5 pt-6">
              <div class="text-white">
-                <div class="text-sm text-white/60">Total estimado</div>
-                <div class="text-3xl font-black tracking-tight">\${{ (car.pricePerDay * 3) | number:'1.0-0' }}</div>
+                <div class="text-[10px] text-zinc-500 uppercase tracking-wider font-bold mb-1">Precio por día</div>
+                <div class="text-3xl font-black tracking-tight font-sans">
+                  USD {{ car.pricePerDay | number:'1.0-0' }}
+                </div>
              </div>
              
              <button (click)="onConfirm()"
-                     class="flex-1 bg-brand-primary text-black font-black text-lg py-4 rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-neon-glow">
-                Confirmar Reserva
+                     class="flex-1 bg-white text-black font-black text-lg py-4 rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl hover:bg-zinc-200">
+                Continuar
              </button>
           </div>
         </div>
       </div>
-    }
-    
-    <!-- AR Preview Modal -->
-    @if (showARPreview()) {
-      <app-ar-preview 
-        [carTitle]="car?.title || ''"
-        [posterUrl]="car?.photoUrl || '/assets/images/car-placeholder.svg'"
-        (previewClosed)="closeARPreview()">
-      </app-ar-preview>
     }
   `,
   styles: [`
@@ -184,18 +164,5 @@ export class BookingSheetComponent {
   onConfirm() {
     this.sound.play('success');
     this.confirmed.emit();
-  }
-
-  // AR Preview
-  showARPreview = signal(false);
-
-  openARPreview() {
-    this.sound.play('pop');
-    this.showARPreview.set(true);
-  }
-
-  closeARPreview() {
-    this.sound.play('swoosh');
-    this.showARPreview.set(false);
   }
 }

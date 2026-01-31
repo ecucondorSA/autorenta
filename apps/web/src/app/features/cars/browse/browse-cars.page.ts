@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, computed, signal } from '@angular/core';
+import { Component, DestroyRef, inject, computed, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -12,7 +12,9 @@ import { CarsMapComponent } from '@shared/components/cars-map/cars-map.component
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { CarCarouselComponent } from '@shared/components/car-carousel/car-carousel.component';
 import { BookingSheetComponent } from '@shared/components/booking-sheet/booking-sheet.component';
+import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 import { BrowseStore } from './browse.store';
+
 
 @Component({
   selector: 'app-browse-cars',
@@ -24,6 +26,7 @@ import { BrowseStore } from './browse.store';
     CarsMapComponent,
     CarCarouselComponent,
     BookingSheetComponent,
+    SkeletonLoaderComponent,
   ],
   providers: [BrowseStore],
   templateUrl: './browse-cars.page.html',
@@ -89,6 +92,8 @@ import { BrowseStore } from './browse.store';
   ],
 })
 export class BrowseCarsPage {
+  @ViewChild(CarsMapComponent) carsMap!: CarsMapComponent;
+  
   private carsService = inject(CarsService);
   private locationService = inject(LocationService);
   private readonly logger = inject(LoggerService).createChildLogger('BrowseCarsPage');
@@ -97,7 +102,7 @@ export class BrowseCarsPage {
   private readonly destroyRef = inject(DestroyRef);
   readonly store = inject(BrowseStore);
 
-  readonly cars = this.store.cars;
+  readonly cars = this.store.filteredCars;
   readonly loading = this.store.loading;
   readonly selectedCarId = this.store.activeCarId;
   readonly viewMode = this.store.viewMode;
@@ -111,9 +116,11 @@ export class BrowseCarsPage {
   private lastLocation: LocationData | null = null;
   private lastLocationAt = 0;
   private isFetching = false;
+  readonly isLocating = signal(false);
 
   readonly mapLocations = computed<CarMapLocation[]>(() => {
-    const list = this.store.cars();
+    // Use filteredCars so map updates with search query
+    const list = this.store.filteredCars();
     this.logger.debug('Transforming cars for map', { count: list.length });
     return list.map((car) => ({
       carId: car.id,
@@ -130,6 +137,9 @@ export class BrowseCarsPage {
       photoGallery: car.photos?.map((p) => p.url) || car.car_photos?.map((p) => p.url) || [],
       description: car.description || '',
       availabilityStatus: 'available',
+      transmission: car.transmission,
+      seats: car.seats,
+      fuelType: car.fuel_type,
     }));
   });
 
@@ -173,11 +183,20 @@ export class BrowseCarsPage {
       this.store.setLoading(true);
     }
     try {
+      // Use cached location if available, otherwise resolve (but don't force new fetch if not needed)
       const location = await this.resolveLocation();
       this.logger.debug('User location', location ?? {});
 
       const searchFrom = this.searchFrom();
       const searchTo = this.searchTo();
+
+      // Sync params with store
+      this.store.setSearchParams({
+        lat: location?.lat,
+        lng: location?.lng,
+        startDate: searchFrom,
+        endDate: searchTo
+      });
 
       const results = await this.carsService.getAvailableCarsWithDistance(searchFrom, searchTo, {
         lat: location?.lat,
@@ -191,6 +210,29 @@ export class BrowseCarsPage {
       this.store.setLoading(false);
     } finally {
       this.isFetching = false;
+    }
+  }
+  
+  async locateUser() {
+    this.isLocating.set(true);
+    try {
+      const location = await this.locationService.getUserLocation();
+      if (location) {
+        this.lastLocation = location;
+        this.lastLocationAt = Date.now();
+        
+        // 1. Center Map
+        if (this.carsMap) {
+          this.carsMap.flyTo({ lat: location.lat, lng: location.lng }, 14);
+        }
+
+        // 2. Refresh Cars with new center
+        await this.loadCars({ silent: false });
+      }
+    } catch (e) {
+      this.logger.error('Error locating user', e);
+    } finally {
+      this.isLocating.set(false);
     }
   }
 
@@ -239,6 +281,10 @@ export class BrowseCarsPage {
     }
   }
 
+  toggleView() {
+    this.store.toggleViewMode();
+  }
+
   /** Handle preview change from carousel scroll (not selection) */
   onCarouselPreviewChange(carId: string | null) {
     this.carouselPreviewId.set(carId);
@@ -249,5 +295,9 @@ export class BrowseCarsPage {
     if (currentSelection && carId && carId !== currentSelection) {
       this.store.setActiveCar(null);
     }
+  }
+
+  onSearchQueryChange(query: string) {
+    this.store.setFilterQuery(query);
   }
 }
