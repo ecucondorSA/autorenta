@@ -1,3 +1,8 @@
+## <small>3.49.2 (2026-01-31)</small>
+
+* fix(ci): add error handling to daily metrics report queries ([9b7b70d](https://github.com/ecucondorSA/autorenta/commit/9b7b70d))
+* fix(ci): add error handling to wallet balance audit ([b8696fa](https://github.com/ecucondorSA/autorenta/commit/b8696fa))
+
 ## <small>3.49.1 (2026-01-31)</small>
 
 * fix(ci): repair missing migrations and decouple web deploy from DB ([23a887b](https://github.com/ecucondorSA/autorenta/commit/23a887b))
