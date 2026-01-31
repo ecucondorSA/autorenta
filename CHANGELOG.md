@@ -1,3 +1,7 @@
+## <small>3.49.3 (2026-01-31)</small>
+
+* fix(ci): use build:web in E2E tests and improve error handling ([23d8052](https://github.com/ecucondorSA/autorenta/commit/23d8052))
+
 ## <small>3.49.2 (2026-01-31)</small>
 
 * fix(ci): add error handling to daily metrics report queries ([9b7b70d](https://github.com/ecucondorSA/autorenta/commit/9b7b70d))
