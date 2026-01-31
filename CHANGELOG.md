@@ -1,3 +1,8 @@
+## 3.47.0 (2026-01-31)
+
+* feat(ci): add workflow to build signed APK for testing ([1be4aa0](https://github.com/ecucondorSA/autorenta/commit/1be4aa0))
+* fix(auth): update web client id to ...evdr in all files ([086bc16](https://github.com/ecucondorSA/autorenta/commit/086bc16))
+
 ## <small>3.46.3 (2026-01-31)</small>
 
 * fix(auth): google sign-in native configuration complete (local plugin + client ids) ([3f6c408](https://github.com/ecucondorSA/autorenta/commit/3f6c408))
