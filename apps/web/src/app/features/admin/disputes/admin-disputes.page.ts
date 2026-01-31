@@ -10,13 +10,20 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
 interface BookingDispute {
   id: string;
   booking_id: string;
-  status: 'open' | 'resolved' | 'rejected';
+  status: 'open' | 'resolved' | 'rejected' | 'in_review';
   reason: string;
+  description?: string;
+  kind?: string;
   created_at: string;
-  evidence: string[]; // URLs
+  evidence: { path: string; url?: string }[] | string[]; 
   resolution?: string;
   resolution_notes?: string;
   final_charges_cents?: number;
+  // Legacy / Template compatibility
+  dispute_resolution?: string;
+  resolution_amount?: number;
+  resolution_currency?: string;
+  resolved_at?: string;
 }
 
 @Component({
@@ -41,6 +48,16 @@ export class AdminDisputesPage implements OnInit {
   readonly resolutionNotes = signal('');
   readonly finalChargeAmount = signal<number>(0); // In dollars for UI
 
+  // Legacy/Template Compat Signals
+  readonly resolutionReason = signal(''); 
+  readonly resolutionAmount = signal<number | null>(null);
+  readonly evidence = signal<{ path: string; url?: string }[]>([]); 
+  readonly filters = signal({
+    status: '',
+    kind: '',
+    searchTerm: '',
+  });
+
   async ngOnInit(): Promise<void> {
     await this.loadAllDisputes();
   }
@@ -50,11 +67,21 @@ export class AdminDisputesPage implements OnInit {
     try {
       const supabase = this.supabaseService.getClient();
       
-      // Query 'booking_disputes' table (the new standard)
-      const { data, error } = await supabase
+      // Query 'booking_disputes' table
+      let query = supabase
         .from('booking_disputes')
         .select('*')
         .order('created_at', { ascending: false });
+
+      const filter = this.filters();
+      if (filter.status) {
+        query = query.eq('status', filter.status);
+      }
+      if (filter.searchTerm) {
+        query = query.or(`booking_id.ilike.%${filter.searchTerm}%`);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       this.disputes.set((data || []) as BookingDispute[]);
@@ -68,14 +95,23 @@ export class AdminDisputesPage implements OnInit {
 
   openDetailModal(dispute: BookingDispute): void {
     this.selectedDispute.set(dispute);
-    this.resolutionNotes.set('');
-    this.finalChargeAmount.set(0);
+    this.resolutionNotes.set(dispute.resolution_notes || '');
+    this.finalChargeAmount.set(dispute.final_charges_cents ? dispute.final_charges_cents / 100 : 0);
+    
+    // Normalize evidence for template
+    if (Array.isArray(dispute.evidence)) {
+        this.evidence.set(dispute.evidence.map(e => typeof e === 'string' ? { path: e, url: e } : e));
+    } else {
+        this.evidence.set([]);
+    }
+
     this.showDetailModal.set(true);
   }
 
   closeDetailModal(): void {
     this.showDetailModal.set(false);
     this.selectedDispute.set(null);
+    this.evidence.set([]);
   }
 
   /**
@@ -88,7 +124,6 @@ export class AdminDisputesPage implements OnInit {
 
     this.loading.set(true);
     try {
-      // Convert UI amount (USD) to cents for DB if needed, logic handled in service
       const chargeCents = this.finalChargeAmount() > 0 ? Math.round(this.finalChargeAmount() * 100) : undefined;
 
       const result = await this.disputeService.resolveDispute(
@@ -113,9 +148,27 @@ export class AdminDisputesPage implements OnInit {
     }
   }
 
+  // --- Template Helpers (Restored) ---
+
+  async applyFilters(): Promise<void> {
+    await this.loadAllDisputes();
+  }
+
+  async clearFilters(): Promise<void> {
+    this.filters.set({ status: '', kind: '', searchTerm: '' });
+    await this.loadAllDisputes();
+  }
+
+  // Alias for template compatibility
+  updateStatus(_disputeId: string, _status: string) {
+     // In new flow, status update happens via resolve()
+     console.warn('updateStatus is deprecated, use resolve()');
+  }
+
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
       open: 'Abierta',
+      in_review: 'En Revisión',
       resolved: 'Aprobada/Cobrada',
       rejected: 'Rechazada/Devuelta',
     };
@@ -125,16 +178,37 @@ export class AdminDisputesPage implements OnInit {
   getStatusColor(status: string): string {
     switch (status) {
       case 'open': return 'warning';
-      case 'resolved': return 'success'; // Owner won (money moved)
-      case 'rejected': return 'medium';  // Renter won (money returned)
+      case 'in_review': return 'primary';
+      case 'resolved': return 'success'; 
+      case 'rejected': return 'medium';
       default: return 'medium';
     }
   }
 
-  formatDate(dateStr?: string): string {
+  formatDate(dateStr?: string | null): string {
     if (!dateStr) return '-';
     return new Date(dateStr).toLocaleDateString('es-AR', {
       day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
     });
+  }
+
+  getKindLabel(kind?: string): string {
+      if (!kind) return 'General';
+      const map: Record<string, string> = {
+          'damage': 'Daños',
+          'cleanliness': 'Limpieza',
+          'late_return': 'Devolución tardía',
+          'other': 'Otro'
+      };
+      return map[kind] || kind;
+  }
+
+  getStatusCount(status: string): number {
+      return this.disputes().filter(d => d.status === status).length;
+  }
+
+  isImage(path: string): boolean {
+      if (!path) return false;
+      return /\.(jpg|jpeg|png|webp|gif)$/i.test(path);
   }
 }

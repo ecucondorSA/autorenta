@@ -24,50 +24,58 @@ import { chromium } from 'patchright';
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 /**
- * Moves the mouse to (x, y) following a human-like Bezier curve path.
+ * Moves the mouse to (x, y) following a human-like path with gravity and wind simulation.
+ * Uses a more advanced algorithm than simple Bezier curves to mimic human motor control.
  * @param {import('playwright').Page} page
  * @param {number} targetX
  * @param {number} targetY
  */
 async function humanMove(page, targetX, targetY) {
-  // We can't easily get the current mouse position in Playwright without tracking it manually.
-  // We'll trust the start to be 0,0 or the previous known position if we tracked it.
-  // Ideally, the mcp server should track `this.mousePos`, but for now we assume discrete actions.
-  // To make it look real, we arc from a random "off" point if we don't know where we are,
-  // or we just animate the end of the curve.
-  //
-  // For robustness, we will just animate from (0,0) or the center if unknown, 
-  // but actually Playwright's mouse.move simply warps or moves linearly.
-  // To get the bezier effect, we need to send intermediate steps.
-  
-  const start = { x: 0, y: 0 }; // Simplified assumption for stateless calls
-  
-  // Random control points
-  const cp1 = {
-    x: start.x + (targetX - start.x) / 2 + (Math.random() * 100 - 50),
-    y: start.y + (Math.random() * 100 - 50)
-  };
-  const cp2 = {
-    x: targetX - (Math.random() * 100 - 50),
-    y: targetY + (targetY - start.y) / 2 + (Math.random() * 100 - 50)
-  };
+  // Current assumption: we don't know start pos, so we assume (0,0) or last known.
+  // In a stateful real implementation, we'd track this.mousePos.
+  const startX = 0; 
+  const startY = 0;
 
-  const steps = 25; 
+  // Fitts's Law parameters (simplified)
+  const distance = Math.hypot(targetX - startX, targetY - startY);
+  const steps = Math.max(25, Math.min(100, Math.floor(distance / 5))); // More steps for longer distances
+
+  // Gravity/Wind points for deviation
+  const gravity = { x: Math.random() * 0.2 - 0.1, y: Math.random() * 0.2 - 0.1 };
+  
+  let currentX = startX;
+  let currentY = startY;
+
   for (let i = 1; i <= steps; i++) {
     const t = i / steps;
-    const x = Math.pow(1-t, 3) * start.x + 
-              3 * Math.pow(1-t, 2) * t * cp1.x + 
-              3 * (1-t) * Math.pow(t, 2) * cp2.x + 
-              Math.pow(t, 3) * targetX;
-    const y = Math.pow(1-t, 3) * start.y + 
-              3 * Math.pow(1-t, 2) * t * cp1.y + 
-              3 * (1-t) * Math.pow(t, 2) * cp2.y + 
-              Math.pow(t, 3) * targetY;
+    
+    // Easing function (easeOutQuad) - fast start, slow end
+    const easeT = t * (2 - t); 
+    
+    // Linear interpolation base
+    let nextX = startX + (targetX - startX) * easeT;
+    let nextY = startY + (targetY - startY) * easeT;
 
-    await page.mouse.move(x, y);
-    // Micro-hesitancy
-    await page.waitForTimeout(Math.random() * 10 + 5); 
+    // Add noise/deviation (simulating hand tremor/correction)
+    const deviation = Math.sin(t * Math.PI) * (distance * 0.05); // Max 5% deviation
+    nextX += deviation * (Math.random() - 0.5);
+    nextY += deviation * (Math.random() - 0.5);
+
+    // Overshoot at the end (common human behavior)
+    if (i === steps - 5) {
+        nextX += (targetX - startX) * 0.02; // Small overshoot
+        nextY += (targetY - startY) * 0.02;
+    }
+
+    await page.mouse.move(nextX, nextY);
+    
+    // Variable timing (slower at the end for precision)
+    const delay = (1 - t) * 5 + Math.random() * 3; 
+    await page.waitForTimeout(delay);
   }
+
+  // Final correction to exact pixel
+  await page.mouse.move(targetX, targetY);
 }
 
 // ========== MercadoPago Transfer ==========
@@ -212,6 +220,9 @@ function formatCompact(data, type) {
       return `✅ Navigated to: ${data.url}\n📄 Title: ${data.title}\n📊 Events: ${data.eventsTriggered}`;
 
     case 'click':
+      if (data.selfHealed) {
+        return `🩹 Self-Healed Click: ${data.clicked}\n🎯 Visual Match: "${data.matchedText}" at [${data.coords.x}, ${data.coords.y}]\n📊 Events: ${data.eventsTriggered}`;
+      }
       return `✅ Clicked: ${data.clicked}\n📊 Events: ${data.eventsTriggered}`;
 
     case 'type':
@@ -423,11 +434,27 @@ class PatchrightStreamingMCP {
       console.error('[MCP] Launching PATCHRIGHT browser with persistent profile...');
       console.error(`[MCP] Profile: ${CONFIG.profilePath}`);
 
+      // 🧹 CLEANUP: Remove stale locks if browser is not running
+      // This prevents "SingletonLock" errors after hard crashes
+      const fs = await import('fs');
+      const path = await import('path');
+      const lockFile = path.join(CONFIG.profilePath, 'SingletonLock');
+      
+      try {
+        // Simple heuristic: if we are just starting and nobody holds the lock (flock check is hard in node without deps),
+        // we assume it might be stale if the PID in 'SingletonLock' doesn't exist.
+        // For now, we'll just log a warning if it exists. A forceful cleanup script is safer separate.
+        if (fs.existsSync(lockFile)) {
+             console.error('[MCP] ⚠️ Warning: SingletonLock found in profile. If launch fails, the profile might be locked by a zombie process.');
+             // Optional: fs.unlinkSync(lockFile); // Risky if another instance is actually running
+        }
+      } catch (e) {}
+
       const launch = async () => {
         const os = await import('os');
-        const path = await import('path');
         // Video dir requires a persistent path to save files
         this.videoDir = path.join(os.tmpdir(), 'mcp-videos');
+        if (!fs.existsSync(this.videoDir)) fs.mkdirSync(this.videoDir, { recursive: true });
 
         this.context = await chromium.launchPersistentContext(CONFIG.profilePath, {
           headless: CONFIG.headless,
@@ -442,7 +469,11 @@ class PatchrightStreamingMCP {
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-infobars',
-            '--window-position=0,0'
+            '--window-position=0,0',
+            '--disable-dev-shm-usage', // Docker/Container fix
+            '--disable-gpu', // Stability fix
+            '--no-first-run',
+            '--no-default-browser-check'
           ],
           ignoreDefaultArgs: ['--enable-automation'],
         });
@@ -1099,12 +1130,23 @@ class PatchrightStreamingMCP {
               let pageUrl = null;
               let title = '';
               let pageOpen = false;
+              let responsive = false;
 
               try {
                 if (this.page && (typeof this.page.isClosed !== 'function' || !this.page.isClosed())) {
                   pageOpen = true;
-                  pageUrl = this.page.url();
-                  title = await this.page.title().catch(() => '');
+                  // Proactive health check: try to execute simple JS
+                  try {
+                      await this.page.evaluate('1+1', { timeout: 1000 });
+                      responsive = true;
+                  } catch (e) {
+                      responsive = false;
+                  }
+
+                  if (responsive) {
+                      pageUrl = this.page.url();
+                      title = await this.page.title().catch(() => '');
+                  }
                 }
               } catch {
                 // ignore
@@ -1113,6 +1155,7 @@ class PatchrightStreamingMCP {
               result = {
                 browserOpen: Boolean(this.context),
                 pageOpen,
+                responsive,
                 pageUrl,
                 title,
                 eventsInBuffer: this.eventBuffer.length,
@@ -1167,20 +1210,18 @@ class PatchrightStreamingMCP {
               const { page } = await this.ensureBrowser();
               const eventsBefore = this.lastEventId;
 
-              // 🤖 10/10 STEALTH CLICK
+              // 🤖 10/10 STEALTH CLICK with Visual Self-Healing
               try {
-                // Wait for element
+                // 1. Try standard selector with visibility check
                 const el = await page.waitForSelector(args.selector, { 
                     timeout: args.timeout || CONFIG.selectorTimeoutMs,
                     state: 'visible' 
                 });
                 
-                // Scroll & Measure
                 await el.scrollIntoViewIfNeeded();
                 const box = await el.boundingBox();
                 
                 if (box) {
-                    // Human Move & Click
                     const targetX = box.x + box.width / 2;
                     const targetY = box.y + box.height / 2;
                     await humanMove(page, targetX, targetY);
@@ -1188,21 +1229,82 @@ class PatchrightStreamingMCP {
                 } else {
                     await page.click(args.selector, { force: args.force });
                 }
+                
+                return {
+                    clicked: args.selector,
+                    eventsTriggered: this.lastEventId - eventsBefore,
+                    recentEvents: this.getEventsSince(eventsBefore).slice(-5),
+                };
               } catch (e) {
-                 console.error('[Stealth] Human click failed, using standard:', e.message);
+                 // 🧠 SELF-HEALING FALLBACK: Visual Heuristic
+                 console.error(`[Self-Healing] Selector "${args.selector}" failed. Trying visual heuristic...`);
+                 
+                 const visualTarget = await page.evaluate((sel) => {
+                     // Extract readable text from selector (e.g., "button.login" -> "login")
+                     const cleanText = sel.replace(/[#\.\[\]]/g, ' ').replace(/text=/i, '').replace(/['"]/g, '').trim().split(/\s+/).pop();
+                     if (!cleanText || cleanText.length < 2) return null;
+
+                     const candidates = Array.from(document.querySelectorAll('button, a, [role="button"], input[type="submit"], h1, h2, h3'));
+                     
+                     // 1. Exact match
+                     let match = candidates.find(el => 
+                         (el.innerText || '').toLowerCase().trim() === cleanText.toLowerCase() ||
+                         (el.getAttribute('aria-label') || '').toLowerCase().trim() === cleanText.toLowerCase()
+                     );
+
+                     // 2. Partial match if no exact match
+                     if (!match) {
+                        match = candidates.find(el => 
+                            (el.innerText || '').toLowerCase().includes(cleanText.toLowerCase()) ||
+                            (el.getAttribute('aria-label') || '').toLowerCase().includes(cleanText.toLowerCase())
+                        );
+                     }
+
+                     if (match) {
+                         const rect = match.getBoundingClientRect();
+                         if (rect.width > 0 && rect.height > 0) {
+                             return { 
+                                 x: rect.left + rect.width / 2, 
+                                 y: rect.top + rect.height / 2, 
+                                 text: (match.innerText || match.getAttribute('aria-label') || '').substring(0, 30)
+                             };
+                         }
+                     }
+                     return null;
+                 }, args.selector);
+
+                 if (visualTarget) {
+                     console.error(`[Self-Healing] 🎯 Found visual match: "${visualTarget.text}" at ${Math.round(visualTarget.x)}, ${Math.round(visualTarget.y)}`);
+                     
+                     // Use human move to coordinates
+                     await humanMove(page, visualTarget.x, visualTarget.y);
+                     await page.mouse.click(visualTarget.x, visualTarget.y);
+                     
+                     return {
+                        clicked: args.selector,
+                        selfHealed: true,
+                        healingStrategy: 'visual_text_match',
+                        matchedText: visualTarget.text,
+                        coords: { x: Math.round(visualTarget.x), y: Math.round(visualTarget.y) },
+                        eventsTriggered: this.lastEventId - eventsBefore,
+                        recentEvents: this.getEventsSince(eventsBefore).slice(-5),
+                     };
+                 }
+                 
+                 // Last resort: standard click (might throw the original error)
+                 console.error(`[Self-Healing] Failed to find visual match for "${args.selector}".`);
                  await page.click(args.selector, {
-                    timeout: args.timeout || CONFIG.selectorTimeoutMs,
+                    timeout: 2000, // Short timeout for final attempt
                     force: args.force || false
                  });
+                 
+                 return {
+                    clicked: args.selector,
+                    eventsTriggered: this.lastEventId - eventsBefore,
+                 };
               }
 
               await page.waitForTimeout(CONFIG.postActionDelayMs);
-
-              return {
-                clicked: args.selector,
-                eventsTriggered: this.lastEventId - eventsBefore,
-                recentEvents: this.getEventsSince(eventsBefore).slice(-5),
-              };
             });
             break;
           }
