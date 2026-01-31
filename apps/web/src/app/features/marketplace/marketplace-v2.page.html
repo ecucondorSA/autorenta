@@ -518,304 +518,126 @@
   </div>
 </section>
 
-<!-- 4. OWNER CTA + CALCULADORA (SIMULADOR DE NEGOCIO) -->
-<section class="py-24 bg-surface-secondary relative overflow-hidden">
-  <!-- Abstract Background Pattern -->
-  <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-100/50 to-transparent -z-10"></div>
-  <div class="absolute bottom-0 left-0 w-1/3 h-1/3 bg-cta-default/5 rounded-full blur-3xl -z-10"></div>
-
+<!-- 4. OWNER CTA + CALCULADORA (HYBRID: STORY + TECH) -->
+<section class="py-24 bg-zinc-950 relative overflow-hidden text-white border-t border-white/5">
+  <!-- Subtle Background Pattern -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/10 via-zinc-950/0 to-transparent opacity-50 pointer-events-none"></div>
+  
   <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
     <div class="grid lg:grid-cols-2 gap-16 items-center">
-      <!-- Text Content -->
+      
+      <!-- Left: Human Story (Martin) -->
       <div>
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cta-default/10 mb-6">
-          <svg class="w-4 h-4 text-cta-default" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span class="text-cta-default font-semibold text-sm font-luxury">Para Anfitriones</span>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 mb-6 backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-brand-primary animate-pulse"></span>
+          <span class="text-brand-primary font-bold text-xs uppercase tracking-wider">Para Anfitriones</span>
         </div>
-        <h2 class="text-4xl md:text-5xl font-black font-luxury text-text-primary mb-6 leading-tight tracking-tight">
+        
+        <h2 class="text-4xl md:text-5xl font-black font-satoshi text-white mb-6 leading-tight tracking-tight">
           Tu auto estacionado genera gastos.<br />
           En Autorentar,
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 font-luxury">compensás
-            esos costos.</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-emerald-400">compensás esos costos.</span>
         </h2>
-        <!-- Bloque Destacado de Martín -->
-        <div class="card-hud bg-surface-tertiary/50 border border-border-default rounded-xl p-4 md:p-6 mb-10 shadow-lg">
-          <div class="flex flex-col md:flex-row items-center md:items-start gap-4">
-            <div class="flex-shrink-0">
-              <img src="/assets/images/martin-testimonial.jpg" alt="Martín, anfitrión de Autorentar"
-                class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-cta-default" width="96"
-                height="96" />
+
+        <!-- Testimonial Card (Dark Mode) -->
+        <div class="bg-zinc-900/80 border border-white/10 rounded-2xl p-6 mb-8 hover:border-brand-primary/30 transition-colors duration-300">
+          <div class="flex flex-col md:flex-row items-center md:items-start gap-5">
+            <div class="flex-shrink-0 relative">
+              <div class="absolute inset-0 bg-brand-primary blur-md opacity-20 rounded-full"></div>
+              <img src="/assets/images/martin-testimonial.jpg" alt="Martín"
+                class="w-20 h-20 rounded-full object-cover border-2 border-zinc-800 relative z-10" />
             </div>
             <div class="flex-1 text-center md:text-left">
-              <p class="text-text-secondary italic text-base leading-relaxed">
+              <p class="text-zinc-300 italic text-lg font-medium leading-relaxed">
                 "Empecé para cubrir el seguro y ahora cubro el mantenimiento total del auto."
               </p>
-              <p class="text-text-primary font-semibold mt-2 font-luxury">
-                — Martín, anfitrión desde enero (3 autos compartidos)
-              </p>
+              <div class="mt-3 flex items-center justify-center md:justify-start gap-2">
+                <p class="text-white font-bold text-sm">— Martín</p>
+                <span class="text-zinc-600 text-xs">•</span>
+                <p class="text-brand-primary text-xs font-bold uppercase tracking-wide">Anfitrión (3 autos)</p>
+              </div>
             </div>
           </div>
 
-          <!-- Mobile: Expandable testimonial -->
-          <div class="mt-4 md:hidden">
-            @if (!showFullTestimonial()) {
-            <button (click)="showFullTestimonial.set(true)"
-              class="text-cta-default hover:text-cta-hover font-medium inline-flex items-center gap-1 transition-colors">
-              Leer historia completa
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            } @else {
-            <p class="text-text-muted text-sm">
-              "Me sumé sabiendo que asumía un compromiso. El primer mes el aporte no alcanzó para
-              cubrir la cuota del Corolla (aprox. $820.000). Pero al revisar los datos, hice el
-              clic: casi cubro los costos del auto entero sin tocar un peso de mi sueldo, algo
-              impensable antes.
-              <br /><br />
-              Entendí que era un problema de maduración de la comunidad, no de interés. Sostuve la
-              posición y hoy redoblo la apuesta: con 3 autos activos, los números validan la
-              estrategia.
-              <br /><br />
-              <span class="text-amber-600">No creo que esto sea para siempre. Comprás en dólares, recibís compensaciones
-                indexadas... eventualmente el mercado se va a equilibrar. No sé si va a durar 2
-                años o 5, ni me importa. Mientras la matemática sirva para sostener los activos,
-                yo sigo compartiendo. El día que se aplane, vendo todo y busco otra cosa.</span>"
+          <!-- Expanded Story (Desktop) -->
+          <div class="mt-5 pt-5 border-t border-white/5 text-sm text-zinc-400 leading-relaxed hidden md:block">
+            <p>
+              "Al revisar los datos hice el clic: casi cubro los costos del auto entero sin tocar mi sueldo. 
+              <span class="text-zinc-200 font-medium">No sé si va a durar 2 años o 5, pero mientras la matemática sirva, yo sigo compartiendo.</span>"
             </p>
-            <button (click)="showFullTestimonial.set(false)"
-              class="text-cta-default hover:text-cta-hover font-medium inline-flex items-center gap-1 mt-3 transition-colors">
-              Mostrar menos
-              <svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            }
           </div>
-
-          <!-- Desktop: Always visible -->
-          <p class="text-text-muted text-sm mt-4 hidden md:block">
-            "Me sumé sabiendo que asumía un compromiso. El primer mes el aporte no alcanzó para
-            cubrir la cuota del Corolla (aprox. $820.000). Pero al revisar los datos, hice el clic:
-            casi cubro los costos del auto entero sin tocar un peso de mi sueldo, algo impensable
-            antes.
-            <br /><br />
-            Entendí que era un problema de maduración de la comunidad, no de interés. Sostuve la
-            posición y hoy redoblo la apuesta: con 3 autos activos, los números validan la
-            estrategia.
-            <br /><br />
-            <span class="text-amber-600">No creo que esto sea para siempre. Comprás en dólares, recibís compensaciones
-              indexadas... eventualmente el mercado se va a equilibrar. No sé si va a durar 2 años o
-              5, ni me importa. Mientras la matemática sirva para sostener los activos, yo sigo
-              compartiendo. El día que se aplane, vendo todo y busco otra cosa.</span>"
-          </p>
         </div>
 
-        <!-- 👇 Community Avatar Stack -->
-        <div class="flex items-center gap-3 mb-8 pl-1">
-          <div class="avatar-group">
-            <img src="https://i.pravatar.cc/100?img=33" alt="Usuario 1" class="border-surface-base" width="48"
-              height="48" />
-            <img src="https://i.pravatar.cc/100?img=47" alt="Usuario 2" class="border-surface-base" width="48"
-              height="48" />
-            <img src="https://i.pravatar.cc/100?img=12" alt="Usuario 3" class="border-surface-base" width="32"
-              height="32" />
-            <div
-              class="w-8 h-8 rounded-full bg-surface-raised border-2 border-surface-base flex items-center justify-center text-[10px] font-bold text-text-secondary z-20 -ml-2.5">
-              +4k
+        <div class="flex items-center gap-6">
+          <button (click)="onPublishClick()" class="btn-primary px-8 py-4 rounded-xl font-bold text-lg shadow-lg shadow-brand-primary/20 hover:scale-105 transition-transform flex items-center gap-2">
+            Publicar auto gratis
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+          </button>
+          
+          <!-- Avatar Stack -->
+          <div class="hidden sm:flex items-center gap-3">
+            <div class="flex -space-x-3">
+              <img src="https://i.pravatar.cc/100?img=33" class="w-10 h-10 rounded-full border-2 border-zinc-950" />
+              <img src="https://i.pravatar.cc/100?img=47" class="w-10 h-10 rounded-full border-2 border-zinc-950" />
+              <div class="w-10 h-10 rounded-full bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center text-[10px] font-bold text-white">
+                +4k
+              </div>
             </div>
+            <span class="text-xs text-zinc-500 font-medium">se sumaron este mes</span>
           </div>
-          <p class="text-sm text-text-secondary font-medium">
-            Únete a <span class="text-text-primary font-bold">4.200+ anfitriones</span> que ya
-            generan ingresos
-          </p>
         </div>
-
-        <ul class="space-y-5 mb-10">
-          <li class="scroll-reveal flex items-start gap-4">
-            <div
-              class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm mt-1">
-              <svg class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-              </svg>
-            </div>
-            <div>
-              <span class="text-text-primary font-medium font-luxury block mb-0.5">Acreditación en 24hs</span>
-              <p class="text-text-secondary text-sm leading-relaxed">
-                Recibís tu saldo al día siguiente, sin excusas ni demoras
-              </p>
-            </div>
-          </li>
-          <li class="scroll-reveal flex items-start gap-4">
-            <div
-              class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm mt-1">
-              <svg class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-              </svg>
-            </div>
-            <div>
-              <span class="text-text-primary font-medium font-luxury block mb-0.5">Tu auto protegido</span>
-              <p class="text-text-secondary text-sm leading-relaxed">
-                Conectamos propietarios con aseguradoras verificadas. Tu auto debe tener seguro
-                propio.
-              </p>
-            </div>
-          </li>
-          <li class="scroll-reveal flex items-start gap-4">
-            <div
-              class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center flex-shrink-0 shadow-sm mt-1">
-              <svg class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
-              </svg>
-            </div>
-            <div>
-              <span class="text-text-primary font-medium block mb-0.5">Vos controlás</span>
-              <p class="text-text-secondary text-sm leading-relaxed">
-                Bloqueá días, definí el aporte diario, aceptá quien quieras
-              </p>
-            </div>
-          </li>
-        </ul>
-
-        <button (click)="onPublishClick()"
-          class="btn-shimmer btn-primary-glow px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-2 shadow-xl">
-          Publicar auto gratis
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </button>
       </div>
 
-      <!-- Visual Calculator Card -->
-      <div class="bg-surface-raised border border-border-default p-8 rounded-3xl shadow-2xl">
-        <div class="flex justify-between items-center mb-8">
-          <h3 class="text-xl font-bold text-text-primary font-satoshi">Calculadora</h3>
-          <span class="text-xs bg-cta-default/10 text-cta-default px-2 py-1 rounded-lg font-bold">Estimado</span>
-        </div>
-
-        <div class="space-y-8">
-          <!-- Valor del Auto -->
-          <div>
-            <label class="flex justify-between text-text-secondary text-sm mb-4 font-medium">
-              <span>Valor de tu auto</span>
-              <span class="text-text-primary font-bold font-mono">{{
-                calculatorCarValue() | currency: 'USD' : 'symbol-narrow' : '1.0-0'
-                }}</span>
-            </label>
-            <input type="range" [(ngModel)]="calculatorCarValue" min="5000000" max="50000000" step="1000000"
-              class="w-full h-2 bg-surface-secondary rounded-lg appearance-none cursor-pointer accent-cta-default hover:accent-primary-600 transition-all" />
-            <div class="flex justify-between mt-2 text-xs text-text-muted">
-              <span class="font-mono">$5M</span>
-              <span class="font-mono">$50M+</span>
-            </div>
+      <!-- Right: Calculator Widget (Professional but Warm) -->
+      <div class="relative">
+        <div class="bg-zinc-900 border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+          <!-- Header -->
+          <div class="flex justify-between items-center mb-8">
+            <h3 class="text-xl font-bold text-white font-satoshi">Simulá tus ingresos</h3>
+            <span class="text-[10px] font-bold bg-white/5 text-zinc-400 px-2 py-1 rounded border border-white/5">ESTIMADO</span>
           </div>
 
-          <!-- Días Disponibles -->
-          <div>
-            <label class="flex justify-between text-text-secondary text-sm mb-4 font-medium">
-              <span>Días compartido por mes</span>
-              <span class="text-text-primary font-bold font-mono">{{ calculatorDays() }} días</span>
-            </label>
-            <input type="range" [(ngModel)]="calculatorDays" min="1" max="30" step="1"
-              class="w-full h-2 bg-surface-secondary rounded-lg appearance-none cursor-pointer accent-cta-default hover:accent-primary-600 transition-all" />
-            <div class="flex justify-between mt-2 text-xs text-text-muted">
-              <span class="font-mono">1 día</span>
-              <span class="font-mono">30 días</span>
+          <div class="space-y-8">
+            <!-- Valor del Auto -->
+            <div>
+              <label class="flex justify-between text-zinc-400 text-sm mb-3 font-medium">
+                <span>Valor de tu auto (USD)</span>
+                <span class="text-white font-bold font-mono">{{ calculatorCarValue() | number:'1.0-0' }}</span>
+              </label>
+              <input type="range" [(ngModel)]="calculatorCarValue" min="5000" max="50000" step="1000"
+                class="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-brand-primary transition-all" />
             </div>
-          </div>
 
-          <!-- Desglose Completo de Ganancias -->
-          <div class="pt-8 border-t border-border-default">
-            <!-- Número Grande: Ganancia Neta -->
-            <div class="text-center mb-6">
-              <p class="text-text-secondary text-sm mb-2">💰 TU RECUPERO</p>
-              <p
-                class="text-5xl md:text-6xl font-black text-[#00FF41] mb-1 drop-shadow-[0_0_10px_rgba(0,255,65,0.5)] font-mono">
+            <!-- Días Disponibles -->
+            <div>
+              <label class="flex justify-between text-zinc-400 text-sm mb-3 font-medium">
+                <span>Días libres al mes</span>
+                <span class="text-white font-bold font-mono">{{ calculatorDays() }} días</span>
+              </label>
+              <input type="range" [(ngModel)]="calculatorDays" min="1" max="30" step="1"
+                class="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-brand-primary transition-all" />
+            </div>
+
+            <!-- Result -->
+            <div class="bg-black/40 rounded-2xl p-6 border border-white/5 text-center">
+              <p class="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Tu extra mensual</p>
+              <p class="text-5xl font-black text-brand-primary font-mono tracking-tighter drop-shadow-sm">
                 {{ calculatorEstimate().netResult | currency: 'USD' : 'symbol-narrow' : '1.0-0' }}
-                <span class="text-lg font-normal text-[#00FF41] font-sans">/mes</span>
+              </p>
+              <p class="text-sm text-zinc-400 mt-2">
+                *Libre de gastos de gestión
               </p>
             </div>
-
-            <!-- Desglose Transparente -->
-            <div class="bg-surface-secondary/50 rounded-xl p-4 space-y-2 text-sm">
-              <div
-                class="flex items-center gap-2 mb-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                  </path>
-                </svg>
-                <span>Desglose Transparente</span>
-              </div>
-
-              <!-- Ingreso Bruto -->
-              <div class="flex justify-between items-center">
-                <span class="text-text-secondary font-luxury">Aporte Bruto</span>
-                <span class="font-bold text-emerald-600 font-mono">
-                  +{{
-                  calculatorEstimate().grossIncome | currency: 'USD' : 'symbol-narrow' : '1.0-0'
-                  }}
-                </span>
-              </div>
-
-              <!-- Gastos -->
-              <div class="pt-2 border-t border-border-default/50">
-                <div class="flex justify-between items-center text-text-muted">
-                  <span>Gestión AutoRenta (15%)</span>
-                  <span class="font-mono">-{{
-                    calculatorEstimate().breakdown.platformFee
-                    | currency: 'USD' : 'symbol-narrow' : '1.0-0'
-                    }}</span>
-                </div>
-                <div class="flex justify-between items-center text-text-muted mt-1.5">
-                  <span>Seguro estimado</span>
-                  <span class="font-mono">-{{
-                    calculatorEstimate().breakdown.insurance
-                    | currency: 'USD' : 'symbol-narrow' : '1.0-0'
-                    }}</span>
-                </div>
-                <div class="flex justify-between items-center text-text-muted mt-1.5">
-                  <span>Lavados/Higiene</span>
-                  <span class="font-mono">-{{
-                    calculatorEstimate().breakdown.washes
-                    | currency: 'USD' : 'symbol-narrow' : '1.0-0'
-                    }}</span>
-                </div>
-              </div>
-
-              <!-- Total Gastos -->
-              <div
-                class="flex justify-between items-center pt-2 border-t border-border-default/50 text-rose-600 font-semibold">
-                <span>Total Gastos Operativos</span>
-                <span class="font-mono">-{{
-                  calculatorEstimate().expenses | currency: 'USD' : 'symbol-narrow' : '1.0-0'
-                  }}</span>
-              </div>
-
-              <!-- Ganancia Neta -->
-              <div
-                class="flex justify-between items-center pt-3 border-t-2 border-border-default font-bold text-base text-[#00FF41]">
-                <span>Tu Saldo a Favor</span>
-                <span class="font-mono">{{
-                  calculatorEstimate().netResult | currency: 'USD' : 'symbol-narrow' : '1.0-0'
-                  }}</span>
-              </div>
+            
+            <div class="text-center">
+              <button (click)="onPublishClick()" class="text-sm text-zinc-400 hover:text-white underline decoration-zinc-700 hover:decoration-white underline-offset-4 transition-all">
+                Ver desglose detallado de costos
+              </button>
             </div>
-
-            <p class="text-xs text-text-muted text-center mt-4">
-              *Cálculo estimado. Los saldos reales pueden variar según demanda y ubicación.
-            </p>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </section>

@@ -126,101 +126,117 @@ export interface MercadoPagoCardTokenGeneratedEvent {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   template: `
-    <div class="mp-payment-brick-container">
-      @if (isInitializing()) {
-        <div class="flex flex-col items-center justify-center py-8">
-          <svg class="animate-spin h-8 w-8 text-cta-default mb-3" fill="none" viewBox="0 0 24 24">
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-          <p class="text-sm text-text-secondary">Cargando formulario de pago seguro...</p>
-          @if (initAttempt() > 1) {
-            <p class="text-xs text-text-secondary mt-1">
-              Intento {{ initAttempt() }} de {{ maxInitAttempts }}
-            </p>
-          }
+    <div class="vault-container relative overflow-hidden rounded-2xl bg-zinc-950 border border-white/10 shadow-2xl">
+      <!-- Glow Effect -->
+      <div class="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-3xl pointer-events-none rounded-full -mr-32 -mt-32"></div>
+      
+      <!-- Security Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-zinc-900/50">
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10B981]"></div>
+          <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Secure Vault</span>
         </div>
-      }
+        <div class="flex gap-2 opacity-50">
+          <svg class="h-4 w-auto" viewBox="0 0 36 24" fill="none"><rect width="36" height="24" rx="2" fill="white"/><path d="M12 12H24" stroke="black" stroke-width="2"/></svg>
+          <svg class="h-4 w-auto" viewBox="0 0 36 24" fill="none"><rect width="36" height="24" rx="2" fill="white"/><circle cx="12" cy="12" r="6" fill="#EB001B"/><circle cx="24" cy="12" r="6" fill="#F79E1B"/></svg>
+        </div>
+      </div>
 
-      <!-- Payment Brick Container -->
-      <div
-        #paymentBrickContainer
-        id="paymentBrick_container"
-        [class.hidden]="isInitializing()"
-        class="payment-brick-wrapper"
-      ></div>
+      <div class="p-6 relative z-10">
+        @if (isInitializing()) {
+          <div class="flex flex-col items-center justify-center py-12 space-y-4">
+            <div class="relative">
+              <div class="w-12 h-12 border-4 border-zinc-800 border-t-brand-primary rounded-full animate-spin"></div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <svg class="w-4 h-4 text-brand-primary" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              </div>
+            </div>
+            <p class="text-sm font-mono text-zinc-500 animate-pulse">ESTABLISHING SECURE CONNECTION...</p>
+          </div>
+        }
 
-      @if (errorMessage()) {
-        <div class="mt-4 p-4 bg-error-bg border border-error-border rounded-lg">
-          <div class="flex items-start gap-3">
-            <svg
-              class="w-5 h-5 text-error-strong flex-shrink-0 mt-0.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <div>
-              <p class="text-sm font-medium text-error-strong">{{ errorMessage() }}</p>
-              <button
-                (click)="retryInitialization()"
-                class="mt-2 text-xs text-cta-default hover:underline"
-              >
-                Intentar nuevamente
-              </button>
+        <!-- Payment Brick Container (Real SDK) -->
+        <div
+          #paymentBrickContainer
+          id="paymentBrick_container"
+          [class.hidden]="isInitializing() || errorMessage()"
+          class="payment-brick-wrapper"
+        ></div>
+
+        <!-- Fallback / Mock Form (Visible on Error or Mock Mode) -->
+        @if (errorMessage()) {
+          <div class="animate-fade-in">
+            <!-- Mock Inputs for Visual Preview (Since Real SDK Failed) -->
+            <div class="space-y-5 opacity-50 pointer-events-none select-none grayscale" aria-hidden="true">
+              <div>
+                <label class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide">Número de Tarjeta</label>
+                <div class="relative">
+                  <input type="text" value="•••• •••• •••• ••••" class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono" disabled>
+                  <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-600" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide">Vencimiento</label>
+                  <input type="text" value="MM/AA" class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono" disabled>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide">CVC</label>
+                  <div class="relative">
+                    <input type="text" value="•••" class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono" disabled>
+                    <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide">Titular</label>
+                <input type="text" value="NOMBRE COMO FIGURA EN LA TARJETA" class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono" disabled>
+              </div>
+            </div>
+
+            <!-- Error Notification Overlay -->
+            <div class="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3">
+              <div class="p-2 bg-red-500/20 rounded-full text-red-500 shrink-0">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-red-400 font-bold text-sm mb-1">Error de conexión con la bóveda</h4>
+                <p class="text-xs text-red-400/80 mb-3">{{ errorMessage() }}</p>
+                <button (click)="retryInitialization()" class="text-xs font-bold text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition-colors">Reintentar conexión</button>
+              </div>
             </div>
           </div>
-        </div>
-      }
+        }
 
-      <div
-        class="mt-4 p-3 bg-cta-default/10 border border-cta-default/40 rounded-lg flex items-center gap-2"
-      >
-        <svg
-          class="w-4 h-4 text-cta-default flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-          />
-        </svg>
-        <p class="text-xs text-cta-default">
-          Tus datos están protegidos por Mercado Pago. No guardamos información sensible de tu
-          tarjeta.
-        </p>
+        <!-- Footer -->
+        <div class="mt-6 flex items-center justify-center gap-2 text-[10px] text-zinc-600 font-mono uppercase tracking-widest">
+          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <span>End-to-End Encrypted via MercadoPago</span>
+        </div>
       </div>
     </div>
   `,
   styles: [
     `
+      .vault-container {
+        /* Premium aesthetics */
+        background-image: linear-gradient(to bottom right, rgba(24, 24, 27, 1), rgba(9, 9, 11, 1));
+      }
+
       .mp-payment-brick-container {
         width: 100%;
         max-width: 100%;
         margin: 0 auto;
       }
 
+      /* ... (Existing styles remain, but updated for dark mode integration) ... */
+      :host ::ng-deep .mp-payment-brick-container {
+        /* Force brick transparency to blend with vault */
+        background: transparent !important; 
+      }
+      
+      /* ... (Rest of styles) ... */
+      
       @media (min-width: 640px) {
         .mp-payment-brick-container {
           max-width: 500px;
@@ -248,6 +264,12 @@ export interface MercadoPagoCardTokenGeneratedEvent {
       :host ::ng-deep [data-testid='payment-form'] label {
         white-space: normal !important;
         line-height: 1.2 !important;
+        color: #a1a1aa !important; /* zinc-400 */
+        font-family: 'Satoshi', sans-serif !important;
+        font-size: 0.75rem !important; /* text-xs */
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
       }
 
       :host ::ng-deep [data-testid='payment-form'] input,
@@ -255,6 +277,18 @@ export interface MercadoPagoCardTokenGeneratedEvent {
       :host ::ng-deep [data-testid='payment-form'] textarea {
         width: 100% !important;
         max-width: 100% !important;
+        background-color: #18181b !important; /* zinc-900 */
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+        border-radius: 0.5rem !important;
+        padding: 0.75rem 1rem !important;
+        font-family: 'JetBrains Mono', monospace !important;
+      }
+      
+      :host ::ng-deep [data-testid='payment-form'] input:focus {
+        border-color: #39FF14 !important; /* Brand primary */
+        outline: none !important;
+        box-shadow: 0 0 0 2px rgba(57, 255, 20, 0.2) !important;
       }
 
       /* Mobile overflow guardrails for Brick internals */
@@ -407,7 +441,7 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
         customization: {
           visual: {
             style: {
-              theme: 'default',
+              theme: 'dark', // Use native dark theme
             },
             hideFormTitle: true,
           },
