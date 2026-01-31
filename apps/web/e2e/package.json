@@ -20,8 +20,18 @@
     "test:all": "npm run test:login && npm run test:marketplace && npm run test:payment",
     "test:all:headed": "HEADLESS=false npm run test:all",
     "test:ci": "HEADLESS=true CI=true npm run test:all",
+    "test:stress": "tsx specs/stress/stress-runner.spec.ts",
+    "test:stress:marketplace": "tsx specs/stress/marketplace-stress.spec.ts",
+    "test:stress:auth": "tsx specs/stress/auth-stress.spec.ts",
+    "test:stress:navigation": "tsx specs/stress/navigation-stress.spec.ts",
+    "test:stress:api": "tsx specs/stress/api-stress.spec.ts",
+    "test:stress:headed": "HEADLESS=false tsx specs/stress/stress-runner.spec.ts",
+    "test:stress:ci": "HEADLESS=true CI=true tsx specs/stress/stress-runner.spec.ts",
+    "test:stress:concurrent": "STRESS_CONCURRENT_USERS=10 npm run test:stress:marketplace",
+    "test:stress:heavy": "STRESS_RAPID_ITERATIONS=500 API_STRESS_ITERATIONS=500 npm run test:stress",
     "clean": "rm -rf reports/*.json reports/*.png .browser-profile",
-    "clean:profile": "rm -rf .browser-profile"
+    "clean:profile": "rm -rf .browser-profile",
+    "clean:stress": "rm -rf .browser-profile-stress-*"
   },
   "dependencies": {
     "patchright": "^1.49.1"

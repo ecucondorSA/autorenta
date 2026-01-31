@@ -10,6 +10,32 @@ End-to-end tests using **Patchright** (patched Chromium for anti-bot bypass) wit
 | Marketplace | 8 | Car listing, search, filters |
 | Payment | 7 | MercadoPago brick, payment flow |
 | Renter-Owner | 2 | Booking request + owner approval/rejection |
+| **Stress Tests** | - | See [specs/stress/README.md](specs/stress/README.md) |
+
+### Stress Tests
+
+High-load stress tests for performance and stability validation:
+
+| Suite | Description |
+|-------|-------------|
+| Marketplace Stress | Concurrent browsing, rapid filtering, memory monitoring |
+| Auth Stress | Rapid login cycles, session persistence, token refresh |
+| Navigation Stress | Rapid page changes, back/forward, deep links |
+| API Stress | Rate limiting, concurrent requests, error handling |
+
+```bash
+# Run all stress tests
+npm run test:stress
+
+# Run individual stress suites
+npm run test:stress:marketplace
+npm run test:stress:auth
+npm run test:stress:navigation
+npm run test:stress:api
+
+# Custom configuration
+STRESS_CONCURRENT_USERS=10 npm run test:stress:marketplace
+```
 
 ## Quick Start
 

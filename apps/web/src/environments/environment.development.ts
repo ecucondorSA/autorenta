@@ -21,7 +21,7 @@ import { buildEnvironment } from './environment.base';
  */
 export const environment = buildEnvironment({
   production: false,
-  defaultCurrency: 'ARS',
+  defaultCurrency: 'USD',
   appUrl: 'http://localhost:4200',
   cloudflareWorkerUrl: 'http://localhost:8788',
   // Keys se leen de .env.local via NG_APP_* variables

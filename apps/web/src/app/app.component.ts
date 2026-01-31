@@ -472,12 +472,15 @@ export class AppComponent implements OnInit {
     this.fullBleedLayout.set(layout === 'full-bleed');
 
     this.hideFooter.set(Boolean(findInChain('hideFooter')));
-    this.hideMobileNav.set(Boolean(findInChain('hideMobileNav')));
-    this.hideHeader.set(Boolean(findInChain('hideHeader')));
-    this.mobileBottomNavPortal.setHidden(this.hideMobileNav());
 
     // Detectar si estamos en el homepage para header transparente
     const currentUrl = this.router.url.split('?')[0]; // Ignorar query params
+    
+    // Force hide footer on cars/publish
+    if (currentUrl.startsWith('/cars/publish')) {
+      this.hideFooter.set(true);
+    }
+
     const isHome = currentUrl === '/' || currentUrl === '';
     this.isHomePage.set(isHome);
     this.isPanicMode.set(currentUrl.startsWith('/panic'));

@@ -2,7 +2,7 @@ import { buildEnvironment } from './environment.base';
 
 export const environment = buildEnvironment({
   production: true,
-  defaultCurrency: 'ARS',
+  defaultCurrency: 'USD',
   appUrl: 'https://autorentar.com',
   supabaseUrl: 'https://pisqjmoklivzpwufhscx.supabase.co',
   // ANDROID BUILD FIX: Hardcoded for mobile builds (not exposed to web)

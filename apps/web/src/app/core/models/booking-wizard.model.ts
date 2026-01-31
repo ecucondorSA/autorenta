@@ -1,3 +1,18 @@
+export interface BookingPrice {
+  totalAmountUsd: number;      // Canonical value in USD
+  totalAmountLocal: number;    // Actual charge value (if applicable)
+  exchangeRate: number;        // Exchange rate at the time of booking
+  currency: string;            // Local currency code (e.g., 'ARS')
+  breakdown: {
+    dailyRateUsd: number;
+    insuranceUsd: number;
+    serviceFeeUsd: number;
+    extrasUsd: number;
+    discountUsd: number;
+    totalDays: number;
+  };
+}
+
 export interface BookingWizardData {
   carId: string;
   startDate: Date | null;
@@ -9,7 +24,7 @@ export interface BookingWizardData {
     id: string;
     type: 'gps' | 'child_seat' | 'additional_driver' | 'toll_pass' | 'fuel_prepaid' | 'delivery';
     quantity: number;
-    dailyRate: number;
+    dailyRate: number; // In USD
   }[];
   driverLicense: {
     number: string;
@@ -27,4 +42,7 @@ export interface BookingWizardData {
   promoCode: string | null;
   termsAccepted: boolean;
   cancellationPolicyAccepted: boolean;
+  
+  // New: Pricing calculations
+  pricing?: BookingPrice;
 }

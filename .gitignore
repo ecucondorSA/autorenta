@@ -219,3 +219,6 @@ deck-assets/
 
 # Android signing keys - NEVER commit
 apps/web/android/keystore/
+
+.gemini/
+gha-creds-*.json
