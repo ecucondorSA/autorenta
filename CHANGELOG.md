@@ -1,3 +1,7 @@
+## <small>3.50.1 (2026-01-31)</small>
+
+* fix(admin): restore missing template helpers in disputes page ([52fb9b1](https://github.com/ecucondorSA/autorenta/commit/52fb9b1))
+
 ## 3.50.0 (2026-01-31)
 
 * feat(mobile): advanced mobile optimization and checkout hardening ([3a5cccb](https://github.com/ecucondorSA/autorenta/commit/3a5cccb))
