@@ -1,0 +1,85 @@
+
+/* ═══════════════════════════════════════════════════════════════
+   📱 DEEP MOBILE POLISH - "Native Feel" (2026 Standard)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* 1. Physics & Touch Feedback */
+html {
+  /* Prevent bounce effect on the whole page */
+  overscroll-behavior-y: none;
+  /* Remove gray highlight on tap (iOS) */
+  -webkit-tap-highlight-color: transparent;
+  /* Disable text size adjustment on rotation */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  /* Ensure smooth momentum scrolling everywhere */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Eliminate 300ms delay on touch devices */
+a, button, input, select, textarea, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* 2. Safe Area Utilities (The Notch & Dynamic Island) */
+.safe-pt {
+  padding-top: env(safe-area-inset-top, 20px);
+}
+
+.safe-pb {
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+.safe-pl {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
+.safe-pr {
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* Sticky elements must respect Safe Areas */
+.sticky-top-safe {
+  position: sticky;
+  top: 0;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 40;
+}
+
+.sticky-bottom-safe {
+  position: sticky;
+  bottom: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 40;
+}
+
+/* 3. Input Zoom Prevention (iOS) */
+/* Inputs need 16px to prevent auto-zoom on focus */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important; 
+  }
+}
+
+/* 4. Native App Shell Heights */
+/* Fix for 100vh issue on mobile browsers with URL bars */
+.h-screen-safe {
+  height: 100vh;
+  height: 100dvh; /* Dynamic Viewport Height */
+}
+
+.min-h-screen-safe {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* 5. Hide Scrollbars (Clean Look) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

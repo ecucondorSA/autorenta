@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
+import { BookingDisputeService } from '@core/services/bookings/booking-dispute.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
@@ -49,6 +50,7 @@ type InspectionMode = 'photos' | 'video' | 'live';
 export class OwnerCheckOutPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);
   private readonly confirmationService = inject(BookingConfirmationService);
+  private readonly disputeService = inject(BookingDisputeService);
   private readonly authService = inject(AuthService);
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly toastService = inject(NotificationManagerService);
@@ -257,25 +259,42 @@ export class OwnerCheckOutPage implements OnInit {
         return;
       }
 
-      // 3. Confirmar como propietario con los daños reportados
-      const confirmResult = await this.confirmationService.confirmOwner({
-        booking_id: booking.id,
-        confirming_user_id: this.currentUserId()!,
-        has_damages: this.hasDamages(),
-        damage_amount: this.damageAmount(),
-        damage_description: this.damagesNotes() || undefined,
-      });
+      if (this.hasDamages()) {
+        // --- FLUJO DE INCIDENTE / DISPUTA ---
+        const result = await this.disputeService.createDispute(
+          booking.id,
+          `Daños reportados en check-out: ${this.damagesNotes()} (Monto est: USD ${this.damageAmount()})`,
+          [], // TODO: Pass evidence photos from inspection
+        );
 
-      if (confirmResult.funds_released) {
-        this.toastService.success(
-          'Éxito',
-          '✅ Check-out completado. Fondos liberados automáticamente.',
-        );
+        if (result.success) {
+          this.toastService.success(
+            'Incidente Reportado',
+            '⚠️ Se ha retenido la garantía preventivamente. Soporte revisará el caso en 48hs.',
+          );
+        } else {
+          throw new Error(result.error || 'Error al reportar incidente');
+        }
       } else {
-        this.toastService.success(
-          'Éxito',
-          '✅ Check-out completado. Esperando confirmación del locatario para liberar fondos.',
-        );
+        // --- FLUJO FELIZ (SIN DAÑOS) ---
+        const confirmResult = await this.confirmationService.confirmOwner({
+          booking_id: booking.id,
+          confirming_user_id: this.currentUserId()!,
+          has_damages: false,
+          damage_amount: 0,
+        });
+
+        if (confirmResult.funds_released) {
+          this.toastService.success(
+            'Éxito',
+            '✅ Check-out completado. Fondos liberados automáticamente.',
+          );
+        } else {
+          this.toastService.success(
+            'Éxito',
+            '✅ Check-out completado. Esperando confirmación del locatario para liberar fondos.',
+          );
+        }
       }
 
       // Navegar al detalle de la reserva

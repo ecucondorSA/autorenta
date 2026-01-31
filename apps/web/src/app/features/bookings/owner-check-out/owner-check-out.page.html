@@ -66,132 +66,183 @@
         </div>
       }
 
-      <!-- Step 1: Inspection -->
+      <!-- Step 1: Inspection (Split View) -->
       @if (step() === 'inspection') {
         <div class="mb-8">
           <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <p class="text-sm text-blue-800">
-              <strong>Instrucciones:</strong> Realiza la inspeccion final. Si hay danos nuevos,
-              asegurate de tomar fotos claras como evidencia.
+              <strong>Instrucciones:</strong> Compara el estado actual con el Check-in. Si hay daños nuevos, documéntalos claramente.
             </p>
           </div>
 
-          <!-- Mode Selector -->
-          <div class="mb-6">
-            <h3 class="text-sm font-medium text-text-secondary mb-3">Elegí cómo documentar:</h3>
-            <div class="grid grid-cols-3 gap-2">
-              <!-- Photos Mode -->
-              <button
-                type="button"
-                class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all"
-                [class]="
-                  inspectionMode() === 'photos'
-                    ? 'border-cta-default bg-cta-default/10'
-                    : 'border-border-default bg-surface-base hover:border-border-muted'
-                "
-                (click)="setInspectionMode('photos')"
-              >
-                <ion-icon
-                  name="camera"
-                  class="text-2xl"
-                  [class]="
-                    inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-secondary'
-                  "
-                ></ion-icon>
-                <span
-                  class="font-medium text-xs"
-                  [class]="inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-primary'"
-                  >Fotos</span
-                >
-              </button>
+          <!-- Split Layout Container -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            
+            <!-- LEFT: Reference (Check-In Data) -->
+            <div class="space-y-4">
+              <h3 class="text-sm font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2">
+                <ion-icon name="time-outline"></ion-icon>
+                Estado Inicial (Check-In)
+              </h3>
+              
+              <div class="bg-surface-raised border border-border-default rounded-2xl p-4 shadow-sm">
+                <!-- Metrics -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                  <div class="bg-surface-base p-3 rounded-xl border border-border-default">
+                    <p class="text-xs text-text-secondary mb-1">Odómetro</p>
+                    <p class="font-mono font-bold text-text-primary">{{ checkInData()?.odometer_reading | number }} km</p>
+                  </div>
+                  <div class="bg-surface-base p-3 rounded-xl border border-border-default">
+                    <p class="text-xs text-text-secondary mb-1">Combustible</p>
+                    <p class="font-mono font-bold text-text-primary">{{ checkInData()?.fuel_level }}%</p>
+                  </div>
+                </div>
 
-              <!-- Video Batch Mode -->
-              <button
-                type="button"
-                class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative"
-                [class]="
-                  inspectionMode() === 'video'
-                    ? 'border-cta-default bg-cta-default/10'
-                    : 'border-border-default bg-surface-base hover:border-border-muted'
-                "
-                (click)="setInspectionMode('video')"
-              >
-                <span
-                  class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full"
-                  >IA</span
-                >
-                <ion-icon
-                  name="videocam"
-                  class="text-2xl"
-                  [class]="
-                    inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-secondary'
-                  "
-                ></ion-icon>
-                <span
-                  class="font-medium text-xs"
-                  [class]="inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-primary'"
-                  >Video</span
-                >
-              </button>
+                <!-- Photos Grid -->
+                <div>
+                  <p class="text-xs text-text-secondary mb-2">Fotos de entrega:</p>
+                  @if (checkInData()?.photos?.length) {
+                    <div class="grid grid-cols-3 gap-2">
+                      @for (photo of checkInData().photos; track photo.url) {
+                        <div class="aspect-square rounded-lg overflow-hidden bg-surface-secondary border border-border-default relative group">
+                          <img [src]="photo.url" class="w-full h-full object-cover" loading="lazy">
+                          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <div class="text-center py-8 bg-surface-base rounded-xl border border-dashed border-border-muted text-text-muted text-xs">
+                      Sin fotos de check-in
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
 
-              <!-- Live Mode -->
-              <button
-                type="button"
-                class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative"
-                [class]="
-                  inspectionMode() === 'live'
-                    ? 'border-purple-500 bg-purple-500/10'
-                    : 'border-border-default bg-surface-base hover:border-border-muted'
-                "
-                (click)="setInspectionMode('live')"
-              >
-                <span
-                  class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold rounded-full animate-pulse"
-                  >LIVE</span
-                >
-                <ion-icon
-                  name="radio"
-                  class="text-2xl"
-                  [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-secondary'"
-                ></ion-icon>
-                <span
-                  class="font-medium text-xs"
-                  [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-primary'"
-                  >En Vivo</span
-                >
-              </button>
+            <!-- RIGHT: Action (Check-Out Form) -->
+            <div class="space-y-4">
+              <h3 class="text-sm font-bold text-cta-default uppercase tracking-wider flex items-center gap-2">
+                <ion-icon name="camera-outline"></ion-icon>
+                Estado Final (Ahora)
+              </h3>
+
+              <!-- Mode Selector -->
+              <div class="mb-4">
+                <div class="grid grid-cols-3 gap-2">
+                  <!-- Photos Mode -->
+                  <button
+                    type="button"
+                    class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all"
+                    [class]="
+                      inspectionMode() === 'photos'
+                        ? 'border-cta-default bg-cta-default/10'
+                        : 'border-border-default bg-surface-base hover:border-border-muted'
+                    "
+                    (click)="setInspectionMode('photos')"
+                  >
+                    <ion-icon
+                      name="camera"
+                      class="text-2xl"
+                      [class]="
+                        inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-secondary'
+                      "
+                    ></ion-icon>
+                    <span
+                      class="font-medium text-xs"
+                      [class]="inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-primary'"
+                      >Fotos</span
+                    >
+                  </button>
+
+                  <!-- Video Batch Mode -->
+                  <button
+                    type="button"
+                    class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative"
+                    [class]="
+                      inspectionMode() === 'video'
+                        ? 'border-cta-default bg-cta-default/10'
+                        : 'border-border-default bg-surface-base hover:border-border-muted'
+                    "
+                    (click)="setInspectionMode('video')"
+                  >
+                    <span
+                      class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full"
+                      >IA</span
+                    >
+                    <ion-icon
+                      name="videocam"
+                      class="text-2xl"
+                      [class]="
+                        inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-secondary'
+                      "
+                    ></ion-icon>
+                    <span
+                      class="font-medium text-xs"
+                      [class]="inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-primary'"
+                      >Video</span
+                    >
+                  </button>
+
+                  <!-- Live Mode -->
+                  <button
+                    type="button"
+                    class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative"
+                    [class]="
+                      inspectionMode() === 'live'
+                        ? 'border-purple-500 bg-purple-500/10'
+                        : 'border-border-default bg-surface-base hover:border-border-muted'
+                    "
+                    (click)="setInspectionMode('live')"
+                  >
+                    <span
+                      class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold rounded-full animate-pulse"
+                      >LIVE</span
+                    >
+                    <ion-icon
+                      name="radio"
+                      class="text-2xl"
+                      [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-secondary'"
+                    ></ion-icon>
+                    <span
+                      class="font-medium text-xs"
+                      [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-primary'"
+                      >En Vivo</span
+                    >
+                  </button>
+                </div>
+              </div>
+
+              <!-- Inspection Component -->
+              @switch (inspectionMode()) {
+                @case ('live') {
+                  <app-video-inspection-live
+                    [bookingId]="booking()!.id"
+                    stage="check_out"
+                    (inspectionCompleted)="onInspectionCompleted($event)"
+                    (inspectionCancelled)="cancel()"
+                    (switchToPhotos)="switchToPhotos()"
+                  ></app-video-inspection-live>
+                }
+                @case ('video') {
+                  <app-video-inspection-ai
+                    [bookingId]="booking()!.id"
+                    stage="check_out"
+                    (inspectionCompleted)="onInspectionCompleted($event)"
+                    (inspectionCancelled)="cancel()"
+                    (switchToPhotos)="switchToPhotos()"
+                  ></app-video-inspection-ai>
+                }
+                @default {
+                  <app-inspection-uploader
+                    [bookingId]="booking()!.id"
+                    [stage]="'check_out'"
+                    (inspectionCompleted)="onInspectionCompleted($event)"
+                    (inspectionCancelled)="cancel()"
+                  ></app-inspection-uploader>
+                }
+              }
             </div>
           </div>
-
-          <!-- Inspection Component based on mode -->
-          @switch (inspectionMode()) {
-            @case ('live') {
-              <app-video-inspection-live
-                [bookingId]="booking()!.id"
-                stage="check_out"
-                (inspectionCompleted)="onInspectionCompleted($event)"
-                (inspectionCancelled)="cancel()"
-                (switchToPhotos)="switchToPhotos()"
-              ></app-video-inspection-live>
-            }
-            @case ('video') {
-              <app-video-inspection-ai
-                [bookingId]="booking()!.id"
-                stage="check_out"
-                (inspectionCompleted)="onInspectionCompleted($event)"
-                (inspectionCancelled)="cancel()"
-                (switchToPhotos)="switchToPhotos()"
-              ></app-video-inspection-ai>
-            }
-            @default {
-              <app-inspection-uploader
-                [bookingId]="booking()!.id"
-                [stage]="'check_out'"
-                (inspectionCompleted)="onInspectionCompleted($event)"
-                (inspectionCancelled)="cancel()"
-              ></app-inspection-uploader>
-            }
-          }
         </div>
       }
 

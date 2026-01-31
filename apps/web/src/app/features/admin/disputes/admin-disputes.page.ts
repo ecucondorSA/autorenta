@@ -2,14 +2,22 @@ import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@ang
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import {
-  DisputesService,
-  Dispute,
-  DisputeEvidence,
-  DisputeStatus,
-} from '@core/services/admin/disputes.service';
+import { BookingDisputeService } from '@core/services/bookings/booking-dispute.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
-import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service'; // NEW: Import toast service
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+
+// Define Interface locally or import if available
+interface BookingDispute {
+  id: string;
+  booking_id: string;
+  status: 'open' | 'resolved' | 'rejected';
+  reason: string;
+  created_at: string;
+  evidence: string[]; // URLs
+  resolution?: string;
+  resolution_notes?: string;
+  final_charges_cents?: number;
+}
 
 @Component({
   selector: 'app-admin-disputes',
@@ -20,26 +28,18 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
   styleUrls: ['./admin-disputes.page.scss'],
 })
 export class AdminDisputesPage implements OnInit {
-  private readonly disputesService = inject(DisputesService);
+  private readonly disputeService = inject(BookingDisputeService);
   private readonly supabaseService = inject(SupabaseClientService);
-  private readonly toastService = inject(NotificationManagerService); // NEW: Inject toast service
+  private readonly toastService = inject(NotificationManagerService);
 
   readonly loading = signal(false);
-  readonly disputes = signal<Dispute[]>([]);
-  readonly selectedDispute = signal<Dispute | null>(null);
-  readonly evidence = signal<DisputeEvidence[]>([]);
+  readonly disputes = signal<BookingDispute[]>([]);
+  readonly selectedDispute = signal<BookingDispute | null>(null);
+  
+  // Resolution UI State
   readonly showDetailModal = signal(false);
-
-  // NEW: Resolution fields
-  readonly resolutionReason = signal('');
-  readonly resolutionAmount = signal<number | null>(null);
-  readonly resolutionCurrency = signal<string | null>('USD');
-
-  readonly filters = signal({
-    status: '' as DisputeStatus | '',
-    kind: '',
-    searchTerm: '',
-  });
+  readonly resolutionNotes = signal('');
+  readonly finalChargeAmount = signal<number>(0); // In dollars for UI
 
   async ngOnInit(): Promise<void> {
     await this.loadAllDisputes();
@@ -49,24 +49,15 @@ export class AdminDisputesPage implements OnInit {
     this.loading.set(true);
     try {
       const supabase = this.supabaseService.getClient();
-      let query = supabase.from('disputes').select('*').order('created_at', { ascending: false });
+      
+      // Query 'booking_disputes' table (the new standard)
+      const { data, error } = await supabase
+        .from('booking_disputes')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-      const filter = this.filters();
-      if (filter.status) {
-        query = query.eq('status', filter.status);
-      }
-      if (filter.kind) {
-        query = query.eq('kind', filter.kind);
-      }
-      if (filter.searchTerm) {
-        query = query.or(
-          `description.ilike.%${filter.searchTerm}%,booking_id.ilike.%${filter.searchTerm}%`,
-        );
-      }
-
-      const { data, error } = await query;
       if (error) throw error;
-      this.disputes.set((data || []) as Dispute[]);
+      this.disputes.set((data || []) as BookingDispute[]);
     } catch (err) {
       console.error('Error loading disputes:', err);
       this.toastService.error('Error', 'No se pudieron cargar las disputas');
@@ -75,139 +66,75 @@ export class AdminDisputesPage implements OnInit {
     }
   }
 
-  async openDetailModal(dispute: Dispute): Promise<void> {
+  openDetailModal(dispute: BookingDispute): void {
     this.selectedDispute.set(dispute);
-    this.loading.set(true);
-    // Pre-populate resolution fields
-    this.resolutionReason.set(dispute.dispute_resolution || ''); // Use dispute_resolution
-    this.resolutionAmount.set(dispute.resolution_amount || null);
-    this.resolutionCurrency.set(dispute.resolution_currency || 'USD'); // Default or pre-populate
-
-    try {
-      const evidenceList = await this.disputesService.listEvidence(dispute.id);
-      this.evidence.set(evidenceList);
-      this.showDetailModal.set(true);
-    } catch (err) {
-      console.error('Error loading evidence:', err);
-      this.toastService.error('Error', 'No se pudieron cargar las evidencias'); // Add toast
-    } finally {
-      this.loading.set(false);
-    }
+    this.resolutionNotes.set('');
+    this.finalChargeAmount.set(0);
+    this.showDetailModal.set(true);
   }
 
   closeDetailModal(): void {
     this.showDetailModal.set(false);
     this.selectedDispute.set(null);
-    this.evidence.set([]);
-    this.resolutionReason.set(''); // Clear
-    this.resolutionAmount.set(null); // Clear
-    this.resolutionCurrency.set('USD'); // Reset to default
   }
 
-  async updateStatus(disputeId: string, newStatus: DisputeStatus): Promise<void> {
+  /**
+   * Resolve Dispute Action
+   * @param resolutionType 'approved' (Charge renter), 'rejected' (Refund renter), 'partial' (Split)
+   */
+  async resolve(resolutionType: 'approved' | 'rejected' | 'partial'): Promise<void> {
+    const dispute = this.selectedDispute();
+    if (!dispute) return;
+
     this.loading.set(true);
     try {
-      // Map status to resolution type for RPC
-      const resolutionMap: Record<string, 'favor_renter' | 'favor_owner' | 'split' | 'rejected'> = {
-        resolved: 'favor_renter', // Default, can be changed via UI
-        rejected: 'rejected',
-      };
+      // Convert UI amount (USD) to cents for DB if needed, logic handled in service
+      const chargeCents = this.finalChargeAmount() > 0 ? Math.round(this.finalChargeAmount() * 100) : undefined;
 
-      if (newStatus === 'resolved' || newStatus === 'rejected') {
-        // Use the new RPC method for final resolutions
-        const result = await this.disputesService.resolveDisputeRpc({
-          disputeId,
-          resolution: resolutionMap[newStatus] || 'rejected',
-          resolutionAmountCents: this.resolutionAmount()
-            ? Math.round(this.resolutionAmount()! * 100)
-            : undefined,
-          resolutionNotes: this.resolutionReason().trim() || undefined,
-        });
+      const result = await this.disputeService.resolveDispute(
+        dispute.booking_id,
+        resolutionType,
+        chargeCents,
+        this.resolutionNotes()
+      );
 
-        if (!result.success) {
-          throw new Error(result.error || 'Error al resolver disputa');
-        }
-      } else {
-        // For intermediate statuses (in_review), use the direct update
-        await this.disputesService.updateStatus(disputeId, newStatus);
+      if (!result.success) {
+        throw new Error(result.error || 'Error al resolver disputa');
       }
 
-      await this.loadAllDisputes();
+      this.toastService.success('Disputa Resuelta', `Resolución: ${resolutionType}`);
       this.closeDetailModal();
-      this.toastService.success('Estado de disputa actualizado', '');
+      await this.loadAllDisputes();
     } catch (err) {
-      console.error('Error updating status:', err);
-      this.toastService.error(
-        'Error',
-        err instanceof Error ? err.message : 'Error al actualizar el estado de la disputa',
-      );
+      console.error('Error resolving dispute:', err);
+      this.toastService.error('Error', err instanceof Error ? err.message : 'Falló la resolución');
     } finally {
       this.loading.set(false);
     }
   }
 
-  async applyFilters(): Promise<void> {
-    await this.loadAllDisputes();
-  }
-
-  async clearFilters(): Promise<void> {
-    this.filters.set({ status: '', kind: '', searchTerm: '' });
-    await this.loadAllDisputes();
-  }
-
-  getStatusLabel(status: Dispute['status']): string {
-    const labels: Record<Dispute['status'], string> = {
+  getStatusLabel(status: string): string {
+    const labels: Record<string, string> = {
       open: 'Abierta',
-      in_review: 'En revisión',
-      resolved: 'Resuelta',
-      rejected: 'Rechazada',
+      resolved: 'Aprobada/Cobrada',
+      rejected: 'Rechazada/Devuelta',
     };
     return labels[status] || status;
   }
 
-  getStatusColor(status: Dispute['status']): string {
+  getStatusColor(status: string): string {
     switch (status) {
-      case 'open':
-        return 'warning';
-      case 'in_review':
-        return 'primary';
-      case 'resolved':
-        return 'success';
-      case 'rejected':
-        return 'danger';
-      default:
-        return 'medium';
+      case 'open': return 'warning';
+      case 'resolved': return 'success'; // Owner won (money moved)
+      case 'rejected': return 'medium';  // Renter won (money returned)
+      default: return 'medium';
     }
   }
 
-  getKindLabel(kind: Dispute['kind']): string {
-    const labels: Record<Dispute['kind'], string> = {
-      damage: 'Daños',
-      no_show: 'No se presentó',
-      late_return: 'Devolución tardía',
-      other: 'Otro',
-    };
-    return labels[kind] || kind;
-  }
-
-  formatDate(dateStr?: string | null): string {
-    if (!dateStr) {
-      return 'Sin datos';
-    }
+  formatDate(dateStr?: string): string {
+    if (!dateStr) return '-';
     return new Date(dateStr).toLocaleDateString('es-AR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+      day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
     });
-  }
-
-  isImage(path: string): boolean {
-    return /\.(jpg|jpeg|png|gif|webp)$/i.test(path);
-  }
-
-  getStatusCount(status: DisputeStatus): number {
-    return this.disputes().filter((d) => d.status === status).length;
   }
 }

@@ -221,6 +221,40 @@ export class BookingDisputeService {
         });
       }
 
+      // --- NOTIFICATION TRIGGER ---
+      try {
+        // Fetch booking details for context
+        const { data: bookingDetails } = await this.supabase
+          .from('bookings')
+          .select('*, car:cars(title), renter:profiles!renter_id(id, full_name, email)')
+          .eq('id', bookingId)
+          .single();
+
+        if (bookingDetails) {
+          const carName = bookingDetails.car?.title || 'Vehículo';
+          const recipientId = bookingDetails.renter?.id || bookingDetails.user_id;
+
+          // Notify Renter
+          await this.supabase.functions.invoke('notify-multi-channel', {
+            body: {
+              user_id: recipientId,
+              channels: ['email', 'push'],
+              template_code: 'dispute_opened',
+              variables: {
+                car_name: carName,
+                booking_id: bookingId,
+              },
+            },
+          });
+          
+          // Notify Admin (via internal channel or email)
+          // TODO: Add admin notification logic here
+        }
+      } catch (notifyError) {
+        this.logger.warn('Failed to send dispute notification', { error: notifyError });
+        // Don't fail the operation just because notification failed
+      }
+
       return { success: true };
     } catch (error) {
       return {

@@ -51,6 +51,9 @@
 /* 🪟 Glassmorphism System - 2026 UI Trend */
 @import './styles/glass.css';
 
+/* 📱 Mobile Hardening - Deep Polish (Notch, Physics, Zoom) */
+@import './styles/mobile-hardening.css';
+
 /* ============================================ */
 /* CSS RULES START HERE */
 /* ============================================ */

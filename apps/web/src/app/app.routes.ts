@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from '@core/guards/auth.guard';
 import { GuestGuard } from '@core/guards/guest.guard';
 import { kycGuard, onboardingGuard } from '@core/guards/onboarding.guard';
+import { AdminGuard } from '@core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -156,7 +157,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    canMatch: [AuthGuard],
+    canMatch: [AuthGuard, AdminGuard],
     children: [
       {
         path: '',
