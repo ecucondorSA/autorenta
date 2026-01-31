@@ -90,6 +90,9 @@ export class SentryErrorHandler implements ErrorHandler {
   /**
    * Serialize error objects to avoid [object Object] in Sentry
    */
+  /**
+   * Serialize error objects to avoid [object Object] in Sentry
+   */
   private serializeError(error: unknown): { message: string; extra: Record<string, unknown> } {
     if (typeof error !== 'object' || error === null) {
       return { message: String(error), extra: {} };
@@ -97,34 +100,46 @@ export class SentryErrorHandler implements ErrorHandler {
 
     const obj = error as Record<string, unknown>;
 
-    // Try to extract a meaningful message
-    const message =
-      (obj['message'] as string) ||
-      (obj['error'] as string) ||
-      (obj['statusText'] as string) ||
-      (obj['name'] as string) ||
-      'Unknown error';
+    // Try to extract a meaningful message with priority
+    const messageCandidates = [
+      obj['message'],
+      obj['error_description'], // Auth0 / OAuth
+      obj['description'],
+      obj['details'], // Supabase
+      obj['error'],
+      obj['statusText'],
+      obj['name'],
+      obj['code'], // Supabase code as fallback
+    ];
+
+    let message =
+      messageCandidates.find((m) => typeof m === 'string' && m.trim().length > 0) || '';
+
+    // If no message found, try to stringify the object
+    if (!message) {
+      try {
+        const json = JSON.stringify(obj);
+        message = json.length > 100 ? json.substring(0, 97) + '...' : json;
+      } catch {
+        message = 'Unknown Non-Serializable Error';
+      }
+    }
 
     // Collect extra context
     const extra: Record<string, unknown> = {};
 
-    // Common error properties
-    const keys = ['code', 'status', 'statusText', 'url', 'method', 'data', 'response', 'stack'];
-    for (const key of keys) {
-      if (key in obj && obj[key] !== undefined) {
-        extra[key] = obj[key];
-      }
+    // Capture ALL properties for better context, excluding the one used as message
+    try {
+      Object.keys(obj).forEach((key) => {
+        if (typeof obj[key] !== 'function') {
+          extra[key] = obj[key];
+        }
+      });
+    } catch {
+      // Ignore iteration errors
     }
 
-    // If no extra context, stringify the whole object
-    if (Object.keys(extra).length === 0) {
-      try {
-        extra['serialized'] = JSON.stringify(error);
-      } catch {
-        extra['serialized'] = '[Circular or non-serializable object]';
-      }
-    }
-
+    // Ensure we don't have cyclic references in extra if possible (Sentry handles this, but good to be safe)
     return { message: `Error: ${message}`, extra };
   }
 }
@@ -330,9 +345,6 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
       'ChunkLoadError',
       'Script error',
       'style is not done loading',
-
-      // Object serialization (catch-all for [object Object])
-      '[object Object]',
     ],
 
     // Ignore specific URLs
