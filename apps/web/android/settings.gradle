@@ -1,3 +1,16 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    plugins {
+        id 'com.android.application' version '8.13.2'
+        id 'com.android.library' version '8.13.2'
+        id 'org.jetbrains.kotlin.android' version '1.9.25'
+    }
+}
+
 include ':app'
 include ':baselineprofile'
 include ':capacitor-cordova-android-plugins'

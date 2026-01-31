@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "2933571972",
+    "project_id": "autorentar-e7254",
+    "storage_bucket": "autorentar-e7254.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2933571972:android:9f87ee443e7f4d7be2ddd1",
+        "android_client_info": {
+          "package_name": "app.autorentar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeKWsiyDhJk3CgMRh4Ntlo7L4fL0TcGk4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

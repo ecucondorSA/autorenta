@@ -24,6 +24,14 @@ allprojects {
         google()
         mavenCentral()
     }
+
+    // Fix Kotlin version conflict with capacitor-native-google-one-tap-signin
+    configurations.all {
+        resolutionStrategy {
+            force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.25'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.25'
+        }
+    }
 }
 
 task clean(type: Delete) {

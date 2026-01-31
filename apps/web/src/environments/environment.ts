@@ -55,8 +55,9 @@ export const environment = buildEnvironment({
 
   // Google One Tap / Native Sign-In Configuration
   // El Web Client ID es necesario para validar ID Tokens en plataformas nativas (Android/iOS)
+  // Proyecto Firebase: autorentar-e7254
   googleOneTap: {
-    clientId: '199395590437-8e29faaapojqolscpqatotvn366pevdr.apps.googleusercontent.com',
+    clientId: '2933571972-lps8689svegahs81niaquujrq19158nj.apps.googleusercontent.com',
     autoSelect: true,
     cancelOnTapOutside: true,
   },
