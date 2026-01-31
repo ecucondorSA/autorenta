@@ -1,3 +1,7 @@
+## <small>3.49.1 (2026-01-31)</small>
+
+* fix(ci): repair missing migrations and decouple web deploy from DB ([23a887b](https://github.com/ecucondorSA/autorenta/commit/23a887b))
+
 ## 3.49.0 (2026-01-31)
 
 * feat(ui): polish checkout and landing experience ([2840c2a](https://github.com/ecucondorSA/autorenta/commit/2840c2a)), closes [hi#contrast](https://github.com/hi/issues/contrast)
