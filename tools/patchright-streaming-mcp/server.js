@@ -1099,6 +1099,25 @@ class PatchrightStreamingMCP {
             },
             required: ['source']
           }
+        },
+        {
+          name: 'stream_list_profiles',
+          description: 'List available Chrome profiles. Use this before launching to let the user choose which profile to use.',
+          inputSchema: {
+            type: 'object',
+            properties: {}
+          }
+        },
+        {
+          name: 'stream_set_profile',
+          description: 'Set the Chrome profile to use. Call this before launching the browser. Use stream_list_profiles to see available options.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              profile: { type: 'string', description: 'Profile path or name (e.g., "Default", "Profile 2", or full path)' }
+            },
+            required: ['profile']
+          }
         }
       ]
     }));
@@ -1165,6 +1184,124 @@ class PatchrightStreamingMCP {
                 engine: 'patchright (CDP bypass)',
               };
             }
+            break;
+          }
+
+          case 'stream_list_profiles': {
+            const fs = await import('fs');
+            const path = await import('path');
+            const os = await import('os');
+
+            const chromeDir = path.join(os.homedir(), '.config/google-chrome');
+            const profiles = [];
+
+            // Add dedicated automation profile
+            profiles.push({
+              name: '🤖 Automatización (dedicado)',
+              path: '/home/edu/.patchright-profile',
+              description: 'Perfil separado para automatización. No conflicta con Chrome abierto.',
+              recommended: true,
+              current: CONFIG.profilePath === '/home/edu/.patchright-profile'
+            });
+
+            // Scan Chrome profiles
+            if (fs.existsSync(chromeDir)) {
+              const entries = fs.readdirSync(chromeDir);
+              for (const entry of entries) {
+                if (entry === 'Default' || entry.startsWith('Profile ')) {
+                  const profilePath = path.join(chromeDir, entry);
+                  const prefsPath = path.join(profilePath, 'Preferences');
+
+                  let profileName = entry;
+                  try {
+                    if (fs.existsSync(prefsPath)) {
+                      const prefs = JSON.parse(fs.readFileSync(prefsPath, 'utf-8'));
+                      profileName = prefs?.profile?.name || entry;
+                    }
+                  } catch {}
+
+                  profiles.push({
+                    name: profileName,
+                    path: profilePath,
+                    description: `Chrome profile: ${entry}`,
+                    recommended: false,
+                    current: CONFIG.profilePath === profilePath
+                  });
+                }
+              }
+            }
+
+            result = {
+              profiles,
+              currentProfile: CONFIG.profilePath,
+              note: '⚠️ Usar perfiles de Chrome requiere que Chrome esté cerrado. El perfil de Automatización es independiente.'
+            };
+            break;
+          }
+
+          case 'stream_set_profile': {
+            const fs = await import('fs');
+            const path = await import('path');
+            const os = await import('os');
+
+            let newProfilePath = args.profile;
+
+            // Handle short names like "Default", "Profile 2", "eduardo"
+            if (!newProfilePath.startsWith('/')) {
+              const chromeDir = path.join(os.homedir(), '.config/google-chrome');
+
+              // Check if it's a directory name
+              const directPath = path.join(chromeDir, newProfilePath);
+              if (fs.existsSync(directPath)) {
+                newProfilePath = directPath;
+              } else {
+                // Search by profile name
+                const entries = fs.readdirSync(chromeDir);
+                for (const entry of entries) {
+                  if (entry === 'Default' || entry.startsWith('Profile ')) {
+                    const profilePath = path.join(chromeDir, entry);
+                    const prefsPath = path.join(profilePath, 'Preferences');
+                    try {
+                      if (fs.existsSync(prefsPath)) {
+                        const prefs = JSON.parse(fs.readFileSync(prefsPath, 'utf-8'));
+                        if (prefs?.profile?.name?.toLowerCase() === args.profile.toLowerCase()) {
+                          newProfilePath = profilePath;
+                          break;
+                        }
+                      }
+                    } catch {}
+                  }
+                }
+              }
+            }
+
+            // Special case for automation profile
+            if (args.profile.toLowerCase().includes('automat') || args.profile.toLowerCase().includes('dedicado')) {
+              newProfilePath = '/home/edu/.patchright-profile';
+            }
+
+            // Validate path exists or can be created
+            if (!fs.existsSync(newProfilePath)) {
+              // If it's the automation profile, that's OK - it will be created
+              if (newProfilePath !== '/home/edu/.patchright-profile') {
+                result = { error: `Profile path not found: ${newProfilePath}` };
+                break;
+              }
+            }
+
+            // Close current browser if open
+            if (this.context) {
+              await this.closeBrowser();
+            }
+
+            // Update config
+            CONFIG.profilePath = newProfilePath;
+
+            result = {
+              success: true,
+              profilePath: newProfilePath,
+              message: `Perfil cambiado a: ${newProfilePath}. Usá stream_status con launch:true para iniciar.`
+            };
             break;
           }
 
