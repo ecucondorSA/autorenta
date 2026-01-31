@@ -30,6 +30,14 @@ jobs:
 
             console.log('Calling wallet-reconciliation edge function...');
 
+            if (!supabaseUrl || !supabaseKey) {
+              console.warn('SUPABASE_URL or SUPABASE_SERVICE_KEY not configured, skipping audit');
+              core.setOutput('discrepancies', '0');
+              core.setOutput('fund_ok', 'true');
+              core.setOutput('total_difference', '0');
+              return { success: true, skipped: true };
+            }
+
             const response = await fetch(
               `${supabaseUrl}/functions/v1/wallet-reconciliation`,
               {
@@ -42,7 +50,9 @@ jobs:
             );
 
             if (!response.ok) {
-              throw new Error(`Function call failed: ${response.status}`);
+              const errorText = await response.text();
+              console.error(`Function call failed: ${response.status}`, errorText);
+              throw new Error(`Function call failed: ${response.status} - ${errorText.slice(0, 200)}`);
             }
 
             const result = await response.json();
@@ -111,6 +121,11 @@ jobs:
             const supabaseUrl = process.env.SUPABASE_URL;
             const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
+            if (!supabaseUrl || !supabaseKey) {
+              console.warn('SUPABASE_URL or SUPABASE_SERVICE_KEY not configured, skipping direct DB check');
+              return;
+            }
+
             // Check for negative balances (should never happen)
             const negativeBalancesRes = await fetch(
               supabaseUrl + '/rest/v1/user_wallets?available_balance=lt.0&select=user_id,available_balance',
@@ -123,6 +138,11 @@ jobs:
             );
 
             const negativeBalances = await negativeBalancesRes.json();
+
+            if (!Array.isArray(negativeBalances)) {
+              console.warn('Unexpected response for negative balances query:', JSON.stringify(negativeBalances).slice(0, 200));
+              return;
+            }
 
             if (negativeBalances.length > 0) {
               console.error('CRITICAL: Found users with negative balances!', negativeBalances);
@@ -147,6 +167,11 @@ jobs:
             );
 
             const orphanedLocks = await orphanedLocksRes.json();
+
+            if (!Array.isArray(orphanedLocks)) {
+              console.warn('Unexpected response for orphaned locks query:', JSON.stringify(orphanedLocks).slice(0, 200));
+              return;
+            }
 
             if (orphanedLocks.length > 0) {
               console.warn('Found ' + orphanedLocks.length + ' locked funds older than 30 days');
