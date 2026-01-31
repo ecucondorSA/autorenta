@@ -1,3 +1,7 @@
+## <small>3.46.3 (2026-01-31)</small>
+
+* fix(auth): google sign-in native configuration complete (local plugin + client ids) ([3f6c408](https://github.com/ecucondorSA/autorenta/commit/3f6c408))
+
 ## <small>3.46.2 (2026-01-30)</small>
 
 * fix(android): remove background/experimental permissions to unblock google play release ([68d01ea](https://github.com/ecucondorSA/autorenta/commit/68d01ea))
