@@ -1,3 +1,15 @@
+## 3.48.0 (2026-01-31)
+
+* fix(bookings): improve ssr compatibility and fix injection context errors ([353d553](https://github.com/ecucondorSA/autorenta/commit/353d553))
+* fix(ci): sync pnpm-lock.yaml with patchright-mcp dependencies ([dfa1144](https://github.com/ecucondorSA/autorenta/commit/dfa1144))
+* fix(lint): resolve unused vars and import order in currency.service ([b1b29e0](https://github.com/ecucondorSA/autorenta/commit/b1b29e0))
+* feat: revamp cars landing, browse and booking experience ([df3e46d](https://github.com/ecucondorSA/autorenta/commit/df3e46d))
+* feat(booking): phase 1 implementation - currency service & store infrastructure ([ef68d2c](https://github.com/ecucondorSA/autorenta/commit/ef68d2c))
+* feat(booking): phase 2 implementation - smart search & car card redesign ([3f8f8e7](https://github.com/ecucondorSA/autorenta/commit/3f8f8e7))
+* feat(bookings): implement dollarized booking flow and protection selector ([a60aa56](https://github.com/ecucondorSA/autorenta/commit/a60aa56))
+* chore(infra): add patchright mcp tool and update sentry config ([832502c](https://github.com/ecucondorSA/autorenta/commit/832502c))
+* chore(mobile): update android build configuration and environment ([188d229](https://github.com/ecucondorSA/autorenta/commit/188d229))
+
 ## 3.47.0 (2026-01-31)
 
 * feat(ci): add workflow to build signed APK for testing ([1be4aa0](https://github.com/ecucondorSA/autorenta/commit/1be4aa0))
