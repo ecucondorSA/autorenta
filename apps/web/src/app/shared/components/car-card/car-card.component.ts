@@ -20,6 +20,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
 import { RealtimePricingService } from '@core/services/payments/realtime-pricing.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
+import { CurrencyService } from '@core/services/payments/currency.service';
 import { Car } from '../../../core/models';
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
 
@@ -36,6 +37,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private readonly pricingService = inject(DynamicPricingService);
   private readonly realtimePricing = inject(RealtimePricingService);
   private readonly urgentRentalService = inject(UrgentRentalService);
+  protected readonly currencyService = inject(CurrencyService); // Exposed to template
   private readonly supabase = injectSupabase();
 
   protected readonly Math = Math;

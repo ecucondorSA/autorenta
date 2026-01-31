@@ -81,8 +81,8 @@ En lugar de un wizard de 5 pasos desconectados, usaremos un **Layout de 2 Column
 - [x] **Step 3:** Crear `BookingFlowFacade` para aislar la lógica de estado.
 
 ### Phase 2: The "Smart Search" & List (The "Hook")
-- [ ] **Step 4:** Rediseñar `car-card` para mostrar precio en USD con tipografía "Premium".
-- [ ] **Step 5:** Implementar el `date-range-picker` mejorado (UI limpia, sin modales nativos feos).
+- [x] **Step 4:** Rediseñar `car-card` para mostrar precio en USD con tipografía "Premium".
+- [x] **Step 5:** Implementar el `date-range-picker` mejorado (UI limpia, sin modales nativos feos).
 
 ### Phase 3: The Booking Experience (The "Flow")
 - [ ] **Step 6:** Construir la página `booking-request` (Review & Pay).

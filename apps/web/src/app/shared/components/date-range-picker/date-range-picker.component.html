@@ -248,7 +248,7 @@
                   <div class="flex items-center gap-2">
                     @if (suggestion.totalPrice) {
                       <span class="text-sm font-bold text-cta-default">
-                        ${{ suggestion.totalPrice | number: '1.0-0' }}
+                        {{ suggestion.totalPrice | currency:'USD':'symbol':'1.0-0' }}
                       </span>
                     }
                     @if (suggestion.discount > 0) {
@@ -260,7 +260,7 @@
                     }
                     @if (suggestion.savings) {
                       <span class="text-xs text-success-700">
-                        (Ahorrás ${{ suggestion.savings | number: '1.0-0' }})
+                        (Ahorrás {{ suggestion.savings | currency:'USD':'symbol':'1.0-0' }})
                       </span>
                     }
                   </div>

@@ -275,7 +275,7 @@
                   class="relative text-xl font-black font-tech tracking-tighter"
                   [class.text-lg]="mapVariant"
                 >
-                  ${{ displayPrice() | number: '1.0-0' : 'en-US' }}
+                  {{ displayPrice() | currency:'USD':'symbol':'1.0-0' }}
                 </span>
               </div>
               @if (priceSurgeIcon() && !mapVariant) {

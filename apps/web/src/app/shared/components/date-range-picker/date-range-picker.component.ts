@@ -24,6 +24,8 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
 import type { DateRange } from '@core/models/marketplace.model';
 import type { DetailedBlockedRange } from '@core/services/cars/car-availability.service';
 
+import { CurrencyService } from '@core/services/payments/currency.service';
+
 interface DatePreset {
   label: string;
   days: number | 'weekend';
@@ -52,6 +54,7 @@ export interface AlternativeDateSuggestion {
 })
 export class DateRangePickerComponent implements AfterViewInit, OnChanges, OnDestroy {
   private readonly analytics = inject(AnalyticsService);
+  protected readonly currencyService = inject(CurrencyService); // Exposed to template
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 

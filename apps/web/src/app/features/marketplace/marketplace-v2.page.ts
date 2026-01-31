@@ -54,6 +54,8 @@ import { AssetPreloaderService } from '@core/services/ui/asset-preloader.service
 import { SeoSchemaService } from '@core/services/ui/seo-schema.service';
 import { ThemeService } from '@core/services/ui/theme.service';
 import { Car } from '../../core/models';
+import { CarCardComponent } from '../../shared/components/car-card/car-card.component';
+import { SmartSearchBarComponent } from '../../shared/components/smart-search-bar/smart-search-bar.component';
 import { DateRangePickerComponent } from '../../shared/components/date-range-picker/date-range-picker.component';
 import { HdriBackgroundComponent } from '../../shared/components/hdri-background/hdri-background.component';
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
@@ -83,6 +85,8 @@ type ToastType = 'success' | 'info' | 'warning' | 'error';
     DateRangePickerComponent,
     HdriBackgroundComponent,
     Tilt3dDirective,
+    CarCardComponent,
+    SmartSearchBarComponent,
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
@@ -1077,6 +1081,28 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     });
 
     void this.loadCars();
+  }
+
+  /**
+   * Handle smart search bar submission
+   */
+  onSmartSearch(event: { location: { lat: number; lng: number } | null; dates: DateRange }): void {
+    if (event.location) {
+      this.userLocation.set(event.location);
+    }
+    
+    if (event.dates.from && event.dates.to) {
+      this.dateRange.set(event.dates);
+    }
+
+    // Scroll to results
+    const element = document.querySelector('.bg-surface-base'); // Target the listing section
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    void this.loadCars();
+    this.showToast('Buscando autos...', 'success');
   }
 
   onQuickFilterClick(filterId: string): void {
