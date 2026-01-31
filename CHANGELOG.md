@@ -1,3 +1,7 @@
+## 3.49.0 (2026-01-31)
+
+* feat(ui): polish checkout and landing experience ([2840c2a](https://github.com/ecucondorSA/autorenta/commit/2840c2a)), closes [hi#contrast](https://github.com/hi/issues/contrast)
+
 ## 3.48.0 (2026-01-31)
 
 * fix(bookings): improve ssr compatibility and fix injection context errors ([353d553](https://github.com/ecucondorSA/autorenta/commit/353d553))
