@@ -73,7 +73,25 @@ export class CarCardComponent implements OnInit, OnDestroy {
   readonly displayPrice = computed(() => {
     const dynamic = this.dynamicPrice();
     const car = this._car();
-    return dynamic !== null ? dynamic : (car?.price_per_day ?? 0);
+    const rawPrice = dynamic !== null ? dynamic : (car?.price_per_day ?? 0);
+
+    // Dollar First Strategy: Normalize to USD
+    if (car?.currency === 'ARS') {
+      const rates = this.currencyService.exchangeRates();
+      // Fallback to a safe default if rates are not loaded yet to avoid 0/Infinity issues
+      // ideally we should show a loader, but for now we fallback or wait
+      const rate = rates ? rates['USDARS'] : undefined; 
+      
+      if (rate && rate > 0) {
+        return rawPrice / rate;
+      } else {
+        // If we don't have a rate yet, we might return null or the raw price (risky)
+        // or return 0 to trigger "Consultar precio"
+        return 0; 
+      }
+    }
+
+    return rawPrice;
   });
 
   readonly hasValidPrice = computed(() => {

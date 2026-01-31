@@ -629,6 +629,87 @@
                 </details>
 
                 <!-- ============================================ -->
+                <!-- PROTECTION SELECTOR -->
+                <!-- ============================================ -->
+                <section class="bg-surface-raised rounded-2xl shadow-md border border-border-default p-4 sm:p-6 mb-6">
+                  <div class="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 class="text-lg font-bold text-text-primary font-satoshi">Nivel de Protección</h3>
+                      <p class="text-xs text-text-secondary">Elegí tu nivel de responsabilidad ante daños.</p>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <!-- Standard -->
+                    <button type="button" 
+                      (click)="setCoverageUpgrade('standard')"
+                      class="relative p-4 rounded-xl border-2 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                      [class.border-primary-500]="coverageUpgrade() === 'standard'"
+                      [class.bg-primary-50]="coverageUpgrade() === 'standard'"
+                      [class.border-border-default]="coverageUpgrade() !== 'standard'"
+                      [class.hover:border-primary-300]="coverageUpgrade() !== 'standard'">
+                      
+                      <div class="flex justify-between items-start mb-2">
+                        <span class="font-bold text-sm text-text-primary">Estándar</span>
+                        @if(coverageUpgrade() === 'standard') {
+                          <svg class="w-5 h-5 text-primary-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        }
+                      </div>
+                      <div class="text-xs text-text-secondary mb-2">Incluido</div>
+                      <div class="font-mono text-sm font-bold text-text-primary">
+                        Franquicia: USD {{ riskSnapshot()?.deductibleUsd | number:'1.0-0' }}
+                      </div>
+                    </button>
+
+                    <!-- Premium (-50%) -->
+                    <button type="button" 
+                      (click)="setCoverageUpgrade('premium50')"
+                      class="relative p-4 rounded-xl border-2 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                      [class.border-primary-500]="coverageUpgrade() === 'premium50'"
+                      [class.bg-primary-50]="coverageUpgrade() === 'premium50'"
+                      [class.border-border-default]="coverageUpgrade() !== 'premium50'"
+                      [class.hover:border-primary-300]="coverageUpgrade() !== 'premium50'">
+                      
+                      <div class="flex justify-between items-start mb-2">
+                        <span class="font-bold text-sm text-text-primary">Premium</span>
+                        @if(coverageUpgrade() === 'premium50') {
+                          <svg class="w-5 h-5 text-primary-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        }
+                      </div>
+                      <div class="text-xs text-primary-700 font-bold mb-2">+ USD {{ rentalCostUsd() * 0.10 | number:'1.0-0' }}</div>
+                      <div class="font-mono text-sm font-bold text-text-primary">
+                        Franquicia: USD {{ (riskSnapshot()?.deductibleUsd || 0) * 0.5 | number:'1.0-0' }}
+                      </div>
+                    </button>
+
+                    <!-- Zero -->
+                    <button type="button" 
+                      (click)="setCoverageUpgrade('zero')"
+                      class="relative p-4 rounded-xl border-2 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                      [class.border-primary-500]="coverageUpgrade() === 'zero'"
+                      [class.bg-primary-50]="coverageUpgrade() === 'zero'"
+                      [class.border-border-default]="coverageUpgrade() !== 'zero'"
+                      [class.hover:border-primary-300]="coverageUpgrade() !== 'zero'">
+                      
+                      <div class="absolute -top-3 right-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                        RECOMENDADO
+                      </div>
+
+                      <div class="flex justify-between items-start mb-2">
+                        <span class="font-bold text-sm text-text-primary">Cero Riesgo</span>
+                        @if(coverageUpgrade() === 'zero') {
+                          <svg class="w-5 h-5 text-primary-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        }
+                      </div>
+                      <div class="text-xs text-primary-700 font-bold mb-2">+ USD {{ rentalCostUsd() * 0.20 | number:'1.0-0' }}</div>
+                      <div class="font-mono text-sm font-bold text-success-600">
+                        Franquicia: USD 0
+                      </div>
+                    </button>
+                  </div>
+                </section>
+
+                <!-- ============================================ -->
                 <!-- MESSAGE TO HOST - Key for P2P -->
                 <!-- ============================================ -->
                 <section
@@ -1466,7 +1547,7 @@
                     <p class="text-primary-100 text-xs font-medium mb-0.5">Contribución Total</p>
                     <div class="flex items-baseline gap-1">
                       <span class="text-xl sm:text-2xl font-extrabold tracking-tight break-words"
-                        >USD {{ rentalCostUsd() | number: '1.2-2' }}</span
+                        >USD {{ totalRentalUsd() | number: '1.2-2' }}</span
                       >
                     </div>
                   </div>
@@ -1527,6 +1608,13 @@
                     <span class="font-medium">INCLUIDO</span>
                   </div>
 
+                  @if (coverageUpgradeCostUsd() > 0) {
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 text-primary-700">
+                      <span class="text-text-secondary">Upgrade {{ getCoverageName(coverageUpgrade()) }}</span>
+                      <span class="font-medium">USD {{ coverageUpgradeCostUsd() | number:'1.2-2' }}</span>
+                    </div>
+                  }
+
                   <!-- Divider -->
                   <div class="h-px bg-border-default my-2"></div>
 
@@ -1534,7 +1622,7 @@
                     class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 font-bold text-lg text-text-primary"
                   >
                     <span>Contribución Final</span>
-                    <span>USD {{ rentalCostUsd() | number: '1.2-2' }}</span>
+                    <span>USD {{ totalRentalUsd() | number: '1.2-2' }}</span>
                   </div>
 
                   <div class="bg-surface-base rounded-lg p-3 border border-border-default">

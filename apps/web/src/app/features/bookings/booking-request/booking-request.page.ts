@@ -31,6 +31,9 @@ import {
   RiskSnapshot,
   PaymentAuthorization,
   PaymentMode,
+  CoverageUpgrade,
+  getCoverageUpgradeName,
+  getCoverageUpgradeCost,
 } from '@core/models/booking-detail-payment.model';
 import {
   SubscriptionCoverageCheck,
@@ -108,6 +111,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   readonly paymentMode = signal<PaymentMode>('card');
   readonly walletLockId = signal<string | null>(null);
   readonly lockingWallet = signal(false);
+
+  // Coverage Upgrade
+  readonly coverageUpgrade = signal<CoverageUpgrade>('standard');
 
   // P2P Message to host
   messageToHost = '';
@@ -227,9 +233,17 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     return dailyRate * days;
   });
 
+  readonly coverageUpgradeCostUsd = computed(() => {
+    return getCoverageUpgradeCost(this.coverageUpgrade(), this.rentalCostUsd());
+  });
+
+  readonly totalRentalUsd = computed(() => {
+    return this.rentalCostUsd() + this.coverageUpgradeCostUsd();
+  });
+
   readonly rentalCostArs = computed(() => {
     const fx = this.fxSnapshot();
-    const usdCost = this.rentalCostUsd();
+    const usdCost = this.totalRentalUsd();
 
     if (!fx || usdCost === 0) return 0;
     return usdCost * fx.binanceRate;
@@ -302,6 +316,15 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       this.logger.error('Error parsing car features', { error });
       return [];
     }
+  }
+
+  setCoverageUpgrade(upgrade: CoverageUpgrade) {
+    this.coverageUpgrade.set(upgrade);
+    this.calculateRiskSnapshot();
+  }
+
+  getCoverageName(upgrade: CoverageUpgrade) {
+    return getCoverageUpgradeName(upgrade);
   }
 
   async ngOnInit(): Promise<void> {
@@ -637,6 +660,11 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         this.bookingId.set(bookingId);
       }
 
+      // Map coverage upgrade for DB
+      const upgrade = this.coverageUpgrade();
+      const dbUpgrade =
+        upgrade === 'premium50' ? 'premium' : upgrade === 'zero' ? 'zero_franchise' : 'standard';
+
       if (mode === 'card') {
         const { error: updateError } = await this.supabaseClient
           .from('bookings')
@@ -648,6 +676,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
             currency: 'ARS',
             authorized_payment_id: authorization?.authorizedPaymentId ?? null,
             wallet_lock_id: null,
+            coverage_upgrade: dbUpgrade,
           })
           .eq('id', bookingId);
 
@@ -670,6 +699,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
             currency: 'USD',
             wallet_lock_id: walletLockId,
             authorized_payment_id: null,
+            coverage_upgrade: dbUpgrade,
           })
           .eq('id', bookingId);
 
@@ -734,7 +764,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       country: 'AR',
       fxRate: fx.platformRate,
       calculatedAt: new Date(),
-      coverageUpgrade: 'standard',
+      coverageUpgrade: this.coverageUpgrade(),
     };
 
     this.riskSnapshot.set(riskSnapshot);
@@ -742,6 +772,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       holdEstimatedUsd,
       discountApplied: preauth.discountApplied,
       coverageType: coverage.coverage_type,
+      coverageUpgrade: this.coverageUpgrade(),
     });
   }
 

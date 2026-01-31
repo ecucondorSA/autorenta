@@ -182,6 +182,20 @@ export class DateRangePickerComponent implements AfterViewInit, OnChanges, OnDes
           // Use the shared blockedDatesSet which gets updated via ngOnChanges
           if (this.blockedDatesSet.has(dateKey)) {
             dayElem.classList.add('calendar-day-reserved');
+          } else if (
+            this.showPrices &&
+            this.dailyPrice &&
+            this.dailyPrice > 0 &&
+            !dayElem.classList.contains('prevMonthDay') &&
+            !dayElem.classList.contains('nextMonthDay')
+          ) {
+            // Add price if not present
+            if (!dayElem.querySelector('.calendar-day-price')) {
+              const priceSpan = document.createElement('span');
+              priceSpan.className = 'calendar-day-price';
+              priceSpan.textContent = '$' + Math.round(this.dailyPrice);
+              dayElem.appendChild(priceSpan);
+            }
           }
         },
         onChange: (selectedDates, _dateStr) => {

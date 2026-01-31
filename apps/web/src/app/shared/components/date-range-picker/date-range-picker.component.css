@@ -729,3 +729,32 @@
       0 8px 10px -6px #4e4e4e !important;
   }
 }
+
+/* ==================== PRICE IN CALENDAR ==================== */
+::ng-deep .calendar-day-price {
+  display: block;
+  font-size: 0.65rem;
+  line-height: 1;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+::ng-deep .flatpickr-day {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  line-height: normal !important;
+}
+
+::ng-deep .flatpickr-day.selected .calendar-day-price,
+::ng-deep .flatpickr-day.startRange .calendar-day-price,
+::ng-deep .flatpickr-day.endRange .calendar-day-price,
+::ng-deep .flatpickr-day.selected.inRange .calendar-day-price {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+::ng-deep .flatpickr-day.inRange .calendar-day-price {
+  color: var(--text-primary);
+}
