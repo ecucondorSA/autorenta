@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
+import { getRequiredTierByVehicleValue, SubscriptionTier } from '@core/models/subscription.model';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { FranchiseTableService } from '@core/services/payments/franchise-table.service';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { SubscriptionPolicyService } from './subscription-policy.service';
-import { SubscriptionTier, getRequiredTierByVehicleValue } from '@core/models/subscription.model';
 
-export interface RiskCalculationV2 {
+export interface DynamicRiskCalculation {
   // Guarantee
   guaranteeAmountUsd: number;
   guaranteeAmountArs: number;
@@ -26,10 +26,10 @@ export interface RiskCalculationV2 {
 @Injectable({
   providedIn: 'root'
 })
-export class RiskCalculatorServiceV2 {
+export class DynamicRiskCalculatorService {
   private readonly franchiseService = inject(FranchiseTableService);
   private readonly policyService = inject(SubscriptionPolicyService);
-  private readonly supabase = injectSupabase();
+  private readonly supabase = inject(SupabaseClientService);
 
   /**
    * Calculates risk using the Dynamic Policy Engine (DB-driven)
@@ -40,7 +40,7 @@ export class RiskCalculatorServiceV2 {
     fxRate: number,
     userId?: string,
     userTier?: SubscriptionTier | null
-  ): Promise<RiskCalculationV2> {
+  ): Promise<DynamicRiskCalculation> {
     
     // 1. Determine Required Tier (e.g. 'club_luxury' for $50k car)
     const requiredTier = getRequiredTierByVehicleValue(carValueUsd);
@@ -92,7 +92,7 @@ export class RiskCalculatorServiceV2 {
     };
   }
 
-  private calculateFallback(value: number, fx: number): RiskCalculationV2 {
+  private calculateFallback(value: number, fx: number): DynamicRiskCalculation {
      // Conservative fallback
      const amount = value * 0.05; // 5% classic rule
      return {

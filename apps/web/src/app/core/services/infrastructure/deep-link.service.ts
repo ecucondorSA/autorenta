@@ -71,7 +71,7 @@ export class DeepLinkService {
         if (internalPath && internalPath !== '/') {
           void this.router.navigateByUrl(internalPath);
         }
-      } catch (e) {
+      } catch {
         // Fallback for custom schemas that might not parse as standard URLs
         this.logger.warn('Failed to parse URL, attempting slug extraction', url);
         const slug = url.split('://').pop();

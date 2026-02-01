@@ -246,12 +246,98 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
   },
 };
 
+// ... (previous code)
+
 /**
- * Get tier config by tier name
+ * Subscription plan from DB (subscription_plans table)
  */
-export function getTierConfig(tier: SubscriptionTier): SubscriptionTierConfig {
-  return SUBSCRIPTION_TIERS[tier];
+export interface SubscriptionPlan {
+  id: string;
+  tier: SubscriptionTier;
+  name: string;
+  description: string;
+  price_cents: number;
+  currency: string;
+  features: string[];
+  is_active: boolean;
+  metadata?: Record<string, unknown>;
+  created_at: string;
 }
+
+/**
+ * User benefits returned by RPC
+ */
+export interface UserClubBenefits {
+  tier: SubscriptionTier | null;
+  has_active_subscription: boolean;
+  benefits: string[];
+  max_vehicle_value_usd?: number;
+  discount_percentage?: number;
+}
+
+/**
+ * Upgrade recommendation result
+ */
+export interface UpgradeRecommendation {
+  recommended: boolean;
+  upgradeTo?: SubscriptionTier;
+  reason?: string;
+  savingsUsd?: number;
+}
+
+/**
+ * Get upgrade recommendation for a vehicle (local)
+ */
+export function getUpgradeRecommendation(
+  vehicleValueUsd: number,
+  currentTier: SubscriptionTier | null
+): UpgradeRecommendation {
+  const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
+  
+  // If no tier, always recommend relevant tier
+  if (!currentTier) {
+     const config = SUBSCRIPTION_TIERS[requiredTier];
+     const savings = config.preauth_hold_usd - config.preauth_with_subscription_usd;
+     return {
+        recommended: true,
+        upgradeTo: requiredTier,
+        reason: 'Reducir garantía al 50%',
+        savingsUsd: savings
+     };
+  }
+
+  // If current tier is lower than required
+  const hierarchy: Record<SubscriptionTier, number> = { club_standard: 1, club_black: 2, club_luxury: 3 };
+  if (hierarchy[currentTier] < hierarchy[requiredTier]) {
+     const config = SUBSCRIPTION_TIERS[requiredTier];
+     const savings = config.preauth_hold_usd - config.preauth_with_subscription_usd;
+     return {
+        recommended: true,
+        upgradeTo: requiredTier,
+        reason: 'Acceder a este vehículo con garantía reducida',
+        savingsUsd: savings
+     };
+  }
+
+  return { recommended: false };
+}
+
+/**
+ * Format preauthorization info for UI
+ */
+export function formatPreauthorizationInfo(preauth: PreauthorizationCalculation): {
+  amount: string;
+  description: string;
+  isDiscounted: boolean;
+} {
+  return {
+    amount: `${preauth.holdAmountUsd} USD`,
+    description: preauth.formula,
+    isDiscounted: preauth.discountApplied
+  };
+}
+
+// ... (rest of the file)
 
 /**
  * Parameters for creating a subscription purchase

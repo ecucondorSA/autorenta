@@ -1,21 +1,23 @@
 import { Injectable, inject } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { RiskCalculatorService, PaymentMethodType } from './risk-calculator.service';
-import { 
-  RiskSnapshot, 
-  CalculateRiskSnapshotParams, 
-  PaymentMode, 
+import {
+  BookingDetailRiskSnapshotDb,
+  CalculateRiskSnapshotParams,
+  CountryCode,
   CoverageUpgrade,
-  BookingDetailRiskSnapshotDb
+  PaymentMode,
+  PricingBucketType,
+  RiskSnapshot,
 } from '@core/models/booking-detail-payment.model';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { from, Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
+import { RiskCalculatorService } from './risk-calculator.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RiskService {
-  private readonly supabase = injectSupabase();
+  private readonly supabase = inject(SupabaseClientService);
   private readonly riskCalculator = inject(RiskCalculatorService);
 
   /**
@@ -26,7 +28,7 @@ export class RiskService {
     const calc = await this.riskCalculator.calculateRisk(
       params.vehicleValueUsd,
       params.fxRate,
-      true
+      true,
     );
 
     const baseSnapshot: RiskSnapshot = {
@@ -40,7 +42,7 @@ export class RiskService {
       country: params.country,
       fxRate: params.fxRate,
       calculatedAt: new Date(),
-      coverageUpgrade: params.coverageUpgrade || 'standard'
+      coverageUpgrade: params.coverageUpgrade || 'standard',
     };
 
     // Apply coverage upgrade logic if needed
@@ -55,9 +57,9 @@ export class RiskService {
    * Persists the risk snapshot to the database
    */
   persistRiskSnapshot(
-    bookingId: string, 
-    snapshot: RiskSnapshot, 
-    paymentMode: PaymentMode
+    bookingId: string,
+    snapshot: RiskSnapshot,
+    paymentMode: PaymentMode,
   ): Observable<{ ok: boolean; snapshotId?: string; error?: string }> {
     const dbRow: Partial<BookingDetailRiskSnapshotDb> = {
       booking_id: bookingId,
@@ -73,35 +75,39 @@ export class RiskService {
       coverage_upgrade: snapshot.coverageUpgrade,
       meta: {
         vehicle_value_usd: snapshot.vehicleValueUsd,
-        rollover_deductible_usd: snapshot.rolloverDeductibleUsd
-      }
+        rollover_deductible_usd: snapshot.rolloverDeductibleUsd,
+      },
     };
 
     return from(
-      this.supabase.from('booking_risk_snapshots').insert(dbRow).select().single()
+      this.supabase.from('booking_risk_snapshots').insert(dbRow).select().single(),
     ).pipe(
       map(({ data, error }) => {
         if (error) throw error;
-        return { ok: true, snapshotId: (data as any)?.id || bookingId };
+        // Explicit cast to known DB shape to avoid 'any'
+        const inserted = data as BookingDetailRiskSnapshotDb;
+        return { ok: true, snapshotId: inserted?.id || bookingId };
       }),
-      catchError(err => of({ ok: false, error: err.message }))
+      catchError((err: Error) => of({ ok: false, error: err.message })),
     );
   }
 
   /**
    * Retrieves a risk snapshot by booking ID
    */
-  getRiskSnapshotByBookingId(bookingId: string): Observable<{ snapshot: RiskSnapshot | null; error?: string }> {
+  getRiskSnapshotByBookingId(
+    bookingId: string,
+  ): Observable<{ snapshot: RiskSnapshot | null; error?: string }> {
     return from(
-      this.supabase.from('booking_risk_snapshots').select('*').eq('booking_id', bookingId).single()
+      this.supabase.from('booking_risk_snapshots').select('*').eq('booking_id', bookingId).single(),
     ).pipe(
       map(({ data, error }) => {
         if (error) {
-           // If not found, return null without error string usually, but spec says check error
-           if (error.code === 'PGRST116') return { snapshot: null }; 
-           throw error;
+          // If not found, return null without error string usually, but spec says check error
+          if (error.code === 'PGRST116') return { snapshot: null };
+          throw error;
         }
-        
+
         const row = data as BookingDetailRiskSnapshotDb;
         const snapshot: RiskSnapshot = {
           deductibleUsd: row.deductible_usd,
@@ -109,20 +115,21 @@ export class RiskService {
           holdEstimatedArs: row.estimated_hold_amount_ars || 0,
           holdEstimatedUsd: 0, // Calculated field, not in DB explicitly usually
           creditSecurityUsd: row.estimated_credit_security_usd || 600,
-          bucket: row.bucket as any,
-          vehicleValueUsd: (row.meta as any)?.vehicle_value_usd || 0,
-          country: row.country_code as any,
+          bucket: this.isValidBucket(row.bucket) ? row.bucket : 'standard',
+          vehicleValueUsd: (row.meta as { vehicle_value_usd?: number })?.vehicle_value_usd || 0,
+          country: this.isValidCountry(row.country_code) ? row.country_code : 'AR',
           fxRate: row.fx_snapshot,
           calculatedAt: new Date(row.created_at),
-          coverageUpgrade: (row.coverage_upgrade as CoverageUpgrade) || 'standard'
+          coverageUpgrade: (row.coverage_upgrade as CoverageUpgrade) || 'standard',
         };
-        
+
         // Recalculate derived fields if needed
-        snapshot.holdEstimatedUsd = snapshot.holdEstimatedArs / snapshot.fxRate;
+        snapshot.holdEstimatedUsd =
+          snapshot.fxRate > 0 ? snapshot.holdEstimatedArs / snapshot.fxRate : 0;
 
         return { snapshot };
       }),
-      catchError(err => of({ snapshot: null, error: err.message }))
+      catchError((err: Error) => of({ snapshot: null, error: err.message })),
     );
   }
 
@@ -130,23 +137,16 @@ export class RiskService {
    * Recalculates risk with a new coverage upgrade
    */
   async recalculateWithUpgrade(
-    currentSnapshot: RiskSnapshot, 
-    newUpgrade: CoverageUpgrade
+    currentSnapshot: RiskSnapshot,
+    newUpgrade: CoverageUpgrade,
   ): Promise<RiskSnapshot> {
-    // Logic to adjust deductibles based on upgrade
-    let newDeductible = currentSnapshot.deductibleUsd;
-    let newRollover = currentSnapshot.rolloverDeductibleUsd;
-
-    // Reset to standard first if we can infer it? 
-    // It's safer to recalculate from scratch if we had the car value.
-    // Fortunately we have vehicleValueUsd in snapshot.
-    
+    // We recalculate from scratch to ensure consistency
     return this.calculateRiskSnapshot({
       vehicleValueUsd: currentSnapshot.vehicleValueUsd,
       bucket: currentSnapshot.bucket,
       country: currentSnapshot.country,
       fxRate: currentSnapshot.fxRate,
-      coverageUpgrade: newUpgrade
+      coverageUpgrade: newUpgrade,
     });
   }
 
@@ -154,15 +154,15 @@ export class RiskService {
    * Recalculates risk with a new FX rate
    */
   async recalculateWithNewFxRate(
-    currentSnapshot: RiskSnapshot, 
-    newFxRate: number
+    currentSnapshot: RiskSnapshot,
+    newFxRate: number,
   ): Promise<RiskSnapshot> {
     return this.calculateRiskSnapshot({
       vehicleValueUsd: currentSnapshot.vehicleValueUsd,
       bucket: currentSnapshot.bucket,
       country: currentSnapshot.country,
       fxRate: newFxRate,
-      coverageUpgrade: currentSnapshot.coverageUpgrade
+      coverageUpgrade: currentSnapshot.coverageUpgrade,
     });
   }
 
@@ -171,28 +171,27 @@ export class RiskService {
    */
   validateRiskSnapshot(snapshot: RiskSnapshot): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
-    
+
     if (snapshot.coverageUpgrade !== 'zero' && snapshot.deductibleUsd <= 0) {
       errors.push('La franquicia debe ser mayor a 0');
     }
 
-    // Rollover check (~1.5x)
-    // Using loose comparison for float math
-    if (snapshot.coverageUpgrade !== 'zero') {
-       const expectedRollover = snapshot.deductibleUsd * 1.5;
-       if (Math.abs(snapshot.rolloverDeductibleUsd - expectedRollover) > 10) { // Tolerance
-          // In spec it checked equality, but usually calculator handles this.
-          // We'll skip strict check here to avoid breaking if logic changed.
-       }
-    }
-
-    if (snapshot.creditSecurityUsd !== 600 && snapshot.creditSecurityUsd !== 300) { // allowing 300 just in case
-      // Spec said 600.
+    if (snapshot.creditSecurityUsd !== 600 && snapshot.creditSecurityUsd !== 300) {
+      // allowing 300 just in case logic changes
       if (snapshot.creditSecurityUsd !== 600) {
-         errors.push('Crédito de seguridad debe ser 600 USD');
+        errors.push('Crédito de seguridad debe ser 600 USD');
       }
     }
 
     return { valid: errors.length === 0, errors };
+  }
+
+  // Type Guards helpers
+  private isValidBucket(bucket: string): bucket is PricingBucketType {
+    return ['economy', 'standard', 'premium', 'luxury'].includes(bucket);
+  }
+
+  private isValidCountry(country: string): country is CountryCode {
+    return ['AR', 'CO', 'MX'].includes(country);
   }
 }

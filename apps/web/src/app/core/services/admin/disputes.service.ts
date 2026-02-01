@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { Injectable, inject } from '@angular/core';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 export type DisputeKind = 'damage' | 'no_show' | 'late_return' | 'other';
 export type DisputeStatus = 'open' | 'in_review' | 'resolved' | 'rejected';
@@ -17,8 +17,7 @@ export interface Dispute {
   resolution_favor: 'owner' | 'renter' | 'none' | null;
   penalty_amount_cents: number | null;
   internal_notes: string | null;
-  metadata: any;
-  [key: string]: unknown;
+  metadata: Record<string, unknown>;
 }
 
 export interface DisputeTimelineEvent {
@@ -32,11 +31,20 @@ export interface DisputeTimelineEvent {
   created_at: string;
 }
 
+export interface DisputeEvidence {
+  id: string;
+  dispute_id: string;
+  url: string;
+  type: 'image' | 'video' | 'document';
+  uploaded_at: string;
+  uploaded_by: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class DisputesService {
-  private readonly supabase = injectSupabase();
+  private readonly supabase = inject(SupabaseClientService);
 
   async listAllForAdmin(): Promise<Dispute[]> {
     const { data, error } = await this.supabase
@@ -44,7 +52,7 @@ export class DisputesService {
       .select('*, profiles:opened_by(full_name)')
       .order('created_at', { ascending: false });
     if (error) throw error;
-    return (data ?? []) as any[];
+    return (data ?? []) as Dispute[];
   }
 
   async getTimeline(disputeId: string): Promise<DisputeTimelineEvent[]> {
@@ -65,7 +73,7 @@ export class DisputesService {
     publicNotes: string;
   }): Promise<{ success: boolean; error?: string }> {
     try {
-      const { data, error } = await this.supabase.rpc('resolve_dispute', {
+      const { error } = await this.supabase.rpc('resolve_dispute', {
         p_dispute_id: params.disputeId,
         p_resolution_favor: params.resolutionFavor,
         p_penalty_cents: params.penaltyCents,
@@ -93,7 +101,7 @@ export class DisputesService {
       if (error.code === 'PGRST116') return undefined;
       throw error;
     }
-    return data as any;
+    return data as Dispute;
   }
 
   // ============================================================================
@@ -191,5 +199,18 @@ export class DisputesService {
         timeline: [],
       };
     }
+  }
+
+  async listEvidence(disputeId: string): Promise<DisputeEvidence[]> {
+    const { data, error } = await this.supabase
+      .from('dispute_evidence')
+      .select('*')
+      .eq('dispute_id', disputeId);
+
+    if (error) {
+      console.error('Error fetching evidence:', error);
+      return [];
+    }
+    return (data as DisputeEvidence[]) || [];
   }
 }

@@ -7,13 +7,6 @@
 
 import { computed, inject, Injectable, signal } from '@angular/core';
 import {
-  type ActiveSubscription,
-  type PreauthorizationCalculation,
-  type SubscriptionCoverageCheck,
-  type SubscriptionDisplayState,
-  type SubscriptionTier,
-  type SubscriptionUsageLogWithDetails,
-  type UpgradeRecommendation,
   calculatePreauthorization as calculatePreauthorizationLocal,
   canAccessVehicle,
   formatPreauthorizationInfo,
@@ -21,15 +14,22 @@ import {
   getTierConfig,
   getUpgradeRecommendation as getUpgradeRecommendationLocal,
   SUBSCRIPTION_TIERS,
+  type ActiveSubscription,
+  type PreauthorizationCalculation,
+  type SubscriptionCoverageCheck,
+  type SubscriptionDisplayState,
+  type SubscriptionPlan,
+  type SubscriptionTier,
+  type SubscriptionUsageLogWithDetails,
+  type UpgradeRecommendation,
+  type UserClubBenefits,
 } from '@core/models/subscription.model';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
-import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 // Cache configuration
 const SUBSCRIPTION_STALE_TIME_MS = 30_000; // 30 seconds
 
-// Type for Supabase FunctionsHttpError context
 interface FunctionsErrorContext {
   json?: () => Promise<{ message?: string; error?: string }>;
   text?: () => Promise<string>;
@@ -45,7 +45,7 @@ interface FunctionsError {
   providedIn: 'root',
 })
 export class SubscriptionService {
-  private readonly supabase: SupabaseClient = injectSupabase();
+  private readonly supabase = inject(SupabaseClientService);
   private readonly logger = inject(LoggerService);
 
   // ============================================================================
@@ -53,7 +53,7 @@ export class SubscriptionService {
   // ============================================================================
 
   readonly subscription = signal<ActiveSubscription | null>(null);
-  readonly plans = signal<any[]>([]); // Dynamic plans from DB
+  readonly plans = signal<SubscriptionPlan[]>([]);
   readonly usageHistory = signal<SubscriptionUsageLogWithDetails[]>([]);
   readonly loading = signal(false);
   readonly error = signal<{ message: string } | null>(null);
@@ -67,7 +67,7 @@ export class SubscriptionService {
   /**
    * Fetch available subscription plans from database
    */
-  async fetchPlans(): Promise<any[]> {
+  async fetchPlans(): Promise<SubscriptionPlan[]> {
     const { data, error } = await this.supabase
       .from('subscription_plans')
       .select('*')
@@ -79,20 +79,22 @@ export class SubscriptionService {
       return [];
     }
 
-    this.plans.set(data || []);
-    return data || [];
+    // Safe cast assuming DB matches interface
+    const plans = (data as unknown[]) as SubscriptionPlan[];
+    this.plans.set(plans);
+    return plans;
   }
 
   /**
    * Get dynamic benefits for the current user
    */
-  async fetchUserBenefits(): Promise<any> {
+  async fetchUserBenefits(): Promise<UserClubBenefits | null> {
     const { data, error } = await this.supabase.rpc('get_user_club_benefits');
     if (error) {
       this.logger.error('Error fetching user benefits', error);
       return null;
     }
-    return data;
+    return data as UserClubBenefits;
   }
 
   readonly tier = computed(() => this.subscription()?.tier ?? null);

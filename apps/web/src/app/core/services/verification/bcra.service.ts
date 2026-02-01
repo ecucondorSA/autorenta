@@ -16,7 +16,7 @@ export interface BcraResult {
   max_situation: number;
   total_debt: number;
   debts: BcraDebt[];
-  raw?: any;
+  raw?: Record<string, unknown>;
 }
 
 @Injectable({

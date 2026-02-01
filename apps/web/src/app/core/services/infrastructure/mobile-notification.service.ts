@@ -2,14 +2,14 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { PushNotifications, PushNotificationSchema, ActionPerformed, Token } from '@capacitor/push-notifications';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { ToastService } from '@core/services/ui/toast.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MobileNotificationService {
-  private readonly supabase = injectSupabase();
+  private readonly supabase = inject(SupabaseClientService);
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
   
@@ -33,7 +33,7 @@ export class MobileNotificationService {
     });
 
     // On registration error
-    PushNotifications.addListener('registrationError', (error: any) => {
+    PushNotifications.addListener('registrationError', (error: unknown) => {
       console.error('[Push] Registration error:', error);
     });
 
@@ -97,10 +97,10 @@ export class MobileNotificationService {
    * Handle navigation based on notification payload
    * Payload format example: { route: '/bookings/ID', params: { id: '...' } }
    */
-  private handleNavigation(data: any) {
+  private handleNavigation(data: Record<string, unknown>) {
     if (!data) return;
 
-    const route = data.route || data.path;
+    const route = (data['route'] as string) || (data['path'] as string);
     if (route) {
       void this.router.navigateByUrl(route);
     }
