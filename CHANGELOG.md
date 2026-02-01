@@ -1,3 +1,7 @@
+## 3.53.0 (2026-02-01)
+
+* feat: complete operational and financial infrastructure ([d0523d7](https://github.com/ecucondorSA/autorenta/commit/d0523d7))
+
 ## 3.52.0 (2026-02-01)
 
 * feat(chat): implement secure in-app messaging with platform leakage detection ([fd95a7d](https://github.com/ecucondorSA/autorenta/commit/fd95a7d))
