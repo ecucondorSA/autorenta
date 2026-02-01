@@ -264,6 +264,7 @@ export class AppComponent implements OnInit {
   private readonly guidedTour = inject(GuidedTourService);
   private readonly localeManager = inject(LocaleManagerService);
   private readonly pushNotificationService = inject(PushNotificationService);
+  private readonly deepLinkService = inject(DeepLinkService);
   private readonly notificationsService = inject(NotificationsService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -371,6 +372,7 @@ export class AppComponent implements OnInit {
     this.initializeLayoutWatcher();
     this.loadUserProfile();
     this.loadPendingApprovalCount();
+    this.deepLinkService.initialize();
     this.pushNotificationService.initializePushNotifications();
     this.initializeLocalNotificationListeners();
     this.initializePushNotificationListeners();
