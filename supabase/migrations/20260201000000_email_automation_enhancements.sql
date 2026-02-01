@@ -170,7 +170,7 @@ SELECT cron.schedule(
     'check-abandoned-bookings',
     '*/5 * * * *',
     $$ SELECT public.check_abandoned_bookings(); $$
-) ON CONFLICT (name) DO UPDATE SET schedule = EXCLUDED.schedule;
+);
 
 -- Schedule Email Sequence Processor (Every 30 minutes)
 DO $$

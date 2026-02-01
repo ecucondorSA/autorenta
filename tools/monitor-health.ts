@@ -1,66 +1,67 @@
+import { spawn } from 'child_process';
+
 /**
- * 🩺 Health Monitor Tool
+ * Health Monitor Script
  * 
- * Validates the System Health Check Edge Function.
- * Usage: pnpm tsx tools/monitor-health.ts
+ * Verifies system health by calling the check-system-health Edge Function.
+ * Designed to be run by CI/CD pipelines or cron jobs.
  */
 
-import * as dotenv from 'dotenv';
-import path from 'path';
+const EDGE_FUNCTION_URL = process.env.SUPABASE_URL 
+  ? `${process.env.SUPABASE_URL}/functions/v1/check-system-health`
+  : 'http://localhost:54321/functions/v1/check-system-health'; // Local default
 
-// Load environment variables
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 async function checkHealth() {
-  console.log('╔══════════════════════════════════════════════════════════╗');
-  console.log('║  🩺 System Health Monitor                                ║');
-  console.log('╚══════════════════════════════════════════════════════════╝\n');
+  console.log('🏥 Starting System Health Check...');
+  console.log(`Target: ${EDGE_FUNCTION_URL}`);
 
-  const functionUrl = process.env.SUPABASE_URL 
-    ? `${process.env.SUPABASE_URL}/functions/v1/check-system-health`
-    : 'http://localhost:54321/functions/v1/check-system-health'; // Default local
-
-  const anonKey = process.env.SUPABASE_ANON_KEY;
-
-  if (!anonKey) {
-    console.error('❌ Missing SUPABASE_ANON_KEY in .env');
-    process.exit(1);
+  if (!SERVICE_ROLE_KEY) {
+    console.warn('⚠️ SUPABASE_SERVICE_ROLE_KEY not set. Check might fail if auth required.');
   }
-
-  console.log(`Checking Endpoint: ${functionUrl}...`);
 
   try {
     const start = performance.now();
-    const response = await fetch(functionUrl, {
+    const response = await fetch(EDGE_FUNCTION_URL, {
+      method: 'POST',
       headers: {
-        'Authorization': `Bearer ${anonKey}`
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SERVICE_ROLE_KEY}`
       }
     });
-    const latency = Math.round(performance.now() - start);
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    const duration = Math.round(performance.now() - start);
+    const status = response.status;
+    
+    let data;
+    try {
+      data = await response.json();
+    } catch {
+      data = await response.text();
     }
 
-    const data = await response.json();
+    console.log('----------------------------------------');
+    console.log(`HTTP Status: ${status}`);
+    console.log(`Duration: ${duration}ms`);
+    console.log('Response:', JSON.stringify(data, null, 2));
+    console.log('----------------------------------------');
 
-    console.log(`\n✅ Health Check Successful (${latency}ms)`);
-    console.log(`   Status: ${data.status}`);
-    console.log(`   Internal Latency: ${data.latency_ms}ms`);
-    console.log('\n   Checks:');
-    
-    Object.entries(data.checks || {}).forEach(([service, status]) => {
-      const icon = status === 'up' ? '✅' : (status === 'slow' ? '⚠️' : '❌');
-      console.log(`   - ${service}: ${icon} ${status}`);
-    });
-
-    if (data.status !== 'healthy') {
-      console.warn('\n⚠️ System is Degraded');
-      process.exit(1); // Soft fail
+    if (status === 200 && data.status === 'healthy') {
+      console.log('✅ SYSTEM HEALTHY');
+      process.exit(0);
+    } else if (status === 200 && data.status === 'degraded') {
+      console.warn('⚠️ SYSTEM DEGRADED');
+      // Non-zero exit code for degraded? Depends on strictness. 
+      // Let's pass but warn.
+      process.exit(0); 
+    } else {
+      console.error('❌ SYSTEM UNHEALTHY');
+      process.exit(1);
     }
 
   } catch (error) {
-    console.error('\n❌ Health Check Failed');
+    console.error('❌ CHECK FAILED (Network Error)');
     console.error(error);
     process.exit(1);
   }

@@ -16,7 +16,7 @@ Este documento detalla la hoja de ruta estratégica para transformar AutoRenta d
 7.  ✅ **Error Handling 2.0:** Implementar Error Boundaries globales y páginas de error (404/500) amigables.
 8.  ✅ **SEO Técnico Básico:** Sitemap.xml dinámico, meta-tags automáticos por auto y schema.org (JSON-LD).
 9.  ✅ **Performance Budget:** Optimizar imágenes (WebP/AVIF), lazy loading estricto y reducir bundle inicial (<1MB).
-10. ⬜ **Monitoring Setup:** Configurar alertas de Sentry y dashboards de Supabase para monitorear salud del sistema.
+10. ✅ **Monitoring Setup:** Configurar alertas de Sentry y dashboards de Supabase para monitorear salud del sistema.
 
 ---
 
@@ -41,9 +41,9 @@ Este documento detalla la hoja de ruta estratégica para transformar AutoRenta d
 
 21. ⬜ **KYC Automatizado:** Integración con proveedor de validación de identidad (DNI + Selfie) real.
 22. ⬜ **Background Checks:** Verificación automática de antecedentes de conductores (multas, scoring crediticio).
-23. ⬜ **Dispute Center V1:** Panel de administración para gestionar reclamos, retener/liberar garantías y arbitrar.
+23. ✅ **Dispute Center V1:** Panel de administración para gestionar reclamos, retener/liberar garantías y arbitrar.
 24. ⬜ **Smart Availability:** Sincronización de calendario con Google Calendar/iCal para dueños.
-25. ⬜ **Mensajería Interna:** Chat en tiempo real dentro de la app (sin salir a WhatsApp) para seguridad.
+25. ✅ **Mensajería Interna:** Chat en tiempo real dentro de la app (sin salir a WhatsApp) para seguridad.
 26. ⬜ **Facturación Automática:** Generación de facturas/comprobantes PDF automáticos post-viaje.
 27. ⬜ **Owner Dashboard Pro:** Métricas de rendimiento, ocupación y proyecciones de ganancias para dueños.
 28. ⬜ **Soporte Ticket System:** Integración de Help Scout o Zendesk en la app.
