@@ -1,3 +1,8 @@
+## 3.51.0 (2026-02-01)
+
+* feat(seo): add programmatic SEO infrastructure ([3e8e84d](https://github.com/ecucondorSA/autorenta/commit/3e8e84d))
+* feat(seo): implement programmatic SEO infrastructure and performance optimizations ([c204b3d](https://github.com/ecucondorSA/autorenta/commit/c204b3d))
+
 ## <small>3.50.2 (2026-02-01)</small>
 
 * fix(admin): update evidence type definition to match template usage ([cbb15bc](https://github.com/ecucondorSA/autorenta/commit/cbb15bc))
