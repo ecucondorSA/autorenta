@@ -1,3 +1,9 @@
+## <small>3.50.2 (2026-02-01)</small>
+
+* fix(admin): update evidence type definition to match template usage ([cbb15bc](https://github.com/ecucondorSA/autorenta/commit/cbb15bc))
+* chore: save local changes in tools before sync ([83cb583](https://github.com/ecucondorSA/autorenta/commit/83cb583))
+* ci: re-trigger build due to cache issues ([8737356](https://github.com/ecucondorSA/autorenta/commit/8737356))
+
 ## <small>3.50.1 (2026-01-31)</small>
 
 * fix(admin): restore missing template helpers in disputes page ([52fb9b1](https://github.com/ecucondorSA/autorenta/commit/52fb9b1))
