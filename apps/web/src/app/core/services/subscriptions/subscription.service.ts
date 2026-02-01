@@ -53,6 +53,7 @@ export class SubscriptionService {
   // ============================================================================
 
   readonly subscription = signal<ActiveSubscription | null>(null);
+  readonly plans = signal<any[]>([]); // Dynamic plans from DB
   readonly usageHistory = signal<SubscriptionUsageLogWithDetails[]>([]);
   readonly loading = signal(false);
   readonly error = signal<{ message: string } | null>(null);
@@ -62,6 +63,37 @@ export class SubscriptionService {
     const sub = this.subscription();
     return sub !== null && sub.status === 'active';
   });
+
+  /**
+   * Fetch available subscription plans from database
+   */
+  async fetchPlans(): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from('subscription_plans')
+      .select('*')
+      .eq('is_active', true)
+      .order('price_cents', { ascending: true });
+
+    if (error) {
+      this.logger.error('Error fetching subscription plans', error);
+      return [];
+    }
+
+    this.plans.set(data || []);
+    return data || [];
+  }
+
+  /**
+   * Get dynamic benefits for the current user
+   */
+  async fetchUserBenefits(): Promise<any> {
+    const { data, error } = await this.supabase.rpc('get_user_club_benefits');
+    if (error) {
+      this.logger.error('Error fetching user benefits', error);
+      return null;
+    }
+    return data;
+  }
 
   readonly tier = computed(() => this.subscription()?.tier ?? null);
 

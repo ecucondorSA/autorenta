@@ -71,7 +71,7 @@ Este documento detalla la hoja de ruta estratégica para transformar AutoRenta d
 ## 💸 FASE 5: FINTECH & MONETIZACIÓN (Finance)
 > **Objetivo:** Convertir la plataforma en una billetera digital y optimizar el flujo de dinero.
 
-41. ⬜ **AutoRenta Wallet:** Billetera virtual completa (ingresar, retirar, transferir saldo).
+41. ✅ **AutoRenta Wallet:** Billetera virtual completa (ingresar, retirar, transferir saldo).
 42. ⬜ **Split Payments:** División automática de pagos en tiempo real (Comisión -> Nosotros, Resto -> Dueño).
 43. ⬜ **Seguros On-Demand:** Contratación de seguro por día vía API con aseguradora partner.
 44. ⬜ **Micro-Créditos:** Adelanto de ganancias a dueños o financiación de viajes a conductores.
@@ -103,7 +103,7 @@ Este documento detalla la hoja de ruta estratégica para transformar AutoRenta d
 ## 🤝 FASE 7: COMUNIDAD & ECOSISTEMA (Network Effects)
 > **Objetivo:** Crear una red defensiva basada en la comunidad y servicios agregados.
 
-61. ⬜ **AutoRenta Club:** Membresía de suscripción con beneficios exclusivos (sin depósito, descuentos).
+61. ✅ **AutoRenta Club:** Membresía de suscripción con beneficios exclusivos (sin depósito, descuentos).
 62. ⬜ **Gamificación:** Badges, niveles y logros para dueños y conductores ("Super Host", "Piloto Seguro").
 63. ⬜ **Marketplace de Servicios:** Venta cruzada de lavado, mecánica y accesorios con descuentos.
 64. ⬜ **Foro de Comunidad:** Espacio para que dueños compartan consejos y experiencias.

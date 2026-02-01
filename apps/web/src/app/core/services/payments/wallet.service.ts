@@ -191,6 +191,98 @@ export class WalletService {
   }
 
   // ============================================================================
+  // ATOMIC WALLET OPERATIONS (Fintech Core)
+  // ============================================================================
+
+  /**
+   * Deposit funds atomically with idempotency support
+   */
+  async depositAtomic(
+    amountCents: number,
+    description: string,
+    refId?: string,
+    idempotencyKey?: string
+  ): Promise<{ success: boolean; transactionId?: string }> {
+    try {
+      const { data, error } = await this.supabase.rpc('process_wallet_transaction', {
+        p_user_id: (await this.supabase.auth.getUser()).data.user?.id,
+        p_amount_cents: amountCents,
+        p_type: 'deposit',
+        p_category: 'general',
+        p_description: description,
+        p_reference_id: refId || null,
+        p_idempotency_key: idempotencyKey || crypto.randomUUID()
+      });
+
+      if (error) throw error;
+      
+      // Immediate refresh
+      this.invalidateCache();
+      void this.fetchBalance(true);
+      void this.fetchTransactions();
+
+      return { success: true, transactionId: data.transaction_id };
+    } catch (err) {
+      this.handleError(err, 'Error en depósito atómico');
+      throw err;
+    }
+  }
+
+  /**
+   * Hold funds for booking security deposit (Atomic Lock)
+   */
+  async holdFundsAtomic(
+    bookingId: string,
+    amountCents: number
+  ): Promise<{ success: boolean; transactionId?: string }> {
+    try {
+      const { data, error } = await this.supabase.rpc('wallet_hold_funds', {
+        p_amount_cents: amountCents,
+        p_booking_id: bookingId
+      });
+
+      if (error) throw error;
+
+      this.invalidateCache();
+      void this.fetchBalance(true);
+      
+      return { success: true, transactionId: data.transaction_id };
+    } catch (err) {
+      // Translate SQL errors to user friendly messages
+      if (JSON.stringify(err).includes('Insufficient funds')) {
+        throw new WalletError('Saldo insuficiente para retención de garantía');
+      }
+      this.handleError(err, 'Error al retener fondos');
+      throw err;
+    }
+  }
+
+  /**
+   * Release funds (Unlock)
+   */
+  async releaseFundsAtomic(
+    bookingId: string,
+    amountCents: number
+  ): Promise<{ success: boolean; transactionId?: string }> {
+    try {
+      const { data, error } = await this.supabase.rpc('wallet_release_funds', {
+        p_amount_cents: amountCents,
+        p_booking_id: bookingId
+      });
+
+      if (error) throw error;
+
+      this.invalidateCache();
+      void this.fetchBalance(true);
+
+      return { success: true, transactionId: data.transaction_id };
+    } catch (err) {
+      this.handleError(err, 'Error al liberar fondos');
+      throw err;
+    }
+  }
+
+  // ============================================================================
   // LEGACY COMPATIBILITY METHODS (Wrappers)
   // ============================================================================
 
