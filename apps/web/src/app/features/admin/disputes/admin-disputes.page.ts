@@ -51,7 +51,7 @@ export class AdminDisputesPage implements OnInit {
   // Legacy/Template Compat Signals
   readonly resolutionReason = signal(''); 
   readonly resolutionAmount = signal<number | null>(null);
-  readonly evidence = signal<{ path: string; url?: string }[]>([]); 
+  readonly evidence = signal<{ path: string; url?: string; note?: string; created_at?: string }[]>([]); 
   readonly filters = signal({
     status: '',
     kind: '',

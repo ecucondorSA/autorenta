@@ -456,25 +456,41 @@ class PatchrightStreamingMCP {
         this.videoDir = path.join(os.tmpdir(), 'mcp-videos');
         if (!fs.existsSync(this.videoDir)) fs.mkdirSync(this.videoDir, { recursive: true });
 
-        this.context = await chromium.launchPersistentContext(CONFIG.profilePath, {
+        // Determine if this is a Chrome profile (needs special handling)
+        const chromeBaseDir = path.join(os.homedir(), '.config/google-chrome');
+        const isExistingChromeProfile = CONFIG.profilePath.startsWith(chromeBaseDir) &&
+                                         CONFIG.profilePath !== chromeBaseDir;
+
+        let userDataDir = CONFIG.profilePath;
+        const extraArgs = [
+          '--disable-blink-features=AutomationControlled',
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-infobars',
+          '--window-position=0,0',
+          '--disable-dev-shm-usage',
+          '--disable-gpu',
+          '--no-first-run',
+          '--no-default-browser-check'
+        ];
+
+        // For existing Chrome profiles, use base dir + profile-directory arg
+        if (isExistingChromeProfile) {
+          const profileName = path.basename(CONFIG.profilePath);
+          userDataDir = chromeBaseDir;
+          extraArgs.push(`--profile-directory=${profileName}`);
+          console.error(`[MCP] Using Chrome profile: ${profileName}`);
+        }
+
+        this.context = await chromium.launchPersistentContext(userDataDir, {
           headless: CONFIG.headless,
           executablePath: CONFIG.executablePath,
-          viewport: { width: 1280, height: 720 }, // Fixed viewport for video consistency
+          viewport: { width: 1280, height: 720 },
           recordVideo: {
             dir: this.videoDir,
             size: { width: 1280, height: 720 }
           },
-          args: [
-            '--disable-blink-features=AutomationControlled',
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-infobars',
-            '--window-position=0,0',
-            '--disable-dev-shm-usage', // Docker/Container fix
-            '--disable-gpu', // Stability fix
-            '--no-first-run',
-            '--no-default-browser-check'
-          ],
+          args: extraArgs,
           ignoreDefaultArgs: ['--enable-automation'],
         });
 
