@@ -1,3 +1,10 @@
+## <small>3.53.1 (2026-02-01)</small>
+
+* refactor(verification): rename risk-calculator-v2 to dynamic-risk-calculator to resolve guardrails ([c73d1ad](https://github.com/ecucondorSA/autorenta/commit/c73d1ad))
+* fix(ci): use correct booking columns (total_amount, deposit_amount_cents) ([b4dddf7](https://github.com/ecucondorSA/autorenta/commit/b4dddf7))
+* fix(ci): use withdrawal_requests table and remove invalid wallet_withdrawals query ([4e229b0](https://github.com/ecucondorSA/autorenta/commit/4e229b0))
+* chore: wip save all ([957d306](https://github.com/ecucondorSA/autorenta/commit/957d306))
+
 ## 3.53.0 (2026-02-01)
 
 * feat: complete operational and financial infrastructure ([d0523d7](https://github.com/ecucondorSA/autorenta/commit/d0523d7))
