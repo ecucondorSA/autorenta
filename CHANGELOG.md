@@ -1,3 +1,7 @@
+## <small>3.51.1 (2026-02-01)</small>
+
+* fix(referrals): correct function signatures in GRANT statements ([a012d95](https://github.com/ecucondorSA/autorenta/commit/a012d95))
+
 ## 3.51.0 (2026-02-01)
 
 * feat(seo): add programmatic SEO infrastructure ([3e8e84d](https://github.com/ecucondorSA/autorenta/commit/3e8e84d))
