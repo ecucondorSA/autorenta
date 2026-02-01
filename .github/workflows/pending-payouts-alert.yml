@@ -102,43 +102,23 @@ jobs:
               });
             }
 
-            // 3. Check stuck money-out requests
-            console.log('Checking stuck money-out requests...');
-            const stuckMoneyOut = await query(
-              `money_out_requests?status=in.(pending,processing)&created_at=lt.${fortyEightHoursAgo}&select=id,user_id,amount_cents,created_at,status`
+            // 3. Check stuck withdrawal requests
+            console.log('Checking stuck withdrawal requests...');
+            const stuckWithdrawals = await query(
+              `withdrawal_requests?status=in.(pending,processing)&created_at=lt.${fortyEightHoursAgo}&select=id,user_id,amount,created_at,status`
             );
 
-            for (const request of stuckMoneyOut) {
+            for (const request of stuckWithdrawals) {
               const hoursAgo = Math.round((Date.now() - new Date(request.created_at).getTime()) / (1000 * 60 * 60));
               alerts.push({
-                type: 'STUCK_MONEY_OUT',
+                type: 'STUCK_WITHDRAWAL',
                 severity: 'critical',
                 request_id: request.id,
                 user_id: request.user_id,
-                amount_ars: request.amount_cents / 100,
+                amount_ars: request.amount,
                 hours_pending: hoursAgo,
                 status: request.status,
-                message: 'Money-out request stuck in ' + request.status + ' for ' + hoursAgo + 'h',
-              });
-            }
-
-            // 4. Check pending wallet withdrawals
-            console.log('Checking pending withdrawals...');
-            const pendingWithdrawals = await query(
-              `wallet_withdrawals?status=eq.pending&created_at=lt.${fortyEightHoursAgo}&select=id,user_id,amount_cents,created_at`
-            );
-
-            for (const withdrawal of pendingWithdrawals) {
-              const hoursAgo = Math.round((Date.now() - new Date(withdrawal.created_at).getTime()) / (1000 * 60 * 60));
-              alerts.push({
-                type: 'PENDING_WITHDRAWAL',
-                severity: hoursAgo > 72 ? 'critical' : 'high',
-                withdrawal_id: withdrawal.id,
-                user_id: withdrawal.user_id,
-                amount_ars: withdrawal.amount_cents / 100,
-                hours_pending: hoursAgo,
-                message: 'Withdrawal pending for ' + hoursAgo + 'h - ARS ' +
-                  (withdrawal.amount_cents / 100).toLocaleString(),
+                message: 'Withdrawal request stuck in ' + request.status + ' for ' + hoursAgo + 'h',
               });
             }
 
