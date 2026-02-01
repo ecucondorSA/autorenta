@@ -4,6 +4,9 @@
 -- Purpose: Enable programmatic SEO landing pages for "Brand + City" combinations
 -- ============================================================================
 
+-- Required extension for slugify function
+CREATE EXTENSION IF NOT EXISTS unaccent WITH SCHEMA extensions;
+
 BEGIN;
 
 -- 1. Helper function to slugify text
@@ -13,7 +16,7 @@ LANGUAGE sql
 IMMUTABLE
 STRICT
 AS $$
-  SELECT trim(both '-' from regexp_replace(lower(unaccent(value)), '[^a-z0-9]+', '-', 'g'));
+  SELECT trim(both '-' from regexp_replace(lower(extensions.unaccent(value)), '[^a-z0-9]+', '-', 'g'));
 $$;
 
 -- 2. Materialized View for SEO Pages
