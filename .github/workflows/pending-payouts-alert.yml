@@ -60,7 +60,7 @@ jobs:
             // 1. Check pending owner payouts (bookings completed but not paid out)
             console.log('Checking pending owner payouts...');
             const completedBookings = await query(
-              `bookings?status=eq.completed&completion_status=eq.both_confirmed&updated_at=lt.${fortyEightHoursAgo}&select=id,owner_id,total_amount_ars,updated_at`
+              `bookings?status=eq.completed&completion_status=eq.both_confirmed&updated_at=lt.${fortyEightHoursAgo}&select=id,owner_id,total_amount,updated_at`
             );
 
             // Check which ones don't have a corresponding payout
@@ -76,7 +76,7 @@ jobs:
                   severity: hoursAgo > 72 ? 'critical' : 'high',
                   booking_id: booking.id,
                   owner_id: booking.owner_id,
-                  amount_ars: booking.total_amount_ars,
+                  amount_ars: booking.total_amount,
                   hours_pending: hoursAgo,
                   message: 'Booking ' + booking.id.substring(0, 8) + '... completed ' + hoursAgo + 'h ago, owner not paid',
                 });
@@ -86,7 +86,7 @@ jobs:
             // 2. Check pending deposit refunds
             console.log('Checking pending deposit refunds...');
             const pendingRefunds = await query(
-              `bookings?status=eq.completed&deposit_status=eq.pending_refund&updated_at=lt.${fortyEightHoursAgo}&select=id,renter_id,deposit_amount_ars,updated_at`
+              `bookings?status=eq.completed&deposit_status=eq.pending_refund&updated_at=lt.${fortyEightHoursAgo}&select=id,renter_id,deposit_amount_cents,updated_at`
             );
 
             for (const booking of pendingRefunds) {
@@ -96,7 +96,7 @@ jobs:
                 severity: hoursAgo > 72 ? 'critical' : 'high',
                 booking_id: booking.id,
                 renter_id: booking.renter_id,
-                amount_ars: booking.deposit_amount_ars,
+                amount_ars: (booking.deposit_amount_cents || 0) / 100,
                 hours_pending: hoursAgo,
                 message: 'Deposit refund pending for ' + hoursAgo + 'h - Booking ' + booking.id.substring(0, 8) + '...',
               });
