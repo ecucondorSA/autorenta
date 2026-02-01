@@ -29,13 +29,28 @@ jobs:
             const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
             const query = async (endpoint) => {
+              console.log(`Querying: ${endpoint.split('&')[0]}...`);
               const res = await fetch(supabaseUrl + '/rest/v1/' + endpoint, {
                 headers: {
                   'apikey': supabaseKey,
                   'Authorization': 'Bearer ' + supabaseKey,
                 }
               });
-              return res.json();
+              
+              if (!res.ok) {
+                const text = await res.text();
+                console.error(`API Error (${res.status}): ${text}`);
+                throw new Error(`Supabase API failed: ${res.status} ${res.statusText}`);
+              }
+
+              const data = await res.json();
+              
+              if (!Array.isArray(data)) {
+                 console.error('Unexpected response format (not array):', JSON.stringify(data));
+                 throw new Error('API response is not an array');
+              }
+              
+              return data;
             };
 
             const alerts = [];

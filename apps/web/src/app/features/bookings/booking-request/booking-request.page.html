@@ -135,6 +135,16 @@
                   }
                 </div>
               </div>
+              
+              <!-- Telemetry Badge (New) -->
+              @if (car()?.has_telemetry) {
+                <div class="absolute top-4 right-4">
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-md shadow-lg">
+                    <svg class="w-3 h-3 text-emerald-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">GPS Protegido</span>
+                  </div>
+                </div>
+              }
             </div>
           </section>
 
@@ -142,7 +152,7 @@
           <section class="space-y-4">
             <h2 class="text-xl font-bold text-white font-satoshi flex items-center gap-3">
               <span class="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-800 text-zinc-400 text-sm font-bold border border-white/5">2</span>
-              Protección
+              Nivel de Protección
             </h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -158,9 +168,9 @@
                 [class.opacity-60]="coverageUpgrade() !== 'standard'">
                 
                 <div class="text-sm font-bold text-white mb-1">Estándar</div>
-                <div class="text-xs text-zinc-400 mb-3">Cobertura básica</div>
+                <div class="text-xs text-zinc-400 mb-3">Cobertura Esencial</div>
                 <div class="text-lg font-mono font-bold text-white mb-1">USD 0</div>
-                <div class="text-[10px] text-zinc-500 uppercase tracking-wider">Franquicia: ${{ riskSnapshot()?.deductibleUsd }}</div>
+                <div class="text-[10px] text-zinc-500 uppercase tracking-wider">Deducible: ${{ riskSnapshot()?.deductibleUsd }}</div>
               </button>
 
               <!-- Premium -->
@@ -175,9 +185,9 @@
                 [class.opacity-80]="coverageUpgrade() !== 'premium50'">
                 
                 <div class="text-sm font-bold text-white mb-1">Premium</div>
-                <div class="text-xs text-zinc-400 mb-3">Reduce franquicia 50%</div>
+                <div class="text-xs text-zinc-400 mb-3">Responsabilidad Reducida</div>
                 <div class="text-lg font-mono font-bold text-brand-primary mb-1">+ ${{ rentalCostUsd() * 0.10 | number:'1.0-0' }}</div>
-                <div class="text-[10px] text-zinc-500 uppercase tracking-wider">Franquicia: ${{ (riskSnapshot()?.deductibleUsd || 0) * 0.5 | number:'1.0-0' }}</div>
+                <div class="text-[10px] text-zinc-500 uppercase tracking-wider">Deducible: ${{ (riskSnapshot()?.deductibleUsd || 0) * 0.5 | number:'1.0-0' }}</div>
               </button>
 
               <!-- Zero -->
@@ -198,9 +208,9 @@
                   <div class="text-sm font-bold text-white mb-1">Zero Risk</div>
                   <span class="bg-brand-primary text-black text-[10px] font-bold px-1.5 py-0.5 rounded">POPULAR</span>
                 </div>
-                <div class="text-xs text-zinc-400 mb-3">Viaja sin preocupaciones</div>
+                <div class="text-xs text-zinc-400 mb-3">Protección Patrimonial Total</div>
                 <div class="text-lg font-mono font-bold text-brand-primary mb-1">+ ${{ rentalCostUsd() * 0.20 | number:'1.0-0' }}</div>
-                <div class="text-[10px] text-zinc-500 uppercase tracking-wider font-bold">Franquicia: $0</div>
+                <div class="text-[10px] text-zinc-500 uppercase tracking-wider font-bold">Deducible: $0</div>
               </button>
             </div>
           </section>
@@ -229,12 +239,12 @@
                   @if (paymentMode() === 'card') { <div class="w-4 h-4 rounded-full bg-brand-primary shadow-[0_0_10px_#39FF14]"></div> }
                 </div>
                 
-                <h3 class="font-bold text-white mb-1">Garantía con Tarjeta</h3>
-                <p class="text-xs text-zinc-400 mb-3 min-h-[2.5em]">Autorizas una garantía temporal. <span class="text-brand-primary font-bold">Se libera íntegramente</span> al finalizar el uso.</p>
+                <h3 class="font-bold text-white mb-1">Colateral Bancario</h3>
+                <p class="text-xs text-zinc-400 mb-3 min-h-[2.5em]">Autorizas una retención temporal. <span class="text-brand-primary font-bold">Se libera íntegramente</span> al finalizar el uso.</p>
                 
                 <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-zinc-950 border border-white/10 text-[10px] text-zinc-400">
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                  Garantía: USD {{ riskSnapshot()?.holdEstimatedUsd | number:'1.0-0' }}
+                  Fondo de Garantía: USD {{ riskSnapshot()?.holdEstimatedUsd | number:'1.0-0' }}
                 </div>
               </button>
               
@@ -254,15 +264,36 @@
                   @if (paymentMode() === 'wallet') { <div class="w-4 h-4 rounded-full bg-emerald-500 shadow-[0_0_10px_#10B981]"></div> }
                 </div>
                 
-                <h3 class="font-bold text-white mb-1">Membresía Club</h3>
-                <p class="text-xs text-zinc-400 mb-3 min-h-[2.5em]">Aporte anual de socio. <span class="text-amber-500 font-bold">Cero garantías</span>; la comunidad respalda tu uso compartido.</p>
+                <h3 class="font-bold text-white mb-1">Acceso Club Preferente</h3>
+                <p class="text-xs text-zinc-400 mb-3 min-h-[2.5em]">Tu estatus de socio es tu aval. <span class="text-amber-500 font-bold">Libera tu liquidez</span> y evita bloqueos bancarios.</p>
                 
-                <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-zinc-950 border border-white/10 text-[10px] text-zinc-400">
-                  <svg class="w-3 h-3 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  Respaldo hasta USD 20,000
+                <div class="flex flex-wrap gap-2">
+                  <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-zinc-950 border border-white/10 text-[10px]"
+                    [class.text-emerald-400]="discountApplied()"
+                    [class.text-zinc-400]="!discountApplied()">
+                    <svg class="w-3 h-3" [class.text-emerald-500]="discountApplied()" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    {{ discountApplied() ? 'Confianza Certificada' : 'Garantía Estándar' }}
+                  </div>
+                  
+                  @if (discountApplied()) {
+                    <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-500/20 border border-emerald-500/30 text-[10px] text-emerald-300 font-bold uppercase tracking-wider">
+                      Beneficio Club
+                    </div>
+                  }
                 </div>
               </button>
             </div>
+
+            <!-- Eligibility Warning (If subscriber but no discount) -->
+            @if (subscriptionService.tier() && !discountApplied() && paymentMode() === 'wallet') {
+              <div class="mb-6 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl flex items-start gap-3">
+                <svg class="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <div>
+                  <p class="text-xs font-bold text-yellow-200">Garantía reducida no disponible</p>
+                  <p class="text-[11px] text-yellow-200/70">{{ eligibilityReason() }}</p>
+                </div>
+              </div>
+            }
 
             <!-- Guarantee Explanation Box -->
             <div class="bg-zinc-900/80 border border-white/10 rounded-2xl p-6">
@@ -294,8 +325,8 @@
                 <div class="mb-4 flex items-start gap-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl">
                   <svg class="w-5 h-5 text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                   <div>
-                    <p class="text-sm text-amber-200 font-medium">Estás usando tu saldo para pagar la membresía.</p>
-                    <p class="text-xs text-amber-300/80 mt-1">Este monto se descuenta de tu wallet y <strong>no se devuelve</strong>. Es el costo de acceder a la cobertura anual del Club.</p>
+                    <p class="text-sm text-amber-200 font-medium">Estás usando tu saldo para elevar tu nivel de confianza.</p>
+                    <p class="text-xs text-amber-300/80 mt-1">Esta inversión anual desbloquea <strong>alquileres sin depósito</strong> y acceso prioritario.</p>
                   </div>
                 </div>
 
@@ -309,7 +340,7 @@
                     <div class="space-y-4">
                       <div class="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                        Saldo insuficiente para la suscripción.
+                        Capital insuficiente para activar membresía.
                       </div>
                       
                       <a routerLink="/wallet" class="w-full py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors border border-white/10">
@@ -320,7 +351,7 @@
                   } @else {
                     <div class="text-green-500 text-sm flex items-center gap-2">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                      Saldo suficiente para pagar membresía.
+                      Saldo suficiente para activar membresía.
                     </div>
                   }
                 </div>
@@ -347,7 +378,7 @@
               <!-- Glow Effect -->
               <div class="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-3xl pointer-events-none rounded-full -mr-32 -mt-32"></div>
 
-              <h3 class="text-lg font-bold text-white font-satoshi mb-6">Resumen de aportes</h3>
+              <h3 class="text-lg font-bold text-white font-satoshi mb-6">Resumen de inversión</h3>
 
               <div class="space-y-3 mb-6">
                 <div class="flex justify-between text-sm text-zinc-400">
@@ -357,7 +388,7 @@
                 
                 @if (coverageUpgradeCostUsd() > 0) {
                   <div class="flex justify-between text-sm text-brand-primary">
-                    <span>Compensación de seguridad {{ getCoverageName(coverageUpgrade()) }}</span>
+                    <span>Upgrade de Protección {{ getCoverageName(coverageUpgrade()) }}</span>
                     <span class="font-mono">USD {{ coverageUpgradeCostUsd() | number:'1.2-2' }}</span>
                   </div>
                 }
@@ -365,7 +396,7 @@
                 <div class="h-px bg-white/10 my-2"></div>
 
                 <div class="flex justify-between items-baseline">
-                  <span class="text-base font-bold text-white">Aporte total estimado</span>
+                  <span class="text-base font-bold text-white">Inversión total del viaje</span>
                   <span class="text-2xl font-black text-brand-primary font-satoshi">USD {{ totalRentalUsd() | number:'1.2-2' }}</span>
                 </div>
                 <p class="text-xs text-zinc-500 text-right mt-1">Se acredita al finalizar el uso</p>

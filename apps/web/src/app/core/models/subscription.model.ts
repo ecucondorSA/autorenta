@@ -3,18 +3,12 @@
  * Interfaces para el sistema de membresía Autorentar Club
  *
  * Created: 2026-01-06
- * Updated: 2026-01-07
+ * Updated: 2026-02-01 (Tiered Guarantee Model)
  *
  * Tiers basados en valor del vehículo:
- * - Club Access ($300/año, $800 FGO cap) - Autos < $20,000
- * - Silver Access ($600/año, $1,200 FGO cap) - Autos $20,000 - $40,000
- * - Black Access ($1,200/año, $2,000 FGO cap) - Autos > $40,000
- *
- * Preautorizaciones (Hold de tarjeta):
- * - Economy: $1,000
- * - Standard: $2,500
- * - Luxury: $5,000
- * - Fórmula alternativa: Valor del auto * 10%
+ * - Club Access ($14.99/mes) - Autos < $20,000
+ * - Silver Access ($29.99/mes) - Autos $20,000 - $40,000
+ * - Black Access ($59.99/mes) - Autos > $40,000
  */
 
 import type { Database, SubscriptionTier } from '@core/types/database.types';
@@ -160,40 +154,40 @@ export const VEHICLE_VALUE_THRESHOLDS = {
 } as const;
 
 /**
- * Preauthorization formula: 5% of vehicle value
+ * Preauthorization formula: 5% of vehicle value (Deprecated as primary logic)
  */
 export const PREAUTH_PERCENTAGE = 0.05;
 
 /**
  * Tier configurations (matches v_subscription_tiers view)
  *
- * IMPORTANTE: Los tiers están basados en el VALOR del vehículo, no en su categoría.
- * Esto asegura que el riesgo financiero esté correctamente cubierto.
+ * IMPORTANTE: Los tiers están basados en el VALOR del vehículo.
+ * Definimos Holds agresivamente bajos para suscriptores para incentivar la conversión.
  */
 export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig> = {
   club_standard: {
     tier: 'club_standard',
     name: 'Club Access',
     description: 'Para autos económicos (valor < $20,000)',
-    price_cents: 30000,
-    price_usd: 300,
+    price_cents: 1499, // $14.99
+    price_usd: 14.99,
     coverage_limit_cents: 80000,
     coverage_limit_usd: 800,
     fgo_cap_cents: 80000,
     fgo_cap_usd: 800,
     min_vehicle_value_usd: 0,
     max_vehicle_value_usd: 20000,
-    preauth_hold_cents: 100000, // $1,000 sin suscripción
-    preauth_hold_usd: 1000,
-    preauth_with_subscription_cents: 50000, // $500 con suscripción
-    preauth_with_subscription_usd: 500,
+    preauth_hold_cents: 60000, // $600 sin suscripción (Garantía Standard)
+    preauth_hold_usd: 600,
+    preauth_with_subscription_cents: 30000, // $300 con suscripción (50% OFF)
+    preauth_with_subscription_usd: 300,
     target_segment: 'Autos con valor < $20,000',
     features: [
-      'Cobertura FGO hasta USD $800 por evento',
-      'Válido por 1 año desde la activación',
+      'Garantía reducida al 50% ($300 USD)',
+      'Seguro de Franquicia incluido (cubrimos el gap)',
+      'Válido por 1 mes renovable',
       'Uso ilimitado de reservas en autos económicos',
-      'Preautorización: 5% del valor del auto',
-      'Sin cargos ocultos ni auto-renovación',
+      'Sin cargos ocultos',
       'Soporte prioritario 24/7',
     ],
   },
@@ -201,25 +195,25 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
     tier: 'club_black',
     name: 'Silver Access',
     description: 'Para autos de gama media (valor $20,000 - $40,000)',
-    price_cents: 60000,
-    price_usd: 600,
+    price_cents: 2999, // $29.99
+    price_usd: 29.99,
     coverage_limit_cents: 120000,
     coverage_limit_usd: 1200,
     fgo_cap_cents: 120000,
     fgo_cap_usd: 1200,
     min_vehicle_value_usd: 20000,
     max_vehicle_value_usd: 40000,
-    preauth_hold_cents: 250000, // $2,500 sin suscripción
-    preauth_hold_usd: 2500,
-    preauth_with_subscription_cents: 80000, // $800 con suscripción
-    preauth_with_subscription_usd: 800,
+    preauth_hold_cents: 120000, // $1,200 sin suscripción
+    preauth_hold_usd: 1200,
+    preauth_with_subscription_cents: 50000, // $500 con suscripción (~60% OFF)
+    preauth_with_subscription_usd: 500,
     target_segment: 'Autos con valor $20,000 - $40,000',
     features: [
-      'Cobertura FGO hasta USD $1,200 por evento',
-      'Válido por 1 año desde la activación',
+      'Garantía reducida ($500 USD)',
+      'Seguro de Franquicia incluido (cubrimos el gap)',
+      'Válido por 1 mes renovable',
       'Acceso a autos económicos y de gama media',
-      'Preautorización: 5% del valor del auto',
-      'Sin cargos ocultos ni auto-renovación',
+      'Sin cargos ocultos',
       'Soporte VIP prioritario 24/7',
     ],
   },
@@ -227,25 +221,25 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
     tier: 'club_luxury',
     name: 'Black Access',
     description: 'Para autos premium y de lujo (valor > $40,000)',
-    price_cents: 120000,
-    price_usd: 1200,
+    price_cents: 5999, // $59.99
+    price_usd: 59.99,
     coverage_limit_cents: 200000,
     coverage_limit_usd: 2000,
     fgo_cap_cents: 200000,
     fgo_cap_usd: 2000,
     min_vehicle_value_usd: 40000,
     max_vehicle_value_usd: null, // Sin límite superior
-    preauth_hold_cents: 500000, // $5,000 sin suscripción
-    preauth_hold_usd: 5000,
-    preauth_with_subscription_cents: 100000, // $1,000 con suscripción
-    preauth_with_subscription_usd: 1000,
+    preauth_hold_cents: 250000, // $2,500 sin suscripción
+    preauth_hold_usd: 2500,
+    preauth_with_subscription_cents: 120000, // $1,200 con suscripción (50% OFF)
+    preauth_with_subscription_usd: 1200,
     target_segment: 'Autos con valor > $40,000',
     features: [
-      'Cobertura FGO hasta USD $2,000 por evento',
-      'Válido por 1 año desde la activación',
+      'Garantía reducida ($1,200 USD)',
+      'Seguro de Franquicia Premium',
+      'Válido por 1 mes renovable',
       'Acceso a TODA la flota (incluyendo lujo)',
-      'Preautorización: 5% del valor del auto',
-      'Sin cargos ocultos ni auto-renovación',
+      'Sin cargos ocultos',
       'Soporte VIP exclusivo 24/7',
       'Prioridad en reservas de vehículos premium',
     ],
@@ -466,18 +460,36 @@ export function calculatePreauthorization(
   const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
   const tierConfig = SUBSCRIPTION_TIERS[requiredTier];
 
-  // Base hold: 5% del valor del auto (sin mínimos por tier)
-  const formulaHoldCents = Math.round(vehicleValueUsd * PREAUTH_PERCENTAGE * 100);
-  const baseHoldCents = formulaHoldCents;
-  const baseHoldUsd = baseHoldCents / 100;
+  // 1. Calculate Base Hold (Non-Subscriber Price)
+  // We use the fixed value from configuration, which is designed to be the "Liquid Guarantee"
+  const baseHoldUsd = tierConfig.preauth_hold_usd;
+  const baseHoldCents = tierConfig.preauth_hold_cents;
 
-  const holdAmountCents = baseHoldCents;
-  const discountApplied = false;
-  const discountReason = undefined;
+  let holdAmountUsd = baseHoldUsd;
+  let holdAmountCents = baseHoldCents;
+  let discountApplied = false;
+  let discountReason: string | undefined = undefined;
+
+  // 2. Check for Subscription Discount
+  if (userTier) {
+    // Check if user's tier is high enough for this car
+    const accessCheck = canAccessVehicle(userTier, vehicleValueUsd);
+    
+    if (accessCheck.allowed && accessCheck.userTier) { 
+       // Verify hierarchy is sufficient
+       const hierarchy: Record<SubscriptionTier, number> = { club_standard: 1, club_black: 2, club_luxury: 3 };
+       if (hierarchy[userTier] >= hierarchy[requiredTier]) {
+          holdAmountUsd = tierConfig.preauth_with_subscription_usd;
+          holdAmountCents = tierConfig.preauth_with_subscription_cents;
+          discountApplied = true;
+          discountReason = `Beneficio Suscriptor ${SUBSCRIPTION_TIERS[userTier].name}`;
+       }
+    }
+  }
 
   return {
     holdAmountCents,
-    holdAmountUsd: holdAmountCents / 100,
+    holdAmountUsd,
     baseHoldCents,
     baseHoldUsd,
     discountApplied,
@@ -485,80 +497,7 @@ export function calculatePreauthorization(
     requiredTier,
     fgoCap: tierConfig.fgo_cap_usd,
     formula: discountApplied
-      ? `Hold reducido con ${SUBSCRIPTION_TIERS[userTier!].name}`
-      : `Hold = ${vehicleValueUsd} × 5%`,
-  };
-}
-
-/**
- * Get upgrade recommendation if user's tier is insufficient
- */
-export interface UpgradeRecommendation {
-  shouldUpgrade: boolean;
-  currentTier: SubscriptionTier | null;
-  recommendedTier: SubscriptionTier;
-  currentHoldUsd: number;
-  upgradedHoldUsd: number;
-  savingsUsd: number;
-  upgradeCostUsd: number;
-  breakEvenTrips: number;
-}
-
-export function getUpgradeRecommendation(
-  vehicleValueUsd: number,
-  currentTier: SubscriptionTier | null,
-): UpgradeRecommendation {
-  const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
-  const requiredConfig = SUBSCRIPTION_TIERS[requiredTier];
-
-  const currentPreauth = calculatePreauthorization(vehicleValueUsd, currentTier);
-  const upgradedPreauth = calculatePreauthorization(vehicleValueUsd, requiredTier);
-
-  const savingsPerTrip = currentPreauth.holdAmountUsd - upgradedPreauth.holdAmountUsd;
-  const upgradeCost = currentTier
-    ? requiredConfig.price_usd - SUBSCRIPTION_TIERS[currentTier].price_usd
-    : requiredConfig.price_usd;
-
-  // How many trips to break even (savings in blocked credit limit)
-  // This is a bit abstract since it's not actual savings but reduced credit hold
-  const breakEvenTrips = savingsPerTrip > 0 ? Math.ceil(upgradeCost / (savingsPerTrip * 0.1)) : 999;
-
-  const tierHierarchy: Record<SubscriptionTier, number> = {
-    club_standard: 1,
-    club_black: 2,
-    club_luxury: 3,
-  };
-
-  const shouldUpgrade =
-    !currentTier || (currentTier && tierHierarchy[currentTier] < tierHierarchy[requiredTier]);
-
-  return {
-    shouldUpgrade,
-    currentTier,
-    recommendedTier: requiredTier,
-    currentHoldUsd: currentPreauth.holdAmountUsd,
-    upgradedHoldUsd: upgradedPreauth.holdAmountUsd,
-    savingsUsd: savingsPerTrip,
-    upgradeCostUsd: upgradeCost,
-    breakEvenTrips,
-  };
-}
-
-/**
- * Format preauthorization info for display
- */
-export function formatPreauthorizationInfo(preauth: PreauthorizationCalculation): {
-  holdDisplay: string;
-  baseDisplay: string;
-  discountDisplay: string | null;
-  fgoCapDisplay: string;
-} {
-  return {
-    holdDisplay: `$${preauth.holdAmountUsd.toLocaleString('en-US')} USD`,
-    baseDisplay: `$${preauth.baseHoldUsd.toLocaleString('en-US')} USD`,
-    discountDisplay: preauth.discountApplied
-      ? `Descuento aplicado: ${preauth.discountReason}`
-      : null,
-    fgoCapDisplay: `Cobertura FGO máxima: $${preauth.fgoCap} USD`,
+      ? `Garantía Reducida (${SUBSCRIPTION_TIERS[userTier!].name})`
+      : `Garantía Estándar (${tierConfig.name})`,
   };
 }

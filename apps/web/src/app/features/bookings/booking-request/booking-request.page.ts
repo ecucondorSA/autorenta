@@ -24,6 +24,7 @@ import { PaymentAuthorizationService } from '@core/services/payments/payment-aut
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import { EmailVerificationService } from '@core/services/auth/email-verification.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
+import { RiskCalculatorServiceV2 } from '@core/services/verification/risk-calculator-v2.service'; // V2
 
 // Models
 import {
@@ -95,6 +96,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   readonly subscriptionService = inject(SubscriptionService);
   private emailVerificationService = inject(EmailVerificationService);
   private distanceCalculator = inject(DistanceCalculatorService);
+  private riskCalculatorV2 = inject(RiskCalculatorServiceV2); // Inject V2
   private supabaseClient = inject(SupabaseClientService).getClient();
   private logger = inject(LoggerService).createChildLogger('BookingRequestPage');
 
@@ -118,6 +120,11 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   readonly riskSnapshot = signal<RiskSnapshot | null>(null);
   readonly subscriptionCoverage = signal<SubscriptionCoverageCheck | null>(null);
   readonly preauthCalculation = signal<PreauthorizationCalculation | null>(null);
+  
+  // V2 UI Feedback Signals
+  readonly discountApplied = signal(false);
+  readonly eligibilityReason = signal<string>('');
+
   readonly currentAuthorization = signal<PaymentAuthorization | null>(null);
   readonly currentUserId = signal<string>('');
 
@@ -793,34 +800,41 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   private async calculateRiskSnapshot(): Promise<void> {
     const fx = this.fxSnapshot();
     const car = this.car();
+    const userId = this.currentUserId();
 
-    if (!fx || !car) return;
+    if (!fx || !car || !userId) return;
 
     const vehicleValueUsd = car.value_usd || Math.round(car.price_per_day * 125);
+    const hasTelemetry = car.has_telemetry || false;
+    const userTier = this.subscriptionService.tier();
 
-    const preauth =
-      await this.subscriptionService.calculatePreauthorizationForVehicle(vehicleValueUsd);
-    this.preauthCalculation.set(preauth);
-
-    const standardDeductibleUsd = Math.round(vehicleValueUsd * 0.05);
-    const rolloverDeductibleUsd = standardDeductibleUsd * 2;
-
-    const coverage = await this.subscriptionService.checkCoverage(
-      Math.round(standardDeductibleUsd * 100),
+    // V2 RISK CALCULATION
+    const riskV2 = await this.riskCalculatorV2.calculateRisk(
+      vehicleValueUsd,
+      hasTelemetry,
+      fx.platformRate,
+      userId,
+      userTier
     );
-    this.subscriptionCoverage.set(coverage);
 
-    const holdEstimatedUsd = preauth.holdAmountUsd;
-    const holdEstimatedArs = holdEstimatedUsd * fx.platformRate;
+    // Update Signals for UI Feedback
+    this.discountApplied.set(riskV2.discountApplied);
+    this.eligibilityReason.set(riskV2.eligibilityReason || '');
+
+    // Construct RiskSnapshot for compatibility
+    const standardDeductibleUsd = Math.round(vehicleValueUsd * 0.05); // Estimate
+    
+    // We maintain 'holdEstimatedUsd' to drive the logic downstream
+    const holdEstimatedUsd = riskV2.guaranteeAmountUsd;
+    const holdEstimatedArs = riskV2.guaranteeAmountArs;
 
     const riskSnapshot: RiskSnapshot = {
       deductibleUsd: standardDeductibleUsd,
-      rolloverDeductibleUsd: rolloverDeductibleUsd,
+      rolloverDeductibleUsd: standardDeductibleUsd * 2,
       holdEstimatedArs,
       holdEstimatedUsd,
       creditSecurityUsd: holdEstimatedUsd,
-      bucket:
-        vehicleValueUsd < 20000 ? 'economy' : vehicleValueUsd < 40000 ? 'standard' : 'premium',
+      bucket: riskV2.appliedTier === 'club_luxury' ? 'premium' : riskV2.appliedTier === 'club_black' ? 'standard' : 'economy', // Map back to old buckets roughly
       vehicleValueUsd,
       country: 'AR',
       fxRate: fx.platformRate,
@@ -829,11 +843,11 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     };
 
     this.riskSnapshot.set(riskSnapshot);
-    this.logger.info('Risk snapshot updated with subscription benefits', {
+    this.logger.info('Risk snapshot updated via Engine V2', {
       holdEstimatedUsd,
-      discountApplied: preauth.discountApplied,
-      coverageType: coverage.coverage_type,
-      coverageUpgrade: this.coverageUpgrade(),
+      discountApplied: riskV2.discountApplied,
+      eligibilityReason: riskV2.eligibilityReason,
+      hasTelemetry
     });
   }
 

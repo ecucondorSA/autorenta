@@ -129,6 +129,11 @@ export interface Car {
   insurance_company?: string | null;
   insurance_expiration?: string | null;
 
+  // Telemetry & Security (Underwriting Gates)
+  has_telemetry?: boolean;
+  telemetry_provider?: string | null;
+  kill_switch_enabled?: boolean;
+
   // BYOI Insurance Verification (mandatory for pilot)
   insurance_status?: InsuranceVerificationStatus;
   insurance_document_url?: string | null;

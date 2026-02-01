@@ -98,8 +98,11 @@ export class RiskCalculatorService {
     let guaranteeMultiplier = 1.0;
     let driverClass: number | undefined;
     let guaranteeDiscountPct: number | undefined;
-    let totalTrips = 0;
-
+    
+    // AutoRenta Philosophy: Everyone starts clean.
+    // If we don't know them (New User / No Profile), we don't punish them with multipliers.
+    // We trust in the collateral (Wallet Lock).
+    
     if (userId) {
       try {
         const { data, error } = await this.supabase.rpc('get_driver_profile', {
@@ -111,32 +114,15 @@ export class RiskCalculatorService {
           guaranteeMultiplier = profile.guarantee_multiplier || 1.0;
           driverClass = profile.class;
           guaranteeDiscountPct = Math.round((1.0 - guaranteeMultiplier) * 100);
-          totalTrips = profile.total_trips || 0;
-        } else {
-          // SECURITY HARDENING: New user (no profile) starts with 2.0x guarantee
-          guaranteeMultiplier = 2.0;
-          driverClass = 0;
-          console.warn(
-            '[RiskCalculatorService] Nuevo usuario detectado. Aplicando multiplicador de riesgo 2.0x',
-          );
-        }
+        } 
       } catch (err) {
-        console.warn(
-          '[RiskCalculatorService] Error al obtener perfil de conductor, aplicando default conservador:',
-          err,
-        );
-        guaranteeMultiplier = 2.0;
+        console.warn('[RiskCalculator] Error fetching profile, using standard 1.0x:', err);
       }
     }
 
-    // SECURITY HARDENING: Block luxury cars for new users
-    if (totalTrips < 3 && (bucket === 'luxury' || bucket === 'ultra-luxury')) {
-      throw new Error(
-        'Lo sentimos, para alquilar vehículos de esta categoría necesitas haber completado al menos 3 reservas exitosas en la plataforma.',
-      );
-    }
-
     // Determinar tipo de garantía
+    // Si tiene tarjeta, preferimos HOLD (es menos fricción financiera para el usuario).
+    // Si NO tiene tarjeta, usamos WALLET LOCK (Garantía Líquida).
     const guaranteeType: 'hold' | 'security_credit' = hasCard ? 'hold' : 'security_credit';
 
     let baseGuaranteeAmountUsd = 0;
@@ -144,19 +130,28 @@ export class RiskCalculatorService {
     let guaranteeAmountUsd = 0;
 
     if (hasCard) {
-      // Hold en ARS (preautorización)
+      // Opción A: Tiene Tarjeta (Bancarizado)
+      // Usamos el Hold estándar calculado por la tabla de franquicias.
       const baseHoldArs = franchiseInfo.holdArs;
       guaranteeAmountArs = Math.round(baseHoldArs * guaranteeMultiplier);
       baseGuaranteeAmountUsd = Math.round((baseHoldArs / fxRate) * 100) / 100;
       guaranteeAmountUsd = Math.round((guaranteeAmountArs / fxRate) * 100) / 100;
     } else {
-      // Crédito de Seguridad en USD (wallet)
-      baseGuaranteeAmountUsd = franchiseInfo.securityCreditUsd;
+      // Opción B: No Bancarizado / Crypto / Cash (El camino Inclusivo)
+      // "Garantía Líquida": Deben tener en su Wallet el equivalente a la Franquicia Estándar.
+      // Esto protege al dueño al 100% (cash is king) sin discriminar al usuario por su historial.
+      
+      baseGuaranteeAmountUsd = franchiseInfo.standardUsd; // Ej: 500 USD para un auto Standard
+      
+      // Aplicamos multiplicador si el usuario tiene mal comportamiento PROBADO en la plataforma.
+      // Si es nuevo (desconocido), el multiplicador es 1.0 (Tabula Rasa).
       guaranteeAmountUsd = Math.round(baseGuaranteeAmountUsd * guaranteeMultiplier * 100) / 100;
+      
+      // Convertimos a ARS para referencia visual, pero el lock es en USD/Tokens
       guaranteeAmountArs = Math.round(guaranteeAmountUsd * fxRate);
     }
 
-    // Revalidación
+    // Revalidación (lógica existente)
     let requiresRevalidation = false;
     if (existingSnapshot) {
       const daysSince = Math.floor(

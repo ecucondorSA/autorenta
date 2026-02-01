@@ -553,10 +553,10 @@ serve(async (req) => {
     let rewardPoolAmount: number;
     let fgoAmount: number;
 
-    // AUTORENTA (Solo Comodato): 15% platform, 75% reward pool, 10% FGO, 0% owner
+    // AUTORENTA (Solo Comodato): 15% platform, 70% reward pool, 15% FGO, 0% owner
     platformFee = Math.round(totalAmount * 0.15 * 100) / 100;
-    rewardPoolAmount = Math.round(totalAmount * 0.75 * 100) / 100;
-    fgoAmount = Math.round((totalAmount - platformFee - rewardPoolAmount) * 100) / 100; // ~10%
+    rewardPoolAmount = Math.round(totalAmount * 0.70 * 100) / 100;
+    fgoAmount = Math.round((totalAmount - platformFee - rewardPoolAmount) * 100) / 100; // ~15%
     ownerAmount = 0; // Owner recibe rewards mensuales, no pago directo
 
     log.info('[COMODATO] Payment distribution:', {

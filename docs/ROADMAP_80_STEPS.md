@@ -72,7 +72,7 @@ Este documento detalla la hoja de ruta estratégica para transformar AutoRenta d
 > **Objetivo:** Convertir la plataforma en una billetera digital y optimizar el flujo de dinero.
 
 41. ✅ **AutoRenta Wallet:** Billetera virtual completa (ingresar, retirar, transferir saldo).
-42. ⬜ **Split Payments:** División automática de pagos en tiempo real (Comisión -> Nosotros, Resto -> Dueño).
+42. ✅ **Split Payments:** División automática de pagos (15% Platform, 70% Pool, 15% FGO).
 43. ⬜ **Seguros On-Demand:** Contratación de seguro por día vía API con aseguradora partner.
 44. ⬜ **Micro-Créditos:** Adelanto de ganancias a dueños o financiación de viajes a conductores.
 45. ⬜ **Cashback System:** Recompensas en saldo por buen comportamiento o frecuencia.
