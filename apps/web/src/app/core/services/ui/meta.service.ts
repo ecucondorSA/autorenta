@@ -40,7 +40,7 @@ export class MetaService {
     keywords: 'alquiler autos, rent a car, argentina, uruguay, autorentar',
     author: 'AutoRenta',
     ogType: 'website',
-    ogImage: 'https://autorenta-web.pages.dev/assets/images/autorentar-logo.png',
+    ogImage: 'https://autorentar.com/assets/images/autorentar-logo.png',
     twitterCard: 'summary_large_image',
   };
 
@@ -169,7 +169,7 @@ export class MetaService {
       ogTitle: car.title,
       ogDescription: `Alquila este auto desde $${priceFormatted} por día. ${car.description.substring(0, 100)}`,
       ogImage: car.main_photo_url || this.defaultConfig.ogImage,
-      ogUrl: `https://autorenta-web.pages.dev/cars/${car.id}`,
+      ogUrl: `https://autorentar.com/cars/${car.id}`,
       twitterCard: 'summary_large_image',
       canonical: `/cars/${car.id}`,
     });
@@ -253,7 +253,7 @@ export class MetaService {
       document.head.appendChild(link);
     }
 
-    const baseUrl = 'https://autorenta-web.pages.dev';
+    const baseUrl = 'https://autorentar.com';
     link.setAttribute('href', `${baseUrl}${url}`);
   }
 
@@ -300,18 +300,27 @@ export class MetaService {
     id: string;
     rating_avg?: number;
     rating_count?: number;
+    brand?: string;
+    model?: string;
+    year?: number;
   }): void {
-    this.addStructuredData('Product', {
+    this.addStructuredData('Vehicle', {
       name: car.title,
       description: car.description,
       image:
-        car.main_photo_url || 'https://autorenta-web.pages.dev/assets/images/autorentar-logo.png',
+        car.main_photo_url || 'https://autorentar.com/assets/images/autorentar-logo.png',
+      brand: {
+        '@type': 'Brand',
+        name: car.brand || 'AutoRenta',
+      },
+      model: car.model,
+      productionDate: car.year,
       offers: {
         '@type': 'Offer',
         price: (car.price_per_day / 100).toFixed(2),
         priceCurrency: car.currency,
         availability: 'https://schema.org/InStock',
-        url: `https://autorenta-web.pages.dev/cars/${car.id}`,
+        url: `https://autorentar.com/cars/${car.id}`,
       },
       aggregateRating:
         car.rating_count && car.rating_count > 0

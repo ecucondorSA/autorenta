@@ -61,6 +61,7 @@ import { VerificationBadgeComponent } from './shared/components/verification-bad
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
 import { OfflineBannerComponent } from './shared/components/offline-banner/offline-banner.component';
+import { SwipeBackDirective } from './shared/directives/swipe-back.directive';
 
 @Component({
   selector: 'app-root',
@@ -90,6 +91,7 @@ import { OfflineBannerComponent } from './shared/components/offline-banner/offli
     ClickOutsideDirective,
     DebugPanelComponent,
     OfflineBannerComponent,
+    SwipeBackDirective,
   ],
   templateUrl: './app.component.html',
   styles: [

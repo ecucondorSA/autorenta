@@ -18,12 +18,22 @@
 
     <!-- Real Image -->
     @if (displayImage(); as img) {
-      <img
-        [src]="img.url"
-        [alt]="img.alt"
-        loading="lazy"
-        class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-      />
+      @if (isBase64Image(img.url)) {
+        <img
+          [src]="img.url"
+          [alt]="img.alt"
+          loading="lazy"
+          class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        />
+      } @else {
+        <img
+          [ngSrc]="img.url"
+          [alt]="img.alt"
+          [priority]="_priority()"
+          fill
+          class="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        />
+      }
     }
 
     <!-- Gradient Overlay (Bottom) -->
@@ -99,7 +109,7 @@
     <!-- Footer: Price & CTA -->
     <div class="mt-auto pt-4 flex items-end justify-between border-t border-zinc-800/50">
       <div>
-        <p class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-0.5">Precio por día</p>
+        <p class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider mb-0.5">Aporte diario</p>
         <div class="flex items-baseline gap-1">
           <span class="text-sm font-bold text-zinc-400">USD</span>
           @if (hasValidPrice()) {
@@ -117,7 +127,7 @@
         (click)="$event.stopPropagation();" 
         [routerLink]="['/cars', car.id]"
       >
-        <span>Reservar</span>
+        <span>Solicitar uso</span>
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>

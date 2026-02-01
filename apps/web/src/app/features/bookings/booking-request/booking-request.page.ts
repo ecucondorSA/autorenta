@@ -44,7 +44,6 @@ import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skel
 
 // Components
 import { DateRangePickerComponent } from '@shared/components/date-range-picker/date-range-picker.component';
-import { CarCarouselComponent } from '@shared/components/car-carousel/car-carousel.component';
 import { DateRange } from '@core/models/marketplace.model';
 import { Car } from '../../../core/models';
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
@@ -70,13 +69,12 @@ interface BookingInputData {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    RouterLink, 
-    CardHoldPanelComponent, 
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    CardHoldPanelComponent,
     SkeletonLoaderComponent,
     DateRangePickerComponent,
-    CarCarouselComponent
   ],
   templateUrl: './booking-request.page.html',
   styleUrls: ['./booking-request.page.css'],

@@ -130,16 +130,15 @@
         <!-- Sort Dropdown -->
         <div class="relative">
           <label for="sort-order" class="sr-only">Ordenar autos por</label>
-          <select id="sort-order" [value]="sortOrder()" (change)="onSortOrderChange($event)"
-            class="select-premium bg-surface-raised border-border-default text-text-primary focus:ring-cta-default"
-            aria-label="Ordenar lista de autos">
-            <option value="distance">Más cercanos</option>
-            <option value="score">Relevancia</option>
-            <option value="price_asc">Menor precio</option>
-            <option value="price_desc">Mayor precio</option>
-            <option value="rating">Mejor valorados</option>
-          </select>
-        </div>
+                      <select id="sort-order" [value]="sortOrder()" (change)="onSortOrderChange($event)"
+                      class="select-premium bg-surface-raised border-border-default text-text-primary focus:ring-cta-default"
+                      aria-label="Ordenar lista de autos">
+                      <option value="distance">Más cercanos</option>
+                      <option value="score">Relevancia</option>
+                      <option value="price_asc">Menor aporte</option>
+                      <option value="price_desc">Mayor aporte</option>
+                      <option value="rating">Mejor valorados</option>
+                    </select>        </div>
       </div>
     </div>
 
@@ -694,16 +693,16 @@
   <div class="max-w-6xl mx-auto px-6">
     <div class="text-center mb-12">
       <span class="inline-block px-4 py-1.5 rounded-full bg-[#39FF14]/10 text-[#39FF14] font-semibold text-sm mb-4">
-        Fácil y rápido
+        Fácil y cercano
       </span>
       <h2 class="text-3xl md:text-4xl font-black font-friendly text-text-primary tracking-tight">
-        Alquila en 3 simples pasos
+        Usa un auto en 3 simples pasos
       </h2>
     </div>
 
     <!-- Ilustración del proceso -->
     <div class="flex justify-center mb-12">
-      <img src="/assets/images/design-assets/process_illustration.png" alt="Proceso: Buscar, Reservar, Conducir"
+      <img src="/assets/images/design-assets/process_illustration.png" alt="Proceso: Buscar, Solicitar, Conducir"
         class="max-w-lg w-full h-auto rounded-2xl shadow-xl" loading="lazy" />
     </div>
 
@@ -714,7 +713,7 @@
           class="w-12 h-12 bg-[#39FF14] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
           1
         </div>
-        <h3 class="font-bold text-lg mb-2">Busca tu auto</h3>
+        <h3 class="font-bold text-lg mb-2">Busca cerca tuyo</h3>
         <p class="text-gray-600 text-sm">Filtra por ubicación, fechas y tipo de vehículo</p>
       </div>
       <div class="p-6">
@@ -722,8 +721,8 @@
           class="w-12 h-12 bg-[#39FF14] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
           2
         </div>
-        <h3 class="font-bold text-lg mb-2">Reserva online</h3>
-        <p class="text-gray-600 text-sm">Pago seguro con confirmación instantánea</p>
+        <h3 class="font-bold text-lg mb-2">Solicita online</h3>
+        <p class="text-gray-600 text-sm">Garantía segura con confirmación instantánea</p>
       </div>
       <div class="p-6">
         <div

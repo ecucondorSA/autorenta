@@ -1,5 +1,4 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -98,7 +97,7 @@ interface CarDetailState {
     CommonModule,
     RouterLink,
     DateRangePickerComponent,
-
+    NgOptimizedImage,
     TranslateModule,
     MoneyPipe,
     StickyCtaMobileComponent,
@@ -1469,6 +1468,9 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       id: car.id,
       rating_avg: stats?.rating_avg,
       rating_count: stats?.reviews_count || 0,
+      brand: car.brand || car.brand_name,
+      model: car.model || car.model_name,
+      year: car.year,
     });
   }
 

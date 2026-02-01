@@ -12,9 +12,9 @@ Este documento detalla la hoja de ruta estratégica para transformar AutoRenta d
 3.  ✅ **Landing & Conversion:** Rediseño "Warm Tech" de la Home y embudo de conversión claro.
 4.  ✅ **Smart Browse:** Buscador con filtros semánticos ("SUV Toyota") y mapa interactivo.
 5.  ✅ **Checkout V1:** Flujo de reserva lineal, garantía con tarjeta/wallet y validaciones.
-6.  ⬜ **Mobile Optimization:** Ajustar "Safe Areas" (notch), gestos nativos y performance en móviles de gama baja.
-7.  ⬜ **Error Handling 2.0:** Implementar Error Boundaries globales y páginas de error (404/500) amigables.
-8.  ⬜ **SEO Técnico Básico:** Sitemap.xml dinámico, meta-tags automáticos por auto y schema.org (JSON-LD).
+6.  ✅ **Mobile Optimization:** Ajustar "Safe Areas" (notch), gestos nativos y performance en móviles de gama baja.
+7.  ✅ **Error Handling 2.0:** Implementar Error Boundaries globales y páginas de error (404/500) amigables.
+8.  ✅ **SEO Técnico Básico:** Sitemap.xml dinámico, meta-tags automáticos por auto y schema.org (JSON-LD).
 9.  ⬜ **Performance Budget:** Optimizar imágenes (WebP/AVIF), lazy loading estricto y reducir bundle inicial (<1MB).
 10. ⬜ **Monitoring Setup:** Configurar alertas de Sentry y dashboards de Supabase para monitorear salud del sistema.
 

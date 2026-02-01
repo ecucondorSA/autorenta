@@ -3,6 +3,7 @@ import { AuthGuard } from '@core/guards/auth.guard';
 import { GuestGuard } from '@core/guards/guest.guard';
 import { kycGuard, onboardingGuard } from '@core/guards/onboarding.guard';
 import { AdminGuard } from '@core/guards/admin.guard';
+import { seoPageResolver } from '@core/resolvers/seo-page.resolver';
 
 export const routes: Routes = [
   {
@@ -695,18 +696,45 @@ export const routes: Routes = [
   },
 
   // ============================================================================
-  // SEO LANDING PAGES (Dynamic Routes)
+  // SEO LANDING PAGES (Programmatic SEO)
   // ============================================================================
   {
-    path: 'alquiler-autos/:city',
-    loadComponent: () =>
-      import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPage),
-  },
-  {
-    path: 'rentar/:brand',
-    loadComponent: () =>
-      import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPage),
+    path: 'alquiler',
+    children: [
+      {
+        path: ':segment1', // e.g. /alquiler/toyota OR /alquiler/palermo
+        loadComponent: () =>
+          import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPageComponent),
+        resolve: { pageData: seoPageResolver },
+      },
+      {
+        path: ':segment1/:segment2', // e.g. /alquiler/toyota/palermo
+        loadComponent: () =>
+          import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPageComponent),
+        resolve: { pageData: seoPageResolver },
+      },
+    ],
   },
 
-  { path: '**', redirectTo: '' },
+  // ============================================================================
+  // ERROR PAGES
+  // ============================================================================
+  {
+    path: 'error/500',
+    data: { layout: 'full-bleed', hideHeader: true, hideFooter: true, hideMobileNav: true },
+    loadComponent: () =>
+      import('./features/error/server-error/server-error.page').then((m) => m.ServerErrorPage),
+  },
+  {
+    path: 'error/404',
+    data: { layout: 'full-bleed', hideHeader: true, hideFooter: true, hideMobileNav: true },
+    loadComponent: () =>
+      import('./features/error/not-found/not-found.page').then((m) => m.NotFoundPage),
+  },
+  {
+    path: '**',
+    component: undefined, // Workaround to lazy load via loadComponent on wildcard
+    loadComponent: () =>
+      import('./features/error/not-found/not-found.page').then((m) => m.NotFoundPage),
+  },
 ];

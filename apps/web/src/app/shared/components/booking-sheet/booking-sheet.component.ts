@@ -76,7 +76,7 @@ import { SoundService } from '@core/services/ui/sound.service';
           <!-- Final Action -->
           <div class="mt-8 flex items-center justify-between gap-4 border-t border-white/5 pt-6">
              <div class="text-white">
-                <div class="text-[10px] text-zinc-500 uppercase tracking-wider font-bold mb-1">Precio por día</div>
+                <div class="text-[10px] text-zinc-500 uppercase tracking-wider font-bold mb-1">Aporte diario</div>
                 <div class="text-3xl font-black tracking-tight font-sans">
                   USD {{ car.pricePerDay | number:'1.0-0' }}
                 </div>

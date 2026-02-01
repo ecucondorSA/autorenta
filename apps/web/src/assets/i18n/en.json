@@ -648,6 +648,16 @@
     "locationNotAvailable": "Ubicación del auto no disponible",
     "deviceNotSupported": "Tu dispositivo no soporta geolocalización"
   },
+  "error": {
+    "not_found": {
+      "title": "Page not found",
+      "description": "The page you are looking for does not exist or has been moved. Go back home to find what you need."
+    },
+    "server_error": {
+      "title": "Server Error",
+      "description": "We encountered an unexpected technical issue. Please try reloading the page or come back later."
+    }
+  },
   "carDetail": {
     "viewFullProfile": "Ver perfil completo",
     "host": "Anfitrión",

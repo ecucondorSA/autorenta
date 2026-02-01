@@ -1,4 +1,3 @@
-
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const corsHeaders = {
@@ -18,6 +17,8 @@ Deno.serve(async (req) => {
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+    const baseUrl = 'https://autorentar.com';
+
     // 1. Static Routes (Manual list of your main pages)
     const staticRoutes = [
       '',
@@ -30,34 +31,30 @@ Deno.serve(async (req) => {
       '/about',
       '/careers',
       '/investors',
-      '/blog' // Assuming you might have a blog later
+      '/blog'
     ];
 
-    // 2. Dynamic Data: Fetch Active Cities
-    // We use a raw query to get distinct cities from active cars
-    const { data: citiesData } = await supabase
-      .from('cars')
-      .select('city')
-      .eq('status', 'active');
-    
-    // De-duplicate and normalize cities
-    const cities = [...new Set((citiesData || []).map((c: any) => c.city?.trim()))]
+    // 2. Fetch Data (Parallel for performance)
+    const [citiesResult, brandsResult, carsResult] = await Promise.all([
+      supabase.from('cars').select('city').eq('status', 'active'),
+      supabase.from('cars').select('brand').eq('status', 'active'),
+      supabase.from('cars').select('id, updated_at').eq('status', 'active').order('updated_at', { ascending: false })
+    ]);
+
+    // Process Cities
+    const cities = [...new Set((citiesResult.data || []).map((c: any) => c.city?.trim()))]
       .filter(Boolean)
       .map((city: any) => city.toLowerCase().replace(/\s+/g, '-'));
 
-    // 3. Dynamic Data: Fetch Active Brands
-    const { data: brandsData } = await supabase
-      .from('cars')
-      .select('brand')
-      .eq('status', 'active');
-
-    // De-duplicate and normalize brands
-    const brands = [...new Set((brandsData || []).map((c: any) => c.brand?.trim()))]
+    // Process Brands
+    const brands = [...new Set((brandsResult.data || []).map((c: any) => c.brand?.trim()))]
       .filter(Boolean)
       .map((brand: any) => brand.toLowerCase().replace(/\s+/g, '-'));
 
-    // 4. Build XML
-    const baseUrl = 'https://autorentar.com'; // Change this to your production domain
+    // Process Cars
+    const cars = carsResult.data || [];
+
+    // 3. Build XML
     let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 
@@ -88,6 +85,18 @@ Deno.serve(async (req) => {
     <loc>${baseUrl}/rentar/${brand}</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+  </url>`;
+    });
+
+    // Add Car Detail Pages
+    cars.forEach((car: any) => {
+      const lastMod = car.updated_at ? new Date(car.updated_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+      sitemap += `
+  <url>
+    <loc>${baseUrl}/cars/${car.id}</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
   </url>`;
     });
 

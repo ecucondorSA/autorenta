@@ -59,7 +59,6 @@ import { SmartSearchBarComponent } from '../../shared/components/smart-search-ba
 import { DateRangePickerComponent } from '../../shared/components/date-range-picker/date-range-picker.component';
 import { HdriBackgroundComponent } from '../../shared/components/hdri-background/hdri-background.component';
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
-import { Tilt3dDirective } from '../../shared/directives/tilt-3d.directive';
 
 interface CarWithLatestLocation extends Car {
   distance?: number;
@@ -84,7 +83,6 @@ type ToastType = 'success' | 'info' | 'warning' | 'error';
     NgOptimizedImage,
     DateRangePickerComponent,
     HdriBackgroundComponent,
-    Tilt3dDirective,
     CarCardComponent,
     SmartSearchBarComponent,
   ],

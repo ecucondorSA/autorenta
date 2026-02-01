@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, retry, throwError, timer } from 'rxjs';
 import { ErrorHandlerService } from '@core/services/infrastructure/error-handler.service';
 
@@ -22,6 +23,7 @@ import { ErrorHandlerService } from '@core/services/infrastructure/error-handler
  */
 export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
   const errorHandler = inject(ErrorHandlerService);
+  const router = inject(Router);
 
   return next(req).pipe(
     // Retry failed requests (network errors or 5xx) up to 2 times
@@ -68,6 +70,13 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
       let severity: 'error' | 'warning' | 'critical' = 'error';
       if (error.status >= 500) {
         severity = 'critical';
+        
+        // Redirect to error page for generic 500 errors, but avoid infinite loops
+        // if the error comes from the error page itself or critical auth endpoints
+        if (!req.url.includes('/error/') && !req.url.includes('auth/')) {
+          // Use setTimeout to avoid circular dependency in injection context
+          setTimeout(() => router.navigate(['/error/500']), 0);
+        }
       } else if (error.status === 401 || error.status === 403) {
         severity = 'error';
       } else if (error.status === 404 || error.status === 400) {

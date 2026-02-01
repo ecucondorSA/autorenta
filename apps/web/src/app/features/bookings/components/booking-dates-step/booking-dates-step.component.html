@@ -20,9 +20,9 @@
           <div class="car-details">
             <h3>{{ car.brand }} {{ car.model }}</h3>
             @if (car.price_per_day && car.price_per_day > 0) {
-              <p class="car-price font-mono">${{ car.price_per_day }}/día</p>
+              <p class="car-price font-mono">${{ car.price_per_day }}/día (Aporte)</p>
             } @else {
-              <p class="car-price text-primary-600">Consultar precio</p>
+              <p class="car-price text-primary-600">Consultar aporte</p>
             }
             @if (car.location_formatted_address || car.location_city) {
               <p class="car-location">
@@ -55,10 +55,10 @@
       <div class="date-summary">
         <p>
           <ion-icon name="time-outline"></ion-icon>
-          {{ totalDays() }} día{{ totalDays() > 1 ? 's' : '' }} de renta
+          {{ totalDays() }} día{{ totalDays() > 1 ? 's' : '' }} de uso compartido
         </p>
         <p class="estimated-price">
-          <strong>Precio estimado:</strong> ${{ estimatedPrice() | number: '1.2-2' }}
+          <strong>Aporte estimado:</strong> ${{ estimatedPrice() | number: '1.2-2' }} USD
         </p>
       </div>
     }
@@ -138,10 +138,10 @@
     </ion-card-header>
     <ion-card-content>
       <ul class="tips-list">
-        <li>Las rentas largas (7+ días) pueden tener descuentos</li>
-        <li>Verifica la disponibilidad del propietario antes de reservar</li>
+        <li>Los usos compartidos largos (7+ días) pueden tener beneficios adicionales</li>
+        <li>Verifica la disponibilidad del propietario antes de solicitar el uso</li>
         <li>Considera tiempo extra para recoger y devolver el auto</li>
-        <li>La devolución tardía puede tener cargos adicionales</li>
+        <li>La devolución tardía puede tener cargos por compensación adicionales</li>
       </ul>
     </ion-card-content>
   </ion-card>

@@ -1,6 +1,6 @@
 import { isPlatformBrowser, registerLocaleData } from '@angular/common';
 import { Injectable, inject, PLATFORM_ID, DestroyRef } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import localeEsAr from '@angular/common/locales/es-AR';
 import localePtBr from '@angular/common/locales/pt';
@@ -45,7 +45,7 @@ export class LocaleManagerService {
       // Escuchar cambios de idioma
       this.translateService.onLangChange
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((event) => {
+        .subscribe((event: LangChangeEvent) => {
           this.currentLocale = this.getLocaleFromLang(event.lang);
         });
     } else {

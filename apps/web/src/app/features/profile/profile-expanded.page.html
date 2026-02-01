@@ -76,10 +76,10 @@
             <div class="mt-2">
               <div class="flex items-center justify-between mb-1">
                 <span class="text-xs text-text-muted">Verificación</span>
-                <span class="text-xs font-medium text-cta-default">{{ verificationProgressPercent() ?? 0 }}%</span>
+                <span class="text-xs font-medium text-cta-default">{{ verificationProgressPercent() }}%</span>
               </div>
               <div class="h-1.5 bg-surface-secondary rounded-full overflow-hidden">
-                <div class="h-full bg-cta-default rounded-full transition-all duration-500" [style.width.%]="verificationProgressPercent() ?? 0"></div>
+                <div class="h-full bg-cta-default rounded-full transition-all duration-500" [style.width.%]="verificationProgressPercent()"></div>
               </div>
             </div>
           </div>

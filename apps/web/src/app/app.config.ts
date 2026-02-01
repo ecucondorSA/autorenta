@@ -73,24 +73,42 @@ function autorentaImageLoader(config: ImageLoaderConfig): string {
     return src;
   }
 
-  // Only apply transformations to known providers
-  if (!src.includes('unsplash.com') && !src.includes('images.unsplash.com')) {
-    return src;
+  const width = config.width ?? 800;
+
+  // Supabase Storage Transformation support
+  // Project: pisqjmoklivzpwufhscx.supabase.co
+  if (src.includes('pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/')) {
+    try {
+      // Convert /object/public/ to /render/image/public/
+      const transformedSrc = src.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/');
+      const url = new URL(transformedSrc);
+      
+      url.searchParams.set('width', String(width));
+      url.searchParams.set('quality', '75'); // Slightly more aggressive compression
+      // format=origin lets Supabase auto-select WebP/AVIF based on browser support
+      if (!url.searchParams.has('format')) url.searchParams.set('format', 'origin');
+      
+      return url.toString();
+    } catch {
+      return src;
+    }
   }
 
-  try {
-    const url = new URL(src);
-    const width = config.width ?? 800;
-
-    url.searchParams.set('w', String(width));
-    if (!url.searchParams.has('q')) url.searchParams.set('q', '80');
-    if (!url.searchParams.has('auto')) url.searchParams.set('auto', 'format');
-    if (!url.searchParams.has('fit')) url.searchParams.set('fit', 'crop');
-
-    return url.toString();
-  } catch {
-    return src;
+  // Unsplash Optimization
+  if (src.includes('unsplash.com') || src.includes('images.unsplash.com')) {
+    try {
+      const url = new URL(src);
+      url.searchParams.set('w', String(width));
+      if (!url.searchParams.has('q')) url.searchParams.set('q', '75');
+      if (!url.searchParams.has('auto')) url.searchParams.set('auto', 'format');
+      if (!url.searchParams.has('fit')) url.searchParams.set('fit', 'crop');
+      return url.toString();
+    } catch {
+      return src;
+    }
   }
+
+  return src;
 }
 
 export const appConfig: ApplicationConfig = {

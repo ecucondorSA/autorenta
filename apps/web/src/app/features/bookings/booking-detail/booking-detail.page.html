@@ -184,16 +184,16 @@
                   </svg>
                 </div>
                 <div class="flex-1 pb-4">
-                  <p class="text-sm font-medium text-text-primary">Solicitud enviada</p>
+                  <p class="text-sm font-medium text-text-primary">Solicitud de uso enviada</p>
                   <p class="text-xs text-text-secondary">
                     {{ booking()?.created_at | date: 'd MMM, HH:mm' }}
                   </p>
                 </div>
               </div>
 
-              <!-- 2. Garantía/Pago -->
+              <!-- 2. Garantía -->
               @if (booking()?.status === 'pending' || booking()?.status === 'pending_payment') {
-                <!-- CURRENT: Esperando pago -->
+                <!-- CURRENT: Esperando garantía -->
                 <div class="relative flex items-start gap-4">
                   <div
                     class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-amber-500 text-white flex-shrink-0 ring-4 ring-amber-100"
@@ -212,7 +212,7 @@
                   >
                     <p class="text-sm font-semibold text-amber-800">Esperando garantía</p>
                     <p class="text-xs text-amber-700 mt-1">
-                      Debes completar el pago para que el propietario pueda aprobar
+                      Debes completar la garantía para que el propietario pueda aprobar el uso
                     </p>
                   </div>
                 </div>
@@ -229,7 +229,7 @@
                   </div>
                 </div>
               } @else {
-                <!-- COMPLETED: Garantía pagada -->
+                <!-- COMPLETED: Garantía confirmada -->
                 <div class="relative flex items-start gap-4">
                   <div
                     class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500 text-white flex-shrink-0"
@@ -245,7 +245,7 @@
                   </div>
                   <div class="flex-1 pb-4">
                     <p class="text-sm font-medium text-text-primary">Garantía confirmada</p>
-                    <p class="text-xs text-text-secondary">Pago procesado</p>
+                    <p class="text-xs text-text-secondary">Aporte de seguridad acreditado</p>
                   </div>
                 </div>
               }
@@ -272,7 +272,7 @@
                       </svg>
                     </div>
                     <div class="flex-1 pb-4">
-                      <p class="text-sm font-medium text-text-primary">Reserva aprobada</p>
+                      <p class="text-sm font-medium text-text-primary">Uso compartido aprobado</p>
                       <p class="text-xs text-text-secondary">Por {{ carOwnerName() }}</p>
                     </div>
                   </div>
@@ -473,9 +473,9 @@
                   <div
                     class="flex-1 bg-emerald-50 -ml-2 pl-6 pr-4 py-3 rounded-xl border border-emerald-200"
                   >
-                    <p class="text-sm font-semibold text-emerald-800">Reserva completada</p>
+                    <p class="text-sm font-semibold text-emerald-800">Uso compartido completado</p>
                     <p class="text-xs text-emerald-700 mt-1">
-                      Todo en orden. ¡Gracias por usar AutoRenta!
+                      Todo en orden. ¡Gracias por ser parte de AutoRenta!
                     </p>
                   </div>
                 </div>
@@ -647,13 +647,12 @@
                   >
                     <ion-icon name="receipt-outline" class="text-xl"></ion-icon>
                   </div>
-                  <h3 class="font-bold text-text-primary">Desglose de Precio</h3>
-                </div>
-                <app-booking-pricing-breakdown
-                  [data]="pricingView()!"
-                ></app-booking-pricing-breakdown>
-              </div>
-            }
+                                  <h3 class="font-bold text-text-primary">Desglose de Aportes</h3>
+                                </div>
+                                <app-booking-pricing-breakdown
+                                  [data]="pricingView()!"
+                                ></app-booking-pricing-breakdown>
+                              </div>            }
 
             @if (insuranceView()) {
               <div appHoverLift class="glass-card rounded-2xl p-6">

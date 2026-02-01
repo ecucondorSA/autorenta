@@ -16,7 +16,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
         </a>
-        <h1 class="text-lg font-bold text-white font-satoshi tracking-tight">Solicitud de Reserva</h1>
+        <h1 class="text-lg font-bold text-white font-satoshi tracking-tight">Solicitud de Uso Compartido</h1>
       </div>
       
       <!-- Trust Indicator -->
@@ -24,7 +24,7 @@
         <svg class="w-3.5 h-3.5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
-        Checkout Seguro
+        Validación Segura
       </div>
     </div>
   </header>
@@ -229,12 +229,12 @@
                   @if (paymentMode() === 'card') { <div class="w-4 h-4 rounded-full bg-brand-primary shadow-[0_0_10px_#39FF14]"></div> }
                 </div>
                 
-                <h3 class="font-bold text-white mb-1">Tarjeta de Crédito</h3>
-                <p class="text-xs text-zinc-400 mb-3 min-h-[2.5em]">Bloqueamos el monto temporalmente. <span class="text-brand-primary font-bold">Se devuelve 100%</span> al finalizar.</p>
+                <h3 class="font-bold text-white mb-1">Garantía con Tarjeta</h3>
+                <p class="text-xs text-zinc-400 mb-3 min-h-[2.5em]">Autorizas una garantía temporal. <span class="text-brand-primary font-bold">Se libera íntegramente</span> al finalizar el uso.</p>
                 
                 <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-zinc-950 border border-white/10 text-[10px] text-zinc-400">
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                  Hold: USD {{ riskSnapshot()?.holdEstimatedUsd | number:'1.0-0' }}
+                  Garantía: USD {{ riskSnapshot()?.holdEstimatedUsd | number:'1.0-0' }}
                 </div>
               </button>
               
@@ -254,12 +254,12 @@
                   @if (paymentMode() === 'wallet') { <div class="w-4 h-4 rounded-full bg-emerald-500 shadow-[0_0_10px_#10B981]"></div> }
                 </div>
                 
-                <h3 class="font-bold text-white mb-1">Suscripción Club</h3>
-                <p class="text-xs text-zinc-400 mb-3 min-h-[2.5em]">Pagas una membresía anual. <span class="text-amber-500 font-bold">No reembolsable</span>, pero evita bloqueos altos.</p>
+                <h3 class="font-bold text-white mb-1">Membresía Club</h3>
+                <p class="text-xs text-zinc-400 mb-3 min-h-[2.5em]">Aporte anual de socio. <span class="text-amber-500 font-bold">Cero garantías</span>; la comunidad respalda tu uso compartido.</p>
                 
                 <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-zinc-950 border border-white/10 text-[10px] text-zinc-400">
                   <svg class="w-3 h-3 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  Cubre hasta USD 20,000
+                  Respaldo hasta USD 20,000
                 </div>
               </button>
             </div>
@@ -347,17 +347,17 @@
               <!-- Glow Effect -->
               <div class="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-3xl pointer-events-none rounded-full -mr-32 -mt-32"></div>
 
-              <h3 class="text-lg font-bold text-white font-satoshi mb-6">Resumen de pago</h3>
+              <h3 class="text-lg font-bold text-white font-satoshi mb-6">Resumen de aportes</h3>
 
               <div class="space-y-3 mb-6">
                 <div class="flex justify-between text-sm text-zinc-400">
-                  <span>Alquiler ({{ rentalDays() }} días)</span>
+                  <span>Mantenimiento ({{ rentalDays() }} días)</span>
                   <span class="text-white font-mono">USD {{ rentalCostUsd() | number:'1.2-2' }}</span>
                 </div>
                 
                 @if (coverageUpgradeCostUsd() > 0) {
                   <div class="flex justify-between text-sm text-brand-primary">
-                    <span>Protección {{ getCoverageName(coverageUpgrade()) }}</span>
+                    <span>Compensación de seguridad {{ getCoverageName(coverageUpgrade()) }}</span>
                     <span class="font-mono">USD {{ coverageUpgradeCostUsd() | number:'1.2-2' }}</span>
                   </div>
                 }
@@ -365,10 +365,10 @@
                 <div class="h-px bg-white/10 my-2"></div>
 
                 <div class="flex justify-between items-baseline">
-                  <span class="text-base font-bold text-white">Total estimado</span>
+                  <span class="text-base font-bold text-white">Aporte total estimado</span>
                   <span class="text-2xl font-black text-brand-primary font-satoshi">USD {{ totalRentalUsd() | number:'1.2-2' }}</span>
                 </div>
-                <p class="text-xs text-zinc-500 text-right mt-1">Se paga al finalizar el viaje</p>
+                <p class="text-xs text-zinc-500 text-right mt-1">Se acredita al finalizar el uso</p>
               </div>
 
               <!-- Terms Checkbox -->
@@ -385,7 +385,7 @@
                     </svg>
                   </div>
                   <span class="text-xs text-zinc-400 group-hover:text-zinc-300 transition-colors">
-                    Acepto los <a href="#" class="underline text-zinc-300 hover:text-brand-primary">Términos y Condiciones</a> y la Política de Privacidad.
+                    Acepto los <a href="#" class="underline text-zinc-300 hover:text-brand-primary">Términos de Comodato</a> y la Política de Privacidad.
                   </span>
                 </label>
               </div>
@@ -399,7 +399,7 @@
                   <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                   Procesando...
                 } @else {
-                  Confirmar Reserva
+                  Confirmar Solicitud
                 }
               </button>
               

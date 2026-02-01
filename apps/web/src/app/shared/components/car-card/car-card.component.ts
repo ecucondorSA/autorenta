@@ -1,4 +1,3 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
