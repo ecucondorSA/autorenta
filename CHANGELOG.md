@@ -1,3 +1,9 @@
+## 3.52.0 (2026-02-01)
+
+* feat(chat): implement secure in-app messaging with platform leakage detection ([fd95a7d](https://github.com/ecucondorSA/autorenta/commit/fd95a7d))
+* feat(fintech): implement atomic wallet and membership club systems ([8132c3d](https://github.com/ecucondorSA/autorenta/commit/8132c3d))
+* feat(referrals): finalize v1 implementation and fix code quality issues ([6caf558](https://github.com/ecucondorSA/autorenta/commit/6caf558))
+
 ## <small>3.51.1 (2026-02-01)</small>
 
 * fix(referrals): correct function signatures in GRANT statements ([a012d95](https://github.com/ecucondorSA/autorenta/commit/a012d95))
