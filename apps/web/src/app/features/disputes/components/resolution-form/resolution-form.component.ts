@@ -86,7 +86,7 @@ export class DisputeResolutionFormComponent {
   @Input({ required: true }) disputeId!: string;
   @Input() maxDepositCents: number = 0;
   
-  resolved = output<any>();
+  resolved = output<{ success: boolean; error?: string }>();
 
   private fb = inject(FormBuilder);
   private disputesService = inject(DisputesService);
@@ -126,7 +126,7 @@ export class DisputeResolutionFormComponent {
     try {
       const res = await this.disputesService.resolveDispute({
         disputeId: this.disputeId,
-        resolutionFavor: val.resolutionFavor as any,
+        resolutionFavor: val.resolutionFavor as 'owner' | 'renter' | 'none',
         penaltyCents,
         internalNotes: val.internalNotes || '',
         publicNotes: val.publicNotes || ''
@@ -137,7 +137,7 @@ export class DisputeResolutionFormComponent {
       } else {
         this.error.set(res.error || 'Error al procesar la resolución');
       }
-    } catch (e) {
+    } catch {
       this.error.set('Error inesperado');
     } finally {
       this.loading.set(false);

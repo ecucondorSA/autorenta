@@ -13,7 +13,9 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { 
   DisputesService, 
-  DisputeTimelineEvent 
+  DisputeTimelineEvent,
+  Dispute,
+  DisputeEvidence
 } from '@core/services/admin/disputes.service';
 import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import { DisputeResolutionFormComponent } from '../../components/resolution-form/resolution-form.component';
@@ -92,7 +94,7 @@ import { DisputeTimelineComponent } from '../../components/timeline/timeline.com
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                   @for (ev of evidence(); track ev.id) {
                     <div class="group relative aspect-square bg-surface-raised rounded-2xl border border-border-default overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                      <img [src]="ev.path" class="w-full h-full object-cover" alt="Evidencia">
+                      <img [src]="ev.path || ev.url" class="w-full h-full object-cover" alt="Evidencia">
                       <div class="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                         <p class="text-[10px] text-white truncate">{{ ev.note }}</p>
                       </div>
@@ -186,9 +188,9 @@ export class DisputeDetailPage implements OnInit, OnDestroy {
   private realtimeChannel: RealtimeChannel | null = null;
 
   disputeId = signal<string>('');
-  d = signal<any>(undefined);
+  d = signal<Dispute | undefined>(undefined);
   loading = signal(true);
-  evidence = signal<any[]>([]);
+  evidence = signal<DisputeEvidence[]>([]);
   timeline = signal<DisputeTimelineEvent[]>([]);
 
   async ngOnInit() {
@@ -233,7 +235,7 @@ export class DisputeDetailPage implements OnInit, OnDestroy {
       this.realtimeConnection.unsubscribe(this.realtimeChannel.topic);
     }
 
-    this.realtimeChannel = this.realtimeConnection.subscribeWithRetry<any>(
+    this.realtimeChannel = this.realtimeConnection.subscribeWithRetry<DisputeTimelineEvent>(
       `dispute-dossier-${disputeId}`,
       {
         event: '*',

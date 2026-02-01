@@ -18,6 +18,11 @@ export interface Dispute {
   penalty_amount_cents: number | null;
   internal_notes: string | null;
   metadata: Record<string, unknown>;
+  booking?: {
+    id: string;
+    deposit_amount_cents: number;
+    [key: string]: unknown;
+  };
 }
 
 export interface DisputeTimelineEvent {
@@ -35,6 +40,8 @@ export interface DisputeEvidence {
   id: string;
   dispute_id: string;
   url: string;
+  path?: string; // Some views use path
+  note?: string; // Some views use note
   type: 'image' | 'video' | 'document';
   uploaded_at: string;
   uploaded_by: string;

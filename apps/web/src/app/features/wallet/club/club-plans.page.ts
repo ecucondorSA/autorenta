@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { SubscriptionPlan } from '@core/models/subscription.model';
 
 @Component({
   selector: 'app-club-plans',
@@ -69,14 +70,14 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
               class="relative rounded-2xl p-6 space-y-6 transition-all hover:shadow-lg"
             >
               <!-- Popular badge -->
-              @if (plan.slug === 'club_black') {
+              @if (plan.tier === 'club_black') {
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span class="px-4 py-1 rounded-full bg-gray-700 text-white text-xs font-bold">
                     MAS POPULAR
                   </span>
                 </div>
               }
-              @if (plan.slug === 'club_luxury') {
+              @if (plan.tier === 'club_luxury') {
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span
                     class="px-4 py-1 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-xs font-bold"
@@ -102,14 +103,14 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
               <div class="text-center">
                 <div class="flex items-baseline justify-center gap-1">
                   <span class="text-4xl font-bold">\${{ plan.price_cents / 100 }}</span>
-                  <span class="text-sm opacity-60">/{{ plan.billing_interval }}</span>
+                  <span class="text-sm opacity-60">/mes</span>
                 </div>
               </div>
 
               <!-- Coverage highlight -->
               <div class="rounded-xl p-4 text-center bg-white/10 border border-white/10">
                 <p class="text-xs font-medium opacity-80 uppercase tracking-widest">Cobertura</p>
-                <p class="text-2xl font-bold">\${{ plan.features.coverage_cents / 100 }} USD</p>
+                <p class="text-2xl font-bold">Inscripción al Club</p>
               </div>
 
               <!-- Features list -->
@@ -118,33 +119,25 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
                   <ion-icon name="checkmark-circle" class="text-lg text-success-strong mt-0.5"></ion-icon>
                   <span class="text-sm">Sin depósito de garantía</span>
                 </li>
-                @if (plan.features.commission_discount > 0) {
-                  <li class="flex items-start gap-3">
-                    <ion-icon name="checkmark-circle" class="text-lg text-success-strong mt-0.5"></ion-icon>
-                    <span class="text-sm">{{ plan.features.commission_discount * 100 }}% dto. en comisiones</span>
-                  </li>
-                }
-                @if (plan.features.priority_support) {
-                  <li class="flex items-start gap-3">
-                    <ion-icon name="checkmark-circle" class="text-lg text-success-strong mt-0.5"></ion-icon>
-                    <span class="text-sm">Soporte VIP 24/7</span>
-                  </li>
-                }
+                <li class="flex items-start gap-3">
+                  <ion-icon name="checkmark-circle" class="text-lg text-success-strong mt-0.5"></ion-icon>
+                  <span class="text-sm">Hold reducido al 50%</span>
+                </li>
               </ul>
 
               <!-- CTA -->
               <button
-                (click)="selectPlan(plan.slug)"
-                [disabled]="isCurrentTier(plan.slug) || isDowngrade(plan.slug)"
+                (click)="selectPlan(plan.tier)"
+                [disabled]="isCurrentTier(plan.tier) || isDowngrade(plan.tier)"
                 [class]="getCtaButtonClass(plan)"
                 class="w-full py-3 rounded-xl font-bold transition disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
               >
-                @if (isCurrentTier(plan.slug)) {
+                @if (isCurrentTier(plan.tier)) {
                   <span class="flex items-center justify-center gap-2">
                     <ion-icon name="checkmark-circle"></ion-icon>
                     Plan actual
                   </span>
-                } @else if (isDowngrade(plan.slug)) {
+                } @else if (isDowngrade(plan.tier)) {
                   <span class="flex items-center justify-center gap-2">
                     <ion-icon name="lock-closed"></ion-icon>
                     Plan inferior
@@ -232,7 +225,7 @@ export class ClubPlansPage implements OnInit {
   currentTierName(): string {
     const sub = this.subscription();
     if (!sub) return '';
-    const plan = this.plans().find(p => p.slug === sub.tier);
+    const plan = this.plans().find(p => p.tier === sub.tier);
     return plan ? plan.name : sub.tier;
   }
 
@@ -250,33 +243,33 @@ export class ClubPlansPage implements OnInit {
     const sub = this.subscription();
     if (!sub || sub.status !== 'active') return false;
 
-    const currentPlan = this.plans().find(p => p.slug === sub.tier);
-    const targetPlan = this.plans().find(p => p.slug === tierSlug);
+    const currentPlan = this.plans().find(p => p.tier === sub.tier);
+    const targetPlan = this.plans().find(p => p.tier === tierSlug);
     
     if (!currentPlan || !targetPlan) return false;
     return targetPlan.price_cents < currentPlan.price_cents;
   }
 
-  getPlanCardClass(plan: any): string {
+  getPlanCardClass(plan: SubscriptionPlan): string {
     const base = 'border-2';
-    if (plan.slug === 'club_luxury') {
+    if (plan.tier === 'club_luxury') {
       return `${base} border-amber-400 bg-gradient-to-br from-amber-900/90 to-amber-800/80 text-white`;
     }
-    if (plan.slug === 'club_black') {
+    if (plan.tier === 'club_black') {
       return `${base} border-gray-600 bg-gradient-to-br from-gray-800 to-gray-700 text-white`;
     }
     return `${base} border-amber-500/40 bg-gradient-to-br from-amber-500/5 to-surface-raised`;
   }
 
-  getTierIconClass(plan: any): string {
-    if (plan.slug === 'club_luxury') return 'bg-amber-400 text-amber-900';
-    if (plan.slug === 'club_black') return 'bg-gray-600 text-white';
+  getTierIconClass(plan: SubscriptionPlan): string {
+    if (plan.tier === 'club_luxury') return 'bg-amber-400 text-amber-900';
+    if (plan.tier === 'club_black') return 'bg-gray-600 text-white';
     return 'bg-amber-500/20 text-amber-600';
   }
 
-  getCtaButtonClass(plan: any): string {
-    if (plan.slug === 'club_luxury') return 'bg-amber-400 text-amber-900 hover:bg-amber-300';
-    if (plan.slug === 'club_black') return 'bg-white text-gray-900 hover:bg-gray-100';
+  getCtaButtonClass(plan: SubscriptionPlan): string {
+    if (plan.tier === 'club_luxury') return 'bg-amber-400 text-amber-900 hover:bg-amber-300';
+    if (plan.tier === 'club_black') return 'bg-white text-gray-900 hover:bg-gray-100';
     return 'bg-amber-500 text-black hover:bg-amber-400';
   }
 
