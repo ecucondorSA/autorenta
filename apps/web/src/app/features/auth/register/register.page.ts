@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -30,6 +30,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly analytics = inject(AnalyticsService);
   private readonly tiktokEvents = inject(TikTokEventsService);
   private readonly supabase = injectSupabase();
@@ -184,6 +185,12 @@ export class RegisterPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Ocultar bottom nav en página de registro para maximizar espacio
     this.bottomNavService.setHidden(true);
+
+    // Capturar código de referido si viene por URL
+    const referralCode = this.route.snapshot.queryParamMap.get('ref');
+    if (referralCode && this.isBrowser) {
+      sessionStorage.setItem('referral_code', referralCode.toUpperCase());
+    }
   }
 
   ngOnDestroy(): void {

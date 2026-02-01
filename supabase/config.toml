@@ -56,3 +56,7 @@ verify_jwt = false
 # GitHub webhook handler - public for receiving GitHub Actions events
 # Security: Validates webhook signature via X-Hub-Signature-256 header
 verify_jwt = false
+
+[functions.process-email-sequences]
+# Triggered by pg_cron, auth handled via Service Role Key in header
+verify_jwt = false

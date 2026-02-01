@@ -15,7 +15,7 @@ Este documento detalla la hoja de ruta estratégica para transformar AutoRenta d
 6.  ✅ **Mobile Optimization:** Ajustar "Safe Areas" (notch), gestos nativos y performance en móviles de gama baja.
 7.  ✅ **Error Handling 2.0:** Implementar Error Boundaries globales y páginas de error (404/500) amigables.
 8.  ✅ **SEO Técnico Básico:** Sitemap.xml dinámico, meta-tags automáticos por auto y schema.org (JSON-LD).
-9.  ⬜ **Performance Budget:** Optimizar imágenes (WebP/AVIF), lazy loading estricto y reducir bundle inicial (<1MB).
+9.  ✅ **Performance Budget:** Optimizar imágenes (WebP/AVIF), lazy loading estricto y reducir bundle inicial (<1MB).
 10. ⬜ **Monitoring Setup:** Configurar alertas de Sentry y dashboards de Supabase para monitorear salud del sistema.
 
 ---
@@ -23,9 +23,9 @@ Este documento detalla la hoja de ruta estratégica para transformar AutoRenta d
 ## 🚀 FASE 2: GROWTH ENGINE (Acquisition & Retention)
 > **Objetivo:** Atraer usuarios orgánicamente y retenerlos con ciclos de feedback rápidos.
 
-11. ⬜ **SEO Local:** Landing pages automáticas por ciudad/barrio ("Alquiler de autos en Palermo").
-12. ⬜ **Referral System V1:** Código de referidos simple (Trae a un amigo, ambos ganan créditos).
-13. ⬜ **Email Marketing Automation:** Secuencias de bienvenida, carrito abandonado y recordatorios de búsqueda.
+11. ✅ **SEO Local:** Landing pages automáticas por ciudad/barrio ("Alquiler de autos en Palermo").
+12. ✅ **Referral System V1:** Código de referidos simple (Trae a un amigo, ambos ganan créditos).
+13. ✅ **Email Marketing Automation:** Secuencias de bienvenida, carrito abandonado y recordatorios de búsqueda.
 14. ⬜ **Social Sharing:** Generación de imágenes "Open Graph" dinámicas para compartir autos lindos en WhatsApp/IG.
 15. ⬜ **Reviews & Ratings:** Sistema de calificación bilateral (Dueño <-> Conductor) con moderación.
 16. ⬜ **Wishlist / Favoritos:** Permitir guardar autos para viajes futuros (captura de intención).

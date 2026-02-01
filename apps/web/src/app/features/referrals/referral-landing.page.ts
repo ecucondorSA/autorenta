@@ -46,8 +46,8 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
             <div class="text-5xl mb-4">🎉</div>
             <h2 class="text-2xl font-bold mb-2 text-text-primary">¡Código aplicado!</h2>
             <p class="text-text-secondary mb-6">
-              Recibiste <strong class="text-cta-default">$500 USD</strong> de bono de bienvenida.
-              ¡Publicá tu primer auto y ganá $1,000 USD más!
+              Recibiste <strong class="text-cta-default">$10 USD</strong> de bono de bienvenida.
+              ¡Publicá tu primer auto y ganá $20 USD más!
             </p>
             <a routerLink="/cars/publish" class="btn-primary"> Publicar mi auto </a>
           </div>
@@ -69,14 +69,14 @@ import { ReferralsService } from '@core/services/auth/referrals.service';
                 <li class="flex items-start gap-3">
                   <span class="text-2xl">💵</span>
                   <div>
-                    <div class="font-semibold text-text-primary">$500 USD de bienvenida</div>
+                    <div class="font-semibold text-text-primary">$10 USD de bienvenida</div>
                     <div class="text-sm text-text-secondary">Al registrarte</div>
                   </div>
                 </li>
                 <li class="flex items-start gap-3">
                   <span class="text-2xl">🚗</span>
                   <div>
-                    <div class="font-semibold text-text-primary">$1,000 USD extras</div>
+                    <div class="font-semibold text-text-primary">$20 USD extras</div>
                     <div class="text-sm text-text-secondary">Al publicar tu primer auto</div>
                   </div>
                 </li>

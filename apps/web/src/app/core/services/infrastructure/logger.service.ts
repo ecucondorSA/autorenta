@@ -362,6 +362,46 @@ export class LoggerService {
   }
 
   /**
+   * Log a business-critical error (e.g. Payment Failed, Booking Failed)
+   * Always sent to Sentry with high priority and specific tag.
+   */
+  logBusinessError(event: string, metadata?: Record<string, unknown>): void {
+    const message = `[BUSINESS_ERROR] ${event}`;
+    const safeMeta = this.sanitizeData(metadata);
+    
+    // Always log to console
+    this.logger.error(this.buildLogPrefix('[BUSINESS]', 'Business'), message, safeMeta);
+    
+    // Always send to Sentry with tag
+    void this.sendToSentryAsync('error', message, safeMeta).then(async () => {
+      const Sentry = await this.getSentry();
+      if (Sentry) {
+        Sentry.setTag('business_event', event);
+      }
+    });
+  }
+
+  /**
+   * Log a security event (e.g. Brute Force, Auth Fail)
+   * Always sent to Sentry with high priority.
+   */
+  logSecurityEvent(event: string, metadata?: Record<string, unknown>): void {
+    const message = `[SECURITY_EVENT] ${event}`;
+    const safeMeta = this.sanitizeData(metadata);
+    
+    // Always log to console
+    this.logger.warn(this.buildLogPrefix('[SECURITY]', 'Security'), message, safeMeta);
+    
+    // Always send to Sentry with tag
+    void this.sendToSentryAsync('warning', message, safeMeta).then(async () => {
+      const Sentry = await this.getSentry();
+      if (Sentry) {
+        Sentry.setTag('security_event', event);
+      }
+    });
+  }
+
+  /**
    * Remove sensitive data from logs (tokens, passwords, etc)
    * @private
    */

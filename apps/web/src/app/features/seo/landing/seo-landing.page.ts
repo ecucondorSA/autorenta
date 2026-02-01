@@ -2,14 +2,13 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
   input,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MetaService } from '@core/services/ui/meta.service';
 import { CarCardComponent } from '@shared/components/car-card/car-card.component';
-import { SeoLandingService, SeoPageData } from '@core/services/seo/seo-landing.service';
+import { SeoPageData } from '@core/services/seo/seo-landing.service';
 import { Car } from '@core/models';
 
 @Component({
@@ -167,7 +166,7 @@ export class SeoLandingPageComponent {
   }
 
   // Adapter to match CarCardComponent Input
-  mapToCarModel(seoCar: any): Car {
+  mapToCarModel(seoCar: SeoPageData['cars'][number]): Car {
     return {
       ...seoCar,
       // Default missing fields for card display

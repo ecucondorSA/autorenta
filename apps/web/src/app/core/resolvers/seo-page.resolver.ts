@@ -1,11 +1,10 @@
 import { inject } from '@angular/core';
-import { ResolveFn, Router } from '@angular/router';
+import { ResolveFn } from '@angular/router';
 import { SeoLandingService, SeoPageData } from '@core/services/seo/seo-landing.service';
 import { catchError, of } from 'rxjs';
 
-export const seoPageResolver: ResolveFn<SeoPageData | null> = (route, state) => {
+export const seoPageResolver: ResolveFn<SeoPageData | null> = (route) => {
   const service = inject(SeoLandingService);
-  const router = inject(Router);
   
   const segment1 = route.paramMap.get('segment1');
   const segment2 = route.paramMap.get('segment2');

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { from, Observable, map } from 'rxjs';
 
