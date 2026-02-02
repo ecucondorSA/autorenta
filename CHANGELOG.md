@@ -1,3 +1,8 @@
+## 3.57.0 (2026-02-02)
+
+* style(onboarding): replace emojis with premium SVGs & fix lint ([881fcc0](https://github.com/ecucondorSA/autorenta/commit/881fcc0)), closes [hi#quality](https://github.com/hi/issues/quality)
+* feat(onboarding): strategic redesign with banking-grade UI ([c76b556](https://github.com/ecucondorSA/autorenta/commit/c76b556))
+
 ## <small>3.56.1 (2026-02-02)</small>
 
 * fix(verification): correct toast arguments in selfie capture ([0630b8c](https://github.com/ecucondorSA/autorenta/commit/0630b8c))
