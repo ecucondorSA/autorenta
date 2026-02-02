@@ -1,3 +1,7 @@
+## <small>3.58.1 (2026-02-02)</small>
+
+* fix: change getDocState to protected for template access ([484d91f](https://github.com/ecucondorSA/autorenta/commit/484d91f))
+
 ## 3.58.0 (2026-02-02)
 
 * feat: implement Comodato 15-70-15 model, payout pipelines, and insurance infrastructure ([3495abf](https://github.com/ecucondorSA/autorenta/commit/3495abf))
