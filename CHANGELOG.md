@@ -1,3 +1,7 @@
+## <small>3.55.1 (2026-02-02)</small>
+
+* fix(ci): point E2E workflow to correct playwright config path ([e493457](https://github.com/ecucondorSA/autorenta/commit/e493457))
+
 ## 3.55.0 (2026-02-02)
 
 * feat(profile): UX/UI redesign with verification banner, referral hero, and quick actions ([b14c52a](https://github.com/ecucondorSA/autorenta/commit/b14c52a))
