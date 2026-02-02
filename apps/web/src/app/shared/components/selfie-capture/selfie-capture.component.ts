@@ -309,7 +309,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
 
       this.isAuthError.set(false);
       this.error.set(null);
-      this.toastService.success('Sesión restaurada');
+      this.toastService.success('Sesión activa', 'Sesión restaurada correctamente');
     } catch (err) {
       this.logger.error('Failed to refresh session', err);
       // Force logout if critical
