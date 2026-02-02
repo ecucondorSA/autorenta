@@ -1,3 +1,7 @@
+## <small>3.58.8 (2026-02-02)</small>
+
+* fix(ci): use cap sync instead of cap copy for Android builds ([efd8834](https://github.com/ecucondorSA/autorenta/commit/efd8834))
+
 ## <small>3.58.7 (2026-02-02)</small>
 
 * chore(android): restore android directory for CI builds ([027185f](https://github.com/ecucondorSA/autorenta/commit/027185f))
