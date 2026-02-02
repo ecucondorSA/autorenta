@@ -1,3 +1,8 @@
+## 3.59.0 (2026-02-02)
+
+* feat(profile): conditional SOS button + improved OTP verification UX ([13db5dc](https://github.com/ecucondorSA/autorenta/commit/13db5dc))
+* chore: update guardrails baseline for comodato rpc ([c705242](https://github.com/ecucondorSA/autorenta/commit/c705242))
+
 ## <small>3.58.12 (2026-02-02)</small>
 
 * fix: update csp, chat notifications and image optimizations ([335cc2b](https://github.com/ecucondorSA/autorenta/commit/335cc2b))
