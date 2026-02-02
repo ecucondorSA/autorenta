@@ -520,7 +520,7 @@ export class VerificationPage implements OnInit {
     return this.docPrefillHints()[docId] ?? [];
   }
 
-  private getDocState(docId: string): DocState {
+  protected getDocState(docId: string): DocState {
     const docRecord = this.docStatusMap()[docId];
     if (docRecord?.status === 'rejected') return 'rejected';
     if (docRecord?.status === 'verified') return 'approved';
