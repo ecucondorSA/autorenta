@@ -452,6 +452,25 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
           </a>
+          <!-- SOS Emergency Button - Only visible during active trips -->
+          @if (hasActiveTrip()) {
+            <button
+              type="button"
+              (click)="openPanicMode()"
+              class="flex items-center gap-3 p-4 w-full bg-red-50 hover:bg-red-100 transition-colors"
+            >
+              <div class="h-12 w-12 rounded-xl bg-red-500 flex items-center justify-center shadow-lg shadow-red-500/30 animate-pulse">
+                <span class="text-white font-bold text-sm tracking-wider">SOS</span>
+              </div>
+              <div class="flex-1 text-left">
+                <span class="text-sm font-bold text-red-700">Emergencia SOS</span>
+                <p class="text-xs text-red-600/80">Activar señal de auxilio durante tu viaje</p>
+              </div>
+              <svg class="h-6 w-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </button>
+          }
           <a routerLink="/profile/preferences"
             class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
             <div class="h-10 w-10 rounded-xl bg-gray-500/10 flex items-center justify-center">

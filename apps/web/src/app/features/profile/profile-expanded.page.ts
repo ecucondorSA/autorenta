@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProfileStore } from '@core/stores/profile.store';
+import { BookingsStore } from '@core/stores/bookings.store';
 import { AuthService } from '@core/services/auth/auth.service';
 import { MetaService } from '@core/services/ui/meta.service';
 import { VerificationStateService } from '@core/services/verification/verification-state.service';
@@ -57,6 +58,7 @@ export class ProfileExpandedPage implements OnInit {
   readonly profileStore = inject(ProfileStore);
   private readonly reviewsService = inject(ReviewsService);
   private readonly trustService = inject(TrustService);
+  private readonly bookingsStore = inject(BookingsStore);
 
   // Document upload modal state
   readonly showDocumentModal = signal(false);
@@ -83,6 +85,11 @@ export class ProfileExpandedPage implements OnInit {
   // Trust and Reputation Signals
   readonly trustStatus = this.trustService.currentTrust;
   readonly trustLoading = this.trustService.loading;
+
+  // Active booking detection for SOS button
+  readonly hasActiveTrip = computed(() =>
+    this.bookingsStore.activeBookings().some((b) => b.status === 'in_progress')
+  );
 
   readonly driverLicenseStatus = computed(() => {
     const docs = this.userDocuments();
@@ -365,5 +372,12 @@ export class ProfileExpandedPage implements OnInit {
   async signOut(): Promise<void> {
     await this.authService.signOut();
     void this.router.navigate(['/']);
+  }
+
+  /**
+   * Open panic mode for emergency SOS
+   */
+  openPanicMode(): void {
+    void this.router.navigate(['/panic']);
   }
 }

@@ -90,7 +90,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
       } = await this.supabase.auth.getUser();
 
       if (!user) {
-        throw new Error('Usuario no autenticado');
+        throw new Error('Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.');
       }
 
       this.logger.info('Fresh user data from server', {

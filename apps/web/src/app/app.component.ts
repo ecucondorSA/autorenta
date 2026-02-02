@@ -28,6 +28,7 @@ import { filter } from 'rxjs';
 import { AssetPreloaderService } from '@core/services/ui/asset-preloader.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingApprovalService } from '@core/services/bookings/booking-approval.service';
+import { BookingsStore } from '@core/stores/bookings.store';
 import { CarsCompareService } from '@core/services/cars/cars-compare.service';
 import { DebugService } from '@core/services/admin/debug.service';
 import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
@@ -258,6 +259,7 @@ export class AppComponent implements OnInit {
   private readonly debugService = inject(DebugService); // Initialize early for e2e tests
   private readonly logger = inject(LoggerService).createChildLogger('AppComponent');
   private readonly bookingApprovalService = inject(BookingApprovalService);
+  private readonly bookingsStore = inject(BookingsStore);
 
   readonly userEmail = this.authService.userEmail;
   private readonly compareService = inject(CarsCompareService);
@@ -300,6 +302,11 @@ export class AppComponent implements OnInit {
   readonly isHomePage = signal(false); // Header transparente en homepage
   readonly isPanicMode = signal(false);
   readonly pendingApprovalCount = signal(0); // Contador de solicitudes pendientes para propietarios
+
+  /** SOS button only visible during active trips (in_progress bookings) */
+  readonly hasActiveTrip = computed(() =>
+    this.bookingsStore.activeBookings().some((b) => b.status === 'in_progress')
+  );
 
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
   @ViewChild('sidebarPanel', { read: ElementRef }) sidebarPanel?: ElementRef<HTMLElement>;
@@ -373,6 +380,7 @@ export class AppComponent implements OnInit {
     this.initializeLayoutWatcher();
     this.loadUserProfile();
     this.loadPendingApprovalCount();
+    this.loadActiveBookings();
     this.deepLinkService.initialize();
     this.pushNotificationService.initializePushNotifications();
     this.initializeLocalNotificationListeners();
@@ -574,6 +582,19 @@ export class AppComponent implements OnInit {
       // Silently fail - badge will not show
       this.pendingApprovalCount.set(0);
     }
+  }
+
+  /**
+   * Load active bookings to determine if SOS button should be visible
+   * SOS is only shown during active trips (in_progress status)
+   */
+  private loadActiveBookings(): void {
+    if (!this.isAuthenticatedSig()) {
+      return;
+    }
+
+    // Load bookings - the store handles caching and updates
+    void this.bookingsStore.loadMyBookings();
   }
 
   private checkVerificationPage(url: string): void {

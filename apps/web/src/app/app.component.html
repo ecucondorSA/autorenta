@@ -640,13 +640,13 @@
     </div>
   </main>
 
-  <!-- SOS Global Button -->
-  @if (!isPanicMode()) {
+  <!-- SOS Global Button - Only visible during active trips -->
+  @if (!isPanicMode() && hasActiveTrip()) {
     <button
       class="sos-global-button"
       type="button"
-      aria-label="Activar SOS Global"
-      title="SOS Global"
+      aria-label="Activar SOS de emergencia"
+      title="SOS Emergencia"
       (click)="openPanicMode()"
     >
       SOS

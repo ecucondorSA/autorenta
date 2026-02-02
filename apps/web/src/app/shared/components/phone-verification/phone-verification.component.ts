@@ -11,11 +11,12 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { SUCCESS_MESSAGE_DURATION_MS } from '@core/constants/timing.constants';
 import { PhoneVerificationService } from '@core/services/auth/phone-verification.service';
+import { OtpInputComponent } from '../otp-input/otp-input.component';
 
 @Component({
   standalone: true,
   selector: 'app-phone-verification',
-  imports: [FormsModule, TranslateModule],
+  imports: [FormsModule, TranslateModule, OtpInputComponent],
   template: `
     <div class="space-y-4">
       <!-- Status Row -->
@@ -101,18 +102,11 @@ import { PhoneVerificationService } from '@core/services/auth/phone-verification
               </div>
 
               <div>
-                <label for="otp" class="sr-only">Código de verificación</label>
-                <input
-                  id="otp"
-                  type="text"
-                  [(ngModel)]="otpCode"
-                  placeholder="000000"
-                  maxlength="6"
-                  inputmode="numeric"
-                  pattern="[0-9]*"
-                  class="block w-full rounded-xl border-border-default shadow-sm focus:ring-cta-default focus:border-cta-default text-center text-2xl tracking-[0.5em] font-mono py-3"
+                <app-otp-input
+                  [(value)]="otpCode"
                   [disabled]="loading()"
-                  (input)="onOTPInput($event)"
+                  [hasError]="!!error()"
+                  (complete)="onOtpComplete($event)"
                 />
               </div>
 
@@ -269,6 +263,15 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
     const value = input.value.replace(/\D/g, '').slice(0, 6);
     this.otpCode.set(value);
     input.value = value;
+  }
+
+  /**
+   * Handle OTP input complete - auto-verify when 6 digits entered
+   */
+  onOtpComplete(code: string): void {
+    this.otpCode.set(code);
+    // Optionally auto-verify when complete
+    // void this.verifyOTP();
   }
 
   private startCooldownTimer(): void {
