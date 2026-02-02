@@ -1,3 +1,7 @@
+## <small>3.58.3 (2026-02-02)</small>
+
+* fix: add accounts.google.com to CSP style-src for Google Sign-In ([772ba40](https://github.com/ecucondorSA/autorenta/commit/772ba40))
+
 ## <small>3.58.2 (2026-02-02)</small>
 
 * fix: add acceptedFormats to DocumentTypeConfig interface ([1810834](https://github.com/ecucondorSA/autorenta/commit/1810834))
