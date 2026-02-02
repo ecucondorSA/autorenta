@@ -1,3 +1,7 @@
+## 3.56.0 (2026-02-02)
+
+* feat(verification): banking-grade selfie capture UI & auth fixes ([8ff8fa2](https://github.com/ecucondorSA/autorenta/commit/8ff8fa2))
+
 ## <small>3.55.1 (2026-02-02)</small>
 
 * fix(ci): point E2E workflow to correct playwright config path ([e493457](https://github.com/ecucondorSA/autorenta/commit/e493457))
