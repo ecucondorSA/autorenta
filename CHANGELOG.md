@@ -1,3 +1,7 @@
+## <small>3.54.2 (2026-02-02)</small>
+
+* fix: restore build integrity - SupabaseClientService proxy methods & type fixes ([2f9d6c7](https://github.com/ecucondorSA/autorenta/commit/2f9d6c7))
+
 ## <small>3.54.1 (2026-02-02)</small>
 
 * fix(ci): add preexisting RPC duplicates to guardrails baseline ([749e5b5](https://github.com/ecucondorSA/autorenta/commit/749e5b5))
