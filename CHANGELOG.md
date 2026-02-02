@@ -1,3 +1,7 @@
+## <small>3.58.10 (2026-02-02)</small>
+
+* fix(android): use local google-one-tap-signin plugin to avoid Kotlin conflict ([7e30e7c](https://github.com/ecucondorSA/autorenta/commit/7e30e7c))
+
 ## <small>3.58.9 (2026-02-02)</small>
 
 * fix(android): use hoisted node_modules paths for CI compatibility ([7f4e66a](https://github.com/ecucondorSA/autorenta/commit/7f4e66a))
