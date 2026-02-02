@@ -1,3 +1,7 @@
+## <small>3.58.9 (2026-02-02)</small>
+
+* fix(android): use hoisted node_modules paths for CI compatibility ([7f4e66a](https://github.com/ecucondorSA/autorenta/commit/7f4e66a))
+
 ## <small>3.58.8 (2026-02-02)</small>
 
 * fix(ci): use cap sync instead of cap copy for Android builds ([efd8834](https://github.com/ecucondorSA/autorenta/commit/efd8834))
