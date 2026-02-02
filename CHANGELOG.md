@@ -1,3 +1,7 @@
+## <small>3.58.6 (2026-02-02)</small>
+
+* fix(test): remove obsolete updateStatus test from DisputesService ([5b67f28](https://github.com/ecucondorSA/autorenta/commit/5b67f28))
+
 ## <small>3.58.5 (2026-02-02)</small>
 
 * fix(e2e): ignore Binance CORS errors in CI environment ([52603a7](https://github.com/ecucondorSA/autorenta/commit/52603a7))
