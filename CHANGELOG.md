@@ -1,3 +1,7 @@
+## <small>3.54.3 (2026-02-02)</small>
+
+* fix: remove duplicate ChatMessage type alias to pass guardrails ([4992c4c](https://github.com/ecucondorSA/autorenta/commit/4992c4c))
+
 ## <small>3.54.2 (2026-02-02)</small>
 
 * fix: restore build integrity - SupabaseClientService proxy methods & type fixes ([2f9d6c7](https://github.com/ecucondorSA/autorenta/commit/2f9d6c7))
