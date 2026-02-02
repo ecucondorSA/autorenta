@@ -1,3 +1,7 @@
+## <small>3.56.1 (2026-02-02)</small>
+
+* fix(verification): correct toast arguments in selfie capture ([0630b8c](https://github.com/ecucondorSA/autorenta/commit/0630b8c))
+
 ## 3.56.0 (2026-02-02)
 
 * feat(verification): banking-grade selfie capture UI & auth fixes ([8ff8fa2](https://github.com/ecucondorSA/autorenta/commit/8ff8fa2))
