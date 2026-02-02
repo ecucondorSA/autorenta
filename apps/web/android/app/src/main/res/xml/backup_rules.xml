@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-   Backup rules for Android Auto Backup (Android 6.0+)
-   https://developer.android.com/guide/topics/data/autobackup
--->
-<full-backup-content>
-    <!-- Include non-sensitive preferences only -->
-    <include domain="sharedpref" path="CapacitorStorage.xml" />
-</full-backup-content>
