@@ -1,3 +1,7 @@
+## <small>3.54.6 (2026-02-02)</small>
+
+* fix(verification): handle missing email and non-blocking RPC calls ([26ae625](https://github.com/ecucondorSA/autorenta/commit/26ae625))
+
 ## <small>3.54.5 (2026-02-02)</small>
 
 * fix(phone-verification): correct Argentina mobile number format validation ([ee32cc8](https://github.com/ecucondorSA/autorenta/commit/ee32cc8))
