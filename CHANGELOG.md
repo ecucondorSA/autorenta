@@ -1,3 +1,7 @@
+## <small>3.54.5 (2026-02-02)</small>
+
+* fix(phone-verification): correct Argentina mobile number format validation ([ee32cc8](https://github.com/ecucondorSA/autorenta/commit/ee32cc8))
+
 ## <small>3.54.4 (2026-02-02)</small>
 
 * fix: update ChatMessage import to AgentChatMessage in rentarfast page ([40a3e60](https://github.com/ecucondorSA/autorenta/commit/40a3e60))
