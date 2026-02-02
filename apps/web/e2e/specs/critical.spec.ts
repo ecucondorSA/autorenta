@@ -48,6 +48,13 @@ const IGNORABLE_PATTERNS = [
   '[webpack-dev-server]',
   'ResizeObserver loop',
   'Non-passive event listener',
+  // Google Sign-In / One-Tap errors in headless browsers
+  'GSI_LOGGER',
+  'FedCM',
+  'Provider\'s accounts list is empty',
+  'accounts.google.com',
+  'credential.get()',
+  'Error retrieving a token',
 ];
 
 // ============================================
@@ -98,7 +105,7 @@ test.describe('Critical Flows @guardian', () => {
 
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 30000 });
     // Wait for main bundle to load
-    await page.waitForSelector('[class*="app"]', { timeout: 15000 }).catch(() => {});
+    await page.waitForSelector('[class*="app"]', { timeout: 15000 }).catch(() => { });
 
     expect(failedAssets, `Failed assets: ${failedAssets.join(', ')}`).toHaveLength(0);
   });
