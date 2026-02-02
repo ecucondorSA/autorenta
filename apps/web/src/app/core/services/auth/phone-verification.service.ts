@@ -245,11 +245,16 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
       this.otpAttempts.push(Date.now());
       this.cleanupOldAttempts();
 
-      // Call RPC function for logging
-      await this.supabase.rpc('send_phone_otp', {
-        p_phone: formattedPhone,
-        p_country_code: countryCode,
-      });
+      // Call RPC function for logging (non-blocking, may not exist in all deployments)
+      try {
+        await this.supabase.rpc('send_phone_otp', {
+          p_phone: formattedPhone,
+          p_country_code: countryCode,
+        });
+      } catch (rpcError) {
+        // Logging RPC is optional - don't block OTP flow if it fails
+        this.logger.debug('RPC send_phone_otp not available (optional logging)', { rpcError });
+      }
 
       // Update phone-specific status
       const currentStatus = this.statusSignal();
@@ -309,11 +314,16 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
         throw new Error('Verificación fallida. Por favor intenta nuevamente.');
       }
 
-      // Call RPC function for post-verification
-      await this.supabase.rpc('verify_phone_otp', {
-        p_phone: phone,
-        p_token: token,
-      });
+      // Call RPC function for post-verification logging (non-blocking)
+      try {
+        await this.supabase.rpc('verify_phone_otp', {
+          p_phone: phone,
+          p_token: token,
+        });
+      } catch (rpcError) {
+        // Logging RPC is optional - don't block verification if it fails
+        this.logger.debug('RPC verify_phone_otp not available (optional logging)', { rpcError });
+      }
 
       // Update status
       await this.checkStatus();

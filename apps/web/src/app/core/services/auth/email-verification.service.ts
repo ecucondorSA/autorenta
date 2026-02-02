@@ -98,10 +98,15 @@ export class EmailVerificationService extends VerificationBaseService<EmailVerif
         throw new Error('El email ya está verificado');
       }
 
+      // Check if user has an email configured
+      if (!user.email) {
+        throw new Error('No hay email configurado. Por favor agrega un email a tu cuenta.');
+      }
+
       // Use native Supabase Auth API to resend verification email
       const { error: resendError } = await this.supabase.auth.resend({
         type: 'signup',
-        email: user.email!,
+        email: user.email,
       });
 
       if (resendError) {
