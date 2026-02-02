@@ -1,3 +1,7 @@
+## <small>3.58.2 (2026-02-02)</small>
+
+* fix: add acceptedFormats to DocumentTypeConfig interface ([1810834](https://github.com/ecucondorSA/autorenta/commit/1810834))
+
 ## <small>3.58.1 (2026-02-02)</small>
 
 * fix: change getDocState to protected for template access ([484d91f](https://github.com/ecucondorSA/autorenta/commit/484d91f))
