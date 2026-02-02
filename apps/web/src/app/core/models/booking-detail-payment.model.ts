@@ -13,7 +13,7 @@ export type PaymentMode = 'card' | 'wallet';
 
 export type CoverageUpgrade = 'standard' | 'premium50' | 'zero';
 
-export type PricingBucketType = 'economy' | 'standard' | 'premium' | 'luxury';
+export type PricingBucketType = 'economy' | 'standard' | 'premium' | 'luxury' | 'ultra-luxury';
 
 export type CountryCode = 'AR' | 'CO' | 'MX';
 

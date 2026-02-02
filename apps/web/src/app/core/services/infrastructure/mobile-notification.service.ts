@@ -12,7 +12,7 @@ export class MobileNotificationService {
   private readonly supabase = inject(SupabaseClientService);
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
-  
+
   private readonly isNative = Capacitor.isNativePlatform();
   readonly hasPermission = signal<boolean>(false);
 
@@ -40,13 +40,13 @@ export class MobileNotificationService {
     // Handle received notification while app is in foreground
     PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
       console.log('[Push] Notification received in foreground:', notification);
-      
+
       // In foreground, we show a discrete internal toast instead of system alert
-      this.toast.show(notification.title || 'Nueva notificación', 'info', {
-        body: notification.body,
-        actionLabel: 'Ver',
-        onAction: () => this.handleNavigation(notification.data)
-      });
+      this.toast.info(notification.title || 'Nueva notificación', notification.body || '');
+      // Auto-navigate if there's a route in the notification data
+      if (notification.data?.['route'] || notification.data?.['path']) {
+        this.handleNavigation(notification.data);
+      }
     });
 
     // Handle tap on notification (from background/closed)

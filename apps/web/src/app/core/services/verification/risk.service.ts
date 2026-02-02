@@ -8,7 +8,7 @@ import {
   PricingBucketType,
   RiskSnapshot,
 } from '@core/models/booking-detail-payment.model';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { from, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { RiskCalculatorService } from './risk-calculator.service';
@@ -17,7 +17,7 @@ import { RiskCalculatorService } from './risk-calculator.service';
   providedIn: 'root',
 })
 export class RiskService {
-  private readonly supabase = inject(SupabaseClientService);
+  private readonly supabase = injectSupabase();
   private readonly riskCalculator = inject(RiskCalculatorService);
 
   /**
@@ -188,7 +188,7 @@ export class RiskService {
 
   // Type Guards helpers
   private isValidBucket(bucket: string): bucket is PricingBucketType {
-    return ['economy', 'standard', 'premium', 'luxury'].includes(bucket);
+    return ['economy', 'standard', 'premium', 'luxury', 'ultra-luxury'].includes(bucket);
   }
 
   private isValidCountry(country: string): country is CountryCode {

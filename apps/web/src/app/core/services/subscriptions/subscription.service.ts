@@ -154,14 +154,14 @@ export class SubscriptionService {
     // Auto-fetch subscription on init if user is authenticated
     this.supabase.auth
       .getSession()
-      .then(({ data: { session } }) => {
+      .then(({ data: { session } }: { data: { session: { user?: unknown } | null } }) => {
         if (session?.user) {
-          this.fetchSubscription().catch((err) => {
+          this.fetchSubscription().catch((err: unknown) => {
             this.logger.warn('Failed to fetch subscription on init', err);
           });
         }
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         this.logger.warn('Failed to get session on subscription service init', err);
       });
   }
@@ -353,7 +353,7 @@ export class SubscriptionService {
           schema: 'public',
           table: 'subscriptions',
         },
-        async (payload) => {
+        async (payload: { new: unknown; old: unknown; eventType: string }) => {
           this.logger.debug('Subscription change detected', payload);
           const updated = await this.fetchSubscription(true);
           onUpdate?.(updated);

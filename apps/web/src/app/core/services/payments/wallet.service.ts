@@ -215,7 +215,7 @@ export class WalletService {
       });
 
       if (error) throw error;
-      
+
       // Immediate refresh
       this.invalidateCache();
       void this.fetchBalance(true);
@@ -245,12 +245,12 @@ export class WalletService {
 
       this.invalidateCache();
       void this.fetchBalance(true);
-      
+
       return { success: true, transactionId: data.transaction_id };
     } catch (err) {
       // Translate SQL errors to user friendly messages
       if (JSON.stringify(err).includes('Insufficient funds')) {
-        throw new WalletError('Saldo insuficiente para retención de garantía');
+        throw new WalletError('INSUFFICIENT_BALANCE', 'Saldo insuficiente para retención de garantía');
       }
       this.handleError(err, 'Error al retener fondos');
       throw err;
@@ -376,8 +376,8 @@ export class WalletService {
 
       if (!result.success) throw new Error(result.error_message || 'Fallo al depositar fondos');
 
-      this.fetchBalance().catch(() => {});
-      this.fetchTransactions().catch(() => {});
+      this.fetchBalance().catch(() => { });
+      this.fetchTransactions().catch(() => { });
 
       return { success: true, transactionId: result.transaction_id };
     } catch (err) {
@@ -458,7 +458,7 @@ export class WalletService {
         if (response['error']) throw response['error'];
         // FIX 2025-12-27: Invalidate cache and force refresh after lock
         this.invalidateCache();
-        this.fetchBalance(true).catch(() => {});
+        this.fetchBalance(true).catch(() => { });
       }),
       map((response) => response.data![0] as WalletLockFundsResponse),
     );
@@ -475,7 +475,7 @@ export class WalletService {
         if (response['error']) throw response['error'];
         // FIX 2025-12-27: Invalidate cache and force refresh after unlock
         this.invalidateCache();
-        this.fetchBalance(true).catch(() => {});
+        this.fetchBalance(true).catch(() => { });
       }),
       map((response) => response.data![0] as WalletUnlockFundsResponse),
     );
@@ -510,7 +510,7 @@ export class WalletService {
         if (response['error']) throw response['error'];
         // FIX 2025-12-27: Invalidate cache and force refresh after lock
         this.invalidateCache();
-        this.fetchBalance(true).catch(() => {});
+        this.fetchBalance(true).catch(() => { });
       }),
       map((response) => response.data![0] as WalletLockRentalAndDepositResponse),
     );
@@ -579,8 +579,8 @@ export class WalletService {
     try {
       const { data, error } = await this.supabase.rpc('wallet_poll_pending_payments');
       if (error) throw error;
-      this.fetchBalance().catch(() => {});
-      this.fetchTransactions().catch(() => {});
+      this.fetchBalance().catch(() => { });
+      this.fetchTransactions().catch(() => { });
       return (data ?? { success: false, confirmed: 0, message: 'No data returned' }) as {
         success: boolean;
         confirmed: number;
@@ -626,7 +626,7 @@ export class WalletService {
       });
 
       if (error) throw error;
-      this.fetchBalance().catch(() => {});
+      this.fetchBalance().catch(() => { });
       return data;
     } catch (err) {
       this.handleError(err, 'Error al emitir Crédito de Protección');

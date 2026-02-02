@@ -20,6 +20,7 @@ import { RealtimePricingService } from '@core/services/payments/realtime-pricing
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
 import { CurrencyService } from '@core/services/payments/currency.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Car } from '../../../core/models';
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
 

@@ -461,6 +461,13 @@ export function getRequiredTierByVehicleValue(vehicleValueUsd: number): Subscrip
 }
 
 /**
+ * Get tier configuration by tier name
+ */
+export function getTierConfig(tier: SubscriptionTier): SubscriptionTierConfig {
+  return SUBSCRIPTION_TIERS[tier];
+}
+
+/**
  * Get tier configuration by vehicle value
  */
 export function getTierConfigByVehicleValue(vehicleValueUsd: number): SubscriptionTierConfig {

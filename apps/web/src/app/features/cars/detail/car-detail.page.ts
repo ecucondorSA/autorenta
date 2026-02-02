@@ -31,6 +31,7 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
 import { WalletService } from '@core/services/payments/wallet.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
 import { WaitlistService } from '@core/services/bookings/waitlist.service';

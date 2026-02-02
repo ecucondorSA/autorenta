@@ -82,6 +82,9 @@ export interface AgentChatMessage {
   suggestions?: AgentChatSuggestion[]; // Opciones clickeables
 }
 
+// Backwards compatibility alias
+export type ChatMessage = AgentChatMessage;
+
 export interface TranscriptionEvent {
   text: string;
   isFinal: boolean;

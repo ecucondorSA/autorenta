@@ -24,7 +24,7 @@ import { PaymentAuthorizationService } from '@core/services/payments/payment-aut
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import { EmailVerificationService } from '@core/services/auth/email-verification.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
-import { RiskCalculatorServiceV2 } from '@core/services/verification/risk-calculator-v2.service'; // V2
+import { DynamicRiskCalculatorService } from '@core/services/verification/dynamic-risk-calculator.service';
 
 // Models
 import {
@@ -96,7 +96,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   readonly subscriptionService = inject(SubscriptionService);
   private emailVerificationService = inject(EmailVerificationService);
   private distanceCalculator = inject(DistanceCalculatorService);
-  private riskCalculatorV2 = inject(RiskCalculatorServiceV2); // Inject V2
+  private riskCalculatorV2 = inject(DynamicRiskCalculatorService);
   private supabaseClient = inject(SupabaseClientService).getClient();
   private logger = inject(LoggerService).createChildLogger('BookingRequestPage');
 

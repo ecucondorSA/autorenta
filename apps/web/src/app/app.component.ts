@@ -37,6 +37,7 @@ import { MobileBottomNavPortalService } from '@core/services/ui/mobile-bottom-na
 import { ProfileService, UserProfile } from '@core/services/auth/profile.service';
 import { PushNotificationService } from '@core/services/infrastructure/push-notification.service';
 import { PwaService } from '@core/services/infrastructure/pwa.service';
+import { DeepLinkService } from '@core/services/infrastructure/deep-link.service';
 import { NotificationsService } from '@core/services/infrastructure/user-notifications.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { routeAnimations } from '@core/animations/route-animations'; // Importar animaciones

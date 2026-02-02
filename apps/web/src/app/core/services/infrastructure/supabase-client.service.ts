@@ -93,7 +93,7 @@ function createSSRStubClient(): SupabaseClient {
           return () => Promise.resolve({ data: { session: null, user: null }, error: null });
         }
         if (prop === 'onAuthStateChange') {
-          return () => ({ data: { subscription: { unsubscribe: () => {} } } });
+          return () => ({ data: { subscription: { unsubscribe: () => { } } } });
         }
         // RPC calls
         if (typeof prop === 'string' && prop.startsWith('rpc')) {
@@ -101,10 +101,10 @@ function createSSRStubClient(): SupabaseClient {
         }
         // Realtime channel
         if (prop === 'subscribe') {
-          return () => ({ unsubscribe: () => {} });
+          return () => ({ unsubscribe: () => { } });
         }
         if (prop === 'unsubscribe') {
-          return () => {};
+          return () => { };
         }
         // Default: return chainable stub
         return createChainableStub();
@@ -312,6 +312,66 @@ export class SupabaseClientService {
       url: environment.supabaseUrl || 'hardcoded',
       pooling: 'transaction',
     };
+  }
+
+  // ============================================================================
+  // DELEGATE METHODS
+  // These methods proxy to the underlying Supabase client, allowing services
+  // to call .from(), .rpc(), .auth, etc. directly on SupabaseClientService
+  // without needing to call .getClient() first.
+  // ============================================================================
+
+  /**
+   * Access a database table
+   */
+  from(table: string): ReturnType<SupabaseClient['from']> {
+    return this.getClient().from(table);
+  }
+
+  /**
+   * Call a database function (RPC)
+   */
+  rpc(
+    fn: string,
+    args?: Record<string, unknown>,
+    options?: { head?: boolean; get?: boolean; count?: 'exact' | 'planned' | 'estimated' },
+  ): ReturnType<SupabaseClient['rpc']> {
+    return this.getClient().rpc(fn, args, options) as ReturnType<SupabaseClient['rpc']>;
+  }
+
+  /**
+   * Access auth functionality
+   */
+  get auth(): SupabaseClient['auth'] {
+    return this.getClient().auth;
+  }
+
+  /**
+   * Access storage functionality
+   */
+  get storage(): SupabaseClient['storage'] {
+    return this.getClient().storage;
+  }
+
+  /**
+   * Access edge functions
+   */
+  get functions(): SupabaseClient['functions'] {
+    return this.getClient().functions;
+  }
+
+  /**
+   * Create a realtime channel
+   */
+  channel(name: string, opts?: Parameters<SupabaseClient['channel']>[1]): ReturnType<SupabaseClient['channel']> {
+    return this.getClient().channel(name, opts);
+  }
+
+  /**
+   * Remove a realtime channel
+   */
+  removeChannel(channel: ReturnType<SupabaseClient['channel']>): Promise<'ok' | 'timed out' | 'error'> {
+    return this.getClient().removeChannel(channel);
   }
 }
 

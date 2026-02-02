@@ -1,5 +1,5 @@
-import { Injectable, inject } from '@angular/core';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { Injectable } from '@angular/core';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 export type DisputeKind = 'damage' | 'no_show' | 'late_return' | 'other';
 export type DisputeStatus = 'open' | 'in_review' | 'resolved' | 'rejected';
@@ -16,6 +16,9 @@ export interface Dispute {
   resolved_at: string | null;
   resolution_favor: 'owner' | 'renter' | 'none' | null;
   penalty_amount_cents: number | null;
+  resolution_amount?: number | null;
+  resolution_currency?: string | null;
+  responsible_party_id?: string | null;
   internal_notes: string | null;
   metadata: Record<string, unknown>;
   booking?: {
@@ -23,6 +26,7 @@ export interface Dispute {
     deposit_amount_cents: number;
     [key: string]: unknown;
   };
+  [key: string]: unknown; // Index signature for DatabaseRecord compatibility
 }
 
 export interface DisputeTimelineEvent {
@@ -34,6 +38,7 @@ export interface DisputeTimelineEvent {
   to_status: string | null;
   body: string | null;
   created_at: string;
+  [key: string]: unknown;
 }
 
 export interface DisputeEvidence {
@@ -44,6 +49,7 @@ export interface DisputeEvidence {
   note?: string; // Some views use note
   type: 'image' | 'video' | 'document';
   uploaded_at: string;
+  created_at?: string; // Alias for uploaded_at
   uploaded_by: string;
 }
 
@@ -51,12 +57,22 @@ export interface DisputeEvidence {
   providedIn: 'root',
 })
 export class DisputesService {
-  private readonly supabase = inject(SupabaseClientService);
+  private readonly supabase = injectSupabase();
 
   async listAllForAdmin(): Promise<Dispute[]> {
     const { data, error } = await this.supabase
       .from('disputes')
       .select('*, profiles:opened_by(full_name)')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as Dispute[];
+  }
+
+  async listByBooking(bookingId: string): Promise<Dispute[]> {
+    const { data, error } = await this.supabase
+      .from('disputes')
+      .select('*')
+      .eq('booking_id', bookingId)
       .order('created_at', { ascending: false });
     if (error) throw error;
     return (data ?? []) as Dispute[];
@@ -72,21 +88,64 @@ export class DisputesService {
     return (data ?? []) as DisputeTimelineEvent[];
   }
 
-  async resolveDispute(params: {
-    disputeId: string;
-    resolutionFavor: 'owner' | 'renter' | 'none';
-    penaltyCents: number;
-    internalNotes: string;
-    publicNotes: string;
-  }): Promise<{ success: boolean; error?: string }> {
+  /**
+   * Resolve a dispute - supports multiple call signatures:
+   * 1. resolveDispute(disputeId, status) - Simple status update
+   * 2. resolveDispute(disputeId, status, amount, currency, responsiblePartyId) - Admin resolve with amount
+   * 3. resolveDispute({...params}) - Object-based call
+   */
+  async resolveDispute(
+    disputeIdOrParams: string | {
+      disputeId: string;
+      resolutionFavor: 'owner' | 'renter' | 'none';
+      penaltyCents: number;
+      internalNotes: string;
+      publicNotes: string;
+    },
+    status?: DisputeStatus,
+    amount?: number | null,
+    _currency?: string,
+    _responsiblePartyId?: string | null,
+  ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await this.supabase.rpc('resolve_dispute', {
-        p_dispute_id: params.disputeId,
-        p_resolution_favor: params.resolutionFavor,
-        p_penalty_cents: params.penaltyCents,
-        p_internal_notes: params.internalNotes,
-        p_public_notes: params.publicNotes,
-      });
+      // Handle object-based call
+      if (typeof disputeIdOrParams === 'object') {
+        const params = disputeIdOrParams;
+        const { error } = await this.supabase.rpc('resolve_dispute', {
+          p_dispute_id: params.disputeId,
+          p_resolution_favor: params.resolutionFavor,
+          p_penalty_cents: params.penaltyCents,
+          p_internal_notes: params.internalNotes,
+          p_public_notes: params.publicNotes,
+        });
+
+        if (error) throw error;
+        return { success: true };
+      }
+
+      // Handle positional arguments
+      const disputeId = disputeIdOrParams;
+
+      // Simple status update (no RPC, just direct update)
+      if (status && !amount) {
+        const { error } = await this.supabase
+          .from('disputes')
+          .update({ status })
+          .eq('id', disputeId);
+
+        if (error) throw error;
+        return { success: true };
+      }
+
+      // Admin resolve with amount
+      const { error } = await this.supabase
+        .from('disputes')
+        .update({
+          status: status || 'resolved',
+          resolution_amount: amount,
+          resolved_at: new Date().toISOString(),
+        })
+        .eq('id', disputeId);
 
       if (error) throw error;
       return { success: true };
@@ -109,6 +168,97 @@ export class DisputesService {
       throw error;
     }
     return data as Dispute;
+  }
+
+  async createDispute(params: {
+    bookingId: string;
+    kind: DisputeKind;
+    description?: string;
+  }): Promise<Dispute> {
+    const { data, error } = await this.supabase
+      .from('disputes')
+      .insert({
+        booking_id: params.bookingId,
+        kind: params.kind,
+        description: params.description || null,
+        status: 'open',
+      })
+      .select('*')
+      .single();
+
+    if (error) throw error;
+    return data as Dispute;
+  }
+
+  async addEvidence(
+    disputeId: string,
+    note: string,
+    fileOrMessage?: File | string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      // If it's a string, add it as a comment to the timeline
+      if (typeof fileOrMessage === 'string') {
+        const { error: insertError } = await this.supabase
+          .from('dispute_timeline')
+          .insert({
+            dispute_id: disputeId,
+            event_type: 'comment',
+            body: fileOrMessage,
+          });
+
+        if (insertError) throw insertError;
+        return { success: true };
+      }
+
+      // If no file/message provided, just add the note as a comment
+      if (!fileOrMessage) {
+        if (note) {
+          const { error: insertError } = await this.supabase
+            .from('dispute_timeline')
+            .insert({
+              dispute_id: disputeId,
+              event_type: 'comment',
+              body: note,
+            });
+
+          if (insertError) throw insertError;
+        }
+        return { success: true };
+      }
+
+      // Otherwise, handle file upload
+      const file = fileOrMessage;
+      const fileName = `disputes/${disputeId}/${Date.now()}_${file.name}`;
+      const { error: uploadError } = await this.supabase.storage
+        .from('evidence')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: urlData } = this.supabase.storage
+        .from('evidence')
+        .getPublicUrl(fileName);
+
+      // Insert evidence record
+      const { error: insertError } = await this.supabase
+        .from('dispute_evidence')
+        .insert({
+          dispute_id: disputeId,
+          url: urlData.publicUrl,
+          path: fileName,
+          note,
+          type: file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : 'document',
+        });
+
+      if (insertError) throw insertError;
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al agregar evidencia',
+      };
+    }
   }
 
   // ============================================================================

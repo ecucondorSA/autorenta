@@ -23,11 +23,11 @@ export interface ChatMessage {
 export class ChatService {
   private supabase = injectSupabase();
   private toast = inject(ToastService);
-  
+
   // State
   private messagesSignal = signal<ChatMessage[]>([]);
   readonly messages = computed(() => this.messagesSignal());
-  
+
   private activeChannel: RealtimeChannel | null = null;
 
   /**
@@ -57,7 +57,7 @@ export class ChatService {
     }));
 
     this.messagesSignal.set(enriched);
-    
+
     // Subscribe to new messages
     this.subscribeToRealtime(context);
   }
@@ -117,7 +117,7 @@ export class ChatService {
     if (error) {
       // Revert optimistic update on failure
       this.messagesSignal.update(msgs => msgs.filter(m => m.id !== tempId));
-      this.toast.show('Error al enviar mensaje', 'error');
+      this.toast.error('Error', 'Error al enviar mensaje');
       throw error;
     }
   }
@@ -130,8 +130,8 @@ export class ChatService {
       this.supabase.removeChannel(this.activeChannel);
     }
 
-    const filter = context.bookingId 
-      ? `booking_id=eq.${context.bookingId}` 
+    const filter = context.bookingId
+      ? `booking_id=eq.${context.bookingId}`
       : `car_id=eq.${context.carId}`;
 
     this.activeChannel = this.supabase.channel('chat-room')
@@ -141,15 +141,15 @@ export class ChatService {
         async (payload) => {
           const newMsg = payload.new as ChatMessage;
           const user = (await this.supabase.auth.getUser()).data.user;
-          
+
           // Avoid duplicating my own message (already added optimistically)
           // But replace optimistic one with real one if needed.
           // For simplicity in V1: we just add if not mine, assuming send() handles mine.
           // Actually, better to reload or merge.
-          
+
           if (newMsg.sender_id !== user?.id) {
-             this.messagesSignal.update(msgs => [...msgs, { ...newMsg, is_mine: false }]);
-             // Play sound?
+            this.messagesSignal.update(msgs => [...msgs, { ...newMsg, is_mine: false }]);
+            // Play sound?
           }
         }
       )

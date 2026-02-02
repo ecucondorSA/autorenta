@@ -304,7 +304,8 @@ export class MetaService {
     model?: string;
     year?: number;
   }): void {
-    this.addStructuredData('Vehicle', {
+    this.addStructuredData('Product', {
+      '@type': 'Vehicle', // Schema.org Vehicle type nested within Product
       name: car.title,
       description: car.description,
       image:
@@ -325,12 +326,30 @@ export class MetaService {
       aggregateRating:
         car.rating_count && car.rating_count > 0
           ? {
-              '@type': 'AggregateRating',
-              ratingValue: car.rating_avg?.toFixed(1) || '0',
-              reviewCount: car.rating_count.toString(),
-            }
+            '@type': 'AggregateRating',
+            ratingValue: car.rating_avg?.toFixed(1) || '0',
+            reviewCount: car.rating_count.toString(),
+          }
           : undefined,
     });
+  }
+
+  /**
+   * Update page title only
+   */
+  updateTitle(title: string): void {
+    this.title.setTitle(title);
+    this.meta.updateTag({ property: 'og:title', content: title });
+    this.meta.updateTag({ property: 'twitter:title', content: title });
+  }
+
+  /**
+   * Update description meta tag only
+   */
+  updateDescription(description: string): void {
+    this.meta.updateTag({ name: 'description', content: description });
+    this.meta.updateTag({ property: 'og:description', content: description });
+    this.meta.updateTag({ property: 'twitter:description', content: description });
   }
 
   /**
