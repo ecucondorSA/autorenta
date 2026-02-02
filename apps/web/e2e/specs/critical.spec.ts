@@ -55,6 +55,11 @@ const IGNORABLE_PATTERNS = [
   'accounts.google.com',
   'credential.get()',
   'Error retrieving a token',
+  // External API CORS errors (expected in localhost/CI environment)
+  'api.binance.com',
+  'CORS policy',
+  'tasa de mercado',
+  'net::ERR_FAILED',
 ];
 
 // ============================================
