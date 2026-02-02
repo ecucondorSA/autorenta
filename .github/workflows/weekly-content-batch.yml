@@ -154,20 +154,34 @@ jobs:
 
       - name: Create Weekly Summary Issue
         uses: actions/github-script@v7
+        env:
+          WEEK_START: ${{ steps.generate.outputs.week_start }}
+          GENERATED_COUNT: ${{ steps.generate.outputs.generated_count }}
+          ERROR_COUNT: ${{ steps.generate.outputs.error_count }}
+          CONTENT_JSON: ${{ steps.generate.outputs.content }}
+          ERRORS_JSON: ${{ steps.generate.outputs.errors }}
         with:
           script: |
-            const weekStart = '${{ steps.generate.outputs.week_start }}';
-            const generatedCount = '${{ steps.generate.outputs.generated_count }}';
-            const errorCount = '${{ steps.generate.outputs.error_count }}';
-            const content = JSON.parse('${{ steps.generate.outputs.content }}' || '[]');
-            const errors = JSON.parse('${{ steps.generate.outputs.errors }}' || '[]');
+            const weekStart = process.env.WEEK_START;
+            const generatedCount = process.env.GENERATED_COUNT;
+            const errorCount = process.env.ERROR_COUNT;
+            
+            let content = [];
+            let errors = [];
+            
+            try {
+              content = JSON.parse(process.env.CONTENT_JSON || '[]');
+              errors = JSON.parse(process.env.ERRORS_JSON || '[]');
+            } catch (e) {
+              console.error('Error parsing JSON outputs:', e);
+            }
 
             const dayNames = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
             let contentTable = '| Day | Platform | Type | Caption Preview |\n|-----|----------|------|----------------|\n';
             for (const item of content) {
               contentTable += '| ' + dayNames[item.day] + ' ' + item.date + ' | ' + item.platform +
-                ' | ' + item.contentType + ' | ' + item.caption + '... |\n';
+                ' | ' + item.contentType + ' | ' + (item.caption || '').replace(/\n/g, ' ') + '... |\n';
             }
 
             let errorSection = '';

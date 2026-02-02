@@ -52,6 +52,12 @@ export class PaymentAuthorizationService {
     cardToken: string;
     payerEmail: string;
     payerIdentification?: { type: string; number: string };
+    /** MercadoPago issuer ID - mejora tasa de aprobación */
+    issuerId?: string;
+    /** Payment method (visa, mastercard, etc) */
+    paymentMethodId?: string;
+    /** Number of installments */
+    installments?: number;
     description?: string;
     bookingId?: string;
   }): Observable<AuthorizePaymentResult> {
@@ -86,6 +92,10 @@ export class PaymentAuthorizationService {
                   payer_email: params.payerEmail,
                   payer_identification_type: params.payerIdentification?.type || null,
                   payer_identification_number: params.payerIdentification?.number || null,
+                  // MercadoPago Quality Checklist: campos adicionales
+                  issuer_id: params.issuerId || null,
+                  payment_method_id: params.paymentMethodId || null,
+                  installments: params.installments || 1,
                   description: params.description,
                   external_reference: `preauth_${params.bookingId || Date.now()}`,
                 },

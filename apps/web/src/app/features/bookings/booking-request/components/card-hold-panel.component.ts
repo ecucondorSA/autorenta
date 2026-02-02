@@ -59,13 +59,23 @@ export class CardHoldPanelComponent {
   }
 
   onCardTokenGenerated(event: MercadoPagoCardTokenGeneratedEvent): void {
-    this.onAuthorize(event.cardToken, event.last4, event.payer?.identification);
+    this.onAuthorize(
+      event.cardToken,
+      event.last4,
+      event.payer?.identification,
+      event.issuerId,
+      event.paymentMethodId,
+      event.installments,
+    );
   }
 
   onAuthorize(
     cardToken: string,
     cardLast4: string,
     payerIdentification?: { type: string; number: string },
+    issuerId?: string,
+    paymentMethodId?: string,
+    installments?: number,
   ): void {
     const email = this.userEmail();
     if (!this.userId || !email) {
@@ -86,6 +96,10 @@ export class CardHoldPanelComponent {
         cardToken,
         payerEmail: email,
         payerIdentification,
+        // MercadoPago Quality Checklist: campos adicionales mejoran tasa de aprobación
+        issuerId,
+        paymentMethodId,
+        installments,
         description: `Preautorización para reserva${this.bookingId ? ` ${this.bookingId}` : ''}`,
         bookingId: this.bookingId,
       })

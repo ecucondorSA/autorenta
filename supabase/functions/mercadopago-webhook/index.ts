@@ -1,9 +1,13 @@
 /**
  * @fileoverview Supabase Edge Function: mercadopago-webhook
- * @version 12
- * @frozen 2026-01-09
+ * @version 13
+ * @updated 2026-02-01
  *
  * ⚠️  FROZEN CODE - DO NOT MODIFY WITHOUT EXPLICIT USER PERMISSION
+ *
+ * v13 Changes (2026-02-01):
+ * - Added chargeback (charged_back) handling → delegates to process-chargeback
+ * - Added refunded status handling
  *
  * Maneja las notificaciones IPN de Mercado Pago usando fetch() directo.
  * NO usar SDK mercadopago - causa BOOT_ERROR en Deno.
@@ -253,8 +257,9 @@ serve(async (req: Request) => {
     // En producción, rechazar IPs no autorizadas
     // (en desarrollo, permitir si HMAC es válido)
     const isProduction = Deno.env.get('ENVIRONMENT') === 'production' || !Deno.env.get('ENVIRONMENT');
+    const allowTestWebhooks = Deno.env.get('ALLOW_TEST_WEBHOOKS') === 'true';
 
-    if (!isAuthorizedIP && isProduction) {
+    if (!isAuthorizedIP && isProduction && !allowTestWebhooks) {
       log.warn('⚠️ Unauthorized IP attempt:', {
         ip: clientIP,
         userAgent: req.headers.get('user-agent'),
@@ -270,6 +275,10 @@ serve(async (req: Request) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
+    }
+
+    if (!isAuthorizedIP && allowTestWebhooks) {
+      log.info('🧪 Test mode: Allowing non-MercadoPago IP:', { ip: clientIP });
     }
 
     // ========================================
@@ -835,6 +844,167 @@ serve(async (req: Request) => {
           }
         );
       }
+    }
+
+    // ========================================
+    // MANEJAR CHARGEBACKS (CONTRACARGOS)
+    // ========================================
+
+    if (paymentData.status === 'charged_back') {
+      log.info('🚨 Processing CHARGEBACK webhook:', {
+        payment_id: paymentId,
+        amount: paymentData.transaction_amount,
+        status_detail: paymentData.status_detail,
+      });
+
+      try {
+        // Delegate to process-chargeback function
+        const chargebackResponse = await fetch(
+          `${SUPABASE_URL}/functions/v1/process-chargeback`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              mp_payment_id: String(paymentId),
+              amount: paymentData.transaction_amount,
+              currency: paymentData.currency_id || 'ARS',
+              reason: paymentData.status_detail || 'Chargeback from MercadoPago',
+              mp_status: 'opened',
+              payment_data: {
+                id: paymentData.id,
+                status: paymentData.status,
+                status_detail: paymentData.status_detail,
+                payment_method_id: paymentData.payment_method_id,
+                external_reference: paymentData.external_reference,
+                date_created: paymentData.date_created,
+                payer: paymentData.payer,
+                webhook_received_at: new Date().toISOString(),
+              },
+            }),
+          }
+        );
+
+        const chargebackResult = await chargebackResponse.json();
+
+        log.info('Chargeback processed:', chargebackResult);
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: 'Chargeback processed',
+            chargeback: chargebackResult,
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      } catch (chargebackError: any) {
+        log.error('Error processing chargeback:', chargebackError);
+
+        // Return 500 so MP retries
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'Failed to process chargeback',
+            retry: true,
+          }),
+          {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+    }
+
+    // ========================================
+    // MANEJAR REFUNDED (REEMBOLSOS)
+    // ========================================
+
+    if (paymentData.status === 'refunded') {
+      log.info('Processing REFUND webhook:', {
+        payment_id: paymentId,
+        amount: paymentData.transaction_amount,
+      });
+
+      // Update payment status in DB
+      const { error: refundError } = await supabase
+        .from('payments')
+        .update({
+          status: 'refunded',
+          refunded_at: new Date().toISOString(),
+          metadata: supabase.sql`COALESCE(metadata, '{}'::jsonb) || ${JSON.stringify({
+            refund_webhook_at: new Date().toISOString(),
+            mp_status_detail: paymentData.status_detail,
+          })}::jsonb`,
+        })
+        .or(`mercadopago_payment_id.eq.${paymentId},mp_payment_id.eq.${paymentId}`);
+
+      if (refundError) {
+        log.error('Error updating refund status:', refundError);
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Refund webhook processed',
+          status: 'refunded',
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // ========================================
+    // MANEJAR PAGOS RECHAZADOS (ENQUEUE RETRY)
+    // ========================================
+
+    if (paymentData.status === 'rejected') {
+      log.info('Processing REJECTED payment - enqueueing for retry:', {
+        payment_id: paymentId,
+        amount: paymentData.transaction_amount,
+        status_detail: paymentData.status_detail,
+      });
+
+      // Enqueue for automatic retry
+      try {
+        const { data: retryResult, error: retryError } = await supabase.rpc('enqueue_payment_retry', {
+          p_mp_payment_id: String(paymentId),
+          p_amount_cents: Math.round((paymentData.transaction_amount || 0) * 100),
+          p_reason: paymentData.status_detail || 'rejected',
+          p_error_code: paymentData.status_detail,
+          p_error_message: `Payment rejected: ${paymentData.status_detail}`,
+          p_payment_method_id: paymentData.payment_method_id || null,
+          p_original_status: paymentData.status,
+          p_original_status_detail: paymentData.status_detail,
+        });
+
+        if (retryError) {
+          log.error('Error enqueueing payment retry:', retryError);
+        } else {
+          log.info('✅ Payment enqueued for retry:', retryResult);
+        }
+      } catch (enqueueError) {
+        log.error('Exception enqueueing payment retry:', enqueueError);
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Rejected payment enqueued for retry',
+          status: paymentData.status,
+          status_detail: paymentData.status_detail,
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // ========================================

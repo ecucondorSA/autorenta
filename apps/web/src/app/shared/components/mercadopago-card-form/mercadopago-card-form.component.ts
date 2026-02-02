@@ -111,6 +111,12 @@ interface BrickError {
 export interface MercadoPagoCardTokenGeneratedEvent {
   cardToken: string;
   last4: string;
+  /** MercadoPago issuer ID - mejora tasa de aprobación */
+  issuerId?: string;
+  /** Payment method (visa, mastercard, etc) */
+  paymentMethodId?: string;
+  /** Number of installments selected */
+  installments?: number;
   payer?: {
     email?: string;
     identification?: {
@@ -547,11 +553,15 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
         );
       }
 
-      // Emit token to parent component
+      // Emit token to parent component with all MercadoPago quality fields
       this.ngZone.run(() => {
         this.cardTokenGenerated.emit({
           cardToken: token,
           last4: 'XXXX', // Card Payment Brick doesn't expose last4 directly
+          // MercadoPago Quality Checklist: issuer_id mejora tasa de aprobación
+          issuerId: cardFormData?.issuer_id,
+          paymentMethodId: cardFormData?.payment_method_id,
+          installments: cardFormData?.installments || 1,
           payer: payer
             ? {
                 email: payer.email,

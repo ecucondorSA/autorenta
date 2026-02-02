@@ -316,7 +316,7 @@ serve(async (req) => {
     const { data: authUser } = await supabase.auth.admin.getUserById(booking.renter_id);
     const { data: profile } = await supabase
       .from('profiles')
-      .select('full_name, email, phone, dni, gov_id_number, gov_id_type, mercadopago_customer_id')
+      .select('full_name, email, phone, dni, gov_id_number, gov_id_type, mercadopago_customer_id, address_line1, city, state, postal_code, country')
       .eq('id', booking.renter_id)
       .single();
 
@@ -597,6 +597,15 @@ serve(async (req) => {
           }
         }
 
+        // MercadoPago Quality Checklist: address mejora tasa de aprobación (+5 puntos)
+        const address = profile?.address_line1 ? {
+          street_name: profile.address_line1,
+          street_number: profile.address_line1.match(/\d+/)?.[0] || '0',
+          zip_code: profile.postal_code || '0000',
+          city_name: profile.city || 'Buenos Aires',
+          state_name: profile.state || 'Buenos Aires',
+        } : undefined;
+
         return {
           email: authUser?.user?.email || profile?.email || `${booking.renter_id}@autorenta.com`,
           first_name: firstName,
@@ -604,6 +613,7 @@ serve(async (req) => {
           ...(phoneFormatted && { phone: phoneFormatted }),  // +5 puntos de calidad
           ...(identification && { identification }),  // +10 puntos de calidad
           ...(customerId && { id: customerId }),  // +5-10 puntos (Customers API)
+          ...(address && { address }),  // +5 puntos de calidad
         };
       })(),
 

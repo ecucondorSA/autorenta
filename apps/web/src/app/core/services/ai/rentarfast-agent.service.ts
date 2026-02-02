@@ -72,7 +72,7 @@ export interface AgentChatSuggestion {
   icon?: string; // Emoji opcional: "🚗"
 }
 
-export interface ChatMessage {
+export interface AgentChatMessage {
   id: string;
   role: 'user' | 'agent';
   content: string;
@@ -124,7 +124,7 @@ export class RentarfastAgentService {
   readonly sessionId = this._sessionId.asReadonly();
 
   // Chat history
-  private readonly _messages = signal<ChatMessage[]>([]);
+  private readonly _messages = signal<AgentChatMessage[]>([]);
   readonly messages = this._messages.asReadonly();
 
   // Loading state
@@ -192,7 +192,7 @@ export class RentarfastAgentService {
         this._sessionId.set(data.sessionId);
 
         // Add agent message
-        const agentMessage: ChatMessage = {
+        const agentMessage: AgentChatMessage = {
           id: crypto.randomUUID(),
           role: 'agent',
           content: data.text,
@@ -308,7 +308,7 @@ export class RentarfastAgentService {
     this._isLoading.set(true);
 
     // Add user message to history
-    const userMessage: ChatMessage = {
+    const userMessage: AgentChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
       content: message,
@@ -341,7 +341,7 @@ export class RentarfastAgentService {
 
     this._isLoading.set(true);
 
-    const userMessage: ChatMessage = {
+    const userMessage: AgentChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
       content: message,
@@ -361,7 +361,7 @@ export class RentarfastAgentService {
     toolsUsed: string[] = [],
     suggestions?: AgentChatSuggestion[],
   ): string {
-    const agentMessage: ChatMessage = {
+    const agentMessage: AgentChatMessage = {
       id: crypto.randomUUID(),
       role: 'agent',
       content,
@@ -374,7 +374,7 @@ export class RentarfastAgentService {
   }
 
   addLocalUserMessage(content: string): string {
-    const userMessage: ChatMessage = {
+    const userMessage: AgentChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
       content,
@@ -442,7 +442,7 @@ export class RentarfastAgentService {
     this._isLoading.set(true);
 
     // Add user message to history
-    const userMessage: ChatMessage = {
+    const userMessage: AgentChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
       content: message,
@@ -487,7 +487,7 @@ export class RentarfastAgentService {
           this._sessionId.set(response.sessionId);
         }
 
-        const agentMessage: ChatMessage = {
+        const agentMessage: AgentChatMessage = {
           id: crypto.randomUUID(),
           role: 'agent',
           content: response.response,
@@ -532,7 +532,7 @@ export class RentarfastAgentService {
           this._sessionId.set(response.sessionId);
         }
 
-        const agentMessage: ChatMessage = {
+        const agentMessage: AgentChatMessage = {
           id: crypto.randomUUID(),
           role: 'agent',
           content: response.response,
@@ -544,7 +544,7 @@ export class RentarfastAgentService {
       catchError((error) => {
         this.logger.error('[Rentarfast] Cloud Run error', error);
 
-        const errorMessage: ChatMessage = {
+        const errorMessage: AgentChatMessage = {
           id: crypto.randomUUID(),
           role: 'agent',
           content: 'Lo siento, hubo un error al procesar tu mensaje. Por favor intenta de nuevo.',

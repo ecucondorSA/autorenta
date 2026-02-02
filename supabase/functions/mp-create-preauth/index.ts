@@ -16,6 +16,12 @@ interface CreatePreauthRequest {
   payer_email: string;
   payer_identification_type?: string | null;
   payer_identification_number?: string | null;
+  /** MercadoPago issuer ID - mejora tasa de aprobación */
+  issuer_id?: string | null;
+  /** Payment method (visa, mastercard, etc) - capturado del Brick */
+  payment_method_id?: string | null;
+  /** Number of installments */
+  installments?: number | null;
   description?: string;
   external_reference?: string;
 }
@@ -88,6 +94,10 @@ serve(async (req) => {
       payer_email,
       payer_identification_type,
       payer_identification_number,
+      // MercadoPago Quality Checklist: campos adicionales
+      issuer_id,
+      payment_method_id,
+      installments: requestedInstallments,
       description = 'Preautorización de garantía - AutoRenta',
       external_reference,
     } = body;
@@ -148,12 +158,16 @@ serve(async (req) => {
     }
 
     // Crear preautorización en Mercado Pago con capture=false
+    // MercadoPago Quality Checklist: issuer_id y payment_method_id mejoran tasa de aprobación
     const mpPayload = {
       transaction_amount: Number(finalAmountArs.toFixed(2)),
       token: card_token,
       description: description,
-      installments: 1,
-      // NO especificar payment_method_id, dejar que MP lo detecte del token
+      // Para preautorizaciones siempre 1 cuota, pero lo capturamos del frontend
+      installments: requestedInstallments || 1,
+      // Si el frontend capturó estos datos del Brick, usarlos (mejora tasa aprobación)
+      ...(issuer_id && { issuer_id }),
+      ...(payment_method_id && { payment_method_id }),
       payer: {
         email: payer_email,
         identification:

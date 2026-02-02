@@ -29,16 +29,27 @@ jobs:
             const alerts = [];
 
             const query = async (table, params = '') => {
-              const res = await fetch(
-                supabaseUrl + '/rest/v1/' + table + params,
-                {
-                  headers: {
-                    'apikey': supabaseKey,
-                    'Authorization': 'Bearer ' + supabaseKey,
+              try {
+                const res = await fetch(
+                  supabaseUrl + '/rest/v1/' + table + params,
+                  {
+                    headers: {
+                      'apikey': supabaseKey,
+                      'Authorization': 'Bearer ' + supabaseKey,
+                    }
                   }
+                );
+                if (!res.ok) {
+                  const errorText = await res.text();
+                  console.error(`Error querying ${table}: ${res.status} ${errorText}`);
+                  return [];
                 }
-              );
-              return res.json();
+                const data = await res.json();
+                return Array.isArray(data) ? data : [];
+              } catch (err) {
+                console.error(`Fetch error for ${table}:`, err);
+                return [];
+              }
             };
 
             const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
@@ -53,7 +64,9 @@ jobs:
 
             const failedByUser = {};
             for (const p of failedPayments) {
-              failedByUser[p.user_id] = (failedByUser[p.user_id] || 0) + 1;
+              if (p.user_id) {
+                failedByUser[p.user_id] = (failedByUser[p.user_id] || 0) + 1;
+              }
             }
 
             for (const [userId, count] of Object.entries(failedByUser)) {
@@ -77,7 +90,9 @@ jobs:
 
             const bookingsByRenter = {};
             for (const b of recentBookings) {
-              bookingsByRenter[b.renter_id] = (bookingsByRenter[b.renter_id] || 0) + 1;
+              if (b.renter_id) {
+                bookingsByRenter[b.renter_id] = (bookingsByRenter[b.renter_id] || 0) + 1;
+              }
             }
 
             for (const [renterId, count] of Object.entries(bookingsByRenter)) {
@@ -99,29 +114,29 @@ jobs:
               `?kind=in.(transfer_in,transfer_out)&amount_cents=gte.5000000&created_at=gte.${twentyFourHoursAgo}&select=user_id,kind,amount_cents`
             );
 
-            if (largeTransfers.length > 0) {
-              for (const t of largeTransfers) {
-                alerts.push({
-                  type: 'LARGE_TRANSFER',
-                  severity: 'medium',
-                  user_id: t.user_id,
-                  amount_ars: t.amount_cents / 100,
-                  kind: t.kind,
-                  message: 'Large transfer of ARS ' + (t.amount_cents / 100).toLocaleString() + ' detected',
-                });
-              }
+            for (const t of largeTransfers) {
+              alerts.push({
+                type: 'LARGE_TRANSFER',
+                severity: 'medium',
+                user_id: t.user_id,
+                amount_ars: t.amount_cents / 100,
+                kind: t.kind,
+                message: 'Large transfer of ARS ' + (t.amount_cents / 100).toLocaleString() + ' detected',
+              });
             }
 
             // 4. Multiple cancellations by same owner (>3 in 24h)
             console.log('Checking owner cancellations...');
             const cancelledBookings = await query(
               'bookings',
-              `?status=eq.cancelled&cancelled_by=eq.owner&updated_at=gte.${twentyFourHoursAgo}&select=owner_id`
+              `?status=eq.cancelled&cancelled_by_role=eq.owner&updated_at=gte.${twentyFourHoursAgo}&select=owner_id`
             );
 
             const cancellationsByOwner = {};
             for (const b of cancelledBookings) {
-              cancellationsByOwner[b.owner_id] = (cancellationsByOwner[b.owner_id] || 0) + 1;
+              if (b.owner_id) {
+                cancellationsByOwner[b.owner_id] = (cancellationsByOwner[b.owner_id] || 0) + 1;
+              }
             }
 
             for (const [ownerId, count] of Object.entries(cancellationsByOwner)) {
@@ -144,12 +159,12 @@ jobs:
             );
 
             for (const booking of highValueBookings) {
-              const profile = await query(
+              const profileData = await query(
                 'profiles',
                 `?id=eq.${booking.renter_id}&select=identity_verified_at`
               );
 
-              if (profile[0] && !profile[0].identity_verified_at) {
+              if (profileData[0] && !profileData[0].identity_verified_at) {
                 alerts.push({
                   type: 'UNVERIFIED_HIGH_VALUE_BOOKING',
                   severity: 'high',
@@ -171,7 +186,9 @@ jobs:
 
             const refundsByUser = {};
             for (const r of refunds) {
-              refundsByUser[r.user_id] = (refundsByUser[r.user_id] || 0) + r.amount_cents;
+              if (r.user_id) {
+                refundsByUser[r.user_id] = (refundsByUser[r.user_id] || 0) + r.amount_cents;
+              }
             }
 
             for (const [userId, totalCents] of Object.entries(refundsByUser)) {
@@ -186,6 +203,11 @@ jobs:
                 });
               }
             }
+
+            // Categorize alerts
+            const criticalAlerts = alerts.filter(a => a.severity === 'critical');
+            const highAlerts = alerts.filter(a => a.severity === 'high');
+            const mediumAlerts = alerts.filter(a => a.severity === 'medium');
 
             // Report results
             console.log('Found ' + alerts.length + ' suspicious patterns');

@@ -28,6 +28,11 @@ jobs:
             const supabaseUrl = process.env.SUPABASE_URL;
             const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
+            // Initialize outputs
+            core.setOutput('discrepancies', 'ERR');
+            core.setOutput('fund_ok', 'UNKNOWN');
+            core.setOutput('total_difference', '0');
+
             console.log('Calling wallet-reconciliation edge function...');
 
             if (!supabaseUrl || !supabaseKey) {
@@ -81,20 +86,26 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const discrepancies = '${{ steps.reconcile.outputs.discrepancies }}';
-            const fundOk = '${{ steps.reconcile.outputs.fund_ok }}';
+            const discrepancies = '${{ steps.reconcile.outputs.discrepancies }}' || 'Unknown';
+            const fundOk = '${{ steps.reconcile.outputs.fund_ok }}' || 'Unknown';
             const totalDiff = '${{ steps.reconcile.outputs.total_difference }}';
 
-            const totalDiffFormatted = (parseInt(totalDiff || '0') / 100).toFixed(2);
+            let totalDiffFormatted = 'N/A';
+            if (totalDiff && !isNaN(totalDiff)) {
+              totalDiffFormatted = 'ARS ' + (parseInt(totalDiff) / 100).toFixed(2);
+            }
+
             const body =
               '## Wallet Balance Audit Alert\n\n' +
               '**Discrepancies Found:** ' + discrepancies + '\n' +
               '**Coverage Fund OK:** ' + fundOk + '\n' +
-              '**Total Difference:** ARS ' + totalDiffFormatted + '\n\n' +
+              '**Total Difference:** ' + totalDiffFormatted + '\n\n' +
+              '### Critical Notice\n' +
+              (discrepancies === 'ERR' ? '> ⚠️ **The audit function failed to execute.** This may be due to a missing Edge Function (404) or a timeout.\n\n' : '') +
               '### Action Required\n' +
               '1. Review the wallet reconciliation logs\n' +
-              '2. Identify affected users\n' +
-              '3. Investigate the cause of discrepancies\n' +
+              '2. Check if `wallet-reconciliation` Edge Function is deployed\n' +
+              '3. Identify affected users\n' +
               '4. Apply corrections if necessary\n\n' +
               '### Links\n' +
               '- [Workflow Run](https://github.com/' + context.repo.owner + '/' + context.repo.repo +

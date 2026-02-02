@@ -56,6 +56,16 @@
         "--header",
         "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNzYyM2I2YS1hMTIzLTQ5YWMtYTNhOC02YzdlNTY4MjAyYmYiLCJpc3MiOiJuOG4iLCJhdWQiOiJtY3Atc2VydmVyLWFwaSIsImp0aSI6ImNlZWQwYTUxLTQwZDYtNDcwNi1iMTYzLWI0N2QwZjczNzVlNCIsImlhdCI6MTc2OTQ4NTk1Nn0.XnsCYJbyGWlFM363EwyoQ0nRfMtmSNcp1W6BgBRz7w0"
       ]
+    },
+    "mercadopago": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.mercadopago.com/mcp",
+        "--header",
+        "Authorization:Bearer APP_USR-5481180656166782-102806-aeacc45719411021c85acca814b92ad9-202984680"
+      ]
     }
   }
 }

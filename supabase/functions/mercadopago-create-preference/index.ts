@@ -234,7 +234,7 @@ serve(async (req) => {
     const { data: authUser } = await supabase.auth.admin.getUserById(transaction.user_id);
     const { data: profile } = await supabase
       .from('profiles')
-      .select('full_name, email, phone, dni, gov_id_number, gov_id_type, mercadopago_customer_id')
+      .select('full_name, email, phone, dni, gov_id_number, gov_id_type, mercadopago_customer_id, address_line1, city, state, postal_code')
       .eq('id', transaction.user_id)
       .single();
 
@@ -425,6 +425,15 @@ serve(async (req) => {
       }
     }
 
+    // MercadoPago Quality Checklist: address mejora tasa de aprobación (+5 puntos)
+    const address = profile?.address_line1 ? {
+      street_name: profile.address_line1,
+      street_number: profile.address_line1.match(/\d+/)?.[0] || '0',
+      zip_code: profile.postal_code || '0000',
+      city_name: profile.city || 'Buenos Aires',
+      state_name: profile.state || 'Buenos Aires',
+    } : undefined;
+
     preferenceData.payer = {
       email: authUser?.user?.email || profile?.email || `${transaction.user_id}@autorenta.com`,
       first_name: firstName,  // +5 puntos
@@ -432,6 +441,7 @@ serve(async (req) => {
       ...(phoneFormatted && { phone: phoneFormatted }),  // +5 puntos
       ...(identification && { identification }),  // +10 puntos
       ...(customerId && { id: customerId }),  // +5-10 puntos (Customers API)
+      ...(address && { address }),  // +5 puntos de calidad
     };
 
     console.log('Preference data:', JSON.stringify(preferenceData, null, 2));

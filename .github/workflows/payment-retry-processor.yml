@@ -1,0 +1,110 @@
+name: Payment Retry Processor
+
+on:
+  schedule:
+    # Run every hour at minute 15
+    - cron: '15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  process-retries:
+    name: Process Failed Payment Retries
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Process Payment Retries
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            if (!supabaseUrl || !supabaseKey) {
+              console.log('⚠️ Supabase credentials not configured, skipping');
+              return;
+            }
+
+            console.log('🔄 Triggering payment retry processor...');
+
+            try {
+              const response = await fetch(
+                `${supabaseUrl}/functions/v1/process-payment-retries`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${supabaseKey}`,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ triggered_by: 'github_actions' }),
+                }
+              );
+
+              const result = await response.json();
+
+              if (response.ok) {
+                console.log('✅ Payment retries processed:', JSON.stringify(result, null, 2));
+
+                const { results } = result;
+                if (results) {
+                  console.log(`\n📊 Summary:`);
+                  console.log(`   Processed: ${results.processed}`);
+                  console.log(`   Succeeded: ${results.succeeded}`);
+                  console.log(`   Failed: ${results.failed}`);
+                  console.log(`   Exhausted: ${results.exhausted}`);
+
+                  if (results.errors && results.errors.length > 0) {
+                    console.log(`   Errors: ${results.errors.join(', ')}`);
+                  }
+                }
+              } else {
+                console.error('❌ Error processing retries:', result);
+                core.setFailed(`Payment retry processing failed: ${result.error || 'Unknown error'}`);
+              }
+            } catch (error) {
+              console.error('❌ Exception:', error);
+              core.setFailed(`Exception: ${error.message}`);
+            }
+
+      - name: Check Exhausted Retries
+        if: success()
+        uses: actions/github-script@v7
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        with:
+          script: |
+            const supabaseUrl = process.env.SUPABASE_URL;
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+            if (!supabaseUrl || !supabaseKey) return;
+
+            // Check for exhausted retries in last 24 hours that need attention
+            const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+            const response = await fetch(
+              `${supabaseUrl}/rest/v1/payment_retry_queue?status=eq.exhausted&updated_at=gte.${oneDayAgo}&select=id,booking_id,user_id,amount_cents,reason`,
+              {
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${supabaseKey}`,
+                }
+              }
+            );
+
+            const exhaustedRetries = await response.json();
+
+            if (exhaustedRetries && exhaustedRetries.length > 0) {
+              console.log(`\n⚠️ ${exhaustedRetries.length} exhausted retries in last 24h need manual attention:`);
+              exhaustedRetries.forEach(r => {
+                console.log(`   - Booking ${r.booking_id}: $${(r.amount_cents/100).toFixed(2)} (${r.reason})`);
+              });
+            } else {
+              console.log('\n✅ No exhausted retries needing attention');
+            }

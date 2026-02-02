@@ -246,6 +246,9 @@ jobs:
             }
 
             // Report
+            const highIssues = issues.filter(i => i.severity === 'high');
+            const mediumIssues = issues.filter(i => i.severity === 'medium');
+
             console.log('\n=== Slow Query Detection ===');
             console.log('Issues found: ' + issues.length);
             console.log('High: ' + highIssues.length + ', Medium: ' + mediumIssues.length);
