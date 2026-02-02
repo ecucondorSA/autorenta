@@ -92,6 +92,59 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
+           TRUST & REPUTATION CARD
+           ═══════════════════════════════════════════════════════════ -->
+    @if (trustStatus()) {
+    <div class="bg-surface-raised rounded-2xl p-4 mb-4 border border-border-default">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider">Nivel de Confianza</h2>
+        <span class="text-xs font-bold px-2 py-1 rounded-full border flex items-center gap-1"
+          [ngClass]="getRiskLevelProps(trustStatus()?.risk_level).color">
+          <!-- Icon handling logic for dynamic icon name could be complex, simplifying -->
+          <span class="text-[10px] uppercase">{{ getRiskLevelProps(trustStatus()?.risk_level).label }}</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <!-- Circular Score (Simplistic implementation with CSS Conic Gradient) -->
+        <div class="relative h-20 w-20 flex items-center justify-center rounded-full bg-surface-secondary">
+          <div class="absolute inset-0 rounded-full border-4 border-surface-base"></div>
+          <div class="absolute inset-0 rounded-full border-4 border-cta-default"
+            style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: rotate(-90deg);">
+            <!-- This requires a more complex component for true gauge, using text for now -->
+          </div>
+          <div class="text-center z-10">
+            <span class="block text-2xl font-bold text-text-primary">{{ trustStatus()?.score }}</span>
+            <span class="text-[10px] text-text-secondary">Puntos</span>
+          </div>
+        </div>
+
+        <!-- Factors List -->
+        <div class="flex-1 space-y-2">
+          @for (factor of trustStatus()?.factors; track factor) {
+          <div class="flex items-center gap-2 text-xs">
+            @if (isPositiveFactor(factor)) {
+            <svg class="h-4 w-4 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            } @else {
+            <svg class="h-4 w-4 text-warning-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            }
+            <span [class.text-text-primary]="isPositiveFactor(factor)"
+              [class.text-text-secondary]="!isPositiveFactor(factor)">
+              {{ getFactorLabel(factor) }}
+            </span>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- ═══════════════════════════════════════════════════════════
            VERIFICATION CTA BANNER (only if incomplete)
            ═══════════════════════════════════════════════════════════ -->
     @if (verificationProgressPercent() < 100) { <a routerLink="/profile/verification" class="group block mb-4 p-4 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 
