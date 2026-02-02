@@ -1,3 +1,8 @@
+## 3.54.0 (2026-02-02)
+
+* feat(mercadopago): implement quality checklist improvements and payment systems ([98440eb](https://github.com/ecucondorSA/autorenta/commit/98440eb))
+* style: fix lint warnings in dispute and club components ([b5b6543](https://github.com/ecucondorSA/autorenta/commit/b5b6543))
+
 ## <small>3.53.1 (2026-02-01)</small>
 
 * refactor(verification): rename risk-calculator-v2 to dynamic-risk-calculator to resolve guardrails ([c73d1ad](https://github.com/ecucondorSA/autorenta/commit/c73d1ad))
