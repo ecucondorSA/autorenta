@@ -1,3 +1,7 @@
+## <small>3.54.1 (2026-02-02)</small>
+
+* fix(ci): add preexisting RPC duplicates to guardrails baseline ([749e5b5](https://github.com/ecucondorSA/autorenta/commit/749e5b5))
+
 ## 3.54.0 (2026-02-02)
 
 * feat(mercadopago): implement quality checklist improvements and payment systems ([98440eb](https://github.com/ecucondorSA/autorenta/commit/98440eb))
