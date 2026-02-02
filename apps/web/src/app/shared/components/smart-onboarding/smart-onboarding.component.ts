@@ -22,7 +22,7 @@ import { MoneyPipe } from '@shared/pipes/money.pipe';
 @Component({
   selector: 'app-smart-onboarding',
   standalone: true,
-  imports: [CommonModule, FipeAutocompleteComponent, MoneyPipe],
+  imports: [CommonModule, FipeAutocompleteComponent],
   templateUrl: './smart-onboarding.component.html',
   styles: [`
     :host { display: block; height: 100vh; overflow: hidden; }
@@ -150,12 +150,14 @@ export class SmartOnboardingComponent implements OnInit {
         country: 'AR'
       });
 
-      if (result && result.data.value_usd) {
+      const valueUsd = result?.data?.value_usd;
+
+      if (valueUsd) {
         // Regla de dedo: 5% del valor del auto por mes si se alquila full time
         // O más conservador: $50 USD / día * 10 días = $500 USD
         // Usemos una fórmula basada en el valor del auto.
         // ROI anual ~60%. ROI mensual ~5%.
-        const estimatedMonthly = result.data.value_usd * 0.05; // 5% mensual
+        const estimatedMonthly = valueUsd * 0.05; // 5% mensual
         this.estimatedEarnings.set(Math.round(estimatedMonthly));
       } else {
         // Fallback value
