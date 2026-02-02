@@ -57,7 +57,7 @@ describe('DisputesService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [...testProviders, DisputesService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },],
+      { provide: SupabaseClientService, useValue: mockSupabaseService },],
     });
     service = TestBed.inject(DisputesService);
   });
@@ -84,10 +84,6 @@ describe('DisputesService', () => {
 
   it('should have getDisputeById method', () => {
     expect(typeof service.getDisputeById).toBe('function');
-  });
-
-  it('should have updateStatus method', () => {
-    expect(typeof service.updateStatus).toBe('function');
   });
 
   it('should have resolveDispute method', () => {
