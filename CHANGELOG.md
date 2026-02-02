@@ -1,3 +1,8 @@
+## <small>3.58.7 (2026-02-02)</small>
+
+* chore(android): restore android directory for CI builds ([027185f](https://github.com/ecucondorSA/autorenta/commit/027185f))
+* refactor(web): remove android directory and fix admin disputes filters ([06e5f8e](https://github.com/ecucondorSA/autorenta/commit/06e5f8e))
+
 ## <small>3.58.6 (2026-02-02)</small>
 
 * fix(test): remove obsolete updateStatus test from DisputesService ([5b67f28](https://github.com/ecucondorSA/autorenta/commit/5b67f28))
