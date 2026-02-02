@@ -1,3 +1,7 @@
+## 3.58.0 (2026-02-02)
+
+* feat: implement Comodato 15-70-15 model, payout pipelines, and insurance infrastructure ([3495abf](https://github.com/ecucondorSA/autorenta/commit/3495abf))
+
 ## <small>3.57.1 (2026-02-02)</small>
 
 * style: remove unused MoneyPipe import ([6475c08](https://github.com/ecucondorSA/autorenta/commit/6475c08))
