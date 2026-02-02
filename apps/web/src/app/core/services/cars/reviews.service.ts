@@ -106,7 +106,7 @@ export class ReviewsService {
             renterParams.rating_location +
             renterParams.rating_checkin +
             renterParams.rating_value) /
-            6,
+          6,
         );
         categoryRatings = {
           rating_cleanliness: renterParams.rating_cleanliness,
@@ -130,7 +130,7 @@ export class ReviewsService {
             ownerParams.rating_care +
             ownerParams.rating_rules +
             ownerParams.rating_recommend) /
-            5,
+          5,
         );
         categoryRatings = {
           // Renter→Owner categories are null
@@ -271,7 +271,7 @@ export class ReviewsService {
       if (error) throw error;
       this.userStatsSignal.set(data as UserStats | null);
     } catch (err) {
-      console.warn('⚠️ Error loading user stats (suppressed):', err);
+      console.debug('⚠️ User stats table not ready yet (debug info only):', err);
       this.userStatsSignal.set(null);
     } finally {
       this.loadingSignal.set(false);
@@ -429,7 +429,7 @@ export class ReviewsService {
             r.rating_location +
             r.rating_checkin +
             r.rating_value) /
-            6,
+          6,
         );
         distribution[avg as keyof typeof distribution]++;
       });
@@ -738,7 +738,7 @@ export class ReviewsService {
               renterParams.rating_location +
               renterParams.rating_checkin +
               renterParams.rating_value) /
-              6,
+            6,
           );
         } else {
           const ownerParams = params as import('@core/models').OwnerToRenterReviewParams;
@@ -748,7 +748,7 @@ export class ReviewsService {
               ownerParams.rating_care +
               ownerParams.rating_rules +
               ownerParams.rating_recommend) /
-              5,
+            5,
           );
         }
 
