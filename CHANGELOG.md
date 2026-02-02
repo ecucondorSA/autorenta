@@ -1,3 +1,7 @@
+## <small>3.58.12 (2026-02-02)</small>
+
+* fix: update csp, chat notifications and image optimizations ([335cc2b](https://github.com/ecucondorSA/autorenta/commit/335cc2b))
+
 ## <small>3.58.11 (2026-02-02)</small>
 
 * perf(android): optimize gradle build config ([1ab14f6](https://github.com/ecucondorSA/autorenta/commit/1ab14f6))
