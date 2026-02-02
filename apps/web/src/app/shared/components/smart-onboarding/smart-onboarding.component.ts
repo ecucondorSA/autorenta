@@ -7,34 +7,26 @@ import {
   OnInit,
   Output,
   signal,
+  computed,
+  effect,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProfileService } from '@core/services/auth/profile.service';
-
-interface OnboardingQuestion {
-  id: string;
-  title: string;
-  subtitle?: string;
-  type: 'single' | 'multiple' | 'role' | 'location';
-  options: Array<{
-    value: string;
-    label: string;
-    icon?: string;
-    description?: string;
-  }>;
-  required: boolean;
-  conditional?: {
-    dependsOn: string;
-    value: string;
-  };
-}
+import { FipeAutocompleteComponent, FipeAutocompleteOption } from '../fipe-autocomplete/fipe-autocomplete.component';
+import { CarBrandsService } from '@core/services/cars/car-brands.service';
+import { PricingService, FipeModel } from '@core/services/payments/pricing.service';
+import { MoneyPipe } from '@shared/pipes/money.pipe';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 @Component({
-  standalone: true,
   selector: 'app-smart-onboarding',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, FipeAutocompleteComponent, MoneyPipe],
   templateUrl: './smart-onboarding.component.html',
-  styleUrls: ['./smart-onboarding.component.css'],
+  styles: [`
+    :host { display: block; height: 100vh; overflow: hidden; }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SmartOnboardingComponent implements OnInit {
@@ -43,342 +35,195 @@ export class SmartOnboardingComponent implements OnInit {
 
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
+  private readonly carBrandsService = inject(CarBrandsService);
+  private readonly pricingService = inject(PricingService);
+  private readonly logger = inject(LoggerService);
 
-  readonly currentStep = signal(0);
+  // --- STATE ---
+  readonly currentStep = signal<1 | 2 | 3 | 4>(1);
+  readonly role = signal<'owner' | 'renter' | 'both' | null>(null);
+
+  // Owner Data
+  readonly selectedBrand = signal<FipeAutocompleteOption | null>(null);
+  readonly selectedModel = signal<FipeAutocompleteOption | null>(null);
+  readonly selectedYear = signal<number | null>(null);
+  readonly estimatedEarnings = signal<number | null>(null);
+  readonly loadingModels = signal(false);
+  readonly loadingValue = signal(false);
+
+  // Renter Data
+  readonly renterPurpose = signal<string>('');
+  readonly renterLocation = signal<string>('');
+
+  // Shared
   readonly loading = signal(false);
-  readonly answers = signal<Record<string, string | string[]>>({});
 
-  isOptionSelected(questionId: string, value: string): boolean {
-    const answer = this.answers()[questionId];
-    if (Array.isArray(answer)) {
-      return answer.includes(value);
-    }
-    return answer === value;
+  // Options
+  readonly brandOptions = computed<FipeAutocompleteOption[]>(() =>
+    this.carBrandsService.getCarBrands().map(b => ({ code: b.code, name: b.name }))
+  );
+
+  readonly modelOptions = signal<FipeAutocompleteOption[]>([]);
+  readonly yearOptions = signal<FipeAutocompleteOption[]>([]); // Will generate range
+
+  // --- EFFECTS ---
+  constructor() {
+    // Generate Year Options (Last 15 years)
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 15 }, (_, i) => currentYear - i);
+    this.yearOptions.set(years.map(y => ({ code: y.toString(), name: y.toString() })));
+
+    // Load models when brand changes
+    effect(async () => {
+      const brand = this.selectedBrand();
+      if (!brand) {
+        this.modelOptions.set([]);
+        return;
+      }
+
+      this.loadingModels.set(true);
+      try {
+        const models = await this.pricingService.getFipeModels(brand.code);
+        this.modelOptions.set(models.map(m => ({ code: m.code, name: m.name })));
+      } catch (err) {
+        this.logger.error('Error loading models', err);
+      } finally {
+        this.loadingModels.set(false);
+      }
+    }, { allowSignalWrites: true });
+
+    // Calculate earnings when car data is complete
+    effect(async () => {
+      const brand = this.selectedBrand();
+      const model = this.selectedModel();
+      const year = this.selectedYear();
+
+      if (brand && model && year) {
+        this.calculateEarnings(brand.name, model.name, year);
+      }
+    });
   }
-
-  readonly questions = signal<OnboardingQuestion[]>([
-    {
-      id: 'role',
-      title: '¿Qué tipo de usuario sos?',
-      subtitle: 'Esto nos ayuda a personalizar tu experiencia',
-      type: 'role',
-      required: true,
-      options: [
-        {
-          value: 'locador',
-          label: 'Locador',
-          icon: '🚗',
-          description: 'Tengo autos para compartir',
-        },
-        {
-          value: 'locatario',
-          label: 'Locatario',
-          icon: '🔍',
-          description: 'Busco autos para usar',
-        },
-        {
-          value: 'ambos',
-          label: 'Ambos',
-          icon: '🔄',
-          description: 'Alquilo y busco autos',
-        },
-      ],
-    },
-    {
-      id: 'location',
-      title: '¿Dónde estás ubicado?',
-      subtitle: 'Necesitamos saber tu ubicación para mostrarte opciones relevantes',
-      type: 'location',
-      required: true,
-      options: [
-        {
-          value: 'montevideo',
-          label: 'Montevideo',
-          icon: '🏙️',
-        },
-        {
-          value: 'punta_del_este',
-          label: 'Punta del Este',
-          icon: '🏖️',
-        },
-        {
-          value: 'colonia',
-          label: 'Colonia',
-          icon: '🏰',
-        },
-        {
-          value: 'otra',
-          label: 'Otra ubicación',
-          icon: '📍',
-        },
-      ],
-    },
-    {
-      id: 'purpose',
-      title: '¿Cuál es tu objetivo principal?',
-      subtitle: 'Esto nos ayuda a mostrarte las mejores opciones',
-      type: 'single',
-      required: true,
-      options: [
-        {
-          value: 'income',
-          label: 'Generar ingresos',
-          icon: '💰',
-          description: 'Maximizar ganancias con mis autos',
-        },
-        {
-          value: 'flexibility',
-          label: 'Flexibilidad',
-          icon: '🔄',
-          description: 'Alquilar cuando no uso mis autos',
-        },
-        {
-          value: 'convenience',
-          label: 'Conveniencia',
-          icon: '🚙',
-          description: 'Necesito un auto cuando lo requiero',
-        },
-        {
-          value: 'explore',
-          label: 'Explorar opciones',
-          icon: '🔍',
-          description: 'Aún estoy evaluando qué hacer',
-        },
-      ],
-    },
-    {
-      id: 'car_types',
-      title: '¿Qué tipo de autos te interesan?',
-      subtitle: 'Selecciona todas las opciones que apliquen',
-      type: 'multiple',
-      required: false,
-      conditional: {
-        dependsOn: 'role',
-        value: 'locatario',
-      },
-      options: [
-        {
-          value: 'compact',
-          label: 'Compactos',
-          icon: '🚗',
-          description: 'Pequeños y económicos',
-        },
-        {
-          value: 'sedan',
-          label: 'Sedanes',
-          icon: '🚙',
-          description: 'Cómodos para viajes largos',
-        },
-        {
-          value: 'suv',
-          label: 'SUVs',
-          icon: '🚛',
-          description: 'Espaciosos y versátiles',
-        },
-        {
-          value: 'luxury',
-          label: 'De lujo',
-          icon: '🏎️',
-          description: 'Autos deportivos y de lujo',
-        },
-        {
-          value: 'electric',
-          label: 'Eléctricos',
-          icon: '⚡',
-          description: 'Autos ecológicos y silenciosos',
-        },
-      ],
-    },
-    {
-      id: 'rental_frequency',
-      title: '¿Con qué frecuencia usas autos?',
-      subtitle: 'Esto nos ayuda a personalizar recomendaciones',
-      type: 'single',
-      required: false,
-      conditional: {
-        dependsOn: 'role',
-        value: 'locatario',
-      },
-      options: [
-        {
-          value: 'daily',
-          label: 'Diariamente',
-          icon: '📅',
-          description: 'Necesito auto todos los días',
-        },
-        {
-          value: 'weekly',
-          label: 'Semanalmente',
-          icon: '📊',
-          description: 'Varias veces por semana',
-        },
-        {
-          value: 'monthly',
-          label: 'Mensualmente',
-          icon: '📈',
-          description: 'Ocasionalmente al mes',
-        },
-        {
-          value: 'occasional',
-          label: 'Ocasionalmente',
-          icon: '🎯',
-          description: 'Solo cuando lo necesito',
-        },
-      ],
-    },
-    {
-      id: 'car_count',
-      title: '¿Cuántos autos tienes para compartir?',
-      subtitle: 'Esto nos ayuda a optimizar tu experiencia',
-      type: 'single',
-      required: false,
-      conditional: {
-        dependsOn: 'role',
-        value: 'locador',
-      },
-      options: [
-        {
-          value: '1',
-          label: '1 auto',
-          icon: '🚗',
-        },
-        {
-          value: '2-3',
-          label: '2-3 autos',
-          icon: '🚗🚗',
-        },
-        {
-          value: '4-5',
-          label: '4-5 autos',
-          icon: '🚗🚗🚗',
-        },
-        {
-          value: '6+',
-          label: 'Más de 6 autos',
-          icon: '🏢',
-          description: 'Tienes una flota',
-        },
-      ],
-    },
-  ]);
-
-  readonly filteredQuestions = signal<OnboardingQuestion[]>([]);
 
   ngOnInit() {
-    this.updateFilteredQuestions();
-  }
-
-  private updateFilteredQuestions() {
-    const answers = this.answers();
-    const filtered = this.questions().filter((question) => {
-      if (!question.conditional) return true;
-
-      const { dependsOn, value } = question.conditional;
-      const answer = answers[dependsOn];
-      return answer === value || answer === 'ambos'; // Para 'ambos', mostrar preguntas de ambos roles
-    });
-
-    this.filteredQuestions.set(filtered);
-  }
-
-  selectAnswer(questionId: string, value: string | string[]) {
-    const currentAnswers = { ...this.answers() };
-    currentAnswers[questionId] = value;
-    this.answers.set(currentAnswers);
-
-    // Actualizar preguntas filtradas si cambió el rol
-    if (questionId === 'role') {
-      this.updateFilteredQuestions();
+    // Check if userRole input is provided
+    if (this.userRole) {
+      // Pre-select if needed
     }
   }
 
-  toggleMultipleAnswer(questionId: string, value: string) {
-    const currentAnswers = { ...this.answers() };
-    const currentValues = (currentAnswers[questionId] || []) as string[];
+  // --- ACTIONS ---
 
-    if (currentValues.includes(value)) {
-      // Remover valor
-      currentAnswers[questionId] = currentValues.filter((v: string) => v !== value);
-    } else {
-      // Agregar valor
-      currentAnswers[questionId] = [...currentValues, value];
+  selectRole(r: 'owner' | 'renter' | 'both') {
+    this.role.set(r);
+    this.nextStep();
+  }
+
+  onBrandSelected(option: FipeAutocompleteOption) {
+    this.selectedBrand.set(option);
+    this.selectedModel.set(null); // Reset model
+    this.selectedYear.set(null); // Reset year
+  }
+
+  onModelSelected(option: FipeAutocompleteOption) {
+    this.selectedModel.set(option);
+  }
+
+  onYearSelected(option: FipeAutocompleteOption) {
+    this.selectedYear.set(parseInt(option.code));
+  }
+
+  selectPurpose(purpose: string) {
+    this.renterPurpose.set(purpose);
+  }
+
+  selectLocation(loc: string) {
+    this.renterLocation.set(loc);
+  }
+
+  async calculateEarnings(brand: string, model: string, year: number) {
+    this.loadingValue.set(true);
+    try {
+      const result = await this.pricingService.getFipeValueRealtime({
+        brand,
+        model,
+        year,
+        country: 'AR'
+      });
+
+      if (result && result.data.value_usd) {
+        // Regla de dedo: 5% del valor del auto por mes si se alquila full time
+        // O más conservador: $50 USD / día * 10 días = $500 USD
+        // Usemos una fórmula basada en el valor del auto.
+        // ROI anual ~60%. ROI mensual ~5%.
+        const estimatedMonthly = result.data.value_usd * 0.05; // 5% mensual
+        this.estimatedEarnings.set(Math.round(estimatedMonthly));
+      } else {
+        // Fallback value
+        this.estimatedEarnings.set(450); // $450 USD default
+      }
+    } catch {
+      this.estimatedEarnings.set(400);
+    } finally {
+      this.loadingValue.set(false);
     }
-
-    this.answers.set(currentAnswers);
   }
 
   nextStep() {
-    const currentQuestion = this.filteredQuestions()[this.currentStep()];
-    if (!currentQuestion) return;
-
-    // Validar respuesta requerida
-    const answer = this.answers()[currentQuestion.id];
-    if (currentQuestion.required && (!answer || (Array.isArray(answer) && answer.length === 0))) {
-      return; // No avanzar si no hay respuesta
-    }
-
-    if (this.currentStep() < this.filteredQuestions().length - 1) {
-      this.currentStep.update((step) => step + 1);
-    } else {
+    this.currentStep.update(s => (s < 4 ? s + 1 : 4) as any);
+    if (this.currentStep() === 4) {
       this.completeOnboarding();
     }
   }
 
-  previousStep() {
-    if (this.currentStep() > 0) {
-      this.currentStep.update((step) => step - 1);
-    }
+  prevStep() {
+    this.currentStep.update(s => (s > 1 ? s - 1 : 1) as any);
   }
 
-  skipOnboarding() {
+  skip() {
     this.completeOnboarding(true);
   }
 
   private async completeOnboarding(skipped = false) {
     this.loading.set(true);
-
     try {
-      const onboardingData = {
-        ...this.answers(),
-        completed: !skipped,
-        completedAt: new Date().toISOString(),
-      };
+      // Save profile logic
+      // ...
 
-      // Guardar preferencias en el perfil del usuario
-      // Guardar datos de onboarding en metadata o en el perfil directamente
-      // Por ahora solo marcamos como completo
       await this.profileService.completeOnboarding();
-
-      // TODO: Guardar onboarding_data en metadata del perfil si se necesita
-
-      this.completed.emit(onboardingData);
-
-      // Redirigir basado en el rol
-      const role = this.answers()['role'];
-      if (role === 'locador' || role === 'ambos') {
-        this.router.navigate(['/cars/publish']);
-      } else {
-        this.router.navigate(['/explore']);
-      }
-    } catch {
-      console.error('Error completing onboarding');
-      // Fallback: ir a home
-      this.router.navigate(['/']);
+      this.finishRedirect();
+    } catch (err) {
+      this.logger.error('Onboarding error', err);
+      this.finishRedirect();
     } finally {
       this.loading.set(false);
     }
   }
 
-  getProgressPercentage(): number {
-    if (this.filteredQuestions().length === 0) return 100;
-    return Math.round(((this.currentStep() + 1) / this.filteredQuestions().length) * 100);
+  private finishRedirect() {
+    const role = this.role();
+    if (role === 'owner' || role === 'both') {
+      this.router.navigate(['/cars/publish']);
+    } else {
+      this.router.navigate(['/explore']);
+    }
   }
 
-  isAnswered(questionId: string): boolean {
-    return !!this.answers()[questionId];
+  // --- HELPERS ---
+  get showOwnerStep() {
+    return this.currentStep() === 2 && (this.role() === 'owner' || this.role() === 'both');
   }
 
-  getCurrentQuestion(): OnboardingQuestion | undefined {
-    return this.filteredQuestions()[this.currentStep()];
+  get showRenterStep() {
+    return this.currentStep() === 2 && this.role() === 'renter';
+  }
+
+  get canContinueStep2() {
+    if (this.showOwnerStep) {
+      return this.selectedBrand() && this.selectedModel() && this.selectedYear();
+    }
+    if (this.showRenterStep) {
+      return this.renterPurpose() && this.renterLocation();
+    }
+    return false;
   }
 }
