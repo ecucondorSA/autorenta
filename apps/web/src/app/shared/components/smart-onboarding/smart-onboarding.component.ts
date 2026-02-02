@@ -13,11 +13,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProfileService } from '@core/services/auth/profile.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { FipeAutocompleteComponent, FipeAutocompleteOption } from '../fipe-autocomplete/fipe-autocomplete.component';
 import { CarBrandsService } from '@core/services/cars/car-brands.service';
-import { PricingService, FipeModel } from '@core/services/payments/pricing.service';
+import { PricingService } from '@core/services/payments/pricing.service';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
-import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 @Component({
   selector: 'app-smart-onboarding',
@@ -169,21 +169,27 @@ export class SmartOnboardingComponent implements OnInit {
   }
 
   nextStep() {
-    this.currentStep.update(s => (s < 4 ? s + 1 : 4) as any);
+    this.currentStep.update(s => {
+      const next = s + 1;
+      return (next <= 4 ? next : 4) as 1 | 2 | 3 | 4;
+    });
     if (this.currentStep() === 4) {
       this.completeOnboarding();
     }
   }
 
   prevStep() {
-    this.currentStep.update(s => (s > 1 ? s - 1 : 1) as any);
+    this.currentStep.update(s => {
+      const prev = s - 1;
+      return (prev >= 1 ? prev : 1) as 1 | 2 | 3 | 4;
+    });
   }
 
   skip() {
     this.completeOnboarding(true);
   }
 
-  private async completeOnboarding(skipped = false) {
+  private async completeOnboarding(_skipped = false) {
     this.loading.set(true);
     try {
       // Save profile logic
