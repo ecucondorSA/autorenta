@@ -10,7 +10,9 @@ import {
   OnInit,
   signal,
   ViewChild,
+  PLATFORM_ID,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -134,6 +136,9 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly metaService = inject(MetaService);
   private readonly fxService = inject(FxService);
   private readonly supabase = injectSupabase();
+
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   readonly authService = inject(AuthService);
   readonly pricingService = inject(DynamicPricingService);
   readonly urgentRentalService = inject(UrgentRentalService);
@@ -463,13 +468,21 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
-    // Fall back to storage public URL
+    // Fall back to storage public URL with transformations
     const rawPath = (photo.stored_path ?? '').trim();
     if (!rawPath) return null;
 
     // Defensive: strip bucket prefix if it was accidentally included
     const normalizedPath = rawPath.replace(/^car-images\//, '').replace(/^\/+/, '');
-    const { data } = this.supabase.storage.from('car-images').getPublicUrl(normalizedPath);
+
+    // ✅ OPTIMIZATION: Request transformed image to save bandwidth (Risk #1)
+    const { data } = this.supabase.storage.from('car-images').getPublicUrl(normalizedPath, {
+      transform: {
+        width: 1200, // HD Quality but resized from potential 4K originals
+        quality: 80,
+        format: 'origin', // Keep format or use 'webp' if supported across all targets
+      },
+    });
     return data?.publicUrl ?? null;
   }
 
@@ -1087,7 +1100,10 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
     });
 
     // Save method in sessionStorage for payment page
-    sessionStorage.setItem('payment_method', method);
+    // Save method in sessionStorage for payment page
+    if (this.isBrowser) {
+      sessionStorage.setItem('payment_method', method);
+    }
 
     // Navigate to payment page with method pre-selected
     void this.navigateToPaymentPage(method);
@@ -1113,61 +1129,63 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
     const endDate = new Date(to).toISOString();
 
     // Save booking detail input for payment page
-    sessionStorage.setItem(
-      'booking_detail_input',
-      JSON.stringify({
+    if (this.isBrowser) {
+      sessionStorage.setItem(
+        'booking_detail_input',
+        JSON.stringify({
+          carId: car.id,
+          startDate,
+          endDate,
+          bucket: 'standard', // Default bucket, not stored in Car model
+          vehicleValueUsd: car.value_usd ?? 10000,
+          country: car.location_country ?? 'AR',
+        }),
+      );
+
+      // Navigate with payment method if provided
+      const queryParams: Record<string, string> = {
         carId: car.id,
         startDate,
         endDate,
-        bucket: 'standard', // Default bucket, not stored in Car model
-        vehicleValueUsd: car.value_usd ?? 10000,
-        country: car.location_country ?? 'AR',
-      }),
-    );
+      };
 
-    // Navigate with payment method if provided
-    const queryParams: Record<string, string> = {
-      carId: car.id,
-      startDate,
-      endDate,
-    };
+      if (paymentMethod) {
+        queryParams['paymentMethod'] = paymentMethod;
+      }
 
-    if (paymentMethod) {
-      queryParams['paymentMethod'] = paymentMethod;
-    }
+      // First create the booking, then navigate to payment page
+      try {
+        // Call booking service to create the booking (using requestBooking RPC)
+        const booking = await this.bookingsService.requestBooking(car.id, startDate, endDate);
 
-    // First create the booking, then navigate to payment page
-    try {
-      // Call booking service to create the booking (using requestBooking RPC)
-      const booking = await this.bookingsService.requestBooking(car.id, startDate, endDate);
+        if (booking?.id) {
+          // Navigate to booking request (pre-auth + message)
+          await this.router.navigate(['/bookings', booking.id, 'detail-payment'], {
+            queryParams: paymentMethod ? { paymentMethod } : {},
+          });
+        } else {
+          // Fallback to old flow if booking creation fails
+          await this.router.navigate(['/bookings/detail-payment'], { queryParams });
+        }
+      } catch (error: unknown) {
+        console.error('[CarDetail] Error creating booking:', error);
 
-      if (booking?.id) {
-        // Navigate to booking request (pre-auth + message)
-        await this.router.navigate(['/bookings', booking.id, 'detail-payment'], {
-          queryParams: paymentMethod ? { paymentMethod } : {},
-        });
-      } else {
-        // Fallback to old flow if booking creation fails
+        // Handle specific RPC errors with user-friendly messages
+        const errorMessage = (error as { message?: string })?.message;
+        if (errorMessage === 'OVERLAP') {
+          this.bookingError.set(
+            'Las fechas seleccionadas no están disponibles. Por favor elegí otras fechas.',
+          );
+          // Re-open date picker so user can select new dates
+          this.openDatePicker();
+          return;
+        }
+
+        // Fallback to old flow on other errors
         await this.router.navigate(['/bookings/detail-payment'], { queryParams });
       }
-    } catch (error: unknown) {
-      console.error('[CarDetail] Error creating booking:', error);
-
-      // Handle specific RPC errors with user-friendly messages
-      const errorMessage = (error as { message?: string })?.message;
-      if (errorMessage === 'OVERLAP') {
-        this.bookingError.set(
-          'Las fechas seleccionadas no están disponibles. Por favor elegí otras fechas.',
-        );
-        // Re-open date picker so user can select new dates
-        this.openDatePicker();
-        return;
-      }
-
-      // Fallback to old flow on other errors
-      await this.router.navigate(['/bookings/detail-payment'], { queryParams });
     }
-  }
+  };
 
   async onBookClick(): Promise<void> {
     const car = this.car();

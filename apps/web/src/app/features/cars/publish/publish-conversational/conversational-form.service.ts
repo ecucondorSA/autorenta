@@ -1,4 +1,5 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CarsService } from '@core/services/cars/cars.service';
@@ -37,7 +38,10 @@ export class ConversationalFormService {
   private readonly fb = inject(FormBuilder);
   private readonly carsService = inject(CarsService);
   private readonly notifications = inject(NotificationManagerService);
+
   private readonly router = inject(Router);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   private readonly STORAGE_KEY = 'autorenta_publish_draft';
   private readonly QUESTIONS: QuestionId[] = [
@@ -345,6 +349,7 @@ export class ConversationalFormService {
    * Save draft to localStorage
    */
   saveDraft(): void {
+    if (!this.isBrowser) return;
     try {
       const draft = {
         currentIndex: this.currentIndex(),
@@ -368,6 +373,7 @@ export class ConversationalFormService {
    * Restore draft from localStorage
    */
   restoreDraft(): boolean {
+    if (!this.isBrowser) return false;
     try {
       const saved = localStorage.getItem(this.STORAGE_KEY);
       if (!saved) return false;
@@ -431,6 +437,7 @@ export class ConversationalFormService {
    * Clear draft from localStorage
    */
   clearDraft(): void {
+    if (!this.isBrowser) return;
     localStorage.removeItem(this.STORAGE_KEY);
   }
 

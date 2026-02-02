@@ -8,7 +8,9 @@ import {
   signal,
   computed,
   inject,
+  PLATFORM_ID,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { IconComponent } from '@shared/components/icon/icon.component';
 import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
@@ -326,6 +328,8 @@ export class PreTripViewComponent implements OnInit, OnDestroy {
   @Input() hoursToPickup = 48;
 
   private readonly router = inject(Router);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private intervalId: ReturnType<typeof setInterval> | null = null;
 
   // Timer state
@@ -428,8 +432,12 @@ export class PreTripViewComponent implements OnInit, OnDestroy {
     if (!car_city && !car_province) return null;
 
     const location = encodeURIComponent(`${car_city ?? ''}, ${car_province ?? ''}, Argentina`);
-    const apiKey =
-      (window as Window & { __GOOGLE_MAPS_API_KEY__?: string }).__GOOGLE_MAPS_API_KEY__ ?? '';
+
+    // SSR Safe: Window check
+    let apiKey = '';
+    if (this.isBrowser) {
+      apiKey = (window as Window & { __GOOGLE_MAPS_API_KEY__?: string }).__GOOGLE_MAPS_API_KEY__ ?? '';
+    }
 
     // Google Static Maps API
     return `https://maps.googleapis.com/maps/api/staticmap?center=${location}&zoom=14&size=400x200&scale=2&maptype=roadmap&markers=color:red%7C${location}&key=${apiKey}`;
@@ -486,6 +494,7 @@ export class PreTripViewComponent implements OnInit, OnDestroy {
   }
 
   private loadChecklistState(): void {
+    if (!this.isBrowser) return; // SSR Safe
     try {
       const key = `pretrip-checklist-${this.booking.id}`;
       const saved = localStorage.getItem(key);
@@ -504,6 +513,7 @@ export class PreTripViewComponent implements OnInit, OnDestroy {
   }
 
   private saveChecklistState(): void {
+    if (!this.isBrowser) return; // SSR Safe
     try {
       const key = `pretrip-checklist-${this.booking.id}`;
       const checkedIds = this.checklist()

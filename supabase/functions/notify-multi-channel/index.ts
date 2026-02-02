@@ -101,6 +101,12 @@ const TEMPLATES: Record<string, { subject: string; body: string; push_title: str
     push_title: 'Transferencia enviada',
     push_body: 'Transferimos {{amount}} a tu cuenta.',
   },
+  new_chat_message: {
+    subject: 'Nuevo mensaje de {{sender_name}}',
+    body: '{{message_preview}}',
+    push_title: '{{sender_name}}',
+    push_body: '{{message_preview}}',
+  },
 };
 
 // Replace template variables
