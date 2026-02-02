@@ -368,6 +368,20 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
       return '';
     }
 
+    // Argentina-specific: Add '9' for mobile numbers if missing
+    // Mobile numbers in Argentina start with area code (11, 351, etc.) and then 8 digits
+    // When calling internationally, you need +54 9 <area code> <number>
+    if (countryCode === '+54' && cleaned.length === 10) {
+      // Check if it starts with a valid area code (11 for Buenos Aires, etc.)
+      // If it's 10 digits without the 9, add it for mobile compatibility
+      const mobileAreaCodes = ['11', '15', '221', '223', '261', '264', '341', '342', '351', '379', '381', '388'];
+      const startsWithAreaCode = mobileAreaCodes.some(code => cleaned.startsWith(code));
+      if (startsWithAreaCode && !cleaned.startsWith('9')) {
+        cleaned = '9' + cleaned;
+        this.logger.info('Auto-added 9 prefix for Argentina mobile', { originalLength: 10 });
+      }
+    }
+
     // Add country code
     return `${countryCode}${cleaned}`;
   }
@@ -377,7 +391,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
    */
   private getPhoneFormatHint(countryCode: string): string {
     const hints: Record<string, string> = {
-      '+54': '+54 seguido de 10 dígitos (ej: +5491123456789)',
+      '+54': '+54 9 seguido de 10 dígitos para móviles (ej: +5491122456789)',
       '+1': '+1 seguido de 10 dígitos (ej: +15551234567)',
       '+52': '+52 seguido de 10 dígitos (ej: +525512345678)',
       '+55': '+55 seguido de 10-11 dígitos (ej: +5511987654321)',
@@ -407,8 +421,10 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
 
     // Country-specific validation
     if (phone.startsWith('+54')) {
-      // Argentina: +54 followed by 10 digits (total 12 digits after +)
-      return /^\+54\d{10}$/.test(phone);
+      // Argentina: Mobile numbers are +54 9 XX XXXX-XXXX (11 digits after +54)
+      // Landlines are +54 XX XXXX-XXXX (10 digits after +54)
+      // We accept both: 10 digits (landline) or 11 digits (mobile with '9')
+      return /^\+54(9?\d{10})$/.test(phone);
     } else if (phone.startsWith('+1')) {
       // USA/Canada: +1 followed by 10 digits (total 11 digits after +)
       return /^\+1\d{10}$/.test(phone);
