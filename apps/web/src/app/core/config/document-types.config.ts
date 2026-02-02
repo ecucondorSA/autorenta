@@ -10,6 +10,7 @@ export interface DocumentTypeConfig {
   emoji: string;
   description: string;
   category: 'identity' | 'vehicle' | 'other';
+  acceptedFormats?: string[];
 }
 
 export const DOCUMENT_TYPES: Record<string, DocumentTypeConfig> = {
