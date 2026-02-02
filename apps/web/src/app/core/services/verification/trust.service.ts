@@ -32,14 +32,23 @@ export class TrustService {
         .select('*')
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
-        
-      if (error && error.code !== 'PGRST116') throw error;
-      
-      this.currentTrust.set(data as TrustAssessment);
+        .maybeSingle();
+
+      // PGRST116 = no rows, 406 = table doesn't exist or RLS denied
+      if (error && !['PGRST116', '42P01'].includes(error.code ?? '')) {
+        // Only log if it's not a known "table missing" error
+        if (error.message?.includes('406') || error.code === 'PGRST200') {
+          console.debug('[TrustService] risk_assessments table not ready yet');
+        } else {
+          throw error;
+        }
+      }
+
+      this.currentTrust.set(data as TrustAssessment | null);
       return data;
     } catch (err) {
-      console.error('Error fetching trust status:', err);
+      console.debug('[TrustService] Trust status unavailable:', err);
+      this.currentTrust.set(null);
       return null;
     } finally {
       this.loading.set(false);

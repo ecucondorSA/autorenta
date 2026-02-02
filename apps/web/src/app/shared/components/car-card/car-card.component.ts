@@ -167,7 +167,9 @@ export class CarCardComponent implements OnInit, OnDestroy {
     if (value?.region_id) {
       void this.loadDynamicPrice();
     } else {
-      console.warn('⚠️ [CarCard] No region_id, skipping dynamic pricing');
+      // Silently use static price when region_id is missing
+      this.logger.debug('[CarCard] No region_id, using static price', { carId: value?.id });
+      this.dynamicPrice.set(null);
     }
   }
 

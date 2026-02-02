@@ -934,10 +934,54 @@ if (environment.features.enableP2P) {
 4. **Tipos:** Regenerar tipos de TypeScript si el esquema cambia.
 
 ### Despliegue (Deploy)
-1. **Pre-Check:** Ejecutar `pnpm lint` localmente.
-2. **Push:** Commit y Push a `main`.
-3. **CI Monitor:** Verificar GitHub Actions. Si falla, corregir inmediatamente (prioridad máxima).
-4. **Verification:** Smoke test en producción.
+
+**ORDEN OBLIGATORIO DE DEPLOY:**
+
+```
+1. DATABASE (Migraciones SQL)
+   ↓
+2. EDGE FUNCTIONS (Supabase Functions)
+   ↓
+3. BUILD (Frontend Angular)
+```
+
+**Razón:** El frontend puede depender de nuevas tablas/funciones. Si se hace build primero, habrá errores 404/406 hasta que el backend esté listo.
+
+#### Paso 1: Base de Datos
+```bash
+# Verificar migraciones pendientes
+ls -la supabase/migrations/*.sql | tail -5
+
+# Aplicar migraciones
+supabase db push
+
+# O manualmente en Supabase Dashboard > SQL Editor
+```
+
+#### Paso 2: Edge Functions
+```bash
+# Deploy todas las functions modificadas
+supabase functions deploy
+
+# O una específica
+supabase functions deploy nombre-funcion
+```
+
+#### Paso 3: Build Frontend
+```bash
+# Pre-check
+pnpm lint
+
+# Build
+pnpm build:web
+
+# Push (CI/CD hace deploy automático)
+git add . && git commit -m "feat: descripción" && git push
+```
+
+#### Paso 4: Verificación
+1. **CI Monitor:** Verificar GitHub Actions. Si falla, corregir inmediatamente.
+2. **Smoke Test:** Probar flujos críticos en producción.
 
 ---
 
