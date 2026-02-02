@@ -1,3 +1,7 @@
+## <small>3.54.4 (2026-02-02)</small>
+
+* fix: update ChatMessage import to AgentChatMessage in rentarfast page ([40a3e60](https://github.com/ecucondorSA/autorenta/commit/40a3e60))
+
 ## <small>3.54.3 (2026-02-02)</small>
 
 * fix: remove duplicate ChatMessage type alias to pass guardrails ([4992c4c](https://github.com/ecucondorSA/autorenta/commit/4992c4c))
