@@ -206,12 +206,12 @@ jobs:
           echo "Created capacitor-cordova-android-plugins structure:"
           ls -la "$CORDOVA_DIR"
 
-      - name: Copy web assets to Android
+      - name: Sync Capacitor Android
         run: |
-          # Use cap copy instead of cap sync to avoid the Capacitor CLI bug
-          # cap copy only copies web assets, doesn't update native plugins
-          pnpm --filter autorentar-web exec cap copy android
-          echo "✅ Web assets copied to Android"
+          # Use cap sync to regenerate capacitor.settings.gradle with correct pnpm paths
+          # This is required because the committed file has Bun-specific paths
+          pnpm --filter autorentar-web exec cap sync android
+          echo "✅ Capacitor synced with Android"
 
       - name: Decode Keystore
         if: github.event.inputs.build_type == 'release'
