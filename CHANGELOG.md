@@ -1,3 +1,8 @@
+## <small>3.57.1 (2026-02-02)</small>
+
+* style: remove unused MoneyPipe import ([6475c08](https://github.com/ecucondorSA/autorenta/commit/6475c08))
+* fix(onboarding): resolve build errors (unused pipe & strict null checks) ([bf96a71](https://github.com/ecucondorSA/autorenta/commit/bf96a71))
+
 ## 3.57.0 (2026-02-02)
 
 * style(onboarding): replace emojis with premium SVGs & fix lint ([881fcc0](https://github.com/ecucondorSA/autorenta/commit/881fcc0)), closes [hi#quality](https://github.com/hi/issues/quality)
