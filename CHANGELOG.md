@@ -1,3 +1,7 @@
+## 3.55.0 (2026-02-02)
+
+* feat(profile): UX/UI redesign with verification banner, referral hero, and quick actions ([b14c52a](https://github.com/ecucondorSA/autorenta/commit/b14c52a))
+
 ## <small>3.54.6 (2026-02-02)</small>
 
 * fix(verification): handle missing email and non-blocking RPC calls ([26ae625](https://github.com/ecucondorSA/autorenta/commit/26ae625))
