@@ -59,4 +59,4 @@ include ':sentry-capacitor'
 project(':sentry-capacitor').projectDir = new File('../../../node_modules/@sentry/capacitor/android')
 
 include ':capacitor-native-google-one-tap-signin'
-project(':capacitor-native-google-one-tap-signin').projectDir = new File('../../../node_modules/capacitor-native-google-one-tap-signin/android/googleauth-plugin')
+project(':capacitor-native-google-one-tap-signin').projectDir = new File('./capacitor-native-google-one-tap-signin')
