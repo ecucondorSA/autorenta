@@ -17,7 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  ChatMessage,
+  AgentChatMessage,
   AgentChatSuggestion,
   RentarfastAgentService,
 } from '@core/services/ai/rentarfast-agent.service';
@@ -484,7 +484,7 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
     }
   }
 
-  trackByMessageId(index: number, message: ChatMessage): string {
+  trackByMessageId(index: number, message: AgentChatMessage): string {
     return message.id;
   }
 
