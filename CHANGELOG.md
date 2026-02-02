@@ -1,3 +1,7 @@
+## <small>3.58.11 (2026-02-02)</small>
+
+* perf(android): optimize gradle build config ([1ab14f6](https://github.com/ecucondorSA/autorenta/commit/1ab14f6))
+
 ## <small>3.58.10 (2026-02-02)</small>
 
 * fix(android): use local google-one-tap-signin plugin to avoid Kotlin conflict ([7e30e7c](https://github.com/ecucondorSA/autorenta/commit/7e30e7c))
