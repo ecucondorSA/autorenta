@@ -1,3 +1,7 @@
+## <small>3.58.4 (2026-02-02)</small>
+
+* fix(e2e): ignore Google Sign-In FedCM errors in headless tests ([b9ff200](https://github.com/ecucondorSA/autorenta/commit/b9ff200))
+
 ## <small>3.58.3 (2026-02-02)</small>
 
 * fix: add accounts.google.com to CSP style-src for Google Sign-In ([772ba40](https://github.com/ecucondorSA/autorenta/commit/772ba40))
