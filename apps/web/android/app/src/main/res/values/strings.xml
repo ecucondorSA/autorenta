@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Autorentar</string>
+    <string name="title_activity_main">Autorentar</string>
+    <string name="package_name">app.autorentar</string>
+    <string name="custom_url_scheme">app.autorentar</string>
+    <string name="server_client_id">199395590437-8e29faaapojqolscpqatotvn366pevdr.apps.googleusercontent.com</string>
+    <!-- Facebook Login -->
+    <string name="facebook_app_id">4435998730015502</string>
+    <string name="fb_login_protocol_scheme">fb4435998730015502</string>
+    <string name="facebook_client_token">b93293e764bad81ea3d88b4011c8c07d</string>
+</resources>

@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "2933571972",
+    "project_id": "autorentar-e7254",
+    "storage_bucket": "autorentar-e7254.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2933571972:android:a360e55f494d7aa7e2ddd1",
+        "android_client_info": {
+          "package_name": "app.autorentar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "2933571972-35f1evrj5drcoofvtmfkd2a4pkg87jdd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.autorentar",
+            "certificate_hash": "6f781b2c1ebf6a0b362e761c405c63d91af7555e"
+          }
+        },
+        {
+          "client_id": "2933571972-6lugsdi8u515g29c38rgblpn93bgvla5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.autorentar",
+            "certificate_hash": "e991b32374f339f15af76f9993d534acfa5f2e1f"
+          }
+        },
+        {
+          "client_id": "2933571972-6lugsdi8u515g29c38rgblpn93bgvla5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.autorentar",
+            "certificate_hash": "b4639a85a0e0b2d5ae2ea9c6a51ac47d9840fad3"
+          }
+        },
+        {
+          "client_id": "2933571972-lps8689svegahs81niaquujrq19158nj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeKWsiyDhJk3CgMRh4Ntlo7L4fL0TcGk4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "2933571972-lps8689svegahs81niaquujrq19158nj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

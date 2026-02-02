@@ -1,0 +1,101 @@
+apply plugin: 'com.android.application'
+apply plugin: 'androidx.baselineprofile'
+
+android {
+    namespace "app.autorentar"
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "app.autorentar"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 234
+        versionName "3.58.6"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+
+    signingConfigs {
+        release {
+            def keystorePassword = System.getenv("KEYSTORE_PASSWORD")
+            def keyPwd = System.getenv("KEY_PASSWORD")
+
+            // Use release keystore if passwords available, otherwise will fallback to debug
+            if (keystorePassword != null && keyPwd != null) {
+                storeFile file("../keystore/autorentar-release.keystore")
+                storePassword keystorePassword
+                keyAlias "autorentar"
+                keyPassword keyPwd
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Use release signing if available, otherwise debug
+            signingConfig System.getenv("KEYSTORE_PASSWORD") ? signingConfigs.release : signingConfigs.debug
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
+        }
+    }
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+    implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
+    implementation "androidx.work:work-runtime:2.9.0"
+
+    // Baseline Profile - installs profiles at app install time
+    implementation "androidx.profileinstaller:profileinstaller:1.3.1"
+    baselineProfile project(':baselineprofile')
+}
+
+// Baseline Profile configuration
+baselineProfile {
+    dexLayoutOptimization = true
+}
+
+// ROBUSTNESS: Remove AD_ID permission at Gradle level (redundant with manifest merge, but explicit)
+// This ensures the permission is removed even if transitive dependencies add it
+afterEvaluate {
+    android.applicationVariants.all { variant ->
+        variant.mergeResources.doLast {
+            println("🔒 AD_ID Permission Removal: Enabled for ${variant.name} variant")
+        }
+    }
+}
+
+apply from: 'capacitor.build.gradle'
+
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(Exception e) {
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}

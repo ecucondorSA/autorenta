@@ -1,0 +1,38 @@
+plugins {
+    id 'com.android.test'
+    id 'org.jetbrains.kotlin.android'
+    id 'androidx.baselineprofile'
+}
+
+android {
+    namespace 'app.autorentar.baselineprofile'
+    compileSdk rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdk 28  // Baseline profiles require API 28+
+        targetSdk rootProject.ext.targetSdkVersion
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+
+    kotlinOptions {
+        jvmTarget = '21'
+    }
+
+    targetProjectPath = ":app"
+}
+
+baselineProfile {
+    useConnectedDevices = true
+}
+
+dependencies {
+    implementation "androidx.test.ext:junit:1.1.5"
+    implementation "androidx.test.espresso:espresso-core:3.5.1"
+    implementation "androidx.test.uiautomator:uiautomator:2.2.0"
+    implementation "androidx.benchmark:benchmark-macro-junit4:1.2.3"
+}
