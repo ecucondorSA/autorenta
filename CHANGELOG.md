@@ -1,3 +1,7 @@
+## <small>3.58.5 (2026-02-02)</small>
+
+* fix(e2e): ignore Binance CORS errors in CI environment ([52603a7](https://github.com/ecucondorSA/autorenta/commit/52603a7))
+
 ## <small>3.58.4 (2026-02-02)</small>
 
 * fix(e2e): ignore Google Sign-In FedCM errors in headless tests ([b9ff200](https://github.com/ecucondorSA/autorenta/commit/b9ff200))
