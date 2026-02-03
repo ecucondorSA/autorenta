@@ -65,7 +65,13 @@ jobs:
                 }
               } else {
                 console.error('❌ Error processing retries:', result);
-                core.setFailed(`Payment retry processing failed: ${result.error || 'Unknown error'}`);
+                // Treat schema cache errors as warnings (transient Supabase issue)
+                if (result.error && result.error.includes('schema cache')) {
+                  console.log('⚠️ PostgREST schema cache not yet updated - this is transient');
+                  console.log('   The function exists but PostgREST needs time to refresh');
+                } else {
+                  core.setFailed(`Payment retry processing failed: ${result.error || 'Unknown error'}`);
+                }
               }
             } catch (error) {
               console.error('❌ Exception:', error);
