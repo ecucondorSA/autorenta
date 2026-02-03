@@ -67,7 +67,7 @@ import {
             (click)="join.emit('club_standard')"
             class="flex-1 py-3 px-4 rounded-xl bg-amber-500 text-black font-semibold text-sm hover:bg-amber-400 transition-colors"
           >
-            Unirse por $300/ano
+            Unirse por $300/mes
           </button>
           <button
             (click)="viewPlans.emit()"

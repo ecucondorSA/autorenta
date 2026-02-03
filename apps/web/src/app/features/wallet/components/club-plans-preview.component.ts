@@ -82,7 +82,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
 
             <div class="flex items-baseline gap-1">
               <span class="text-2xl font-bold text-text-primary">\${{ tier.price_usd }}</span>
-              <span class="text-xs text-text-secondary">/ano</span>
+              <span class="text-xs text-text-secondary">/mes</span>
             </div>
 
             <div [class]="getCoverageBoxClass(tier)" class="rounded-lg p-3">
@@ -113,7 +113,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
               } @else if (hasActiveSubscription()) {
                 Mejorar a {{ tier.name }}
               } @else {
-                Unirse por \${{ tier.price_usd }}/ano
+                Unirse por \${{ tier.price_usd }}/mes
               }
             </button>
           </div>
