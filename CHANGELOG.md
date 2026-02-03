@@ -1,3 +1,10 @@
+## <small>3.65.5 (2026-02-03)</small>
+
+* fix(db): grant execute permissions to anon and service_role for RPC functions ([1cef0bf](https://github.com/ecucondorSA/autorenta/commit/1cef0bf))
+* ci: add function verification to migration workflow ([e04beab](https://github.com/ecucondorSA/autorenta/commit/e04beab))
+* ci: add manual edge function deployment workflow ([20797f8](https://github.com/ecucondorSA/autorenta/commit/20797f8))
+* chore(db): force PostgREST schema cache reload ([5dd0479](https://github.com/ecucondorSA/autorenta/commit/5dd0479))
+
 ## <small>3.65.4 (2026-02-03)</small>
 
 * fix(db): complete payment retry system from scratch ([147d58d](https://github.com/ecucondorSA/autorenta/commit/147d58d))
