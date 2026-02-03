@@ -1,3 +1,7 @@
+## <small>3.64.5 (2026-02-03)</small>
+
+* fix(marketplace): add missing template methods ([121d006](https://github.com/ecucondorSA/autorenta/commit/121d006))
+
 ## <small>3.64.4 (2026-02-03)</small>
 
 * fix: build errors and uptime monitoring ([35688a6](https://github.com/ecucondorSA/autorenta/commit/35688a6))
