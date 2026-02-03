@@ -1,3 +1,8 @@
+## <small>3.64.7 (2026-02-03)</small>
+
+* fix: database schema alignment and FK references ([a05fe82](https://github.com/ecucondorSA/autorenta/commit/a05fe82))
+* revert: undo marketplace-v2 changes per user request ([2af98e3](https://github.com/ecucondorSA/autorenta/commit/2af98e3))
+
 ## <small>3.64.6 (2026-02-03)</small>
 
 * fix(marketplace): add dateRange signal and DateRangePickerComponent ([c44829f](https://github.com/ecucondorSA/autorenta/commit/c44829f))
