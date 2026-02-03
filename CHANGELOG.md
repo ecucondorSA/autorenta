@@ -1,3 +1,9 @@
+## 3.65.0 (2026-02-03)
+
+* feat: marketplace marquee redesign + schema fixes + verification improvements ([0784574](https://github.com/ecucondorSA/autorenta/commit/0784574))
+* fix: add missing BookingOpsTimelineComponent import ([a777b71](https://github.com/ecucondorSA/autorenta/commit/a777b71))
+* ci: trigger workflow for FK fixes ([b10357b](https://github.com/ecucondorSA/autorenta/commit/b10357b))
+
 ## <small>3.64.7 (2026-02-03)</small>
 
 * fix: database schema alignment and FK references ([a05fe82](https://github.com/ecucondorSA/autorenta/commit/a05fe82))
