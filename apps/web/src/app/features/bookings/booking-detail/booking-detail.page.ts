@@ -103,6 +103,7 @@ import {
   BookingFlowCardComponent,
   FlowActionEvent,
 } from '../../../shared/components/booking-flow-card/booking-flow-card.component';
+import { BookingOpsTimelineComponent } from '../../../shared/components/booking-ops-timeline/booking-ops-timeline.component';
 import { BookingTimelineComponent } from './booking-timeline.component';
 import { BookingActionsCardComponent } from './booking-actions-card.component';
 import { BookingCheckInInfoCardComponent } from './booking-check-in-info-card.component';
@@ -192,6 +193,7 @@ const DISPUTE_STATUSES = new Set<BookingStatus>([
     BookingFlowCardComponent,
     HoverLiftDirective,
     StaggerEnterDirective,
+    BookingOpsTimelineComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
