@@ -64,9 +64,9 @@ serve(async (req: Request) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-    // 1. Get pending retries
+    // 1. Get pending retries (using fetch_payment_retries to bypass PostgREST cache issues)
     const { data: pendingRetries, error: fetchError } = await supabase
-      .rpc('get_pending_retries', { p_limit: 50 });
+      .rpc('fetch_payment_retries', { p_limit: 50 });
 
     if (fetchError) {
       throw fetchError;
