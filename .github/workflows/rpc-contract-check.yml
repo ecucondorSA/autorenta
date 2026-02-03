@@ -1,0 +1,209 @@
+name: 🔗 RPC Contract Check
+
+# Verifica que todos los RPCs usados en el frontend existen en la BD
+# Detecta problemas de integración ANTES de que lleguen a producción
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'supabase/migrations/**'
+      - 'apps/web/src/**/*.ts'
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'apps/web/src/**/*.ts'
+  workflow_dispatch:
+  schedule:
+    # Run daily at 7 AM UTC to catch drift
+    - cron: '0 7 * * *'
+
+env:
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+  SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+
+jobs:
+  extract-rpcs:
+    name: 📋 Extract RPC calls from frontend
+    runs-on: ubuntu-latest
+    outputs:
+      rpc_list: ${{ steps.extract.outputs.rpc_list }}
+      rpc_count: ${{ steps.extract.outputs.rpc_count }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract all RPC function names from frontend code
+        id: extract
+        run: |
+          echo "🔍 Scanning frontend code for RPC calls..."
+
+          # Extract all .rpc('function_name') calls
+          RPC_CALLS=$(grep -roh "\.rpc(['\"][a-z_]*['\"]" apps/web/src/ 2>/dev/null | \
+            sed "s/\.rpc(['\"]//g" | sed "s/['\"]//g" | \
+            sort -u | tr '\n' ',' | sed 's/,$//')
+
+          echo "📋 Found RPC calls: $RPC_CALLS"
+
+          # Count them
+          RPC_COUNT=$(echo "$RPC_CALLS" | tr ',' '\n' | wc -l)
+          echo "📊 Total unique RPC functions: $RPC_COUNT"
+
+          echo "rpc_list=$RPC_CALLS" >> $GITHUB_OUTPUT
+          echo "rpc_count=$RPC_COUNT" >> $GITHUB_OUTPUT
+
+  verify-rpcs:
+    name: ✅ Verify RPCs exist in database
+    runs-on: ubuntu-latest
+    needs: extract-rpcs
+    if: needs.extract-rpcs.outputs.rpc_count > 0
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required secrets
+        id: check-secrets
+        run: |
+          if [ -z "$SUPABASE_PROJECT_ID" ] || [ -z "$SUPABASE_DB_PASSWORD" ]; then
+            echo "⚠️ SUPABASE_PROJECT_ID or SUPABASE_DB_PASSWORD not configured"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup psql client
+        if: steps.check-secrets.outputs.skip != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Verify each RPC exists
+        if: steps.check-secrets.outputs.skip != 'true'
+        run: |
+          echo "🔗 Connecting to database..."
+
+          DB_HOST="db.${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co"
+          DB_URL="postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@${DB_HOST}:5432/postgres"
+
+          RPC_LIST="${{ needs.extract-rpcs.outputs.rpc_list }}"
+
+          MISSING=""
+          FOUND=0
+
+          for RPC in $(echo "$RPC_LIST" | tr ',' '\n'); do
+            [ -z "$RPC" ] && continue
+
+            echo "🔍 Checking: $RPC"
+
+            # Check if function exists in public schema
+            EXISTS=$(psql "$DB_URL" -t -c "
+              SELECT COUNT(*) FROM pg_proc p
+              JOIN pg_namespace n ON p.pronamespace = n.oid
+              WHERE n.nspname = 'public' AND p.proname = '$RPC'
+            " 2>/dev/null | tr -d ' ')
+
+            if [ "$EXISTS" = "0" ] || [ -z "$EXISTS" ]; then
+              echo "❌ MISSING: $RPC"
+              MISSING="$MISSING $RPC"
+            else
+              echo "✅ Found: $RPC"
+              FOUND=$((FOUND + 1))
+            fi
+          done
+
+          echo ""
+          echo "📊 Results: $FOUND found"
+
+          if [ -n "$MISSING" ]; then
+            echo ""
+            echo "::error::❌ Missing RPC functions:$MISSING"
+            echo ""
+            echo "These functions are called in the frontend but don't exist in the database."
+            echo "Either:"
+            echo "  1. Add the missing migration to create the function"
+            echo "  2. Remove the RPC call from the frontend"
+            exit 1
+          fi
+
+          echo "✅ All RPCs verified successfully!"
+
+  check-migrations-applied:
+    name: 🔄 Check migrations are applied
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required secrets
+        id: check-secrets
+        run: |
+          if [ -z "${{ secrets.SUPABASE_PROJECT_ID }}" ] || [ -z "${{ secrets.SUPABASE_DB_PASSWORD }}" ]; then
+            echo "⚠️ Database secrets not configured, skipping migration check"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup psql client
+        if: steps.check-secrets.outputs.skip != 'true'
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Compare local vs remote migrations
+        if: steps.check-secrets.outputs.skip != 'true'
+        run: |
+          DB_HOST="db.${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co"
+          DB_URL="postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@${DB_HOST}:5432/postgres"
+
+          echo "📂 Local migrations:"
+          LOCAL_MIGRATIONS=$(ls -1 supabase/migrations/*.sql 2>/dev/null | xargs -I {} basename {} | sort)
+          echo "$LOCAL_MIGRATIONS" | head -20
+          LOCAL_COUNT=$(echo "$LOCAL_MIGRATIONS" | wc -l)
+          echo "Total: $LOCAL_COUNT"
+
+          echo ""
+          echo "🌐 Remote migrations:"
+          REMOTE_MIGRATIONS=$(psql "$DB_URL" -t -c "
+            SELECT name FROM supabase_migrations.schema_migrations ORDER BY name
+          " 2>/dev/null | tr -d ' ' | grep -v '^$' | sort)
+          echo "$REMOTE_MIGRATIONS" | head -20
+          REMOTE_COUNT=$(echo "$REMOTE_MIGRATIONS" | grep -v '^$' | wc -l)
+          echo "Total: $REMOTE_COUNT"
+
+          # Find migrations that are local but not remote (pending)
+          PENDING=$(comm -23 <(echo "$LOCAL_MIGRATIONS") <(echo "$REMOTE_MIGRATIONS") 2>/dev/null)
+
+          if [ -n "$PENDING" ]; then
+            echo ""
+            echo "::warning::⚠️ Pending migrations (local but not applied to remote):"
+            echo "$PENDING"
+          else
+            echo ""
+            echo "✅ All local migrations are applied to remote"
+          fi
+
+  summary:
+    name: 📝 Generate Summary
+    runs-on: ubuntu-latest
+    needs: [extract-rpcs, verify-rpcs, check-migrations-applied]
+    if: always()
+    steps:
+      - name: Create summary
+        run: |
+          echo "## 🔗 RPC Contract Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| RPC Extraction | ${{ needs.extract-rpcs.outputs.rpc_count }} functions found |" >> $GITHUB_STEP_SUMMARY
+          echo "| RPC Verification | ${{ needs.verify-rpcs.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Migrations Check | ${{ needs.check-migrations-applied.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.verify-rpcs.result }}" == "failure" ]; then
+            echo "### ❌ Action Required" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Some RPC functions used in the frontend don't exist in the database." >> $GITHUB_STEP_SUMMARY
+            echo "This will cause 400/404 errors at runtime." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**To fix:**" >> $GITHUB_STEP_SUMMARY
+            echo "1. Check if the migration was applied: \`supabase db push\`" >> $GITHUB_STEP_SUMMARY
+            echo "2. Force PostgREST reload: pause/restore project in dashboard" >> $GITHUB_STEP_SUMMARY
+            echo "3. Or create the missing function in a new migration" >> $GITHUB_STEP_SUMMARY
+          fi

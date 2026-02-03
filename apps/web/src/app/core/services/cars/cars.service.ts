@@ -223,7 +223,7 @@ export class CarsService {
         `
         *,
         car_photos(*),
-        owner:profiles!cars_owner_id_fkey(
+        owner:profiles!cars_owner_id_profiles_fkey(
           id,
           full_name,
           avatar_url,
@@ -297,7 +297,7 @@ export class CarsService {
         `
         *,
         car_photos(*),
-        owner:profiles!cars_owner_id_fkey(
+        owner:profiles!cars_owner_id_profiles_fkey(
           id,
           full_name,
           avatar_url,
@@ -351,7 +351,7 @@ export class CarsService {
         `
         *,
         car_photos(*),
-        owner:profiles!cars_owner_id_fkey(
+        owner:profiles!cars_owner_id_profiles_fkey(
           id,
           full_name,
           avatar_url,

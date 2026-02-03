@@ -143,7 +143,7 @@ export class ActiveRentalPage implements OnInit {
     try {
       const { data: car } = await this.bookingsService['supabase']
         .from('cars')
-        .select('owner:profiles!cars_owner_id_fkey(full_name, phone, whatsapp)')
+        .select('owner:profiles!cars_owner_id_profiles_fkey(full_name, phone, whatsapp)')
         .eq('id', carId)
         .single();
 

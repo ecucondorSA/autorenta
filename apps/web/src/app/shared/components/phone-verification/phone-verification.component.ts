@@ -27,11 +27,15 @@ import { OtpInputComponent } from '../otp-input/otp-input.component';
             {{ status().value || 'No configurado' }}
           </p>
         </div>
-        
+
         @if (status().isVerified) {
           <span class="flex items-center gap-1 text-xs font-medium text-success-600 bg-success-50 px-2 py-1 rounded-full">
             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
             Verificado
+          </span>
+        } @else if (SERVICE_TEMPORARILY_DISABLED) {
+          <span class="flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
+            En mantenimiento
           </span>
         } @else {
           <span class="flex items-center gap-1 text-xs font-medium text-warning-700 bg-warning-50 px-2 py-1 rounded-full">
@@ -40,8 +44,23 @@ import { OtpInputComponent } from '../otp-input/otp-input.component';
         }
       </div>
 
+      <!-- Service Temporarily Disabled Notice -->
+      @if (!status().isVerified && SERVICE_TEMPORARILY_DISABLED) {
+        <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-600">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p class="font-medium text-gray-700">Verificación temporalmente no disponible</p>
+              <p class="mt-1">El servicio de verificación por SMS está en mantenimiento. Puedes continuar usando la plataforma mientras tanto.</p>
+            </div>
+          </div>
+        </div>
+      }
+
       <!-- Pending Action -->
-      @if (!status().isVerified) {
+      @if (!status().isVerified && !SERVICE_TEMPORARILY_DISABLED) {
         <div class="animate-fade-in">
           <!-- Phone Input (if OTP not sent yet) -->
           @if (!status().otpSent) {
@@ -157,6 +176,10 @@ import { OtpInputComponent } from '../otp-input/otp-input.component';
 })
 export class PhoneVerificationComponent implements OnInit, OnDestroy {
   private readonly phoneVerificationService = inject(PhoneVerificationService);
+
+  // Temporarily disable phone verification while Twilio credentials are not configured
+  // Set to false when Twilio is properly configured in Supabase Auth settings
+  readonly SERVICE_TEMPORARILY_DISABLED = true;
 
   readonly status = this.phoneVerificationService.status;
   readonly loading = this.phoneVerificationService.loading;

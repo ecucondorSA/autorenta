@@ -90,19 +90,14 @@ import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/a
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
 import { BookingInsuranceSummaryComponent } from '../../../shared/components/booking-insurance-summary/booking-insurance-summary.component';
-import { BookingOpsTimelineComponent } from '../../../shared/components/booking-ops-timeline/booking-ops-timeline.component';
 import { BookingPricingBreakdownComponent } from '../../../shared/components/booking-pricing-breakdown/booking-pricing-breakdown.component';
 import { BookingTrackingComponent } from '../../../shared/components/booking-tracking/booking-tracking.component';
-import { DamageComparisonComponent } from '../../../shared/components/damage-comparison/damage-comparison.component';
 import { DisputeFormComponent } from '../../../shared/components/dispute-form/dispute-form.component';
-import { DisputesListComponent } from '../../../shared/components/disputes-list/disputes-list.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { RefundRequestComponent } from '../../../shared/components/refund-request/refund-request.component';
-import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
 import { ReportOwnerNoShowComponent } from '../../../shared/components/report-owner-no-show/report-owner-no-show.component';
 import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component';
 import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component';
-import { SettlementSimulatorComponent } from '../../../shared/components/settlement-simulator/settlement-simulator.component';
 import { SidePanelComponent } from '../../../shared/components/side-panel/side-panel.component';
 import {
   BookingFlowCardComponent,
@@ -114,7 +109,6 @@ import { BookingCheckInInfoCardComponent } from './booking-check-in-info-card.co
 import { BookingExtensionsManagerComponent } from './booking-extensions-manager.component';
 import { BookingStatusComponent } from './booking-status.component';
 import { BookingTrafficFinesManagerComponent } from './booking-traffic-fines-manager.component';
-import { ReviewManagementComponent } from './review-management.component';
 
 interface ReturnChecklistItem {
   id: string;
@@ -177,21 +171,15 @@ const DISPUTE_STATUSES = new Set<BookingStatus>([
     BookingChatComponent,
     TranslateModule,
     BookingStatusComponent,
-    ReviewManagementComponent,
     DisputeFormComponent,
-    DisputesListComponent,
     RefundRequestComponent,
     BookingContractComponent,
-    RefundStatusComponent,
-    BookingOpsTimelineComponent,
     BookingTrackingComponent,
     BookingPricingBreakdownComponent,
     BookingInsuranceSummaryComponent,
-    SettlementSimulatorComponent,
-    DamageComparisonComponent,
-    ReportTrafficFineComponent, // NEW
-    ReportOwnerNoShowComponent, // NEW
-    ReportRenterNoShowComponent, // NEW
+    ReportTrafficFineComponent,
+    ReportOwnerNoShowComponent,
+    ReportRenterNoShowComponent,
     AiLegalPanelComponent,
     AiTripPanelComponent,
     AiChecklistPanelComponent,
@@ -202,7 +190,6 @@ const DISPUTE_STATUSES = new Set<BookingStatus>([
     BookingExtensionsManagerComponent,
     BookingTrafficFinesManagerComponent,
     BookingFlowCardComponent,
-    // UI 2026 Directives
     HoverLiftDirective,
     StaggerEnterDirective,
   ],
@@ -1172,6 +1159,11 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return index > this.currentBookingStageIndex();
   }
 
+  getAvatarInitial(): string {
+    const name = this.isOwner() ? this.booking()?.renter_name : this.carOwnerName();
+    return (name || '?').charAt(0).toUpperCase();
+  }
+
   async ngOnInit() {
     const bookingId = this.route.snapshot.paramMap.get('id');
     if (!bookingId) {
@@ -1385,7 +1377,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     try {
       const { data: car } = await this.bookingsService['supabase']
         .from('cars')
-        .select('owner_id, owner:profiles!cars_owner_id_fkey(id, full_name)')
+        .select('owner_id, owner:profiles!cars_owner_id_profiles_fkey(id, full_name)')
         .eq('id', booking.car_id)
         .single();
 
