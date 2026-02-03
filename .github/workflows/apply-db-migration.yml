@@ -57,13 +57,18 @@ jobs:
           echo "..."
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-      - name: Apply migration
+      - name: Apply migration via direct SQL
         env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          echo "🔄 Applying migration..."
-          supabase db push --include-all
+          echo "🔄 Applying migration via direct SQL..."
+
+          # Install psql
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+
+          # Execute migration
+          psql "$DATABASE_URL" -f ${{ steps.validate.outputs.migration_path }}
+
           echo "✅ Migration applied successfully"
 
       - name: Verify functions exist
