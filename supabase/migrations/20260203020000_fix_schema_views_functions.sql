@@ -2,7 +2,12 @@
 -- FIX: Complete schema corrections v4
 -- Date: 2026-02-03
 -- Fixed: GRANT statement for function with default parameter
+-- Fixed: Add locked_balance column to wallets table
 -- ============================================
+
+-- 0. Ensure wallets table has locked_balance column
+ALTER TABLE public.wallets ADD COLUMN IF NOT EXISTS locked_balance NUMERIC DEFAULT 0;
+ALTER TABLE public.wallets ADD COLUMN IF NOT EXISTS pending_balance NUMERIC DEFAULT 0;
 
 -- Drop existing incomplete views
 DROP VIEW IF EXISTS public.wallet_history;
