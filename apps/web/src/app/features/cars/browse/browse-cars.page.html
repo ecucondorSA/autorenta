@@ -153,11 +153,12 @@
     class="absolute bottom-0 inset-x-0 z-20 pb-safe-bottom pt-20 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none transition-transform duration-500"
     [class.translate-y-full]="viewMode() === 'list'"
   >
-    <app-car-carousel 
-      [cars]="mapLocations()" 
-      [selectedCarId]="selectedCarId()" 
-      [loading]="loading()" 
+    <app-car-carousel
+      [cars]="mapLocations()"
+      [selectedCarId]="selectedCarId()"
+      [loading]="loading()"
       (previewChange)="onCarouselPreviewChange($event)"
+      (hoverChange)="onCarouselHoverChange($event)"
     />
   </div>
 

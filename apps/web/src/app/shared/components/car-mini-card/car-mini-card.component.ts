@@ -86,7 +86,7 @@ import { CarMapLocation } from '@core/services/cars/car-locations.service';
 export class CarMiniCardComponent {
   @Input({ required: true }) car!: CarMapLocation;
   @Input() isSelected = false;
-  @Output() cardClicked = new EventEmitter<void>();
+  @Output() cardClicked = new EventEmitter<MouseEvent>();
 
   private el = inject(ElementRef);
 
@@ -135,7 +135,8 @@ export class CarMiniCardComponent {
       event.stopPropagation();
       return;
     }
-    this.cardClicked.emit();
+    // Pass the event so parent can validate isTrusted
+    this.cardClicked.emit(event);
   }
 
   onMouseEnter() {

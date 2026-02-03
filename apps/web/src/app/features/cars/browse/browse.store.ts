@@ -30,6 +30,12 @@ export class BrowseStore {
   readonly activeCarId = signal<string | null>(null);
   readonly interactionSource = signal<InteractionSource>('idle');
 
+  /** Car being hovered over (carousel or map) - for visual highlighting without selection */
+  readonly hoveredCarId = signal<string | null>(null);
+
+  /** Tracks if modal opening was triggered by a validated user click (isTrusted) */
+  readonly modalTrigger = signal<'user-click' | null>(null);
+
   // --- Computed Logic ---
   
   /**
@@ -122,5 +128,31 @@ export class BrowseStore {
 
   setInteractionSource(source: InteractionSource) {
     this.interactionSource.set(source);
+  }
+
+  /**
+   * Set the hovered car (for visual highlighting without opening modal)
+   */
+  setHoveredCar(carId: string | null) {
+    this.hoveredCarId.set(carId);
+  }
+
+  /**
+   * Open modal with validation - ONLY opens if event.isTrusted is true
+   * This prevents accidental modal opens from programmatic scroll events
+   */
+  openModalWithValidation(carId: string, event: MouseEvent | TouchEvent, source: InteractionSource = 'carousel'): boolean {
+    // Validate that this is a genuine user interaction
+    if (!event.isTrusted) {
+      this.logger.debug('Modal open blocked - event not trusted', { carId, isTrusted: event.isTrusted });
+      return false;
+    }
+
+    this.modalTrigger.set('user-click');
+    this.setActiveCar(carId, source);
+
+    // Reset trigger after a short delay
+    setTimeout(() => this.modalTrigger.set(null), 100);
+    return true;
   }
 }

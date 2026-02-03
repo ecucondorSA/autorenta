@@ -1,0 +1,34 @@
+name: Deploy Edge Function
+
+on:
+  workflow_dispatch:
+    inputs:
+      function_name:
+        description: 'Edge function name to deploy'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy ${{ github.event.inputs.function_name }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy Function
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          echo "🚀 Deploying ${{ github.event.inputs.function_name }}..."
+          supabase functions deploy ${{ github.event.inputs.function_name }} --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+          echo "✅ Deployed successfully"

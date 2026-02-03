@@ -110,8 +110,12 @@ export class BrowseCarsPage {
   readonly searchTo = signal<string>(new Date(Date.now() + 86400000).toISOString());
   /** Car currently being previewed in the carousel (scroll, not click) */
   readonly carouselPreviewId = signal<string | null>(null);
-  /** The car to highlight on the map: selected car takes priority, then preview */
-  readonly mapHighlightedCarId = computed(() => this.selectedCarId() ?? this.carouselPreviewId());
+  /** Car being hovered in the carousel */
+  readonly carouselHoveredId = signal<string | null>(null);
+  /** The car to highlight on the map: hovered takes priority, then selected, then preview */
+  readonly mapHighlightedCarId = computed(() =>
+    this.carouselHoveredId() ?? this.selectedCarId() ?? this.carouselPreviewId()
+  );
   private readonly pollIntervalMs = 30000;
   private lastLocation: LocationData | null = null;
   private lastLocationAt = 0;
@@ -299,5 +303,11 @@ export class BrowseCarsPage {
 
   onSearchQueryChange(query: string) {
     this.store.setFilterQuery(query);
+  }
+
+  /** Handle hover change from carousel */
+  onCarouselHoverChange(carId: string | null) {
+    this.carouselHoveredId.set(carId);
+    this.store.setHoveredCar(carId);
   }
 }

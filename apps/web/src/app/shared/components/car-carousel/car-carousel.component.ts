@@ -32,11 +32,13 @@ import { BrowseStore } from '../../../features/cars/browse/browse.store';
              (touchend)="onTouchEnd()">
           @for (car of cars; track car.carId) {
             <div [id]="'card-' + car.carId"
-                 class="snap-center shrink-0 min-w-[70vw] sm:min-w-[280px] h-full">
-              <app-car-mini-card 
-                [car]="car" 
+                 class="snap-center shrink-0 min-w-[70vw] sm:min-w-[280px] h-full"
+                 (mouseenter)="onCardHover(car.carId)"
+                 (mouseleave)="onCardHover(null)">
+              <app-car-mini-card
+                [car]="car"
                 [isSelected]="selectedCarId === car.carId"
-                (cardClicked)="onCardClick(car.carId)">
+                (cardClicked)="onCardClick(car.carId, $event)">
               </app-car-mini-card>
             </div>
           }
@@ -58,6 +60,9 @@ export class CarCarouselComponent {
 
   /** Emits the carId of the card currently in the center during scroll (preview, not selection) */
   @Output() readonly previewChange = new EventEmitter<string | null>();
+
+  /** Emits when user hovers over a card (for map highlighting) */
+  @Output() readonly hoverChange = new EventEmitter<string | null>();
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef<HTMLDivElement>;
 
@@ -148,15 +153,24 @@ export class CarCarouselComponent {
     }, 150); // Increased from 100ms for more reliable detection
   }
 
-  onCardClick(carId: string) {
+  onCardClick(carId: string, event: MouseEvent) {
     // Ignore clicks that were actually swipes
     if (this.isSwipe) {
       return;
     }
 
+    // Validate isTrusted for modal opening
+    if (!event.isTrusted) {
+      return;
+    }
+
     this.sound.play('click');
-    this.store.setActiveCar(carId, 'carousel');
+    this.store.openModalWithValidation(carId, event, 'carousel');
     this.scrollToCard(carId);
+  }
+
+  onCardHover(carId: string | null) {
+    this.hoverChange.emit(carId);
   }
 
   scrollToCard(carId: string) {
