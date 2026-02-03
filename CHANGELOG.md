@@ -1,3 +1,7 @@
+## <small>3.64.6 (2026-02-03)</small>
+
+* fix(marketplace): add dateRange signal and DateRangePickerComponent ([c44829f](https://github.com/ecucondorSA/autorenta/commit/c44829f))
+
 ## <small>3.64.5 (2026-02-03)</small>
 
 * fix(marketplace): add missing template methods ([121d006](https://github.com/ecucondorSA/autorenta/commit/121d006))
