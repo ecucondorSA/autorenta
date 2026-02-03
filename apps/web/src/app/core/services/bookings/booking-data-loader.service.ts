@@ -102,18 +102,20 @@ export class BookingDataLoaderService {
     }
 
     try {
+      // P0 EGRESS OPTIMIZATION: Select only required fields instead of *
       const { data: coverage, error: coverageError } = await this.supabase
         .from('booking_insurance_coverage')
-        .select('*')
+        .select('id, booking_id, policy_id, coverage_type, deductible_amount, coverage_limit, daily_rate, total_premium, status, created_at')
         .eq('id', booking.insurance_coverage_id)
         .single();
 
       if (!coverageError && coverage) {
         // Load policy if available
         if (coverage.policy_id) {
+          // P0 EGRESS OPTIMIZATION: Select only required fields instead of *
           const { data: policy, error: policyError } = await this.supabase
             .from('insurance_policies')
-            .select('*')
+            .select('id, name, description, coverage_type, deductible_amount, coverage_limit, daily_rate, provider, is_active')
             .eq('id', coverage.policy_id)
             .single();
 

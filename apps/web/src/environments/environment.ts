@@ -4,10 +4,11 @@ export const environment = buildEnvironment({
   production: true,
   defaultCurrency: 'USD',
   appUrl: 'https://autorentar.com',
-  supabaseUrl: 'https://pisqjmoklivzpwufhscx.supabase.co',
+  supabaseUrl: 'https://aceacpaockyxgogxsfyc.supabase.co',
   // ANDROID BUILD FIX: Hardcoded for mobile builds (not exposed to web)
   // For Cloudflare Pages web builds, these are still loaded from env vars via buildEnvironment()
-  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.wE2jTut2JSexoKFtHdEaIpl9MZ0sOHy9zMYBbhFbzt4',
+  // PRODUCTION PROJECT: autorenta-prod (nueva org sin egress issues)
+  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjZWFjcGFvY2t5eGdvZ3hzZnljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNzM4NDQsImV4cCI6MjA4NTY0OTg0NH0._Vzv8a97DskL7y-D6ngSFl1GRXgwBlJA6_daTJ01oqU',
   mapboxAccessToken: 'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg',
   tripoApiKey: undefined, // Will be read from NG_APP_TRIPO_API_KEY
   googleAnalyticsMeasurementId: 'G-WV2PWTKG2E', // Google Analytics 4

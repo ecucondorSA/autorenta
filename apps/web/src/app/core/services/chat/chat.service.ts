@@ -34,9 +34,10 @@ export class ChatService {
    * Load messages for a context (Booking or Car)
    */
   async loadMessages(context: { bookingId?: string; carId?: string }) {
+    // P0 EGRESS OPTIMIZATION: Select only required fields instead of *
     let query = this.supabase
       .from('messages')
-      .select('*')
+      .select('id, booking_id, car_id, sender_id, recipient_id, body, is_flagged, is_system_message, read_at, created_at')
       .order('created_at', { ascending: true }); // Oldest first for chat
 
     if (context.bookingId) {

@@ -188,9 +188,10 @@ export class CarsService {
   }
 
   async getCarPhotos(carId: string): Promise<CarPhoto[]> {
+    // P0 EGRESS OPTIMIZATION: Select only required fields instead of *
     const { data, error } = await this.supabase
       .from('car_photos')
-      .select('*')
+      .select('id, car_id, url, stored_path, position, sort_order, created_at')
       .eq('car_id', carId)
       .order('sort_order', { ascending: true })
       .order('position', { ascending: true });

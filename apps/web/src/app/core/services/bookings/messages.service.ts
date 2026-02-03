@@ -75,9 +75,10 @@ export class MessagesService implements OnDestroy {
   readonly isSyncing = signal<boolean>(false);
 
   async listByBooking(bookingId: string): Promise<Message[]> {
+    // P0 EGRESS OPTIMIZATION: Select only required fields instead of *
     const { data, error } = await this.supabase
       .from('messages')
-      .select('*')
+      .select('id, booking_id, car_id, sender_id, recipient_id, body, created_at, read_at, delivered_at')
       .eq('booking_id', bookingId)
       .order('created_at', { ascending: true });
     if (error) throw error;
@@ -85,9 +86,10 @@ export class MessagesService implements OnDestroy {
   }
 
   async listByCar(carId: string): Promise<Message[]> {
+    // P0 EGRESS OPTIMIZATION: Select only required fields instead of *
     const { data, error } = await this.supabase
       .from('messages')
-      .select('*')
+      .select('id, booking_id, car_id, sender_id, recipient_id, body, created_at, read_at, delivered_at')
       .eq('car_id', carId)
       .order('created_at', { ascending: true });
     if (error) throw error;
@@ -190,6 +192,7 @@ export class MessagesService implements OnDestroy {
     // Try to send immediately
     try {
       this.rateLimiter.recordAttempt('messageSend', user.id);
+      // P0 EGRESS OPTIMIZATION: Select only required fields after insert
       const { data, error } = await this.supabase
         .from('messages')
         .insert({
@@ -199,7 +202,7 @@ export class MessagesService implements OnDestroy {
           recipient_id: params.recipientId,
           body: params.body,
         })
-        .select('*')
+        .select('id, booking_id, car_id, sender_id, recipient_id, body, created_at, read_at, delivered_at')
         .single<Message>();
 
       if (error) throw error;
