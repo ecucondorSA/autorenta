@@ -191,7 +191,7 @@ async function mpTransfer(page, alias, amount, expectedName) {
 const CONFIG = {
   headless: process.env.HEADLESS === 'true', // Default to false (visible) unless HEADLESS=true
   profilePath: process.env.BROWSER_PROFILE || '/home/edu/.patchright-profile',
-  executablePath: '/usr/bin/google-chrome', // Use system Chrome (more stable than bundled)
+  channel: 'chrome', // Use installed Google Chrome (not bundled Chromium which crashes)
   eventBufferSize: 100,
   compactOutput: true,
   maxEventSummary: 5,
@@ -484,7 +484,7 @@ class PatchrightStreamingMCP {
 
         this.context = await chromium.launchPersistentContext(userDataDir, {
           headless: CONFIG.headless,
-          executablePath: CONFIG.executablePath,
+          channel: CONFIG.channel,
           viewport: { width: 1280, height: 720 },
           recordVideo: {
             dir: this.videoDir,

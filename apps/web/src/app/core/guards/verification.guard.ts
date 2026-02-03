@@ -6,11 +6,10 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 /**
  * Guard que verifica nivel de identidad para acciones críticas (booking/payment)
  *
- * Requiere Level 2 mínimo:
- * - Email verificado
- * - Teléfono verificado
- * - DNI subido
- * - Licencia de conducir subida
+ * Requiere Level 1 mínimo:
+ * - Email verificado O Teléfono verificado
+ *
+ * Level 2 (DNI + Licencia) se requiere solo para publicar autos como owner.
  *
  * Si el usuario no cumple, redirige a /profile/verification con contexto.
  */
@@ -23,11 +22,13 @@ export const VerificationGuard: CanMatchFn = async (route: Route) => {
   logger.debug(`VerificationGuard triggered for: ${routePath}`, 'VerificationGuard');
 
   try {
-    const levelCheck = await identityService.checkLevelAccess(2);
+    // Level 1: Email OR Phone verified (basic identity check)
+    // Level 2 (documents) is only required for owners publishing cars
+    const levelCheck = await identityService.checkLevelAccess(1);
 
     if (!levelCheck.allowed) {
       logger.warn(
-        `User needs verification level 2. Current: ${levelCheck.current_level}`,
+        `User needs verification level 1. Current: ${levelCheck.current_level}`,
         'VerificationGuard',
       );
 
@@ -35,7 +36,7 @@ export const VerificationGuard: CanMatchFn = async (route: Route) => {
         queryParams: {
           reason: 'booking_verification_required',
           returnUrl: `/${routePath}`,
-          requiredLevel: 2,
+          requiredLevel: 1,
         },
       });
     }

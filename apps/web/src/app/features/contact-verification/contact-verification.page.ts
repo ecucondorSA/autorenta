@@ -370,7 +370,7 @@ export class ContactVerificationPage implements OnInit, OnDestroy {
 	});
 
 	readonly canContinue = computed(
-		() => this.isEmailVerified() && this.isPhoneVerified(),
+		() => this.isEmailVerified(), // Permite continuar si el email está verificado, aunque falte el teléfono (SMS issues)
 	);
 
 	ngOnInit(): void {

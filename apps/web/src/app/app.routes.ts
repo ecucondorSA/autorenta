@@ -514,16 +514,28 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        redirectTo: 'map',
+        pathMatch: 'full'
+      },
+      {
+        path: 'map',
         loadComponent: () =>
-          import('./features/scout/pages/missions-list/missions-list.page').then(
-            (m) => m.MissionsListPage,
+          import('./features/scout/pages/scout-map/scout-map').then(
+            (m) => m.ScoutMapPage,
           ),
       },
       {
-        path: 'mission/:id',
+        path: 'report/:bookingId',
         loadComponent: () =>
-          import('./features/scout/pages/mission-detail/mission-detail.page').then(
-            (m) => m.MissionDetailPage,
+          import('./features/scout/pages/scout-report/scout-report').then(
+            (m) => m.ScoutReportPage,
+          ),
+      },
+      {
+        path: 'missions',
+        loadComponent: () =>
+          import('./features/scout/pages/missions-list/missions-list.page').then(
+            (m) => m.MissionsListPage,
           ),
       },
     ],

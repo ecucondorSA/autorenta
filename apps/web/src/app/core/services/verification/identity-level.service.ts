@@ -224,10 +224,27 @@ export class IdentityLevelService implements OnDestroy {
 
       return data as LevelAccessCheck;
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'No pudimos verificar el nivel de acceso';
-      this.error.set(message);
-      throw err;
+      this.logger.warn(`RPC check_level_requirements failed, trying fallback via getVerificationProgress`, err);
+      
+      try {
+        // Fallback: Use getVerificationProgress which is more robust
+        const progress = await this.getVerificationProgress();
+        const currentLevel = progress.current_level;
+        const allowed = currentLevel >= requiredLevel;
+        
+        return {
+          allowed,
+          current_level: currentLevel,
+          required_level: requiredLevel,
+          message: allowed ? 'Access granted' : `Verification level ${requiredLevel} required`,
+          error: allowed ? undefined : 'Insufficient verification level'
+        };
+      } catch (fallbackErr) {
+        const message =
+          err instanceof Error ? err.message : 'No pudimos verificar el nivel de acceso';
+        this.error.set(message);
+        throw err;
+      }
     }
   }
 

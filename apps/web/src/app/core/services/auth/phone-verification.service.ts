@@ -5,6 +5,7 @@ import {
   VerificationBaseService,
 } from '@core/services/verification/verification-base.service';
 import type { AuthError } from '@supabase/supabase-js';
+import { environment } from '@environment';
 
 /**
  * Phone Verification Status (extends base with OTP-specific fields)
@@ -55,6 +56,9 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
   private readonly MAX_ATTEMPTS_PER_HOUR = 3;
   private otpAttempts: number[] = []; // Timestamps of OTP attempts
   private logger = inject(LoggerService).createChildLogger('PhoneVerificationService');
+
+  // Track which channel was used for sending OTP (for verification)
+  private currentChannel: 'sms' | 'whatsapp' = 'sms';
 
   constructor() {
     super();
@@ -178,7 +182,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
         throw new Error(`Número de teléfono inválido. Formato esperado: ${formatHint}`);
       }
 
-      // Send OTP via Supabase Auth
+      // Try Supabase Auth SMS first, fallback to WhatsApp edge function
       const { error } = await this.supabase.auth.signInWithOtp({
         phone: formattedPhone,
         options: {
@@ -191,18 +195,34 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
         const errorCode = extendedError.code || extendedError.error_code || '';
         const errorMessage = extendedError.message || '';
 
-        // Provide more user-friendly error messages
-        // Check for phone provider errors (multiple ways Supabase can return this)
-        if (
+        // Check for phone provider errors - try WhatsApp fallback
+        const isProviderDisabled =
           errorCode === 'phone_provider_disabled' ||
           errorCode === 'provider_disabled' ||
           errorMessage?.includes('phone_provider_disabled') ||
           errorMessage?.includes('Unsupported phone provider') ||
           errorMessage?.includes('phone provider') ||
-          errorMessage?.includes('SMS provider')
-        ) {
+          errorMessage?.includes('SMS provider');
+
+        if (isProviderDisabled) {
+          this.logger.info('SMS provider disabled, trying WhatsApp fallback');
+          const whatsappResult = await this.sendViaWhatsApp(formattedPhone);
+          if (whatsappResult.success) {
+            // WhatsApp fallback succeeded - mark as using WhatsApp channel
+            const currentStatus = this.statusSignal();
+            this.statusSignal.set({
+              ...currentStatus,
+              otpSent: true,
+              value: formattedPhone,
+            } as PhoneVerificationStatus);
+            // Store the channel for verification
+            this.currentChannel = 'whatsapp';
+            return; // Success via WhatsApp
+          }
+          // WhatsApp also failed
           throw new Error(
-            'El servicio de SMS no está configurado para este país. Por favor contacta al soporte o intenta con otro número.',
+            whatsappResult.error ||
+              'El servicio de verificación no está disponible. Por favor contacta al soporte.',
           );
         }
 
@@ -239,6 +259,9 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
         // Re-throw original error if we don't have a specific message
         throw error;
       }
+
+      // SMS succeeded - mark channel
+      this.currentChannel = 'sms';
 
       // Update tracking (using base class method + phone-specific)
       this.recordSendTime();
@@ -296,7 +319,22 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
         throw new Error('El código debe tener 6 dígitos');
       }
 
-      // Verify OTP via Supabase Auth
+      // Use WhatsApp verification if OTP was sent via WhatsApp
+      if (this.currentChannel === 'whatsapp') {
+        this.logger.info('Verifying via WhatsApp edge function');
+        const whatsappResult = await this.verifyViaWhatsApp(phone, token);
+
+        if (!whatsappResult.success) {
+          this.error.set(whatsappResult.error || 'Código inválido o expirado');
+          return whatsappResult;
+        }
+
+        // Update status after successful WhatsApp verification
+        await this.checkStatus();
+        return whatsappResult;
+      }
+
+      // Verify OTP via Supabase Auth (SMS channel)
       const {
         data: { user },
         error,
@@ -545,5 +583,117 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
       ...currentStatus,
       otpSent: false,
     } as PhoneVerificationStatus);
+  }
+
+  /**
+   * Send OTP via WhatsApp edge function (fallback when SMS provider is disabled)
+   */
+  private async sendViaWhatsApp(
+    phone: string,
+  ): Promise<{ success: boolean; error?: string; fallback?: boolean }> {
+    try {
+      // IMPORTANT: Refresh session first to ensure we have a valid JWT token
+      // getSession() can return a cached/expired session which causes 401 errors
+      const { data: refreshData, error: refreshError } = await this.supabase.auth.refreshSession();
+
+      if (refreshError || !refreshData.session) {
+        this.logger.error('Session refresh failed', { error: refreshError });
+        return { success: false, error: 'Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.' };
+      }
+
+      const session = refreshData.session;
+
+      const response = await fetch(
+        `${environment.supabaseUrl}/functions/v1/send-otp-via-n8n`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            phone,
+            channel: 'whatsapp',
+          }),
+        },
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        this.logger.error('WhatsApp OTP failed', { status: response.status, result });
+
+        // Handle specific error cases
+        if (response.status === 401) {
+          return { success: false, error: 'Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.' };
+        }
+
+        // Check if service is not configured (N8N_OTP_WEBHOOK_URL missing)
+        if (result.error?.includes('no configurado') || result.error?.includes('not configured')) {
+          return {
+            success: false,
+            error: 'El servicio de verificación por WhatsApp no está disponible. Por favor contacta al soporte.',
+          };
+        }
+
+        return { success: false, error: result.error || 'Error al enviar código por WhatsApp' };
+      }
+
+      this.logger.info('WhatsApp OTP sent successfully', { fallback: result.fallback });
+      return { success: true, fallback: result.fallback };
+    } catch (err) {
+      this.logger.error('WhatsApp OTP exception', { error: err });
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : 'Error de conexión',
+      };
+    }
+  }
+
+  /**
+   * Verify OTP via RPC (for WhatsApp/n8n channel)
+   */
+  private async verifyViaWhatsApp(
+    phone: string,
+    code: string,
+  ): Promise<OTPVerificationResult> {
+    try {
+      const { data, error } = await this.supabase.rpc('verify_phone_otp_code', {
+        p_phone: phone,
+        p_code: code,
+      });
+
+      if (error) {
+        this.logger.error('RPC verify_phone_otp_code failed', { error });
+        return {
+          success: false,
+          verified: false,
+          error: error.message || 'Error al verificar código',
+        };
+      }
+
+      const result = data as { success: boolean; verified: boolean; error?: string; message?: string };
+
+      if (!result.success) {
+        return {
+          success: false,
+          verified: false,
+          error: result.error || 'Código inválido o expirado',
+        };
+      }
+
+      return {
+        success: true,
+        verified: true,
+        message: result.message || 'Teléfono verificado exitosamente',
+      };
+    } catch (err) {
+      this.logger.error('Verify OTP exception', { error: err });
+      return {
+        success: false,
+        verified: false,
+        error: err instanceof Error ? err.message : 'Error de verificación',
+      };
+    }
   }
 }

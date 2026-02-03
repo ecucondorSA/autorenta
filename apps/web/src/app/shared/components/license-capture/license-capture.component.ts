@@ -6,7 +6,6 @@ import {
     Output,
     ViewChild,
     signal,
-    inject,
     AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';

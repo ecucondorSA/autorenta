@@ -1,524 +1,213 @@
-<div
-  class="earnings-page bg-surface-base min-h-screen pb-20 sm:pb-0 transition-colors duration-300"
->
-  <!-- Header -->
-  <div class="bg-surface-raised border-b border-border-default transition-colors duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <h1
-            class="text-3xl font-bold text-text-primary flex items-center gap-2 tracking-tight font-satoshi"
-          >
-            <svg
-              class="w-8 h-8 text-success-strong"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.75" />
-              <circle cx="12" cy="12" r="3.5" stroke-width="1.5" />
-              <path
-                d="M12 9.5v5M10.5 10.5c0-.5.67-1 1.5-1s1.5.5 1.5 1-.67 1-1.5 1-1.5.5-1.5 1 .67 1 1.5 1 1.5-.5 1.5-1"
-                stroke-width="1.25"
-                stroke-linecap="round"
-              />
-            </svg>
-            Ganancias
-          </h1>
-          <p class="mt-2 text-text-secondary">Visualiza tus ingresos y ganancias</p>
+<div class="min-h-screen bg-surface-base pb-32 font-sans text-text-primary">
+  
+  <!-- 1. CINEMATIC HEADER -->
+  <header class="sticky top-0 z-30 bg-surface-base/80 backdrop-blur-xl border-b border-border-muted px-4 py-6 sm:px-6">
+    <div class="container-page flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <div class="animate-fade-in">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest border border-emerald-100">
+            Performance
+          </span>
         </div>
-        <a
-          routerLink="/wallet"
-          class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-text-inverse font-medium rounded-lg transition-colors flex items-center gap-2"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M6 10c0-1 1-2 2-3l1-2h6l1 2c1 1 2 2 2 3v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8z"
-              stroke-width="1.75"
-              stroke-linejoin="round"
-            />
-            <path d="M9 5h6" stroke-width="1.5" stroke-linecap="round" />
-            <path
-              d="M12 11v6M10 12.5c0-.83.9-1.5 2-1.5s2 .67 2 1.5-.9 1.5-2 1.5-2 .67-2 1.5.9 1.5 2 1.5"
-              stroke-width="1.25"
-              stroke-linecap="round"
-            />
-          </svg>
+        <h1 class="text-3xl font-black tracking-tight font-satoshi">Tus Ganancias</h1>
+        <p class="text-sm text-text-secondary mt-1">Monitorea el rendimiento de tu inversión</p>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <a routerLink="/wallet" 
+           appPressScale
+           class="flex items-center gap-2 px-6 py-3 bg-cta-default text-cta-text rounded-2xl font-black text-sm uppercase tracking-widest shadow-premium-sm hover:shadow-premium-md hover:bg-cta-hover transition-all">
+          <ion-icon name="wallet-outline"></ion-icon>
           Ir a Wallet
         </a>
       </div>
     </div>
-  </div>
+  </header>
 
-  <!-- Content -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Loading -->
-    @if (loading()) {
-      <div class="flex items-center justify-center py-16">
-        <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
-      </div>
-    }
-
-    <!-- Error -->
-    @if (error(); as errorMsg) {
-      <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-6">
-        <p class="text-sm text-error-strong">{{ errorMsg }}</p>
-        <button (click)="loadData()" class="mt-2 text-sm font-medium text-error-text underline">
-          Reintentar
-        </button>
-      </div>
-    }
-
-    @if (!loading() && !error()) {
-      <!-- Balance Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Balance Disponible -->
-        <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6">
-          <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-text-secondary">Balance Disponible</p>
-            <app-icon name="wallet" [size]="24" cssClass="text-success-600" />
+  <main class="container-page px-4 sm:px-6 pt-8 space-y-10 animate-fade-in-up">
+    
+    <!-- 2. BALANCES BENTO GRID (The High-Value Stats) -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Disponible (Hero Card) -->
+      <div class="col-span-1 md:col-span-2 group relative overflow-hidden bg-white rounded-3xl border border-border-default shadow-premium-sm hover:shadow-premium-lg transition-all duration-500 p-8">
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full -mr-20 -mt-20 blur-3xl group-hover:bg-emerald-500/10 transition-colors"></div>
+        
+        <div class="relative z-10 flex flex-col justify-between h-full space-y-8">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shadow-inner">
+              <ion-icon name="cash-outline"></ion-icon>
+            </div>
+            <span class="text-xs font-black uppercase tracking-widest text-text-muted">Saldo Disponible</span>
           </div>
-          <p class="text-3xl font-bold text-text-primary">
-            {{ availableBalance() | money }}
-          </p>
-          <p class="text-xs text-text-secondary mt-1">Listo para retirar</p>
+          
+          <div>
+            <div class="text-5xl md:text-6xl font-black font-mono tracking-tighter text-text-primary">
+              {{ availableBalance() | money }}
+            </div>
+            <p class="text-sm text-text-secondary mt-2 flex items-center gap-2">
+              <ion-icon name="shield-checkmark-outline" class="text-emerald-500"></ion-icon>
+              Fondos asegurados y listos para retirar
+            </p>
+          </div>
         </div>
+      </div>
 
-        <!-- Balance Pendiente -->
-        <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6">
-          <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-text-secondary">Balance Pendiente</p>
-            <app-icon name="clock" [size]="24" cssClass="text-warning-600" />
+      <!-- Pendiente -->
+      <div class="bg-surface-secondary rounded-3xl border border-border-muted p-8 flex flex-col justify-between space-y-6 hover:bg-white hover:shadow-premium-md transition-all duration-300">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl">
+            <ion-icon name="time-outline"></ion-icon>
           </div>
-          <p class="text-3xl font-bold text-text-primary">
+          <span class="text-xs font-black uppercase tracking-widest text-text-muted">En Tránsito</span>
+        </div>
+        <div>
+          <div class="text-3xl font-black font-mono tracking-tight text-text-primary">
             {{ pendingBalance() | money }}
-          </p>
-          <p class="text-xs text-text-secondary mt-1">De reservas en curso</p>
-        </div>
-
-        <!-- Total Ganado -->
-        <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6">
-          <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-text-secondary">Total Ganado</p>
-            <app-icon name="trending-up" [size]="24" cssClass="text-primary-600" />
           </div>
-          <p class="text-3xl font-bold text-text-primary">
-            {{ totalEarnings() | money }}
-          </p>
-          <p class="text-xs text-text-secondary mt-1">Histórico total</p>
+          <p class="text-xs text-text-muted mt-1 uppercase tracking-wide font-bold">Por reservas en curso</p>
         </div>
       </div>
+    </section>
 
-      <!-- Earnings by Month -->
-      <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6 mb-8">
-        <h2
-          class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi"
-        >
-          <svg
-            class="w-6 h-6 text-primary-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M3 21h18" stroke-width="1.75" stroke-linecap="round" />
-            <rect x="5" y="13" width="3" height="8" rx="0.5" stroke-width="1.5" />
-            <rect x="10.5" y="7" width="3" height="14" rx="0.5" stroke-width="1.5" />
-            <rect x="16" y="3" width="3" height="18" rx="0.5" stroke-width="1.5" />
-          </svg>
-          Ganancias Mensuales
+    <!-- 3. GROWTH & TRENDS (Interactive Chart Look) -->
+    <section class="space-y-6">
+      <header class="flex items-center justify-between px-1">
+        <h2 class="text-xs font-black uppercase tracking-widest text-text-muted flex items-center gap-2">
+          <ion-icon name="trending-up-outline" class="text-indigo-500"></ion-icon>
+          Tendencias Mensuales
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <p class="text-sm text-text-secondary mb-1">Este Mes</p>
-            <p class="text-3xl font-extrabold text-text-primary leading-tight">
-              {{ thisMonthEarnings() | money }}
-            </p>
-          </div>
-          <div>
-            <p class="text-sm text-text-secondary mb-1">Mes Anterior</p>
-            <p class="text-2xl font-bold text-text-primary">
-              {{ lastMonthEarnings() | money }}
-            </p>
-          </div>
-          <div>
-            <p class="text-sm text-text-secondary mb-1">Crecimiento</p>
-            <p
-              class="text-3xl font-extrabold"
-              [class.text-success-strong]="isGrowthPositive()"
-              [class.text-error-text]="!isGrowthPositive()"
-            >
-              {{ isGrowthPositive() ? '+' : '' }}{{ growthPercentage() }}%
-            </p>
-          </div>
-        </div>
-      </div>
+      </header>
 
-      <!-- Depreciation & Income Charts -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <!-- Depreciation Chart -->
-        <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6">
-          <h2
-            class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi"
-          >
-            <svg
-              class="w-6 h-6 text-error-text"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M3 3v18h18"
-                stroke-width="1.75"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M6 7l4 4 4-2 6 8"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M18 13l2 4m0 0l-2.5-1m2.5 1l-1-2.5"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            Depreciación Anual del Auto
-          </h2>
-          <div class="h-64 relative">
-            <!-- CSS Bar Chart -->
-            <div class="flex items-end justify-between h-full gap-1 pb-6">
-              @for (bar of depreciationChartData(); track bar.month) {
-                <div class="flex-1 flex flex-col items-center gap-1">
-                  <div
-                    class="w-full bg-error-text/80 rounded-t transition-all duration-500 min-h-[2px]"
-                    [style.height.%]="bar.percentage"
-                    [title]="bar.value | money"
-                  ></div>
-                  <span class="text-xs text-text-muted">{{ bar.month }}</span>
-                </div>
-              }
-            </div>
-            @if (depreciationChartData().length === 0) {
-              <div
-                class="absolute inset-0 flex items-center justify-center text-text-muted text-sm"
-              >
-                Sin datos de depreciación
+      <div class="bg-white rounded-3xl border border-border-default shadow-premium-sm p-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <!-- Stats -->
+          <div class="space-y-8">
+            <div class="group">
+              <p class="text-xs font-black uppercase tracking-widest text-text-muted mb-2 group-hover:text-indigo-500 transition-colors">Este Mes</p>
+              <div class="text-4xl font-black font-mono tracking-tighter text-text-primary">
+                {{ thisMonthEarnings() | money }}
               </div>
-            }
+            </div>
+            
+            <div class="group">
+              <p class="text-xs font-black uppercase tracking-widest text-text-muted mb-2">Crecimiento</p>
+              <div class="flex items-center gap-3">
+                <div class="text-4xl font-black font-mono tracking-tighter"
+                     [class.text-emerald-600]="isGrowthPositive()"
+                     [class.text-red-500]="!isGrowthPositive()">
+                  {{ isGrowthPositive() ? '+' : '' }}{{ growthPercentage() }}%
+                </div>
+                <div class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-secondary"
+                     [class.text-emerald-600]="isGrowthPositive()"
+                     [class.text-red-500]="!isGrowthPositive()">
+                  <ion-icon [name]="isGrowthPositive() ? 'trending-up-outline' : 'stats-chart-outline'"></ion-icon>
+                </div>
+              </div>
+            </div>
           </div>
-          <p class="text-sm text-text-secondary mt-4">
-            Depreciación acumulada estimada durante el año
-          </p>
-        </div>
 
-        <!-- Income Chart -->
-        <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6">
-          <h2
-            class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi"
-          >
-            <svg
-              class="w-6 h-6 text-success-strong"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M3 3v18h18"
-                stroke-width="1.75"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M6 17l4-4 4 2 6-8"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M17 10l3-3m0 0l-2.5 1m2.5-1l-1 2.5"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            Ingresos Proyectados
-          </h2>
-          <div class="h-64 relative">
-            <!-- CSS Bar Chart -->
-            <div class="flex items-end justify-between h-full gap-1 pb-6">
+          <!-- Cumulative Projection Chart (Visual Representation) -->
+          <div class="md:col-span-2 space-y-6">
+            <p class="text-xs font-black uppercase tracking-widest text-text-muted text-right">Proyección de Ingresos Acumulados</p>
+            <div class="h-40 flex items-end justify-between gap-2 pt-4">
               @for (bar of incomeChartData(); track bar.month) {
-                <div class="flex-1 flex flex-col items-center gap-1">
-                  <div
-                    class="w-full bg-success-text/80 rounded-t transition-all duration-500 min-h-[2px]"
-                    [style.height.%]="bar.percentage"
-                    [title]="bar.value | money"
-                  ></div>
-                  <span class="text-xs text-text-muted">{{ bar.month }}</span>
+                <div class="flex-1 flex flex-col items-center gap-3 group/bar">
+                  <div 
+                    class="w-full bg-indigo-50 rounded-t-lg transition-all duration-700 ease-out group-hover/bar:bg-indigo-500 shadow-inner relative"
+                    [style.height.%]="bar.percentage">
+                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-text-primary text-white text-[9px] font-bold px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap">
+                      {{ bar.value | money }}
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-black text-text-muted group-hover/bar:text-text-primary transition-colors">{{ bar.month }}</span>
                 </div>
               }
             </div>
-            @if (incomeChartData().length === 0) {
-              <div
-                class="absolute inset-0 flex items-center justify-center text-text-muted text-sm"
-              >
-                Sin datos de ingresos
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. BREAKEVEN INSIGHTS (The Strategy Section) -->
+    <section class="space-y-6">
+      <header class="flex items-center justify-between px-1">
+        <h2 class="text-xs font-black uppercase tracking-widest text-text-muted flex items-center gap-2">
+          <ion-icon name="analytics-outline" class="text-purple-500"></ion-icon>
+          Análisis Estratégico
+        </h2>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Breakeven Card -->
+        <div class="lg:col-span-2 bg-slate-900 rounded-3xl p-8 text-white relative overflow-hidden shadow-premium-lg">
+          <div class="absolute bottom-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full -mb-32 -mr-32 blur-3xl"></div>
+          
+          <div class="relative z-10 space-y-10">
+            <div class="flex items-center gap-3">
+              <ion-icon name="flash-outline" class="text-indigo-400 text-xl"></ion-icon>
+              <h3 class="text-lg font-black tracking-tight">Punto de Equilibrio</h3>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-12">
+              <div class="space-y-2">
+                <p class="text-indigo-300 text-xs font-black uppercase tracking-widest">Días Restantes</p>
+                <div class="text-6xl font-black font-mono tracking-tighter">{{ breakevenDays() }}</div>
+                <p class="text-white/50 text-xs">Días de uso compartido para cubrir costos anuales</p>
               </div>
-            }
-          </div>
-          <p class="text-sm text-text-secondary mt-4">
-            Ingresos acumulados estimados durante el año
-          </p>
-        </div>
-      </div>
 
-      <!-- Breakeven Metrics -->
-      <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6 mb-8">
-        <h2
-          class="text-xl font-semibold text-text-primary mb-6 flex items-center gap-2 font-satoshi"
-        >
-          <svg
-            class="w-6 h-6 text-primary-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="12" cy="12" r="10" stroke-width="1.75" />
-            <circle cx="12" cy="12" r="6" stroke-width="1.5" />
-            <circle cx="12" cy="12" r="2" fill="currentColor" />
-          </svg>
-          Análisis de Breakeven
-        </h2>
+              <div class="space-y-2">
+                <p class="text-emerald-400 text-xs font-black uppercase tracking-widest">Meta de Ganancia Neta</p>
+                <div class="text-4xl font-black font-mono tracking-tight">
+                  {{ profitStartDate() ? (formatDashboardDate(profitStartDate()!)) : 'En cálculo' }}
+                </div>
+                <p class="text-white/50 text-xs">Fecha estimada para rentabilidad del 100%</p>
+              </div>
+            </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Depreciación Anual -->
-          <div class="p-4 bg-error-bg/10 rounded-lg border border-error-border/30">
-            <p class="text-sm font-medium text-error-text mb-2">Depreciación Anual</p>
-            <p class="text-2xl font-bold text-error-text">
-              {{ totalAnnualDepreciation() | money }}
-            </p>
-            <p class="text-xs text-text-secondary mt-1">Pérdida de valor estimada</p>
-          </div>
-
-          <!-- Días para Breakeven -->
-          <div class="p-4 bg-warning-bg/10 rounded-lg border border-warning-border/30">
-            <p class="text-sm font-medium text-warning-text mb-2">Días para Breakeven</p>
-            <p class="text-2xl font-bold text-warning-text">
-              {{ breakevenDays() }}
-            </p>
-            <p class="text-xs text-text-secondary mt-1">Días de uso necesarios</p>
-          </div>
-
-          <!-- Fecha de Ganancia -->
-          <div class="p-4 bg-success-bg/10 rounded-lg border border-success-border/30">
-            <p class="text-sm font-medium text-success-text mb-2">Inicio de Ganancia Real</p>
-            @if (profitStartDate()) {
-              <p class="text-2xl font-bold text-success-text">
-                {{ formatDashboardDate(profitStartDate()!) }}
+            <div class="bg-white/5 rounded-2xl p-4 border border-white/10 flex items-center gap-4">
+              <ion-icon name="information-circle-outline" class="text-indigo-400 text-2xl"></ion-icon>
+              <p class="text-xs text-white/70 leading-relaxed italic">
+                "Este cálculo considera la depreciación estimada del vehículo vs ingresos actuales. Mantener una calificación alta mejora estas fechas."
               </p>
-              <p class="text-xs text-text-secondary mt-1">Después de cubrir depreciación</p>
-            } @else {
-              <p class="text-lg text-text-secondary">
-                No disponible
-                <span
-                  class="ml-1 text-xs inline-flex items-center gap-1 text-text-muted"
-                  title="Aún no podemos calcular la fecha de ganancia real porque faltan datos de depreciación o ingresos."
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  (¿Por qué?)
-                </span>
-              </p>
-            }
+            </div>
           </div>
         </div>
 
-        <!-- Explanation -->
-        <div class="mt-6 p-4 bg-surface-base rounded-lg border border-border-default">
-          <h3
-            class="text-sm font-semibold text-text-primary mb-2 flex items-center gap-2 font-satoshi"
-          >
-            <svg
-              class="w-5 h-5 text-warning-text"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M9 21h6M12 3a6 6 0 0 0-4 10.5V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3.5A6 6 0 0 0 12 3z"
-                stroke-width="1.75"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path d="M10 17h4M10 19h4" stroke-width="1" stroke-linecap="round" />
-            </svg>
-            ¿Qué significa esto?
-          </h3>
-          <ul class="text-sm text-text-secondary space-y-1">
-            <li>
-              • <strong>Depreciación Anual:</strong> Es la pérdida de valor que sufre tu auto
-              durante un año.
-            </li>
-            <li>
-              • <strong>Días para Breakeven:</strong> Es la cantidad de días que necesitas compartir
-              tu auto para cubrir la depreciación anual.
-            </li>
-            <li>
-              • <strong>Inicio de Ganancia Real:</strong> Después de esta fecha, cada día de reserva
-              genera ganancia neta (ingresos - depreciación).
-            </li>
-          </ul>
+        <!-- Quick Tips Bento -->
+        <div class="space-y-4">
+          <div class="bg-surface-secondary rounded-3xl p-6 border border-border-muted group hover:bg-white hover:shadow-premium-sm transition-all">
+            <ion-icon name="analytics-outline" class="text-indigo-500 text-2xl mb-4"></ion-icon>
+            <h4 class="font-black text-sm uppercase tracking-wide text-text-primary mb-2">Optimiza</h4>
+            <p class="text-xs text-text-secondary leading-relaxed">Configura precios dinámicos para reducir el tiempo de breakeven en un 15%.</p>
+          </div>
+          <div class="bg-indigo-50 rounded-3xl p-6 border border-indigo-100 group hover:shadow-premium-sm transition-all">
+            <ion-icon name="shield-checkmark-outline" class="text-indigo-600 text-2xl mb-4"></ion-icon>
+            <h4 class="font-black text-sm uppercase tracking-wide text-indigo-900 mb-2">Protección</h4>
+            <p class="text-xs text-indigo-700/80 leading-relaxed">Tu cobertura premium está activa. Reporta cualquier siniestro desde el detalle de la reserva.</p>
+          </div>
         </div>
       </div>
+    </section>
 
-      <!-- Quick Actions -->
-      <div class="bg-surface-raised rounded-lg shadow-sm border border-border-default p-6">
-        <h2
-          class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2 font-satoshi"
-        >
-          <svg
-            class="w-6 h-6 text-warning-text"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          Acciones Rápidas
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <a
-            routerLink="/wallet"
-            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
-          >
-            <svg
-              class="w-7 h-7 text-success-strong flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <rect x="2" y="7" width="14" height="10" rx="1.5" stroke-width="1.75" />
-              <circle cx="9" cy="12" r="2.5" stroke-width="1.25" />
-              <path
-                d="M9 10.5v3M8 11c0-.3.45-.5 1-.5s1 .2 1 .5-.45.5-1 .5-.9.2-1 .5.45.5 1 .5"
-                stroke-width="1"
-                stroke-linecap="round"
-              />
-              <path d="M18 10h3M18 12h4M18 14h3" stroke-width="1.5" stroke-linecap="round" />
-            </svg>
-            <div>
-              <p class="font-medium text-text-primary pr-0.5 font-luxury">Retirar Dinero</p>
-              <p class="text-xs text-text-secondary">Solicitar retiro</p>
-            </div>
-          </a>
+    <!-- 5. QUICK ACTIONS GRID -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      @for (action of [
+        { label: 'Retirar', icon: 'cash-outline', link: '/wallet' },
+        { label: 'Historial', icon: 'receipt-outline', link: '/payouts' },
+        { label: 'Dashboard', icon: 'grid-outline', link: '/dashboard' },
+        { label: 'Ayuda', icon: 'information-circle-outline', link: '/support' }
+      ]; track action.label) {
+        <a [routerLink]="action.link"
+           appPressScale
+           class="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-border-default shadow-premium-sm hover:shadow-premium-md hover:border-cta-default transition-all group">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl group-hover:bg-cta-default group-hover:text-cta-text transition-colors mb-3">
+            <ion-icon [name]="action.icon"></ion-icon>
+          </div>
+          <span class="text-xs font-black uppercase tracking-widest text-text-primary">{{ action.label }}</span>
+        </a>
+      }
+    </section>
 
-          <a
-            routerLink="/payouts"
-            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
-          >
-            <svg
-              class="w-7 h-7 text-primary-600 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M3 21h18" stroke-width="1.75" stroke-linecap="round" />
-              <rect x="5" y="13" width="3" height="8" rx="0.5" stroke-width="1.5" />
-              <rect x="10.5" y="7" width="3" height="14" rx="0.5" stroke-width="1.5" />
-              <rect x="16" y="3" width="3" height="18" rx="0.5" stroke-width="1.5" />
-            </svg>
-            <div>
-              <p class="font-medium text-text-primary pr-0.5">Historial de Payouts</p>
-              <p class="text-xs text-text-secondary">Ver transacciones</p>
-            </div>
-          </a>
-
-          <a
-            routerLink="/dashboard"
-            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
-          >
-            <svg
-              class="w-7 h-7 text-success-strong flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M3 3v18h18"
-                stroke-width="1.75"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M6 17l4-4 4 2 6-8"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M17 10l3-3m0 0l-2.5 1m2.5-1l-1 2.5"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <div>
-              <p class="font-medium text-text-primary pr-0.5">Dashboard</p>
-              <p class="text-xs text-text-secondary">Ver resumen completo</p>
-            </div>
-          </a>
-
-          <a
-            routerLink="/wallet/history"
-            class="flex items-center gap-3 p-4 border border-border-default rounded-lg hover:bg-surface-base transition-colors"
-          >
-            <svg
-              class="w-7 h-7 text-text-secondary flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
-                stroke-width="1.75"
-              />
-              <rect x="8" y="2" width="8" height="4" rx="1" stroke-width="1.75" />
-              <path d="M8 10h8M8 14h8M8 18h5" stroke-width="1.5" stroke-linecap="round" />
-            </svg>
-            <div>
-              <p class="font-medium text-text-primary pr-0.5">Historial Wallet</p>
-              <p class="text-xs text-text-secondary">Ver movimientos</p>
-            </div>
-          </a>
-        </div>
-      </div>
-    }
-  </div>
+  </main>
 </div>

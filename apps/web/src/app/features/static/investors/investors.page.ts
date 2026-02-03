@@ -6,6 +6,13 @@ import { environment } from '@environment';
 import { catchError, map, shareReplay } from 'rxjs/operators';
 import { of } from 'rxjs';
 
+interface InvestorStats {
+  active_cars: number;
+  total_gmv_usd: number;
+  completed_trips: number;
+  total_users: number;
+}
+
 @Component({
   selector: 'app-investors',
   standalone: true,
@@ -89,7 +96,7 @@ import { of } from 'rxjs';
 export class InvestorsPage {
   private http = inject(HttpClient);
   
-  stats$ = this.http.get<any>(`${environment.supabaseUrl}/functions/v1/public-investor-stats`).pipe(
+  stats$ = this.http.get<InvestorStats>(`${environment.supabaseUrl}/functions/v1/public-investor-stats`).pipe(
     map(data => ({
       ...data,
       // Fallback values if API is cold/empty

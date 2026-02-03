@@ -11,7 +11,7 @@
       "command": "/home/edu/.npm-global/bin/mcp-server-supabase",
       "args": [],
       "env": {
-        "SUPABASE_ACCESS_TOKEN": "sbp_4984abf7ac0af3d977b989b674c19875539c014b"
+        "SUPABASE_ACCESS_TOKEN": "sbp_d420f2b7bf1d34835eedbe26b44f630144219109"
       }
     },
     "autorenta-ops": {

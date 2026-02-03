@@ -52,7 +52,7 @@ export class LicenseVerificationService {
                 const user = (await this.supabase.auth.getUser()).data.user;
                 if (user) {
                     const ed = data.extracted_data;
-                    const updates: Record<string, any> = {};
+                    const updates: Record<string, unknown> = {};
 
                     if (ed.license_categories) updates['driver_license_categories'] = ed.license_categories;
                     if (ed.expiry_date) updates['driver_license_expiry'] = ed.expiry_date;

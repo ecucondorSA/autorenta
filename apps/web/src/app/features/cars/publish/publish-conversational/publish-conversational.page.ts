@@ -222,16 +222,36 @@ import { QUESTIONS_CONFIG, formatQuestionTitle } from './questions.config';
         />
       }
 
-      <!-- Loading overlay -->
+      <!-- Loading overlay with progress -->
       @if (isSubmitting()) {
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div class="bg-surface-raised rounded-2xl p-8 shadow-2xl text-center">
-            <svg class="animate-spin h-12 w-12 mx-auto text-cta-default" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p class="mt-4 text-text-primary font-medium">Publicando tu auto...</p>
-            <p class="text-sm text-text-muted mt-1">Esto puede tomar unos segundos</p>
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div class="bg-surface-raised rounded-2xl p-8 shadow-2xl text-center min-w-[280px]">
+            @if (publishingStep() === 'error') {
+              <!-- Error state -->
+              <div class="w-12 h-12 mx-auto rounded-full bg-red-100 flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <p class="mt-4 text-red-600 font-semibold">Error</p>
+              <p class="text-sm text-text-muted mt-2 max-w-xs">{{ publishingMessage() }}</p>
+              <button (click)="isSubmitting.set(false)" class="mt-4 px-4 py-2 bg-cta-default text-white rounded-lg text-sm font-medium">
+                Cerrar
+              </button>
+            } @else {
+              <!-- Progress state -->
+              <svg class="animate-spin h-12 w-12 mx-auto text-cta-default" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <p class="mt-4 text-text-primary font-semibold">{{ publishingMessage() }}</p>
+              <!-- Progress steps -->
+              <div class="flex justify-center gap-2 mt-4">
+                <div class="w-2 h-2 rounded-full" [class]="publishingStep() === 'validating' ? 'bg-cta-default animate-pulse' : (publishingStep() === 'creating' || publishingStep() === 'uploading' || publishingStep() === 'success' ? 'bg-green-500' : 'bg-gray-300')"></div>
+                <div class="w-2 h-2 rounded-full" [class]="publishingStep() === 'creating' ? 'bg-cta-default animate-pulse' : (publishingStep() === 'uploading' || publishingStep() === 'success' ? 'bg-green-500' : 'bg-gray-300')"></div>
+                <div class="w-2 h-2 rounded-full" [class]="publishingStep() === 'uploading' ? 'bg-cta-default animate-pulse' : (publishingStep() === 'success' ? 'bg-green-500' : 'bg-gray-300')"></div>
+              </div>
+            }
           </div>
         </div>
       }
@@ -544,29 +564,53 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
     }
   }
 
+  // Publishing state
+  readonly publishingStep = signal<'idle' | 'validating' | 'creating' | 'uploading' | 'success' | 'error'>('idle');
+  readonly publishingMessage = signal('');
+
   // Publishing
   async publish(): Promise<void> {
     if (this.isSubmitting()) return;
 
     this.isSubmitting.set(true);
+    this.publishingStep.set('validating');
+    this.publishingMessage.set('Validando información...');
 
     try {
-      // Prepare form data
+      // Step 1: Prepare and validate form data
       const formData = this.formService.getFormData();
 
-      // Create car
+      // Validate required fields
+      if (!formData['price_per_day'] || (formData['price_per_day'] as number) <= 0) {
+        throw new Error('El precio por día es requerido y debe ser mayor a 0');
+      }
+      if (!formData['location_lat'] || !formData['location_lng']) {
+        throw new Error('La ubicación es requerida. Seleccioná una ubicación en el mapa.');
+      }
+
+      // Step 2: Create car
+      this.publishingStep.set('creating');
+      this.publishingMessage.set('Creando publicación...');
+
       const car = await this.carsService.createCar(formData);
 
       if (!car?.id) {
-        throw new Error('No se pudo crear la publicación');
+        throw new Error('No se pudo crear la publicación. Intentá de nuevo.');
       }
 
       const carId = car.id;
 
-      // Upload photos
-      await this.photoService.uploadPhotos(carId);
+      // Step 3: Upload photos
+      const photos = this.photoService.uploadedPhotos();
+      if (photos.length > 0) {
+        this.publishingStep.set('uploading');
+        this.publishingMessage.set(`Subiendo ${photos.length} foto(s)...`);
+        await this.photoService.uploadPhotos(carId);
+      }
 
-      // Success!
+      // Step 4: Success!
+      this.publishingStep.set('success');
+      this.publishingMessage.set('¡Publicación exitosa!');
       this.publishedCarId.set(carId);
       this.publishedCarTitle.set(
         `${this.formService.selectedBrand()?.name} ${this.formService.selectedModel()?.name} ${this.formService.selectedYear()}`,
@@ -575,15 +619,59 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
 
       // Clear draft
       this.formService.clearDraft();
+
+      // Success notification
+      this.notifications.show({
+        title: '¡Auto publicado!',
+        message: 'Tu auto ya está visible en el marketplace',
+        type: 'success',
+        duration: 5000,
+      });
     } catch (error) {
+      this.publishingStep.set('error');
       console.error('Publish error:', error);
-      this.notifications.error(
-        'Error',
-        error instanceof Error ? error.message : 'No se pudo publicar el auto. Intentá de nuevo.',
-      );
+
+      // Parse specific error types for better UX
+      const errorMessage = this.parsePublishError(error);
+      this.publishingMessage.set(errorMessage);
+
+      this.notifications.error('Error al publicar', errorMessage);
     } finally {
       this.isSubmitting.set(false);
     }
+  }
+
+  /**
+   * Parse publish errors for user-friendly messages
+   */
+  private parsePublishError(error: unknown): string {
+    if (error instanceof Error) {
+      const msg = error.message;
+
+      // PostgREST schema cache errors
+      if (msg.includes('PGRST204') || msg.includes('schema cache')) {
+        return 'Error de sincronización. Por favor recargá la página e intentá de nuevo.';
+      }
+
+      // Network errors
+      if (msg.includes('fetch') || msg.includes('network') || msg.includes('Failed to fetch')) {
+        return 'Error de conexión. Verificá tu internet e intentá de nuevo.';
+      }
+
+      // Validation errors
+      if (msg.includes('required') || msg.includes('requerido')) {
+        return msg;
+      }
+
+      // RLS/Permission errors
+      if (msg.includes('row-level security') || msg.includes('permission denied')) {
+        return 'No tenés permisos para publicar. Verificá tu cuenta.';
+      }
+
+      return msg;
+    }
+
+    return 'Error inesperado. Por favor intentá de nuevo.';
   }
 
   viewPublishedCar(): void {

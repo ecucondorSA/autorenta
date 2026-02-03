@@ -14,9 +14,9 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { FipeAutocompleteComponent, FipeAutocompleteOption } from '../fipe-autocomplete/fipe-autocomplete.component';
 import { CarBrandsService } from '@core/services/cars/car-brands.service';
 import { PricingService } from '@core/services/payments/pricing.service';
+import { FipeAutocompleteComponent, FipeAutocompleteOption } from '../fipe-autocomplete/fipe-autocomplete.component';
 
 
 @Component({

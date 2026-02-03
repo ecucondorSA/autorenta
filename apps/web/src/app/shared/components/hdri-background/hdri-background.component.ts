@@ -97,6 +97,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
    @Input() rotateSpeedMobile = 0.000001; // Even slower on mobile to reduce motion sickness
    @Input() enableInteraction = true;
    @Input() initialRotationY = 1.24; // Start showing the city in night mode
+   @Input() fov = 0.55; // Field of view (lower = more zoomed in)
 
    // Detect mobile for slower rotation
    private isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -168,6 +169,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     uniform float u_rotationY;
     uniform float u_rotationX;
     uniform float u_isNight; // 0.0 = day, 1.0 = night
+    uniform float u_fov;
 
     const float PI = 3.14159265359;
 
@@ -181,11 +183,8 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       vec2 ndc = (uv - 0.5) * 2.0;
       ndc.x *= aspect;
 
-      // Field of view (lower = more zoomed in)
-      float fov = 0.55;
-
       // Create ray direction (as if inside a sphere looking out)
-      vec3 dir = normalize(vec3(ndc.x * fov, ndc.y * fov, -1.0));
+      vec3 dir = normalize(vec3(ndc.x * u_fov, ndc.y * u_fov, -1.0));
 
       // Apply Y rotation (horizontal pan)
       float cosY = cos(u_rotationY);
@@ -657,11 +656,13 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     const rotationYLocation = this.gl.getUniformLocation(this.program, 'u_rotationY');
     const rotationXLocation = this.gl.getUniformLocation(this.program, 'u_rotationX');
     const isNightLocation = this.gl.getUniformLocation(this.program, 'u_isNight');
+    const fovLocation = this.gl.getUniformLocation(this.program, 'u_fov');
 
     this.gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
     this.gl.uniform1f(rotationYLocation, this.rotationY);
     this.gl.uniform1f(rotationXLocation, this.rotationX);
     this.gl.uniform1f(isNightLocation, this.isNightTime() ? 1.0 : 0.0);
+    this.gl.uniform1f(fovLocation, this.fov);
 
     // Bind texture
     this.gl.activeTexture(this.gl.TEXTURE0);

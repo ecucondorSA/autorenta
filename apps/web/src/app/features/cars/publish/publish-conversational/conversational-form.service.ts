@@ -297,8 +297,9 @@ export class ConversationalFormService {
       year: year || rawValue.year,
       color: rawValue.color || 'No especificado',
       mileage: rawValue.mileage,
-      transmission: rawValue.transmission,
-      fuel: rawValue.fuel,
+      // Map transmission to DB enum values (manual, automatico)
+      transmission: rawValue.transmission === 'automatic' ? 'automatico' : rawValue.transmission,
+      // fuel_type is set below in Generated section
 
       // Rental rules (smart defaults - unlimited km)
       mileage_limit: rawValue.mileage_limit ?? 0, // 0 = Unlimited
@@ -339,7 +340,7 @@ export class ConversationalFormService {
       fuel_type: rawValue.fuel,
       location_province: location?.state || rawValue.location_state,
       rating_avg: 0,
-      rating_count: 0,
+      review_count: 0,
       availability_start_date: rawValue.availability_start_date || this.todayISO(),
       availability_end_date: rawValue.availability_end_date || this.nextYearISO(),
     };

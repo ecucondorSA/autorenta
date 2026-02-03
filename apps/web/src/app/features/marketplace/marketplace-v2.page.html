@@ -5,7 +5,7 @@
   <div class="absolute inset-0 z-0 brightness-[1.1] saturate-[1.2] contrast-[1.05]">
     @defer (on viewport) {
     <app-hdri-background #hdriViewer src="/assets/hdri/suburban_parking_area_8k.webp" [autoRotate]="true"
-      [enableInteraction]="true" [initialRotationY]="4.5" (hdriLoaded)="onHdriLoaded()" class="w-full h-full">
+      [enableInteraction]="true" [initialRotationY]="4.5" [fov]="0.35" (hdriLoaded)="onHdriLoaded()" class="w-full h-full">
     </app-hdri-background>
     } @placeholder {
     <div class="w-full h-full bg-[#050505]"></div>
@@ -117,16 +117,22 @@
 <section class="py-8 sm:py-12 lg:py-24 bg-surface-base">
   <div class="max-w-7xl mx-auto px-6 lg:px-12">
     <!-- Section Header -->
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-6">
-      <div>
-        <span
-          class="inline-block px-3 py-1 rounded-full bg-gray-900/5 border border-gray-900/10 text-xs font-medium text-gray-500 text-text-secondary uppercase tracking-widest mb-3">
-          Marketplace
-        </span>
-        <h2 class="font-display h2 font-bold text-text-primary font-satoshi">Autos cerca de ti</h2>
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-6 gap-6 sticky top-[72px] z-30 bg-surface-base/95 backdrop-blur-md py-4 -mx-6 px-6 lg:-mx-12 lg:px-12 border-b border-border-default/50 transition-all duration-300">
+      <div class="flex items-center gap-4 overflow-x-auto pb-1 scrollbar-hide w-full lg:w-auto">
+        @for (cat of categories; track cat.id) {
+          <button (click)="selectCategory(cat.id)" 
+            [class.bg-text-primary]="selectedCategory() === cat.id"
+            [class.text-surface-base]="selectedCategory() === cat.id"
+            [class.bg-surface-raised]="selectedCategory() !== cat.id"
+            [class.text-text-secondary]="selectedCategory() !== cat.id"
+            class="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all whitespace-nowrap hover:scale-105 active:scale-95 border border-border-default shadow-sm">
+            <ion-icon [name]="cat.icon" class="text-lg"></ion-icon>
+            {{ cat.label }}
+          </button>
+        }
       </div>
 
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4 hidden lg:flex">
         <!-- Sort Dropdown -->
         <div class="relative">
           <label for="sort-order" class="sr-only">Ordenar autos por</label>
@@ -154,7 +160,7 @@
           <div class="relative flex-shrink-0 w-[85vw] h-full snap-center" style="min-height: 400px;">
             <app-car-card
               [car]="car"
-              [distance]="car.distanceText"
+              [distance]="undefined"
               [showOwnerActions]="false"
               class="h-full w-full block"
             ></app-car-card>
@@ -186,7 +192,7 @@
         <div class="h-full">
           <app-car-card
             [car]="car"
-            [distance]="car.distanceText"
+            [distance]="undefined"
             [showOwnerActions]="false"
           ></app-car-card>
         </div>
@@ -301,218 +307,65 @@
   <!-- This closes max-w-7xl -->
 </section>
 
-<!-- PARTNERS SECTION - Infinite Marquee (Hidden on mobile for cleaner UX) -->
-<section class="hidden md:block py-12 md:py-20 border-b border-border-default/30 bg-surface-base overflow-hidden relative">
-  <!-- Gradient Fade Masks -->
-  <div
-    class="absolute top-0 bottom-0 left-0 w-24 md:w-32 z-10 bg-gradient-to-r from-surface-base to-transparent pointer-events-none">
-  </div>
-  <div
-    class="absolute top-0 bottom-0 right-0 w-24 md:w-32 z-10 bg-gradient-to-l from-surface-base to-transparent pointer-events-none">
-  </div>
+<!-- STRATEGIC PARTNERS - TITANIUM EDITION (ULTRA-PREMIUM) -->
+<section class="py-16 bg-white relative overflow-hidden border-y border-zinc-200">
 
-  <div class="w-full overflow-hidden" style="overflow: hidden; width: 100%; position: relative; max-width: 100vw">
-    <div class="animate-marquee flex items-center gap-16 md:gap-32">
-      <!-- SET 1 -->
-      <!-- MercadoPago -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" aria-label="MercadoPago">
-        <circle cx="24" cy="24" r="22" fill="#009EE3" />
-        <path
-          d="M14 24c0-1 .5-2 1.5-2.5l5-2.5c1-.5 2-.5 3 0l5 2.5c1 .5 1.5 1.5 1.5 2.5v4c0 1-.5 2-1.5 2.5l-5 2.5c-1 .5-2 .5-3 0l-5-2.5c-1-.5-1.5-1.5-1.5-2.5v-4z"
-          fill="#fff" />
-        <path d="M18 22l3-1.5c.5-.25 1-.25 1.5 0l3 1.5M18 26l3 1.5c.5.25 1 .25 1.5 0l3-1.5" stroke="#009EE3"
-          stroke-width="1.5" stroke-linecap="round" fill="none" />
-      </svg>
+  <!-- 1. Background Depth (Subtle) -->
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-100/50 via-white to-white pointer-events-none"></div>
 
-      <!-- Mapbox -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" aria-label="Mapbox">
-        <circle cx="24" cy="24" r="22" fill="#4264FB" />
-        <path
-          d="M24 12c-5.52 0-10 4.48-10 10 0 7.5 10 16 10 16s10-8.5 10-16c0-5.52-4.48-10-10-10zm0 14c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"
-          fill="#fff" />
-      </svg>
+  <!-- 2. Noise Texture (Subtle Grain) -->
+  <div class="absolute inset-0 opacity-[0.02]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')"></div>
 
-      <!-- EcuCondor -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" fill="none" aria-label="EcuCondor">
-        <defs>
-          <radialGradient id="ecu-bg" cx="30%" cy="30%" r="70%">
-            <stop offset="0%" stop-color="#1a237e" />
-            <stop offset="100%" stop-color="#0d1421" />
-          </radialGradient>
-          <linearGradient id="ecu-red" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#c62828" />
-            <stop offset="100%" stop-color="#e53935" />
-          </linearGradient>
-          <linearGradient id="ecu-gold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#f9a825" />
-            <stop offset="100%" stop-color="#fdd835" />
-          </linearGradient>
-          <linearGradient id="ecu-blue" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#1565c0" />
-            <stop offset="100%" stop-color="#42a5f5" />
-          </linearGradient>
-          <linearGradient id="ecu-purple" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#0284c7" />
-            <stop offset="100%" stop-color="#0369a1" />
-          </linearGradient>
-        </defs>
-        <clipPath id="ecu-circle">
-          <circle cx="24" cy="24" r="22" />
-        </clipPath>
-        <g clip-path="url(#ecu-circle)">
-          <circle cx="24" cy="24" r="22" fill="url(#ecu-bg)" />
-          <path d="M48 20c-8 4-14 12-16 22-1 4-3 6-6 6-8-2-14-10-14-20 0-4 1-8 4-12 6 8 16 12 32 4z"
-            fill="url(#ecu-purple)" opacity="0.9" />
-          <path d="M44 16c-6 6-10 14-10 24-1 4-4 8-8 8-6-4-10-12-10-22 0-6 2-10 6-14 4 6 12 10 22 4z"
-            fill="url(#ecu-blue)" opacity="0.95" />
-          <path d="M4 28c4-6 6-14 4-22 2 2 6 4 10 4-2 6-2 14 2 22-6 1-12-1-16-4z" fill="url(#ecu-red)" opacity="0.9" />
-          <path d="M12 8c4 1 8 4 10 8 2 6 1 12-2 18-2 4-4 6-6 6-4-2-8-6-10-12 0-8 4-16 8-20z" fill="url(#ecu-gold)" />
-          <path d="M16 10c3 1 6 3 8 7 2 5 2 10 0 15-1 3-3 5-5 5-3-2-6-6-7-12 0-6 2-12 4-15z" fill="#fdd835" />
-          <ellipse cx="16" cy="14" rx="6" ry="5" fill="url(#ecu-gold)" />
-          <ellipse cx="15" cy="13" rx="5" ry="4" fill="#ffeb3b" />
-          <circle cx="13" cy="12" r="2.5" fill="#fff" />
-          <circle cx="13" cy="12" r="1.8" fill="#1565c0" />
-          <circle cx="12.5" cy="11.5" r="0.6" fill="#fff" />
-          <path d="M8 14c0-1 1-2 3-2 1 0 2 0 2 1l-2 4c-1 1-2 1-3 0-1-1-1-2 0-3z" fill="#e0e0e0" />
-          <path d="M7 15c0-1 1-1 2-1l-1 2c-1 0-1 0-1-1z" fill="#9e9e9e" />
-          <path d="M18 16c2 4 3 8 2 14" stroke="#e65100" stroke-width="0.5" opacity="0.4" />
-          <path d="M20 14c3 4 4 10 2 16" stroke="#e65100" stroke-width="0.5" opacity="0.3" />
-          <path d="M22 12c4 5 6 12 4 20" stroke="#1565c0" stroke-width="0.5" opacity="0.3" />
-        </g>
-        <circle cx="24" cy="24" r="22" fill="none" stroke="#1a237e" stroke-width="0.5" opacity="0.5" />
-      </svg>
+  <div class="relative z-10 max-w-[100vw]">
+    <!-- Marquee Container with Fade Masks -->
+    <div class="overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]">
+      
+      <!-- The Ticker Track -->
+      <div class="flex items-center gap-24 animate-marquee whitespace-nowrap py-2">
+        
+        <!-- BLOCK 1 -->
+        <div class="flex items-center gap-24">
+          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+            MERCADOPAGO
+          </span>
+          
+          <span class="text-zinc-300 text-2xl">❖</span>
 
-      <!-- Visa -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 100 32" aria-label="Visa">
-        <path
-          d="M42.5 10.16l-3.93 18.68h-4.99l3.93-18.68h4.99zm20.47 12.07l2.62-7.24 1.51 7.24h-4.13zm5.57 6.61h4.62l-4.03-18.68h-4.26c-.96 0-1.77.56-2.13 1.42l-7.5 17.26h5.25l1.04-2.89h6.41l.6 2.89zm-13.08-6.09c.02-4.93-6.82-5.2-6.77-7.4.01-.67.65-1.38 2.05-1.56.69-.09 2.6-.16 4.77.84l.85-3.97c-1.17-.42-2.67-.83-4.54-.83-4.8 0-8.17 2.55-8.2 6.2-.03 2.7 2.41 4.21 4.25 5.11 1.89.92 2.53 1.51 2.52 2.34-.01 1.26-1.51 1.82-2.91 1.84-2.44.04-3.86-.66-4.99-1.19l-.88 4.12c1.14.52 3.23.98 5.4 1 5.1 0 8.44-2.52 8.45-6.5zM32.31 10.16l-7.87 18.68h-5.28l-3.87-14.92c-.24-.93-.44-1.27-1.16-1.66-1.17-.64-3.11-1.24-4.81-1.61l.12-.49h8.48c1.08 0 2.05.72 2.3 1.96l2.1 11.16 5.19-13.12h5.8z"
-          fill="#1A1F71" />
-      </svg>
+          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+            ECUCONDOR SAS
+          </span>
 
-      <!-- Mastercard -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 60 40" aria-label="Mastercard">
-        <circle cx="22" cy="20" r="12" fill="#EB001B" />
-        <circle cx="38" cy="20" r="12" fill="#F79E1B" />
-        <path d="M30 10.5c3.04 2.34 5 6.01 5 10.15s-1.96 7.81-5 10.15c-3.04-2.34-5-6.01-5-10.15s1.96-7.81 5-10.15z"
-          fill="#FF5F00" />
-      </svg>
+          <span class="text-zinc-300 text-2xl">❖</span>
 
-      <!-- American Express -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 60 40" aria-label="American Express">
-        <rect width="60" height="40" rx="4" fill="#006FCF" />
-        <path
-          d="M10 25h4l.5-1.2h1l.5 1.2h8v-.9l.7.9h4.1l.7-.9v.9h16.5v-2.1h-1.8c-.2 0-.2 0-.2-.2v-1.8h2v-2h-3.6l-.6.8-.6-.8H27.5v4.1h-1.4l-.7-1.7h-2.5l-.7 1.7h-1.6v-4.1h-4.2l-1.8 4.1h-2.4L10 25zm1.8-4.1h1.8l2 4.6v-4.6h2l1.5 3.2 1.4-3.2h2v4.6h-1.2v-3.6l-1.6 3.6h-1.1l-1.6-3.6v3.6h-2.5l-.5-1.2h-2.7l-.5 1.2h-1.3l2.3-4.6zm1.2 2.3l-.8-1.9-.8 1.9h1.6z"
-          fill="#fff" />
-      </svg>
+          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+            AUTAMEDICA
+          </span>
+          
+          <span class="text-zinc-300 text-2xl">❖</span>
+        </div>
 
-      <!-- Wallet -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 40 40" aria-label="Autorentar Wallet">
-        <rect x="4" y="10" width="32" height="22" rx="3" fill="none" stroke="#A7D8F4" stroke-width="2" />
-        <path d="M4 16h32" stroke="#A7D8F4" stroke-width="2" />
-        <circle cx="30" cy="22" r="3" fill="#A7D8F4" />
-        <path d="M8 8c0-2.2 1.8-4 4-4h16c2.2 0 4 1.8 4 4" stroke="#A7D8F4" stroke-width="2" fill="none" />
-      </svg>
+        <!-- BLOCK 2 (Clone for Loop) -->
+        <div class="flex items-center gap-24">
+          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+            MERCADOPAGO
+          </span>
+          
+          <span class="text-zinc-300 text-2xl">❖</span>
 
-      <!-- SET 2 (DUPLICATE) -->
-      <!-- MercadoPago -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" aria-label="MercadoPago">
-        <circle cx="24" cy="24" r="22" fill="#009EE3" />
-        <path
-          d="M14 24c0-1 .5-2 1.5-2.5l5-2.5c1-.5 2-.5 3 0l5 2.5c1 .5 1.5 1.5 1.5 2.5v4c0 1-.5 2-1.5 2.5l-5 2.5c-1 .5-2 .5-3 0l-5-2.5c-1-.5-1.5-1.5-1.5-2.5v-4z"
-          fill="#fff" />
-        <path d="M18 22l3-1.5c.5-.25 1-.25 1.5 0l3 1.5M18 26l3 1.5c.5.25 1 .25 1.5 0l3-1.5" stroke="#009EE3"
-          stroke-width="1.5" stroke-linecap="round" fill="none" />
-      </svg>
+          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+            ECUCONDOR SAS
+          </span>
 
-      <!-- Mapbox -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" aria-label="Mapbox">
-        <circle cx="24" cy="24" r="22" fill="#4264FB" />
-        <path
-          d="M24 12c-5.52 0-10 4.48-10 10 0 7.5 10 16 10 16s10-8.5 10-16c0-5.52-4.48-10-10-10zm0 14c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"
-          fill="#fff" />
-      </svg>
+          <span class="text-zinc-300 text-2xl">❖</span>
 
-      <!-- EcuCondor -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 48 48" fill="none" aria-label="EcuCondor">
-        <defs>
-          <radialGradient id="ecu-bg-2" cx="30%" cy="30%" r="70%">
-            <stop offset="0%" stop-color="#1a237e" />
-            <stop offset="100%" stop-color="#0d1421" />
-          </radialGradient>
-          <linearGradient id="ecu-red-2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#c62828" />
-            <stop offset="100%" stop-color="#e53935" />
-          </linearGradient>
-          <linearGradient id="ecu-gold-2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#f9a825" />
-            <stop offset="100%" stop-color="#fdd835" />
-          </linearGradient>
-          <linearGradient id="ecu-blue-2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#1565c0" />
-            <stop offset="100%" stop-color="#42a5f5" />
-          </linearGradient>
-          <linearGradient id="ecu-purple-2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#0284c7" />
-            <stop offset="100%" stop-color="#0369a1" />
-          </linearGradient>
-        </defs>
-        <clipPath id="ecu-circle-2">
-          <circle cx="24" cy="24" r="22" />
-        </clipPath>
-        <g clip-path="url(#ecu-circle-2)">
-          <circle cx="24" cy="24" r="22" fill="url(#ecu-bg-2)" />
-          <path d="M48 20c-8 4-14 12-16 22-1 4-3 6-6 6-8-2-14-10-14-20 0-4 1-8 4-12 6 8 16 12 32 4z"
-            fill="url(#ecu-purple-2)" opacity="0.9" />
-          <path d="M44 16c-6 6-10 14-10 24-1 4-4 8-8 8-6-4-10-12-10-22 0-6 2-10 6-14 4 6 12 10 22 4z"
-            fill="url(#ecu-blue-2)" opacity="0.95" />
-          <path d="M4 28c4-6 6-14 4-22 2 2 6 4 10 4-2 6-2 14 2 22-6 1-12-1-16-4z" fill="url(#ecu-red-2)"
-            opacity="0.9" />
-          <path d="M12 8c4 1 8 4 10 8 2 6 1 12-2 18-2 4-4 6-6 6-4-2-8-6-10-12 0-8 4-16 8-20z" fill="url(#ecu-gold-2)" />
-          <path d="M16 10c3 1 6 3 8 7 2 5 2 10 0 15-1 3-3 5-5 5-3-2-6-6-7-12 0-6 2-12 4-15z" fill="#fdd835" />
-          <ellipse cx="16" cy="14" rx="6" ry="5" fill="url(#ecu-gold-2)" />
-          <ellipse cx="15" cy="13" rx="5" ry="4" fill="#ffeb3b" />
-          <circle cx="13" cy="12" r="2.5" fill="#fff" />
-          <circle cx="13" cy="12" r="1.8" fill="#1565c0" />
-          <circle cx="12.5" cy="11.5" r="0.6" fill="#fff" />
-          <path d="M8 14c0-1 1-2 3-2 1 0 2 0 2 1l-2 4c-1 1-2 1-3 0-1-1-1-2 0-3z" fill="#e0e0e0" />
-          <path d="M7 15c0-1 1-1 2-1l-1 2c-1 0-1 0-1-1z" fill="#9e9e9e" />
-          <path d="M18 16c2 4 3 8 2 14" stroke="#e65100" stroke-width="0.5" opacity="0.4" />
-          <path d="M20 14c3 4 4 10 2 16" stroke="#e65100" stroke-width="0.5" opacity="0.3" />
-          <path d="M22 12c4 5 6 12 4 20" stroke="#1565c0" stroke-width="0.5" opacity="0.3" />
-        </g>
-        <circle cx="24" cy="24" r="22" fill="none" stroke="#1a237e" stroke-width="0.5" opacity="0.5" />
-      </svg>
+          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+            AUTAMEDICA
+          </span>
+          
+          <span class="text-zinc-300 text-2xl">❖</span>
+        </div>
 
-      <!-- Visa -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 100 32" aria-label="Visa">
-        <path
-          d="M42.5 10.16l-3.93 18.68h-4.99l3.93-18.68h4.99zm20.47 12.07l2.62-7.24 1.51 7.24h-4.13zm5.57 6.61h4.62l-4.03-18.68h-4.26c-.96 0-1.77.56-2.13 1.42l-7.5 17.26h5.25l1.04-2.89h6.41l.6 2.89zm-13.08-6.09c.02-4.93-6.82-5.2-6.77-7.4.01-.67.65-1.38 2.05-1.56.69-.09 2.6-.16 4.77.84l.85-3.97c-1.17-.42-2.67-.83-4.54-.83-4.8 0-8.17 2.55-8.2 6.2-.03 2.7 2.41 4.21 4.25 5.11 1.89.92 2.53 1.51 2.52 2.34-.01 1.26-1.51 1.82-2.91 1.84-2.44.04-3.86-.66-4.99-1.19l-.88 4.12c1.14.52 3.23.98 5.4 1 5.1 0 8.44-2.52 8.45-6.5zM32.31 10.16l-7.87 18.68h-5.28l-3.87-14.92c-.24-.93-.44-1.27-1.16-1.66-1.17-.64-3.11-1.24-4.81-1.61l.12-.49h8.48c1.08 0 2.05.72 2.3 1.96l2.1 11.16 5.19-13.12h5.8z"
-          fill="#1A1F71" />
-      </svg>
-
-      <!-- Mastercard -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 60 40" aria-label="Mastercard">
-        <circle cx="22" cy="20" r="12" fill="#EB001B" />
-        <circle cx="38" cy="20" r="12" fill="#F79E1B" />
-        <path d="M30 10.5c3.04 2.34 5 6.01 5 10.15s-1.96 7.81-5 10.15c-3.04-2.34-5-6.01-5-10.15s1.96-7.81 5-10.15z"
-          fill="#FF5F00" />
-      </svg>
-
-      <!-- American Express -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 60 40" aria-label="American Express">
-        <rect width="60" height="40" rx="4" fill="#006FCF" />
-        <path
-          d="M10 25h4l.5-1.2h1l.5 1.2h8v-.9l.7.9h4.1l.7-.9v.9h16.5v-2.1h-1.8c-.2 0-.2 0-.2-.2v-1.8h2v-2h-3.6l-.6.8-.6-.8H27.5v4.1h-1.4l-.7-1.7h-2.5l-.7 1.7h-1.6v-4.1h-4.2l-1.8 4.1h-2.4L10 25zm1.8-4.1h1.8l2 4.6v-4.6h2l1.5 3.2 1.4-3.2h2v4.6h-1.2v-3.6l-1.6 3.6h-1.1l-1.6-3.6v3.6h-2.5l-.5-1.2h-2.7l-.5 1.2h-1.3l2.3-4.6zm1.2 2.3l-.8-1.9-.8 1.9h1.6z"
-          fill="#fff" />
-      </svg>
-
-      <!-- Wallet -->
-      <svg class="partner-logo shrink-0" viewBox="0 0 40 40" aria-label="Autorentar Wallet">
-        <rect x="4" y="10" width="32" height="22" rx="3" fill="none" stroke="#A7D8F4" stroke-width="2" />
-        <path d="M4 16h32" stroke="#A7D8F4" stroke-width="2" />
-        <circle cx="30" cy="22" r="3" fill="#A7D8F4" />
-        <path d="M8 8c0-2.2 1.8-4 4-4h16c2.2 0 4 1.8 4 4" stroke="#A7D8F4" stroke-width="2" fill="none" />
-      </svg>
+      </div>
     </div>
   </div>
 </section>
@@ -587,52 +440,88 @@
         </div>
       </div>
 
-      <!-- Right: Calculator Widget (Professional but Warm) -->
-      <div class="relative">
-        <div class="bg-zinc-900 border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+      <!-- Right: Titanium Dashboard Widget -->
+      <div class="relative group">
+        <!-- Glow Effect behind card -->
+        <div class="absolute -inset-1 bg-gradient-to-r from-brand-primary to-emerald-500 rounded-[2rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+        
+        <div class="bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+          
           <!-- Header -->
-          <div class="flex justify-between items-center mb-8">
-            <h3 class="text-xl font-bold text-white font-satoshi">Simulá tus ingresos</h3>
-            <span class="text-[10px] font-bold bg-white/5 text-zinc-400 px-2 py-1 rounded border border-white/5">ESTIMADO</span>
+          <div class="flex justify-between items-start mb-8">
+            <div>
+              <p class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-1">Rendimiento Estimado</p>
+              <h3 class="text-xl font-bold text-white font-satoshi">Dashboard Financiero</h3>
+            </div>
+            <div class="bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full flex items-center gap-2">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wide">Activo</span>
+            </div>
+          </div>
+
+          <!-- Visualization: CSS Bar Chart (Monthly Projection) -->
+          <div class="h-24 flex items-end justify-between gap-1 mb-8 px-2 border-b border-white/5 pb-4">
+            <!-- Simulated data bars -->
+            <div class="w-full bg-zinc-800/50 rounded-t-sm h-[30%] relative group/bar"></div>
+            <div class="w-full bg-zinc-800/50 rounded-t-sm h-[45%] relative group/bar"></div>
+            <div class="w-full bg-zinc-800/50 rounded-t-sm h-[40%] relative group/bar"></div>
+            <div class="w-full bg-zinc-800/50 rounded-t-sm h-[60%] relative group/bar"></div>
+            <div class="w-full bg-brand-primary/20 rounded-t-sm h-[55%] relative group/bar"></div>
+            <div class="w-full bg-brand-primary/30 rounded-t-sm h-[70%] relative group/bar"></div>
+            <div class="w-full bg-brand-primary/40 rounded-t-sm h-[65%] relative group/bar"></div>
+            <div class="w-full bg-brand-primary/60 rounded-t-sm h-[80%] relative group/bar"></div>
+            <div class="w-full bg-brand-primary/80 rounded-t-sm h-[90%] relative group/bar">
+              <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">Dic</div>
+            </div>
+            <div class="w-full bg-brand-primary rounded-t-sm h-[100%] shadow-[0_0_15px_rgba(57,255,20,0.3)] relative group/bar">
+              <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded">Ene</div>
+            </div>
           </div>
 
           <div class="space-y-8">
-            <!-- Valor del Auto -->
-            <div>
-              <label class="flex justify-between text-zinc-400 text-sm mb-3 font-medium">
-                <span>Valor de tu auto (USD)</span>
-                <span class="text-white font-bold font-mono">{{ calculatorCarValue() | number:'1.0-0' }}</span>
-              </label>
+            <!-- Input: Car Value -->
+            <div class="group/input">
+              <div class="flex justify-between text-sm mb-3 font-medium">
+                <span class="text-zinc-400 group-hover/input:text-zinc-300 transition-colors">Valor de Mercado</span>
+                <span class="text-white font-mono bg-zinc-800 px-2 py-0.5 rounded text-xs border border-zinc-700">{{ calculatorCarValue() | currency:'USD':'symbol':'1.0-0' }}</span>
+              </div>
               <input type="range" [(ngModel)]="calculatorCarValue" min="5000" max="50000" step="1000"
-                class="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-brand-primary transition-all" />
+                class="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-brand-primary hover:accent-emerald-400 transition-all" />
             </div>
 
-            <!-- Días Disponibles -->
-            <div>
-              <label class="flex justify-between text-zinc-400 text-sm mb-3 font-medium">
-                <span>Días libres al mes</span>
-                <span class="text-white font-bold font-mono">{{ calculatorDays() }} días</span>
-              </label>
+            <!-- Input: Days -->
+            <div class="group/input">
+              <div class="flex justify-between text-sm mb-3 font-medium">
+                <span class="text-zinc-400 group-hover/input:text-zinc-300 transition-colors">Disponibilidad</span>
+                <span class="text-white font-mono bg-zinc-800 px-2 py-0.5 rounded text-xs border border-zinc-700">{{ calculatorDays() }} días/mes</span>
+              </div>
               <input type="range" [(ngModel)]="calculatorDays" min="1" max="30" step="1"
-                class="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-brand-primary transition-all" />
+                class="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-brand-primary hover:accent-emerald-400 transition-all" />
             </div>
 
-            <!-- Result -->
-            <div class="bg-black/40 rounded-2xl p-6 border border-white/5 text-center">
-              <p class="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Tu extra mensual</p>
-              <p class="text-5xl font-black text-brand-primary font-mono tracking-tighter drop-shadow-sm">
-                {{ calculatorEstimate().netResult | currency: 'USD' : 'symbol-narrow' : '1.0-0' }}
-              </p>
-              <p class="text-sm text-zinc-400 mt-2">
-                *Libre de gastos de gestión
-              </p>
+            <!-- Result Box -->
+            <div class="grid grid-cols-2 gap-4 mt-6">
+              <div class="bg-black/40 rounded-xl p-4 border border-white/5">
+                <p class="text-[10px] text-zinc-500 uppercase font-bold mb-1">Ingreso Bruto</p>
+                <p class="text-lg font-mono text-zinc-300 decoration-zinc-600 line-through decoration-2 opacity-60">
+                  {{ (calculatorEstimate().netResult * 1.25) | currency: 'USD' : 'symbol-narrow' : '1.0-0' }}
+                </p>
+              </div>
+              <div class="bg-gradient-to-br from-brand-primary/20 to-emerald-900/20 rounded-xl p-4 border border-brand-primary/20 relative overflow-hidden">
+                <div class="absolute inset-0 bg-brand-primary/5 animate-pulse"></div>
+                <p class="text-[10px] text-emerald-400 uppercase font-bold mb-1 relative z-10">Tu Neto Mensual</p>
+                <p class="text-2xl font-black text-white font-mono tracking-tight relative z-10">
+                  {{ calculatorEstimate().netResult | currency: 'USD' : 'symbol-narrow' : '1.0-0' }}
+                </p>
+              </div>
             </div>
             
-            <div class="text-center">
-              <button (click)="onPublishClick()" class="text-sm text-zinc-400 hover:text-white underline decoration-zinc-700 hover:decoration-white underline-offset-4 transition-all">
-                Ver desglose detallado de costos
-              </button>
-            </div>
+            <button (click)="onPublishClick()" class="w-full py-4 rounded-xl font-bold text-sm uppercase tracking-widest text-black bg-white hover:bg-zinc-200 transition-colors shadow-lg shadow-white/5 mt-2">
+              Comenzar ahora
+            </button>
           </div>
         </div>
       </div>
@@ -875,13 +764,3 @@
   </div>
 </section>
 
-<!-- Modals (Date Picker, Location Picker) -->
-@if (showDatePicker()) {
-<div class="fixed inset-0 z-50 flex items-start justify-center pt-6 px-4" (click)="closeDatePicker()">
-  <div class="w-full max-w-lg bg-surface-raised rounded-3xl shadow-2xl border border-border-default overflow-hidden"
-    (click)="$event.stopPropagation()">
-    <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
-      (rangeChange)="onDateRangeChange($event)" />
-  </div>
-</div>
-}

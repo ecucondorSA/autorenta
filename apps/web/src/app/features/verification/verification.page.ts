@@ -620,7 +620,7 @@ export class VerificationPage implements OnInit {
   }
 
   // Helper to check if uploading
-  isUploading(docId: string): boolean {
+  isUploading(_docId: string): boolean {
     // Simplification: not tracking upload state per doc currently
     return false;
   }

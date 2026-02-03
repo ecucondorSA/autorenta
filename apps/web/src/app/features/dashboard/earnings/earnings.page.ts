@@ -10,13 +10,28 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  walletOutline,
+  timeOutline,
+  trendingUpOutline,
+  statsChartOutline,
+  calculatorOutline,
+  cashOutline,
+  receiptOutline,
+  gridOutline,
+  chevronForwardOutline,
+  informationCircleOutline,
+  flashOutline,
+  analyticsOutline,
+} from 'ionicons/icons';
 import type { DashboardStats } from '@core/models/dashboard.model';
 import { CarsService } from '@core/services/cars/cars.service';
 import { DashboardService } from '@core/services/admin/dashboard.service';
 import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { PressScaleDirective } from '@shared/directives/press-scale.directive';
 import type { Car } from '../../../core/models';
-import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { formatDate } from '../../../shared/utils/date.utils';
 
@@ -24,7 +39,7 @@ import { formatDate } from '../../../shared/utils/date.utils';
   selector: 'app-earnings-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, MoneyPipe, IconComponent],
+  imports: [CommonModule, RouterLink, MoneyPipe, IonIcon, PressScaleDirective],
   templateUrl: './earnings.page.html',
   styleUrls: ['./earnings.page.css'],
 })
@@ -32,22 +47,36 @@ export class EarningsPage implements OnInit {
   private readonly dashboardService = inject(DashboardService);
   private readonly carsService = inject(CarsService);
   private readonly exchangeRateService = inject(ExchangeRateService);
-  private readonly supabaseService = inject(SupabaseClientService);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly stats = signal<DashboardStats | null>(null);
   readonly cars = signal<Car[]>([]);
-  readonly exchangeRate = signal<number>(1000); // Default ARS/USD rate
-  readonly carCategories = signal<Map<string, { depreciation_rate_annual: number }>>(new Map());
+  readonly exchangeRate = signal<number>(1000);
+
+  constructor() {
+    addIcons({
+      walletOutline,
+      timeOutline,
+      trendingUpOutline,
+      statsChartOutline,
+      calculatorOutline,
+      cashOutline,
+      receiptOutline,
+      gridOutline,
+      chevronForwardOutline,
+      informationCircleOutline,
+      flashOutline,
+      analyticsOutline,
+    });
+  }
 
   formatDashboardDate(date?: string | Date | null): string {
     if (!date) return '-';
     return formatDate(date, { format: 'medium' });
   }
 
-  // Computed signals
   readonly availableBalance = computed(() => this.stats()?.wallet.availableBalance ?? 0);
   readonly pendingBalance = computed(() => this.stats()?.wallet.lockedBalance ?? 0);
   readonly totalEarnings = computed(() => this.stats()?.earnings.total ?? 0);
@@ -63,82 +92,40 @@ export class EarningsPage implements OnInit {
 
   readonly isGrowthPositive = computed(() => this.growthPercentage() >= 0);
 
-  // Depreciation and breakeven calculations
   readonly totalAnnualDepreciation = computed(() => {
     const userCars = this.cars();
-
     let total = 0;
-
     for (const car of userCars) {
       const valueUsd = car.value_usd || 0;
       if (valueUsd > 0) {
-        // Obtener tasa de depreciación de la categoría o usar default
-        let depreciationRate = 0.15; // 15% anual (default)
-        // Note: category_id is not part of Car interface, using default depreciation rate
-        const annualDepreciation = valueUsd * depreciationRate;
-        total += annualDepreciation;
+        let depreciationRate = 0.15;
+        total += valueUsd * depreciationRate;
       }
     }
-
     return total;
-  });
-
-  readonly totalAnnualIncome = computed(() => {
-    // Estimación basada en ganancias mensuales * 12
-    const monthlyEarnings = this.thisMonthEarnings();
-    return monthlyEarnings * 12;
   });
 
   readonly breakevenDays = computed(() => {
     const annualDepreciation = this.totalAnnualDepreciation();
     const userCars = this.cars();
-
     if (annualDepreciation === 0 || userCars.length === 0) return 0;
-
-    // Calcular ingreso diario promedio por auto
-    // Modelo Comodato: Owner gana ~70% via rewards de comunidad (no pago directo)
     let totalDailyIncome = 0;
     for (const car of userCars) {
-      // Estimación de rewards: ~70% del precio va al pool de comunidad
-      const dailyIncome = (car.price_per_day || 0) * 0.70;
-      totalDailyIncome += dailyIncome;
+      totalDailyIncome += (car.price_per_day || 0) * 0.70;
     }
-
-    if (totalDailyIncome === 0) return 0;
-
-    // Días necesarios para cubrir depreciación anual
-    return Math.ceil(annualDepreciation / totalDailyIncome);
+    return totalDailyIncome === 0 ? 0 : Math.ceil(annualDepreciation / totalDailyIncome);
   });
 
   readonly profitStartDate = computed(() => {
     const days = this.breakevenDays();
     if (days === 0) return null;
-
     const startDate = new Date();
     startDate.setDate(startDate.getDate() + days);
     return startDate;
   });
 
-  // Chart data for CSS bar charts
-  readonly months = [
-    'Ene',
-    'Feb',
-    'Mar',
-    'Abr',
-    'May',
-    'Jun',
-    'Jul',
-    'Ago',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dic',
-  ];
-
-  // CSS chart data signals
-  readonly depreciationChartData = signal<{ month: string; value: number; percentage: number }[]>(
-    [],
-  );
+  readonly months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+  readonly depreciationChartData = signal<{ month: string; value: number; percentage: number }[]>([]);
   readonly incomeChartData = signal<{ month: string; value: number; percentage: number }[]>([]);
 
   async ngOnInit(): Promise<void> {
@@ -147,22 +134,17 @@ export class EarningsPage implements OnInit {
 
   async loadData(): Promise<void> {
     this.loading.set(true);
-    this.error.set(null);
-
-    this.dashboardService
-      .getDashboardStats(false)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (stats) => {
-          this.stats.set(stats);
-          this.updateCharts();
-          this.loading.set(false);
-        },
-        error: (_err) => {
-          this.error.set('No pudimos cargar las ganancias. Intentá de nuevo.');
-          this.loading.set(false);
-        },
-      });
+    this.dashboardService.getDashboardStats(false).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (stats) => {
+        this.stats.set(stats);
+        this.updateCharts();
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Error al cargar datos');
+        this.loading.set(false);
+      }
+    });
   }
 
   async loadCars(): Promise<void> {
@@ -179,47 +161,32 @@ export class EarningsPage implements OnInit {
     try {
       const rate = await this.exchangeRateService.getPlatformRate();
       this.exchangeRate.set(rate);
-    } catch (error) {
-      console.error('Error loading exchange rate:', error);
-      this.exchangeRate.set(1000); // Fallback
+    } catch {
+      this.exchangeRate.set(1000);
     }
   }
 
   private updateCharts(): void {
     const annualDepreciation = this.totalAnnualDepreciation();
     const monthlyDepreciation = annualDepreciation / 12;
-    const monthlyIncome = this.thisMonthEarnings();
-    const fallbackMonthly =
-      monthlyIncome ||
-      (this.totalEarnings() > 0 ? this.totalEarnings() / 12 : 0) ||
-      (this.availableBalance() + this.pendingBalance()) / 6 ||
-      500; // baseline estimate if no data
-
-    // Generate cumulative data for each month
+    const monthlyIncome = this.thisMonthEarnings() || 500;
     const depreciationData: { month: string; value: number; percentage: number }[] = [];
     const incomeData: { month: string; value: number; percentage: number }[] = [];
 
-    const maxDepreciation = annualDepreciation;
-    const baseIncome = monthlyIncome || fallbackMonthly;
-    const maxIncome = baseIncome * 12;
-
     for (let i = 0; i < 12; i++) {
       const depValue = Math.round(monthlyDepreciation * (i + 1));
-      const incValue = Math.round(baseIncome * (i + 1));
-
+      const incValue = Math.round(monthlyIncome * (i + 1));
       depreciationData.push({
         month: this.months[i],
         value: depValue,
-        percentage: maxDepreciation > 0 ? (depValue / maxDepreciation) * 100 : 0,
+        percentage: annualDepreciation > 0 ? (depValue / annualDepreciation) * 100 : 0,
       });
-
       incomeData.push({
         month: this.months[i],
         value: incValue,
-        percentage: maxIncome > 0 ? (incValue / maxIncome) * 100 : 0,
+        percentage: (monthlyIncome * 12) > 0 ? (incValue / (monthlyIncome * 12)) * 100 : 0,
       });
     }
-
     this.depreciationChartData.set(depreciationData);
     this.incomeChartData.set(incomeData);
   }
