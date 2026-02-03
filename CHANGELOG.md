@@ -1,3 +1,8 @@
+## <small>3.61.3 (2026-02-03)</small>
+
+* fix(profile): hide footer on /profile/personal page ([a4a8f6e](https://github.com/ecucondorSA/autorenta/commit/a4a8f6e))
+* fix(wallet): change subscription pricing from /ano to /mes ([fe101f8](https://github.com/ecucondorSA/autorenta/commit/fe101f8))
+
 ## <small>3.61.2 (2026-02-03)</small>
 
 * fix: isolate email test from monorepo ([a8ca96a](https://github.com/ecucondorSA/autorenta/commit/a8ca96a))
