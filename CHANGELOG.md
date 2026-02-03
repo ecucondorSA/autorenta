@@ -1,3 +1,7 @@
+## <small>3.65.7 (2026-02-03)</small>
+
+* fix(ci): treat PostgREST schema cache errors as warnings ([008a175](https://github.com/ecucondorSA/autorenta/commit/008a175))
+
 ## <small>3.65.6 (2026-02-03)</small>
 
 * fix: use fresh function name to bypass PostgREST cache issue ([0755bf4](https://github.com/ecucondorSA/autorenta/commit/0755bf4))
