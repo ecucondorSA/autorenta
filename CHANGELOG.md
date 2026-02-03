@@ -1,3 +1,7 @@
+## <small>3.65.4 (2026-02-03)</small>
+
+* fix(db): complete payment retry system from scratch ([147d58d](https://github.com/ecucondorSA/autorenta/commit/147d58d))
+
 ## <small>3.65.3 (2026-02-03)</small>
 
 * fix(db): add is_admin function and complete payment_retry_queue setup ([cff3c21](https://github.com/ecucondorSA/autorenta/commit/cff3c21))
