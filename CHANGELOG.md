@@ -1,3 +1,7 @@
+## 3.63.0 (2026-02-03)
+
+* feat: add investor one-pager HTML files ([87ad4b2](https://github.com/ecucondorSA/autorenta/commit/87ad4b2))
+
 ## 3.62.0 (2026-02-03)
 
 * feat: add investor email sender with PDF generation ([233c258](https://github.com/ecucondorSA/autorenta/commit/233c258))
