@@ -1,0 +1,28 @@
+name: Test Email
+
+on:
+  workflow_dispatch:
+    inputs:
+      destinatario:
+        description: 'Email de destino'
+        required: true
+        default: 'admin@autorentar.com'
+
+jobs:
+  send-test-email:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun add nodemailer
+
+      - name: Send test email
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: bun tools/send-test-email.ts "${{ github.event.inputs.destinatario }}"
