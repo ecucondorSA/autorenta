@@ -1,3 +1,7 @@
+## <small>3.64.2 (2026-02-03)</small>
+
+* fix: add locked_balance column to wallets table ([e7e5ace](https://github.com/ecucondorSA/autorenta/commit/e7e5ace))
+
 ## <small>3.64.1 (2026-02-03)</small>
 
 * fix: add missing schema objects for new Supabase project ([c3b1b02](https://github.com/ecucondorSA/autorenta/commit/c3b1b02))
