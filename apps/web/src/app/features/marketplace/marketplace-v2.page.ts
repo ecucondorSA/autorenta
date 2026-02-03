@@ -163,42 +163,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.router.navigate(['/cars/publish']);
   }
 
-  onDateRangeChange(event: { start: Date; end: Date }): void {
-    this.logger.debug('Date range changed', 'MarketplaceV2Page', event);
-  }
-
-  scrollToHowItWorks(): void {
-    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  onLogoClick(): void {
-    this.router.navigate(['/']);
-  }
-
-  clearQuickFilters(): void {
-    this.loadCars();
-  }
-
-  closeDatePicker(): void {
-    // Date picker close handler
-  }
-
-  nextPage(): void {
-    // Pagination - next page
-  }
-
-  previousPage(): void {
-    // Pagination - previous page
-  }
-
-  onSortOrderChange(_event: Event): void {
-    // Sort order change handler
-  }
-
-  onHdriLoaded(): void {
-    this.logger.debug('HDRI loaded', 'MarketplaceV2Page');
-  }
-
   ngOnDestroy(): void {
     if (this.isBrowser) {
       window.removeEventListener('scroll', this.scrollHandler);
