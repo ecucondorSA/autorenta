@@ -389,7 +389,7 @@ export const routes: Routes = [
       },
       {
         path: 'personal',
-        data: { layout: 'full-bleed', hideHeader: true },
+        data: { layout: 'full-bleed', hideHeader: true, hideFooter: true },
         loadComponent: () =>
           import('./features/profile/personal/profile-personal.page').then(
             (m) => m.ProfilePersonalPage,
@@ -440,6 +440,14 @@ export const routes: Routes = [
     path: 'verification',
     loadChildren: () =>
       import('./features/verification/verification.routes').then((m) => m.VERIFICATION_ROUTES),
+  },
+  {
+    path: 'contact-verification',
+    data: { layout: 'full-bleed', hideHeader: true, hideFooter: true, hideMobileNav: true },
+    loadChildren: () =>
+      import('./features/contact-verification/contact-verification.routes').then(
+        (m) => m.CONTACT_VERIFICATION_ROUTES,
+      ),
   },
   {
     path: 'users/:id',
