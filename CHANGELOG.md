@@ -1,3 +1,7 @@
+## 3.64.0 (2026-02-03)
+
+* feat: add contact-verification feature module ([d2e577b](https://github.com/ecucondorSA/autorenta/commit/d2e577b))
+
 ## <small>3.63.1 (2026-02-03)</small>
 
 * fix: use valid booking_status enum values in get_available_cars ([5b0556c](https://github.com/ecucondorSA/autorenta/commit/5b0556c))
