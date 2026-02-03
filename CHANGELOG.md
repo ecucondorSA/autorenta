@@ -1,3 +1,9 @@
+## <small>3.64.1 (2026-02-03)</small>
+
+* fix: add missing schema objects for new Supabase project ([c3b1b02](https://github.com/ecucondorSA/autorenta/commit/c3b1b02))
+* fix: migrate to new Supabase project and remove explore page ([a3a2733](https://github.com/ecucondorSA/autorenta/commit/a3a2733))
+* fix(patchright): use system Chrome instead of bundled Chromium ([bde60ce](https://github.com/ecucondorSA/autorenta/commit/bde60ce))
+
 ## 3.64.0 (2026-02-03)
 
 * feat: add contact-verification feature module ([d2e577b](https://github.com/ecucondorSA/autorenta/commit/d2e577b))
