@@ -1,3 +1,7 @@
+## <small>3.65.3 (2026-02-03)</small>
+
+* fix(db): add is_admin function and complete payment_retry_queue setup ([cff3c21](https://github.com/ecucondorSA/autorenta/commit/cff3c21))
+
 ## <small>3.65.2 (2026-02-03)</small>
 
 * fix(ci): use direct psql for migrations to bypass history sync issues ([106ee3c](https://github.com/ecucondorSA/autorenta/commit/106ee3c))
