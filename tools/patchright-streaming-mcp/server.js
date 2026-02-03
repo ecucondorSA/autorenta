@@ -191,7 +191,7 @@ async function mpTransfer(page, alias, amount, expectedName) {
 const CONFIG = {
   headless: process.env.HEADLESS === 'true', // Default to false (visible) unless HEADLESS=true
   profilePath: process.env.BROWSER_PROFILE || '/home/edu/.patchright-profile',
-  executablePath: undefined, // Use bundled Chromium (most stable)
+  executablePath: '/usr/bin/google-chrome', // Use system Chrome (more stable than bundled)
   eventBufferSize: 100,
   compactOutput: true,
   maxEventSummary: 5,
