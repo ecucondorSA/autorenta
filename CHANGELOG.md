@@ -1,3 +1,7 @@
+## 3.61.0 (2026-02-03)
+
+* feat: add test email script and workflow ([e5b9424](https://github.com/ecucondorSA/autorenta/commit/e5b9424))
+
 ## 3.60.0 (2026-02-03)
 
 * feat: migrate to new production project + egress optimization P0 ([6554cfe](https://github.com/ecucondorSA/autorenta/commit/6554cfe))
