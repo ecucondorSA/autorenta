@@ -1,3 +1,10 @@
+## <small>3.65.2 (2026-02-03)</small>
+
+* fix(ci): use direct psql for migrations to bypass history sync issues ([106ee3c](https://github.com/ecucondorSA/autorenta/commit/106ee3c))
+* ci: add workflow to apply database migrations ([2b6eb4c](https://github.com/ecucondorSA/autorenta/commit/2b6eb4c))
+* ci: add workflow to sync secrets from GitHub to Supabase ([645a9c8](https://github.com/ecucondorSA/autorenta/commit/645a9c8))
+* chore: force cache invalidation ([80efd16](https://github.com/ecucondorSA/autorenta/commit/80efd16))
+
 ## <small>3.65.1 (2026-02-03)</small>
 
 * fix: remove duplicate RPC migrations to pass guardrails ([4944743](https://github.com/ecucondorSA/autorenta/commit/4944743))
