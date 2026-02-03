@@ -1,3 +1,7 @@
+## <small>3.64.4 (2026-02-03)</small>
+
+* fix: build errors and uptime monitoring ([35688a6](https://github.com/ecucondorSA/autorenta/commit/35688a6))
+
 ## <small>3.64.3 (2026-02-03)</small>
 
 * perf: fix critical performance issues P0.1-P1.1 ([4e96a16](https://github.com/ecucondorSA/autorenta/commit/4e96a16))
