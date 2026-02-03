@@ -83,7 +83,7 @@ export class RegisterPage implements OnInit, OnDestroy {
 
       this.message.set('¡Cuenta creada! Ya podés explorar autos.');
       // Redirigir directo a explorar (sin onboarding obligatorio)
-      setTimeout(() => void this.router.navigate(['/explore']), 1500);
+      setTimeout(() => void this.router.navigate(['/cars/list']), 1500);
     } catch (err) {
       // Track failed registration
       this.analytics.trackEvent('sign_up', {

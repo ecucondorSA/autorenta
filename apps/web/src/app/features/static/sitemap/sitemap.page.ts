@@ -29,7 +29,7 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar 
           <h2>Principal</h2>
           <ul>
             <li><a routerLink="/">Inicio</a></li>
-            <li><a routerLink="/explore">Explorar Autos</a></li>
+            <li><a routerLink="/cars/list">Explorar Autos</a></li>
             <li><a routerLink="/cars/publish">Publicar un Auto</a></li>
           </ul>
 

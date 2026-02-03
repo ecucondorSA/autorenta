@@ -14,11 +14,6 @@ export const routes: Routes = [
       import('./features/marketplace/marketplace-v2.page').then((m) => m.MarketplaceV2Page),
   },
   {
-    path: 'explore',
-    data: { layout: 'full-bleed', hideHeader: true },
-    loadComponent: () => import('./features/explore/explore.page').then((m) => m.ExplorePage),
-  },
-  {
     path: 'rentarfast',
     data: { layout: 'full-bleed', hideFooter: true, hideNav: true },
     loadComponent: () =>

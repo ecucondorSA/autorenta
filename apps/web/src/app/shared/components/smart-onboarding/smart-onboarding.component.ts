@@ -212,7 +212,7 @@ export class SmartOnboardingComponent implements OnInit {
     if (role === 'owner' || role === 'both') {
       this.router.navigate(['/cars/publish']);
     } else {
-      this.router.navigate(['/explore']);
+      this.router.navigate(['/cars/list']);
     }
   }
 
