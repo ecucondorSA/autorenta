@@ -73,8 +73,8 @@ jobs:
 
       - name: Verify functions exist
         env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           echo "🔍 Verifying created objects..."
-          # This step is for logging purposes
-          echo "✅ Migration complete. Verify in Supabase Dashboard."
+          psql "$DATABASE_URL" -c "SELECT proname, pg_get_function_arguments(oid) FROM pg_proc WHERE proname LIKE '%pending_retries%';"
+          echo "✅ Migration complete."
