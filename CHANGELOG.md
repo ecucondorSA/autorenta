@@ -1,3 +1,8 @@
+## <small>3.64.3 (2026-02-03)</small>
+
+* perf: fix critical performance issues P0.1-P1.1 ([4e96a16](https://github.com/ecucondorSA/autorenta/commit/4e96a16))
+* chore: sync pending changes and new edge functions ([51207bc](https://github.com/ecucondorSA/autorenta/commit/51207bc))
+
 ## <small>3.64.2 (2026-02-03)</small>
 
 * fix: add locked_balance column to wallets table ([e7e5ace](https://github.com/ecucondorSA/autorenta/commit/e7e5ace))
