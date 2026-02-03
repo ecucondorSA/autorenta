@@ -2,8 +2,21 @@ import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@ang
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { DisputesService, Dispute, DisputeTimelineEvent } from '@core/services/admin/disputes.service';
+import { DisputesService, Dispute } from '@core/services/admin/disputes.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+
+// Simplified timeline event from RPC (different from full DisputeTimelineEvent)
+interface TimelineEntry {
+  id?: string;
+  action: string;
+  timestamp: string;
+  actor?: string;
+  from_status?: string;
+  to_status?: string;
+  event_type?: string;
+  created_at?: string;
+  body?: string;
+}
 
 @Component({
   selector: 'app-admin-disputes',
@@ -28,7 +41,7 @@ export class AdminDisputesPage implements OnInit {
   readonly resolutionFavor = signal<'owner' | 'renter' | 'split'>('owner');
 
   // Timeline & Evidence
-  readonly timeline = signal<DisputeTimelineEvent[]>([]);
+  readonly timeline = signal<TimelineEntry[]>([]);
   readonly evidence = signal<{ url: string; note?: string; type: string; created_at?: string }[]>([]);
 
   readonly filters = signal({
@@ -71,14 +84,14 @@ export class AdminDisputesPage implements OnInit {
     this.selectedDispute.set(dispute);
     this.resolutionNotes.set(dispute.internal_notes || '');
     this.finalChargeAmount.set(dispute.penalty_amount_cents ? dispute.penalty_amount_cents / 100 : 0);
-    this.resolutionFavor.set((dispute.resolution_favor as 'owner' | 'renter') || 'owner');
+    this.resolutionFavor.set((dispute.resolution_favor as 'owner' | 'renter' | 'split') || 'owner');
 
     // Load full details for timeline and evidence
     this.loading.set(true);
     try {
       const details = await this.disputeService.getDisputeDetails(dispute.id);
       if (details) {
-        this.timeline.set(details.timeline as any[]); // Cast to match interface if needed
+        this.timeline.set(details.timeline);
         this.evidence.set(details.evidence);
       }
     } catch (err) {

@@ -95,6 +95,7 @@ jobs:
 
             // 4. Key Edge Functions (organized by criticality)
             // NOTE: Only includes DEPLOYED functions (verified via `supabase functions list`)
+            // Functions not deployed due to plan limits: verify-document, verify-face, tiktok-events, sync-binance-rates
             const edgeFunctions = [
               // === CRITICAL: Payment Functions ===
               'mercadopago-webhook',
@@ -106,16 +107,12 @@ jobs:
 
               // === HIGH: User Flow Functions ===
               'recognize-vehicle',
-              'verify-document',
-              'verify-face',
               'send-push-notification',
               'booking-notify-n8n',
               'send-otp-via-n8n',
 
               // === MEDIUM: Analytics & Integrations ===
-              'tiktok-events',
               'dashboard-stats',
-              'sync-binance-rates',
 
               // === LOW: Supporting Functions ===
               'get-fipe-value',
