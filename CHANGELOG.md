@@ -1,3 +1,8 @@
+## <small>3.65.6 (2026-02-03)</small>
+
+* fix: use fresh function name to bypass PostgREST cache issue ([0755bf4](https://github.com/ecucondorSA/autorenta/commit/0755bf4))
+* fix(db): recreate get_pending_retries with RETURNS TABLE for PostgREST compatibility ([20ebc1a](https://github.com/ecucondorSA/autorenta/commit/20ebc1a))
+
 ## <small>3.65.5 (2026-02-03)</small>
 
 * fix(db): grant execute permissions to anon and service_role for RPC functions ([1cef0bf](https://github.com/ecucondorSA/autorenta/commit/1cef0bf))
