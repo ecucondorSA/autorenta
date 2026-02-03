@@ -66,7 +66,7 @@ declare global {
                 <p class="text-2xl font-bold" [class]="getTierTextClass()">
                   \${{ tier.price_usd }}
                 </p>
-                <p class="text-xs opacity-70">USD/ano</p>
+                <p class="text-xs opacity-70">USD/mes</p>
               </div>
             </div>
 

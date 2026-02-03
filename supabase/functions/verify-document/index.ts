@@ -184,6 +184,39 @@ serve(async (req: Request) => {
       validation = validateEcuadorDocument(ocrResult.text, document_type, side);
     }
 
+    // SECURITY: Hard Gate for Expired Documents
+    // If the document is expired, it must be rejected immediately regardless of other checks.
+    if (validation.extracted.expiryDate) {
+      // Parse date format: DD/MM/YYYY or YYYY-MM-DD
+      const expiryStr = String(validation.extracted.expiryDate).trim();
+      let expiryDate: Date | null = null;
+      
+      // Try parsing DD/MM/YYYY
+      const dmyParts = expiryStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+      if (dmyParts) {
+        expiryDate = new Date(parseInt(dmyParts[3]), parseInt(dmyParts[2]) - 1, parseInt(dmyParts[1]));
+      } else {
+        // Try standard date parsing
+        const parsed = new Date(expiryStr);
+        if (!isNaN(parsed.getTime())) {
+          expiryDate = parsed;
+        }
+      }
+
+      if (expiryDate) {
+        // Reset time to start of day for fair comparison
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        if (expiryDate < today) {
+          console.warn(`[verify-document] REJECTED: Document expired on ${expiryStr} for user ${user_id}`);
+          validation.isValid = false;
+          validation.errors.push(`El documento vencio el ${expiryStr}`);
+          validation.confidence = 0; // Force rejection score
+        }
+      }
+    }
+
     // Add face detection bonus for front documents
     if (side === 'front' && ocrResult.hasFace) {
       validation.confidence = Math.min(validation.confidence + 10, 100);

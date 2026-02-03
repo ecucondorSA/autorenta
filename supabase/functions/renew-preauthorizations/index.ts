@@ -11,7 +11,7 @@
  * 4. Si éxito: cancelar la pre-auth anterior
  * 5. Si no tiene tarjeta: enviar notificación al usuario
  *
- * Schedule: Cada 6 horas (0 */6 * * *)
+ * Schedule: Cada 6 horas - cron expression: 0 star/6 star star star
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';

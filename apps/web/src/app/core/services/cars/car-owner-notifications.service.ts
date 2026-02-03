@@ -6,6 +6,31 @@ import { NotificationsService } from '@core/services/infrastructure/user-notific
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
+ * Response type from check-missing-documents-batch Edge Function
+ */
+interface CarDocumentStatus {
+  car_id: string;
+  car_title: string;
+  plate: string | null;
+  missing_documents: string[];
+  expiring_soon: string[];
+  expired: string[];
+  status: 'ok' | 'warning' | 'critical';
+}
+
+interface CarDocumentBatchResult {
+  cars: CarDocumentStatus[];
+  summary: {
+    total_cars: number;
+    cars_with_issues: number;
+    total_missing: number;
+    total_expiring: number;
+    total_expired: number;
+  };
+  checked_at: string;
+}
+
+/**
  * CarOwnerNotificationsService
  *
  * Servicio especializado para generar notificaciones para locadores (dueños de autos).
@@ -737,68 +762,110 @@ export class CarOwnerNotificationsService {
 
   /**
    * Método público para verificar y notificar documentos faltantes para todos los autos del usuario
-   * Útil para generar notificaciones retroactivas para autos ya publicados
+   * Utiliza el Edge Function check-missing-documents-batch para evitar N+1 queries
+   *
+   * @returns CarDocumentStatus[] | null - Array con el estado de documentos de cada auto
    */
-  async checkAndNotifyMissingDocumentsForAllCars(): Promise<void> {
+  async checkAndNotifyMissingDocumentsForAllCars(): Promise<CarDocumentBatchResult | null> {
     try {
       const {
-        data: { user },
-      } = await this.supabase.auth.getUser();
-      if (!user) {
-        console.warn('No user found');
-        return;
+        data: { session },
+      } = await this.supabase.auth.getSession();
+
+      if (!session) {
+        this.logger.warn('No session found, cannot check missing documents');
+        return null;
       }
 
-      // Obtener todos los autos del usuario
-      const { data: cars, error: carsError } = await this.supabase
-        .from('cars')
-        .select('id, title, brand, model')
-        .eq('owner_id', user.id)
-        .in('status', ['active', 'pending']);
+      // Use Edge Function for batch query (fixes N+1 problem)
+      const { data, error } = await this.supabase.functions.invoke<CarDocumentBatchResult>(
+        'check-missing-documents-batch',
+        {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        },
+      );
 
-      if (carsError) {
-        console.error('Error fetching cars:', carsError);
-        return;
+      if (error) {
+        this.logger.error('Error calling check-missing-documents-batch:', error);
+        return null;
       }
 
-      if (!cars || cars.length === 0) {
+      if (!data || !data.cars || data.cars.length === 0) {
         this.logger.debug('No cars found for user');
-        return;
+        return data ?? null;
       }
 
-      // Para cada auto, verificar documentos faltantes
-      for (const car of cars) {
-        const { data: documents, error: docsError } = await this.supabase
-          .from('vehicle_documents')
-          .select('kind, status')
-          .eq('car_id', car.id)
-          .in('kind', ['registration', 'insurance', 'technical_inspection'])
-          .eq('status', 'verified');
+      // Notify for cars with issues
+      for (const car of data.cars) {
+        if (car.status === 'ok') continue;
 
-        if (docsError) {
-          console.error(`Error checking documents for car ${car.id}:`, docsError);
-          continue;
+        const carName = car.car_title || 'tu auto';
+        const documentsUrl = `/cars/${car.car_id}/documents`;
+
+        // Notify about missing documents
+        for (const docKind of car.missing_documents) {
+          const documentType = this.getDocumentKindLabel(docKind);
+          this.notifyMissingDocument(documentType, carName, documentsUrl);
+          // Small pause between notifications
+          await new Promise((resolve) => setTimeout(resolve, 500));
         }
 
-        const verifiedKinds = new Set((documents || []).map((d) => d.kind));
-        const requiredKinds = ['registration', 'insurance', 'technical_inspection'];
-        const missingKinds = requiredKinds.filter((kind) => !verifiedKinds.has(kind));
+        // Notify about expiring documents
+        for (const docKind of car.expiring_soon) {
+          const documentType = this.getDocumentKindLabel(docKind);
+          this.notifyDocumentExpiring(documentType, carName, 30, documentsUrl);
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
 
-        if (missingKinds.length > 0) {
-          const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
-          const documentsUrl = `/cars/${car.id}/documents`;
-
-          // Notificar sobre cada documento faltante
-          for (const docKind of missingKinds) {
-            const documentType = this.getDocumentKindLabel(docKind);
-            await this.notifyMissingDocument(documentType, carName, documentsUrl);
-            // Pequeña pausa entre notificaciones
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-          }
+        // Notify about expired documents (high priority)
+        for (const docKind of car.expired) {
+          const documentType = this.getDocumentKindLabel(docKind);
+          this.notifyDocumentExpiring(documentType, carName, 0, documentsUrl);
+          await new Promise((resolve) => setTimeout(resolve, 500));
         }
       }
+
+      return data;
     } catch (error) {
-      console.error('Error checking missing documents for all cars:', error);
+      this.logger.error('Error checking missing documents for all cars:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get document status summary without notifications (useful for UI components)
+   * Uses the batch Edge Function for optimal performance
+   */
+  async getDocumentStatusBatch(): Promise<CarDocumentBatchResult | null> {
+    try {
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
+
+      if (!session) {
+        return null;
+      }
+
+      const { data, error } = await this.supabase.functions.invoke<CarDocumentBatchResult>(
+        'check-missing-documents-batch',
+        {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        },
+      );
+
+      if (error) {
+        this.logger.error('Error fetching document status batch:', error);
+        return null;
+      }
+
+      return data ?? null;
+    } catch (error) {
+      this.logger.error('Error in getDocumentStatusBatch:', error);
+      return null;
     }
   }
 
@@ -807,11 +874,18 @@ export class CarOwnerNotificationsService {
    */
   private getDocumentKindLabel(kind: string): string {
     const labels: Record<string, string> = {
-      registration: 'Registro / Título de Propiedad',
-      insurance: 'Póliza de Seguro',
-      technical_inspection: 'Inspección Técnica Vehicular',
-      circulation_permit: 'Permiso de Circulación',
+      // Legacy document kinds
+      registration: 'Registro / Titulo de Propiedad',
+      insurance: 'Poliza de Seguro',
+      technical_inspection: 'Inspeccion Tecnica Vehicular',
+      circulation_permit: 'Permiso de Circulacion',
       ownership_proof: 'Comprobante de Titularidad',
+      // Brazilian/Argentine document kinds
+      cedula_verde: 'Cedula Verde',
+      cedula_azul: 'Cedula Azul',
+      vtv: 'VTV (Verificacion Tecnica Vehicular)',
+      seguro: 'Poliza de Seguro',
+      titulo: 'Titulo de Propiedad',
     };
     return labels[kind] || kind;
   }

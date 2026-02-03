@@ -710,7 +710,11 @@ serve(async (req) => {
       .eq('id', booking_id);
 
     if (updateError) {
-      log.error('Error updating booking:', updateError);
+      log.error('🚨 [EVENTUAL_CONSISTENCY] Payment approved but Booking DB update failed. Relying on Webhook to fix state.', {
+        booking_id,
+        payment_id: mpData.id,
+        error: updateError
+      });
       // No fallar el pago si la actualización falla, el webhook lo hará
     }
 

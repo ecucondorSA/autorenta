@@ -14,19 +14,10 @@ verify_jwt = false
 # Requires JWT verification (user must be authenticated)
 verify_jwt = true
 
-[functions.google-calendar-oauth]
-# Disable JWT verification for OAuth callback (Google redirects without JWT)
-# The callback handler validates the 'state' parameter instead
-verify_jwt = false
-
 [functions.mercadopago-oauth-callback]
 # Disable JWT verification for MP OAuth callback (MP no envía el token del usuario)
 # Seguridad se asegura con el parámetro state y validaciones en la función.
 verify_jwt = false
-
-[functions.sync-booking-to-calendar]
-# Requires JWT verification (user must be authenticated)
-verify_jwt = true
 
 [functions.sitemap]
 # Sitemap must be public for Google Bot

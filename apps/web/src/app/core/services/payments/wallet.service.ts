@@ -19,6 +19,7 @@ import {
   RATE_LIMIT_WINDOW_MS,
 } from '@core/constants';
 import { WalletError } from '@core/errors';
+import { AuthService } from '@core/services/auth/auth.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
@@ -28,6 +29,7 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
 export class WalletService {
   private readonly supabase: SupabaseClient = injectSupabase();
   private readonly logger = inject(LoggerService);
+  private readonly authService = inject(AuthService);
 
   // ✅ SIGNALS: Single source of truth for wallet state
   readonly balance = signal<WalletBalance | null>(null);
@@ -63,10 +65,11 @@ export class WalletService {
   private lockTimestamps: number[] = [];
 
   constructor() {
-    this.supabase.auth
-      .getSession()
-      .then(({ data: { session } }) => {
-        if (session?.['user']) {
+    // Use AuthService.ensureSession() to wait for session to be properly loaded
+    this.authService
+      .ensureSession()
+      .then((session) => {
+        if (session?.user) {
           this.fetchBalance().catch((err) => {
             this.logger.warn('Failed to fetch wallet balance on init', err);
           });
@@ -126,10 +129,9 @@ export class WalletService {
     this['error'].set(null);
 
     try {
-      const {
-        data: { session },
-      } = await this.supabase.auth.getSession();
-      if (!session?.['user']) throw new Error('Usuario no autenticado');
+      // Use AuthService.ensureSession() to properly wait for session
+      const session = await this.authService.ensureSession();
+      if (!session?.user) throw new Error('Usuario no autenticado');
 
       const { data, error } = await this.supabase.rpc('wallet_get_balance');
       if (error) throw error;
@@ -154,10 +156,8 @@ export class WalletService {
     this['error'].set(null);
 
     try {
-      const {
-        data: { session },
-      } = await this.supabase.auth.getSession();
-      if (!session?.['user']) throw new Error('Usuario no autenticado');
+      const session = await this.authService.ensureSession();
+      if (!session?.user) throw new Error('Usuario no autenticado');
 
       const { data, error } = await this.supabase
         .from('v_wallet_history')
@@ -204,8 +204,11 @@ export class WalletService {
     idempotencyKey?: string
   ): Promise<{ success: boolean; transactionId?: string }> {
     try {
+      const userId = await this.authService.getCachedUserId();
+      if (!userId) throw new Error('Usuario no autenticado');
+
       const { data, error } = await this.supabase.rpc('process_wallet_transaction', {
-        p_user_id: (await this.supabase.auth.getUser()).data.user?.id,
+        p_user_id: userId,
         p_amount_cents: amountCents,
         p_type: 'deposit',
         p_category: 'general',
@@ -391,8 +394,8 @@ export class WalletService {
     amount: number,
     description: string,
   ): Promise<{ init_point?: string; sandbox_init_point?: string }> {
-    const { data } = await this.supabase.auth.getSession();
-    if (!data.session) throw new Error('No autenticado');
+    const session = await this.authService.ensureSession();
+    if (!session) throw new Error('No autenticado');
 
     const response = await this.supabase.functions.invoke('mercadopago-create-preference', {
       body: {
@@ -524,19 +527,19 @@ export class WalletService {
     onTransaction: (transaction: WalletTransaction) => void,
     onBalanceChange: (balance: WalletBalance) => void,
   ): Promise<RealtimeChannel> {
-    const { data } = await this.supabase.auth.getSession();
-    const user = data.session?.['user'];
+    const session = await this.authService.ensureSession();
+    const user = session?.user;
     if (!user) throw new Error('No autenticado');
 
     return this.supabase
-      .channel(`wallet:${user['id']}`)
+      .channel(`wallet:${user.id}`)
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
           table: 'wallet_ledger',
-          filter: `user_id=eq.${user['id']}`,
+          filter: `user_id=eq.${user.id}`,
         },
         async (payload) => {
           onTransaction(payload.new as WalletTransaction);
@@ -559,10 +562,10 @@ export class WalletService {
   }
 
   async unsubscribeFromWalletChanges(): Promise<void> {
-    const { data } = await this.supabase.auth.getSession();
-    if (!data.session?.['user']) return;
+    const userId = this.authService.getCachedUserIdSync();
+    if (!userId) return;
     await this.supabase.removeChannel(
-      this.supabase.channel(`wallet:${data.session['user']['id']}`),
+      this.supabase.channel(`wallet:${userId}`),
     );
   }
 
@@ -641,21 +644,19 @@ export class WalletService {
     bookingsNeeded: number;
   }> {
     try {
-      const {
-        data: { user },
-      } = await this.supabase.auth.getUser();
-      if (!user) throw new Error('Usuario no autenticado');
+      const userId = await this.authService.getCachedUserId();
+      if (!userId) throw new Error('Usuario no autenticado');
 
       const { count: completedBookings } = await this.supabase
         .from('bookings')
         .select('*', { count: 'exact', head: true })
-        .eq('renter_id', user['id'])
+        .eq('renter_id', userId)
         .eq('status', 'completed');
 
       const { count: totalClaims } = await this.supabase
         .from('booking_claims')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', user['id'])
+        .eq('user_id', userId)
         .in('status', ['approved', 'resolved']);
 
       const eligible = (completedBookings ?? 0) >= 10 && (totalClaims ?? 0) === 0;

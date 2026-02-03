@@ -575,7 +575,8 @@ serve(async (req: Request) => {
     let paymentData: MPPayment | null = null;
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      // FIX: Aumentado timeout a 8000ms para soportar latencia de MP
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
 
       const mpResponse = await fetch(`${MP_API_BASE}/payments/${paymentId}`, {
         method: 'GET',
@@ -1527,7 +1528,12 @@ serve(async (req: Request) => {
     if (ledgerError) {
       // No fallar el webhook si el ledger falla, solo loggear
       // El sistema viejo (wallet_transactions) ya funcionó
-      log.error('Warning: Error registering in ledger (old system still worked):', ledgerError);
+      log.error('🚨 [ACCOUNTING_MISMATCH] Ledger registration failed but legacy transaction succeeded. Verify user balance manually.', {
+        user_id: transaction.user_id,
+        amount_cents: amountCents,
+        mp_payment_id: paymentData.id,
+        error: ledgerError
+      });
     } else {
       log.info('✅ Deposit registered in ledger successfully:', ledgerResult);
     }

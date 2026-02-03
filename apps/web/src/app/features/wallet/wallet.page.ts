@@ -145,6 +145,15 @@ export class WalletPage implements OnInit {
   readonly walletError = computed(() => this.walletService.error());
 
   /**
+   * Detecta si el error es por falta de autenticación
+   */
+  readonly isAuthError = computed(() => {
+    const error = this.walletError();
+    return error?.message?.toLowerCase().includes('no autenticado') ||
+           error?.message?.toLowerCase().includes('not authenticated');
+  });
+
+  /**
    * Target de crédito protegido (USD 300 en dólares, consistente con SQL)
    */
   readonly protectedCreditTarget = 300;
@@ -291,6 +300,15 @@ export class WalletPage implements OnInit {
     } else {
       void this.router.navigate(['/wallet/deposit']);
     }
+  }
+
+  /**
+   * Navega a login cuando hay error de autenticación
+   */
+  navigateToLogin(): void {
+    void this.router.navigate(['/auth/login'], {
+      queryParams: { returnUrl: '/wallet' }
+    });
   }
 
   /**

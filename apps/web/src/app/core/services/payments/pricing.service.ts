@@ -54,6 +54,26 @@ export interface FipeValueResult {
   timestamp?: string;
 }
 
+/**
+ * Response from estimate-pricing-secure Edge Function
+ * Includes HMAC signature for tamper-proof pricing
+ */
+export interface SecurePricingResponse {
+  estimated_value_usd: number;
+  suggested_daily_rate: number;
+  suggested_weekly_rate: number;
+  suggested_monthly_rate: number;
+  confidence: 'high' | 'medium' | 'low';
+  pricing_factors: {
+    base_rate_pct: number;
+    depreciation_factor: number;
+    category_multiplier: number;
+    demand_factor: number;
+  };
+  valid_until: string;
+  signature: string;
+}
+
 export interface FipeBrand {
   code: string;
   name: string;
@@ -594,6 +614,81 @@ export class PricingService {
   async getFipeBaseModels(brandCode: string): Promise<FipeBaseModel[]> {
     const allModels = await this.getFipeModels(brandCode);
     return this.groupModelsByBaseName(allModels);
+  }
+
+  /**
+   * Get secure pricing estimation with HMAC signature
+   *
+   * This method calls the estimate-pricing-secure Edge Function which:
+   * - Calculates pricing server-side (prevents client manipulation)
+   * - Includes HMAC signature for verification
+   * - Uses FIPE data when available, category fallback otherwise
+   *
+   * Use this for pricing that needs to be verified (e.g., at booking time)
+   *
+   * @param params Vehicle details for pricing
+   * @returns SecurePricingResponse with signed pricing data
+   */
+  async getSecurePricingEstimate(params: {
+    brand: string;
+    model: string;
+    year: number;
+    category_id?: string;
+    mileage?: number;
+    fuel_type?: string;
+  }): Promise<SecurePricingResponse | null> {
+    try {
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
+
+      if (!session) {
+        console.error('[PricingService] No session for secure pricing');
+        return null;
+      }
+
+      const { data, error } = await this.supabase.functions.invoke<SecurePricingResponse>(
+        'estimate-pricing-secure',
+        {
+          body: params,
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        },
+      );
+
+      if (error) {
+        console.error('[PricingService] Secure pricing error:', error);
+        return null;
+      }
+
+      return data ?? null;
+    } catch (error) {
+      console.error('[PricingService] getSecurePricingEstimate failed:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Verify a pricing signature is valid and not expired
+   *
+   * Note: Full verification should be done server-side.
+   * This is a client-side check for UX purposes only.
+   *
+   * @param pricing The pricing response to verify
+   * @returns true if signature appears valid and not expired
+   */
+  isPricingValid(pricing: SecurePricingResponse | null): boolean {
+    if (!pricing) return false;
+
+    // Check expiration
+    const validUntil = new Date(pricing.valid_until);
+    if (validUntil < new Date()) {
+      return false;
+    }
+
+    // Check signature exists (actual verification is server-side)
+    return pricing.signature?.length > 0;
   }
 
   /**
