@@ -1,0 +1,55 @@
+name: Send Investor Emails
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (no enviar realmente)'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      investor:
+        description: 'Filtrar por inversor (vacío = todos)'
+        required: false
+        default: ''
+
+jobs:
+  send-emails:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: |
+          cd tools
+          bun init -y 2>/dev/null || true
+          bun add puppeteer nodemailer
+
+      - name: Send investor emails
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          cd tools
+          ARGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          if [ -n "${{ github.event.inputs.investor }}" ]; then
+            ARGS="$ARGS --investor=${{ github.event.inputs.investor }}"
+          fi
+          bun send-investor-emails.ts $ARGS
+
+      - name: Upload PDFs as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: investor-pdfs
+          path: docs/investors/pdfs/
+          if-no-files-found: ignore
