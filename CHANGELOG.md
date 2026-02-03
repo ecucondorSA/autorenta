@@ -1,3 +1,7 @@
+## <small>3.61.2 (2026-02-03)</small>
+
+* fix: isolate email test from monorepo ([a8ca96a](https://github.com/ecucondorSA/autorenta/commit/a8ca96a))
+
 ## <small>3.61.1 (2026-02-03)</small>
 
 * fix: skip husky in test-email workflow ([e6ee951](https://github.com/ecucondorSA/autorenta/commit/e6ee951))
