@@ -1,3 +1,7 @@
+## <small>3.65.8 (2026-02-03)</small>
+
+* fix(db): include lat/lng in get_available_cars RPC ([1609f81](https://github.com/ecucondorSA/autorenta/commit/1609f81))
+
 ## <small>3.65.7 (2026-02-03)</small>
 
 * fix(ci): treat PostgREST schema cache errors as warnings ([008a175](https://github.com/ecucondorSA/autorenta/commit/008a175))
