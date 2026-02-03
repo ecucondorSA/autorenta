@@ -1,3 +1,9 @@
+## 3.60.0 (2026-02-03)
+
+* feat: migrate to new production project + egress optimization P0 ([6554cfe](https://github.com/ecucondorSA/autorenta/commit/6554cfe))
+* chore: trigger CI ([36ca4b3](https://github.com/ecucondorSA/autorenta/commit/36ca4b3))
+* fix: resolve console errors (user_stats 404, region_id warnings, trust 406) ([adb020c](https://github.com/ecucondorSA/autorenta/commit/adb020c))
+
 ## 3.59.0 (2026-02-02)
 
 * feat(profile): conditional SOS button + improved OTP verification UX ([13db5dc](https://github.com/ecucondorSA/autorenta/commit/13db5dc))
