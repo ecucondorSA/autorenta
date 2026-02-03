@@ -1,3 +1,7 @@
+## <small>3.65.1 (2026-02-03)</small>
+
+* fix: remove duplicate RPC migrations to pass guardrails ([4944743](https://github.com/ecucondorSA/autorenta/commit/4944743))
+
 ## 3.65.0 (2026-02-03)
 
 * feat: marketplace marquee redesign + schema fixes + verification improvements ([0784574](https://github.com/ecucondorSA/autorenta/commit/0784574))
