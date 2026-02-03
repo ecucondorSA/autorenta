@@ -74,7 +74,7 @@ interface InsightItem {
   template: `
     <div class="min-h-screen bg-surface-primary pb-24">
       <header class="sticky top-0 z-20 border-b border-border-default backdrop-blur">
-        <div class="absolute inset-0 bg-gradient-to-b from-cta-default/10 via-surface-primary to-surface-primary"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-cta-default/10 via-surface-primary to-surface-primary pointer-events-none"></div>
         <div class="relative container-page px-4 sm:px-6 py-4 space-y-4">
           <div class="flex items-center justify-between gap-4">
             <div>
@@ -96,12 +96,12 @@ interface InsightItem {
             </a>
           </div>
 
-          <div class="flex w-full max-w-sm rounded-2xl bg-surface-secondary/70 p-1 ring-1 ring-border-default/70">
+          <div class="relative z-10 flex w-full max-w-sm rounded-2xl bg-surface-secondary/70 p-1 ring-1 ring-border-default/70">
             <button
               type="button"
               (click)="setRole('renter')"
               appPressScale
-              class="flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl transition-colors"
+              class="flex-1 px-4 py-3 min-h-[48px] text-sm font-semibold rounded-xl transition-colors touch-manipulation"
               [class]="
                 role() === 'renter'
                   ? 'bg-surface-raised text-cta-default shadow-sm ring-1 ring-cta-default/20'
@@ -115,7 +115,7 @@ interface InsightItem {
               type="button"
               (click)="setRole('owner')"
               appPressScale
-              class="flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl transition-colors"
+              class="flex-1 px-4 py-3 min-h-[48px] text-sm font-semibold rounded-xl transition-colors touch-manipulation"
               [class]="
                 role() === 'owner'
                   ? 'bg-surface-raised text-cta-default shadow-sm ring-1 ring-cta-default/20'

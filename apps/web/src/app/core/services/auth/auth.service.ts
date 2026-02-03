@@ -42,8 +42,11 @@ export class AuthService implements OnDestroy {
    * - SSR: stub client that returns empty results
    */
   private readonly state = signal<AuthState>({ session: null, loading: true });
-  private restoreSessionPromise: Promise<void> | null = null;
+  private restoreSessionPromise: Promise<Session | null> | null = null;
   private authSubscription: { data: { subscription: { unsubscribe: () => void } } } | null = null;
+
+  // P0.2 FIX: Track if session has been resolved to avoid redundant calls
+  private sessionResolved = false;
 
   readonly sessionSignal = computed(() => this.state().session);
   readonly session$ = computed(() => this.state().session);
@@ -56,25 +59,56 @@ export class AuthService implements OnDestroy {
     this.authSubscription?.data.subscription.unsubscribe();
   }
 
+  // 🚀 PERF: Throttle ensureSession logging to avoid console spam
+  private ensureSessionCallCount = 0;
+  private lastEnsureSessionLog = 0;
+
+  /**
+   * P0.2 FIX: Optimized ensureSession with proper deduplication
+   * - Uses sessionResolved flag to avoid redundant checks
+   * - Reuses single promise for concurrent callers
+   * - Logs only once per second to reduce console noise
+   */
   async ensureSession(): Promise<Session | null> {
-    this.logger.debug('ensureSession called', 'AuthService', {
-      loading: this.state().loading,
-      hasSession: !!this.state().session,
-    });
-    if (!this.state().loading) {
+    this.ensureSessionCallCount++;
+
+    // 🚀 FAST PATH: Session already resolved, return immediately
+    if (this.sessionResolved && !this.state().loading) {
       return this.state().session;
     }
-    if (!this.restoreSessionPromise) {
-      this.logger.debug('ensureSession: waiting for loadSession...', 'AuthService');
-      this.restoreSessionPromise = this.loadSession().finally(() => {
-        this.restoreSessionPromise = null;
+
+    // 🚀 PERF: Only log once per second max to avoid console spam
+    const now = Date.now();
+    if (now - this.lastEnsureSessionLog > 1000) {
+      this.logger.debug('ensureSession called', 'AuthService', {
+        loading: this.state().loading,
+        hasSession: !!this.state().session,
+        callCount: this.ensureSessionCallCount,
+        resolved: this.sessionResolved,
       });
+      this.lastEnsureSessionLog = now;
+      this.ensureSessionCallCount = 0;
     }
-    await this.restoreSessionPromise;
-    this.logger.debug('ensureSession: resolved', 'AuthService', {
-      hasSession: !!this.state().session,
-    });
-    return this.state().session;
+
+    // Fast path: session already loaded (backup check)
+    if (!this.state().loading) {
+      this.sessionResolved = true;
+      return this.state().session;
+    }
+
+    // Dedupe concurrent calls - reuse existing promise
+    if (!this.restoreSessionPromise) {
+      this.restoreSessionPromise = this.loadSession()
+        .then(() => {
+          this.sessionResolved = true;
+          return this.state().session;
+        })
+        .finally(() => {
+          this.restoreSessionPromise = null;
+        });
+    }
+
+    return this.restoreSessionPromise;
   }
 
   /**
@@ -206,11 +240,15 @@ export class AuthService implements OnDestroy {
         // clear the session without showing errors on public pages
         if (event === 'SIGNED_OUT' && !session) {
           this.logger.debug('Session ended (possibly expired)', 'AuthService');
+          // P0.2 FIX: Reset resolved flag on sign out
+          this.sessionResolved = false;
         }
 
         // ✅ Apply pending referral code after successful sign-in
         if (event === 'SIGNED_IN' && session?.user) {
           void this.applyPendingReferralCode(session.user.id);
+          // P0.2 FIX: Mark as resolved on sign in
+          this.sessionResolved = true;
         }
 
         this.state.set({ session: session ?? null, loading: false });

@@ -76,8 +76,9 @@ function autorentaImageLoader(config: ImageLoaderConfig): string {
   const width = config.width ?? 800;
 
   // Supabase Storage Transformation support
-  // Project: pisqjmoklivzpwufhscx.supabase.co
-  if (src.includes('pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/')) {
+  // Project: aceacpaockyxgogxsfyc.supabase.co (production)
+  if (src.includes('aceacpaockyxgogxsfyc.supabase.co/storage/v1/object/public/') ||
+      src.includes('pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/')) {
     try {
       // Convert /object/public/ to /render/image/public/
       const transformedSrc = src.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/');
