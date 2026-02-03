@@ -1,3 +1,7 @@
+## <small>3.61.1 (2026-02-03)</small>
+
+* fix: skip husky in test-email workflow ([e6ee951](https://github.com/ecucondorSA/autorenta/commit/e6ee951))
+
 ## 3.61.0 (2026-02-03)
 
 * feat: add test email script and workflow ([e5b9424](https://github.com/ecucondorSA/autorenta/commit/e5b9424))
