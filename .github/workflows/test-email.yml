@@ -12,19 +12,41 @@ jobs:
   send-test-email:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
       - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
 
-      - name: Install dependencies
-        run: bun add nodemailer --no-save
-        env:
-          HUSKY: 0
-
-      - name: Send test email
+      - name: Create and run email script
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-        run: bun tools/send-test-email.ts "${{ github.event.inputs.destinatario }}"
+          DESTINATARIO: ${{ github.event.inputs.destinatario }}
+        run: |
+          mkdir email-test && cd email-test
+          bun init -y
+          bun add nodemailer
+
+          cat > send.ts << 'EOF'
+          import nodemailer from "nodemailer";
+
+          const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: process.env.GMAIL_USER,
+              pass: process.env.GMAIL_APP_PASSWORD,
+            },
+          });
+
+          const dest = process.env.DESTINATARIO || "admin@autorentar.com";
+
+          const info = await transporter.sendMail({
+            from: process.env.GMAIL_USER,
+            to: dest,
+            subject: "Test AutoRenta - Email Corporativo",
+            html: `<h2>Test AutoRenta</h2><p>Email a <strong>${dest}</strong> funciona correctamente.</p>`,
+          });
+
+          console.log("✅ Email enviado:", info.messageId);
+          EOF
+
+          bun send.ts
