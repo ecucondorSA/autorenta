@@ -1,27 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-aircover',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton],
+  imports: [CommonModule, RouterLink],
   template: `
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button defaultHref="/"></ion-back-button>
-        </ion-buttons>
-        <ion-title>AirCover</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
-      <div class="static-page">
-        <section class="static-hero" style="background: linear-gradient(135deg, #065f46 0%, #047857 100%);">
-          <h1>🛡️ AirCover</h1>
+    <div class="static-page">
+      <section class="static-hero" style="background: linear-gradient(135deg, #065f46 0%, #047857 100%);">
+        <h1>🛡️ AirCover</h1>
           <p>Protección integral para cada viaje. Alquila con tranquilidad.</p>
         </section>
 
@@ -77,10 +66,9 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar 
             <h3>¿Tienes preguntas sobre AirCover?</h3>
             <a routerLink="/support" class="cta-button">Contactar Soporte</a>
           </div>
-        </div>
       </div>
-    </ion-content>
+    </div>
   `,
   styleUrls: ['./static-shared.css'],
 })
-export class AircoverPage { }
+export class AircoverPage {}
