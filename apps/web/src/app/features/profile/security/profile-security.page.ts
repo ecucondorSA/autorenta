@@ -225,7 +225,7 @@ import { PasskeysService } from '@core/services/auth/passkeys.service';
                     <button
                       (click)="deletePasskey(passkey.id)"
                       class="p-2 text-error-text hover:bg-error-bg rounded-lg transition-colors"
-                      title="Eliminar passkey"
+                      aria-label="Eliminar passkey"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path

@@ -136,20 +136,20 @@ serve(async (req) => {
                     <p>Recibimos una solicitud para eliminar tu cuenta de Autorentar asociada a este email.</p>
 
                     <div class="warning">
-                      <strong>Advertencia:</strong> Esta accion es permanente e irreversible. Se eliminaran todos tus datos, vehiculos publicados, historial de reservas y saldo de wallet.
+                      <strong>Advertencia:</strong> Esta acción es permanente e irreversible. Se eliminarán todos tus datos, vehículos publicados, historial de reservas y saldo de wallet.
                     </div>
 
-                    <p>Si deseas continuar con la eliminacion de tu cuenta, haz clic en el siguiente boton:</p>
+                    <p>Si deseas continuar con la eliminación de tu cuenta, haz clic en el siguiente botón:</p>
 
                     <p style="text-align: center;">
-                      <a href="${deleteUrl}" class="button">Confirmar Eliminacion de Cuenta</a>
+                      <a href="${deleteUrl}" class="button">Confirmar Eliminación de Cuenta</a>
                     </p>
 
                     <p><strong>Este enlace expira en 24 horas.</strong></p>
 
-                    <p>Si no solicitaste eliminar tu cuenta, puedes ignorar este email. Tu cuenta permanecera segura.</p>
+                    <p>Si no solicitaste eliminar tu cuenta, puedes ignorar este email. Tu cuenta permanecerá segura.</p>
 
-                    <p>Si tienes preguntas, contactanos en <a href="mailto:soporte@autorentar.com">soporte@autorentar.com</a></p>
+                    <p>Si tienes preguntas, contáctanos en <a href="mailto:soporte@autorentar.com">soporte@autorentar.com</a></p>
                   </div>
                   <div class="footer">
                     <p>Este email fue enviado por Autorentar</p>

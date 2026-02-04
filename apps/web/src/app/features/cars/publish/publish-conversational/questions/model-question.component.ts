@@ -61,6 +61,7 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
           <button
             type="button"
             (click)="clearSearch()"
+            aria-label="Limpiar búsqueda"
             class="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-surface-secondary hover:bg-surface-hover text-text-muted hover:text-text-primary transition-all"
           >
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -146,6 +147,7 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
           <button
             type="button"
             (click)="clearSelection()"
+            aria-label="Quitar selección"
             class="text-emerald-700 dark:text-emerald-200 hover:text-emerald-900 dark:hover:text-white transition-colors"
           >
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

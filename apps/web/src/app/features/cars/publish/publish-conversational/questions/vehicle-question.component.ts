@@ -68,6 +68,7 @@ import {
             <button
               type="button"
               (click)="clearSearch()"
+              aria-label="Limpiar búsqueda"
               class="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-surface-secondary hover:bg-surface-hover text-text-muted hover:text-text-primary transition-all"
             >
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -90,7 +91,7 @@ import {
           type="button"
           (click)="openScanner()"
           class="flex-shrink-0 w-14 h-14 bg-cta-default/10 hover:bg-cta-default/20 border-2 border-cta-default/30 hover:border-cta-default rounded-2xl flex items-center justify-center transition-all active:scale-95 hover:shadow-lg"
-          title="Escanear auto con cámara"
+          aria-label="Escanear auto con cámara"
         >
           <svg class="w-6 h-6 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -187,6 +188,7 @@ import {
           <button
             type="button"
             (click)="clearSelection()"
+            aria-label="Quitar selección"
             class="text-emerald-600 hover:text-emerald-800 transition-colors"
           >
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

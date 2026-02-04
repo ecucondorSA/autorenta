@@ -348,7 +348,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
                 type="button"
                 (click)="removePhoto(i)"
                 class="p-3 bg-white text-rose-600 rounded-full hover:bg-rose-50 hover:text-rose-700 hover:scale-110 transition-all shadow-xl"
-                title="Eliminar"
+                aria-label="Eliminar foto"
               >
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -360,7 +360,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
                   type="button"
                   (click)="retryValidation(photo)"
                   class="p-3 bg-white text-blue-600 rounded-full hover:bg-blue-50 hover:text-blue-700 hover:scale-110 transition-all shadow-xl"
-                  title="Reintentar validación"
+                  aria-label="Reintentar validación"
                 >
                   <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
