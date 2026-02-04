@@ -1,0 +1,122 @@
+{
+  "module": "profile",
+  "baseUrl": "https://autorentar.com",
+  "timestamp": "2026-02-04T06:14:37.886Z",
+  "pages": [
+    {
+      "name": "profile",
+      "path": "/profile",
+      "url": "https://autorentar.com/profile",
+      "finalUrl": "📜 Result: \"https://autorentar.com/auth/login\"\n⏱️ 18ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 21ms",
+      "loadTime": 4592,
+      "screenshot": "profile.jpg",
+      "status": "auth_required",
+      "requiresAuth": true,
+      "requiresAdmin": false
+    },
+    {
+      "name": "profile_personal",
+      "path": "/profile/personal",
+      "url": "https://autorentar.com/profile/personal",
+      "finalUrl": "📜 Result: \"https://autorentar.com/auth/login\"\n⏱️ 13ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 96ms",
+      "loadTime": 4024,
+      "screenshot": "profile_personal.jpg",
+      "status": "auth_required",
+      "requiresAuth": true,
+      "requiresAdmin": false
+    },
+    {
+      "name": "profile_contact",
+      "path": "/profile/contact",
+      "url": "https://autorentar.com/profile/contact",
+      "finalUrl": "📜 Result: \"https://autorentar.com/auth/login\"\n⏱️ 29ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 14ms",
+      "loadTime": 3525,
+      "screenshot": "profile_contact.jpg",
+      "status": "auth_required",
+      "requiresAuth": true,
+      "requiresAdmin": false
+    },
+    {
+      "name": "profile_preferences",
+      "path": "/profile/preferences",
+      "url": "https://autorentar.com/profile/preferences",
+      "finalUrl": "📜 Result: \"https://autorentar.com/auth/login\"\n⏱️ 25ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 19ms",
+      "loadTime": 4281,
+      "screenshot": "profile_preferences.jpg",
+      "status": "auth_required",
+      "requiresAuth": true,
+      "requiresAdmin": false
+    },
+    {
+      "name": "profile_security",
+      "path": "/profile/security",
+      "url": "https://autorentar.com/profile/security",
+      "finalUrl": "📜 Result: \"https://autorentar.com/auth/login\"\n⏱️ 24ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 20ms",
+      "loadTime": 4074,
+      "screenshot": "profile_security.jpg",
+      "status": "auth_required",
+      "requiresAuth": true,
+      "requiresAdmin": false
+    },
+    {
+      "name": "profile_verification",
+      "path": "/profile/verification",
+      "url": "https://autorentar.com/profile/verification",
+      "finalUrl": "📜 Result: \"https://autorentar.com/auth/login\"\n⏱️ 13ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 9ms",
+      "loadTime": 3941,
+      "screenshot": "profile_verification.jpg",
+      "status": "auth_required",
+      "requiresAuth": true,
+      "requiresAdmin": false
+    },
+    {
+      "name": "profile_driving_stats",
+      "path": "/profile/driving-stats",
+      "url": "https://autorentar.com/profile/driving-stats",
+      "finalUrl": "📜 Result: \"https://autorentar.com/auth/login\"\n⏱️ 8ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 9ms",
+      "loadTime": 3246,
+      "screenshot": "profile_driving_stats.jpg",
+      "status": "auth_required",
+      "requiresAuth": true,
+      "requiresAdmin": false
+    },
+    {
+      "name": "profile_location",
+      "path": "/profile/location-settings",
+      "url": "https://autorentar.com/profile/location-settings",
+      "finalUrl": "📜 Result: \"https://autorentar.com/auth/login\"\n⏱️ 18ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 14ms",
+      "loadTime": 3730,
+      "screenshot": "profile_location.jpg",
+      "status": "auth_required",
+      "requiresAuth": true,
+      "requiresAdmin": false
+    },
+    {
+      "name": "profile_notifications",
+      "path": "/profile/notifications-settings",
+      "url": "https://autorentar.com/profile/notifications-settings",
+      "finalUrl": "📜 Result: \"https://autorentar.com/auth/login\"\n⏱️ 8ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 46ms",
+      "loadTime": 3838,
+      "screenshot": "profile_notifications.jpg",
+      "status": "auth_required",
+      "requiresAuth": true,
+      "requiresAdmin": false
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "total": 9,
+    "success": 0,
+    "failed": 0,
+    "skipped": 9
+  }
+}

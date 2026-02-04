@@ -1,0 +1,158 @@
+{
+  "module": "static",
+  "baseUrl": "https://autorentar.com",
+  "timestamp": "2026-02-04T06:15:36.650Z",
+  "pages": [
+    {
+      "name": "about",
+      "path": "/about",
+      "url": "https://autorentar.com/about",
+      "finalUrl": "📜 Result: \"https://autorentar.com/about\"\n⏱️ 13ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 23ms",
+      "loadTime": 4843,
+      "screenshot": "about.jpg",
+      "status": "success",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    },
+    {
+      "name": "help",
+      "path": "/help",
+      "url": "https://autorentar.com/help",
+      "finalUrl": "📜 Result: \"https://autorentar.com/help\"\n⏱️ 6ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 4ms",
+      "loadTime": 3346,
+      "screenshot": "help.jpg",
+      "status": "success",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    },
+    {
+      "name": "support",
+      "path": "/support",
+      "url": "https://autorentar.com/support",
+      "finalUrl": "📜 Result: \"https://autorentar.com/auth/login\"\n⏱️ 21ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 5ms",
+      "loadTime": 3055,
+      "screenshot": "support.jpg",
+      "status": "auth_required",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    },
+    {
+      "name": "safety",
+      "path": "/safety",
+      "url": "https://autorentar.com/safety",
+      "finalUrl": "📜 Result: \"https://autorentar.com/safety\"\n⏱️ 16ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 3ms",
+      "loadTime": 2853,
+      "screenshot": "safety.jpg",
+      "status": "success",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    },
+    {
+      "name": "terms",
+      "path": "/terms",
+      "url": "https://autorentar.com/terms",
+      "finalUrl": "📜 Result: \"https://autorentar.com/terminos\"\n⏱️ 16ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 6ms",
+      "loadTime": 3118,
+      "screenshot": "terms.jpg",
+      "status": "success",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    },
+    {
+      "name": "privacy",
+      "path": "/privacy",
+      "url": "https://autorentar.com/privacy",
+      "finalUrl": "📜 Result: \"https://autorentar.com/privacy\"\n⏱️ 18ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 5ms",
+      "loadTime": 3049,
+      "screenshot": "privacy.jpg",
+      "status": "success",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    },
+    {
+      "name": "aircover",
+      "path": "/aircover",
+      "url": "https://autorentar.com/aircover",
+      "finalUrl": "📜 Result: \"https://autorentar.com/aircover\"\n⏱️ 13ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 4ms",
+      "loadTime": 2794,
+      "screenshot": "aircover.jpg",
+      "status": "success",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    },
+    {
+      "name": "cancellation",
+      "path": "/cancellation",
+      "url": "https://autorentar.com/cancellation",
+      "finalUrl": "📜 Result: \"https://autorentar.com/cancellation\"\n⏱️ 17ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 4ms",
+      "loadTime": 3379,
+      "screenshot": "cancellation.jpg",
+      "status": "success",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    },
+    {
+      "name": "careers",
+      "path": "/careers",
+      "url": "https://autorentar.com/careers",
+      "finalUrl": "📜 Result: \"https://autorentar.com/careers\"\n⏱️ 10ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 3ms",
+      "loadTime": 3454,
+      "screenshot": "careers.jpg",
+      "status": "success",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    },
+    {
+      "name": "investors",
+      "path": "/investors",
+      "url": "https://autorentar.com/investors",
+      "finalUrl": "📜 Result: \"https://autorentar.com/auth/login\"\n⏱️ 21ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 15ms",
+      "loadTime": 3509,
+      "screenshot": "investors.jpg",
+      "status": "auth_required",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    },
+    {
+      "name": "rent_your_car",
+      "path": "/rent-your-car",
+      "url": "https://autorentar.com/rent-your-car",
+      "finalUrl": "📜 Result: \"https://autorentar.com/rent-your-car\"\n⏱️ 25ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 10ms",
+      "loadTime": 2887,
+      "screenshot": "rent_your_car.jpg",
+      "status": "success",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    },
+    {
+      "name": "sitemap",
+      "path": "/sitemap",
+      "url": "https://autorentar.com/sitemap",
+      "finalUrl": "📜 Result: \"https://autorentar.com/sitemap\"\n⏱️ 6ms",
+      "title": "📜 Result: \"Autorentar - Comparte tu auto, encuentra el tuyo\"\n⏱️ 7ms",
+      "loadTime": 3373,
+      "screenshot": "sitemap.jpg",
+      "status": "success",
+      "requiresAuth": false,
+      "requiresAdmin": false
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "total": 12,
+    "success": 10,
+    "failed": 0,
+    "skipped": 2
+  }
+}

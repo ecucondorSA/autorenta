@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patchright Live Monitor</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-connected {
+      background: #238636;
+      color: white;
+    }
+
+    .status-disconnected {
+      background: #da3633;
+      color: white;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 0;
+      height: calc(100vh - 53px);
+    }
+
+    .preview-section {
+      background: #0d1117;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #30363d;
+    }
+
+    .preview-header {
+      padding: 12px 16px;
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .preview-header h2 {
+      font-size: 14px;
+      font-weight: 500;
+      color: #8b949e;
+    }
+
+    .preview-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .preview-container img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .no-preview {
+      color: #484f58;
+      text-align: center;
+    }
+
+    .no-preview svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    .sidebar {
+      background: #161b22;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .info-panel {
+      padding: 16px;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .info-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-label {
+      width: 60px;
+      font-size: 11px;
+      color: #8b949e;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .info-value {
+      font-size: 13px;
+      word-break: break-all;
+      flex: 1;
+    }
+
+    .info-value.url {
+      color: #58a6ff;
+    }
+
+    .workflow-status {
+      padding: 12px 16px;
+      background: #1c2128;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .workflow-status.active {
+      background: #1a2332;
+      border-left: 3px solid #58a6ff;
+    }
+
+    .workflow-name {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .workflow-progress {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 6px;
+      background: #30363d;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #58a6ff;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: #8b949e;
+      white-space: nowrap;
+    }
+
+    .events-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .events-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .events-header h3 {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .events-count {
+      font-size: 12px;
+      color: #8b949e;
+    }
+
+    .events-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+
+    .event-item {
+      padding: 8px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      border-bottom: 1px solid #21262d;
+    }
+
+    .event-item:hover {
+      background: #1c2128;
+    }
+
+    .event-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .event-icon.navigate { background: #1f6feb; }
+    .event-icon.click { background: #238636; }
+    .event-icon.type { background: #a371f7; }
+    .event-icon.screenshot { background: #f0883e; }
+    .event-icon.workflow { background: #58a6ff; }
+    .event-icon.error { background: #da3633; }
+
+    .event-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .event-action {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .event-detail {
+      font-size: 12px;
+      color: #8b949e;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .event-time {
+      font-size: 11px;
+      color: #484f58;
+      flex-shrink: 0;
+    }
+
+    .click-indicator {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f0883e;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: clickPulse 0.5s ease-out forwards;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes clickPulse {
+      0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+      }
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #30363d;
+      background: #21262d;
+      color: #c9d1d9;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      background: #30363d;
+      border-color: #8b949e;
+    }
+
+    .btn-clear {
+      background: transparent;
+      border-color: #da3633;
+      color: #da3633;
+    }
+
+    .btn-clear:hover {
+      background: #da3633;
+      color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .main {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+      }
+
+      .preview-section {
+        border-right: none;
+        border-bottom: 1px solid #30363d;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>
+      <span>🖥️</span>
+      Patchright Live Monitor
+    </h1>
+    <span id="connectionStatus" class="status-badge status-disconnected">Disconnected</span>
+  </header>
+
+  <main class="main">
+    <section class="preview-section">
+      <div class="preview-header">
+        <h2>Live Preview</h2>
+        <button class="btn" onclick="requestScreenshot()">📸 Capture</button>
+      </div>
+      <div class="preview-container" id="previewContainer">
+        <div class="no-preview">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+          </svg>
+          <p>No preview available</p>
+          <p style="font-size: 12px; margin-top: 4px;">Waiting for browser activity...</p>
+        </div>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="info-panel">
+        <div class="info-row">
+          <span class="info-label">URL</span>
+          <span class="info-value url" id="currentUrl">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Title</span>
+          <span class="info-value" id="currentTitle">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Status</span>
+          <span class="info-value" id="currentStatus">Idle</span>
+        </div>
+      </div>
+
+      <div class="workflow-status" id="workflowPanel" style="display: none;">
+        <div class="workflow-name" id="workflowName">-</div>
+        <div class="workflow-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" id="workflowProgress" style="width: 0%"></div>
+          </div>
+          <span class="progress-text" id="workflowStep">0/0</span>
+        </div>
+      </div>
+
+      <section class="events-section">
+        <div class="events-header">
+          <h3>📋 Event Log</h3>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="events-count" id="eventsCount">0 events</span>
+            <button class="btn btn-clear" onclick="clearEvents()">Clear</button>
+          </div>
+        </div>
+        <div class="events-list" id="eventsList"></div>
+      </section>
+    </aside>
+  </main>
+
+  <script>
+    const WS_URL = 'ws://localhost:8765';
+    let ws = null;
+    let events = [];
+    let reconnectAttempts = 0;
+
+    function connect() {
+      ws = new WebSocket(WS_URL);
+
+      ws.onopen = () => {
+        console.log('Connected to monitor server');
+        document.getElementById('connectionStatus').textContent = 'Connected';
+        document.getElementById('connectionStatus').className = 'status-badge status-connected';
+        reconnectAttempts = 0;
+      };
+
+      ws.onclose = () => {
+        console.log('Disconnected from monitor server');
+        document.getElementById('connectionStatus').textContent = 'Disconnected';
+        document.getElementById('connectionStatus').className = 'status-badge status-disconnected';
+
+        // Reconnect with exponential backoff
+        const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+        reconnectAttempts++;
+        setTimeout(connect, delay);
+      };
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          handleMessage(data);
+        } catch (e) {
+          console.error('Failed to parse message:', e);
+        }
+      };
+    }
+
+    function handleMessage(data) {
+      switch (data.type) {
+        case 'init':
+          updateState(data.state);
+          if (data.screenshot) {
+            updateScreenshot(data.screenshot);
+          }
+          break;
+
+        case 'screenshot':
+          updateScreenshot(data.data);
+          break;
+
+        case 'action':
+          addEvent(data);
+          updateState(data.state);
+          if (data.action === 'click' && data.details?.x && data.details?.y) {
+            showClickIndicator(data.details.x, data.details.y);
+          }
+          break;
+
+        case 'workflow':
+          updateWorkflow(data);
+          addEvent({
+            type: 'workflow',
+            action: 'workflow',
+            details: {
+              status: data.status,
+              name: data.workflow,
+              step: data.step
+            },
+            timestamp: data.timestamp
+          });
+          break;
+      }
+    }
+
+    function updateState(state) {
+      if (!state) return;
+
+      if (state.url) {
+        document.getElementById('currentUrl').textContent = state.url;
+      }
+      if (state.title) {
+        document.getElementById('currentTitle').textContent = state.title;
+      }
+      if (state.status) {
+        document.getElementById('currentStatus').textContent = capitalizeFirst(state.status);
+      }
+    }
+
+    function updateScreenshot(base64) {
+      const container = document.getElementById('previewContainer');
+      container.innerHTML = `<img src="data:image/jpeg;base64,${base64}" alt="Live Preview" />`;
+    }
+
+    function updateWorkflow(data) {
+      const panel = document.getElementById('workflowPanel');
+
+      if (data.status === 'completed' || data.status === 'failed' || data.status === 'idle') {
+        panel.style.display = 'none';
+        panel.classList.remove('active');
+        return;
+      }
+
+      panel.style.display = 'block';
+      panel.classList.add('active');
+
+      document.getElementById('workflowName').textContent = `▶ ${data.workflow}`;
+
+      if (data.step) {
+        const progress = (data.step.index / data.step.total) * 100;
+        document.getElementById('workflowProgress').style.width = `${progress}%`;
+        document.getElementById('workflowStep').textContent = `${data.step.index}/${data.step.total}`;
+      }
+    }
+
+    function addEvent(data) {
+      events.unshift(data);
+      if (events.length > 100) events.pop();
+
+      renderEvents();
+    }
+
+    function renderEvents() {
+      const list = document.getElementById('eventsList');
+      const count = document.getElementById('eventsCount');
+
+      count.textContent = `${events.length} events`;
+
+      list.innerHTML = events.map(event => {
+        const iconClass = event.action || 'action';
+        const icon = getEventIcon(event.action);
+        const time = new Date(event.timestamp).toLocaleTimeString();
+        const detail = formatEventDetail(event);
+
+        return `
+          <div class="event-item">
+            <div class="event-icon ${iconClass}">${icon}</div>
+            <div class="event-content">
+              <div class="event-action">${capitalizeFirst(event.action || 'Event')}</div>
+              <div class="event-detail" title="${escapeHtml(detail)}">${escapeHtml(detail)}</div>
+            </div>
+            <div class="event-time">${time}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getEventIcon(action) {
+      const icons = {
+        navigate: '🔗',
+        click: '👆',
+        type: '⌨️',
+        screenshot: '📸',
+        workflow: '📋',
+        error: '❌',
+        scroll: '📜',
+        fill: '✏️',
+        hover: '🎯'
+      };
+      return icons[action] || '•';
+    }
+
+    function formatEventDetail(event) {
+      if (!event.details) return '-';
+
+      const d = event.details;
+
+      if (event.action === 'navigate') {
+        return d.url || '-';
+      }
+      if (event.action === 'click') {
+        let detail = d.selector || '-';
+        if (d.x && d.y) detail += ` (${d.x}, ${d.y})`;
+        return detail;
+      }
+      if (event.action === 'type') {
+        return d.text || `${d.chars || 0} chars`;
+      }
+      if (event.action === 'workflow') {
+        if (d.step) {
+          return `${d.name}: ${d.step.action} (${d.step.index}/${d.step.total})`;
+        }
+        return `${d.name}: ${d.status}`;
+      }
+
+      return JSON.stringify(d).substring(0, 50);
+    }
+
+    function showClickIndicator(x, y) {
+      // Scale coordinates to match preview image
+      const preview = document.querySelector('.preview-container img');
+      if (!preview) return;
+
+      const rect = preview.getBoundingClientRect();
+      const scaleX = rect.width / preview.naturalWidth;
+      const scaleY = rect.height / preview.naturalHeight;
+
+      const indicator = document.createElement('div');
+      indicator.className = 'click-indicator';
+      indicator.style.left = `${rect.left + x * scaleX}px`;
+      indicator.style.top = `${rect.top + y * scaleY}px`;
+
+      document.body.appendChild(indicator);
+
+      setTimeout(() => indicator.remove(), 500);
+    }
+
+    function requestScreenshot() {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'request_screenshot' }));
+      }
+    }
+
+    function clearEvents() {
+      events = [];
+      renderEvents();
+    }
+
+    function capitalizeFirst(str) {
+      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Start connection
+    connect();
+  </script>
+</body>
+</html>
