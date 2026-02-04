@@ -1,3 +1,9 @@
+## 3.69.0 (2026-02-04)
+
+* feat(tools): add WhatsApp contact import utility ([33fb428](https://github.com/ecucondorSA/autorenta/commit/33fb428))
+* fix(i18n): Spanish accent corrections in examples and FAQs ([65cdd4c](https://github.com/ecucondorSA/autorenta/commit/65cdd4c))
+* security: update vulnerable dependencies ([3166362](https://github.com/ecucondorSA/autorenta/commit/3166362))
+
 ## 3.68.0 (2026-02-04)
 
 * feat(db): add missing RPC function stubs for frontend contracts ([a24a4f8](https://github.com/ecucondorSA/autorenta/commit/a24a4f8))
