@@ -306,6 +306,20 @@ Multiple typos found: "deposito" → "depósito", "garantia" → "garantía", et
 
 ---
 
+## Session 5 - Damage-Related i18n Fixes (15+ typos fixed)
+
+### Files Fixed:
+- **owner-check-out.page.html**: dano → daño, danos → daños, Descripcion → Descripción, deducira → deducirá, deposito → depósito, garantia → garantía
+- **club-history.page.ts**: Deduccion por dano → Deducción por daño
+- **wallet-faq.component.ts**: Dano → Daño (table header)
+- **owner-confirmation.component.html**: danos → daños (comment)
+- **core/models/index.ts**: confirmacion → confirmación, reporto → reportó, danos → daños, Descripcion → Descripción
+
+### Commit:
+`fix(i18n): Spanish accent corrections for damage-related text`
+
+---
+
 ## Remaining Work
 
 ### Requires Authentication:
