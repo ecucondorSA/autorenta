@@ -21,7 +21,7 @@ import { ScoutService, Bounty } from '../../services/scout.service';
       <div class="px-4 mt-2">
         <div class="bg-gray-800 rounded-3xl overflow-hidden border border-gray-700">
           <div class="h-48 bg-gray-700 relative">
-            <img [src]="mission()?.cars?.photos?.[0]" class="w-full h-full object-cover">
+            <img [src]="mission()?.cars?.photos?.[0]" class="w-full h-full object-cover" [alt]="(mission()?.cars?.brand || '') + ' ' + (mission()?.cars?.model || '')">
             <div class="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full font-black text-sm shadow-lg">
               RECOMPENSA: $150
             </div>

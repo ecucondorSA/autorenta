@@ -120,7 +120,7 @@ interface CarWithOwner {
                 @if (car.profiles) {
                   <div class="car-owner">
                     @if (car.profiles.avatar_url) {
-                      <img [src]="car.profiles.avatar_url" class="owner-avatar" />
+                      <img [src]="car.profiles.avatar_url" class="owner-avatar" [alt]="'Foto de ' + car.profiles.full_name" />
                     }
                     <span class="owner-name">{{ car.profiles.full_name }}</span>
                     @if (car.profiles.is_superhost) {

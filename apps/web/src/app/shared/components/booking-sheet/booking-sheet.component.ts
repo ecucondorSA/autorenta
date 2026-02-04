@@ -31,7 +31,7 @@ import { SoundService } from '@core/services/ui/sound.service';
           <div class="flex gap-4">
             <!-- Large Photo -->
             <div class="w-24 h-24 rounded-2xl overflow-hidden bg-surface-secondary border border-white/10 shadow-lg shrink-0 relative group">
-               <img [src]="car.photoUrl || '/assets/images/car-placeholder.svg'" class="w-full h-full object-cover" />
+               <img [src]="car.photoUrl || '/assets/images/car-placeholder.svg'" class="w-full h-full object-cover" [alt]="car.title || 'Auto'" />
             </div>
 
             <div class="flex-1">
