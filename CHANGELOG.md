@@ -1,3 +1,8 @@
+## <small>3.65.9 (2026-02-04)</small>
+
+* fix(db): force replace get_available_cars with DROP + CREATE ([84d3652](https://github.com/ecucondorSA/autorenta/commit/84d3652))
+* chore(db): force PostgREST schema cache reload ([0e95bb9](https://github.com/ecucondorSA/autorenta/commit/0e95bb9))
+
 ## <small>3.65.8 (2026-02-03)</small>
 
 * fix(db): include lat/lng in get_available_cars RPC ([1609f81](https://github.com/ecucondorSA/autorenta/commit/1609f81))
