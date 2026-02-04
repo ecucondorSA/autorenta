@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <boolean name="bg_startup_tracing" value="false" />
-    <long name="com.facebook.appevents.SessionInfo.sessionStartTime" value="1769260724813" />
-    <long name="com.facebook.appevents.SessionInfo.sessionEndTime" value="1769260741354" />
-    <int name="com.facebook.appevents.SessionInfo.interruptionCount" value="0" />
-    <string name="com.facebook.appevents.SessionInfo.sessionId">05be53ea-d93e-414c-a6d7-7bcde31c3510</string>
-</map>

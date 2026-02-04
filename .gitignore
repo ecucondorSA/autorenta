@@ -222,3 +222,10 @@ apps/web/android/keystore/
 
 .gemini/
 gha-creds-*.json
+
+# Security: Never commit app data dumps
+dump_analysis/
+**/dump_analysis/
+*.pma
+Cookies
+Cookies-journal
