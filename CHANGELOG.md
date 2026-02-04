@@ -1,3 +1,7 @@
+## 3.68.0 (2026-02-04)
+
+* feat(db): add missing RPC function stubs for frontend contracts ([a24a4f8](https://github.com/ecucondorSA/autorenta/commit/a24a4f8))
+
 ## <small>3.67.8 (2026-02-04)</small>
 
 * fix(i18n): Spanish accent corrections in booking utils and notifications ([3794ac3](https://github.com/ecucondorSA/autorenta/commit/3794ac3))
