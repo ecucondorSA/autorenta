@@ -1,3 +1,7 @@
+## <small>3.67.5 (2026-02-04)</small>
+
+* fix(i18n): Spanish accent corrections in trip models ([8dd40c8](https://github.com/ecucondorSA/autorenta/commit/8dd40c8))
+
 ## <small>3.67.4 (2026-02-04)</small>
 
 * fix(i18n): Spanish accent corrections in contracts, booking, and models ([11da24a](https://github.com/ecucondorSA/autorenta/commit/11da24a))
