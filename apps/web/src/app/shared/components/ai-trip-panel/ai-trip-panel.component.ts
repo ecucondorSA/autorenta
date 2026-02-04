@@ -95,7 +95,7 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
                   for="tripDaysSelect"
                   class="mb-1 block text-xs font-medium text-text-secondary"
                 >
-                  Duracion del viaje
+                  Duración del viaje
                 </label>
                 <select
                   id="tripDaysSelect"

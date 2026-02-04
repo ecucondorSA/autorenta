@@ -171,9 +171,9 @@ export interface TripActivity {
   time: string;
   /** Descripcion de la actividad */
   activity: string;
-  /** Ubicacion/lugar */
+  /** Ubicación/lugar */
   location: string;
-  /** Duracion estimada */
+  /** Duración estimada */
   duration: string;
   /** Notas adicionales */
   notes?: string;
