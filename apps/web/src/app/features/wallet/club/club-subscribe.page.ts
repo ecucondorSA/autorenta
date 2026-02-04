@@ -45,7 +45,7 @@ declare global {
             Volver a planes
           </button>
 
-          <h1 class="text-2xl font-bold text-text-primary">Confirmar Suscripcion</h1>
+          <h1 class="text-2xl font-bold text-text-primary">Confirmar Suscripción</h1>
         </div>
 
         @if (selectedTier(); as tier) {
@@ -60,7 +60,7 @@ declare global {
               </div>
               <div class="flex-1">
                 <h3 class="text-lg font-bold" [class]="getTierTextClass()">{{ tier.name }}</h3>
-                <p class="text-sm opacity-70">Membresia anual</p>
+                <p class="text-sm opacity-70">Membresía anual</p>
               </div>
               <div class="text-right">
                 <p class="text-2xl font-bold" [class]="getTierTextClass()">
@@ -307,7 +307,7 @@ export class ClubSubscribePage implements OnInit {
       });
     } catch (err) {
       console.error('Payment initialization error:', err);
-      this.error.set('No se pudo inicializar el pago. Intenta mas tarde.');
+      this.error.set('No se pudo inicializar el pago. Intenta más tarde.');
       this.loading.set(false);
     }
   }
@@ -326,7 +326,7 @@ export class ClubSubscribePage implements OnInit {
     try {
       await this.subscriptionService.createSubscriptionWithWallet(tier.tier);
       this.analytics.trackEvent('club_payment_submitted', { tier: tier.tier, method: 'wallet' });
-      this.toast.success('Membresia activada', 'Se activo tu membresía con wallet.');
+      this.toast.success('Membresía activada', 'Se activó tu membresía con wallet.');
       void this.router.navigate(['/wallet/club/history'], {
         queryParams: { payment: 'success', tier: tier.tier },
       });
@@ -362,7 +362,7 @@ export class ClubSubscribePage implements OnInit {
           } catch (upgradeErr) {
             // Fallthrough to error display
             const upgradeMsg =
-              upgradeErr instanceof Error ? upgradeErr.message : 'Fallo la actualización';
+              upgradeErr instanceof Error ? upgradeErr.message : 'Falló la actualización';
             this.error.set(`Error al mejorar plan: ${upgradeMsg}`);
             return;
           }

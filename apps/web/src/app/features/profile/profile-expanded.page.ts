@@ -353,9 +353,6 @@ export class ProfileExpandedPage implements OnInit {
     const placeholderPath = '/assets/avatar-placeholder.png';
     // Check if already using placeholder (src might be full URL)
     if (img && !img.src.endsWith(placeholderPath)) {
-      this.logger.debug('Avatar load failed, using placeholder', 'ProfileExpandedPage', {
-        failedSrc: img.src
-      });
       img.src = placeholderPath;
     }
   }
