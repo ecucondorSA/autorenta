@@ -1,3 +1,9 @@
+## <small>3.66.6 (2026-02-04)</small>
+
+* fix: remove ion-header from about and help-center pages ([dd6add8](https://github.com/ecucondorSA/autorenta/commit/dd6add8))
+* fix: remove Ionic components from all static pages ([65e5c15](https://github.com/ecucondorSA/autorenta/commit/65e5c15))
+* fix: static pages showing only footer and SaltaSalta duplicate text ([880d84b](https://github.com/ecucondorSA/autorenta/commit/880d84b))
+
 ## <small>3.66.5 (2026-02-04)</small>
 
 * fix: critical P0 bugs - memory leak, credit calculation, alert removal ([7f8a8fa](https://github.com/ecucondorSA/autorenta/commit/7f8a8fa))
