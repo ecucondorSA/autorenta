@@ -54,10 +54,10 @@ export interface TicketStatusDisplay {
 export const TICKET_CATEGORIES: TicketCategoryOption[] = [
   { value: 'booking_issue', label: 'Problema con reserva', icon: 'calendar' },
   { value: 'payment_issue', label: 'Problema de pago', icon: 'credit-card' },
-  { value: 'vehicle_issue', label: 'Problema con vehiculo', icon: 'car' },
+  { value: 'vehicle_issue', label: 'Problema con vehículo', icon: 'car' },
   { value: 'account_issue', label: 'Problema de cuenta', icon: 'user' },
-  { value: 'verification_issue', label: 'Verificacion de identidad', icon: 'shield' },
-  { value: 'technical_issue', label: 'Problema tecnico', icon: 'wrench' },
+  { value: 'verification_issue', label: 'Verificación de identidad', icon: 'shield' },
+  { value: 'technical_issue', label: 'Problema técnico', icon: 'wrench' },
   { value: 'suggestion', label: 'Sugerencia', icon: 'lightbulb' },
   { value: 'other', label: 'Otro', icon: 'help' },
 ];
@@ -66,7 +66,7 @@ export const TICKET_URGENCY_LEVELS: TicketUrgencyOption[] = [
   { value: 'low', label: 'Baja', color: 'text-gray-600 bg-gray-100' },
   { value: 'medium', label: 'Media', color: 'text-yellow-600 bg-yellow-100' },
   { value: 'high', label: 'Alta', color: 'text-orange-600 bg-orange-100' },
-  { value: 'critical', label: 'Critica', color: 'text-red-600 bg-red-100' },
+  { value: 'critical', label: 'Crítica', color: 'text-red-600 bg-red-100' },
 ];
 
 export const TICKET_STATUS_MAP: Record<TicketStatus, TicketStatusDisplay> = {

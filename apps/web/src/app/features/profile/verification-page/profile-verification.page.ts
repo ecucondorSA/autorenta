@@ -283,7 +283,7 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
   private setContextualMessage(reason: string): void {
     const messages: Record<string, string> = {
       booking_verification_required:
-        'Para poder alquilar un auto, necesitas completar la verificacion de tu identidad.',
+        'Para poder alquilar un auto, necesitas completar la verificación de tu identidad.',
       email_verification_required:
         'Verifica tu email para acceder a todas las funciones de la plataforma.',
       verification_check_failed:
@@ -377,7 +377,7 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
 
   getProgressLabel(): string {
     const progress = this.progressPercentage();
-    if (progress === 100) return 'Verificacion completa';
+    if (progress === 100) return 'Verificación completa';
     if (progress >= 80) return 'Casi terminado';
     if (progress >= 50) return 'Buen progreso';
     if (progress > 0) return 'En progreso';

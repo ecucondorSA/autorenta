@@ -28,13 +28,13 @@ describe('ToastService', () => {
 
   describe('success()', () => {
     it('should add success notification with correct properties', () => {
-      service.success('Exito', 'Operacion completada');
+      service.success('Éxito', 'Operación completada');
 
       const notifications = service.notifications();
       expect(notifications.length).toBe(1);
       expect(notifications[0].type).toBe('success');
-      expect(notifications[0].title).toBe('Exito');
-      expect(notifications[0].message).toBe('Operacion completada');
+      expect(notifications[0].title).toBe('Éxito');
+      expect(notifications[0].message).toBe('Operación completada');
       expect(notifications[0].icon).toBe('✓');
     });
 
@@ -57,12 +57,12 @@ describe('ToastService', () => {
 
   describe('error()', () => {
     it('should add error notification with correct properties', () => {
-      service.error('Error', 'Algo salio mal');
+      service.error('Error', 'Algo salió mal');
 
       const notification = service.notifications()[0];
       expect(notification.type).toBe('error');
       expect(notification.title).toBe('Error');
-      expect(notification.message).toBe('Algo salio mal');
+      expect(notification.message).toBe('Algo salió mal');
       expect(notification.icon).toBe('✕');
     });
 
@@ -96,12 +96,12 @@ describe('ToastService', () => {
 
   describe('info()', () => {
     it('should add info notification with correct properties', () => {
-      service.info('Info', 'Informacion importante');
+      service.info('Info', 'Información importante');
 
       const notification = service.notifications()[0];
       expect(notification.type).toBe('info');
       expect(notification.title).toBe('Info');
-      expect(notification.message).toBe('Informacion importante');
+      expect(notification.message).toBe('Información importante');
       expect(notification.icon).toBe('ℹ');
     });
 

@@ -515,7 +515,7 @@ export class AiChecklistPanelComponent {
   readonly error = signal<string | null>(null);
   readonly checkedItems = signal<Record<string, boolean>>({});
 
-  // Computed: obtiene datos del vehiculo desde car o booking
+  // Computed: obtiene datos del vehículo desde car o booking
   private readonly vehicleData = computed(() => {
     const c = this.car();
     const b = this.booking();
@@ -528,7 +528,7 @@ export class AiChecklistPanelComponent {
 
   readonly vehicleName = computed(() => {
     const v = this.vehicleData();
-    return `${v.brand} ${v.model} ${v.year}`.trim() || 'Vehiculo';
+    return `${v.brand} ${v.model} ${v.year}`.trim() || 'Vehículo';
   });
 
   readonly totalCount = () => {

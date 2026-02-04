@@ -2,21 +2,21 @@ import { Injectable } from '@angular/core';
 import { Booking } from '@core/models';
 
 /**
- * Estados canonicos del booking (Finite State Machine)
+ * Estados canónicos del booking (Finite State Machine)
  *
- * Este enum representa la UNICA fuente de verdad para el estado del booking.
+ * Este enum representa la ÚNICA fuente de verdad para el estado del booking.
  * Todos los componentes deben usar deriveState() para determinar el estado.
  */
 export type BookingState =
   | 'DRAFT' // Solicitud creada, no pagada
-  | 'PENDING_PAYMENT' // Esperando pago/autorizacion
+  | 'PENDING_PAYMENT' // Esperando pago/autorización
   | 'CONFIRMED' // Pagado, esperando check-in
-  | 'ACTIVE' // En progreso (vehiculo entregado)
-  | 'RETURNED' // Vehiculo devuelto, esperando inspeccion
-  | 'INSPECTED_GOOD' // Inspeccionado OK, esperando confirmacion final (opcional/auto)
-  | 'DAMAGE_REPORTED' // Con daños, esperando aceptacion/disputa del locatario
-  | 'PENDING_OWNER' // Legacy: Esperando confirmacion del propietario
-  | 'PENDING_RENTER' // Legacy: Esperando confirmacion del locatario
+  | 'ACTIVE' // En progreso (vehículo entregado)
+  | 'RETURNED' // Vehículo devuelto, esperando inspección
+  | 'INSPECTED_GOOD' // Inspeccionado OK, esperando confirmación final (opcional/auto)
+  | 'DAMAGE_REPORTED' // Con daños, esperando aceptación/disputa del locatario
+  | 'PENDING_OWNER' // Legacy: Esperando confirmación del propietario
+  | 'PENDING_RENTER' // Legacy: Esperando confirmación del locatario
   | 'FUNDS_RELEASED' // Fondos liberados
   | 'COMPLETED' // Finalizado exitosamente
   | 'CANCELLED' // Cancelado
@@ -202,17 +202,17 @@ export class BookingStateMachineService {
     const state = this.deriveState(booking);
 
     if (state === 'PENDING_OWNER' && role === 'owner') {
-      return 'Esperando tu confirmacion como propietario';
+      return 'Esperando tu confirmación como propietario';
     }
     if (state === 'PENDING_RENTER' && role === 'renter') {
-      return 'Esperando tu confirmacion como locatario';
+      return 'Esperando tu confirmación como locatario';
     }
     if (state === 'RETURNED') {
       if (role === 'owner' && !booking.owner_confirmed_delivery) {
-        return 'Confirma la recepcion del vehiculo';
+        return 'Confirma la recepción del vehículo';
       }
       if (role === 'renter' && !booking.renter_confirmed_payment) {
-        return 'Confirma la liberacion del pago';
+        return 'Confirma la liberación del pago';
       }
     }
 

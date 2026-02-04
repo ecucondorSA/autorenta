@@ -464,13 +464,13 @@ export class AiLegalPanelComponent {
     return (b?.car as Car | undefined) ?? null;
   });
 
-  /** Computed: info del vehiculo para mostrar en UI */
+  /** Computed: info del vehículo para mostrar en UI */
   readonly vehicleDisplay = computed(() => {
     const c = this.effectiveCar();
     const b = this.booking();
     const brand = c?.brand || b?.car_brand || '';
     const model = c?.model || b?.car_model || '';
-    return `${brand} ${model}`.trim() || 'el vehiculo';
+    return `${brand} ${model}`.trim() || 'el vehículo';
   });
 
   async askQuestion(question: string): Promise<void> {

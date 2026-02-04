@@ -123,7 +123,7 @@ interface CategoryPreference {
               @if (browserNotificationsPermission() === 'denied') {
                 <div class="rounded-lg bg-warning-bg p-3 ml-14">
                   <p class="text-sm text-warning-strong">
-                    Has bloqueado las notificaciones. Habilitalas en la configuracion del navegador.
+                    Has bloqueado las notificaciones. Habilitalas en la configuración del navegador.
                   </p>
                 </div>
               }
@@ -601,7 +601,7 @@ export class NotificationPreferencesPage implements OnInit {
         if (Notification.permission === 'denied') {
           this.notifications.warning(
             'Notificaciones bloqueadas',
-            'Habilitalas en la configuracion del navegador',
+            'Habilitalas en la configuración del navegador',
           );
           return;
         }

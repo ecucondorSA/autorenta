@@ -67,10 +67,10 @@ export class GeminiService {
   // GLOBAL STATE
   // ============================================
 
-  /** Si hay una operacion en progreso */
+  /** Si hay una operación en progreso */
   readonly isProcessing = signal(false);
 
-  /** Ultimo error ocurrido */
+  /** Último error ocurrido */
   readonly lastError = signal<string | null>(null);
 
   // ============================================
@@ -206,7 +206,7 @@ export class GeminiService {
    * Recomienda un auto basado en el historial de alquileres del usuario
    *
    * @param params - Historial de alquileres y preferencias opcionales
-   * @returns Recomendacion con tipo de auto, razon y filtros de busqueda
+   * @returns Recomendación con tipo de auto, razón y filtros de búsqueda
    *
    * @example
    * ```typescript

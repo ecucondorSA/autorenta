@@ -44,9 +44,9 @@ export interface AiBookingContext {
   startDate: string;
   /** Fecha de fin del alquiler */
   endDate: string;
-  /** Marca del vehiculo */
+  /** Marca del vehículo */
   carBrand: string;
-  /** Modelo del vehiculo */
+  /** Modelo del vehículo */
   carModel: string;
   /** Nombre del propietario */
   ownerName: string;
@@ -106,14 +106,14 @@ export interface BookingTerms {
 }
 
 /**
- * Informacion basica del vehiculo para contexto
+ * Información básica del vehículo para contexto
  */
 export interface VehicleInfo {
-  /** Marca del vehiculo */
+  /** Marca del vehículo */
   brand: string;
-  /** Modelo del vehiculo */
+  /** Modelo del vehículo */
   model: string;
-  /** Ano del vehiculo */
+  /** Año del vehículo */
   year: number;
 }
 
@@ -132,14 +132,14 @@ export interface LegalAnswer {
 }
 
 /**
- * Parametros para consulta legal
+ * Parámetros para consulta legal
  */
 export interface LegalQuestionParams {
   /** Pregunta del usuario */
   question: string;
-  /** Terminos del alquiler */
+  /** Términos del alquiler */
   bookingTerms: BookingTerms;
-  /** Informacion del vehiculo */
+  /** Información del vehículo */
   vehicleInfo: VehicleInfo;
 }
 
@@ -180,14 +180,14 @@ export interface TripActivity {
 }
 
 /**
- * Un dia del itinerario
+ * Un día del itinerario
  */
 export interface TripDay {
-  /** Numero del dia (1, 2, 3...) */
+  /** Número del día (1, 2, 3...) */
   dayNumber: number;
-  /** Titulo del dia (ej: "Buenos Aires - Mar del Plata") */
+  /** Título del día (ej: "Buenos Aires - Mar del Plata") */
   title: string;
-  /** Actividades del dia */
+  /** Actividades del día */
   activities: TripActivity[];
   /** Lugar de pernocte */
   overnightLocation?: string;
@@ -215,13 +215,13 @@ export interface TripItinerary {
  * Parametros para generar itinerario
  */
 export interface TripPlannerParams {
-  /** Cantidad de dias del viaje */
+  /** Cantidad de días del viaje */
   days: number;
-  /** Ciudad/ubicacion de inicio */
+  /** Ciudad/ubicación de inicio */
   startLocation: string;
-  /** Ciudad/ubicacion de fin (opcional, puede ser igual al inicio) */
+  /** Ciudad/ubicación de fin (opcional, puede ser igual al inicio) */
   endLocation?: string;
-  /** Tipo de vehiculo (para sugerir rutas apropiadas) */
+  /** Tipo de vehículo (para sugerir rutas apropiadas) */
   vehicleType: string;
   /** Preferencias del viajero */
   preferences?: TripPreferences;
@@ -235,55 +235,55 @@ export interface TripPlannerParams {
  * Item individual del checklist
  */
 export interface ChecklistItem {
-  /** ID unico del item */
+  /** ID único del item */
   id: string;
-  /** Etiqueta/descripcion del item */
+  /** Etiqueta/descripción del item */
   label: string;
-  /** Descripcion detallada (opcional) */
+  /** Descripción detallada (opcional) */
   description?: string;
-  /** Si es un item critico (debe verificarse si o si) */
+  /** Si es un item crítico (debe verificarse sí o sí) */
   critical: boolean;
-  /** Si es especifico para este modelo de auto */
+  /** Si es específico para este modelo de auto */
   modelSpecific?: boolean;
 }
 
 /**
- * Categoria del checklist
+ * Categoría del checklist
  */
 export interface ChecklistCategory {
-  /** Nombre de la categoria */
+  /** Nombre de la categoría */
   name: string;
   /** Icono (nombre del icono de Lucide) */
   icon: string;
-  /** Items de esta categoria */
+  /** Items de esta categoría */
   items: ChecklistItem[];
 }
 
 /**
- * Checklist completo de inspeccion
+ * Checklist completo de inspección
  */
 export interface VehicleChecklist {
-  /** Nombre completo del vehiculo */
+  /** Nombre completo del vehículo */
   vehicleName: string;
-  /** Tipo de inspeccion */
+  /** Tipo de inspección */
   inspectionType: 'check_in' | 'check_out';
-  /** Categorias con sus items */
+  /** Categorías con sus items */
   categories: ChecklistCategory[];
-  /** Tips especificos del modelo */
+  /** Tips específicos del modelo */
   tips: string[];
 }
 
 /**
- * Parametros para generar checklist
+ * Parámetros para generar checklist
  */
 export interface VehicleChecklistParams {
-  /** Marca del vehiculo */
+  /** Marca del vehículo */
   brand: string;
-  /** Modelo del vehiculo */
+  /** Modelo del vehículo */
   model: string;
-  /** Ano del vehiculo */
+  /** Año del vehículo */
   year: number;
-  /** Tipo de inspeccion: check_in (recibir) o check_out (devolver) */
+  /** Tipo de inspección: check_in (recibir) o check_out (devolver) */
   inspectionType: 'check_in' | 'check_out';
 }
 
@@ -292,14 +292,14 @@ export interface VehicleChecklistParams {
 // ============================================
 
 /**
- * Respuesta generica del worker de Gemini
+ * Respuesta genérica del worker de Gemini
  */
 export interface GeminiWorkerResponse<T> {
-  /** Si la operacion fue exitosa */
+  /** Si la operación fue exitosa */
   success: boolean;
   /** Datos de la respuesta */
   data?: T;
-  /** Mensaje de error si fallo */
+  /** Mensaje de error si falló */
   error?: string;
 }
 
