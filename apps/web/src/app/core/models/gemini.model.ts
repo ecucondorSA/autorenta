@@ -307,11 +307,11 @@ export interface GeminiWorkerResponse<T> {
  * Estado de procesamiento de IA
  */
 export interface AiProcessingState {
-  /** Si esta procesando */
+  /** Si está procesando */
   isProcessing: boolean;
-  /** Ultimo error */
+  /** Último error */
   lastError: string | null;
-  /** Timestamp del ultimo procesamiento */
+  /** Timestamp del último procesamiento */
   lastProcessedAt?: Date;
 }
 

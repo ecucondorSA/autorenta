@@ -247,7 +247,7 @@ export class WalletFaqComponent {
           <li><strong>Grave</strong> (daño estructural): Clase +3 → Fee +15%, Garantía +40% (≈ +$55 USD)</li>
         </ul>
         <p class="mt-2"><strong>Siniestros SIN culpa tuya:</strong> NO afectan tu clase ni tus precios. ✅</p>
-        <p class="mt-2 text-xs text-cta-default"><strong>Buena noticia:</strong> El siniestro se cubre primero con tu Credito de Proteccion ($300 USD), luego tu wallet, y por ultimo pago externo.</p>
+        <p class="mt-2 text-xs text-cta-default"><strong>Buena noticia:</strong> El siniestro se cubre primero con tu Crédito de Protección ($300 USD), luego tu wallet, y por último pago externo.</p>
         <p class="mt-2 text-xs text-success-700"><strong>Protector de Bonus:</strong> Podes comprar un "Protector" ($15-$45) que previene el aumento de clase en 1-3 siniestros.</p>`,
       expanded: false,
     },

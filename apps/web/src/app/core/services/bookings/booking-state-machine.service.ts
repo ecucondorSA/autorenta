@@ -100,10 +100,10 @@ export const STATE_ACTIONS: Record<BookingState, { owner: string[]; renter: stri
 @Injectable({ providedIn: 'root' })
 export class BookingStateMachineService {
   /**
-   * Deriva el estado canonico desde los campos del booking.
-   * Esta es la UNICA funcion que debe usarse para determinar el estado.
+   * Deriva el estado canónico desde los campos del booking.
+   * Esta es la ÚNICA función que debe usarse para determinar el estado.
    *
-   * El orden de evaluacion importa - estados mas especificos primero.
+   * El orden de evaluación importa - estados más específicos primero.
    */
   deriveState(booking: Booking | null | undefined): BookingState {
     if (!booking) return 'DRAFT';

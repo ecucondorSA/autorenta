@@ -59,7 +59,7 @@ interface CategoryPreference {
             <div>
               <h1 class="text-2xl font-bold text-text-primary">Preferencias de notificaciones</h1>
               <p class="text-sm text-text-secondary">
-                Personaliza como y cuando recibir notificaciones
+                Personaliza cómo y cuándo recibir notificaciones
               </p>
             </div>
           </div>
@@ -78,14 +78,14 @@ interface CategoryPreference {
             </div>
           </div>
         } @else {
-          <!-- Canales de notificacion -->
+          <!-- Canales de notificación -->
           <section class="rounded-xl bg-surface-raised p-6 shadow-sm">
             <h2 class="mb-4 text-lg font-semibold text-text-primary flex items-center gap-2">
               <span class="text-2xl">📱</span>
-              Canales de notificacion
+              Canales de notificación
             </h2>
             <p class="mb-6 text-sm text-text-secondary">
-              Elige como quieres recibir las notificaciones
+              Elige cómo quieres recibir las notificaciones
             </p>
 
             <div class="space-y-4">
@@ -101,7 +101,7 @@ interface CategoryPreference {
                   </div>
                   <div>
                     <h3 class="font-medium text-text-primary">Push (navegador/app)</h3>
-                    <p class="text-sm text-text-secondary">Notificaciones instantaneas</p>
+                    <p class="text-sm text-text-secondary">Notificaciones instantáneas</p>
                   </div>
                 </div>
                 <button
@@ -171,7 +171,7 @@ interface CategoryPreference {
                   <div>
                     <h3 class="font-medium text-text-primary">En la app</h3>
                     <p class="text-sm text-text-secondary">
-                      Notificaciones dentro de la aplicacion
+                      Notificaciones dentro de la aplicación
                     </p>
                   </div>
                 </div>
@@ -231,7 +231,7 @@ interface CategoryPreference {
               Horario silencioso
             </h2>
             <p class="mb-6 text-sm text-text-secondary">
-              No recibiras notificaciones push durante estas horas (excepto emergencias)
+              No recibirás notificaciones push durante estas horas (excepto emergencias)
             </p>
 
             <div class="flex items-center gap-4 mb-4">
@@ -284,7 +284,7 @@ interface CategoryPreference {
               Modo de entrega
             </h2>
             <p class="mb-6 text-sm text-text-secondary">
-              Elige como quieres recibir las notificaciones no urgentes
+              Elige cómo quieres recibir las notificaciones no urgentes
             </p>
 
             <div class="space-y-3">
@@ -316,14 +316,14 @@ interface CategoryPreference {
             </div>
           </section>
 
-          <!-- Categorias -->
+          <!-- Categorías -->
           <section class="rounded-xl bg-surface-raised p-6 shadow-sm">
             <h2 class="mb-4 text-lg font-semibold text-text-primary flex items-center gap-2">
               <span class="text-2xl">📋</span>
-              Categorias de notificacion
+              Categorías de notificación
             </h2>
             <p class="mb-6 text-sm text-text-secondary">
-              Selecciona que tipos de notificaciones quieres recibir
+              Selecciona qué tipos de notificaciones quieres recibir
             </p>
 
             <div class="space-y-3">
@@ -367,7 +367,7 @@ interface CategoryPreference {
               Probar notificaciones
             </h2>
             <p class="mb-4 text-sm text-text-secondary">
-              Envia una notificacion de prueba para verificar la configuracion
+              Envía una notificación de prueba para verificar la configuración
             </p>
             <button
               (click)="sendTestNotification()"
@@ -388,7 +388,7 @@ interface CategoryPreference {
                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                   />
                 </svg>
-                Enviar notificacion de prueba
+                Enviar notificación de prueba
               }
             </button>
           </section>
@@ -457,8 +457,8 @@ export class NotificationPreferencesPage implements OnInit {
   readonly digestModes = [
     {
       value: 'instant' as const,
-      label: 'Instantaneo',
-      description: 'Recibir cada notificacion inmediatamente',
+      label: 'Instantáneo',
+      description: 'Recibir cada notificación inmediatamente',
       icon: '⚡',
     },
     {
@@ -470,7 +470,7 @@ export class NotificationPreferencesPage implements OnInit {
     {
       value: 'daily' as const,
       label: 'Resumen diario',
-      description: 'Recibir un resumen de notificaciones una vez al dia',
+      description: 'Recibir un resumen de notificaciones una vez al día',
       icon: '📅',
     },
   ];
@@ -657,13 +657,13 @@ export class NotificationPreferencesPage implements OnInit {
     try {
       const success = await this.smartNotifications.sendTestNotification();
       if (success) {
-        this.notifications.success('Notificacion enviada', 'Revisa tus notificaciones');
+        this.notifications.success('Notificación enviada', 'Revisa tus notificaciones');
       } else {
-        this.notifications.error('Error', 'No se pudo enviar la notificacion de prueba');
+        this.notifications.error('Error', 'No se pudo enviar la notificación de prueba');
       }
     } catch (error) {
       console.error('Error sending test notification:', error);
-      this.notifications.error('Error', 'No se pudo enviar la notificacion de prueba');
+      this.notifications.error('Error', 'No se pudo enviar la notificación de prueba');
     } finally {
       this.sendingTest.set(false);
     }
