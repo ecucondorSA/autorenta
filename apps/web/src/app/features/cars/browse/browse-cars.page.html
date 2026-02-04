@@ -31,7 +31,7 @@
         <!-- List Header Info -->
         <div class="flex items-center justify-between mb-8">
           <h2 class="text-3xl font-black font-satoshi tracking-tight text-white">
-            {{ mapLocations().length }} vehículos
+            {{ mapLocations().length }} {{ mapLocations().length === 1 ? 'vehículo' : 'vehículos' }}
             <span class="text-zinc-500 text-lg font-medium ml-2 block sm:inline">en tu zona</span>
           </h2>
           <div class="flex gap-2">

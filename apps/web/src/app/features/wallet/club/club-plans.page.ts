@@ -202,19 +202,19 @@ export class ClubPlansPage implements OnInit {
 
   readonly faqs = [
     {
-      question: 'Como funciona la cobertura del Club?',
+      question: '¿Cómo funciona la cobertura del Club?',
       answer:
-        'Tu membresia incluye un saldo de cobertura que se usa para cubrir el deposito de garantia en tus alquileres. Si el deposito es menor o igual a tu saldo, no pagas nada. Si es mayor, solo pagas la diferencia.',
+        'Tu membresía incluye un saldo de cobertura que se usa para cubrir el depósito de garantía en tus alquileres. Si el depósito es menor o igual a tu saldo, no pagás nada. Si es mayor, solo pagás la diferencia.',
     },
     {
-      question: 'Que pasa si tengo un dano durante el alquiler?',
+      question: '¿Qué pasa si tengo un daño durante el alquiler?',
       answer:
-        'Si hay un dano, el monto se deduce de tu saldo de cobertura. Si el dano supera tu saldo disponible, la diferencia se cobra de tu wallet o tarjeta.',
+        'Si hay un daño, el monto se deduce de tu saldo de cobertura. Si el daño supera tu saldo disponible, la diferencia se cobra de tu wallet o tarjeta.',
     },
     {
-      question: 'Puedo cancelar mi membresia?',
+      question: '¿Puedo cancelar mi membresía?',
       answer:
-        'Si, puedes cancelar en cualquier momento. Tu membresia seguira activa hasta la fecha de vencimiento. No hay reembolsos por el tiempo no utilizado.',
+        'Sí, podés cancelar en cualquier momento. Tu membresía seguirá activa hasta la fecha de vencimiento. No hay reembolsos por el tiempo no utilizado.',
     },
   ];
 

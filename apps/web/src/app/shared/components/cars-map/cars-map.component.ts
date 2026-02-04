@@ -12,6 +12,7 @@ import {
   EventEmitter,
   inject,
   Input,
+  isDevMode,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -250,7 +251,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   readonly viewMode = signal<'map' | 'list'>('map');
 
   // Debug mode - only show debug controls in development
-  readonly isDevMode = !environment.production;
+  // P1 FIX: Use Angular's isDevMode() which is more reliable than environment.production
+  // Angular's isDevMode() checks the runtime mode set during bootstrap
+  readonly devModeEnabled = isDevMode();
 
   // Map Layers Control
   readonly showBaseMap = signal(true);

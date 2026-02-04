@@ -196,17 +196,17 @@ export class WalletFaqComponent {
             <tr class="bg-border-default/10">
               <td class="border border-border-default px-3 py-2 text-sm"><strong>Comisiones</strong></td>
               <td class="border border-border-default px-3 py-2 text-center text-sm">Sin comisiones</td>
-              <td class="border border-border-default px-3 py-2 text-center text-sm">Segun tu banco</td>
+              <td class="border border-border-default px-3 py-2 text-center text-sm">Según tu banco</td>
             </tr>
             <tr>
-              <td class="border border-border-default px-3 py-2 text-sm"><strong>Garantia</strong></td>
+              <td class="border border-border-default px-3 py-2 text-sm"><strong>Garantía</strong></td>
               <td class="border border-border-default px-3 py-2 text-center text-sm">Reutilizable</td>
               <td class="border border-border-default px-3 py-2 text-center text-sm">Se libera post-reserva</td>
             </tr>
             <tr class="bg-border-default/10">
               <td class="border border-border-default px-3 py-2 text-sm"><strong>Requisito</strong></td>
               <td class="border border-border-default px-3 py-2 text-center text-sm">Saldo previo</td>
-              <td class="border border-border-default px-3 py-2 text-center text-sm">Tarjeta valida</td>
+              <td class="border border-border-default px-3 py-2 text-center text-sm">Tarjeta válida</td>
             </tr>
           </tbody>
         </table>
@@ -233,8 +233,8 @@ export class WalletFaqComponent {
           <li><strong>Fondos regulares:</strong> Tus depósitos (MercadoPago, transferencia) NO vencen nunca</li>
           <li><strong>Garantía reutilizable ($600):</strong> Es parte de tus fondos regulares, NO vence</li>
         </ul>
-        <p class="mt-2 text-xs text-cta-default"><strong>Tip:</strong> Mantener buen historial de conduccion renueva automaticamente tu Credito AutoRenta.</p>
-        <p class="mt-2 text-xs text-warning-strong"><strong>Importante:</strong> Solo el Credito AutoRenta (bonificacion) vence. Tus depositos regulares permanecen indefinidamente.</p>`,
+        <p class="mt-2 text-xs text-cta-default"><strong>Tip:</strong> Mantener buen historial de conducción renueva automáticamente tu Crédito AutoRenta.</p>
+        <p class="mt-2 text-xs text-warning-strong"><strong>Importante:</strong> Solo el Crédito AutoRenta (bonificación) vence. Tus depósitos regulares permanecen indefinidamente.</p>`,
       expanded: false,
     },
     {
@@ -290,8 +290,8 @@ export class WalletFaqComponent {
           <li><strong>Protector de Bonus Nivel 2:</strong> $30 USD (protege 2 siniestros)</li>
           <li><strong>Protector de Bonus Nivel 3:</strong> $45 USD (protege 3 siniestros)</li>
         </ul>
-        <p class="mt-2 text-xs text-cta-default"><strong>Ejemplo:</strong> Clase 0 + reserva $100 = <strong>ahorros de $40 USD</strong> por viaje (fee -$15 + garantia -$25).</p>
-        <p class="mt-2 text-xs text-success-700"><strong>Gamificacion:</strong> Badges visuales, mensajes motivacionales, y progreso visible hacia tu proxima mejora de clase.</p>`,
+        <p class="mt-2 text-xs text-cta-default"><strong>Ejemplo:</strong> Clase 0 + reserva $100 = <strong>ahorros de $40 USD</strong> por viaje (fee -$15 + garantía -$25).</p>
+        <p class="mt-2 text-xs text-success-700"><strong>Gamificación:</strong> Badges visuales, mensajes motivacionales, y progreso visible hacia tu próxima mejora de clase.</p>`,
       expanded: false,
     },
     {

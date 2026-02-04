@@ -31,7 +31,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
             Mejora tu plan con Silver y Black
           </h2>
           <p class="text-sm text-text-secondary mt-1">
-            Mas cobertura, menos deposito y acceso a autos de mayor valor.
+            Más cobertura, menos depósito y acceso a autos de mayor valor.
           </p>
         </div>
         <button
