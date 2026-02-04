@@ -1,3 +1,10 @@
+## <small>3.66.12 (2026-02-04)</small>
+
+* docs: update inspection findings with session 4 i18n fixes ([0bf06f7](https://github.com/ecucondorSA/autorenta/commit/0bf06f7))
+* docs: update inspection report with Session 3 i18n fixes ([f5e901e](https://github.com/ecucondorSA/autorenta/commit/f5e901e))
+* fix(i18n): additional Spanish accent corrections ([9b55f7d](https://github.com/ecucondorSA/autorenta/commit/9b55f7d))
+* fix(i18n): Spanish accent corrections across core services and utilities ([0943576](https://github.com/ecucondorSA/autorenta/commit/0943576))
+
 ## <small>3.66.11 (2026-02-04)</small>
 
 * fix(i18n): correct Spanish accents across booking and profile components ([bf91207](https://github.com/ecucondorSA/autorenta/commit/bf91207))
