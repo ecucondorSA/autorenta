@@ -1,0 +1,113 @@
+{
+  "groups": [
+    {
+      "id": "conductores-unidos-ar",
+      "name": "Alquiler de autos Uber, Cabify, DiDi, InDrive",
+      "url": "https://www.facebook.com/search/groups?q=Alquiler%20de%20autos%20Uber%2C%20Cabify%2C%20DiDi%2C%20InDrive",
+      "search_name": "Alquiler de autos Uber, Cabify, DiDi, InDrive",
+      "members": 112200,
+      "type": "rideshare_owners",
+      "priority": "high",
+      "status": "joined",
+      "note": "Buscar por nombre en Facebook, grupo verificado funcionando"
+    },
+    {
+      "id": "alquiler-apps-argentina",
+      "name": "Alquiler de autos, para Apps CABIFY, UBER O DIDI. ARGENTINA",
+      "url": "https://www.facebook.com/search/groups?q=Alquiler%20autos%20CABIFY%20UBER%20DIDI%20ARGENTINA",
+      "search_name": "Alquiler de autos, para Apps CABIFY, UBER O DIDI. ARGENTINA",
+      "members": 28200,
+      "type": "car_rental",
+      "priority": "high",
+      "status": "joined"
+    },
+    {
+      "id": "alquiler-zona-norte",
+      "name": "Alquiler de autos Zona norte, cabify, uber, didi",
+      "url": "https://www.facebook.com/search/groups?q=Alquiler%20autos%20Zona%20norte%20cabify%20uber",
+      "search_name": "Alquiler de autos Zona norte, cabify, uber, didi",
+      "members": 15000,
+      "type": "car_rental",
+      "priority": "medium",
+      "status": "joined"
+    },
+    {
+      "id": "uber-cabify-beat-didi-choferes",
+      "name": "Uber / Cabify / BEAT / DIDI Arg Busqueda de Choferes y Autos",
+      "url": "https://www.facebook.com/search/groups?q=Uber%20Cabify%20BEAT%20DIDI%20Arg%20Choferes",
+      "search_name": "Uber / Cabify / BEAT / DIDI Arg Busqueda de Choferes y Autos",
+      "members": 20000,
+      "type": "rideshare_owners",
+      "priority": "high",
+      "status": "joined"
+    },
+    {
+      "id": "alquiler-extranjeros-caba",
+      "name": "ALQUILER PARA EXTRANJEROS EN CABA Y BUENOS AIRES",
+      "url": "https://www.facebook.com/search/groups?q=ALQUILER%20EXTRANJEROS%20CABA%20BUENOS%20AIRES",
+      "search_name": "ALQUILER PARA EXTRANJEROS EN CABA Y BUENOS AIRES",
+      "members": 83000,
+      "type": "tourist_rental",
+      "priority": "high",
+      "status": "pending"
+    },
+    {
+      "id": "solo-alquiler-uber",
+      "name": "SOLO ALQUILER DE AUTOS UBER",
+      "url": "https://www.facebook.com/search/groups?q=SOLO%20ALQUILER%20AUTOS%20UBER",
+      "search_name": "SOLO ALQUILER DE AUTOS UBER",
+      "members": 9400,
+      "type": "car_rental",
+      "priority": "medium",
+      "status": "pending"
+    },
+    {
+      "id": "alquiler-dueno-directo",
+      "name": "ALQUILER DUEÑO DIRECTO CON O SIN GARANTIA. C.A.B.A. Y GRAN BUENOS AIRES",
+      "url": "https://www.facebook.com/search/groups?q=ALQUILER%20DUE%C3%91O%20DIRECTO%20GARANTIA%20CABA",
+      "search_name": "ALQUILER DUEÑO DIRECTO CON O SIN GARANTIA",
+      "members": 118000,
+      "type": "direct_rental",
+      "priority": "high",
+      "status": "pending"
+    }
+  ],
+  "posting_rules": {
+    "max_posts_per_day": 6,
+    "max_posts_per_group_per_day": 1,
+    "min_hours_between_posts": 3,
+    "min_hours_between_posts_same_group": 24,
+    "active_hours": {
+      "start": 9,
+      "end": 21
+    },
+    "days_active": ["mon", "tue", "wed", "thu", "fri", "sat"],
+    "timezone": "America/Buenos_Aires"
+  },
+  "comment_rules": {
+    "max_comments_per_day": 10,
+    "min_minutes_between_comments": 30,
+    "target_posts": {
+      "keywords": ["alquilo", "vendo", "disponible", "gnc", "uber", "cabify", "chofer"],
+      "max_post_age_hours": 24,
+      "min_post_age_minutes": 5
+    }
+  },
+  "dm_rules": {
+    "max_dms_per_day": 15,
+    "min_minutes_between_dms": 10,
+    "followup_days": [3, 7]
+  },
+  "anti_detection": {
+    "typing_delay_ms": {
+      "min": 50,
+      "max": 150
+    },
+    "pause_between_actions_ms": {
+      "min": 2000,
+      "max": 5000
+    },
+    "human_scroll_enabled": true,
+    "random_reactions_enabled": true
+  }
+}
