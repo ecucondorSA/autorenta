@@ -1,3 +1,7 @@
+## <small>3.65.12 (2026-02-04)</small>
+
+* fix(ci): add migration repair commands for orphaned migrations ([6926c23](https://github.com/ecucondorSA/autorenta/commit/6926c23))
+
 ## <small>3.65.11 (2026-02-04)</small>
 
 * fix(ci): resolve guardrails and E2E test failures ([b7177dc](https://github.com/ecucondorSA/autorenta/commit/b7177dc))
