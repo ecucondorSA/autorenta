@@ -1,3 +1,8 @@
+## <small>3.66.8 (2026-02-04)</small>
+
+* fix(auth): P0.4 - wait for Supabase SDK init before checking session ([d2c927e](https://github.com/ecucondorSA/autorenta/commit/d2c927e))
+* fix(cars-map): P1 - use Angular isDevMode() for debug panel visibility ([6200900](https://github.com/ecucondorSA/autorenta/commit/6200900))
+
 ## <small>3.66.7 (2026-02-04)</small>
 
 * fix: resolve 5 bugs found during platform inspection ([b539581](https://github.com/ecucondorSA/autorenta/commit/b539581))
