@@ -1,3 +1,7 @@
+## <small>3.69.4 (2026-02-04)</small>
+
+* fix(i18n): Spanish accents in remaining email templates ([7b73b26](https://github.com/ecucondorSA/autorenta/commit/7b73b26))
+
 ## <small>3.69.3 (2026-02-04)</small>
 
 * fix: accessibility (aria-labels) and i18n in email templates ([b231dd7](https://github.com/ecucondorSA/autorenta/commit/b231dd7))
