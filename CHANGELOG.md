@@ -1,3 +1,10 @@
+## <small>3.65.16 (2026-02-04)</small>
+
+* docs: add senior-level audit report ([575f466](https://github.com/ecucondorSA/autorenta/commit/575f466))
+* chore(db): add performance and security migrations ([24087b1](https://github.com/ecucondorSA/autorenta/commit/24087b1))
+* chore(tools): add patchright streaming MCP demos and inspector ([5be06f8](https://github.com/ecucondorSA/autorenta/commit/5be06f8))
+* perf: optimize Supabase queries - select only required fields ([2c2bcc0](https://github.com/ecucondorSA/autorenta/commit/2c2bcc0))
+
 ## <small>3.65.15 (2026-02-04)</small>
 
 * fix(auth): prevent session loss during rapid page navigation ([b3f0cd8](https://github.com/ecucondorSA/autorenta/commit/b3f0cd8))
