@@ -83,7 +83,7 @@
                 <button 
                   (click)="openPhotoGallery()"
                   class="w-full md:w-32 h-48 md:h-32 rounded-xl overflow-hidden bg-zinc-950 flex-shrink-0 border border-white/5 relative group cursor-zoom-in shadow-lg">
-                  <img [src]="car()?.photos?.[0]?.url || '/assets/images/car-placeholder.svg'" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Car" loading="lazy">
+                  <img [src]="car()?.photos?.[0]?.url || '/assets/images/car-placeholder.svg'" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" [alt]="car()?.title || 'Vehículo'" loading="lazy">
                   <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span class="text-xs font-bold text-white bg-black/60 px-2 py-1 rounded-full backdrop-blur-sm border border-white/10">Ver fotos</span>
                   </div>

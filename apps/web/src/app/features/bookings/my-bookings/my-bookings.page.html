@@ -224,7 +224,7 @@
                          <!-- Photo -->
                          <div class="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100">
                            @if (booking.main_photo_url) {
-                             <img [src]="booking.main_photo_url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" alt="Auto">
+                             <img [src]="booking.main_photo_url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" [alt]="booking.car_brand + ' ' + booking.car_model">
                            } @else {
                              <div class="w-full h-full flex items-center justify-center text-slate-300">
                                <app-icon name="car-outline" [size]="24"></app-icon>
