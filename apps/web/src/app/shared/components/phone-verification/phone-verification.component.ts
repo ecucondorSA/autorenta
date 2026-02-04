@@ -66,7 +66,7 @@ import { OtpInputComponent } from '../otp-input/otp-input.component';
           @if (!status().otpSent) {
             <div class="space-y-4">
               <div class="p-4 bg-surface-secondary/50 rounded-lg text-sm text-text-secondary border border-border-subtle">
-                <p>Ingresa tu número para recibir un código SMS.</p>
+                <p>Ingresá tu número para recibir un código SMS.</p>
               </div>
               
               <div>
