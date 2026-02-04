@@ -1,3 +1,7 @@
+## 3.66.0 (2026-02-04)
+
+* feat(cars): add WebGL fallback - auto-switch to list view ([426ab5d](https://github.com/ecucondorSA/autorenta/commit/426ab5d))
+
 ## <small>3.65.16 (2026-02-04)</small>
 
 * docs: add senior-level audit report ([575f466](https://github.com/ecucondorSA/autorenta/commit/575f466))
