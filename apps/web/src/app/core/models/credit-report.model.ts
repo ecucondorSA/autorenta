@@ -183,6 +183,6 @@ export function getBcraDescription(status: BcraStatus): string {
     case '5':
       return 'Irrecuperable';
     default:
-      return 'Sin informacion';
+      return 'Sin información';
   }
 }

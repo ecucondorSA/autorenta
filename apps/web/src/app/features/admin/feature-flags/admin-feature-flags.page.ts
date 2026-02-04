@@ -81,10 +81,10 @@ import { FeatureFlagService } from '@core/services/infrastructure/feature-flag.s
               <p class="text-xs text-gray-500 px-4 -mt-2">Usar snake_case, ej: new_booking_flow</p>
 
               <ion-item>
-                <ion-label position="stacked">Descripcion</ion-label>
+                <ion-label position="stacked">Descripción</ion-label>
                 <ion-input
                   [(ngModel)]="formData.description"
-                  placeholder="Descripcion de la feature"
+                  placeholder="Descripción de la feature"
                 ></ion-input>
               </ion-item>
 

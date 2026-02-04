@@ -70,10 +70,10 @@ export function getPaymentPlanLabel(plan: string | null | undefined): string {
 export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
   pending: 'Pendiente',
   pending_payment: 'Pendiente de pago',
-  pending_approval: 'Pendiente de aprobacion',
+  pending_approval: 'Pendiente de aprobación',
   confirmed: 'Confirmada',
   in_progress: 'En progreso',
-  pending_review: 'Pendiente de revision',
+  pending_review: 'Pendiente de revisión',
   completed: 'Completada',
   cancelled: 'Cancelada',
   cancelled_owner: 'Cancelada por propietario',
@@ -83,12 +83,12 @@ export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
   resolved: 'Resuelta',
   expired: 'Expirada',
   rejected: 'Rechazada',
-  no_show: 'No se presento',
-  pending_dispute_resolution: 'Resolucion de disputa pendiente',
-  payment_validation_failed: 'Validacion de pago fallida',
+  no_show: 'No se presentó',
+  pending_dispute_resolution: 'Resolución de disputa pendiente',
+  payment_validation_failed: 'Validación de pago fallida',
   returned: 'Devuelto',
   inspected_good: 'Inspeccionado OK',
-  damage_reported: 'Dano reportado',
+  damage_reported: 'Daño reportado',
 };
 
 /**
@@ -363,10 +363,10 @@ export function getCoverageUpgradeLabel(upgrade: string | null | undefined): str
  * Completion status labels
  */
 export const COMPLETION_STATUS_LABELS: Record<string, string> = {
-  awaiting_return: 'Esperando devolucion',
+  awaiting_return: 'Esperando devolución',
   returned: 'Devuelto',
-  awaiting_owner_confirmation: 'Esperando confirmacion del propietario',
-  awaiting_renter_confirmation: 'Esperando confirmacion del arrendatario',
+  awaiting_owner_confirmation: 'Esperando confirmación del propietario',
+  awaiting_renter_confirmation: 'Esperando confirmación del arrendatario',
   funds_released: 'Fondos liberados',
   completed: 'Completado',
 };

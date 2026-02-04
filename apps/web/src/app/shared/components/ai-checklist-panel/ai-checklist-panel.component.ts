@@ -86,14 +86,14 @@ import type { Booking, Car, VehicleChecklist } from '../../../core/models';
             </div>
             <div>
               <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">
-                Checklist de {{ inspectionType() === 'check_in' ? 'Recepcion' : 'Devolucion' }}
+                Checklist de {{ inspectionType() === 'check_in' ? 'Recepción' : 'Devolución' }}
                 <span
                   class="text-xs bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider"
                 >
                   AI
                 </span>
               </h3>
-              <p class="text-xs text-gray-500">Inspeccion personalizada para {{ vehicleName() }}</p>
+              <p class="text-xs text-gray-500">Inspección personalizada para {{ vehicleName() }}</p>
             </div>
           </div>
           <div class="flex items-center gap-2">

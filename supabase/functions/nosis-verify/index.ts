@@ -424,7 +424,7 @@ async function processNosisResponse(
   } else {
     report.status = 'failed';
     report.error_code = 'INVALID_RESPONSE';
-    report.error_message = 'Respuesta invalida del servicio de verificacion';
+    report.error_message = 'Respuesta inválida del servicio de verificación';
   }
 
   // Store in database

@@ -123,7 +123,7 @@ export interface VehicleInfo {
 export interface LegalAnswer {
   /** Respuesta a la pregunta */
   answer: string;
-  /** Fuentes de la respuesta (ej: "Politica de cancelacion") */
+  /** Fuentes de la respuesta (ej: "Política de cancelación") */
   sources: string[];
   /** Disclaimer legal */
   disclaimer: string;

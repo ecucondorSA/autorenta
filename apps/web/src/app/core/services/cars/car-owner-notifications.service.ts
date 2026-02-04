@@ -875,17 +875,17 @@ export class CarOwnerNotificationsService {
   private getDocumentKindLabel(kind: string): string {
     const labels: Record<string, string> = {
       // Legacy document kinds
-      registration: 'Registro / Titulo de Propiedad',
-      insurance: 'Poliza de Seguro',
-      technical_inspection: 'Inspeccion Tecnica Vehicular',
-      circulation_permit: 'Permiso de Circulacion',
+      registration: 'Registro / Título de Propiedad',
+      insurance: 'Póliza de Seguro',
+      technical_inspection: 'Inspección Técnica Vehicular',
+      circulation_permit: 'Permiso de Circulación',
       ownership_proof: 'Comprobante de Titularidad',
       // Brazilian/Argentine document kinds
-      cedula_verde: 'Cedula Verde',
-      cedula_azul: 'Cedula Azul',
-      vtv: 'VTV (Verificacion Tecnica Vehicular)',
-      seguro: 'Poliza de Seguro',
-      titulo: 'Titulo de Propiedad',
+      cedula_verde: 'Cédula Verde',
+      cedula_azul: 'Cédula Azul',
+      vtv: 'VTV (Verificación Técnica Vehicular)',
+      seguro: 'Póliza de Seguro',
+      titulo: 'Título de Propiedad',
     };
     return labels[kind] || kind;
   }

@@ -76,7 +76,7 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({
           success: true,
-          message: 'Si existe una cuenta con ese email, recibiras un enlace de confirmacion',
+          message: 'Si existe una cuenta con ese email, recibirás un enlace de confirmación',
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -187,7 +187,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Si existe una cuenta con ese email, recibiras un enlace de confirmacion',
+        message: 'Si existe una cuenta con ese email, recibirás un enlace de confirmación',
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
