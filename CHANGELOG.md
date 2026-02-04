@@ -1,3 +1,7 @@
+## <small>3.66.7 (2026-02-04)</small>
+
+* fix: resolve 5 bugs found during platform inspection ([b539581](https://github.com/ecucondorSA/autorenta/commit/b539581))
+
 ## <small>3.66.6 (2026-02-04)</small>
 
 * fix: remove ion-header from about and help-center pages ([dd6add8](https://github.com/ecucondorSA/autorenta/commit/dd6add8))
