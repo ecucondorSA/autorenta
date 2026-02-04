@@ -48,6 +48,11 @@ export class AuthService implements OnDestroy {
   // P0.2 FIX: Track if session has been resolved to avoid redundant calls
   private sessionResolved = false;
 
+  // P0.3 FIX: Timestamp when session was last resolved to prevent race conditions
+  private sessionResolvedAt = 0;
+  // Grace period to keep promise alive for concurrent navigations (ms)
+  private readonly SESSION_GRACE_PERIOD = 5000;
+
   readonly sessionSignal = computed(() => this.state().session);
   readonly session$ = computed(() => this.state().session);
   readonly isAuthenticated = computed(() => !!this.state().session);
@@ -65,20 +70,26 @@ export class AuthService implements OnDestroy {
 
   /**
    * P0.2 FIX: Optimized ensureSession with proper deduplication
+   * P0.3 FIX: Prevents race conditions during rapid navigation
    * - Uses sessionResolved flag to avoid redundant checks
    * - Reuses single promise for concurrent callers
+   * - Keeps promise alive during grace period for concurrent navigations
    * - Logs only once per second to reduce console noise
    */
   async ensureSession(): Promise<Session | null> {
     this.ensureSessionCallCount++;
+    const now = Date.now();
 
-    // 🚀 FAST PATH: Session already resolved, return immediately
+    // 🚀 FAST PATH: Session resolved recently, return cached result immediately
+    // This prevents race conditions when navigating rapidly between pages
     if (this.sessionResolved && !this.state().loading) {
-      return this.state().session;
+      const timeSinceResolved = now - this.sessionResolvedAt;
+      if (timeSinceResolved < this.SESSION_GRACE_PERIOD) {
+        return this.state().session;
+      }
     }
 
     // 🚀 PERF: Only log once per second max to avoid console spam
-    const now = Date.now();
     if (now - this.lastEnsureSessionLog > 1000) {
       this.logger.debug('ensureSession called', 'AuthService', {
         loading: this.state().loading,
@@ -93,19 +104,31 @@ export class AuthService implements OnDestroy {
     // Fast path: session already loaded (backup check)
     if (!this.state().loading) {
       this.sessionResolved = true;
+      this.sessionResolvedAt = now;
       return this.state().session;
     }
 
     // Dedupe concurrent calls - reuse existing promise
+    // P0.3 FIX: Don't clear promise in finally(), keep it during grace period
     if (!this.restoreSessionPromise) {
       this.restoreSessionPromise = this.loadSession()
         .then(() => {
           this.sessionResolved = true;
+          this.sessionResolvedAt = Date.now();
           return this.state().session;
         })
-        .finally(() => {
-          this.restoreSessionPromise = null;
+        .catch((error) => {
+          this.logger.error('ensureSession failed', 'AuthService', error);
+          this.sessionResolved = true; // Mark as resolved even on error to prevent infinite retries
+          this.sessionResolvedAt = Date.now();
+          return null;
         });
+
+      // P0.3 FIX: Clear promise AFTER grace period, not immediately
+      // This allows concurrent navigations to share the same promise
+      setTimeout(() => {
+        this.restoreSessionPromise = null;
+      }, this.SESSION_GRACE_PERIOD);
     }
 
     return this.restoreSessionPromise;
@@ -242,6 +265,9 @@ export class AuthService implements OnDestroy {
           this.logger.debug('Session ended (possibly expired)', 'AuthService');
           // P0.2 FIX: Reset resolved flag on sign out
           this.sessionResolved = false;
+          // P0.3 FIX: Clear promise to force fresh load on next navigation
+          this.restoreSessionPromise = null;
+          this.sessionResolvedAt = 0;
         }
 
         // ✅ Apply pending referral code after successful sign-in
@@ -249,6 +275,14 @@ export class AuthService implements OnDestroy {
           void this.applyPendingReferralCode(session.user.id);
           // P0.2 FIX: Mark as resolved on sign in
           this.sessionResolved = true;
+          // P0.3 FIX: Update timestamp on sign in
+          this.sessionResolvedAt = Date.now();
+        }
+
+        // P0.3 FIX: Update resolved state on TOKEN_REFRESHED
+        if (event === 'TOKEN_REFRESHED' && session) {
+          this.sessionResolved = true;
+          this.sessionResolvedAt = Date.now();
         }
 
         this.state.set({ session: session ?? null, loading: false });
