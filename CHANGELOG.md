@@ -1,3 +1,7 @@
+## <small>3.65.13 (2026-02-04)</small>
+
+* fix(ci): baseline migrations and use patchright for e2e ([e53f337](https://github.com/ecucondorSA/autorenta/commit/e53f337))
+
 ## <small>3.65.12 (2026-02-04)</small>
 
 * fix(ci): add migration repair commands for orphaned migrations ([6926c23](https://github.com/ecucondorSA/autorenta/commit/6926c23))
