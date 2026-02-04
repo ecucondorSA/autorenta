@@ -1,3 +1,10 @@
+## 3.67.0 (2026-02-04)
+
+* fix(a11y): add alt text to images for accessibility ([56edc9e](https://github.com/ecucondorSA/autorenta/commit/56edc9e))
+* fix(a11y): add alt text to more images ([4dfbf55](https://github.com/ecucondorSA/autorenta/commit/4dfbf55))
+* feat(marketing): add Facebook outreach automation tools ([0712c3e](https://github.com/ecucondorSA/autorenta/commit/0712c3e))
+* docs: update inspection findings with session 5 i18n fixes ([e527f13](https://github.com/ecucondorSA/autorenta/commit/e527f13))
+
 ## <small>3.66.13 (2026-02-04)</small>
 
 * fix(i18n): Spanish accent corrections for damage-related text ([be240f6](https://github.com/ecucondorSA/autorenta/commit/be240f6))
