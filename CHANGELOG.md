@@ -1,3 +1,7 @@
+## <small>3.66.4 (2026-02-04)</small>
+
+* fix(profile): improve avatar error handling ([2d8da44](https://github.com/ecucondorSA/autorenta/commit/2d8da44))
+
 ## <small>3.66.3 (2026-02-04)</small>
 
 * fix(ui): hide debug panel in production + fix typos ([cb80c83](https://github.com/ecucondorSA/autorenta/commit/cb80c83))
