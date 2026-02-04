@@ -21,6 +21,9 @@ functions/workers/*/.wrangler
 apps/web/public/env.json
 apps/web/public/env.js
 
+# MCP configuration (may contain secrets)
+.mcp.json
+
 # Supabase temp files (anywhere in the project)
 **/.temp/
 **/supabase/.temp/

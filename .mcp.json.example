@@ -1,0 +1,71 @@
+{
+  "mcpServers": {
+    "patchright-streaming": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/path/to/autorenta/tools/patchright-streaming-mcp/server.js"],
+      "env": {}
+    },
+    "supabase": {
+      "type": "stdio",
+      "command": "mcp-server-supabase",
+      "args": [],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "${SUPABASE_ACCESS_TOKEN}"
+      }
+    },
+    "autorenta-ops": {
+      "command": "python",
+      "args": ["/path/to/autorenta/mcp/autorenta-ops/server.py"],
+      "env": {}
+    },
+    "autorenta-platform": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/path/to/autorenta/mcp-server/dist/index.js"],
+      "env": {
+        "SUPABASE_URL": "${SUPABASE_URL}",
+        "SUPABASE_SERVICE_ROLE_KEY": "${SUPABASE_SERVICE_ROLE_KEY}",
+        "ENABLE_CACHE": "true",
+        "CACHE_TTL": "600"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-git"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-filesystem", "/path/to/autorenta"]
+    },
+    "n8n": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "supergateway",
+        "--streamableHttp",
+        "http://localhost:5678/mcp-server/http",
+        "--header",
+        "Authorization:Bearer ${N8N_MCP_TOKEN}"
+      ]
+    },
+    "mercadopago": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.mercadopago.com/mcp",
+        "--header",
+        "Authorization:Bearer ${MERCADOPAGO_ACCESS_TOKEN}"
+      ]
+    }
+  }
+}
