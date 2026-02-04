@@ -28,7 +28,7 @@ import type { BookingStatus } from '@core/models';
  */
 export const PAYMENT_METHOD_LABELS: Record<string, string> = {
   card: 'Tarjeta',
-  credit_card: 'Tarjeta de Credito',
+  credit_card: 'Tarjeta de Crédito',
   wallet: 'Wallet',
   bank_transfer: 'Transferencia',
   split: 'Pago mixto',

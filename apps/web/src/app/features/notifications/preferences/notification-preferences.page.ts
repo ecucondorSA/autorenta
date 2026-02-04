@@ -487,7 +487,7 @@ export class NotificationPreferencesPage implements OnInit {
     {
       category: 'payment',
       label: 'Pagos',
-      description: 'Confirmaciones de pago, depositos, reembolsos',
+      description: 'Confirmaciones de pago, depósitos, reembolsos',
       enabled: true,
       icon: '💳',
     },
