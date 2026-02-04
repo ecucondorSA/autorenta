@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   signal,
   computed,
   inject,
@@ -39,7 +40,7 @@ interface UserProfile {
   templateUrl: './pwa-titlebar.component.html',
   styleUrls: ['./pwa-titlebar.component.css'],
 })
-export class PwaTitlebarComponent implements OnInit {
+export class PwaTitlebarComponent implements OnInit, OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly supabase = injectSupabase();
@@ -52,6 +53,9 @@ export class PwaTitlebarComponent implements OnInit {
 
   readonly isAuthenticated = computed(() => !!this.userProfile());
 
+  private wcoGeometryChangeHandler?: (event: Event) => void;
+  private wcoRef?: WindowControlsOverlay;
+
   ngOnInit(): void {
     if (!this.isBrowser) return;
 
@@ -61,6 +65,7 @@ export class PwaTitlebarComponent implements OnInit {
       this.isWCOSupported.set(true);
 
       const wco = nav.windowControlsOverlay;
+      this.wcoRef = wco;
 
       // Verificar si WCO está activo
       if (wco.visible) {
@@ -69,17 +74,24 @@ export class PwaTitlebarComponent implements OnInit {
       }
 
       // Escuchar cambios en WCO
-      wco.addEventListener('geometrychange', (event: Event) => {
+      this.wcoGeometryChangeHandler = (event: Event) => {
         const geometryEvent = event as WindowControlsOverlayGeometryChangeEvent;
         this.isWCOActive.set(geometryEvent.visible);
         if (geometryEvent.visible) {
           this.updateTitlebarRect(geometryEvent.titlebarAreaRect);
         }
-      });
+      };
+      wco.addEventListener('geometrychange', this.wcoGeometryChangeHandler);
     }
 
     // Cargar perfil del usuario
     this.loadUserProfile();
+  }
+
+  ngOnDestroy(): void {
+    if (this.wcoRef && this.wcoGeometryChangeHandler) {
+      this.wcoRef.removeEventListener('geometrychange', this.wcoGeometryChangeHandler);
+    }
   }
 
   private updateTitlebarRect(rect: DOMRect): void {

@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, signal, OnDestroy } from '@angular/core';
 
 /**
  * 🔄 Pull to Refresh Component
@@ -128,7 +128,7 @@ import { Component, Output, EventEmitter, ChangeDetectionStrategy, signal } from
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PullToRefreshComponent {
+export class PullToRefreshComponent implements OnDestroy {
   @Output() refresh = new EventEmitter<void>();
 
   readonly pullDistance = signal(0);
@@ -139,6 +139,12 @@ export class PullToRefreshComponent {
   private isDragging = false;
   private readonly REFRESH_THRESHOLD = 70;
   private readonly MAX_PULL_DISTANCE = 120;
+  private timeoutIds: ReturnType<typeof setTimeout>[] = [];
+
+  ngOnDestroy(): void {
+    this.timeoutIds.forEach((id) => clearTimeout(id));
+    this.timeoutIds = [];
+  }
 
   onTouchStart(event: TouchEvent): void {
     if (window.scrollY === 0) {
@@ -180,11 +186,12 @@ export class PullToRefreshComponent {
 
       this.refresh.emit();
 
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         if (this.isRefreshing()) {
           this.completeRefresh();
         }
       }, 2000);
+      this.timeoutIds.push(timeoutId);
     } else {
       this.pullDistance.set(0);
     }
@@ -199,8 +206,9 @@ export class PullToRefreshComponent {
       navigator.vibrate(50);
     }
 
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       this.refreshText.set('Desliza para actualizar');
     }, 1000);
+    this.timeoutIds.push(timeoutId);
   }
 }

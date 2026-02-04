@@ -4,6 +4,7 @@ import {
   Component,
   inject,
   OnInit,
+  OnDestroy,
   Output,
   EventEmitter,
   signal,
@@ -38,7 +39,7 @@ interface NavItem {
   changeDetection: ChangeDetectionStrategy.OnPush, // ✅ Performance boost
   host: { class: 'block md:hidden' },
 })
-export class MobileBottomNavComponent implements OnInit {
+export class MobileBottomNavComponent implements OnInit, OnDestroy {
   private readonly unreadMessagesService = inject(UnreadMessagesService);
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
@@ -54,6 +55,7 @@ export class MobileBottomNavComponent implements OnInit {
   private lastScrollY = 0;
   private readonly scrollThreshold = 50;
   private readonly scrollDelta = 10;
+  private visualViewportHandler?: () => void;
 
   /**
    * Navegación final AutoRenta - 5 tabs principales:
@@ -144,12 +146,19 @@ export class MobileBottomNavComponent implements OnInit {
     } else {
       // Fallback for web: use visualViewport API
       if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', () => {
+        this.visualViewportHandler = () => {
           // Keyboard is likely open if viewport height is significantly smaller than window height
           const isKeyboardOpen = window.visualViewport!.height < window.innerHeight * 0.75;
           this.ngZone.run(() => this.isKeyboardVisible.set(isKeyboardOpen));
-        });
+        };
+        window.visualViewport.addEventListener('resize', this.visualViewportHandler);
       }
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.visualViewportHandler && window.visualViewport) {
+      window.visualViewport.removeEventListener('resize', this.visualViewportHandler);
     }
   }
 
