@@ -260,7 +260,7 @@ serve(async (req: Request) => {
           risk_level: existingReport.risk_level,
           cpf_status: existingReport.bcra_status,
           expires_at: existingReport.expires_at,
-          message: 'Relatorio crediticio existente valido'
+          message: 'Reporte crediticio existente válido'
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

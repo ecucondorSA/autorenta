@@ -1,6 +1,6 @@
 // ============================================
 // EDGE FUNCTION: delete-account-request
-// Proposito: Solicitar eliminacion de cuenta por email
+// Propósito: Solicitar eliminación de cuenta por email
 // Para usuarios que no pueden acceder a su cuenta
 // ============================================
 
@@ -110,7 +110,7 @@ serve(async (req) => {
           body: JSON.stringify({
             from: 'Autorentar <no-reply@autorentar.com>',
             to: [email],
-            subject: 'Confirma la eliminacion de tu cuenta - Autorentar',
+            subject: 'Confirma la eliminación de tu cuenta - Autorentar',
             html: `
               <!DOCTYPE html>
               <html>
@@ -129,7 +129,7 @@ serve(async (req) => {
               <body>
                 <div class="container">
                   <div class="header">
-                    <h1>Solicitud de Eliminacion de Cuenta</h1>
+                    <h1>Solicitud de Eliminación de Cuenta</h1>
                   </div>
                   <div class="content">
                     <p>Hola ${profile.full_name || 'Usuario'},</p>
@@ -225,17 +225,17 @@ serve(async (req) => {
  *
  * ## Flujo
  *
- * 1. Usuario envia email
- * 2. Si existe cuenta, se envia email con link de confirmacion
- * 3. Link valido por 24 horas
- * 4. Al hacer clic, se ejecuta eliminacion
+ * 1. Usuario envía email
+ * 2. Si existe cuenta, se envía email con link de confirmación
+ * 3. Link válido por 24 horas
+ * 4. Al hacer clic, se ejecuta eliminación
  *
  * ## Seguridad
  *
- * - No revela si el email existe (previene enumeracion)
+ * - No revela si el email existe (previene enumeración)
  * - Token de un solo uso
- * - Expiracion de 24 horas
- * - IP logging para auditoria
+ * - Expiración de 24 horas
+ * - IP logging para auditoría
  *
  * ## Tabla Requerida
  *

@@ -1,6 +1,6 @@
 // ============================================
 // EDGE FUNCTION: delete-account
-// Proposito: Eliminar cuenta de usuario (GDPR/CCPA compliance)
+// Propósito: Eliminar cuenta de usuario (GDPR/CCPA compliance)
 // Permite al usuario eliminar permanentemente su cuenta y datos
 // ============================================
 
@@ -95,7 +95,7 @@ serve(async (req) => {
     if (walletBalance > 0) {
       return new Response(
         JSON.stringify({
-          error: 'Tienes saldo pendiente en tu wallet. Por favor retiralo antes de eliminar tu cuenta.',
+          error: 'Tienes saldo pendiente en tu wallet. Por favor retíralo antes de eliminar tu cuenta.',
           wallet_balance: walletBalance,
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -273,7 +273,7 @@ serve(async (req) => {
  *
  * ## Datos Eliminados
  *
- * - Perfil anonimizado (nombre, telefono, documentos, selfie)
+ * - Perfil anonimizado (nombre, teléfono, documentos, selfie)
  * - Favoritos eliminados
  * - Push subscriptions eliminadas
  * - Mensajes anonimizados
@@ -281,14 +281,14 @@ serve(async (req) => {
  * - MercadoPago desconectado
  * - Usuario de auth eliminado
  *
- * ## Datos Retenidos (Obligacion Legal)
+ * ## Datos Retenidos (Obligación Legal)
  *
- * - Historial de transacciones (5 anos - requerimiento fiscal)
+ * - Historial de transacciones (5 años - requerimiento fiscal)
  * - Registros de reservas (para disputas)
  * - Audit logs
  *
- * ## Auditoria
+ * ## Auditoría
  *
- * Cada eliminacion se registra en audit_logs con IP y timestamp.
+ * Cada eliminación se registra en audit_logs con IP y timestamp.
  *
  * ============================================ */

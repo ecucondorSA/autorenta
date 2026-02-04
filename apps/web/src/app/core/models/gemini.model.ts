@@ -76,7 +76,7 @@ export interface ChatSuggestionsParams {
 // ============================================
 
 /**
- * Terminos del alquiler para consultas legales
+ * Términos del alquiler para consultas legales
  */
 export interface BookingTerms {
   /** Política de cancelación */
