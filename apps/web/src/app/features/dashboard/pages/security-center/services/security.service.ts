@@ -33,7 +33,7 @@ export class SecurityService {
 
   private realtimeSubscription?: RealtimeChannel;
 
-  async loadDashboardData(carId: string) {
+  async loadDashboardData(carId: string, bookingId?: string) {
     // 1. Cargar Dispositivos
     const { data: devices } = await this.supabase
       .from('car_security_devices')
@@ -42,15 +42,20 @@ export class SecurityService {
 
     if (devices) this.devices.set(devices as SecurityDevice[]);
 
-    // 2. Cargar Alertas Activas
-    const { data: alerts } = await this.supabase
-      .from('security_alerts')
-      .select('*')
-      .eq('booking_id', 'current_booking_id_placeholder') // TODO: Get active booking
-      .eq('resolved', false)
-      .order('created_at', { ascending: false });
+    // 2. Cargar Alertas Activas (solo si hay un booking activo)
+    if (bookingId) {
+      const { data: alerts } = await this.supabase
+        .from('security_alerts')
+        .select('*')
+        .eq('booking_id', bookingId)
+        .eq('resolved', false)
+        .order('created_at', { ascending: false });
 
-    if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
+      if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
+    } else {
+      // Sin booking activo, no hay alertas que mostrar
+      this.activeAlerts.set([]);
+    }
 
     // 3. Suscribirse a cambios en tiempo real
     this.subscribeToRealtime(carId);

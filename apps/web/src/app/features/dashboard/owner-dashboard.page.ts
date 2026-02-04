@@ -11,6 +11,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
+import { AuthService } from '@core/services/auth/auth.service';
 import type { DashboardStats } from '@core/models/dashboard.model';
 import { DashboardService } from '@core/services/admin/dashboard.service';
 import { ParticipationService } from '@core/services/business/participation.service';
@@ -56,6 +57,7 @@ import { NetworkParticipationWidgetComponent } from './widgets/network-participa
   styleUrls: ['./owner-dashboard.page.css'],
 })
 export class OwnerDashboardPage implements OnInit, OnDestroy {
+  private readonly authService = inject(AuthService);
   private readonly dashboardService = inject(DashboardService);
   private readonly participationService = inject(ParticipationService);
   private readonly notificationsService = inject(NotificationsService);
@@ -152,7 +154,7 @@ export class OwnerDashboardPage implements OnInit, OnDestroy {
   private loadParticipationData() {
     // Load Participation Period (Points)
     this.participationService
-      .getCurrentPeriod('current-owner-id') // TODO: Get real ID
+      .getCurrentPeriod(this.authService.userId() ?? '')
       .pipe(takeUntil(this.destroy$))
       .subscribe((period) => this.participationPeriod.set(period));
 
