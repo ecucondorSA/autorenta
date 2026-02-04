@@ -1,3 +1,7 @@
+## <small>3.69.12 (2026-02-04)</small>
+
+* fix(a11y): add aria-hidden to payment method button SVGs ([b01005d](https://github.com/ecucondorSA/autorenta/commit/b01005d))
+
 ## <small>3.69.11 (2026-02-04)</small>
 
 * fix(a11y): add aria-hidden to decorative SVGs in search bar and quick actions ([364b027](https://github.com/ecucondorSA/autorenta/commit/364b027))
