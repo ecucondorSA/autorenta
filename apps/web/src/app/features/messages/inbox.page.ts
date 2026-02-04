@@ -41,7 +41,7 @@ import { ChatThreadComponent } from './components/chat-thread.component';
         <div class="header-content">
           <h1 class="header-title">Mensajes</h1>
           <div class="header-actions">
-            <button class="icon-btn" type="button">
+            <button class="icon-btn" type="button" aria-label="Buscar conversaciones">
               <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -51,7 +51,7 @@ import { ChatThreadComponent } from './components/chat-thread.component';
                 />
               </svg>
             </button>
-            <button class="icon-btn" type="button">
+            <button class="icon-btn" type="button" aria-label="Más opciones">
               <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"

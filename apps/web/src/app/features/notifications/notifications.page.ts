@@ -317,7 +317,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                             (click)="deleteNotification(notification.id)"
                             class="absolute right-1.5 top-1.5 rounded-lg p-1 text-text-muted opacity-60 transition-opacity hover:bg-surface-hover hover:text-text-secondary sm:right-2 sm:top-2 sm:p-1.5 sm:opacity-0 sm:group-hover:opacity-100"
                             type="button"
-                            title="Eliminar"
+                            aria-label="Eliminar notificación"
                           >
                             <svg
                               class="h-4 w-4 sm:h-5 sm:w-5"
@@ -417,7 +417,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                             (click)="deleteNotification(notification.id)"
                             class="absolute right-1.5 top-1.5 rounded-lg p-1 text-text-muted opacity-60 transition-opacity hover:bg-surface-hover hover:text-text-secondary sm:right-2 sm:top-2 sm:p-1.5 sm:opacity-0 sm:group-hover:opacity-100"
                             type="button"
-                            title="Eliminar"
+                            aria-label="Eliminar notificación"
                           >
                             <svg
                               class="h-4 w-4 sm:h-5 sm:w-5"
@@ -518,7 +518,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                         (click)="deleteNotification(notification.id)"
                         class="absolute right-1.5 top-1.5 rounded-lg p-1 text-text-muted opacity-60 transition-opacity hover:bg-surface-hover hover:text-text-secondary sm:right-2 sm:top-2 sm:p-1.5 sm:opacity-0 sm:group-hover:opacity-100"
                         type="button"
-                        title="Eliminar"
+                        aria-label="Eliminar notificación"
                       >
                         <svg
                           class="h-4 w-4 sm:h-5 sm:w-5"

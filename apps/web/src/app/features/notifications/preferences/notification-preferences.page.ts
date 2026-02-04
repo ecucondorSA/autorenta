@@ -41,7 +41,7 @@ interface CategoryPreference {
       <div class="sticky top-0 z-10 bg-surface-raised shadow">
         <div class="mx-auto max-w-4xl px-4 py-4">
           <div class="flex items-center gap-3">
-            <button (click)="goBack()" class="rounded-lg p-2 hover:bg-surface-raised" type="button">
+            <button (click)="goBack()" class="rounded-lg p-2 hover:bg-surface-raised" type="button" aria-label="Volver">
               <svg
                 class="h-6 w-6 text-text-secondary"
                 fill="none"

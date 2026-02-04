@@ -37,7 +37,7 @@ import { DisputeTimelineComponent } from '../../components/timeline/timeline.com
       <header class="bg-surface-raised border-b border-border-default sticky top-0 z-30 px-6 py-4">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <a routerLink="/admin/disputes" class="p-2 hover:bg-surface-secondary rounded-full">
+            <a routerLink="/admin/disputes" class="p-2 hover:bg-surface-secondary rounded-full" aria-label="Volver a disputas">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
             <div>

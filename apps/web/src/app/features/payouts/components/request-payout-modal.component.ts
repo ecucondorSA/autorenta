@@ -28,7 +28,7 @@ import { BankAccount, PayoutService } from '@core/services/payments/payout.servi
       <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
           <h2 class="modal-title">Solicitar Retiro</h2>
-          <button type="button" class="close-button" (click)="onClose()">
+          <button type="button" class="close-button" (click)="onClose()" aria-label="Cerrar">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
