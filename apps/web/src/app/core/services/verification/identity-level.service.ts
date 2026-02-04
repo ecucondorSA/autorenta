@@ -239,7 +239,7 @@ export class IdentityLevelService implements OnDestroy {
           message: allowed ? 'Access granted' : `Verification level ${requiredLevel} required`,
           error: allowed ? undefined : 'Insufficient verification level'
         };
-      } catch (fallbackErr) {
+      } catch {
         const message =
           err instanceof Error ? err.message : 'No pudimos verificar el nivel de acceso';
         this.error.set(message);
