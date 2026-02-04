@@ -169,7 +169,7 @@ interface RenterAnalysis {
                 [name]="analysis()!.verification.phone_verified ? 'check-circle' : 'circle'"
                 [size]="20"
               />
-              <span>Telefono</span>
+              <span>Teléfono</span>
             </div>
             <div
               class="verification-item"

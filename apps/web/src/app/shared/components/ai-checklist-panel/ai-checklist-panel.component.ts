@@ -13,10 +13,10 @@ import { GeminiService } from '@core/services/ai/gemini.service';
 import type { Booking, Car, VehicleChecklist } from '../../../core/models';
 
 /**
- * Panel de Checklist de Inspeccion IA
+ * Panel de Checklist de Inspección IA
  *
- * Genera un checklist de inspeccion personalizado para el vehiculo
- * especifico del booking, considerando marca, modelo y ano.
+ * Genera un checklist de inspección personalizado para el vehículo
+ * específico del booking, considerando marca, modelo y año.
  *
  * @example
  * ```html

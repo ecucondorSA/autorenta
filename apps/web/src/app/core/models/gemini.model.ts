@@ -4,9 +4,9 @@
  *
  * Features:
  * 1. Chat Suggestions - Sugerencias de respuesta en chat
- * 2. Legal Assistant - Consultas sobre terminos del alquiler
+ * 2. Legal Assistant - Consultas sobre términos del alquiler
  * 3. Trip Planner - Planificador de viajes
- * 4. Vehicle Checklist - Checklist de inspeccion del vehiculo
+ * 4. Vehicle Checklist - Checklist de inspección del vehículo
  *
  * @module gemini.model
  * @since 2025-12-17
@@ -79,7 +79,7 @@ export interface ChatSuggestionsParams {
  * Terminos del alquiler para consultas legales
  */
 export interface BookingTerms {
-  /** Politica de cancelacion */
+  /** Política de cancelación */
   cancellationPolicy: CancelPolicy;
   /** Limite de kilometros (null = ilimitado) */
   mileageLimit?: number | null;
@@ -169,7 +169,7 @@ export interface TripPreferences {
 export interface TripActivity {
   /** Hora sugerida */
   time: string;
-  /** Descripcion de la actividad */
+  /** Descripción de la actividad */
   activity: string;
   /** Ubicación/lugar */
   location: string;

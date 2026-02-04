@@ -26,11 +26,11 @@ import type {
  *
  * Features:
  * 1. Chat Suggestions - Sugerencias de respuesta
- * 2. Legal Assistant - Consultas legales sobre terminos
+ * 2. Legal Assistant - Consultas legales sobre términos
  * 3. Trip Planner - Planificador de viajes
- * 4. Vehicle Checklist - Checklist de inspeccion
- * 5. Reputation Analysis - Analisis de reputacion del usuario
- * 6. Car Recommendation - Recomendacion de autos basada en historial
+ * 4. Vehicle Checklist - Checklist de inspección
+ * 5. Reputation Analysis - Análisis de reputación del usuario
+ * 6. Car Recommendation - Recomendación de autos basada en historial
  *
  * @example
  * ```typescript
@@ -105,15 +105,15 @@ export class GeminiService {
   // ============================================
 
   /**
-   * Responde preguntas sobre los terminos del alquiler
+   * Responde preguntas sobre los términos del alquiler
    *
-   * @param params - Pregunta, terminos del booking e info del vehiculo
+   * @param params - Pregunta, términos del booking e info del vehículo
    * @returns Respuesta con fuentes y disclaimer
    *
    * @example
    * ```typescript
    * const answer = await gemini.askLegalQuestion({
-   *   question: 'Cual es la franquicia del seguro?',
+   *   question: '¿Cuál es la franquicia del seguro?',
    *   bookingTerms: { insuranceDeductibleUsd: 500, mileageLimit: null },
    *   vehicleInfo: { brand: 'Toyota', model: 'Corolla', year: 2023 }
    * });
@@ -131,8 +131,8 @@ export class GeminiService {
   /**
    * Genera un itinerario de viaje personalizado
    *
-   * @param params - Dias, ubicacion de inicio/fin, tipo de vehiculo y preferencias
-   * @returns Itinerario completo con actividades por dia, km estimados y tips
+   * @param params - Días, ubicación de inicio/fin, tipo de vehículo y preferencias
+   * @returns Itinerario completo con actividades por día, km estimados y tips
    *
    * @example
    * ```typescript
@@ -154,10 +154,10 @@ export class GeminiService {
   // ============================================
 
   /**
-   * Genera un checklist de inspeccion especifico para el modelo del vehiculo
+   * Genera un checklist de inspección específico para el modelo del vehículo
    *
-   * @param params - Marca, modelo, ano y tipo de inspeccion
-   * @returns Checklist categorizado con items criticos marcados
+   * @param params - Marca, modelo, año y tipo de inspección
+   * @returns Checklist categorizado con items críticos marcados
    *
    * @example
    * ```typescript

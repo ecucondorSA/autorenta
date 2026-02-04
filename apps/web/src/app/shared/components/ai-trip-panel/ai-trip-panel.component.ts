@@ -14,8 +14,8 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
 /**
  * Panel de Planificador de Viajes IA
  *
- * Genera itinerarios de viaje personalizados basados en la duracion
- * del alquiler, ubicacion y preferencias del usuario.
+ * Genera itinerarios de viaje personalizados basados en la duración
+ * del alquiler, ubicación y preferencias del usuario.
  *
  * @example
  * ```html
@@ -327,7 +327,7 @@ export class AiTripPanelComponent {
     return b?.car_city || b?.car?.location_city || 'Buenos Aires';
   });
 
-  /** Computed: obtiene el tipo de vehiculo */
+  /** Computed: obtiene el tipo de vehículo */
   private readonly vehicleType = computed(() => {
     const c = this.car();
     const b = this.booking();
