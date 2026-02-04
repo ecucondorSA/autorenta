@@ -31,6 +31,7 @@ import { ChatThreadComponent } from './components/chat-thread.component';
               (click)="goBack()"
               class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-hover"
               type="button"
+              aria-label="Volver"
             >
               <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path

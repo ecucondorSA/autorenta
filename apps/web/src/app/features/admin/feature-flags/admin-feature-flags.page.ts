@@ -196,15 +196,15 @@ import { FeatureFlagService } from '@core/services/infrastructure/feature-flag.s
       @if (flagToDelete()) {
         <ion-card class="mt-4 border-2 border-red-300">
           <ion-card-header>
-            <ion-card-title class="text-red-600">Confirmar Eliminacion</ion-card-title>
+            <ion-card-title class="text-red-600">Confirmar Eliminación</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <p class="mb-2">
-              Estas seguro de eliminar la flag
+              ¿Estás seguro de eliminar la flag
               <strong class="font-mono">{{ flagToDelete()?.name }}</strong
               >?
             </p>
-            <p class="text-sm text-red-500 mb-4">Esta accion no se puede deshacer.</p>
+            <p class="text-sm text-red-500 mb-4">Esta acción no se puede deshacer.</p>
             <div class="flex gap-2">
               <ion-button fill="outline" (click)="flagToDelete.set(null)"> Cancelar </ion-button>
               <ion-button color="danger" (click)="deleteFlag()" [disabled]="deleting()">

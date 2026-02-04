@@ -58,6 +58,7 @@ import {
           (click)="back.emit()"
           [disabled]="!canGoBack() || isTransitioning()"
           class="flex items-center gap-2 px-4 py-2 text-text-secondary hover:text-text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          aria-label="Anterior"
         >
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path

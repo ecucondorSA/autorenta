@@ -500,8 +500,8 @@ export class NotificationPreferencesPage implements OnInit {
     },
     {
       category: 'review',
-      label: 'Resenas',
-      description: 'Nuevas resenas y respuestas',
+      label: 'Reseñas',
+      description: 'Nuevas reseñas y respuestas',
       enabled: true,
       icon: '⭐',
     },
