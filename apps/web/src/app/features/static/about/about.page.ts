@@ -1,25 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-about',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton],
+  imports: [CommonModule, RouterLink],
   template: `
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button defaultHref="/"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Sobre Nosotros</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
-      <div class="static-page">
+    <div class="static-page">
         <section class="static-hero">
           <h1>🚗 Sobre Autorentar</h1>
           <p>La plataforma de alquiler de autos entre personas de Argentina</p>
@@ -72,7 +61,7 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar 
           </div>
         </div>
       </div>
-    </ion-content>
+    </div>
   `,
   styleUrls: ['./static-shared.css'],
 })
