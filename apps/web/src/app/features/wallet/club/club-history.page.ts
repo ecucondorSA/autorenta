@@ -273,7 +273,7 @@ export class ClubHistoryPage implements OnInit {
   getLogTitle(reason: string): string {
     switch (reason) {
       case 'claim_deduction':
-        return 'Deduccion por dano';
+        return 'Deducción por daño';
       case 'admin_adjustment':
         return 'Ajuste administrativo';
       case 'refund':

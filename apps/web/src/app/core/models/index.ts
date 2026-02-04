@@ -371,12 +371,12 @@ export interface Booking {
   // IMPORTANTE: Estos nombres deben coincidir EXACTAMENTE con las columnas de BD
   returned_at?: string | null;
   owner_confirmed_delivery?: boolean | null;
-  owner_confirmed_at?: string | null; // Timestamp confirmacion owner (BD: owner_confirmed_at)
-  has_damages?: boolean | null; // Si reporto danos (BD: has_damages)
-  damage_amount_cents?: number | null; // Monto danos en CENTAVOS (BD: damage_amount_cents)
-  damage_description?: string | null; // Descripcion danos (BD: damage_description)
+  owner_confirmed_at?: string | null; // Timestamp confirmación owner (BD: owner_confirmed_at)
+  has_damages?: boolean | null; // Si reportó daños (BD: has_damages)
+  damage_amount_cents?: number | null; // Monto daños en CENTAVOS (BD: damage_amount_cents)
+  damage_description?: string | null; // Descripción daños (BD: damage_description)
   renter_confirmed_payment?: boolean | null;
-  renter_confirmed_at?: string | null; // Timestamp confirmacion renter (BD: renter_confirmed_at)
+  renter_confirmed_at?: string | null; // Timestamp confirmación renter (BD: renter_confirmed_at)
   funds_released_at?: string | null;
   completion_status?: BookingCompletionStatus | null;
 

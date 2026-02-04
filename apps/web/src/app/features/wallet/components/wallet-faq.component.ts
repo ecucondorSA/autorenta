@@ -301,7 +301,7 @@ export class WalletFaqComponent {
         <table class="w-full text-xs mt-2 border-collapse" data-testid="wallet-table">
           <thead>
             <tr class="bg-border-default/30">
-              <th class="border border-border-default px-2 py-1">Dano</th>
+              <th class="border border-border-default px-2 py-1">Daño</th>
               <th class="border border-border-default px-2 py-1">CP Usado</th>
               <th class="border border-border-default px-2 py-1">CP Restante</th>
               <th class="border border-border-default px-2 py-1">Pagas de tu bolsillo</th>

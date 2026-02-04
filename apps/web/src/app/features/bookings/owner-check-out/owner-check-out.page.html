@@ -252,7 +252,7 @@
           <div class="card-premium p-6">
             <div class="flex items-center justify-between mb-4">
               <h3 class="font-bold text-text-primary font-satoshi">
-                Hay danos nuevos que reportar?
+                ¿Hay daños nuevos que reportar?
               </h3>
               <ion-toggle
                 [checked]="hasDamages()"
@@ -266,12 +266,12 @@
               <div class="space-y-4 pt-4 border-t border-border-default">
                 <div class="bg-warning-bg border border-warning-border rounded-lg p-3">
                   <p class="text-sm text-warning-strong">
-                    El monto de danos se deducira del deposito de garantia ($250 USD) del locatario.
+                    El monto de daños se deducirá del depósito de garantía ($250 USD) del locatario.
                   </p>
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-text-primary mb-2"
-                    >Monto del dano (USD) *</label
+                    >Monto del daño (USD) *</label
                   >
                   <input
                     type="number"
@@ -287,13 +287,13 @@
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-text-primary mb-2"
-                    >Descripcion del dano *</label
+                    >Descripción del daño *</label
                   >
                   <textarea
                     [value]="damagesNotes()"
                     (input)="damagesNotes.set($any($event.target).value)"
                     rows="4"
-                    placeholder="Describe el dano en detalle..."
+                    placeholder="Describe el daño en detalle..."
                     class="w-full px-4 py-3 rounded-xl border border-border-default focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 outline-none transition-all resize-none"
                   ></textarea>
                 </div>
