@@ -253,6 +253,46 @@ export class BrowseCarsPage {
     return location;
   }
 
+  /**
+   * Handle marker hover/selection from map (for carousel sync only, NOT modal)
+   */
+  onMarkerHover(carId: string | null) {
+    if (carId === null) {
+      this.store.setHoveredCar(null);
+      return;
+    }
+    this.store.setHoveredCar(carId);
+    // Scroll carousel to show the hovered car
+    const element = document.getElementById('car-' + carId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  /**
+   * Handle marker click with native event validation (opens modal only on genuine user click)
+   */
+  onMarkerClickWithEvent(data: { carId: string; event: MouseEvent | null }) {
+    const { carId, event } = data;
+    this.logger.debug('Marker click with event', { carId, isTrusted: event?.isTrusted });
+
+    // Validate that this is a genuine user interaction
+    if (!event || !event.isTrusted) {
+      this.logger.debug('Modal blocked - event not trusted');
+      return;
+    }
+
+    // Open modal via validated path
+    this.store.openModalWithValidation(carId, event, 'map');
+
+    // Scroll carousel to show the clicked car
+    const element = document.getElementById('car-' + carId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  /** @deprecated Use onMarkerClickWithEvent instead */
   onMarkerClick(carId: string | Event | null) {
     if (carId === null) {
       this.store.setActiveCar(null);
@@ -266,7 +306,7 @@ export class BrowseCarsPage {
         : (carId as { detail?: { carId?: string }; carId?: string })?.detail?.carId ??
           (carId as { detail?: { carId?: string }; carId?: string })?.carId ??
           String(carId);
-    this.logger.debug('Marker click', { id });
+    this.logger.debug('Marker click (legacy)', { id });
     this.store.setActiveCar(id, 'map');
     const element = document.getElementById('car-' + id);
     if (element) {

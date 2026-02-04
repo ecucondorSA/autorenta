@@ -10,12 +10,13 @@
   <div class="absolute inset-0 z-0 transition-opacity duration-300"
        [class.opacity-0]="viewMode() === 'list'"
        [class.pointer-events-none]="viewMode() === 'list'">
-    <app-cars-map 
-      [cars]="mapLocations()" 
-      [selectedCarId]="selectedCarId()" 
-      [highlightedCarId]="mapHighlightedCarId()" 
-      (markerClick)="onMarkerClick($any($event))"
-      class="w-full h-full block" 
+    <app-cars-map
+      [cars]="mapLocations()"
+      [selectedCarId]="selectedCarId()"
+      [highlightedCarId]="mapHighlightedCarId()"
+      (carSelected)="onMarkerHover($event)"
+      (carClickedWithEvent)="onMarkerClickWithEvent($event)"
+      class="w-full h-full block"
     />
   </div>
 

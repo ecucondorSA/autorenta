@@ -215,6 +215,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Input() highlightedCarId: string | null = null; // Car to highlight on map (from carousel preview)
 
   @Output() readonly carSelected = new EventEmitter<string>();
+  /** Emits car selection with native event for validation (isTrusted check) */
+  @Output() readonly carClickedWithEvent = new EventEmitter<{ carId: string; event: MouseEvent | null }>();
   @Output() readonly userLocationChange = new EventEmitter<{ lat: number; lng: number }>();
   @Output() readonly quickBook = new EventEmitter<string>();
   @Output() readonly searchRadiusChange = new EventEmitter<number>();
@@ -863,7 +865,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       });
     });
 
-    // Handle individual car clicks
+    // Handle individual car clicks - emit with native event for isTrusted validation
     this.map.on('click', 'cars-unclustered', (event: MapLayerMouseEvent) => {
       const carFeature = event.features?.[0] as MapboxGeoJSONFeature | undefined;
       const properties = (carFeature?.properties || {}) as Record<string, unknown>;
@@ -871,6 +873,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         typeof properties['carId'] === 'string' ? (properties['carId'] as string) : undefined;
       if (carId) {
         this.carSelected.emit(carId);
+        // Extract native event for validation (MapLayerMouseEvent has originalEvent)
+        const nativeEvent = (event as unknown as { originalEvent?: MouseEvent }).originalEvent || null;
+        this.carClickedWithEvent.emit({ carId, event: nativeEvent });
         const car = this.cars.find((c) => c['carId'] === carId);
         if (car) {
           this.selectedCar.set(car);
@@ -1775,9 +1780,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       this.hideTimeouts.set(car['carId'], hideTimeout);
     });
 
-    // Handle click
-    markerElement.addEventListener('click', () => {
+    // Handle click - emit with native event for isTrusted validation
+    markerElement.addEventListener('click', (event: MouseEvent) => {
       this.carSelected.emit(car['carId']);
+      this.carClickedWithEvent.emit({ carId: car['carId'], event });
       this.selectedCar.set(car);
     });
 
