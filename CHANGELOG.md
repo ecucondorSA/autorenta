@@ -1,3 +1,7 @@
+## <small>3.66.13 (2026-02-04)</small>
+
+* fix(i18n): Spanish accent corrections for damage-related text ([be240f6](https://github.com/ecucondorSA/autorenta/commit/be240f6))
+
 ## <small>3.66.12 (2026-02-04)</small>
 
 * docs: update inspection findings with session 4 i18n fixes ([0bf06f7](https://github.com/ecucondorSA/autorenta/commit/0bf06f7))
