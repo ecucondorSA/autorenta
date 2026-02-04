@@ -1,3 +1,8 @@
+## <small>3.69.2 (2026-02-04)</small>
+
+* fix: i18n accents and accessibility improvements ([757bfbb](https://github.com/ecucondorSA/autorenta/commit/757bfbb))
+* perf: add OnPush change detection to remaining pages ([27b4968](https://github.com/ecucondorSA/autorenta/commit/27b4968))
+
 ## <small>3.69.1 (2026-02-04)</small>
 
 * fix: i18n accents and subscription memory leaks ([d6b202d](https://github.com/ecucondorSA/autorenta/commit/d6b202d))
