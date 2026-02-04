@@ -320,6 +320,43 @@ Multiple typos found: "deposito" → "depósito", "garantia" → "garantía", et
 
 ---
 
+## Session 6 - Accessibility & Security Audit
+
+### Accessibility Fixes (a11y)
+Added missing `alt` attributes to images:
+- **document-upload-modal.component.ts**: 3 preview images
+- **owner-check-out.page.html**: Check-in photos grid
+- **admin-disputes.page.html**: Evidence images
+- **car-mini-card.component.ts**: Car thumbnail
+- **booking-sheet.component.ts**: Car photo
+- **mission-detail.page.ts**: Mission car image
+- **favorites.page.ts**: Owner avatar
+
+### 🚨 CRITICAL SECURITY FINDING
+**File:** `.mcp.json` (was tracked in git)
+
+**Exposed Secrets:**
+- MercadoPago production access token (`APP_USR-*`)
+- Supabase personal access token
+- Supabase SERVICE ROLE KEY (full database access!)
+- n8n MCP bearer token
+
+**Fix Applied:**
+1. Removed `.mcp.json` from version control
+2. Added `.mcp.json` to `.gitignore`
+3. Created `.mcp.json.example` with placeholder variables
+
+**ACTION REQUIRED:**
+1. **IMMEDIATELY rotate all exposed tokens**
+2. Consider using BFG Repo-Cleaner to remove secrets from git history
+3. Audit GitHub repo for any forks that may have copied secrets
+
+### Commits:
+- `fix(a11y): add alt text to images for accessibility` (2 commits)
+- `security: remove exposed secrets from .mcp.json`
+
+---
+
 ## Remaining Work
 
 ### Requires Authentication:
@@ -338,6 +375,7 @@ Multiple typos found: "deposito" → "depósito", "garantia" → "garantía", et
 
 ---
 
-**Report Updated:** 2026-02-04 (Session 3)
+**Report Updated:** 2026-02-04 (Session 6)
 **Inspector:** Claude Opus 4.5
-**Total Code Fixes:** 8+ commits, 35+ files modified, 100+ typos/issues corrected
+**Total Code Fixes:** 12+ commits, 45+ files modified, 120+ issues corrected
+**Security Issues Found:** 1 CRITICAL (exposed secrets in .mcp.json)
