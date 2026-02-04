@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -236,6 +237,7 @@ export class VerificationBlockedPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly faceVerificationService = inject(FaceVerificationService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly blockReason = signal<string | null>(null);
   readonly attempts = signal<number | null>(null);
@@ -252,14 +254,16 @@ export class VerificationBlockedPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // Get params from route
-    this.route.queryParams.subscribe(params => {
-      if (params['reason']) {
-        this.blockReason.set(params['reason']);
-      }
-      if (params['attempts']) {
-        this.attempts.set(parseInt(params['attempts'], 10));
-      }
-    });
+    this.route.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => {
+        if (params['reason']) {
+          this.blockReason.set(params['reason']);
+        }
+        if (params['attempts']) {
+          this.attempts.set(parseInt(params['attempts'], 10));
+        }
+      });
 
     // Also check current block status
     try {

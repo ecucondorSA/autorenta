@@ -93,7 +93,7 @@ import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../..
                   AI
                 </span>
               </h3>
-              <p class="text-xs text-gray-500">Consultas sobre terminos de uso</p>
+              <p class="text-xs text-gray-500">Consultas sobre términos de uso</p>
             </div>
           </div>
           <svg

@@ -5,7 +5,9 @@ import {
   OnInit,
   OnDestroy,
   ChangeDetectionStrategy,
+  DestroyRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -49,6 +51,7 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
   private readonly toastService = inject(NotificationManagerService);
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
   private readonly carsService = inject(CarsService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly carId = signal<string>('');
   readonly loading = signal(true);
@@ -111,17 +114,20 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
   async loadDocuments() {
     this.loading.set(true);
     try {
-      this.documentsService.getCarDocuments(this.carId()).subscribe({
-        next: (docs) => {
-          this.documents.set(docs);
-          this.loading.set(false);
-        },
-        error: (error) => {
-          console.error('Error loading documents:', error);
-          this.toastService.error('Error al cargar documentos', '');
-          this.loading.set(false);
-        },
-      });
+      this.documentsService
+        .getCarDocuments(this.carId())
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (docs) => {
+            this.documents.set(docs);
+            this.loading.set(false);
+          },
+          error: (error) => {
+            console.error('Error loading documents:', error);
+            this.toastService.error('Error al cargar documentos', '');
+            this.loading.set(false);
+          },
+        });
     } catch (error) {
       console.error('Error loading documents:', error);
       this.toastService.error('Error al cargar documentos', '');

@@ -104,7 +104,7 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
                   class="w-full rounded-lg border border-border-muted bg-surface-base px-3 py-2 text-sm"
                 >
                   @for (d of daysOptions; track d) {
-                    <option [value]="d">{{ d }} {{ d === 1 ? 'dia' : 'dias' }}</option>
+                    <option [value]="d">{{ d }} {{ d === 1 ? 'día' : 'días' }}</option>
                   }
                 </select>
               </div>
@@ -206,7 +206,7 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
                 <div class="rounded-lg border border-border-muted bg-surface-base p-3">
                   <div class="mb-2 flex items-center justify-between">
                     <h4 class="font-semibold text-text-primary">
-                      Dia {{ day.dayNumber }}: {{ day.title }}
+                      Día {{ day.dayNumber }}: {{ day.title }}
                     </h4>
                     <span class="text-xs text-text-muted">{{ day.estimatedKm }} km</span>
                   </div>
