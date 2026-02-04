@@ -1,3 +1,7 @@
+## <small>3.66.1 (2026-02-04)</small>
+
+* fix(test): configure vitest for pure unit tests only ([6cb5662](https://github.com/ecucondorSA/autorenta/commit/6cb5662))
+
 ## 3.66.0 (2026-02-04)
 
 * feat(cars): add WebGL fallback - auto-switch to list view ([426ab5d](https://github.com/ecucondorSA/autorenta/commit/426ab5d))
