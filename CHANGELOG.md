@@ -1,3 +1,7 @@
+## <small>3.69.5 (2026-02-04)</small>
+
+* fix(i18n): correct Spanish accents in edge functions and templates ([7de8caf](https://github.com/ecucondorSA/autorenta/commit/7de8caf))
+
 ## <small>3.69.4 (2026-02-04)</small>
 
 * fix(i18n): Spanish accents in remaining email templates ([7b73b26](https://github.com/ecucondorSA/autorenta/commit/7b73b26))
