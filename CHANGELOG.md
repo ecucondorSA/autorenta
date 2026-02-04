@@ -1,3 +1,7 @@
+## <small>3.65.11 (2026-02-04)</small>
+
+* fix(ci): resolve guardrails and E2E test failures ([b7177dc](https://github.com/ecucondorSA/autorenta/commit/b7177dc))
+
 ## <small>3.65.10 (2026-02-04)</small>
 
 * fix(browse): prevent modal opening during programmatic navigation ([0d14f5d](https://github.com/ecucondorSA/autorenta/commit/0d14f5d))
