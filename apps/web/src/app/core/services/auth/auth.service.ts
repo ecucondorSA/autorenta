@@ -193,29 +193,86 @@ export class AuthService implements OnDestroy {
     };
   }
 
+  /**
+   * P0.4 FIX: Wait for Supabase SDK initialization before checking session
+   * On full page reload, the SDK needs time to recover session from localStorage.
+   * We wait for onAuthStateChange to fire with INITIAL_SESSION before giving up.
+   */
   private async loadSession(): Promise<void> {
     this.logger.debug('loadSession: starting...', 'AuthService');
+
+    // First attempt - SDK might be ready
     const {
-      data: { session },
-      error,
+      data: { session: initialSession },
+      error: initialError,
     } = await this.supabase.auth.getSession();
 
-    this.logger.debug('loadSession: getSession result', 'AuthService', {
-      hasSession: !!session,
-      error: error?.message,
+    // If we got a session immediately, we're done
+    if (initialSession) {
+      this.logger.debug('loadSession: immediate session found', 'AuthService');
+      this.state.set({ session: initialSession, loading: false });
+      return;
+    }
+
+    // P0.4 FIX: No session on first try - wait for SDK initialization
+    // The SDK fires INITIAL_SESSION event when it finishes recovering from localStorage
+    this.logger.debug('loadSession: no immediate session, waiting for SDK init...', 'AuthService');
+
+    const SDK_INIT_TIMEOUT = 3000; // 3 seconds max wait for SDK
+
+    try {
+      const session = await new Promise<Session | null>((resolve) => {
+        let resolved = false;
+
+        // Timeout fallback - don't wait forever
+        const timeout = setTimeout(() => {
+          if (!resolved) {
+            resolved = true;
+            this.logger.debug('loadSession: SDK init timeout, no session', 'AuthService');
+            resolve(null);
+          }
+        }, SDK_INIT_TIMEOUT);
+
+        // Listen for the INITIAL_SESSION event from SDK
+        const { data: { subscription } } = this.supabase.auth.onAuthStateChange((event, eventSession) => {
+          this.logger.debug('loadSession: auth event during init', 'AuthService', { event, hasSession: !!eventSession });
+
+          // INITIAL_SESSION fires when SDK finishes loading from storage
+          // SIGNED_IN fires if user was previously authenticated
+          if (!resolved && (event === 'INITIAL_SESSION' || event === 'SIGNED_IN')) {
+            resolved = true;
+            clearTimeout(timeout);
+            subscription.unsubscribe();
+            resolve(eventSession);
+          }
+        });
+      });
+
+      if (session) {
+        this.logger.debug('loadSession: session recovered after SDK init', 'AuthService');
+        this.state.set({ session, loading: false });
+        return;
+      }
+    } catch (err) {
+      this.logger.warn('loadSession: error waiting for SDK init', 'AuthService', err);
+    }
+
+    // No session found after waiting
+    this.logger.debug('loadSession: no session after SDK init', 'AuthService', {
+      initialError: initialError?.message,
     });
 
-    if (error) {
+    if (initialError) {
       this.logger.error(
         'Failed to load session',
         'AuthService',
-        error instanceof Error ? error : new Error(getErrorMessage(error)),
+        initialError instanceof Error ? initialError : new Error(getErrorMessage(initialError)),
       );
       // ✅ FIX: Clear stale session data if there's an auth error
       // This prevents "Tu sesión expiró" errors on public pages
       await this.clearStaleSession();
     }
-    this.state.set({ session: session ?? null, loading: false });
+    this.state.set({ session: null, loading: false });
   }
 
   /**
