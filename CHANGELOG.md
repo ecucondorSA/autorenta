@@ -1,3 +1,7 @@
+## <small>3.69.8 (2026-02-04)</small>
+
+* fix: replace hardcoded placeholder IDs with real values ([12cc680](https://github.com/ecucondorSA/autorenta/commit/12cc680))
+
 ## <small>3.69.7 (2026-02-04)</small>
 
 * fix(i18n): use consistent vos form in phone-verification ([8f3e26a](https://github.com/ecucondorSA/autorenta/commit/8f3e26a))
