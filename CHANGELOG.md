@@ -1,3 +1,8 @@
+## <small>3.66.5 (2026-02-04)</small>
+
+* fix: critical P0 bugs - memory leak, credit calculation, alert removal ([7f8a8fa](https://github.com/ecucondorSA/autorenta/commit/7f8a8fa))
+* fix: replace alert() with NotificationManagerService in booking-detail ([f12529f](https://github.com/ecucondorSA/autorenta/commit/f12529f))
+
 ## <small>3.66.4 (2026-02-04)</small>
 
 * fix(profile): improve avatar error handling ([2d8da44](https://github.com/ecucondorSA/autorenta/commit/2d8da44))
