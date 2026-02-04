@@ -58,7 +58,7 @@ import {
           </div>
           <div class="flex items-center gap-2 text-sm text-text-secondary">
             <ion-icon name="checkmark-circle" class="text-success-strong"></ion-icon>
-            <span>Renovacion anual sin compromiso</span>
+            <span>Renovación anual sin compromiso</span>
           </div>
         </div>
 
@@ -137,7 +137,7 @@ import {
           <div class="relative flex items-center gap-2 p-3 rounded-xl bg-white/10">
             <ion-icon name="time-outline" class="text-white/80"></ion-icon>
             <span class="text-sm text-white/80">
-              Tu membresia vence en {{ daysRemaining() }} dias
+              Tu membresía vence en {{ daysRemaining() }} días
             </span>
             <button
               (click)="renew.emit()"

@@ -80,7 +80,7 @@ declare global {
                 <span class="font-semibold">12 meses</span>
               </div>
               <div class="flex justify-between text-sm">
-                <span class="opacity-70">Renovacion</span>
+                <span class="opacity-70">Renovación</span>
                 <span class="font-semibold">Manual (sin auto-cobro)</span>
               </div>
             </div>
@@ -88,7 +88,7 @@ declare global {
 
           <!-- Benefits reminder -->
           <div class="rounded-xl border border-border-default bg-surface-raised p-4">
-            <h4 class="font-semibold text-text-primary mb-3">Lo que incluye tu membresia:</h4>
+            <h4 class="font-semibold text-text-primary mb-3">Lo que incluye tu membresía:</h4>
             <ul class="space-y-2">
               @for (feature of tier.features; track feature) {
                 <li class="flex items-start gap-2 text-sm text-text-secondary">
@@ -101,7 +101,7 @@ declare global {
 
           <!-- Payment section -->
           <div class="rounded-xl border border-border-default bg-surface-raised p-6 space-y-4">
-            <h4 class="font-semibold text-text-primary">Metodo de pago</h4>
+            <h4 class="font-semibold text-text-primary">Método de pago</h4>
 
             <!-- Wallet balance option -->
             <div class="rounded-lg border border-border-default bg-surface-secondary p-4 space-y-2">
@@ -170,13 +170,13 @@ declare global {
           <div class="text-center space-y-2">
             <p class="text-xs text-text-muted">
               Al continuar, aceptas los
-              <a href="/legal/terms" class="underline">Terminos del Servicio</a>
+              <a href="/legal/terms" class="underline">Términos del Servicio</a>
               y la
-              <a href="/legal/privacy" class="underline">Politica de Privacidad</a>
+              <a href="/legal/privacy" class="underline">Política de Privacidad</a>
               de Autorentar Club.
             </p>
             <p class="text-xs text-text-muted">
-              Tu membresia se activa inmediatamente despues del pago exitoso.
+              Tu membresía se activa inmediatamente después del pago exitoso.
             </p>
           </div>
 
@@ -195,7 +195,7 @@ declare global {
           <!-- No tier selected -->
           <div class="text-center py-12">
             <ion-icon name="alert-circle" class="text-6xl text-warning-text"></ion-icon>
-            <p class="text-text-secondary mt-4">No se selecciono ningun plan.</p>
+            <p class="text-text-secondary mt-4">No se seleccionó ningún plan.</p>
             <button
               (click)="goToPlans()"
               class="mt-4 px-6 py-2 rounded-lg bg-cta-default text-cta-text font-semibold"
@@ -316,7 +316,7 @@ export class ClubSubscribePage implements OnInit {
     const tier = this.selectedTier();
     if (!tier) return;
     if (!this.canPayWithWallet()) {
-      this.error.set('Saldo insuficiente en tu wallet para pagar la membresia.');
+      this.error.set('Saldo insuficiente en tu wallet para pagar la membresía.');
       return;
     }
 
@@ -326,7 +326,7 @@ export class ClubSubscribePage implements OnInit {
     try {
       await this.subscriptionService.createSubscriptionWithWallet(tier.tier);
       this.analytics.trackEvent('club_payment_submitted', { tier: tier.tier, method: 'wallet' });
-      this.toast.success('Membresia activada', 'Se activo tu membresia con wallet.');
+      this.toast.success('Membresia activada', 'Se activo tu membresía con wallet.');
       void this.router.navigate(['/wallet/club/history'], {
         queryParams: { payment: 'success', tier: tier.tier },
       });

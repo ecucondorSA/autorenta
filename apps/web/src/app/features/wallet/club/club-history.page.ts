@@ -24,7 +24,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
           </button>
           <div>
             <h1 class="text-xl font-bold text-text-primary">Historial de Cobertura</h1>
-            <p class="text-sm text-text-secondary">Uso de tu membresia Autorentar Club</p>
+            <p class="text-sm text-text-secondary">Uso de tu membresía Autorentar Club</p>
           </div>
         </div>
 
@@ -79,7 +79,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
             class="rounded-2xl border-2 border-dashed border-amber-500/50 bg-amber-500/5 p-8 text-center"
           >
             <ion-icon name="shield-outline" class="text-5xl text-amber-500/50"></ion-icon>
-            <h3 class="mt-4 font-bold text-text-primary">Sin membresia activa</h3>
+            <h3 class="mt-4 font-bold text-text-primary">Sin membresía activa</h3>
             <p class="text-sm text-text-secondary mt-2">
               Únete al Autorentar Club para alquilar sin depósito de garantía.
             </p>
@@ -104,7 +104,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
             <div class="rounded-xl border border-border-default bg-surface-raised p-8 text-center">
               <ion-icon name="time-outline" class="text-4xl text-text-muted"></ion-icon>
               <p class="text-text-secondary mt-2">No hay movimientos registrados</p>
-              <p class="text-xs text-text-muted mt-1">Los usos de tu cobertura apareceran aqui</p>
+              <p class="text-xs text-text-muted mt-1">Los usos de tu cobertura aparecerán aquí</p>
             </div>
           } @else {
             <div class="space-y-3">
@@ -169,7 +169,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
                   (click)="goToPlans()"
                   class="mt-3 px-4 py-2 rounded-lg bg-warning-strong text-white font-semibold text-sm hover:bg-warning-700 transition"
                 >
-                  Renovar membresia
+                  Renovar membresía
                 </button>
               </div>
             </div>

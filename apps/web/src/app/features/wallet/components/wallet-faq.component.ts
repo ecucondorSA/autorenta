@@ -340,7 +340,7 @@ export class WalletFaqComponent {
           <li>Podés usarlo en futuros siniestros</li>
           <li>Tu wallet no se afecta</li>
         </ul>
-        <p class="mt-2 text-xs text-cta-default"><strong>Tip:</strong> El costo REAL de un siniestro con culpa no es perder el CP, sino perder descuentos y renovacion automatica.</p>
+        <p class="mt-2 text-xs text-cta-default"><strong>Tip:</strong> El costo REAL de un siniestro con culpa no es perder el CP, sino perder descuentos y renovación automática.</p>
         <p class="mt-2 text-xs text-success-700"><strong>Protector de Bonus:</strong> Compralo antes ($15-$45) para que tu clase NO aumente aunque tengas siniestro.</p>`,
       expanded: false,
     },

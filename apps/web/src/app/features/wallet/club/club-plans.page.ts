@@ -48,7 +48,7 @@ import { SubscriptionPlan } from '@core/models/subscription.model';
               <div class="flex-1">
                 <h3 class="font-bold text-text-primary">Ya eres miembro del Club</h3>
                 <p class="text-sm text-text-secondary">
-                  Tu membresia {{ currentTierName() }} esta activa hasta
+                  Tu membresía {{ currentTierName() }} está activa hasta
                   {{ subscriptionExpiry() | date: 'dd MMM yyyy' }}
                 </p>
               </div>
