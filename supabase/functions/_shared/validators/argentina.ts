@@ -321,7 +321,7 @@ export function validateArgentinaDniFront(text: string): DocumentValidationResul
     result.extracted.documentNumber = dniNumber;
     result.confidence += 25;
   } else {
-    result.errors.push('No se encontro numero de documento');
+    result.errors.push('No se encontró número de documento');
   }
 
   // Extract name
@@ -447,7 +447,7 @@ export function validateArgentinaLicenseFront(text: string): DocumentValidationR
     result.extracted.categories = categories;
     result.confidence += 20;
   } else {
-    result.warnings.push('No se detectaron categorias de licencia');
+    result.warnings.push('No se detectaron categorías de licencia');
   }
 
   // Extract expiry date
@@ -459,10 +459,10 @@ export function validateArgentinaLicenseFront(text: string): DocumentValidationR
     // Check if expired
     const expiry = new Date(expiryDate);
     if (expiry < new Date()) {
-      result.errors.push('La licencia esta vencida');
+      result.errors.push('La licencia está vencida');
     }
   } else {
-    result.warnings.push('No se encontro fecha de vencimiento');
+    result.warnings.push('No se encontró fecha de vencimiento');
   }
 
   // Check for professional license

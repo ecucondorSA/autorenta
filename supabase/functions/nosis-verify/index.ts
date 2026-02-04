@@ -186,7 +186,7 @@ serve(async (req: Request) => {
       return new Response(
         JSON.stringify({
           error: 'INVALID_DOCUMENT',
-          message: `Numero de ${document_type} invalido`
+          message: `Número de ${document_type} inválido`
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

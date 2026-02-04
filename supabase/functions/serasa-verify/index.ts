@@ -237,7 +237,7 @@ serve(async (req: Request) => {
       return new Response(
         JSON.stringify({
           error: 'INVALID_CPF',
-          message: 'CPF invalido'
+          message: 'CPF inválido'
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

@@ -365,7 +365,7 @@ export function validateEcuadorCedulaFront(text: string): DocumentValidationResu
   // Check for required keywords
   const keywordCount = countKeywords(normalized, ECUADOR_CEDULA_KEYWORDS.front);
   if (keywordCount < 2) {
-    result.errors.push('No se detectaron suficientes indicadores de cedula ecuatoriana');
+    result.errors.push('No se detectaron suficientes indicadores de cédula ecuatoriana');
     return result;
   }
   result.confidence += keywordCount * 8;
@@ -380,9 +380,9 @@ export function validateEcuadorCedulaFront(text: string): DocumentValidationResu
     // Check if there's a 10-digit number that failed checksum
     const anyTenDigit = normalized.match(/\b\d{10}\b/);
     if (anyTenDigit) {
-      result.errors.push('Numero de cedula invalido (verificador incorrecto)');
+      result.errors.push('Número de cédula inválido (verificador incorrecto)');
     } else {
-      result.errors.push('No se encontro numero de cedula');
+      result.errors.push('No se encontró número de cédula');
     }
   }
 
@@ -443,7 +443,7 @@ export function validateEcuadorCedulaBack(text: string): DocumentValidationResul
   // Check for back-side keywords
   const keywordCount = countKeywords(normalized, ECUADOR_CEDULA_KEYWORDS.back);
   if (keywordCount < 1) {
-    result.errors.push('No se detectaron indicadores del reverso de la cedula');
+    result.errors.push('No se detectaron indicadores del reverso de la cédula');
     return result;
   }
   result.confidence += keywordCount * 15;
@@ -521,10 +521,10 @@ export function validateEcuadorLicenseFront(text: string): DocumentValidationRes
     // Check if expired
     const expiry = new Date(expiryDate);
     if (expiry < new Date()) {
-      result.errors.push('La licencia esta vencida');
+      result.errors.push('La licencia está vencida');
     }
   } else {
-    result.warnings.push('No se encontro fecha de vencimiento');
+    result.warnings.push('No se encontró fecha de vencimiento');
   }
 
   // Extract points
