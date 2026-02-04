@@ -116,7 +116,7 @@
             <div class="inline-reject-form">
               <div class="reject-form-header">
                 <h4>Rechazar Reserva</h4>
-                <button class="close-inline-btn" (click)="onCancelReject()">
+                <button class="close-inline-btn" (click)="onCancelReject()" aria-label="Cancelar rechazo">
                   <app-icon name="x" [size]="18" />
                 </button>
               </div>
@@ -194,10 +194,10 @@
     <div class="analysis-drawer" (click)="$event.stopPropagation()">
       <div class="drawer-header">
         <div class="drawer-info">
-          <h2>Analisis del Locatario</h2>
+          <h2>Análisis del Locatario</h2>
           <p class="drawer-subtitle">Solicitud para: {{ selectedAnalysisBooking()!.car_name }}</p>
         </div>
-        <button class="close-btn" (click)="closeAnalysisPanel()">
+        <button class="close-btn" (click)="closeAnalysisPanel()" aria-label="Cerrar análisis">
           <app-icon name="x" [size]="24" />
         </button>
       </div>

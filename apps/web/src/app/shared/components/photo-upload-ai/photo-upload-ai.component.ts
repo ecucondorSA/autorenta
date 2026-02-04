@@ -265,6 +265,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
               [alt]="'Foto ' + (i + 1)"
               class="w-full h-full object-cover"
               [class.blur-sm]="photo.status === 'validating'"
+              loading="lazy"
             />
 
             <!-- Validation Overlay with AI Scan Effect (only while validating) -->

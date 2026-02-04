@@ -267,7 +267,7 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
                     <div class="photos-grid">
                       @for (photo of section.photos_uploaded; track photo) {
                         <div class="photo-thumb">
-                          <img [src]="photo" alt="Foto de evidencia" />
+                          <img [src]="photo" alt="Foto de evidencia" loading="lazy" />
                         </div>
                       }
                       @if (section.photos_uploaded.length < section.photos_required) {

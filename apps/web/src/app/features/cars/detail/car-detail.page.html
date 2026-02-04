@@ -92,14 +92,15 @@
         <button
           (click)="router.navigate(['/cars'])"
           class="bg-black/20 backdrop-blur-md p-2 rounded-full text-white"
+          aria-label="Volver a la lista de autos"
         >
           <app-icon name="chevron-left" [size]="20" />
         </button>
         <div class="flex gap-2">
-          <button class="bg-black/20 backdrop-blur-md p-2 rounded-full text-white">
+          <button class="bg-black/20 backdrop-blur-md p-2 rounded-full text-white" aria-label="Compartir">
             <app-icon name="share" [size]="20" />
           </button>
-          <button class="bg-black/20 backdrop-blur-md p-2 rounded-full text-white">
+          <button class="bg-black/20 backdrop-blur-md p-2 rounded-full text-white" aria-label="Agregar a favoritos">
             <app-icon name="heart" [size]="20" />
           </button>
         </div>
@@ -110,12 +111,14 @@
         <button
           (click)="previousPhoto()"
           class="hero-overlay hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-xl items-center justify-center hover:bg-white transition-all scale-90 group-hover:scale-100 opacity-0 group-hover:opacity-100"
+          aria-label="Foto anterior"
         >
           <app-icon name="chevron-left" [size]="24" />
         </button>
         <button
           (click)="nextPhoto()"
           class="hero-overlay hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-xl items-center justify-center hover:bg-white transition-all scale-90 group-hover:scale-100 opacity-0 group-hover:opacity-100"
+          aria-label="Foto siguiente"
         >
           <app-icon name="chevron-right" [size]="24" />
         </button>
