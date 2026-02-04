@@ -1,3 +1,7 @@
+## <small>3.66.2 (2026-02-04)</small>
+
+* fix(lint): remove unused catch parameter ([aba585e](https://github.com/ecucondorSA/autorenta/commit/aba585e))
+
 ## <small>3.66.1 (2026-02-04)</small>
 
 * fix(test): configure vitest for pure unit tests only ([6cb5662](https://github.com/ecucondorSA/autorenta/commit/6cb5662))
