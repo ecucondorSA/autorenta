@@ -1,3 +1,9 @@
+## <small>3.69.1 (2026-02-04)</small>
+
+* fix: i18n accents and subscription memory leaks ([d6b202d](https://github.com/ecucondorSA/autorenta/commit/d6b202d))
+* chore: cleanup and i18n fixes ([49791f2](https://github.com/ecucondorSA/autorenta/commit/49791f2))
+* chore: remove incomplete update-binance-rate function ([e1ca37b](https://github.com/ecucondorSA/autorenta/commit/e1ca37b))
+
 ## 3.69.0 (2026-02-04)
 
 * feat(tools): add WhatsApp contact import utility ([33fb428](https://github.com/ecucondorSA/autorenta/commit/33fb428))
