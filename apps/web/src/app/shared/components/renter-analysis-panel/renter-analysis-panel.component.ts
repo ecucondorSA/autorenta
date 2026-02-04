@@ -277,7 +277,7 @@ interface RenterAnalysis {
           <div class="section bookings-section">
             <h5 class="section-title">
               <app-icon name="calendar" [size]="18" />
-              Ultimos Alquileres
+              Últimos Alquileres
             </h5>
             <div class="bookings-list">
               @for (booking of analysis()!.recent_bookings.slice(0, 3); track booking.id) {

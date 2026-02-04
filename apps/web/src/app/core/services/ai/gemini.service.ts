@@ -228,12 +228,12 @@ export class GeminiService {
   // ============================================
 
   /**
-   * Llama al worker de Gemini con el endpoint y parametros especificados
+   * Llama al worker de Gemini con el endpoint y parámetros especificados
    *
    * @param endpoint - Nombre del endpoint (chat-suggestions, legal-assistant, etc)
-   * @param params - Parametros para el endpoint
+   * @param params - Parámetros para el endpoint
    * @returns Respuesta tipada del worker
-   * @throws Error si el worker falla o no esta configurado
+   * @throws Error si el worker falla o no está configurado
    */
   private async callWorker<T>(endpoint: string, params: unknown): Promise<T> {
     if (!this.WORKER_URL) {

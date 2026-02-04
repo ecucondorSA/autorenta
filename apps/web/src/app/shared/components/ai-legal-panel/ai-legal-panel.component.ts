@@ -450,10 +450,10 @@ export class AiLegalPanelComponent {
   customQuestion = '';
 
   readonly quickQuestions = [
-    'Cual es la franquicia del seguro?',
-    'Que pasa si excedo los kilometros?',
-    'Puedo viajar a otra provincia?',
-    'Como es la politica de combustible?',
+    '¿Cuál es la franquicia del seguro?',
+    '¿Qué pasa si excedo los kilómetros?',
+    '¿Puedo viajar a otra provincia?',
+    '¿Cómo es la política de combustible?',
   ];
 
   /** Computed: obtiene el car desde booking o directamente */

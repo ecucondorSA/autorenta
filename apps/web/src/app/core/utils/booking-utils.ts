@@ -41,7 +41,7 @@ export const PAYMENT_METHOD_LABELS: Record<string, string> = {
 export const PAYMENT_PLAN_LABELS: Record<string, string> = {
   full: 'Pago completo',
   split_50_50: '50% ahora, 50% al check-in',
-  deposit_20: '20% ahora, resto 7 dias antes',
+  deposit_20: '20% ahora, resto 7 días antes',
   partial: 'Pago parcial',
   installments: 'Cuotas',
 };
@@ -304,8 +304,8 @@ export function calculateDaysCount(
  */
 export function formatDuration(days: number): string {
   if (days <= 0) return '-';
-  if (days === 1) return '1 dia';
-  if (days < 7) return `${days} dias`;
+  if (days === 1) return '1 día';
+  if (days < 7) return `${days} días`;
   if (days === 7) return '1 semana';
   if (days < 30) {
     const weeks = Math.floor(days / 7);
@@ -313,7 +313,7 @@ export function formatDuration(days: number): string {
     if (remainingDays === 0) {
       return `${weeks} semana${weeks > 1 ? 's' : ''}`;
     }
-    return `${weeks} semana${weeks > 1 ? 's' : ''} y ${remainingDays} dia${remainingDays > 1 ? 's' : ''}`;
+    return `${weeks} semana${weeks > 1 ? 's' : ''} y ${remainingDays} día${remainingDays > 1 ? 's' : ''}`;
   }
   const months = Math.floor(days / 30);
   return `${months} mes${months > 1 ? 'es' : ''}`;

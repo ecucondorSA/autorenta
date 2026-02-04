@@ -58,7 +58,7 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
           <div>
             <h3 class="text-sm font-semibold text-text-primary">Planificador de Viaje</h3>
             <p class="text-xs text-text-secondary">
-              Genera un itinerario para {{ rentalDays() }} dias
+              Genera un itinerario para {{ rentalDays() }} días
             </p>
           </div>
         </div>
@@ -190,7 +190,7 @@ import type { Booking, Car, TripItinerary, TripPreferences } from '../../../core
                 class="flex items-center justify-between rounded-lg bg-indigo-500/10 p-3 text-sm"
               >
                 <span class="text-indigo-700">
-                  {{ itinerary()!.totalDays }} dias - {{ itinerary()!.totalKm }} km aprox.
+                  {{ itinerary()!.totalDays }} días - {{ itinerary()!.totalKm }} km aprox.
                 </span>
                 <button
                   type="button"

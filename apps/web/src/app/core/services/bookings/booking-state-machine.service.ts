@@ -221,7 +221,7 @@ export class BookingStateMachineService {
 
   /**
    * Mapea el estado FSM al step index del timeline (0-8)
-   * Util para componentes que muestran progreso
+   * Útil para componentes que muestran progreso
    */
   getTimelineStepIndex(state: BookingState): number {
     const stateToStep: Record<BookingState, number> = {

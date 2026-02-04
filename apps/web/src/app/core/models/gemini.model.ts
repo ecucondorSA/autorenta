@@ -57,10 +57,10 @@ export interface AiBookingContext {
 }
 
 /**
- * Parametros para generar sugerencias de chat
+ * Parámetros para generar sugerencias de chat
  */
 export interface ChatSuggestionsParams {
-  /** Historial de la conversacion (ultimos 5 mensajes) */
+  /** Historial de la conversación (últimos 5 mensajes) */
   conversationHistory: Array<{
     role: 'user' | 'recipient';
     text: string;
@@ -81,11 +81,11 @@ export interface ChatSuggestionsParams {
 export interface BookingTerms {
   /** Política de cancelación */
   cancellationPolicy: CancelPolicy;
-  /** Limite de kilometros (null = ilimitado) */
+  /** Límite de kilómetros (null = ilimitado) */
   mileageLimit?: number | null;
   /** Precio por km extra */
   extraKmPrice?: number | null;
-  /** Politica de combustible */
+  /** Política de combustible */
   fuelPolicy?: string | null;
   /** Provincias permitidas */
   allowedProvinces?: string[] | null;
@@ -191,7 +191,7 @@ export interface TripDay {
   activities: TripActivity[];
   /** Lugar de pernocte */
   overnightLocation?: string;
-  /** Kilometros estimados para este dia */
+  /** Kilómetros estimados para este día */
   estimatedKm: number;
 }
 
@@ -199,11 +199,11 @@ export interface TripDay {
  * Itinerario completo generado por IA
  */
 export interface TripItinerary {
-  /** Total de dias */
+  /** Total de días */
   totalDays: number;
-  /** Kilometros totales estimados */
+  /** Kilómetros totales estimados */
   totalKm: number;
-  /** Detalle por dia */
+  /** Detalle por día */
   days: TripDay[];
   /** Tips generales para el viaje */
   tips: string[];
@@ -212,7 +212,7 @@ export interface TripItinerary {
 }
 
 /**
- * Parametros para generar itinerario
+ * Parámetros para generar itinerario
  */
 export interface TripPlannerParams {
   /** Cantidad de días del viaje */
