@@ -1,3 +1,7 @@
+## <small>3.65.15 (2026-02-04)</small>
+
+* fix(auth): prevent session loss during rapid page navigation ([b3f0cd8](https://github.com/ecucondorSA/autorenta/commit/b3f0cd8))
+
 ## <small>3.65.14 (2026-02-04)</small>
 
 * fix(e2e): run patchright tests directly with tsx ([8c4a328](https://github.com/ecucondorSA/autorenta/commit/8c4a328))
