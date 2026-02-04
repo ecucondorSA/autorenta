@@ -258,7 +258,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
       id: car.id,
     });
 
-    return { url, alt: car.title };
+    return { url, alt: car.title || `${car.brand || car.brand_name || ''} ${car.model || car.model_name || ''} ${car.year || ''}`.trim() || 'Auto' };
   });
 
   /**

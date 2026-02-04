@@ -68,12 +68,15 @@
 }
 
 .info-card {
+  display: block;
   background: white;
   border-radius: 1rem;
   padding: 1.5rem;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  color: inherit;
 }
 
 .info-card:hover {

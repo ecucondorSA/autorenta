@@ -554,7 +554,6 @@ export const routes: Routes = [
   },
   {
     path: 'support',
-    canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: () => import('./features/support/support.page').then((m) => m.SupportPage),
   },

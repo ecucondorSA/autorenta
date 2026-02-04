@@ -38,7 +38,8 @@ export const authRefreshInterceptor: HttpInterceptorFn = (req, next) => {
       if (
         error instanceof HttpErrorResponse &&
         error.status === 401 &&
-        !req.url.includes('auth/v1/token') // Avoid infinite loops if refresh endpoint fails
+        !req.url.includes('auth/v1/token') && // Avoid infinite loops if refresh endpoint fails
+        auth.isAuthenticated() // Only attempt refresh if user was logged in
       ) {
         if (!isRefreshing) {
           isRefreshing = true;
