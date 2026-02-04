@@ -204,13 +204,13 @@ serve(async (req) => {
 });
 
 /* ============================================
- * DOCUMENTACION
+ * DOCUMENTACIÓN
  * ============================================
  *
- * ## Proposito
+ * ## Propósito
  *
  * Permite a usuarios que no pueden acceder a su cuenta
- * solicitar la eliminacion enviando un email de confirmacion.
+ * solicitar la eliminación enviando un email de confirmación.
  *
  * ## Uso
  *

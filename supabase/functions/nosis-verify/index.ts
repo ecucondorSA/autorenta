@@ -150,7 +150,7 @@ serve(async (req: Request) => {
         JSON.stringify({
           success: false,
           error: 'NOSIS_NOT_CONFIGURED',
-          message: 'Servicio de verificacion crediticia no configurado'
+          message: 'Servicio de verificación crediticia no configurado'
         }),
         { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
