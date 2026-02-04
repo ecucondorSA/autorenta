@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="mb-6">
     <h2 class="text-2xl font-bold text-text-primary mb-2 font-satoshi">
-      Donde es el retiro y devolucion del auto?
+      ¿Dónde es el retiro y devolución del auto?
     </h2>
     <p class="text-text-secondary">
       Selecciona ubicaciones para calcular la tarifa de delivery si es necesario
@@ -42,7 +42,7 @@
       }
       @if (pickupCoordinates()) {
         <div class="mt-2 text-sm text-success-700">
-          Ubicacion: {{ pickupCoordinates()!.lat.toFixed(4) }},
+          Ubicación: {{ pickupCoordinates()!.lat.toFixed(4) }},
           {{ pickupCoordinates()!.lng.toFixed(4) }}
         </div>
       }
@@ -51,7 +51,7 @@
 
   <!-- Dropoff Location -->
   <div class="mb-8">
-    <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">Lugar de devolucion</h3>
+    <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">Lugar de devolución</h3>
     <div class="location-input-group">
       <!-- Address Input -->
       <input
@@ -81,7 +81,7 @@
       }
       @if (dropoffCoordinates()) {
         <div class="mt-2 text-sm text-success-700">
-          Ubicacion: {{ dropoffCoordinates()!.lat.toFixed(4) }},
+          Ubicación: {{ dropoffCoordinates()!.lat.toFixed(4) }},
           {{ dropoffCoordinates()!.lng.toFixed(4) }}
         </div>
       }
@@ -118,8 +118,8 @@
         class="w-5 h-5 text-cta-default rounded focus:ring-2 focus:ring-cta-default"
       />
       <div class="ml-3 flex-1">
-        <div class="font-semibold text-text-primary">Necesitas delivery del auto?</div>
-        <div class="text-sm text-text-secondary">Entrega del auto en tu ubicacion de retiro</div>
+        <div class="font-semibold text-text-primary">¿Necesitas delivery del auto?</div>
+        <div class="text-sm text-text-secondary">Entrega del auto en tu ubicación de retiro</div>
         @if (!isWithinDeliveryRange()) {
           <div class="text-xs text-warning-700 mt-1">
             La distancia excede el rango de delivery (max. 50 km)
@@ -135,7 +135,7 @@
           Tarifa de delivery: USD ${{ deliveryFeeCents() / 100 | number: '1.2-2' }}
         </div>
         <div class="text-sm text-text-secondary mt-1">
-          Se agregara al precio total de la reserva
+          Se agregará al precio total de la reserva
         </div>
       </div>
     }

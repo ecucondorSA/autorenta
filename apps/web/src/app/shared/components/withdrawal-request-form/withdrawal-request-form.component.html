@@ -27,12 +27,12 @@
           class="md:col-span-2 p-4 bg-warning-bg border border-warning-border rounded-xl transition-colors"
         >
           <p class="text-sm font-semibold text-warning-strong font-luxury">
-            Credito Autorentar protegido
+            Crédito Autorentar protegido
           </p>
           <p class="text-xs text-warning-text leading-relaxed">
             ${{ nonWithdrawableBalance | number: '1.2-2' }} deben permanecer en tu wallet para
             garantizar reservas y futuras locaciones. Este saldo no es reembolsable, pero puedes
-            usarlo para reservar vehiculos o cubrir garantias.
+            usarlo para reservar vehículos o cubrir garantías.
           </p>
         </div>
       }
@@ -97,7 +97,7 @@
               (click)="setMaxAmount()"
               class="text-sm text-cta-default hover:underline font-semibold"
             >
-              Retirar maximo
+              Retirar máximo
             </button>
           </div>
           <div class="relative">
@@ -117,7 +117,7 @@
               step="0.01"
               aria-label="Monto a retirar" />
           </div>
-          <p class="text-sm text-text-muted">Minimo: ${{ MIN_AMOUNT }}</p>
+          <p class="text-sm text-text-muted">Mínimo: ${{ MIN_AMOUNT }}</p>
           @if (getErrorMessage('amount')) {
             <p class="text-sm text-error-text">{{ getErrorMessage('amount') }}</p>
           }
@@ -138,14 +138,14 @@
             </div>
 
             <div class="flex items-center justify-between text-sm">
-              <span class="text-text-secondary">Comision (1.5%)</span>
+              <span class="text-text-secondary">Comisión (1.5%)</span>
               <span class="font-semibold text-error-text">
                 -${{ feeAmount() | number: '1.2-2' }}
               </span>
             </div>
 
             <div class="border-t border-border-muted pt-2 flex items-center justify-between">
-              <span class="text-sm font-bold text-text-primary">Recibiras en tu cuenta</span>
+              <span class="text-sm font-bold text-text-primary">Recibirás en tu cuenta</span>
               <span class="h5 text-success-strong font-mono">
                 ${{ netAmount() | number: '1.2-2' }}
               </span>
@@ -154,7 +154,7 @@
             <div
               class="border-t border-border-muted pt-2 flex items-center justify-between text-sm"
             >
-              <span class="text-text-secondary">Se debitara de tu wallet</span>
+              <span class="text-text-secondary">Se debitará de tu wallet</span>
               <span class="font-semibold text-text-primary">
                 ${{ totalDebit() | number: '1.2-2' }}
               </span>
@@ -201,7 +201,7 @@
           ></textarea>
         </div>
 
-        <!-- Informacion importante -->
+        <!-- Información importante -->
         <div class="bg-cta-default/5 border border-cta-default/20 rounded-xl p-4 transition-colors">
           <p class="text-sm text-cta-default flex items-center gap-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,16 +212,16 @@
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <strong>Informacion importante:</strong>
+            <strong>Información importante:</strong>
           </p>
           <ul class="mt-2 text-xs text-cta-default/80 space-y-1 list-disc list-inside">
-            <li>El retiro sera procesado en 24-48 horas habiles.</li>
-            <li>La transferencia puede demorar 1-2 dias habiles adicionales segun el banco.</li>
-            <li>Se aplicara una comision del 1.5% sobre el monto solicitado.</li>
+            <li>El retiro será procesado en 24-48 horas hábiles.</li>
+            <li>La transferencia puede demorar 1-2 días hábiles adicionales según el banco.</li>
+            <li>Se aplicará una comisión del 1.5% sobre el monto solicitado.</li>
             <li>
-              El credito exclusivo de Autorentar se mantiene en tu wallet y no puede retirarse.
+              El crédito exclusivo de Autorentar se mantiene en tu wallet y no puede retirarse.
             </li>
-            <li>Una vez aprobado, el monto se debitara de tu wallet inmediatamente.</li>
+            <li>Una vez aprobado, el monto se debitará de tu wallet inmediatamente.</li>
           </ul>
         </div>
 

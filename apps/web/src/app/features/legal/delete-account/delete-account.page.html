@@ -171,7 +171,7 @@
               Cuenta eliminada correctamente
             </h2>
             <p class="mt-2 text-text-secondary">
-              Tu cuenta y datos han sido eliminados. Seras redirigido a la pagina principal.
+              Tu cuenta y datos han sido eliminados. Serás redirigido a la página principal.
             </p>
             <p class="mt-4 text-sm text-text-secondary">
               Gracias por haber sido parte de Autorentar.
@@ -199,7 +199,7 @@
             </div>
             <h2 class="mt-6 text-xl font-semibold text-red-700">Error al eliminar la cuenta</h2>
             <p class="mt-2 text-text-secondary">
-              {{ errorMessage() || 'Ocurrio un error inesperado. Por favor intenta nuevamente.' }}
+              {{ errorMessage() || 'Ocurrió un error inesperado. Por favor intenta nuevamente.' }}
             </p>
             <button
               (click)="step.set('confirm')"
@@ -217,9 +217,9 @@
       <div class="space-y-6">
         @if (!requestSubmitted()) {
           <article class="card">
-            <h2 class="text-xl font-semibold">Solicitar eliminacion de cuenta</h2>
+            <h2 class="text-xl font-semibold">Solicitar eliminación de cuenta</h2>
             <p class="mt-2 text-text-secondary">
-              Para eliminar tu cuenta, puedes iniciar sesion o enviar una solicitud proporcionando
+              Para eliminar tu cuenta, puedes iniciar sesión o enviar una solicitud proporcionando
               el email asociado a tu cuenta.
             </p>
 
@@ -227,7 +227,7 @@
               (click)="goToLogin()"
               class="mt-4 w-full px-6 py-3 bg-cta-default hover:bg-cta-hover text-white font-semibold rounded-lg transition-colors"
             >
-              Iniciar sesion para eliminar cuenta
+              Iniciar sesión para eliminar cuenta
             </button>
 
             <div class="relative my-6">
@@ -241,7 +241,7 @@
 
             <h3 class="font-semibold">Enviar solicitud por email</h3>
             <p class="mt-2 text-sm text-text-secondary">
-              Si no puedes acceder a tu cuenta, enviaremos un enlace de confirmacion a tu email.
+              Si no puedes acceder a tu cuenta, enviaremos un enlace de confirmación a tu email.
             </p>
 
             <div class="mt-4 space-y-4">
@@ -268,7 +268,7 @@
                   id="reason"
                   [value]="requestReason()"
                   (input)="requestReason.set($any($event.target).value)"
-                  placeholder="Cuentanos por que deseas eliminar tu cuenta..."
+                  placeholder="Cuéntanos por qué deseas eliminar tu cuenta..."
                   rows="3"
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-cta-default focus:border-transparent resize-none"
                 ></textarea>
@@ -320,7 +320,7 @@
                     Enviando...
                   </span>
                 } @else {
-                  Enviar solicitud de eliminacion
+                  Enviar solicitud de eliminación
                 }
               </button>
             </div>
@@ -348,11 +348,11 @@
             </div>
             <h2 class="mt-6 text-xl font-semibold text-green-700">Solicitud enviada</h2>
             <p class="mt-2 text-text-secondary">
-              Hemos enviado un enlace de confirmacion a <strong>{{ requestEmail() }}</strong
+              Hemos enviado un enlace de confirmación a <strong>{{ requestEmail() }}</strong
               >.
             </p>
             <p class="mt-4 text-sm text-text-secondary">
-              Si no recibes el email en los proximos minutos, revisa tu carpeta de spam. La
+              Si no recibes el email en los próximos minutos, revisa tu carpeta de spam. La
               solicitud expira en 24 horas.
             </p>
             <a
@@ -368,16 +368,16 @@
 
     <!-- Contact Info -->
     <article class="card">
-      <h2 class="font-semibold text-lg">Necesitas ayuda?</h2>
+      <h2 class="font-semibold text-lg">¿Necesitas ayuda?</h2>
       <p class="mt-2 text-text-secondary">
-        Si tienes problemas para eliminar tu cuenta o necesitas asistencia, contactanos en:
+        Si tienes problemas para eliminar tu cuenta o necesitas asistencia, contáctanos en:
         <a href="mailto:soporte&#64;autorentar.com" class="link font-semibold">
           soporte&#64;autorentar.com
         </a>
       </p>
       <p class="mt-4 text-sm text-text-secondary">
-        Procesamos las solicitudes de eliminacion en un plazo maximo de 30 dias, conforme a las
-        regulaciones de proteccion de datos.
+        Procesamos las solicitudes de eliminación en un plazo máximo de 30 días, conforme a las
+        regulaciones de protección de datos.
       </p>
     </article>
   </div>

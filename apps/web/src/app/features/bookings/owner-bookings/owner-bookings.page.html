@@ -5,7 +5,7 @@
       <h1 class="text-3xl font-bold text-text-primary tracking-tight font-satoshi">
         Reservas de Mis Autos
       </h1>
-      <p class="mt-2 text-text-secondary">Gestiona las reservas de tus vehículos</p>
+      <p class="mt-2 text-text-secondary">Gestioná las reservas de tus vehículos</p>
     </div>
   </div>
 
@@ -237,7 +237,7 @@
                 <div class="owner-booking-card__title">
                   <span class="owner-booking-card__status-icon">{{ statusIcon(booking) }}</span>
                   <div>
-                    <p class="owner-booking-card__label">Vehiculo</p>
+                    <p class="owner-booking-card__label">Vehículo</p>
                     <h3 class="owner-booking-card__name font-satoshi">
                       {{ booking.car_title || booking.car_id }}
                     </h3>
@@ -325,7 +325,7 @@
                     [disabled]="processingAction() === booking.id"
                     class="owner-booking-btn bg-blue-600 text-text-inverse disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {{ processingAction() === booking.id ? '...' : '✅ Devolucion' }}
+                    {{ processingAction() === booking.id ? '...' : '✅ Devolución' }}
                   </button>
                 }
 
