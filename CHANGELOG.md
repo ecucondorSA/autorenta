@@ -1,3 +1,7 @@
+## <small>3.69.6 (2026-02-04)</small>
+
+* fix(a11y): add aria-labels to icon-only buttons ([952b4b0](https://github.com/ecucondorSA/autorenta/commit/952b4b0))
+
 ## <small>3.69.5 (2026-02-04)</small>
 
 * fix(i18n): correct Spanish accents in edge functions and templates ([7de8caf](https://github.com/ecucondorSA/autorenta/commit/7de8caf))
