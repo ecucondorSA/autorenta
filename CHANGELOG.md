@@ -1,3 +1,7 @@
+## <small>3.67.8 (2026-02-04)</small>
+
+* fix(i18n): Spanish accent corrections in booking utils and notifications ([3794ac3](https://github.com/ecucondorSA/autorenta/commit/3794ac3))
+
 ## <small>3.67.7 (2026-02-04)</small>
 
 * fix(i18n): Spanish accent corrections in models, services, and components ([4242cee](https://github.com/ecucondorSA/autorenta/commit/4242cee))
