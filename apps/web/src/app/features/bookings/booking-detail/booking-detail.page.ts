@@ -45,6 +45,7 @@ import { TrafficInfractionsService } from '@core/services/infrastructure/traffic
 import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
 import { PaymentsService } from '@core/services/payments/payments.service';
 import { MetaService } from '@core/services/ui/meta.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { AlertController } from '@ionic/angular';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -218,6 +219,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly pdfWorkerService = inject(PdfWorkerService);
   private readonly logger = inject(LoggerService).createChildLogger('BookingDetailPage');
   private readonly injector = inject(Injector);
+  private readonly notifications = inject(NotificationManagerService);
 
   constructor() {
     addIcons({
@@ -1054,7 +1056,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
     const days = parseInt(daysStr, 10);
     if (isNaN(days) || days < 1) {
-      alert('Por favor ingresa un número válido de días.');
+      this.notifications.warning('Extensión', 'Por favor ingresa un número válido de días.');
       return;
     }
 
@@ -1074,19 +1076,20 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     try {
       const result = await this.bookingsService.requestExtension(booking.id, newEndDate);
       if (result.success) {
-        alert(
-          `Solicitud de extensión enviada exitosamente por un costo estimado de ${result.additionalCost}. Esperando aprobación del anfitrión.`,
+        this.notifications.success(
+          'Extensión',
+          `Solicitud enviada por ${result.additionalCost}. Esperando aprobación del anfitrión.`,
         );
         // Reload booking to show pending extension status
         const updated = await this.bookingsService.getBookingById(booking.id);
         this.booking.set(updated);
         await this.loadPendingExtensionRequests(booking.id);
       } else {
-        alert('Error al solicitar extensión: ' + result.error);
+        this.notifications.error('Extensión', 'Error al solicitar: ' + result.error);
       }
     } catch (error) {
       console.error('Error requesting booking extension:', error);
-      alert('Ocurrió un error inesperado al solicitar la extensión.');
+      this.notifications.error('Extensión', 'Ocurrió un error inesperado.');
     } finally {
       this.loading.set(false);
     }
@@ -1100,17 +1103,17 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     try {
       const result = await this.bookingsService.approveExtensionRequest(requestId);
       if (result.success) {
-        alert('Solicitud de extensión aprobada y reserva actualizada.');
+        this.notifications.success('Extensión', 'Solicitud aprobada y reserva actualizada.');
         // Reload booking and requests to reflect changes
         const updated = await this.bookingsService.getBookingById(this.booking()!.id);
         this.booking.set(updated);
         await this.loadPendingExtensionRequests(this.booking()!.id);
       } else {
-        alert('Error al aprobar extensión: ' + result.error);
+        this.notifications.error('Extensión', 'Error al aprobar: ' + result.error);
       }
     } catch (error) {
       console.error('Error approving extension request:', error);
-      alert('Ocurrió un error inesperado al aprobar la extensión.');
+      this.notifications.error('Extensión', 'Ocurrió un error inesperado.');
     } finally {
       this.loading.set(false);
     }
@@ -1128,15 +1131,15 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     try {
       const result = await this.bookingsService.rejectExtensionRequest(requestId, reason || '');
       if (result.success) {
-        alert('Solicitud de extensión rechazada.');
+        this.notifications.success('Extensión', 'Solicitud rechazada.');
         // Reload requests to reflect changes
         await this.loadPendingExtensionRequests(this.booking()!.id);
       } else {
-        alert('Error al rechazar extensión: ' + result.error);
+        this.notifications.error('Extensión', 'Error al rechazar: ' + result.error);
       }
     } catch (error) {
       console.error('Error rejecting extension request:', error);
-      alert('Ocurrió un error inesperado al rechazar la extensión.');
+      this.notifications.error('Extensión', 'Ocurrió un error inesperado.');
     } finally {
       this.loading.set(false);
     }
@@ -1725,7 +1728,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
           return;
         } catch (error) {
           this.logger.error('Error confirming renter release', error);
-          alert('Error al confirmar la liberación del pago. Intentá de nuevo.');
+          this.notifications.error('Pago', 'Error al confirmar la liberación. Intentá de nuevo.');
           return;
         }
       }
@@ -1747,9 +1750,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     // Show success message first
     const message = result?.message || 'Operación completada exitosamente';
     if (result?.funds_released) {
-      alert(`✅ ${message}\n\n¡Los fondos fueron liberados!`);
+      this.notifications.success('Confirmación', `${message}. ¡Los fondos fueron liberados!`);
     } else {
-      alert(`✅ ${message}`);
+      this.notifications.success('Confirmación', message);
     }
 
     // Force reload booking to get updated status
@@ -1770,7 +1773,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   }
 
   handleConfirmationError(errorMessage: string): void {
-    alert(`❌ Error: ${errorMessage}`);
+    this.notifications.error('Error', errorMessage);
   }
 
   async handleTimelineAction(event: {
@@ -1802,7 +1805,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private async handleMarkAsReturned(bookingId: string): Promise<void> {
     const userId = this.authService.session$()?.user?.id;
     if (!userId) {
-      alert('Necesitas iniciar sesión para continuar.');
+      this.notifications.warning('Sesión', 'Necesitas iniciar sesión para continuar.');
       return;
     }
 
@@ -1822,10 +1825,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         this.booking.set(updatedBooking);
       }
 
-      alert('Marcaste la reserva como devuelta. Gracias por completar este paso.');
+      this.notifications.success('Devolución', 'Marcaste la reserva como devuelta. Gracias por completar este paso.');
     } catch (error) {
       console.error('Error al marcar la reserva como devuelta', error);
-      alert('No pudimos marcar la devolución. Intentalo nuevamente en unos minutos.');
+      this.notifications.error('Devolución', 'No pudimos marcar la devolución. Intentalo nuevamente en unos minutos.');
     }
   }
 
@@ -1857,7 +1860,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   async disputeTrafficFine(fine: TrafficInfraction): Promise<void> {
     const reason = prompt('Por favor, ingresa la razón por la que deseas disputar esta multa:');
     if (!reason) {
-      alert('Debes ingresar una razón para disputar la multa.');
+      this.notifications.warning('Multa', 'Debes ingresar una razón para disputar la multa.');
       return;
     }
 
@@ -1868,12 +1871,12 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     this.loading.set(true);
     try {
       await this.trafficInfractionsService.updateInfractionStatus(fine.id, 'disputed', reason);
-      alert('Multa disputada exitosamente. El propietario será notificado.');
+      this.notifications.success('Multa', 'Multa disputada exitosamente. El propietario será notificado.');
       // Reload fines to update UI
       await this.loadTrafficFines(this.booking()!.id);
     } catch (error) {
       console.error('Error disputing traffic fine:', error);
-      alert('Ocurrió un error al disputar la multa.');
+      this.notifications.error('Multa', 'Ocurrió un error al disputar la multa.');
     } finally {
       this.loading.set(false);
     }
@@ -1922,9 +1925,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
           },
         ],
       });
-      alert.then((a) => a.present());
+      void alert.then((a) => a.present());
     } else {
-      alert('Error al reportar no-show: ' + (result.message || 'Error desconocido.'));
+      this.notifications.error('No-Show', 'Error al reportar: ' + (result.message || 'Error desconocido.'));
     }
   }
 
@@ -1932,15 +1935,16 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     this.logger.debug('Renter No-Show reported:', result);
     this.showReportRenterNoShowModal.set(false);
     if (result.success) {
-      alert(
-        'Reporte de no-show enviado. Nuestro equipo se pondrá en contacto para validar la situación y aplicar las penalidades correspondientes.',
+      this.notifications.success(
+        'No-Show',
+        'Reporte enviado. Nuestro equipo se pondrá en contacto para validar la situación.',
       );
       // For now, reload booking data to reflect any status changes
       this.bookingsService.getBookingById(this.booking()!.id).then((updated) => {
         if (updated) this.booking.set(updated);
       });
     } else {
-      alert('Error al reportar no-show: ' + (result.message || 'Error desconocido.'));
+      this.notifications.error('No-Show', 'Error al reportar: ' + (result.message || 'Error desconocido.'));
     }
   }
 
@@ -2349,7 +2353,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     );
 
     if (!inspection) {
-      alert(`No hay acta de ${type === 'delivery' ? 'entrega' : 'devolución'} disponible`);
+      this.notifications.warning('Acta', `No hay acta de ${type === 'delivery' ? 'entrega' : 'devolución'} disponible`);
       return;
     }
 
