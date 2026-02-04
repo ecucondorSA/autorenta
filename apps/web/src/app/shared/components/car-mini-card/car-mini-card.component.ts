@@ -32,13 +32,14 @@ import { CarMapLocation } from '@core/services/cars/car-locations.service';
            <!-- Skeleton Placeholder -->
            <div class="absolute inset-0 bg-zinc-800 animate-pulse" *ngIf="!imageLoaded"></div>
            
-           <img [src]="car.photoUrl || '/assets/images/car-placeholder.svg'" 
+           <img [src]="car.photoUrl || '/assets/images/car-placeholder.svg'"
                 class="absolute inset-0 w-full h-full object-cover transition-all duration-500"
                 [class.opacity-0]="!imageLoaded"
                 [class.scale-105]="!imageLoaded"
                 [style.transform]="imageLoaded ? 'scale(1.1) translate(' + parallaxX + 'px, ' + parallaxY + 'px)' : ''"
                 (load)="onImageLoad()"
-                loading="lazy" />
+                loading="lazy"
+                [alt]="car.title || 'Auto'" />
         </div>
 
         <!-- Info -->

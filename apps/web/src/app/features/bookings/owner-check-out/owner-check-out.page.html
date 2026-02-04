@@ -105,7 +105,7 @@
                     <div class="grid grid-cols-3 gap-2">
                       @for (photo of checkInData().photos; track photo.url) {
                         <div class="aspect-square rounded-lg overflow-hidden bg-surface-secondary border border-border-default relative group">
-                          <img [src]="photo.url" class="w-full h-full object-cover" loading="lazy">
+                          <img [src]="photo.url" class="w-full h-full object-cover" loading="lazy" alt="Foto de entrega del vehículo">
                           <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
                         </div>
                       }
