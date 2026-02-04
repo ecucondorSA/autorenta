@@ -47,9 +47,10 @@
       <div class="flex items-center gap-4">
         <!-- Avatar -->
         <div class="relative group">
-          <img [src]="avatarUrl() || '/assets/avatar-placeholder.png'" alt=""
+          <!-- P1 FIX: Use fallback when avatarUrl is null, undefined, or empty string -->
+          <img [src]="avatarUrl()?.trim() || '/assets/avatar-placeholder.png'" alt="Foto de perfil"
             class="h-16 w-16 rounded-full object-cover bg-surface-secondary ring-2 ring-border-default" width="64"
-            height="64" (error)="onAvatarLoadError($event)" />
+            height="64" loading="eager" (error)="onAvatarLoadError($event)" />
           <label
             class="absolute inset-0 rounded-full bg-smoke-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center">
             <input type="file" accept="image/*" class="hidden" (change)="onAvatarChange($event)"

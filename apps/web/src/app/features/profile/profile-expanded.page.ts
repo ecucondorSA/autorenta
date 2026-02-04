@@ -346,11 +346,17 @@ export class ProfileExpandedPage implements OnInit {
 
   /**
    * Handle avatar image load error - fallback to placeholder
+   * P1 FIX: Check if src ends with placeholder to handle full URLs
    */
   onAvatarLoadError(event: Event): void {
     const img = event.target as HTMLImageElement;
-    if (img && img.src !== '/assets/avatar-placeholder.png') {
-      img.src = '/assets/avatar-placeholder.png';
+    const placeholderPath = '/assets/avatar-placeholder.png';
+    // Check if already using placeholder (src might be full URL)
+    if (img && !img.src.endsWith(placeholderPath)) {
+      this.logger.debug('Avatar load failed, using placeholder', 'ProfileExpandedPage', {
+        failedSrc: img.src
+      });
+      img.src = placeholderPath;
     }
   }
 
