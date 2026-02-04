@@ -135,7 +135,20 @@ export class FavoritesService {
           `
           car_id,
           cars (
-            *,
+            id,
+            brand,
+            model,
+            year,
+            price_per_day,
+            location_city,
+            location_state,
+            location_province,
+            location_formatted_address,
+            car_photos (
+              id,
+              url,
+              position
+            ),
             profiles!cars_owner_id_profiles_fkey (
               full_name,
               avatar_url,

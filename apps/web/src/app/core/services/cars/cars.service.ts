@@ -386,10 +386,26 @@ export class CarsService {
 
     const orgIds = orgs?.map((o) => o.organization_id) || [];
 
-    // 2. Build query
+    // 2. Build query - Only select fields needed for listing UI
     let query = this.supabase
       .from('cars')
-      .select('*, car_photos(*)')
+      .select(`
+        id,
+        title,
+        brand,
+        model,
+        year,
+        price_per_day,
+        status,
+        currency,
+        region_id,
+        created_at,
+        car_photos (
+          id,
+          url,
+          sort_order
+        )
+      `)
       .order('created_at', { ascending: false });
 
     if (orgIds.length > 0) {

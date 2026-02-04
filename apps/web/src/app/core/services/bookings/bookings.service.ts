@@ -349,7 +349,23 @@ export class BookingsService {
 
     let query = this.supabase
       .from('my_bookings')
-      .select('*', { count: 'exact' })
+      .select(`
+        id,
+        status,
+        start_at,
+        end_at,
+        car_id,
+        car_title,
+        car_brand,
+        car_model,
+        car_year,
+        main_photo_url,
+        total_amount,
+        payment_mode,
+        payment_status,
+        created_at,
+        renter_id
+      `, { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -385,7 +401,28 @@ export class BookingsService {
 
     let query = this.supabase
       .from('owner_bookings')
-      .select('*', { count: 'exact' })
+      .select(`
+        id,
+        status,
+        start_at,
+        end_at,
+        car_id,
+        car_title,
+        car_brand,
+        car_model,
+        total_amount,
+        currency,
+        deposit_status,
+        payment_mode,
+        payment_status,
+        completion_status,
+        dispute_status,
+        owner_confirmed_delivery,
+        renter_id,
+        renter_name,
+        renter_avatar,
+        created_at
+      `, { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 

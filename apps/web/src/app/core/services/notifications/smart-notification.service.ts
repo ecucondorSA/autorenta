@@ -291,7 +291,7 @@ export class SmartNotificationService {
 
     const { count, error } = await this.supabase
       .from('notification_history')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .eq('user_id', user.id)
       .eq('status', 'sent');
 
@@ -313,7 +313,7 @@ export class SmartNotificationService {
 
     const { data, error } = await this.supabase
       .from('notification_history')
-      .select('*')
+      .select('id, title, body, channel, status, sent_at, read_at, cta_link, template_code')
       .eq('user_id', user.id)
       .order('sent_at', { ascending: false })
       .limit(limit);
