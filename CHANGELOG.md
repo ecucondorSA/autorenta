@@ -1,3 +1,7 @@
+## <small>3.66.9 (2026-02-04)</small>
+
+* fix(profile): P1 - avatar fallback handling for empty/invalid URLs ([8441bf3](https://github.com/ecucondorSA/autorenta/commit/8441bf3))
+
 ## <small>3.66.8 (2026-02-04)</small>
 
 * fix(auth): P0.4 - wait for Supabase SDK init before checking session ([d2c927e](https://github.com/ecucondorSA/autorenta/commit/d2c927e))
