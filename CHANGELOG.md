@@ -1,3 +1,7 @@
+## <small>3.65.14 (2026-02-04)</small>
+
+* fix(e2e): run patchright tests directly with tsx ([8c4a328](https://github.com/ecucondorSA/autorenta/commit/8c4a328))
+
 ## <small>3.65.13 (2026-02-04)</small>
 
 * fix(ci): baseline migrations and use patchright for e2e ([e53f337](https://github.com/ecucondorSA/autorenta/commit/e53f337))
