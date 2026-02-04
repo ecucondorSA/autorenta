@@ -249,6 +249,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   readonly selectedCar = signal<CarMapLocation | null>(null);
   readonly viewMode = signal<'map' | 'list'>('map');
 
+  // Debug mode - only show debug controls in development
+  readonly isDevMode = !environment.production;
+
   // Map Layers Control
   readonly showBaseMap = signal(true);
   readonly showUserLocation = signal(true);

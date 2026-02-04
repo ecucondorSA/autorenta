@@ -32,7 +32,7 @@ import { SubscriptionPlan } from '@core/models/subscription.model';
 
           <h1 class="text-3xl font-bold text-text-primary">Autorentar Club</h1>
           <p class="text-lg text-text-secondary max-w-xl mx-auto">
-            Alquila sin deposito de garantia. Tu membresia cubre el deposito hasta por un ano.
+            Alquila sin depósito de garantía. Tu membresía cubre el depósito hasta por un año.
           </p>
         </div>
 

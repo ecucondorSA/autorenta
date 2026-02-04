@@ -43,14 +43,14 @@ import {
           </div>
           <div>
             <h3 class="text-lg font-bold text-text-primary">Autorentar Club</h3>
-            <p class="text-sm text-text-secondary">Alquila sin deposito de garantia</p>
+            <p class="text-sm text-text-secondary">Alquila sin depósito de garantía</p>
           </div>
         </div>
 
         <div class="space-y-2">
           <div class="flex items-center gap-2 text-sm text-text-secondary">
             <ion-icon name="checkmark-circle" class="text-success-strong"></ion-icon>
-            <span>Deposito $0 en la mayoria de autos</span>
+            <span>Depósito $0 en la mayoría de autos</span>
           </div>
           <div class="flex items-center gap-2 text-sm text-text-secondary">
             <ion-icon name="checkmark-circle" class="text-success-strong"></ion-icon>

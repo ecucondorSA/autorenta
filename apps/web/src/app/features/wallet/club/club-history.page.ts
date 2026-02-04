@@ -81,7 +81,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
             <ion-icon name="shield-outline" class="text-5xl text-amber-500/50"></ion-icon>
             <h3 class="mt-4 font-bold text-text-primary">Sin membresia activa</h3>
             <p class="text-sm text-text-secondary mt-2">
-              Unete al Autorentar Club para alquilar sin deposito de garantia.
+              Únete al Autorentar Club para alquilar sin depósito de garantía.
             </p>
             <button
               (click)="goToPlans()"
@@ -162,8 +162,8 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
               <div class="flex-1">
                 <p class="font-medium text-warning-strong">Saldo de cobertura agotado</p>
                 <p class="text-sm text-warning-strong/80 mt-1">
-                  Tu saldo se ha agotado. Renueva tu membresia para seguir disfrutando de alquileres
-                  sin deposito.
+                  Tu saldo se ha agotado. Renueva tu membresía para seguir disfrutando de alquileres
+                  sin depósito.
                 </p>
                 <button
                   (click)="goToPlans()"

@@ -29,8 +29,8 @@
 
   <div #mapContainer class="cars-map-canvas" id="map-container" data-testid="map-container"></div>
 
-  <!-- Map Layers Control (hidden on mobile to avoid clutter) -->
-  @if (!loading() && !error()) {
+  <!-- Map Layers Control (dev only - hidden in production and on mobile) -->
+  @if (isDevMode && !loading() && !error()) {
     <div class="absolute top-4 right-4 z-20 hidden lg:block">
       <app-map-layers-control
         [layers]="mapLayers()"
