@@ -10,9 +10,9 @@
 Inspección visual y funcional de la plataforma AutoRenta en producción. Se identificaron varios issues críticos y menores que requieren atención.
 
 **Status Update (Final):**
-- Issues Encontrados: 8
+- Issues Encontrados: 10
 - Issues Resueltos: 7
-- Issues Pendientes: 1 (datos de producción)
+- Issues Pendientes: 3 (datos de producción)
 
 ---
 
@@ -155,6 +155,35 @@ Multiple typos found: "deposito" → "depósito", "garantia" → "garantía", et
 
 **Fix Applied:**
 - Added fallback chain for alt text: `car.title || brand+model+year || 'Auto'`
+
+---
+
+## Data Quality Issues (Production Data)
+
+### 9. BYD Dolphin Mini - Fuel Type Mismatch
+**Severity:** P2 - Medium
+**Status:** ⏳ DATA ISSUE (not code)
+**Location:** /cars/list → BYD Dolphin Mini listing
+
+**Description:**
+- Car title: "BYD Dolphin Mini (Elétrico)" - indicates electric vehicle
+- MOTOR field shows: "Nafta" (gasoline)
+- This is a data entry error - electric vehicles should have "Eléctrico" as motor type
+
+**Fix Required:** Update car record in database to correct fuel_type
+
+---
+
+### 10. Portuguese vs Spanish Spelling
+**Severity:** P3 - Low
+**Status:** ⏳ DATA ISSUE (not code)
+**Location:** BYD Dolphin Mini listing
+
+**Description:**
+- "Elétrico" is Portuguese spelling
+- Should be "Eléctrico" in Spanish
+
+**Fix Required:** Update car title to use Spanish spelling
 
 ---
 
