@@ -1,3 +1,7 @@
+## <small>3.69.9 (2026-02-04)</small>
+
+* fix: memory leak prevention and accessibility improvements ([414f60e](https://github.com/ecucondorSA/autorenta/commit/414f60e))
+
 ## <small>3.69.8 (2026-02-04)</small>
 
 * fix: replace hardcoded placeholder IDs with real values ([12cc680](https://github.com/ecucondorSA/autorenta/commit/12cc680))
