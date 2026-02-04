@@ -253,6 +253,20 @@ Multiple typos found: "deposito" → "depósito", "garantia" → "garantía", et
 2. `fix(cars-map): P1 - use Angular isDevMode() for debug panel visibility`
 3. `fix: grammar and Spanish accent typos across wallet and browse modules`
 4. `fix(profile): P1 - avatar fallback handling for empty/invalid URLs`
+5. `fix(i18n): additional Spanish accent corrections` (emergency-panel, owner-check-out, delete-account)
+6. `fix(i18n): more Spanish accent corrections` (booking-confirmation-timeline, owner-confirmation, club-subscribe)
+
+---
+
+## Session 2 - Additional i18n Fixes (30+ typos)
+
+### Files Fixed:
+- **club-subscribe.page.ts**: Suscripción, Membresía, más tarde, Se activó, Falló
+- **emergency-panel.component.html**: Información, Póliza
+- **owner-check-out.page.html**: Información
+- **owner-confirmation.component.html**: confirmación, también confirmó, automáticamente
+- **booking-confirmation-timeline.component.html**: Acción
+- **delete-account.page.html**: página, acción, Estás, eliminarán, vehículos, podrás, serán, conservarán, obligación, años, Información
 
 ---
 
@@ -276,4 +290,4 @@ Multiple typos found: "deposito" → "depósito", "garantia" → "garantía", et
 
 **Report Finalized:** 2026-02-04
 **Inspector:** Claude Opus 4.5
-**Total Code Fixes:** 4 commits, 20+ files modified
+**Total Code Fixes:** 6 commits, 25+ files modified, 40+ typos corrected
