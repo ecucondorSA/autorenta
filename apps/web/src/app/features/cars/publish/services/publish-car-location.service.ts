@@ -1,4 +1,5 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { Injectable, signal, inject } from '@angular/core';
 import { environment } from '@environment';
 
@@ -27,6 +28,8 @@ export interface Address {
 @Injectable()
 export class PublishCarLocationService {
   private readonly logger = inject(LoggerService);
+  private readonly notifications = inject(NotificationManagerService);
+
   // State
   readonly manualCoordinates = signal<PublishCoordinates | null>(null);
   readonly isLoadingLocation = signal(false);
@@ -123,7 +126,7 @@ export class PublishCarLocationService {
         msg = error.message;
       }
 
-      alert(msg);
+      this.notifications.error('Ubicación', msg);
       return null;
     } finally {
       this.isLoadingLocation.set(false);

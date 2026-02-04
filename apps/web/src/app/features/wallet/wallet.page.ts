@@ -215,7 +215,8 @@ export class WalletPage implements OnInit {
     if (status === 'pending') {
       return 'Configurar crédito protegido';
     } else if (status === 'partial') {
-      const remaining = (this.protectedCreditTarget - balance) / 100;
+      // Both protectedCreditTarget and balance are in USD - no conversion needed
+      const remaining = this.protectedCreditTarget - balance;
       return `Completar crédito (faltan USD ${remaining.toFixed(0)})`;
     } else {
       return 'Depositar fondos';
