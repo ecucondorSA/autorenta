@@ -1,3 +1,7 @@
+## <small>3.69.7 (2026-02-04)</small>
+
+* fix(i18n): use consistent vos form in phone-verification ([8f3e26a](https://github.com/ecucondorSA/autorenta/commit/8f3e26a))
+
 ## <small>3.69.6 (2026-02-04)</small>
 
 * fix(a11y): add aria-labels to icon-only buttons ([952b4b0](https://github.com/ecucondorSA/autorenta/commit/952b4b0))
