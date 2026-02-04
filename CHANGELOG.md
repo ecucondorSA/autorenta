@@ -1,3 +1,7 @@
+## <small>3.67.7 (2026-02-04)</small>
+
+* fix(i18n): Spanish accent corrections in models, services, and components ([4242cee](https://github.com/ecucondorSA/autorenta/commit/4242cee))
+
 ## <small>3.67.6 (2026-02-04)</small>
 
 * fix(i18n): Spanish accent corrections in AI panels and support ([3ead144](https://github.com/ecucondorSA/autorenta/commit/3ead144))
