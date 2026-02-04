@@ -329,6 +329,14 @@ export class BrowseCarsPage {
     this.store.toggleViewMode();
   }
 
+  /**
+   * Handle WebGL error from map component - auto-switch to list view as fallback
+   */
+  onWebGLError() {
+    this.logger.warn('WebGL not available, switching to list view');
+    this.store.setViewMode('list');
+  }
+
   /** Handle preview change from carousel scroll (not selection) */
   onCarouselPreviewChange(carId: string | null) {
     this.carouselPreviewId.set(carId);

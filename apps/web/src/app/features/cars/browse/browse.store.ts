@@ -126,6 +126,10 @@ export class BrowseStore {
     this.viewMode.update((mode) => (mode === 'map' ? 'list' : 'map'));
   }
 
+  setViewMode(mode: BrowseViewMode) {
+    this.viewMode.set(mode);
+  }
+
   setInteractionSource(source: InteractionSource) {
     this.interactionSource.set(source);
   }

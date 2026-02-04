@@ -232,6 +232,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     east: number;
     west: number;
   }>();
+  /** Emitted when WebGL is not available - parent should switch to list view */
+  @Output() readonly webGLError = new EventEmitter<void>();
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -615,6 +617,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         this['error'].set(
           'El mapa requiere aceleración de hardware (WebGL). Por favor, actívala en tu navegador.',
         );
+        // Notify parent to switch to list view as fallback
+        this.webGLError.emit();
       } else {
         this['error'].set(errorMessage || 'Error al inicializar el mapa');
       }
