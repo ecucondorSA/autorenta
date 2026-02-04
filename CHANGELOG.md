@@ -1,3 +1,8 @@
+## <small>3.69.3 (2026-02-04)</small>
+
+* fix: accessibility (aria-labels) and i18n in email templates ([b231dd7](https://github.com/ecucondorSA/autorenta/commit/b231dd7))
+* fix(a11y): add aria-labels for screen reader accessibility ([441bdb5](https://github.com/ecucondorSA/autorenta/commit/441bdb5))
+
 ## <small>3.69.2 (2026-02-04)</small>
 
 * fix: i18n accents and accessibility improvements ([757bfbb](https://github.com/ecucondorSA/autorenta/commit/757bfbb))
