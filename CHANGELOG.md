@@ -1,3 +1,7 @@
+## <small>3.66.3 (2026-02-04)</small>
+
+* fix(ui): hide debug panel in production + fix typos ([cb80c83](https://github.com/ecucondorSA/autorenta/commit/cb80c83))
+
 ## <small>3.66.2 (2026-02-04)</small>
 
 * fix(lint): remove unused catch parameter ([aba585e](https://github.com/ecucondorSA/autorenta/commit/aba585e))
