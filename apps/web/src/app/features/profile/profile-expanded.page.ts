@@ -345,6 +345,16 @@ export class ProfileExpandedPage implements OnInit {
   }
 
   /**
+   * Handle avatar image load error - fallback to placeholder
+   */
+  onAvatarLoadError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img && img.src !== '/assets/avatar-placeholder.png') {
+      img.src = '/assets/avatar-placeholder.png';
+    }
+  }
+
+  /**
    * Close document upload modal and clear query param
    */
   closeDocumentModal(): void {
