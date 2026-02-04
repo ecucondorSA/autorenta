@@ -81,6 +81,26 @@ jobs:
           supabase migration repair --status reverted 20260130222110 2>/dev/null || true
           supabase migration repair --status reverted 20260130222331 2>/dev/null || true
           supabase migration repair --status reverted 20260130222404 2>/dev/null || true
+
+          # Mark consolidated payment retry migrations as reverted (superseded by 20260203221600)
+          supabase migration repair --status reverted 20260201230000 2>/dev/null || true
+          supabase migration repair --status reverted 20260203221500 2>/dev/null || true
+          supabase migration repair --status reverted 20260203222000 2>/dev/null || true
+          supabase migration repair --status reverted 20260203223300 2>/dev/null || true
+          supabase migration repair --status reverted 20260203223500 2>/dev/null || true
+
+          # Mark orphaned remote migrations as reverted (2026-02-03 batch)
+          supabase migration repair --status reverted 20260203123235 2>/dev/null || true
+          supabase migration repair --status reverted 20260203123313 2>/dev/null || true
+          supabase migration repair --status reverted 20260203123330 2>/dev/null || true
+          supabase migration repair --status reverted 20260203123619 2>/dev/null || true
+          supabase migration repair --status reverted 20260203125501 2>/dev/null || true
+          supabase migration repair --status reverted 20260203130638 2>/dev/null || true
+          supabase migration repair --status reverted 20260203132332 2>/dev/null || true
+          supabase migration repair --status reverted 20260203132842 2>/dev/null || true
+          supabase migration repair --status reverted 20260203141128 2>/dev/null || true
+          supabase migration repair --status reverted 20260203141916 2>/dev/null || true
+          supabase migration repair --status reverted 20260203161408 2>/dev/null || true
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
