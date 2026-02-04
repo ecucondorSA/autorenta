@@ -146,12 +146,12 @@ export class SupportPage implements OnInit {
 
     if (field.errors['required']) return 'Este campo es requerido';
     if (field.errors['minlength']) {
-      return `Minimo ${field.errors['minlength'].requiredLength} caracteres`;
+      return `Mínimo ${field.errors['minlength'].requiredLength} caracteres`;
     }
     if (field.errors['maxlength']) {
-      return `Maximo ${field.errors['maxlength'].requiredLength} caracteres`;
+      return `Máximo ${field.errors['maxlength'].requiredLength} caracteres`;
     }
-    return 'Campo invalido';
+    return 'Campo inválido';
   }
 
   getCategoryIcon(icon: string): string {
