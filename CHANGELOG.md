@@ -1,3 +1,7 @@
+## <small>3.69.10 (2026-02-04)</small>
+
+* fix(a11y): replace generic alt text with descriptive alternatives ([1f366c2](https://github.com/ecucondorSA/autorenta/commit/1f366c2))
+
 ## <small>3.69.9 (2026-02-04)</small>
 
 * fix: memory leak prevention and accessibility improvements ([414f60e](https://github.com/ecucondorSA/autorenta/commit/414f60e))
