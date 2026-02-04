@@ -1244,7 +1244,7 @@ export class BookingsService {
     try {
       await this.recalculatePricing(data.id);
     } catch {
-      // no bloquear si falla el recalculo en fallback
+      // no bloquear si falla el recálculo en fallback
     }
 
     return data as Booking;

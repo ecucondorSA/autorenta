@@ -85,8 +85,8 @@ export const STATE_ACTIONS: Record<BookingState, { owner: string[]; renter: stri
 /**
  * BookingStateMachineService
  *
- * Servicio centralizado que actua como UNICA fuente de verdad para
- * el estado del booking. Elimina la ambiguedad de tener multiples
+ * Servicio centralizado que actúa como ÚNICA fuente de verdad para
+ * el estado del booking. Elimina la ambigüedad de tener múltiples
  * campos (status, completion_status, flags booleanos) que determinan
  * el estado de forma dispersa.
  *

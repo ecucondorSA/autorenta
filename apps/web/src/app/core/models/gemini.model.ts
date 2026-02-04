@@ -22,13 +22,13 @@ import type { BookingStatus, CancelPolicy } from '@core/types/database.types';
  * Sugerencia de respuesta generada por IA
  */
 export interface ChatSuggestion {
-  /** ID unico de la sugerencia */
+  /** ID único de la sugerencia */
   id: string;
   /** Texto de la sugerencia */
   text: string;
   /** Tono de la respuesta */
   tone: 'formal' | 'friendly' | 'neutral';
-  /** Intencion de la respuesta */
+  /** Intención de la respuesta */
   intent: 'question' | 'confirmation' | 'request' | 'info' | 'greeting';
 }
 
