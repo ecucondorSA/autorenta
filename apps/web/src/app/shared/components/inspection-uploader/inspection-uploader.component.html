@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="header">
     <h2>{{ stageLabel() }} del Vehículo</h2>
-    <button class="close-btn" (click)="cancel()" [disabled]="saving()">
+    <button class="close-btn" (click)="cancel()" [disabled]="saving()" aria-label="Cerrar">
       <app-icon name="close" [size]="20" />
     </button>
   </div>
@@ -65,7 +65,7 @@
             <img
               [src]="photo.url"
               [alt]="'Foto de inspección del vehículo ' + (i + 1) + ' de ' + photos().length" width="400" height="300" />
-            <button class="remove-photo" (click)="removePhoto(i)" [disabled]="saving()">
+            <button class="remove-photo" (click)="removePhoto(i)" [disabled]="saving()" [attr.aria-label]="'Eliminar foto ' + (i + 1)">
               <app-icon name="trash" [size]="18" />
             </button>
           </div>

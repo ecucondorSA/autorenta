@@ -139,7 +139,7 @@ export class WalletFaqComponent {
           <li>Una vez liberado, <strong>queda disponible</strong> en tu wallet para futuras reservas</li>
           <li>Es <strong>reutilizable</strong>: no necesitás volver a cargarlo cada vez</li>
         </ul>
-        <p class="mt-2 text-xs text-success-700"><strong>Ventaja:</strong> Con US$ 600 en tu wallet, podes hacer reservas ilimitadas sin volver a cargar.</p>`,
+        <p class="mt-2 text-xs text-success-700"><strong>Ventaja:</strong> Con US$ 600 en tu wallet, podés hacer reservas ilimitadas sin volver a cargar.</p>`,
       expanded: false,
     },
     {
@@ -182,15 +182,15 @@ export class WalletFaqComponent {
         <table class="w-full text-xs mt-2 border-collapse" data-testid="wallet-table">
           <thead>
             <tr class="bg-border-default/30">
-              <th class="border border-border-default px-3 py-2 text-left text-sm">Caracteristica</th>
+              <th class="border border-border-default px-3 py-2 text-left text-sm">Característica</th>
               <th class="border border-border-default px-3 py-2 text-sm">Wallet</th>
               <th class="border border-border-default px-3 py-2 text-sm">Tarjeta</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="border border-border-default px-3 py-2 text-sm"><strong>Confirmacion</strong></td>
-              <td class="border border-border-default px-3 py-2 text-center text-sm">Instantanea</td>
+              <td class="border border-border-default px-3 py-2 text-sm"><strong>Confirmación</strong></td>
+              <td class="border border-border-default px-3 py-2 text-center text-sm">Instantánea</td>
               <td class="border border-border-default px-3 py-2 text-center text-sm">1-2 min</td>
             </tr>
             <tr class="bg-border-default/10">
@@ -248,7 +248,7 @@ export class WalletFaqComponent {
         </ul>
         <p class="mt-2"><strong>Siniestros SIN culpa tuya:</strong> NO afectan tu clase ni tus precios. ✅</p>
         <p class="mt-2 text-xs text-cta-default"><strong>Buena noticia:</strong> El siniestro se cubre primero con tu Crédito de Protección ($300 USD), luego tu wallet, y por último pago externo.</p>
-        <p class="mt-2 text-xs text-success-700"><strong>Protector de Bonus:</strong> Podes comprar un "Protector" ($15-$45) que previene el aumento de clase en 1-3 siniestros.</p>`,
+        <p class="mt-2 text-xs text-success-700"><strong>Protector de Bonus:</strong> Podés comprar un "Protector" ($15-$45) que previene el aumento de clase en 1-3 siniestros.</p>`,
       expanded: false,
     },
     {
@@ -271,7 +271,7 @@ export class WalletFaqComponent {
           <li>Porcentaje de reservas sin incidentes</li>
           <li>Requerido 80%+ para renovación de beneficios</li>
         </ul>
-        <p class="mt-2 text-xs text-success-700"><strong>Transparencia total:</strong> Podes ver tu historial completo, badges de desempeno y progreso hacia mejor clase.</p>`,
+        <p class="mt-2 text-xs text-success-700"><strong>Transparencia total:</strong> Podés ver tu historial completo, badges de desempeño y progreso hacia mejor clase.</p>`,
       expanded: false,
     },
     {

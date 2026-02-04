@@ -45,7 +45,7 @@ import type {
  *
  * // Legal question
  * const answer = await gemini.askLegalQuestion({
- *   question: 'Puedo viajar a Cordoba?',
+ *   question: '¿Puedo viajar a Córdoba?',
  *   bookingTerms: {...},
  *   vehicleInfo: {...}
  * });
