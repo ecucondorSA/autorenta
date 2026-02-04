@@ -1,3 +1,7 @@
+## <small>3.65.10 (2026-02-04)</small>
+
+* fix(browse): prevent modal opening during programmatic navigation ([0d14f5d](https://github.com/ecucondorSA/autorenta/commit/0d14f5d))
+
 ## <small>3.65.9 (2026-02-04)</small>
 
 * fix(db): force replace get_available_cars with DROP + CREATE ([84d3652](https://github.com/ecucondorSA/autorenta/commit/84d3652))
