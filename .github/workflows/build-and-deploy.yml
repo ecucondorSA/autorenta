@@ -63,14 +63,32 @@ jobs:
         env:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
-      - name: Repair Migration History (if needed)
+      - name: Baseline Local Migrations (mark as applied)
+        run: |
+          # Mark ALL local migrations as applied to establish baseline
+          # This prevents re-applying migrations when schema already exists
+          echo "📋 Establishing migration baseline..."
+          for file in supabase/migrations/*.sql; do
+            filename=$(basename "$file")
+            # Extract timestamp (first 14 digits before underscore)
+            timestamp=$(echo "$filename" | grep -oE '^[0-9]+' | head -1)
+            if [ -n "$timestamp" ] && [ ${#timestamp} -ge 8 ]; then
+              echo "  ✓ Marking $timestamp as applied"
+              supabase migration repair --status applied "$timestamp" 2>/dev/null || true
+            fi
+          done
+          echo "✅ Baseline established"
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+
+      - name: Repair Migration History (orphaned migrations)
         run: |
           # Mark old migrations with incomplete timestamps as reverted
-          # so they can be re-applied with correct YYYYMMDDHHMMSS format
           supabase migration repair --status reverted 20251218 2>/dev/null || true
           supabase migration repair --status reverted 20260116 2>/dev/null || true
 
-          # Mark migrations that exist in remote but not locally as reverted
+          # Mark migrations that exist ONLY in remote (not locally) as reverted
           # These were applied directly to DB without being added to repo
           supabase migration repair --status reverted 20260130220905 2>/dev/null || true
           supabase migration repair --status reverted 20260130220936 2>/dev/null || true
@@ -82,14 +100,14 @@ jobs:
           supabase migration repair --status reverted 20260130222331 2>/dev/null || true
           supabase migration repair --status reverted 20260130222404 2>/dev/null || true
 
-          # Mark consolidated payment retry migrations as reverted (superseded by 20260203221600)
+          # Mark consolidated payment retry migrations as reverted (files deleted, superseded by 20260203221600)
           supabase migration repair --status reverted 20260201230000 2>/dev/null || true
           supabase migration repair --status reverted 20260203221500 2>/dev/null || true
           supabase migration repair --status reverted 20260203222000 2>/dev/null || true
           supabase migration repair --status reverted 20260203223300 2>/dev/null || true
           supabase migration repair --status reverted 20260203223500 2>/dev/null || true
 
-          # Mark orphaned remote migrations as reverted (2026-02-03 batch)
+          # Mark orphaned remote migrations as reverted (2026-02-03 batch - applied directly)
           supabase migration repair --status reverted 20260203123235 2>/dev/null || true
           supabase migration repair --status reverted 20260203123313 2>/dev/null || true
           supabase migration repair --status reverted 20260203123330 2>/dev/null || true
