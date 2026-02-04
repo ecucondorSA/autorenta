@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CarsService } from '@core/services/cars/cars.service';
 import { PricingService } from '@core/services/payments/pricing.service';
@@ -18,6 +18,7 @@ import { FipeAutocompleteComponent, FipeAutocompleteOption } from '../../shared/
 @Component({
     selector: 'app-owners-landing',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, FipeAutocompleteComponent, IonIcon],
     templateUrl: './owners-landing.page.html',
     styleUrls: ['./owners-landing.page.scss']
