@@ -1,3 +1,7 @@
+## <small>3.69.11 (2026-02-04)</small>
+
+* fix(a11y): add aria-hidden to decorative SVGs in search bar and quick actions ([364b027](https://github.com/ecucondorSA/autorenta/commit/364b027))
+
 ## <small>3.69.10 (2026-02-04)</small>
 
 * fix(a11y): replace generic alt text with descriptive alternatives ([1f366c2](https://github.com/ecucondorSA/autorenta/commit/1f366c2))
