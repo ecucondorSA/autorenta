@@ -1,3 +1,8 @@
+## <small>3.67.3 (2026-02-04)</small>
+
+* refactor(booking-detail): remove unused BookingOpsTimelineComponent import ([a48d650](https://github.com/ecucondorSA/autorenta/commit/a48d650))
+* docs: update inspection findings with session 7 i18n fixes ([cb4b22c](https://github.com/ecucondorSA/autorenta/commit/cb4b22c))
+
 ## <small>3.67.2 (2026-02-04)</small>
 
 * fix(i18n): additional Spanish accent corrections ([b4310f1](https://github.com/ecucondorSA/autorenta/commit/b4310f1))
