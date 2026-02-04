@@ -1,3 +1,8 @@
+## <small>3.67.6 (2026-02-04)</small>
+
+* fix(i18n): Spanish accent corrections in AI panels and support ([3ead144](https://github.com/ecucondorSA/autorenta/commit/3ead144))
+* fix(i18n): Spanish accent corrections in calendar and Edge Functions ([7580514](https://github.com/ecucondorSA/autorenta/commit/7580514))
+
 ## <small>3.67.5 (2026-02-04)</small>
 
 * fix(i18n): Spanish accent corrections in trip models ([8dd40c8](https://github.com/ecucondorSA/autorenta/commit/8dd40c8))
