@@ -1,3 +1,11 @@
+## <small>3.66.10 (2026-02-04)</small>
+
+* fix(i18n): additional Spanish accent corrections ([4f58c19](https://github.com/ecucondorSA/autorenta/commit/4f58c19))
+* fix(i18n): more Spanish accent corrections ([fa40b1f](https://github.com/ecucondorSA/autorenta/commit/fa40b1f))
+* security: remove accidentally committed Android app data dump ([b0b7e23](https://github.com/ecucondorSA/autorenta/commit/b0b7e23))
+* docs: add data quality issues found during inspection ([174d835](https://github.com/ecucondorSA/autorenta/commit/174d835))
+* docs: update inspection findings with all fixes applied ([41424b4](https://github.com/ecucondorSA/autorenta/commit/41424b4))
+
 ## <small>3.66.9 (2026-02-04)</small>
 
 * fix(profile): P1 - avatar fallback handling for empty/invalid URLs ([8441bf3](https://github.com/ecucondorSA/autorenta/commit/8441bf3))
