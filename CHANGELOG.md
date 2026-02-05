@@ -1,3 +1,8 @@
+## 3.71.0 (2026-02-05)
+
+* feat(ai): add Gemini Nano Banana Pro image generation workflow ([998ede1](https://github.com/ecucondorSA/autorenta/commit/998ede1))
+* docs: update CLAUDE.md with critical project information ([586086e](https://github.com/ecucondorSA/autorenta/commit/586086e))
+
 ## <small>3.70.1 (2026-02-05)</small>
 
 * fix: update Supabase project ID in whatsapp-outreach tools ([dd3a043](https://github.com/ecucondorSA/autorenta/commit/dd3a043))
