@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   inject,
@@ -22,6 +23,7 @@ import { IonicModule } from '@ionic/angular';
   selector: 'app-video-inspection-recorder',
   standalone: true,
   imports: [CommonModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="video-recorder-container">
       <!-- Video Preview -->

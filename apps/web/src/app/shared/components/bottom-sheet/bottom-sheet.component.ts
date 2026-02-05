@@ -1,6 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, effect, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, effect, model } from '@angular/core';
 
 @Component({
   selector: 'app-bottom-sheet',
@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, Output, effect, model } from '@angular/
   imports: [CommonModule],
   templateUrl: './bottom-sheet.component.html',
   styleUrls: ['./bottom-sheet.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('backdropAnimation', [
       transition(':enter', [

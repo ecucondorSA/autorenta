@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   OnDestroy,
   ElementRef,
@@ -42,6 +43,7 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
   selector: 'app-video-vehicle-recognition',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="relative rounded-2xl overflow-hidden bg-slate-900">
       <!-- Camera View -->

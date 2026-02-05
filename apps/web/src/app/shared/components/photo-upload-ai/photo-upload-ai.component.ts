@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -106,6 +107,7 @@ const POSITION_HINTS: Record<PhotoPosition, string> = {
   selector: 'app-photo-upload-ai',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-6">
       <!-- Header con stats -->

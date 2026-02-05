@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, inject, signal, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, OnDestroy, inject, signal, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '@core/services/chat/chat.service';
@@ -7,6 +7,7 @@ import { ChatService } from '@core/services/chat/chat.service';
   selector: 'app-chat-window',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="flex flex-col h-[500px] bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
       

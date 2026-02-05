@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GeocodingResult, GeocodingService } from '@core/services/geo/geocoding.service';
 import { LocationService } from '@core/services/geo/location.service';
@@ -12,6 +12,7 @@ import { DateRangePickerComponent } from '../date-range-picker/date-range-picker
   imports: [CommonModule, FormsModule, DateRangePickerComponent],
   templateUrl: './smart-search-bar.component.html',
   styleUrls: ['./smart-search-bar.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SmartSearchBarComponent {
   private readonly geocodingService = inject(GeocodingService);

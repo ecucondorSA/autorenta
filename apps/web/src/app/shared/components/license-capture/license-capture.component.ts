@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
     EventEmitter,
@@ -14,6 +15,7 @@ import { CommonModule } from '@angular/common';
     selector: 'app-license-capture',
     standalone: true,
     imports: [CommonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
     <div class="fixed inset-0 z-50 flex flex-col bg-black text-white">
       <!-- Header -->

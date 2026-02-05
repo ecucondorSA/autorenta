@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import type { VideoDamageAnalysis } from '@core/services/verification/video-damage-detection.service';
@@ -7,6 +7,7 @@ import type { VideoDamageAnalysis } from '@core/services/verification/video-dama
   selector: 'app-damage-report',
   standalone: true,
   imports: [CommonModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="damage-report">
       @if (analysis(); as data) {
