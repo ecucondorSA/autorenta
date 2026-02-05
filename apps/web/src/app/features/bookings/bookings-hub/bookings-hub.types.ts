@@ -16,7 +16,7 @@ export interface FilterItem {
   count: number;
 }
 
-export interface QuickAction {
+export interface BookingQuickAction {
   id: string;
   label: string;
   icon: string;

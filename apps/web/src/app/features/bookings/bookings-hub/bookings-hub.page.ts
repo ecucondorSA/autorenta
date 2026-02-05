@@ -36,7 +36,7 @@ import {
   locationOutline,
 } from 'ionicons/icons';
 
-import { BookingRole, BookingFilter, FilterItem, FocusCard, InsightItem, QuickAction } from './bookings-hub.types';
+import { BookingRole, BookingFilter, FilterItem, FocusCard, InsightItem, BookingQuickAction } from './bookings-hub.types';
 import { BookingsHeaderComponent } from './components/bookings-header.component';
 import { BookingsFocusCardComponent } from './components/bookings-focus-card.component';
 import { BookingsInsightsComponent } from './components/bookings-insights.component';
@@ -280,7 +280,7 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     };
   });
 
-  readonly quickActions = computed<QuickAction[]>(() => {
+  readonly quickActions = computed<BookingQuickAction[]>(() => {
     if (this.role() === 'owner') {
       return [
         {

@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { PressScaleDirective } from '@shared/directives/press-scale.directive';
-import { QuickAction } from '../bookings-hub.types';
+import { BookingQuickAction } from '../bookings-hub.types';
 
 @Component({
   selector: 'app-bookings-quick-actions',
@@ -38,5 +38,5 @@ import { QuickAction } from '../bookings-hub.types';
   `
 })
 export class BookingsQuickActionsComponent {
-  actions = input.required<QuickAction[]>();
+  actions = input.required<BookingQuickAction[]>();
 }
