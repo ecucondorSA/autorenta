@@ -1,3 +1,8 @@
+## <small>3.69.13 (2026-02-05)</small>
+
+* perf: add OnPush change detection to 9 components ([b93c1d8](https://github.com/ecucondorSA/autorenta/commit/b93c1d8))
+* security: move Gemini API key from URL to header + fix memory leak ([d035cf8](https://github.com/ecucondorSA/autorenta/commit/d035cf8))
+
 ## <small>3.69.12 (2026-02-04)</small>
 
 * fix(a11y): add aria-hidden to payment method button SVGs ([b01005d](https://github.com/ecucondorSA/autorenta/commit/b01005d))
