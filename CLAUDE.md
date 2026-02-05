@@ -293,6 +293,310 @@ channel: 'msedge'
 - Herramientas: `stream_navigate`, `stream_click`, `stream_type`, `stream_screenshot`
 - Incluye movimiento de mouse humanizado (curvas Bezier)
 
+### 7.3 JavaScript Click Hacks (Anti-Bot Bypass)
+
+Sitios como Facebook detectan automatización verificando la propiedad `isTrusted` de eventos. Estas técnicas permiten forzar clicks cuando `stream_click` o `stream_act` fallan.
+
+**¿Por qué fallan los clicks normales?**
+- Facebook verifica `event.isTrusted === true` (solo eventos de usuario real)
+- Playwright/Patchright genera eventos sintéticos con `isTrusted: false`
+- React Fiber intercepta eventos antes del DOM nativo
+
+**Técnica 1: Click Nativo Directo (MÁS EFECTIVA)**
+```javascript
+// Usar con stream_evaluate - Funciona en Facebook
+var buttons = document.querySelectorAll('div[role="button"], span[role="button"]');
+var joined = 0;
+buttons.forEach(function(btn) {
+  if (btn.innerText.trim() === 'Participar' && joined < 10) {
+    btn.click();  // Llamada directa al método click()
+    joined++;
+  }
+});
+'Clicked ' + joined + ' buttons';
+```
+
+**Técnica 2: Simulación Completa de Eventos**
+```javascript
+// Cuando .click() no funciona, simular secuencia completa
+function fullClickSimulation(element) {
+  var rect = element.getBoundingClientRect();
+  var x = rect.left + rect.width / 2;
+  var y = rect.top + rect.height / 2;
+
+  var eventInit = {
+    bubbles: true,
+    cancelable: true,
+    view: window,
+    clientX: x,
+    clientY: y,
+    button: 0
+  };
+
+  // Secuencia completa: hover → mousedown → mouseup → click
+  element.dispatchEvent(new MouseEvent('mouseenter', eventInit));
+  element.dispatchEvent(new MouseEvent('mouseover', eventInit));
+  element.dispatchEvent(new MouseEvent('mousedown', eventInit));
+  element.dispatchEvent(new MouseEvent('mouseup', eventInit));
+  element.dispatchEvent(new MouseEvent('click', eventInit));
+}
+```
+
+**Técnica 3: React Fiber Hack (Último Recurso)**
+```javascript
+// Acceder directamente al onClick de React
+function reactFiberClick(element) {
+  var keys = Object.keys(element);
+  var reactKey = keys.find(function(k) {
+    return k.startsWith('__reactFiber$') || k.startsWith('__reactProps$');
+  });
+
+  if (reactKey && element[reactKey] && element[reactKey].onClick) {
+    element[reactKey].onClick({ preventDefault: function(){}, stopPropagation: function(){} });
+    return true;
+  }
+  return false;
+}
+```
+
+**Técnica 4: Focus + Enter (Para Botones Accesibles)**
+```javascript
+// Algunos botones responden a Enter después de focus
+element.focus();
+element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
+element.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', keyCode: 13, bubbles: true }));
+```
+
+**⚠️ IMPORTANTE: Usar `var` en lugar de `const`/`let`**
+```javascript
+// ❌ INCORRECTO - SyntaxError en algunos contextos de evaluate
+const buttons = document.querySelectorAll('button');
+
+// ✅ CORRECTO - Compatibilidad máxima
+var buttons = document.querySelectorAll('button');
+```
+
+**Orden de Prioridad:**
+1. `stream_act` con descripción natural (más humano)
+2. `stream_click` con selector CSS
+3. `stream_evaluate` con `.click()` directo
+4. `stream_evaluate` con simulación completa de eventos
+5. React Fiber hack (solo si nada más funciona)
+
+**Sitios Probados:**
+| Sitio | Técnica que Funciona |
+|-------|---------------------|
+| Facebook Groups | `.click()` directo via `stream_evaluate` |
+| MercadoPago | `stream_click` con perfil persistente |
+| Google Forms | `stream_act` natural |
+
+### 7.4 Técnicas Avanzadas de JavaScript para Automation
+
+#### Entendiendo isTrusted (Limitación Fundamental)
+
+**Fuente:** [MDN - Event.isTrusted](https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted)
+
+```javascript
+// isTrusted es READ-ONLY y no se puede falsificar
+event.isTrusted  // true = usuario real, false = script
+
+// EXCEPCIÓN: Si un click programático dispara un form submit,
+// el evento submit PUEDE tener isTrusted = true (bubbling)
+```
+
+**Implicación:** No hay forma de hacer que un evento sintético tenga `isTrusted = true`. Los sitios que verifican esto (como Facebook) detectarán automatización.
+
+#### Técnica 5: Typing en ContentEditable (Facebook, WhatsApp Web)
+
+**Fuente:** [MDN - Element: input event](https://developer.mozilla.org/en-US/docs/Web/API/Element/input_event)
+
+```javascript
+// Para campos contenteditable (como el composer de Facebook)
+function typeInContentEditable(element, text) {
+  element.focus();
+
+  // Opción 1: execCommand (deprecated pero funciona)
+  document.execCommand('insertText', false, text);
+
+  // Opción 2: Modificar innerHTML + disparar eventos
+  element.innerHTML = text;
+  element.dispatchEvent(new InputEvent('input', {
+    bubbles: true,
+    cancelable: true,
+    inputType: 'insertText',
+    data: text
+  }));
+
+  // Opción 3: Selection API para posición del cursor
+  var selection = window.getSelection();
+  var range = document.createRange();
+  range.selectNodeContents(element);
+  range.collapse(false);  // Cursor al final
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
+```
+
+#### Técnica 6: InputEvent para Campos de Formulario
+
+**Fuente:** [MDN - InputEvent](https://developer.mozilla.org/en-US/docs/Web/API/InputEvent)
+
+```javascript
+// Simular typing completo en un input
+function simulateTyping(input, text) {
+  input.focus();
+  input.value = '';
+
+  for (var i = 0; i < text.length; i++) {
+    var char = text[i];
+
+    // KeyDown
+    input.dispatchEvent(new KeyboardEvent('keydown', {
+      key: char,
+      code: 'Key' + char.toUpperCase(),
+      bubbles: true
+    }));
+
+    // Actualizar valor
+    input.value += char;
+
+    // Input event
+    input.dispatchEvent(new InputEvent('input', {
+      bubbles: true,
+      inputType: 'insertText',
+      data: char
+    }));
+
+    // KeyUp
+    input.dispatchEvent(new KeyboardEvent('keyup', {
+      key: char,
+      code: 'Key' + char.toUpperCase(),
+      bubbles: true
+    }));
+  }
+
+  // Change event al final
+  input.dispatchEvent(new Event('change', { bubbles: true }));
+}
+```
+
+#### Técnica 7: Acceso a React Internal State
+
+**Fuente:** [GitHub - browser-use issues](https://github.com/browser-use/browser-use/issues/3829)
+
+```javascript
+// Encontrar el React Fiber node de un elemento
+function getReactFiber(element) {
+  var key = Object.keys(element).find(function(k) {
+    return k.startsWith('__reactFiber$') ||
+           k.startsWith('__reactInternalInstance$');
+  });
+  return key ? element[key] : null;
+}
+
+// Obtener props de React
+function getReactProps(element) {
+  var key = Object.keys(element).find(function(k) {
+    return k.startsWith('__reactProps$');
+  });
+  return key ? element[key] : null;
+}
+
+// Disparar onChange de React directamente
+function triggerReactChange(element, value) {
+  var props = getReactProps(element);
+  if (props && props.onChange) {
+    props.onChange({ target: { value: value } });
+  }
+}
+```
+
+#### Técnica 8: Scroll con IntersectionObserver Trigger
+
+```javascript
+// Algunos sitios cargan contenido cuando elemento es visible
+function scrollIntoViewAndWait(element) {
+  return new Promise(function(resolve) {
+    var observer = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        observer.disconnect();
+        setTimeout(resolve, 500);  // Esperar carga
+      }
+    });
+    observer.observe(element);
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+}
+```
+
+#### Técnica 9: MutationObserver para Detectar Cambios de DOM
+
+```javascript
+// Esperar a que aparezca un elemento dinámico
+function waitForElement(selector, timeout) {
+  return new Promise(function(resolve, reject) {
+    var element = document.querySelector(selector);
+    if (element) return resolve(element);
+
+    var observer = new MutationObserver(function(mutations) {
+      element = document.querySelector(selector);
+      if (element) {
+        observer.disconnect();
+        resolve(element);
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    setTimeout(function() {
+      observer.disconnect();
+      reject(new Error('Element not found: ' + selector));
+    }, timeout || 10000);
+  });
+}
+```
+
+#### Técnica 10: Clipboard API para Paste
+
+```javascript
+// Simular Ctrl+V con texto personalizado
+async function simulatePaste(element, text) {
+  element.focus();
+
+  // Escribir al clipboard
+  await navigator.clipboard.writeText(text);
+
+  // Disparar evento paste
+  var pasteEvent = new ClipboardEvent('paste', {
+    bubbles: true,
+    cancelable: true,
+    clipboardData: new DataTransfer()
+  });
+  pasteEvent.clipboardData.setData('text/plain', text);
+  element.dispatchEvent(pasteEvent);
+}
+```
+
+#### Resumen de Técnicas por Caso de Uso
+
+| Caso de Uso | Técnica Recomendada |
+|-------------|---------------------|
+| Click en botón normal | `.click()` directo |
+| Click en React component | React Fiber hack |
+| Typing en `<input>` | `simulateTyping()` con InputEvent |
+| Typing en contenteditable | `execCommand('insertText')` |
+| Esperar elemento dinámico | MutationObserver |
+| Scroll infinito | IntersectionObserver |
+| Formularios React | `triggerReactChange()` |
+
+#### Referencias
+
+- [MDN - Creating and triggering events](https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events)
+- [MDN - MouseEvent](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent)
+- [MDN - InputEvent](https://developer.mozilla.org/en-US/docs/Web/API/InputEvent/inputType)
+- [GeeksforGeeks - Simulate Click](https://www.geeksforgeeks.org/how-to-simulate-a-click-with-javascript/)
+- [GitHub - Simulant](https://github.com/Rich-Harris/simulant)
+
 ---
 
 ## 8. Performance Checklist

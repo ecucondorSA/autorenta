@@ -1,0 +1,66 @@
+═══════════════════════════════════════════════════════════════
+POST 9: OWNER - CALCULADORA DE GANANCIAS
+═══════════════════════════════════════════════════════════════
+
+🧮 ¿Cuánto podrías ganar alquilando tu auto?
+
+Hice los números basándome en lo que vi en apps de alquiler P2P:
+
+📊 PRECIO PROMEDIO POR DÍA (Argentina 2026):
+
+| Tipo de Auto | Precio/Día USD |
+|--------------|----------------|
+| Compacto (Gol, Corsa, Clio) | $25-40 |
+| Sedán (Corolla, Cruze, Vento) | $40-70 |
+| SUV (Tracker, Duster, Kicks) | $60-100 |
+| Premium (BMW, Audi, Mercedes) | $100-200 |
+| Camioneta (Hilux, Ranger) | $80-150 |
+
+📅 EJEMPLO: Sedán alquilado solo fines de semana
+
+- 4 fines de semana = 8 días/mes
+- Precio promedio: $50 USD/día
+- Ocupación realista: 75%
+- **Ingreso mensual: ~$300 USD**
+
+📅 EJEMPLO: Auto parado L-V (trabajo remoto)
+
+- 20 días hábiles/mes
+- Precio: $45 USD/día
+- Ocupación: 50%
+- **Ingreso mensual: ~$450 USD**
+
+💡 COSTOS QUE CUBRÍS CON ESO:
+- Seguro mensual ✅
+- Patente ✅
+- Service anual ✅
+- Y te sobra...
+
+¿Querés calcular para TU auto?
+Comentá marca, modelo y año, y te doy una estimación.
+
+═══════════════════════════════════════════════════════════════
+RESPUESTAS PERSONALIZADAS:
+═══════════════════════════════════════════════════════════════
+
+[Para Corolla 2020:]
+Un Corolla 2020 en buen estado podrías ponerlo entre $50-65 USD/día.
+Si lo alquilás 8 días al mes (fines de semana),
+son ~$400-500 USD mensuales.
+
+La app que uso es AutoRentar (autorentar.com/owner/rent-your-car)
+Incluye seguro y verificación de usuarios.
+
+---
+
+[Para Gol/Corsa:]
+Los autos compactos son MUY pedidos porque son más baratos.
+Un Gol/Corsa podés ponerlo a $30-40 USD/día.
+Con 10 días de alquiler al mes = $300-400 USD.
+
+---
+
+[Para SUV:]
+Las SUV tienen muy buena demanda, especialmente para viajes.
+Una Tracker/Duster podés ponerla a $70-90 USD/día.
+Solo con 2 fines de semana largos al mes ya recuperás gastos.

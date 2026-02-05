@@ -1,0 +1,31 @@
+═══════════════════════════════════════════════════════════════
+POST 2: PREGUNTA ENGAGEMENT (Para gerar discussão)
+═══════════════════════════════════════════════════════════════
+
+❓ ALGUÉM MAIS JÁ ENFRENTOU ESSE PROBLEMA?
+
+Cheguei na Argentina e descobri que meu cartão de débito/Nubank NÃO serve para alugar carro nas locadoras tradicionais.
+
+Eles exigem:
+- Cartão de crédito INTERNACIONAL
+- Com limite de USD 500+ disponível
+- Bloqueio por até 30 dias
+
+Alguém conhece alguma alternativa? Ouvi falar de apps de aluguel P2P, mas não sei se realmente funcionam aqui...
+
+(Já tentei Hertz, Avis e Localiza - nenhuma aceita débito ou pré-pago)
+
+═══════════════════════════════════════════════════════════════
+RESPUESTA CUANDO PREGUNTEN O SUGIERAN:
+═══════════════════════════════════════════════════════════════
+
+Obrigado pela dica! Vou testar.
+
+---
+
+[Si alguien pregunta qué usaste después:]
+
+Sim! Acabei usando o AutoRentar (autorentar.com).
+É P2P, você aluga direto de proprietários.
+Aceita PIX, MercadoPago e dinheiro.
+Funcionou muito bem!

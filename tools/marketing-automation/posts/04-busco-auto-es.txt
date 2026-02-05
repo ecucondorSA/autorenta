@@ -1,0 +1,37 @@
+═══════════════════════════════════════════════════════════════
+POST 4: BUSCO AUTO (En español - para grupos argentinos/latinos)
+═══════════════════════════════════════════════════════════════
+
+🚗 BUSCO: Auto para alquilar este fin de semana
+
+Hola! Soy brasileño viviendo en Buenos Aires y necesito un auto
+para [DESTINO] el [FECHA].
+
+Detalles:
+📅 Fechas: [DESDE] al [HASTA]
+📍 Retiro: CABA (flexible)
+💳 Pago: MercadoPago, efectivo o transferencia
+🪪 Tengo registro de conducir internacional
+⭐ Referencias disponibles si las necesitan
+
+Las rentadoras tradicionales me piden tarjeta internacional
+que no tengo...
+
+¿Alguien alquila su auto o conoce alguna plataforma P2P
+tipo Airbnb de autos?
+
+Gracias!
+
+═══════════════════════════════════════════════════════════════
+SI ALGUIEN RESPONDE CON ALTERNATIVA:
+═══════════════════════════════════════════════════════════════
+
+Gracias! Voy a chequear.
+
+---
+
+[Si preguntan qué usaste después:]
+
+Al final encontré AutoRentar (autorentar.com).
+Es P2P, alquilás directo de dueños. Acepta MercadoPago y efectivo.
+Funcionó perfecto!
