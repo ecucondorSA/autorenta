@@ -1,3 +1,7 @@
+## 3.70.0 (2026-02-05)
+
+* feat: add community awards PDF and email workflow ([7570c6e](https://github.com/ecucondorSA/autorenta/commit/7570c6e))
+
 ## <small>3.69.15 (2026-02-05)</small>
 
 * fix: resolve test compilation errors and lint issues ([02791a1](https://github.com/ecucondorSA/autorenta/commit/02791a1))
