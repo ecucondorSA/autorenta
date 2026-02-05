@@ -239,7 +239,7 @@ async function analyzeDocumentWithGemini(
 ): Promise<AnalyzeDocumentResponse> {
   const prompt = getAnalysisPrompt(documentType, country, ocrText);
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
   const requestBody = {
     contents: [
@@ -271,7 +271,10 @@ async function analyzeDocumentWithGemini(
 
   const response = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-goog-api-key': GEMINI_API_KEY,
+    },
     body: JSON.stringify(requestBody),
   });
 

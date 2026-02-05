@@ -25,7 +25,7 @@ export async function callGemini(
     temperature: number = 0.2
 ): Promise<string> {
     const hostname = 'generativelanguage.googleapis.com';
-    const path = `/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const path = `/v1beta/models/${model}:generateContent`;
 
     const data = {
         systemInstruction: {
@@ -51,6 +51,7 @@ export async function callGemini(
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'x-goog-api-key': apiKey,
         },
         body: JSON.stringify(data),
     });

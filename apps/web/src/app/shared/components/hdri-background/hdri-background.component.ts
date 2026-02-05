@@ -149,6 +149,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   private idleTimeout: ReturnType<typeof setTimeout> | null = null;
   private readonly IDLE_DELAY = 3000; // 3 seconds without interaction
 
+  // Track glance animation timeouts for cleanup
+  private glanceTimeoutIds: ReturnType<typeof setTimeout>[] = [];
+
   // Track if high-res texture is loaded
   private isHighResLoaded = false;
 
@@ -842,6 +845,10 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       this.idleTimeout = null;
     }
 
+    // Clear glance animation timeouts
+    this.glanceTimeoutIds.forEach((id) => clearTimeout(id));
+    this.glanceTimeoutIds = [];
+
     const canvas = this.canvasRef?.nativeElement;
     if (canvas) {
       canvas.removeEventListener('mousedown', this.onMouseDown);
@@ -866,8 +873,12 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
    * to hint that the background is interactive.
    */
   private triggerGlanceAnimation(): void {
+    // Clear any existing glance timeouts
+    this.glanceTimeoutIds.forEach((id) => clearTimeout(id));
+    this.glanceTimeoutIds = [];
+
     // Wait for fade-in to complete
-    setTimeout(() => {
+    const t1 = setTimeout(() => {
       if (this.isDragging || this.isDestroyed) return;
 
       // 1. Prepare for movement (very slow, cinematic feel)
@@ -877,7 +888,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       // 2. Look Left (~30 degrees = 0.52 rad) - subtle glance
       this.targetRotationY -= 0.52;
 
-      setTimeout(() => {
+      const t2 = setTimeout(() => {
         if (this.isDragging || this.isDestroyed) {
           this.rotationSmoothing = originalSmoothing;
           return;
@@ -886,7 +897,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
         // 3. Look Right (Sweep ~60 degrees total)
         this.targetRotationY += 1.04;
 
-        setTimeout(() => {
+        const t3 = setTimeout(() => {
           if (this.isDragging || this.isDestroyed) {
             this.rotationSmoothing = originalSmoothing;
             return;
@@ -896,13 +907,17 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
           this.targetRotationY -= 0.52;
 
           // Restore smoothing
-          setTimeout(() => {
+          const t4 = setTimeout(() => {
             this.rotationSmoothing = originalSmoothing;
           }, 3000);
+          this.glanceTimeoutIds.push(t4);
 
         }, 3000); // Hold right longer
+        this.glanceTimeoutIds.push(t3);
       }, 3000); // Hold left longer
+      this.glanceTimeoutIds.push(t2);
     }, 2000); // Start delay
+    this.glanceTimeoutIds.push(t1);
   }
 
 }
