@@ -1,4 +1,4 @@
-const SUPABASE_URL = 'https://pisqjmoklivzpwufhscx.supabase.co';
+const SUPABASE_URL = 'https://aceacpaockyxgogxsfyc.supabase.co';
 
 async function checkSentMessages() {
   // Get count of sent messages

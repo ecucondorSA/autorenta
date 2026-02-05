@@ -23,16 +23,20 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install dependencies
-        run: bun add nodemailer
-
       - name: Send Email
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           TO_EMAIL: ${{ github.event.inputs.to_email }}
           SUBJECT: ${{ github.event.inputs.subject }}
+          PDF_PATH: ${{ github.workspace }}/tools/whatsapp-context/wa-market-analyzer/output/premios-comunidad-ecuatoriana-2026.pdf
         run: |
+          # Create temp dir for email script
+          mkdir -p /tmp/email-sender
+          cd /tmp/email-sender
+          bun init -y
+          bun add nodemailer
+
           cat > send-email.ts << 'SCRIPT'
           import nodemailer from 'nodemailer';
 
@@ -45,56 +49,55 @@ jobs:
           });
 
           const mailOptions = {
-            from: `ECUCÓNDOR 🇪🇨🇦🇷 <${process.env.GMAIL_USER}>`,
+            from: `ECUCÓNDOR <${process.env.GMAIL_USER}>`,
             to: process.env.TO_EMAIL,
             subject: process.env.SUBJECT,
             html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <div style="background: linear-gradient(90deg, #FFD700, #004990); padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
-                  <h1 style="color: white; margin: 0;">🇪🇨 🏆 🇦🇷</h1>
-                  <h2 style="color: white; margin: 10px 0;">PREMIOS COMUNIDAD ECUATORIANA</h2>
+                  <h1 style="color: white; margin: 0;">PREMIOS COMUNIDAD ECUATORIANA</h1>
                 </div>
                 <div style="padding: 20px; background: #f8f9fa; border-radius: 0 0 10px 10px;">
-                  <p>¡Hola!</p>
-                  <p>Te compartimos los <strong>PREMIOS de nuestra Comunidad Ecuatoriana en Argentina</strong> - Edición 2026.</p>
-                  <p>📊 <strong>Datos destacados:</strong></p>
+                  <p>Hola!</p>
+                  <p>Te compartimos los <strong>PREMIOS de nuestra Comunidad Ecuatoriana en Argentina</strong> - Edicion 2026.</p>
+                  <p><strong>Datos destacados:</strong></p>
                   <ul>
                     <li>50,000+ mensajes analizados</li>
                     <li>5,000+ miembros activos</li>
                     <li>20+ grupos de la comunidad</li>
                   </ul>
-                  <p>🏆 <strong>Categorías premiadas:</strong></p>
+                  <p><strong>Categorias premiadas:</strong></p>
                   <ul>
-                    <li>🍲 Chef Ecuatoriano del Año</li>
-                    <li>🤝 Colaborador Solidario</li>
-                    <li>⭐ Influencer Más Activo</li>
-                    <li>👔 Profesional Destacado</li>
-                    <li>🏆 Comida Más Pedida</li>
-                    <li>💬 Grupo Más Activo</li>
+                    <li>Chef Ecuatoriano del Ano</li>
+                    <li>Colaborador Solidario</li>
+                    <li>Influencer Mas Activo</li>
+                    <li>Profesional Destacado</li>
+                    <li>Comida Mas Pedida</li>
+                    <li>Grupo Mas Activo</li>
                   </ul>
-                  <p>¡Descarga el PDF adjunto para ver todos los resultados! 📄</p>
+                  <p>Descarga el PDF adjunto para ver todos los resultados!</p>
                   <br>
-                  <p style="color: #666;">Juntos somos más fuertes 🇪🇨❤️🇦🇷</p>
-                  <p><strong>ECUCÓNDOR</strong></p>
+                  <p style="color: #666;">Juntos somos mas fuertes</p>
+                  <p><strong>ECUCONDOR</strong></p>
                 </div>
               </div>
             `,
             attachments: [
               {
                 filename: 'Premios-Comunidad-Ecuatoriana-2026.pdf',
-                path: './tools/whatsapp-context/wa-market-analyzer/output/premios-comunidad-ecuatoriana-2026.pdf'
+                path: process.env.PDF_PATH
               }
             ]
           };
 
           try {
             const info = await transporter.sendMail(mailOptions);
-            console.log('✅ Email enviado exitosamente!');
-            console.log('📧 To:', process.env.TO_EMAIL);
-            console.log('📝 Subject:', process.env.SUBJECT);
-            console.log('🆔 Message ID:', info.messageId);
+            console.log('Email enviado exitosamente!');
+            console.log('To:', process.env.TO_EMAIL);
+            console.log('Subject:', process.env.SUBJECT);
+            console.log('Message ID:', info.messageId);
           } catch (error) {
-            console.error('❌ Error:', error);
+            console.error('Error:', error);
             process.exit(1);
           }
           SCRIPT

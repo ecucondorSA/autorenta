@@ -24,7 +24,7 @@
     {
       "parameters": {
         "method": "GET",
-        "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts",
+        "url": "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/outreach_contacts",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendQuery": true,
@@ -80,7 +80,7 @@
     {
       "parameters": {
         "method": "PATCH",
-        "url": "=https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts?id=eq.{{ $json.id }}",
+        "url": "=https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/outreach_contacts?id=eq.{{ $json.id }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -103,7 +103,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_messages",
+        "url": "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/outreach_messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -143,7 +143,7 @@
     {
       "parameters": {
         "method": "GET",
-        "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts",
+        "url": "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/outreach_contacts",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
@@ -198,7 +198,7 @@
     {
       "parameters": {
         "method": "PATCH",
-        "url": "=https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts?id=eq.{{ $json.id }}",
+        "url": "=https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/outreach_contacts?id=eq.{{ $json.id }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -243,7 +243,7 @@
     {
       "parameters": {
         "method": "GET",
-        "url": "=https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts?phone=eq.{{ $json.phone }}&limit=1",
+        "url": "=https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/outreach_contacts?phone=eq.{{ $json.phone }}&limit=1",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -272,7 +272,7 @@
     {
       "parameters": {
         "method": "PATCH",
-        "url": "=https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_contacts?id=eq.{{ $json.id }}",
+        "url": "=https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/outreach_contacts?id=eq.{{ $json.id }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -295,7 +295,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/outreach_messages",
+        "url": "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/outreach_messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
