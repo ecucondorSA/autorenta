@@ -1,3 +1,7 @@
+## 3.72.0 (2026-02-05)
+
+* feat(marketing): add Nubank partnership pitch materials and LinkedIn outreach ([3b732fc](https://github.com/ecucondorSA/autorenta/commit/3b732fc))
+
 ## 3.71.0 (2026-02-05)
 
 * feat(ai): add Gemini Nano Banana Pro image generation workflow ([998ede1](https://github.com/ecucondorSA/autorenta/commit/998ede1))
