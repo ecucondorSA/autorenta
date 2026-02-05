@@ -1,7 +1,18 @@
 <!-- Hero Search Section -->
 <section class="hero-section bg-black relative overflow-hidden min-h-[85vh] flex items-center">
-  <!-- Dynamic Background -->
-  <div class="absolute inset-0 bg-gradient-to-br from-zinc-950 via-black to-black pointer-events-none"></div>
+  <!-- Hero Background Image -->
+  <div class="absolute inset-0 pointer-events-none">
+    <img
+      src="/assets/images/hero-marketplace.webp"
+      alt=""
+      class="w-full h-full object-cover object-right-bottom opacity-60"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <!-- Gradient Overlay for text readability -->
+    <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/40"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
+  </div>
   
   <!-- Content -->
   <div class="hero-content relative z-10 container mx-auto px-4 flex flex-col items-center text-center">
