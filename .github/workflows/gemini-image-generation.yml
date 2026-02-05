@@ -1,0 +1,127 @@
+name: Gemini Image Generation (Nano Banana Pro)
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'Prompt para generar la imagen'
+        required: true
+        default: 'Professional logo for car rental app AUTORENTAR, blue gradient, minimalist'
+      output_name:
+        description: 'Nombre del archivo de salida (sin extensión)'
+        required: false
+        default: 'generated-image'
+      upload_artifact:
+        description: 'Subir imagen como artifact'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+env:
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+jobs:
+  generate-image:
+    name: Generate Image with Nano Banana Pro
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Check API Key
+        id: check-key
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "⚠️ GEMINI_API_KEY secret not configured"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ GEMINI_API_KEY configured"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate Image
+        if: steps.check-key.outputs.skip != 'true'
+        run: |
+          echo "🎨 Generating image with Nano Banana Pro..."
+          echo "📝 Prompt: ${{ github.event.inputs.prompt }}"
+
+          # Using curl directly for reliability
+          curl -s "https://generativelanguage.googleapis.com/v1beta/models/nano-banana-pro-preview:generateContent?key=$GEMINI_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "contents": [{
+                "parts": [{
+                  "text": "${{ github.event.inputs.prompt }}"
+                }]
+              }],
+              "generationConfig": {
+                "responseModalities": ["IMAGE", "TEXT"]
+              }
+            }' -o /tmp/gemini-response.json
+
+          # Check for errors
+          if jq -e '.error' /tmp/gemini-response.json > /dev/null 2>&1; then
+            echo "❌ API Error:"
+            jq '.error.message' /tmp/gemini-response.json
+            exit 1
+          fi
+
+          # Extract image
+          jq -r '.candidates[0].content.parts[] | select(.inlineData) | .inlineData.data' /tmp/gemini-response.json | base64 -d > ${{ github.event.inputs.output_name }}.png
+
+          # Verify
+          if [ -s "${{ github.event.inputs.output_name }}.png" ]; then
+            echo "✅ Image generated successfully"
+            ls -la ${{ github.event.inputs.output_name }}.png
+            file ${{ github.event.inputs.output_name }}.png
+          else
+            echo "❌ Image generation failed - empty file"
+            exit 1
+          fi
+
+      - name: Upload Image Artifact
+        if: steps.check-key.outputs.skip != 'true' && github.event.inputs.upload_artifact == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: gemini-generated-image
+          path: ${{ github.event.inputs.output_name }}.png
+          retention-days: 30
+
+      - name: Summary
+        if: steps.check-key.outputs.skip != 'true'
+        run: |
+          echo "## 🎨 Gemini Image Generation Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Model:** Nano Banana Pro (Gemini 3 Pro Image)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Prompt:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "${{ github.event.inputs.prompt }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Output:** \`${{ github.event.inputs.output_name }}.png\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.upload_artifact }}" == "true" ]; then
+            echo "📦 Image uploaded as artifact (available for 30 days)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Skip Notice
+        if: steps.check-key.outputs.skip == 'true'
+        run: |
+          echo "## ⚠️ Workflow Skipped" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "GEMINI_API_KEY secret is not configured." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "To configure:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Go to Settings → Secrets and variables → Actions" >> $GITHUB_STEP_SUMMARY
+          echo "2. Add a new secret named \`GEMINI_API_KEY\`" >> $GITHUB_STEP_SUMMARY
+          echo "3. Get your API key from https://aistudio.google.com/apikey" >> $GITHUB_STEP_SUMMARY
