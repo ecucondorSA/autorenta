@@ -7,15 +7,6 @@
 
 | Página | JS | CSS | Imágenes | Fonts | Otros | Total |
 |--------|----|----|----------|-------|-------|-------|
-| landing | 0 | 0 | 0 | 0 | 0 | 0 |
-| auth_login | 0 | 0 | 0 | 0 | 0 | 0 |
-| cars_list | 0 | 0 | 0 | 0 | 0 | 0 |
-| home_marketplace | 0 | 0 | 0 | 0 | 0 | 0 |
-| home_profile | 0 | 0 | 0 | 0 | 0 | 0 |
-| home_bookings | 0 | 0 | 0 | 0 | 0 | 0 |
-| home_wallet | 0 | 0 | 0 | 0 | 0 | 0 |
-| home_cars | 0 | 0 | 0 | 0 | 0 | 0 |
-| home_notifications | 0 | 0 | 0 | 0 | 0 | 0 |
 
 ## API Endpoints Detectados
 

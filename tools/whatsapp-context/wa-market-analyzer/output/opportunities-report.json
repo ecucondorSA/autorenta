@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-02-05T07:34:25.276Z",
+  "highPriority": [
+    {
+      "id": "demand_tramites",
+      "category": "Trámites/Documentos",
+      "type": "HIGH_DEMAND",
+      "priority": "HIGH",
+      "insight": "370 mensajes de demanda vs 34 de oferta (ratio 10.88x)",
+      "recommendation": "Alta demanda insatisfecha. Conectar compradores con vendedores o crear marketplace especializado en trámites/documentos.",
+      "metrics": {
+        "demandMentions": 370,
+        "supplyMentions": 34,
+        "gapRatio": 10.88,
+        "avgPrice": 35,
+        "priceCurrency": "ARS"
+      },
+      "targetSegments": []
+    }
+  ],
+  "mediumPriority": [],
+  "lowPriority": [
+    {
+      "id": "demand_vivienda",
+      "category": "Vivienda",
+      "type": "NICHE",
+      "priority": "LOW",
+      "insight": "83 mensajes de demanda vs 112 de oferta (ratio 0.74x)",
+      "recommendation": "Nicho específico. Diferenciación por precio o calidad en vivienda.",
+      "metrics": {
+        "demandMentions": 83,
+        "supplyMentions": 112,
+        "gapRatio": 0.74,
+        "avgPrice": 230,
+        "priceCurrency": "USD"
+      },
+      "targetSegments": []
+    }
+  ],
+  "marketSummary": {
+    "totalCategories": 10,
+    "highOpportunityCount": 1,
+    "saturatedCount": 8,
+    "topGapCategory": "Trámites/Documentos",
+    "mostActiveSegment": "Comunidad Ecuatoriana"
+  },
+  "actionItems": [
+    "🔴 ALTA PRIORIDAD: Trámites/Documentos - Alta demanda insatisfecha. Conectar compradores con vendedores o crear marketplace especializado en trámites/documentos.",
+    "👥 Comunidad Comunidad Ecuatoriana (1445 usuarios) es objetivo principal",
+    "🤝 Top vendedor: 6240805630027 - potencial aliado/competidor"
+  ]
+}

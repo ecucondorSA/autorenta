@@ -1,0 +1,451 @@
+/**
+ * Market categories for WhatsApp message analysis
+ */
+
+export interface Category {
+  id: string;
+  name: string;
+  emoji: string;
+  demandKeywords: string[];  // "busco", "necesito" patterns
+  supplyKeywords: string[];  // "vendo", "ofrezco" patterns
+  contextKeywords: string[]; // Additional context keywords
+}
+
+export const CATEGORIES: Category[] = [
+  {
+    id: "vivienda",
+    name: "Vivienda",
+    emoji: "🏠",
+    demandKeywords: [
+      "busco habitación",
+      "busco habitacion",
+      "necesito habitación",
+      "necesito habitacion",
+      "busco cuarto",
+      "busco pieza",
+      "busco depto",
+      "busco departamento",
+      "busco roomie",
+      "alguien alquila",
+      "busco alquilar",
+      "necesito alquilar",
+    ],
+    supplyKeywords: [
+      "alquilo habitación",
+      "alquilo habitacion",
+      "alquilo cuarto",
+      "alquilo pieza",
+      "habitación disponible",
+      "habitacion disponible",
+      "busco roomie",
+      "dueño directo",
+      "sin inmobiliaria",
+    ],
+    contextKeywords: [
+      "habitación",
+      "habitacion",
+      "roomie",
+      "departamento",
+      "depto",
+      "alquiler",
+      "expensas",
+      "monoambiente",
+      "pensión",
+      "pension",
+      "residencia",
+    ],
+  },
+  {
+    id: "electronicos",
+    name: "Electrónicos",
+    emoji: "📱",
+    demandKeywords: [
+      "busco iphone",
+      "busco celular",
+      "busco notebook",
+      "busco laptop",
+      "necesito celular",
+      "busco tablet",
+      "busco samsung",
+      "busco xiaomi",
+      "busco motorola",
+      "alguien vende celular",
+      "alguien vende iphone",
+    ],
+    supplyKeywords: [
+      "vendo iphone",
+      "vendo celular",
+      "vendo notebook",
+      "vendo laptop",
+      "vendo tablet",
+      "vendo samsung",
+      "vendo xiaomi",
+      "vendo motorola",
+      "iphone en venta",
+      "celular en venta",
+    ],
+    contextKeywords: [
+      "iphone",
+      "samsung",
+      "xiaomi",
+      "motorola",
+      "celular",
+      "notebook",
+      "laptop",
+      "tablet",
+      "auriculares",
+      "airpods",
+      "cargador",
+      "pantalla",
+      "gb",
+      "ram",
+    ],
+  },
+  {
+    id: "comida",
+    name: "Comida/Delivery",
+    emoji: "🍔",
+    demandKeywords: [
+      "busco delivery",
+      "alguien hace comida",
+      "alguien vende comida",
+      "busco almuerzo",
+      "busco viandas",
+      "necesito comida",
+      "quién hace",
+      "quien hace",
+    ],
+    supplyKeywords: [
+      "hago delivery",
+      "vendo comida",
+      "hago tequeños",
+      "hago empanadas",
+      "hago viandas",
+      "almuerzo del día",
+      "menú del día",
+      "encargos de",
+      "pedidos de",
+    ],
+    contextKeywords: [
+      "tequeños",
+      "empanadas",
+      "almuerzo",
+      "viandas",
+      "delivery",
+      "comida casera",
+      "menú",
+      "menu",
+      "torta",
+      "postre",
+      "encebollado",
+      "ceviche",
+      "seco de pollo",
+      "arroz",
+    ],
+  },
+  {
+    id: "servicios",
+    name: "Servicios",
+    emoji: "🔧",
+    demandKeywords: [
+      "busco plomero",
+      "busco electricista",
+      "busco limpieza",
+      "necesito plomero",
+      "necesito electricista",
+      "alguien hace limpieza",
+      "busco peluquería",
+      "busco peluqueria",
+      "busco manicura",
+      "busco gasista",
+      "alguien arregla",
+      "recomiendan plomero",
+      "recomiendan electricista",
+    ],
+    supplyKeywords: [
+      "hago limpieza",
+      "soy plomero",
+      "soy electricista",
+      "hago manicura",
+      "hago peluquería",
+      "ofrezco limpieza",
+      "trabajos de plomería",
+      "trabajos de electricidad",
+      "servicio de limpieza",
+    ],
+    contextKeywords: [
+      "limpieza",
+      "plomero",
+      "plomería",
+      "electricista",
+      "gasista",
+      "peluquería",
+      "peluqueria",
+      "manicura",
+      "pedicura",
+      "depilación",
+      "masajes",
+      "técnico",
+      "reparación",
+    ],
+  },
+  {
+    id: "educacion",
+    name: "Educación",
+    emoji: "📚",
+    demandKeywords: [
+      "busco libros",
+      "busco apuntes",
+      "necesito clases",
+      "busco tutor",
+      "busco profesor",
+      "alguien da clases",
+      "busco clases de",
+      "necesito apuntes",
+      "alguien tiene libros",
+    ],
+    supplyKeywords: [
+      "vendo libros",
+      "doy clases",
+      "clases particulares",
+      "tengo apuntes",
+      "vendo apuntes",
+      "tutorías de",
+      "profesor de",
+    ],
+    contextKeywords: [
+      "libros",
+      "apuntes",
+      "clases",
+      "tutorías",
+      "profesor",
+      "universidad",
+      "facultad",
+      "examen",
+      "parcial",
+      "final",
+      "medicina",
+      "anatomía",
+      "fisiología",
+    ],
+  },
+  {
+    id: "transporte",
+    name: "Transporte",
+    emoji: "🚗",
+    demandKeywords: [
+      "busco auto",
+      "busco moto",
+      "busco bicicleta",
+      "necesito auto",
+      "busco remis",
+      "alguien vende auto",
+      "alguien vende moto",
+      "busco viaje a",
+      "alguien viaja a",
+    ],
+    supplyKeywords: [
+      "vendo auto",
+      "vendo moto",
+      "vendo bicicleta",
+      "ofrezco viaje",
+      "viajo a",
+      "remis disponible",
+      "auto en venta",
+      "moto en venta",
+    ],
+    contextKeywords: [
+      "auto",
+      "moto",
+      "bicicleta",
+      "bici",
+      "remis",
+      "uber",
+      "cabify",
+      "viaje",
+      "pasaje",
+      "combustible",
+      "nafta",
+    ],
+  },
+  {
+    id: "ropa",
+    name: "Ropa/Moda",
+    emoji: "👗",
+    demandKeywords: [
+      "busco ropa",
+      "busco zapatos",
+      "busco zapatillas",
+      "necesito ropa",
+      "busco talle",
+      "alguien vende ropa",
+      "busco jean",
+      "busco remera",
+    ],
+    supplyKeywords: [
+      "vendo ropa",
+      "vendo zapatos",
+      "vendo zapatillas",
+      "ropa en venta",
+      "liquidación de ropa",
+      "feria de ropa",
+      "ropa americana",
+      "ropa usada",
+    ],
+    contextKeywords: [
+      "ropa",
+      "zapatos",
+      "zapatillas",
+      "talle",
+      "remera",
+      "jean",
+      "pantalón",
+      "campera",
+      "vestido",
+      "calzado",
+      "nike",
+      "adidas",
+    ],
+  },
+  {
+    id: "tramites",
+    name: "Trámites/Documentos",
+    emoji: "📄",
+    demandKeywords: [
+      "cómo saco",
+      "como saco",
+      "cómo hago",
+      "como hago",
+      "alguien sabe de",
+      "ayuda con",
+      "necesito info",
+      "dónde tramito",
+      "donde tramito",
+      "turno para",
+      "busco turno",
+    ],
+    supplyKeywords: [
+      "yo te ayudo",
+      "te asesoro",
+      "hago trámites",
+      "gestión de",
+      "asesoría migratoria",
+    ],
+    contextKeywords: [
+      "dni",
+      "residencia",
+      "precaria",
+      "radicación",
+      "convalidar",
+      "convalidación",
+      "migraciones",
+      "turno",
+      "radex",
+      "cuit",
+      "cuil",
+      "monotributo",
+      "anses",
+    ],
+  },
+  {
+    id: "trabajo",
+    name: "Trabajo/Empleo",
+    emoji: "💼",
+    demandKeywords: [
+      "busco trabajo",
+      "busco empleo",
+      "necesito trabajo",
+      "alguien contrata",
+      "oportunidad de trabajo",
+      "busco laburo",
+    ],
+    supplyKeywords: [
+      "busco empleado",
+      "se busca",
+      "se necesita",
+      "oferta de trabajo",
+      "contratamos",
+      "vacante",
+    ],
+    contextKeywords: [
+      "trabajo",
+      "empleo",
+      "laburo",
+      "sueldo",
+      "salario",
+      "contrato",
+      "part time",
+      "full time",
+      "freelance",
+      "remoto",
+    ],
+  },
+  {
+    id: "mascotas",
+    name: "Mascotas",
+    emoji: "🐕",
+    demandKeywords: [
+      "busco perro",
+      "busco gato",
+      "busco mascota",
+      "adopción de",
+      "adopcion de",
+      "alguien tiene cachorros",
+      "busco veterinario",
+    ],
+    supplyKeywords: [
+      "doy en adopción",
+      "doy en adopcion",
+      "perro en adopción",
+      "gato en adopción",
+      "cachorros",
+      "vendo perro",
+      "vendo gato",
+    ],
+    contextKeywords: [
+      "perro",
+      "gato",
+      "mascota",
+      "veterinario",
+      "vacunas",
+      "adopción",
+      "adopcion",
+      "cachorro",
+      "gatito",
+    ],
+  },
+];
+
+/**
+ * Get category by ID
+ */
+export function getCategoryById(id: string): Category | undefined {
+  return CATEGORIES.find(c => c.id === id);
+}
+
+/**
+ * Build SQL LIKE conditions for demand keywords
+ */
+export function getDemandConditions(category: Category): string {
+  return category.demandKeywords
+    .map(kw => `LOWER(text_data) LIKE '%${kw}%'`)
+    .join(" OR ");
+}
+
+/**
+ * Build SQL LIKE conditions for supply keywords
+ */
+export function getSupplyConditions(category: Category): string {
+  return category.supplyKeywords
+    .map(kw => `LOWER(text_data) LIKE '%${kw}%'`)
+    .join(" OR ");
+}
+
+/**
+ * Build SQL LIKE conditions for context keywords
+ */
+export function getContextConditions(category: Category): string {
+  return category.contextKeywords
+    .map(kw => `LOWER(text_data) LIKE '%${kw}%'`)
+    .join(" OR ");
+}

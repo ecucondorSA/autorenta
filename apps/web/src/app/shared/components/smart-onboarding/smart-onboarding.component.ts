@@ -40,8 +40,11 @@ export class SmartOnboardingComponent implements OnInit {
   private readonly logger = inject(LoggerService);
 
   // --- STATE ---
-  readonly currentStep = signal<1 | 2 | 3 | 4>(1);
+  readonly currentStep = signal<number>(1);
   readonly role = signal<'owner' | 'renter' | 'both' | null>(null);
+
+  /** Total steps varies by role: renter=5 (role, purpose, zone, notif, loading), owner/both=4 */
+  readonly totalSteps = computed(() => this.role() === 'renter' ? 5 : 4);
 
   // Owner Data
   readonly selectedBrand = signal<FipeAutocompleteOption | null>(null);
@@ -134,10 +137,14 @@ export class SmartOnboardingComponent implements OnInit {
 
   selectPurpose(purpose: string) {
     this.renterPurpose.set(purpose);
+    // Auto-advance after visual feedback
+    setTimeout(() => this.nextStep(), 300);
   }
 
   selectLocation(loc: string) {
     this.renterLocation.set(loc);
+    // Auto-advance after visual feedback
+    setTimeout(() => this.nextStep(), 300);
   }
 
   async calculateEarnings(brand: string, model: string, year: number) {
@@ -171,20 +178,15 @@ export class SmartOnboardingComponent implements OnInit {
   }
 
   nextStep() {
-    this.currentStep.update(s => {
-      const next = s + 1;
-      return (next <= 4 ? next : 4) as 1 | 2 | 3 | 4;
-    });
-    if (this.currentStep() === 4) {
+    const max = this.totalSteps();
+    this.currentStep.update(s => Math.min(s + 1, max));
+    if (this.currentStep() === max) {
       this.completeOnboarding();
     }
   }
 
   prevStep() {
-    this.currentStep.update(s => {
-      const prev = s - 1;
-      return (prev >= 1 ? prev : 1) as 1 | 2 | 3 | 4;
-    });
+    this.currentStep.update(s => Math.max(s - 1, 1));
   }
 
   skip() {
@@ -217,20 +219,37 @@ export class SmartOnboardingComponent implements OnInit {
   }
 
   // --- HELPERS ---
+
+  /** Owner car data step (step 2 for owner/both) */
   get showOwnerStep() {
     return this.currentStep() === 2 && (this.role() === 'owner' || this.role() === 'both');
   }
 
-  get showRenterStep() {
+  /** Renter purpose selection (step 2 for renter) */
+  get showRenterPurposeStep() {
     return this.currentStep() === 2 && this.role() === 'renter';
   }
 
+  /** Renter zone selection (step 3 for renter) */
+  get showRenterZoneStep() {
+    return this.currentStep() === 3 && this.role() === 'renter';
+  }
+
+  /** Notifications step: step 3 for owner/both, step 4 for renter */
+  get showNotificationsStep() {
+    if (this.role() === 'renter') return this.currentStep() === 4;
+    return this.currentStep() === 3;
+  }
+
+  /** Loading step: step 4 for owner/both, step 5 for renter */
+  get showLoadingStep() {
+    return this.currentStep() === this.totalSteps();
+  }
+
+  /** Only owner path needs a continue button (multi-field form) */
   get canContinueStep2() {
     if (this.showOwnerStep) {
       return this.selectedBrand() && this.selectedModel() && this.selectedYear();
-    }
-    if (this.showRenterStep) {
-      return this.renterPurpose() && this.renterLocation();
     }
     return false;
   }

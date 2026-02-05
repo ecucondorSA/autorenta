@@ -1,6 +1,11 @@
-import { CommonModule, DecimalPipe } from '@angular/common';
-import { Component, computed, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule, DecimalPipe, PercentPipe } from '@angular/common';
+import { Component, computed, inject, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import {
+  VA_THRESHOLDS,
+  MAX_CARS_PER_OWNER,
+  MAX_POOL_SHARE_PER_OWNER,
+} from '@core/models/reward-pool.model';
 import { RewardPoolService } from '@core/services/payments/reward-pool.service';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 
@@ -8,7 +13,7 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
   selector: 'app-points-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, MoneyPipe, DecimalPipe],
+  imports: [CommonModule, RouterLink, MoneyPipe, DecimalPipe, PercentPipe],
   templateUrl: './points.page.html',
 })
 export class PointsPage implements OnInit {
@@ -18,12 +23,31 @@ export class PointsPage implements OnInit {
   readonly error = this.rewardPoolService.error;
   readonly summary = this.rewardPoolService.summary;
 
-  // Computed values from service
+  // Senior model signals
+  readonly seniorSummary = this.rewardPoolService.seniorSummary;
+  readonly carDailyPoints = this.rewardPoolService.carDailyPoints;
+  readonly poolConfig = this.rewardPoolService.poolConfig;
+
+  // Toggle between legacy and senior view
+  readonly useSeniorModel = signal(true);
+
+  // Constants for template
+  readonly VA_THRESHOLDS = VA_THRESHOLDS;
+  readonly MAX_CARS = MAX_CARS_PER_OWNER;
+  readonly MAX_SHARE = MAX_POOL_SHARE_PER_OWNER;
+
+  // Computed values from service (legacy)
   readonly currentMonthPoints = this.rewardPoolService.currentMonthPoints;
   readonly estimatedEarnings = this.rewardPoolService.estimatedEarnings;
   readonly lastMonthEarnings = this.rewardPoolService.lastMonthEarnings;
   readonly totalEarnedAllTime = this.rewardPoolService.totalEarnedAllTime;
   readonly poolStatus = this.rewardPoolService.poolStatus;
+
+  // Senior model computed
+  readonly totalPointsSenior = this.rewardPoolService.totalPointsSenior;
+  readonly estimatedPayoutUsd = this.rewardPoolService.estimatedPayoutUsd;
+  readonly eligibleCars = this.rewardPoolService.eligibleCars;
+  readonly isEligible = this.rewardPoolService.isEligible;
 
   // Local computed
   readonly currentMonthName = computed(() => {
@@ -55,13 +79,59 @@ export class PointsPage implements OnInit {
 
   readonly isGrowthPositive = computed(() => this.pointsGrowth() >= 0);
 
-  // Points breakdown for chart
+  // Senior model: Car breakdown with factors
+  readonly carFactorsBreakdown = computed(() => {
+    const summary = this.seniorSummary();
+    if (!summary) return [];
+
+    return summary.carPoints.map(car => ({
+      carId: car.carId,
+      carTitle: car.carTitle,
+      points: car.points,
+      eligibleDays: car.eligibleDays,
+      avgDailyPoints: car.avgDailyPoints,
+      valueFactor: car.factors.valueFactor,
+      valueFactorLabel: this.rewardPoolService.getFactorQualityLabel(car.factors.valueFactor, 'value'),
+      valueFactorColor: this.rewardPoolService.getFactorColor(car.factors.valueFactor, 'value'),
+      repFactor: car.factors.repFactor,
+      repFactorLabel: this.rewardPoolService.getFactorQualityLabel(car.factors.repFactor, 'rep'),
+      repFactorColor: this.rewardPoolService.getFactorColor(car.factors.repFactor, 'rep'),
+      demandFactor: car.factors.demandFactor,
+      demandFactorLabel: this.rewardPoolService.getFactorQualityLabel(car.factors.demandFactor, 'demand'),
+      demandFactorColor: this.rewardPoolService.getFactorColor(car.factors.demandFactor, 'demand'),
+      isTopCar: summary.carPoints.indexOf(car) < MAX_CARS_PER_OWNER,
+    }));
+  });
+
+  // VA issues summary
+  readonly vaIssues = computed(() => {
+    const dailyPoints = this.carDailyPoints();
+    const issues = new Map<string, number>();
+
+    for (const dp of dailyPoints) {
+      if (!dp.vaStatus && dp.vaFailureReasons) {
+        for (const reason of dp.vaFailureReasons) {
+          issues.set(reason, (issues.get(reason) || 0) + 1);
+        }
+      }
+    }
+
+    return Array.from(issues.entries())
+      .map(([reason, count]) => ({
+        reason,
+        label: this.rewardPoolService.getVAFailureLabel(reason),
+        count,
+      }))
+      .sort((a, b) => b.count - a.count);
+  });
+
+  // Legacy: Points breakdown for chart
   readonly pointsBreakdown = computed(() => {
     const summary = this.summary();
     if (!summary) return [];
 
     const points = summary.currentMonth.points;
-    const total = points.total_points || 1; // Avoid division by zero
+    const total = points.total_points || 1;
 
     return [
       {
@@ -114,7 +184,12 @@ export class PointsPage implements OnInit {
   }
 
   async loadData(): Promise<void> {
-    await this.rewardPoolService.loadOwnerSummary();
+    // Only load senior model - legacy tables (community_rewards, reward_pool) don't exist
+    await this.rewardPoolService.loadSeniorSummary();
+  }
+
+  toggleModel(): void {
+    this.useSeniorModel.update(v => !v);
   }
 
   getMonthName(month: number): string {

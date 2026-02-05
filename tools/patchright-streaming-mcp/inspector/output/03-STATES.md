@@ -6,15 +6,6 @@
 
 | Página | URL | Auth | Loading | Error | Empty |
 |--------|-----|------|---------|-------|-------|
-| landing | `/` | ❌ | – | – | – |
-| auth_login | `/auth/login` | ❌ | – | – | – |
-| cars_list | `/cars/list` | ❌ | – | – | – |
-| home_marketplace | `/home/marketplace` | ❌ | – | – | – |
-| home_profile | `/home/profile` | ❌ | – | – | – |
-| home_bookings | `/home/bookings` | ❌ | – | – | – |
-| home_wallet | `/home/wallet` | ❌ | – | – | – |
-| home_cars | `/home/cars` | ❌ | – | – | – |
-| home_notifications | `/home/notifications` | ❌ | – | – | – |
 
 ## Detalle de Estados
 

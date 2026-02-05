@@ -1,7 +1,7 @@
 # 🔍 Inspección de Plataforma - AutoRenta
 
 > Generado por Patchright MCP Inspector
-> Fecha: 2026-02-04T03:07:46.775Z
+> Fecha: 2026-02-05T03:32:20.152Z
 
 ## Documentos Generados
 
@@ -19,8 +19,8 @@
 
 - **Plataforma**: AutoRenta
 - **URL**: https://autorentar.com
-- **Páginas inspeccionadas**: 9
-- **Screenshots capturados**: 13
+- **Páginas inspeccionadas**: 0
+- **Screenshots capturados**: 4
 - **Componentes Ionic detectados**: 0+
 
 ## Screenshots

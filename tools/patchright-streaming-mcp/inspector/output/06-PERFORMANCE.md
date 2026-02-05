@@ -6,15 +6,6 @@
 
 | Página | Tiempo Total | DOM Loaded | Resources |
 |--------|--------------|------------|-----------|
-| landing | 6181ms | -ms | - |
-| auth_login | 5922ms | -ms | - |
-| cars_list | 5476ms | -ms | - |
-| home_marketplace | 5907ms | -ms | - |
-| home_profile | 5619ms | -ms | - |
-| home_bookings | 6513ms | -ms | - |
-| home_wallet | 5957ms | -ms | - |
-| home_cars | 5631ms | -ms | - |
-| home_notifications | 5405ms | -ms | - |
 
 ## Métricas Detalladas
 
@@ -31,9 +22,9 @@
 
 ### Promedios Detectados
 
-- **Tiempo promedio de carga**: 5846ms
-- **Carga más rápida**: 5405ms
-- **Carga más lenta**: 6513ms
+- **Tiempo promedio de carga**: NaNms
+- **Carga más rápida**: Infinityms
+- **Carga más lenta**: -Infinityms
 
 ## Recursos por Tipo
 

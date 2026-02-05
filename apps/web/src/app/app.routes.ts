@@ -499,6 +499,11 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'points',
+        loadComponent: () =>
+          import('./features/dashboard/points/points.page').then((m) => m.PointsPage),
+      },
+      {
         path: 'security',
         loadComponent: () =>
           import('./features/dashboard/pages/security-center/security-dashboard.page').then(

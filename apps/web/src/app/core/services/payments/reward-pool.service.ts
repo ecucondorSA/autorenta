@@ -6,7 +6,18 @@ import type {
   OwnerPointsSummary,
   RewardPoolStatus,
   OwnerPointsBreakdown,
+  OwnerMonthlyPointsSummary,
+  CarDailyPoints,
+  VAStatus,
+  RewardPoolConfigSenior,
 } from '@core/models/dashboard.model';
+import {
+  getFactorQuality,
+  BASE_POINTS_PER_DAY,
+  MAX_CARS_PER_OWNER,
+  MAX_POOL_SHARE_PER_OWNER,
+  VA_THRESHOLDS,
+} from '@core/models/reward-pool.model';
 
 /**
  * RewardPoolService
@@ -299,5 +310,272 @@ export class RewardPoolService {
       distributed: 'text-success-strong bg-success-bg',
     };
     return colors[status] || 'text-text-secondary bg-surface-base';
+  }
+
+  // ============================================================================
+  // SENIOR MODEL: Multiplicative Points System
+  // ============================================================================
+
+  // Senior model signals
+  readonly seniorSummary = signal<OwnerMonthlyPointsSummary | null>(null);
+  readonly carDailyPoints = signal<CarDailyPoints[]>([]);
+  readonly poolConfig = signal<RewardPoolConfigSenior | null>(null);
+
+  // Computed for senior model
+  readonly totalPointsSenior = computed(() => this.seniorSummary()?.totalPoints ?? 0);
+  readonly estimatedPayoutUsd = computed(() => this.seniorSummary()?.payoutUsd ?? 0);
+  readonly eligibleCars = computed(() => this.seniorSummary()?.carsContributing ?? 0);
+  readonly isEligible = computed(() => this.seniorSummary()?.isEligible ?? false);
+
+  /**
+   * Load senior model summary for current owner
+   * Uses the new daily_car_points and owner_monthly_summary tables
+   */
+  async loadSeniorSummary(): Promise<OwnerMonthlyPointsSummary | null> {
+    const userId = this.authService.userId();
+    if (!userId) {
+      this.error.set('Usuario no autenticado');
+      return null;
+    }
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const now = new Date();
+      const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+
+      // Fetch monthly summary
+      const { data: summaryData, error: summaryError } = await this.supabase
+        .from('owner_monthly_summary')
+        .select('*')
+        .eq('owner_id', userId)
+        .eq('month', currentMonth)
+        .maybeSingle();
+
+      if (summaryError) throw summaryError;
+
+      // Fetch daily points for this month (per car)
+      const { data: dailyData, error: dailyError } = await this.supabase
+        .from('daily_car_points')
+        .select(`
+          *,
+          cars:car_id (
+            id,
+            brand,
+            model,
+            year
+          )
+        `)
+        .eq('owner_id', userId)
+        .gte('date', currentMonth)
+        .order('date', { ascending: false });
+
+      if (dailyError) throw dailyError;
+
+      // Fetch pool config
+      const { data: configData, error: configError } = await this.supabase
+        .from('reward_pool_config')
+        .select('*')
+        .eq('month', currentMonth)
+        .maybeSingle();
+
+      if (configError) throw configError;
+
+      // Aggregate daily points by car
+      const carPointsMap = new Map<string, {
+        carId: string;
+        carTitle: string;
+        points: number;
+        eligibleDays: number;
+        valueFactor: number;
+        repFactor: number;
+        demandFactor: number;
+      }>();
+
+      for (const dp of dailyData || []) {
+        const carId = dp.car_id;
+        const car = dp.cars as { brand?: string; model?: string; year?: number } | null;
+        const carTitle = car ? `${car.brand} ${car.model} ${car.year}` : 'Auto';
+
+        const existing = carPointsMap.get(carId);
+        if (existing) {
+          existing.points += dp.points || 0;
+          existing.eligibleDays += dp.is_eligible ? 1 : 0;
+        } else {
+          carPointsMap.set(carId, {
+            carId,
+            carTitle,
+            points: dp.points || 0,
+            eligibleDays: dp.is_eligible ? 1 : 0,
+            valueFactor: dp.value_factor || 1,
+            repFactor: dp.rep_factor || 1,
+            demandFactor: dp.demand_factor || 1,
+          });
+        }
+      }
+
+      const carPointsArray = Array.from(carPointsMap.values()).map(cp => ({
+        ...cp,
+        avgDailyPoints: cp.eligibleDays > 0 ? Math.round(cp.points / cp.eligibleDays) : 0,
+        factors: {
+          valueFactor: cp.valueFactor,
+          repFactor: cp.repFactor,
+          demandFactor: cp.demandFactor,
+        },
+      }));
+
+      // Build summary
+      const summary: OwnerMonthlyPointsSummary = {
+        ownerId: userId,
+        month: currentMonth,
+        totalPoints: summaryData?.total_points || carPointsArray.reduce((sum, c) => sum + c.points, 0),
+        eligibleDays: summaryData?.eligible_days || carPointsArray.reduce((sum, c) => sum + c.eligibleDays, 0),
+        carsContributing: summaryData?.cars_contributing || carPointsArray.filter(c => c.points > 0).length,
+        carsCapped: summaryData?.cars_capped || Math.max(0, carPointsArray.length - MAX_CARS_PER_OWNER),
+        rawShare: summaryData?.raw_share || 0,
+        cappedShare: summaryData?.capped_share || 0,
+        payoutUsd: summaryData?.payout_usd || 0,
+        isEligible: summaryData?.is_eligible ?? true,
+        eligibilityReasons: summaryData?.eligibility_reasons || [],
+        gamingRiskScore: summaryData?.gaming_risk_score || 0,
+        carPoints: carPointsArray.sort((a, b) => b.points - a.points),
+      };
+
+      // Build pool config
+      if (configData) {
+        const poolCfg: RewardPoolConfigSenior = {
+          month: currentMonth,
+          totalPoolUsd: configData.total_pool_usd || 0,
+          totalPointsNetwork: 0, // Would need aggregation
+          pointValueUsd: 0,
+          maxCarsPerOwner: configData.max_cars_per_owner || MAX_CARS_PER_OWNER,
+          maxSharePerOwner: configData.max_share_per_owner || MAX_POOL_SHARE_PER_OWNER,
+          vaMaxResponseHours: configData.va_max_response_hours || VA_THRESHOLDS.maxResponseHours,
+          vaMinAcceptanceRate: configData.va_min_acceptance_rate || VA_THRESHOLDS.minAcceptanceRate,
+          vaMaxCancellationRate: configData.va_max_cancellation_rate || VA_THRESHOLDS.maxCancellationRate,
+          status: configData.status || 'open',
+        };
+        this.poolConfig.set(poolCfg);
+      }
+
+      this.seniorSummary.set(summary);
+      this.carDailyPoints.set((dailyData || []).map(dp => ({
+        carId: dp.car_id,
+        carTitle: (dp.cars as { brand?: string; model?: string; year?: number } | null)
+          ? `${(dp.cars as { brand: string }).brand} ${(dp.cars as { model: string }).model}`
+          : 'Auto',
+        date: dp.date,
+        points: dp.points || 0,
+        isEligible: dp.is_eligible || false,
+        basePoints: dp.base_points || BASE_POINTS_PER_DAY,
+        vaStatus: dp.va_status || false,
+        vaFailureReasons: dp.va_failure_reasons || [],
+        valueFactor: dp.value_factor || 1,
+        repFactor: dp.rep_factor || 1,
+        demandFactor: dp.demand_factor || 1,
+        formula: dp.formula || '',
+      })));
+
+      this.loading.set(false);
+      return summary;
+    } catch (err) {
+      console.error('[RewardPoolService] Error loading senior summary:', err);
+      this.error.set('Error al cargar los puntos. Intentá de nuevo.');
+      this.loading.set(false);
+      return null;
+    }
+  }
+
+  /**
+   * Get VA status for a specific car
+   */
+  async getCarVAStatus(carId: string): Promise<VAStatus | null> {
+    try {
+      const { data, error } = await this.supabase
+        .from('daily_car_points')
+        .select('*')
+        .eq('car_id', carId)
+        .order('date', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (!data) return null;
+
+      return {
+        isVerified: data.va_status || false,
+        failureReasons: data.va_failure_reasons || [],
+        metrics: {
+          isReadyToBook: data.is_ready_to_book || false,
+          responseTimeHours: data.response_time_hours,
+          acceptanceRate30d: data.acceptance_rate_30d || 0,
+          cancellationRate90d: data.cancellation_rate_90d || 0,
+          priceDeviationPct: data.price_deviation_pct,
+          isInCooldown: false, // Would need to check cooldowns table
+          isOwnerKYC: true, // Would need to check profile
+        },
+      };
+    } catch (err) {
+      console.error('[RewardPoolService] Error getting VA status:', err);
+      return null;
+    }
+  }
+
+  /**
+   * Get factor quality label for UI
+   */
+  getFactorQualityLabel(factor: number, type: 'value' | 'rep' | 'demand'): string {
+    return getFactorQuality(factor, type);
+  }
+
+  /**
+   * Get factor color class for UI
+   */
+  getFactorColor(factor: number, type: 'value' | 'rep' | 'demand'): string {
+    const quality = getFactorQuality(factor, type);
+    const colors: Record<string, string> = {
+      'Excellent': 'text-success-strong',
+      'Good': 'text-success-text',
+      'Above Average': 'text-primary-600',
+      'Standard': 'text-text-primary',
+      'Average': 'text-text-secondary',
+      'Normal Demand': 'text-text-secondary',
+      'Below Average': 'text-warning-text',
+      'Low Demand': 'text-warning-text',
+      'Poor': 'text-error-text',
+      'Very Low Demand': 'text-error-text',
+      'Entry': 'text-text-muted',
+      'Premium': 'text-primary-600',
+      'High Demand': 'text-success-strong',
+    };
+    return colors[quality] || 'text-text-secondary';
+  }
+
+  /**
+   * Get VA failure reason in Spanish
+   */
+  getVAFailureLabel(reason: string): string {
+    const labels: Record<string, string> = {
+      'not_ready_to_book': 'Auto no disponible',
+      'slow_response': 'Respuesta lenta (>12h)',
+      'low_acceptance': 'Tasa de aceptación baja (<70%)',
+      'high_cancellation': 'Muchas cancelaciones (>5%)',
+      'price_too_high': 'Precio muy alto vs mercado',
+      'in_cooldown': 'En período de cooldown',
+      'owner_not_kyc': 'KYC no verificado',
+    };
+    return labels[reason] || reason;
+  }
+
+  /**
+   * Format points with K suffix for large numbers
+   */
+  formatPoints(points: number): string {
+    if (points >= 1000) {
+      return `${(points / 1000).toFixed(1)}k`;
+    }
+    return points.toString();
   }
 }

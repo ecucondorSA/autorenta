@@ -1,0 +1,427 @@
+{
+  "generatedAt": "2026-02-05T07:25:07.719Z",
+  "totalChats": 69,
+  "totalMessages": 38033,
+  "segments": [
+    {
+      "id": "ecuatorianos",
+      "name": "Comunidad Ecuatoriana",
+      "description": "Grupos de ecuatorianos en Argentina",
+      "chatIds": [
+        6804,
+        7969,
+        383,
+        3395,
+        3401,
+        17576,
+        13923,
+        390,
+        385,
+        3398,
+        10408,
+        17577,
+        22610,
+        4330,
+        6806,
+        6805
+      ],
+      "chatNames": [
+        "Ecuatorianos en La Plata 🙌🏻🇪🇨",
+        "Grupo de Ecuatorianos en Argentina🇪🇨🇦🇷",
+        "COLABOREMONOS MIJINES BA🤌🤙 🇪🇨🇦🇷",
+        "MI VIVIENDA EN ARGENTINA MIJINES🤌🤙 🇪🇨🇦🇷",
+        "TRUEQUE O VENTA  MIJINES🤌🤙 🇪🇨🇦🇷",
+        "OFERTAS MIJINES🤌🤙 🇪🇨🇦🇷",
+        "Ecuatorianos en Buenos Aires",
+        "NO  SERA DE TOMAR UN TRAGUITO MIJINES🤌🤙 🇪🇨🇦🇷",
+        "UN FÚLBITO EN BA! MIJINES🤌🤙 🇪🇨🇦🇷",
+        "TURISTIANDO EN ARGENTINA MIJINES🤌🤙 🇪🇨🇦🇷",
+        "Ecuatorianos en Argentina nueva generación 🇪🇨🇦🇷",
+        "ALQUILER DUEÑO DIRECTO MIJINES🤌🤙 🇪🇨🇦🇷",
+        "Consulado del Ecuador en Buenos Aires 🇪🇨🇦🇷",
+        "Asesorías Legales ECUADOR",
+        "Ecuatorianos 🇪🇨",
+        "Ecuatorianos 🇪🇨"
+      ],
+      "totalMessages": 14713,
+      "activeUsers": 1445,
+      "topKeywords": [
+        {
+          "keyword": "encebollado",
+          "count": 198
+        },
+        {
+          "keyword": "ceviche",
+          "count": 27
+        },
+        {
+          "keyword": "bolón",
+          "count": 25
+        },
+        {
+          "keyword": "empanadas",
+          "count": 19
+        },
+        {
+          "keyword": "seco",
+          "count": 9
+        }
+      ],
+      "characteristics": [
+        "Baja actividad",
+        "Comunidad grande"
+      ]
+    },
+    {
+      "id": "comerciantes",
+      "name": "Comerciantes/Vendedores",
+      "description": "Grupos de compra-venta",
+      "chatIds": [
+        11393,
+        15318,
+        18581,
+        394,
+        11391,
+        17578,
+        13749,
+        21027
+      ],
+      "chatNames": [
+        "COMPRA VENTA CS. MÉDICAS 🧡",
+        "OLX Buenos Aires",
+        "COMPRA/VENTA COLEGAS 🫂",
+        "COMPRA Y VENTA EN LA PLATA 🤌🤙 🇪🇨🇦🇷",
+        "Compras y ventas LA PLATA💸🪙⭐",
+        "TIENDITA/ COMPRA Y VENTA  SUA VIA 🛍️",
+        "compra y venta COLOMBIA EN BUENOS AIRES 🇨🇴🇦🇷🤌",
+        "NEO 🛍️ ANUNCIOS Y VENTAS 🏷️"
+      ],
+      "totalMessages": 14493,
+      "activeUsers": 1319,
+      "topKeywords": [
+        {
+          "keyword": "vendo",
+          "count": 1622
+        },
+        {
+          "keyword": "precio",
+          "count": 1145
+        },
+        {
+          "keyword": "envío",
+          "count": 976
+        },
+        {
+          "keyword": "nuevo",
+          "count": 361
+        },
+        {
+          "keyword": "oferta",
+          "count": 302
+        }
+      ],
+      "characteristics": [
+        "Actividad moderada",
+        "Comunidad grande"
+      ]
+    },
+    {
+      "id": "estudiantes",
+      "name": "Estudiantes",
+      "description": "Grupos de estudiantes universitarios",
+      "chatIds": [
+        17557,
+        17555,
+        11394,
+        13766,
+        10484,
+        3467,
+        17876,
+        17875
+      ],
+      "chatNames": [
+        "Compra-Venta Remediar 💙 (4)",
+        "Compra-Venta Remediar💙 (5)",
+        "🇨🇴🧡🌱COLOMBIA EN UNLP 🌱🧡🇨🇴",
+        "TRUEQUE Y DONACIONES ESTUDIANTES 🔃",
+        "Compro-vendo Unlp  🥧⌚📱🎁🛍📚",
+        "Medicina UBA",
+        "Migrantes en la UNLP 🌎🧡",
+        "Migrantes en la UNLP 🌎🧡"
+      ],
+      "totalMessages": 8382,
+      "activeUsers": 717,
+      "topKeywords": [
+        {
+          "keyword": "final",
+          "count": 341
+        },
+        {
+          "keyword": "parcial",
+          "count": 278
+        },
+        {
+          "keyword": "fisiología",
+          "count": 256
+        },
+        {
+          "keyword": "anatomía",
+          "count": 95
+        },
+        {
+          "keyword": "cursada",
+          "count": 29
+        }
+      ],
+      "characteristics": [
+        "Actividad moderada",
+        "Comunidad grande"
+      ]
+    },
+    {
+      "id": "brasilenos",
+      "name": "Comunidad Brasileña",
+      "description": "Grupos de brasileños y lusoparlantes",
+      "chatIds": [
+        21347,
+        21339,
+        21345,
+        21343,
+        21024,
+        21341,
+        21340,
+        21023
+      ],
+      "chatNames": [
+        "FIQUE ESPERTO MARKET",
+        "Fique Esperto Apartamentos",
+        "FIQUE ESPERTO NAS VAGAS DE EMPREGO",
+        "🇦🇷 FIQUE ESPERTO GOLPE 🇧🇷",
+        "NEO Brasil 🔁 Argentina",
+        "FIQUE ESPERTO!",
+        "FIQUE ESPERTO!",
+        "NEO Brasil 🔁 Argentina"
+      ],
+      "totalMessages": 287,
+      "activeUsers": 58,
+      "topKeywords": [
+        {
+          "keyword": "sp",
+          "count": 117
+        },
+        {
+          "keyword": "reais",
+          "count": 16
+        },
+        {
+          "keyword": "rj",
+          "count": 14
+        },
+        {
+          "keyword": "oi",
+          "count": 13
+        },
+        {
+          "keyword": "pix",
+          "count": 4
+        }
+      ],
+      "characteristics": [
+        "Baja actividad"
+      ]
+    },
+    {
+      "id": "caba",
+      "name": "CABA",
+      "description": "Grupos de Ciudad de Buenos Aires",
+      "chatIds": [
+        21022
+      ],
+      "chatNames": [
+        "NEO 🏡 ALQUILERES BUENOS AIRES 🇧🇷🇦🇷"
+      ],
+      "totalMessages": 116,
+      "activeUsers": 33,
+      "topKeywords": [
+        {
+          "keyword": "subte",
+          "count": 17
+        },
+        {
+          "keyword": "colectivo",
+          "count": 5
+        },
+        {
+          "keyword": "caba",
+          "count": 5
+        },
+        {
+          "keyword": "obelisco",
+          "count": 2
+        },
+        {
+          "keyword": "bondi",
+          "count": 0
+        }
+      ],
+      "characteristics": [
+        "Baja actividad"
+      ]
+    },
+    {
+      "id": "vivienda",
+      "name": "Vivienda/Alquileres",
+      "description": "Grupos de búsqueda de vivienda",
+      "chatIds": [
+        12645
+      ],
+      "chatNames": [
+        "ALQUILERES "
+      ],
+      "totalMessages": 39,
+      "activeUsers": 23,
+      "topKeywords": [
+        {
+          "keyword": "habitación",
+          "count": 4
+        },
+        {
+          "keyword": "roomie",
+          "count": 4
+        },
+        {
+          "keyword": "expensas",
+          "count": 1
+        },
+        {
+          "keyword": "dueño directo",
+          "count": 1
+        },
+        {
+          "keyword": "alquilo",
+          "count": 0
+        }
+      ],
+      "characteristics": [
+        "Baja actividad"
+      ]
+    },
+    {
+      "id": "la_plata",
+      "name": "La Plata",
+      "description": "Grupos específicos de La Plata",
+      "chatIds": [
+        11392,
+        11395
+      ],
+      "chatNames": [
+        "LA PLATA Unida",
+        "LA PLATA Unida"
+      ],
+      "totalMessages": 3,
+      "activeUsers": 1,
+      "topKeywords": [
+        {
+          "keyword": "diagonal",
+          "count": 0
+        },
+        {
+          "keyword": "plaza",
+          "count": 0
+        },
+        {
+          "keyword": "centro",
+          "count": 0
+        },
+        {
+          "keyword": "terminal",
+          "count": 0
+        },
+        {
+          "keyword": "bosque",
+          "count": 0
+        }
+      ],
+      "characteristics": [
+        "Baja actividad"
+      ]
+    }
+  ],
+  "unclassifiedChats": [
+    {
+      "id": 393,
+      "name": "COMIDA/ EMPRENDIMIENTO 🇪🇨🇦🇷🤌🤙",
+      "messageCount": 3995
+    },
+    {
+      "id": 16784,
+      "name": "Canal 2 Misiones",
+      "messageCount": 2334
+    },
+    {
+      "id": 6645,
+      "name": "𝑨𝒎𝒐𝒓 𝒑𝒐𝒓 𝒍𝒂 𝑳𝒆𝒄𝒕𝒖𝒓𝒂 📚❤️‍🩹",
+      "messageCount": 2209
+    },
+    {
+      "id": 386,
+      "name": "RESIDENCIA: Siempre un lugar para un Mijin BA 🤌🤙 🇪🇨🇦🇷",
+      "messageCount": 1021
+    },
+    {
+      "id": 3271,
+      "name": "ASESORÍAS LEGALES 🇪🇨🇦🇷🤌🤙",
+      "messageCount": 792
+    },
+    {
+      "id": 17693,
+      "name": "BAZAR ROPA Y  MODA  SUA VIA 🛍️🌻",
+      "messageCount": 537
+    },
+    {
+      "id": 13630,
+      "name": "Rappi - Promos y Cupones 🤑",
+      "messageCount": 360
+    },
+    {
+      "id": 3198,
+      "name": "AuronPlay",
+      "messageCount": 347
+    },
+    {
+      "id": 16310,
+      "name": "Rosh",
+      "messageCount": 336
+    },
+    {
+      "id": 3396,
+      "name": "ADOPCIÓN RESPONSABLE 🇦🇷🤙🤌",
+      "messageCount": 253
+    },
+    {
+      "id": 3400,
+      "name": "ASESORÍAS LEGALES 🇪🇨🇦🇷🤌🤙",
+      "messageCount": 250
+    },
+    {
+      "id": 21344,
+      "name": "FICA ESPERTO NAS DICAS DE B.A ",
+      "messageCount": 241
+    },
+    {
+      "id": 10062,
+      "name": "ChangoMâs 🇦🇷",
+      "messageCount": 102
+    },
+    {
+      "id": 10922,
+      "name": "COTO 🇦🇷",
+      "messageCount": 102
+    }
+  ],
+  "insights": [
+    "Comunidad Ecuatoriana es el segmento más activo con 14,713 mensajes",
+    "64% de los grupos fueron clasificados en segmentos",
+    "Comunidad Ecuatoriana tiene la comunidad más grande con 1,445 usuarios activos"
+  ]
+}

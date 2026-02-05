@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Top 5 - Comunidad Ecuatoriana</title>
+  <style>
+    @page { size: A4; margin: 1cm; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 11pt;
+      padding: 15px;
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid #FFD700;
+    }
+    .header h1 {
+      color: #1a1a1a;
+      font-size: 22pt;
+      margin-bottom: 5px;
+    }
+    .header .flag { font-size: 28pt; }
+    .header .subtitle { color: #666; font-size: 10pt; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .category {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 12px;
+      border-left: 4px solid #FFD700;
+    }
+    .category h2 {
+      font-size: 12pt;
+      color: #333;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .category h2 .emoji { font-size: 16pt; }
+
+    .ranking { list-style: none; }
+    .ranking li {
+      display: flex;
+      align-items: center;
+      padding: 4px 0;
+      border-bottom: 1px dashed #ddd;
+      font-size: 9.5pt;
+    }
+    .ranking li:last-child { border-bottom: none; }
+    .ranking .position {
+      width: 22px;
+      height: 22px;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 10pt;
+      margin-right: 8px;
+    }
+    .ranking .name { flex: 1; }
+    .ranking .value {
+      color: #666;
+      font-size: 8.5pt;
+      background: #eee;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 15px;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+      color: #888;
+      font-size: 8pt;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="flag">🇪🇨🇦🇷</div>
+      <h1>TOP 5 - COMUNIDAD ECUATORIANA</h1>
+      <div class="subtitle">Análisis de 14,713 mensajes | 1,445 usuarios activos | 16 grupos</div>
+    </div>
+
+    <div class="grid">
+      <!-- 1. Trabajadores más dedicados -->
+      <div class="category">
+        <h2><span class="emoji">💪</span> TRABAJADOR MÁS DEDICADO</h2>
+        <ol class="ranking">
+          <li><span class="position">1</span><span class="name">+593 ****-553981173</span><span class="value">497 msgs</span></li>
+          <li><span class="position">2</span><span class="name">+593 ****-797164549</span><span class="value">332 msgs</span></li>
+          <li><span class="position">3</span><span class="name">+593 ****-089884697</span><span class="value">306 msgs</span></li>
+          <li><span class="position">4</span><span class="name">+593 ****-777095816</span><span class="value">283 msgs</span></li>
+          <li><span class="position">5</span><span class="name">+593 ****-190002761</span><span class="value">282 msgs</span></li>
+        </ol>
+      </div>
+
+      <!-- 2. Palabras más buscadas -->
+      <div class="category">
+        <h2><span class="emoji">🔍</span> PALABRA MÁS BUSCADA</h2>
+        <ol class="ranking">
+          <li><span class="position">1</span><span class="name">Roomie / Compañero</span><span class="value">46 búsquedas</span></li>
+          <li><span class="position">2</span><span class="name">Habitación</span><span class="value">19 búsquedas</span></li>
+          <li><span class="position">3</span><span class="name">Departamento</span><span class="value">13 búsquedas</span></li>
+          <li><span class="position">4</span><span class="name">Trabajo / Laburo</span><span class="value">8 búsquedas</span></li>
+          <li><span class="position">5</span><span class="name">Celular / iPhone</span><span class="value">5 búsquedas</span></li>
+        </ol>
+      </div>
+
+      <!-- 3. Comidas típicas más mencionadas -->
+      <div class="category">
+        <h2><span class="emoji">🍲</span> COMIDA TÍPICA MÁS POPULAR</h2>
+        <ol class="ranking">
+          <li><span class="position">1</span><span class="name">Encebollado</span><span class="value">198 menciones</span></li>
+          <li><span class="position">2</span><span class="name">Bolón de Verde</span><span class="value">62 menciones</span></li>
+          <li><span class="position">3</span><span class="name">Ceviche</span><span class="value">27 menciones</span></li>
+          <li><span class="position">4</span><span class="name">Empanadas</span><span class="value">19 menciones</span></li>
+          <li><span class="position">5</span><span class="name">Seco de Pollo</span><span class="value">9 menciones</span></li>
+        </ol>
+      </div>
+
+      <!-- 4. Grupos más activos -->
+      <div class="category">
+        <h2><span class="emoji">💬</span> GRUPO MÁS ACTIVO</h2>
+        <ol class="ranking">
+          <li><span class="position">1</span><span class="name">Ecuatorianos en Argentina</span><span class="value">4,209 msgs</span></li>
+          <li><span class="position">2</span><span class="name">Ecuatorianos en La Plata</span><span class="value">3,621 msgs</span></li>
+          <li><span class="position">3</span><span class="name">COLABOREMONOS MIJINES BA</span><span class="value">2,686 msgs</span></li>
+          <li><span class="position">4</span><span class="name">MI VIVIENDA EN ARGENTINA</span><span class="value">1,006 msgs</span></li>
+          <li><span class="position">5</span><span class="name">Ecuatorianos en Buenos Aires</span><span class="value">538 msgs</span></li>
+        </ol>
+      </div>
+
+      <!-- 5. Productos/Servicios más vendidos -->
+      <div class="category">
+        <h2><span class="emoji">🛒</span> PRODUCTO MÁS VENDIDO</h2>
+        <ol class="ranking">
+          <li><span class="position">1</span><span class="name">Comida / Delivery</span><span class="value">147 ofertas</span></li>
+          <li><span class="position">2</span><span class="name">Electrónicos</span><span class="value">60 ofertas</span></li>
+          <li><span class="position">3</span><span class="name">Muebles / Hogar</span><span class="value">35 ofertas</span></li>
+          <li><span class="position">4</span><span class="name">Ropa / Calzado</span><span class="value">35 ofertas</span></li>
+          <li><span class="position">5</span><span class="name">Alquileres</span><span class="value">26 ofertas</span></li>
+        </ol>
+      </div>
+
+      <!-- 6. Horas de mayor actividad -->
+      <div class="category">
+        <h2><span class="emoji">⏰</span> HORA PICO DE ACTIVIDAD</h2>
+        <ol class="ranking">
+          <li><span class="position">1</span><span class="name">12:00 - 13:00</span><span class="value">1,218 msgs</span></li>
+          <li><span class="position">2</span><span class="name">13:00 - 14:00</span><span class="value">1,180 msgs</span></li>
+          <li><span class="position">3</span><span class="name">19:00 - 20:00</span><span class="value">1,043 msgs</span></li>
+          <li><span class="position">4</span><span class="name">21:00 - 22:00</span><span class="value">954 msgs</span></li>
+          <li><span class="position">5</span><span class="name">15:00 - 16:00</span><span class="value">940 msgs</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="footer">
+      📊 Datos analizados: 2023-04-14 a 2026-02-05 | WhatsApp Market Analyzer | Generado el 05/02/2026
+    </div>
+  </div>
+</body>
+</html>

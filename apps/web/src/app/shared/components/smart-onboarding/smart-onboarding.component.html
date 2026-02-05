@@ -17,9 +17,9 @@
     </button>
 
     <!-- Progress Bar -->
-    <div class="flex-1 mx-4 h-1 bg-surface-secondary rounded-full overflow-hidden max-w-[200px]">
-      <div class="h-full bg-cta-default transition-all duration-500 ease-out"
-        [style.width.%]="(currentStep() / 4) * 100"></div>
+    <div class="flex-1 mx-4 h-1.5 bg-surface-secondary rounded-full overflow-hidden max-w-[200px]">
+      <div class="h-full bg-cta-default transition-all duration-500 ease-out rounded-full"
+        [style.width.%]="(currentStep() / totalSteps()) * 100"></div>
     </div>
 
     <!-- Skip Button -->
@@ -93,12 +93,9 @@
     </div>
     }
 
-    <!-- STEP 2: HIGH VALUE DATA -->
-    @if (currentStep() === 2) {
+    <!-- STEP 2: OWNER CAR DATA -->
+    @if (showOwnerStep) {
     <div class="min-h-full flex flex-col px-6 py-8 animate-slide-in-right">
-
-      <!-- OWNER PATH -->
-      @if (showOwnerStep) {
       <div class="max-w-md mx-auto w-full space-y-8">
         <div class="text-center">
           <h1 class="text-2xl font-bold text-text-primary mb-2">Tu auto es un activo</h1>
@@ -139,73 +136,92 @@
               class="text-xl text-gray-400 font-normal">USD</span>
           </div>
           <p class="text-gray-500 text-xs relative z-10">al mes estimado *</p>
-
           <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-cta-default/20 rounded-full blur-3xl"></div>
         </div>
         }
-
       </div>
-      }
-
-      <!-- RENTER PATH -->
-      @if (showRenterStep) {
-      <div class="max-w-md mx-auto w-full space-y-8">
-        <div class="text-center">
-          <h1 class="text-2xl font-bold text-text-primary mb-2">Tu viaje ideal</h1>
-          <p class="text-text-muted">Afinamos el motor de búsqueda para vos.</p>
-        </div>
-
-        <div class="space-y-6">
-          <div>
-            <label class="block text-sm font-medium text-text-secondary mb-3">¿Para qué lo vas a usar?</label>
-            <div class="grid grid-cols-2 gap-3">
-              @for (purpose of ['Trabajo', 'Turismo', 'Diario', 'Escapada']; track purpose) {
-              <button (click)="selectPurpose(purpose)" [class.bg-text-primary]="renterPurpose() === purpose"
-                [class.text-surface-primary]="renterPurpose() === purpose"
-                [class.bg-surface-raised]="renterPurpose() !== purpose"
-                [class.text-text-primary]="renterPurpose() !== purpose"
-                class="py-3 px-4 rounded-xl border border-border-default font-medium transition-all text-sm hover:border-cta-default">
-                {{ purpose }}
-              </button>
-              }
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-text-secondary mb-3">Zona principal</label>
-            <div class="grid grid-cols-1 gap-3">
-              @for (loc of ['Capital Federal', 'GBA Zona Norte', 'GBA Zona Sur', 'GBA Zona Oeste', 'Interior/Otro'];
-              track loc) {
-              <button (click)="selectLocation(loc)" [class.border-cta-default]="renterLocation() === loc"
-                [class.bg-cta-default/5]="renterLocation() === loc"
-                class="flex items-center p-3 rounded-xl bg-surface-raised border border-border-default hover:bg-surface-hover transition-all text-left group">
-                <span class="text-lg mr-3 group-hover:scale-110 transition-transform">
-                  <!-- Custom Pin Icon -->
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"
-                    class="text-text-secondary group-hover:text-cta-default transition-colors">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                </span>
-                <span class="text-text-primary font-medium">{{ loc }}</span>
-                @if (renterLocation() === loc) {
-                <svg class="w-5 h-5 text-cta-default ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                }
-              </button>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-      }
     </div>
     }
 
-    <!-- STEP 3: NOTIFICATIONS (Growth Hack) -->
-    @if (currentStep() === 3) {
+    <!-- STEP 2 (RENTER): PURPOSE SELECTION -->
+    @if (showRenterPurposeStep) {
+    <div class="min-h-full flex flex-col justify-center px-6 py-10 animate-slide-in-right">
+      <div class="max-w-md mx-auto w-full">
+        <div class="text-center mb-10">
+          <h1 class="text-3xl font-bold text-text-primary mb-2">¿Para qué lo vas a usar?</h1>
+          <p class="text-text-muted">Elegí una opción y seguimos</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          @for (item of [
+            { label: 'Trabajo', icon: '💼', desc: 'Uso profesional diario' },
+            { label: 'Turismo', icon: '✈️', desc: 'Viajes y vacaciones' },
+            { label: 'Diario', icon: '🏠', desc: 'Movilidad cotidiana' },
+            { label: 'Escapada', icon: '🌄', desc: 'Fines de semana y trips' }
+          ]; track item.label) {
+          <button (click)="selectPurpose(item.label)"
+            [class.border-cta-default]="renterPurpose() === item.label"
+            [class.bg-cta-default/5]="renterPurpose() === item.label"
+            [class.scale-[1.03]]="renterPurpose() === item.label"
+            [class.shadow-lg]="renterPurpose() === item.label"
+            class="group relative flex flex-col items-center p-5 bg-surface-raised border border-border-default rounded-2xl transition-all duration-200 hover:border-cta-default hover:shadow-md active:scale-95 min-h-[120px]">
+            <span class="text-3xl mb-2">{{ item.icon }}</span>
+            <span class="text-text-primary font-semibold text-base">{{ item.label }}</span>
+            <span class="text-text-muted text-xs mt-1">{{ item.desc }}</span>
+            @if (renterPurpose() === item.label) {
+            <div class="absolute top-2 right-2">
+              <svg class="w-5 h-5 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            }
+          </button>
+          }
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- STEP 3 (RENTER): ZONE SELECTION -->
+    @if (showRenterZoneStep) {
+    <div class="min-h-full flex flex-col justify-center px-6 py-10 animate-slide-in-right">
+      <div class="max-w-md mx-auto w-full">
+        <div class="text-center mb-10">
+          <h1 class="text-3xl font-bold text-text-primary mb-2">¿Dónde te movés?</h1>
+          <p class="text-text-muted">Seleccioná tu zona principal</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3">
+          @for (loc of ['Capital Federal', 'GBA Zona Norte', 'GBA Zona Sur', 'GBA Zona Oeste', 'Interior/Otro'];
+          track loc) {
+          <button (click)="selectLocation(loc)"
+            [class.border-cta-default]="renterLocation() === loc"
+            [class.bg-cta-default/5]="renterLocation() === loc"
+            [class.shadow-md]="renterLocation() === loc"
+            class="flex items-center p-4 rounded-2xl bg-surface-raised border border-border-default hover:border-cta-default hover:bg-surface-hover transition-all duration-200 text-left group active:scale-[0.98]">
+            <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-secondary group-hover:bg-cta-default/10 transition-colors mr-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"
+                class="text-text-secondary group-hover:text-cta-default transition-colors">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </span>
+            <span class="text-text-primary font-medium text-base flex-1">{{ loc }}</span>
+            @if (renterLocation() === loc) {
+            <svg class="w-5 h-5 text-cta-default ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            }
+          </button>
+          }
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- NOTIFICATIONS STEP -->
+    @if (showNotificationsStep) {
     <div class="min-h-full flex flex-col justify-center px-6 py-10 animate-fade-in text-center">
       <div
         class="w-24 h-24 bg-surface-raised rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-border-default">
@@ -254,8 +270,8 @@
     </div>
     }
 
-    <!-- STEP 4: MAGIC LOADING -->
-    @if (currentStep() === 4) {
+    <!-- LOADING STEP -->
+    @if (showLoadingStep) {
     <div class="min-h-full flex flex-col justify-center items-center px-6 py-10 animate-fade-in text-center">
       <div class="relative w-20 h-20 mb-8">
         <div class="absolute inset-0 border-4 border-surface-raised rounded-full"></div>
@@ -297,8 +313,8 @@
 
   </div>
 
-  <!-- FOOTER Navigation (Step 2 Only) -->
-  @if (currentStep() === 2) {
+  <!-- FOOTER Navigation (Owner Step 2 Only - renter auto-advances) -->
+  @if (showOwnerStep) {
   <div class="p-6 bg-surface-primary border-t border-border-default pb-safe">
     <button (click)="nextStep()" [disabled]="!canContinueStep2"
       class="w-full py-4 rounded-xl bg-text-primary text-surface-primary font-bold text-lg hover:bg-opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">

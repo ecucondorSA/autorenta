@@ -44,6 +44,13 @@ import { BookingPaymentMethod } from '@core/models/wallet.model';
 import type { DateRange } from '@core/models/marketplace.model';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import { RiskCalculation } from '@core/services/verification/risk-calculator.service';
+import {
+  getVehicleTierByValue,
+  calcHoldAndBuydown,
+  getVehicleTierName,
+  type VehicleTier,
+  type MembershipPlan,
+} from '@core/models/guarantee-tiers.model';
 // UI 2026 Directives
 import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
 import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
@@ -83,6 +90,12 @@ interface GuaranteeEstimate {
   holdEstimatedArs: number;
   creditSecurityUsd: number;
   creditSecurityArs: number;
+  // ✅ NEW: 6-tier system fields
+  vehicleTier: VehicleTier;
+  vehicleTierName: string;
+  baseHoldUsd: number;
+  membershipPlan: MembershipPlan;
+  buyDownFgoUsd: number;
 }
 
 interface CarDetailState {
@@ -625,8 +638,15 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   });
 
   /**
-   * Vista previa de garantía usando sistema de tiers (USD)
-   * Club Access (< $20k): $800 | Silver ($20k-$40k): $1,500 | Black (> $40k): $3,000
+   * Vista previa de garantía usando sistema de 6 tiers (USD)
+   *
+   * Vehicle Tiers:
+   * - starter (< $8k): USD 300
+   * - economy ($8k-$15k): USD 500
+   * - standard ($15k-$25k): USD 800
+   * - silver ($25k-$40k): USD 1,500
+   * - premium ($40k-$70k): USD 2,500
+   * - luxury (> $70k): USD 4,000
    */
   readonly guaranteeEstimate = computed<GuaranteeEstimate | null>(() => {
     const car = this.car();
@@ -634,18 +654,16 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
 
     if (!car || !fxRate || fxRate <= 0) return null;
 
-    // Tier-based hold calculation (USD) - without membership
+    // ✅ NEW: Use 6-tier system
     const vehicleValueUsd = car.value_usd || 12000;
-    let holdEstimatedUsd: number;
+    const vehicleTier = getVehicleTierByValue(vehicleValueUsd);
 
-    if (vehicleValueUsd < 20000) {
-      holdEstimatedUsd = 800; // Club Access tier
-    } else if (vehicleValueUsd < 40000) {
-      holdEstimatedUsd = 1500; // Silver Access tier
-    } else {
-      holdEstimatedUsd = 3000; // Black Access tier
-    }
+    // Calculate hold without membership (default view)
+    // TODO: Get user's actual membership plan from subscription service
+    const membershipPlan: MembershipPlan = 'none';
+    const holdCalc = calcHoldAndBuydown(vehicleTier, membershipPlan);
 
+    const holdEstimatedUsd = holdCalc.holdUsd;
     const holdEstimatedArs = holdEstimatedUsd * fxRate;
 
     return {
@@ -654,6 +672,12 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       holdEstimatedArs,
       creditSecurityUsd: holdEstimatedUsd,
       creditSecurityArs: holdEstimatedArs,
+      // ✅ NEW: 6-tier system fields
+      vehicleTier,
+      vehicleTierName: getVehicleTierName(vehicleTier),
+      baseHoldUsd: holdCalc.baseHoldUsd,
+      membershipPlan,
+      buyDownFgoUsd: holdCalc.buyDownFgoUsd,
     };
   });
 

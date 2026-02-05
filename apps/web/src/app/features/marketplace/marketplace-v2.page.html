@@ -1,16 +1,27 @@
-<!-- 🎨 HERO SECTION - MINIMAL OVERLAY STYLE -->
+<!-- 🎨 HERO SECTION - PREMIUM CINEMATIC STYLE -->
 <!-- Hero section with scroll-through enabled -->
 <section class="hero-minimal relative h-screen w-full bg-black">
-  <!-- HDRI Background - Full Screen (Lazy Loaded, WebGL Pure) -->
-  <div class="absolute inset-0 z-0 brightness-[1.1] saturate-[1.2] contrast-[1.05]">
+  <!-- Static Hero Image Background (Fast loading, mobile optimized) -->
+  <div class="absolute inset-0 z-0">
+    <img
+      src="/assets/images/hero-marketplace.webp"
+      alt="Premium SUV en Buenos Aires al atardecer"
+      class="w-full h-full object-cover object-center brightness-[0.85] saturate-[1.1]"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+
+  <!-- HDRI Background - Desktop Only (Lazy Loaded, WebGL) -->
+  <div class="absolute inset-0 z-[1] hidden lg:block brightness-[1.1] saturate-[1.2] contrast-[1.05]">
     @defer (on viewport) {
     <app-hdri-background #hdriViewer src="/assets/hdri/suburban_parking_area_8k.webp" [autoRotate]="true"
       [enableInteraction]="true" [initialRotationY]="4.5" [fov]="0.35" (hdriLoaded)="onHdriLoaded()" class="w-full h-full">
     </app-hdri-background>
     } @placeholder {
-    <div class="w-full h-full bg-[#050505]"></div>
+    <div class="w-full h-full"></div>
     } @error {
-    <div class="w-full h-full bg-[#050505]"></div>
+    <div class="w-full h-full"></div>
     }
 
     <!-- CSS Contact Shadow (Fake Grounding) -->

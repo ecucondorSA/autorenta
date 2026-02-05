@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>🏆 PREMIOS COMUNIDAD ECUATORIANA 2026</title>
+  <style>
+    @page { size: A4; margin: 0.8cm; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 10pt;
+      background: linear-gradient(135deg, #FFD700 0%, #FF6B35 50%, #004990 100%);
+      min-height: 100vh;
+      padding: 12px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 4px solid #FFD700;
+      background: linear-gradient(90deg, #FFD700, #004990);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header .flags { font-size: 32pt; margin-bottom: 5px; }
+    .header h1 { font-size: 20pt; margin-bottom: 3px; }
+    .header .subtitle {
+      font-size: 9pt;
+      -webkit-text-fill-color: #666;
+      color: #666;
+    }
+    .header .stats {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 8px;
+      -webkit-text-fill-color: #333;
+      color: #333;
+    }
+    .header .stat {
+      text-align: center;
+    }
+    .header .stat-number {
+      font-size: 16pt;
+      font-weight: bold;
+      color: #FF6B35;
+      -webkit-text-fill-color: #FF6B35;
+    }
+    .header .stat-label { font-size: 7pt; color: #888; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .category {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 12px;
+      padding: 10px;
+      border-left: 5px solid #FFD700;
+      position: relative;
+      overflow: hidden;
+    }
+    .category::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, transparent 50%, rgba(255,215,0,0.1) 50%);
+    }
+    .category h2 {
+      font-size: 10pt;
+      color: #333;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .category h2 .trophy { font-size: 14pt; }
+
+    .ranking { list-style: none; }
+    .ranking li {
+      display: flex;
+      align-items: center;
+      padding: 3px 0;
+      border-bottom: 1px dashed #ddd;
+      font-size: 8.5pt;
+    }
+    .ranking li:last-child { border-bottom: none; }
+    .ranking .medal {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10pt;
+      margin-right: 6px;
+    }
+    .ranking li:nth-child(1) .medal { background: linear-gradient(135deg, #FFD700, #FFA500); }
+    .ranking li:nth-child(2) .medal { background: linear-gradient(135deg, #C0C0C0, #A8A8A8); }
+    .ranking li:nth-child(3) .medal { background: linear-gradient(135deg, #CD7F32, #B87333); }
+    .ranking li:nth-child(4) .medal, .ranking li:nth-child(5) .medal {
+      background: #e9ecef;
+      font-size: 8pt;
+      color: #666;
+    }
+    .ranking .name { flex: 1; font-weight: 500; }
+    .ranking .value {
+      color: #666;
+      font-size: 7.5pt;
+      background: #fff;
+      padding: 1px 5px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    .cta {
+      grid-column: span 2;
+      background: linear-gradient(90deg, #004990, #FF6B35);
+      color: white;
+      text-align: center;
+      padding: 12px;
+      border-radius: 12px;
+      margin-top: 5px;
+    }
+    .cta h3 { font-size: 11pt; margin-bottom: 4px; }
+    .cta p { font-size: 8pt; opacity: 0.9; }
+
+    .footer {
+      text-align: center;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 2px solid #FFD700;
+      color: #888;
+      font-size: 7pt;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="flags">🇪🇨 🏆 🇦🇷</div>
+      <h1>PREMIOS COMUNIDAD ECUATORIANA</h1>
+      <div class="subtitle">Los mejores de nuestra comunidad en Argentina • Edición 2026</div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number">50,000+</div>
+          <div class="stat-label">MENSAJES</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">5,000+</div>
+          <div class="stat-label">MIEMBROS</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">20+</div>
+          <div class="stat-label">GRUPOS</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- 1. Emprendedor Gastronómico -->
+      <div class="category">
+        <h2><span class="trophy">🍲</span> CHEF ECUATORIANO DEL AÑO</h2>
+        <ol class="ranking">
+          <li><span class="medal">🥇</span><span class="name">Rey del Encebollado</span><span class="value">CABA</span></li>
+          <li><span class="medal">🥈</span><span class="name">Cevichería Express BA</span><span class="value">Delivery</span></li>
+          <li><span class="medal">🥉</span><span class="name">Bolones de la Abuela</span><span class="value">La Plata</span></li>
+          <li><span class="medal">4</span><span class="name">Empanadas Manabitas</span><span class="value">Once</span></li>
+          <li><span class="medal">5</span><span class="name">Morocho & Humitas EC</span><span class="value">Flores</span></li>
+        </ol>
+      </div>
+
+      <!-- 2. Colaborador Solidario -->
+      <div class="category">
+        <h2><span class="trophy">🤝</span> COLABORADOR SOLIDARIO</h2>
+        <ol class="ranking">
+          <li><span class="medal">🥇</span><span class="name">Info Trámites Palermo</span><span class="value">Migraciones</span></li>
+          <li><span class="medal">🥈</span><span class="name">Asesor Migratorio EC</span><span class="value">DNI/Precaria</span></li>
+          <li><span class="medal">🥉</span><span class="name">Guía DNI Express</span><span class="value">Documentos</span></li>
+          <li><span class="medal">4</span><span class="name">Consulado Info</span><span class="value">Consulado</span></li>
+          <li><span class="medal">5</span><span class="name">Precaria Helper</span><span class="value">Radicación</span></li>
+        </ol>
+      </div>
+
+      <!-- 3. Influencer Más Activo -->
+      <div class="category">
+        <h2><span class="trophy">⭐</span> INFLUENCER MÁS ACTIVO</h2>
+        <ol class="ranking">
+          <li><span class="medal">🥇</span><span class="name">Mijin #1</span><span class="value">6 grupos</span></li>
+          <li><span class="medal">🥈</span><span class="name">Info Turnos</span><span class="value">7 grupos</span></li>
+          <li><span class="medal">🥉</span><span class="name">Grosellas EC</span><span class="value">6 grupos</span></li>
+          <li><span class="medal">4</span><span class="name">Networker EC</span><span class="value">11 grupos</span></li>
+          <li><span class="medal">5</span><span class="name">La Voz del Barrio</span><span class="value">4 grupos</span></li>
+        </ol>
+      </div>
+
+      <!-- 4. Profesional Destacado -->
+      <div class="category">
+        <h2><span class="trophy">👔</span> PROFESIONAL DESTACADO</h2>
+        <ol class="ranking">
+          <li><span class="medal">🥇</span><span class="name">Dra. Andrea Mieles (Dermatóloga)</span><span class="value">Recoleta</span></li>
+          <li><span class="medal">🥈</span><span class="name">Paul - Megacell (Celulares)</span><span class="value">La Plata</span></li>
+          <li><span class="medal">🥉</span><span class="name">Jonatan (Residencias)</span><span class="value">La Plata</span></li>
+          <li><span class="medal">4</span><span class="name">Corredor Inmobiliario Pet</span><span class="value">CABA</span></li>
+          <li><span class="medal">5</span><span class="name">Tatiana (Solidaridad)</span><span class="value">Buenos Aires</span></li>
+        </ol>
+      </div>
+
+      <!-- 5. Comida Típica -->
+      <div class="category">
+        <h2><span class="trophy">🏆</span> COMIDA MÁS PEDIDA</h2>
+        <ol class="ranking">
+          <li><span class="medal">🥇</span><span class="name">Encebollado 🍲</span><span class="value">Costa</span></li>
+          <li><span class="medal">🥈</span><span class="name">Bolón de Verde</span><span class="value">Costa</span></li>
+          <li><span class="medal">🥉</span><span class="name">Ceviche</span><span class="value">Costa</span></li>
+          <li><span class="medal">4</span><span class="name">Empanadas</span><span class="value">Nacional</span></li>
+          <li><span class="medal">5</span><span class="name">Seco de Pollo</span><span class="value">Sierra</span></li>
+        </ol>
+      </div>
+
+      <!-- 6. Ciudad de Origen -->
+      <div class="category">
+        <h2><span class="trophy">🗺️</span> ¿DE DÓNDE SOMOS?</h2>
+        <ol class="ranking">
+          <li><span class="medal">🥇</span><span class="name">Quito 🏔️</span><span class="value">Sierra</span></li>
+          <li><span class="medal">🥈</span><span class="name">Guayaquil 🌴</span><span class="value">Costa</span></li>
+          <li><span class="medal">🥉</span><span class="name">Manta 🐟</span><span class="value">Costa</span></li>
+          <li><span class="medal">4</span><span class="name">Loja 🎵</span><span class="value">Sierra</span></li>
+          <li><span class="medal">5</span><span class="name">Machala 🍌</span><span class="value">Costa</span></li>
+        </ol>
+      </div>
+
+      <!-- 7. Tema Más Consultado -->
+      <div class="category">
+        <h2><span class="trophy">❓</span> TEMA MÁS CONSULTADO</h2>
+        <ol class="ranking">
+          <li><span class="medal">🥇</span><span class="name">Alquiler / Vivienda 🏠</span><span class="value">Top 1</span></li>
+          <li><span class="medal">🥈</span><span class="name">DNI / Precaria 🪪</span><span class="value">Trámites</span></li>
+          <li><span class="medal">🥉</span><span class="name">Comida Ecuatoriana 🍲</span><span class="value">Nostalgia</span></li>
+          <li><span class="medal">4</span><span class="name">Turnos Migraciones 📋</span><span class="value">Urgente</span></li>
+          <li><span class="medal">5</span><span class="name">Trabajo / Empleo 💼</span><span class="value">Necesidad</span></li>
+        </ol>
+      </div>
+
+      <!-- 8. Grupo Más Activo -->
+      <div class="category">
+        <h2><span class="trophy">💬</span> GRUPO MÁS ACTIVO</h2>
+        <ol class="ranking">
+          <li><span class="medal">🥇</span><span class="name">COLABOREMONOS MIJINES 🤌🤙</span><span class="value">Buenos Aires</span></li>
+          <li><span class="medal">🥈</span><span class="name">Ecuatorianos en Argentina</span><span class="value">Nacional</span></li>
+          <li><span class="medal">🥉</span><span class="name">MI VIVIENDA MIJINES 🏠</span><span class="value">Buenos Aires</span></li>
+          <li><span class="medal">4</span><span class="name">Ecuatorianos en La Plata</span><span class="value">La Plata</span></li>
+          <li><span class="medal">5</span><span class="name">Ecuatorianos en BA</span><span class="value">CABA</span></li>
+        </ol>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta">
+        <h3>🎉 ¡GRACIAS POR SER PARTE DE NUESTRA COMUNIDAD!</h3>
+        <p>Juntos somos más fuertes • La comunidad ecuatoriana más grande de Argentina 🇪🇨❤️🇦🇷</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      🇪🇨 La comunidad ecuatoriana más grande de Argentina 🇦🇷 • Febrero 2026
+    </div>
+  </div>
+</body>
+</html>

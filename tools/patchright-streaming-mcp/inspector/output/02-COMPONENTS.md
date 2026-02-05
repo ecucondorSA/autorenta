@@ -12,24 +12,6 @@
 
 ### login_form
 
-### landing
-
-### auth_login
-
-### cars_list
-
-### home_marketplace
-
-### home_profile
-
-### home_bookings
-
-### home_wallet
-
-### home_cars
-
-### home_notifications
-
 ## Patrones de Componentes Detectados
 
 ### 1. Modales

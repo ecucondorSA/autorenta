@@ -1,0 +1,301 @@
+{
+  "generatedAt": "2026-02-05T07:25:06.637Z",
+  "totalMessages": 95597,
+  "dateRange": {
+    "earliest": "2023-04-14 03:06:22",
+    "latest": "2026-02-05 02:46:01",
+    "totalDays": 1027
+  },
+  "hourlyDistribution": [
+    {
+      "hour": 0,
+      "count": 1718,
+      "percentage": 1.8
+    },
+    {
+      "hour": 1,
+      "count": 1241,
+      "percentage": 1.3
+    },
+    {
+      "hour": 2,
+      "count": 471,
+      "percentage": 0.49
+    },
+    {
+      "hour": 3,
+      "count": 271,
+      "percentage": 0.28
+    },
+    {
+      "hour": 4,
+      "count": 207,
+      "percentage": 0.22
+    },
+    {
+      "hour": 5,
+      "count": 111,
+      "percentage": 0.12
+    },
+    {
+      "hour": 6,
+      "count": 393,
+      "percentage": 0.41
+    },
+    {
+      "hour": 7,
+      "count": 891,
+      "percentage": 0.93
+    },
+    {
+      "hour": 8,
+      "count": 2136,
+      "percentage": 2.23
+    },
+    {
+      "hour": 9,
+      "count": 3027,
+      "percentage": 3.17
+    },
+    {
+      "hour": 10,
+      "count": 4299,
+      "percentage": 4.5
+    },
+    {
+      "hour": 11,
+      "count": 5957,
+      "percentage": 6.23
+    },
+    {
+      "hour": 12,
+      "count": 6596,
+      "percentage": 6.9
+    },
+    {
+      "hour": 13,
+      "count": 7260,
+      "percentage": 7.59
+    },
+    {
+      "hour": 14,
+      "count": 7387,
+      "percentage": 7.73
+    },
+    {
+      "hour": 15,
+      "count": 7177,
+      "percentage": 7.51
+    },
+    {
+      "hour": 16,
+      "count": 7293,
+      "percentage": 7.63
+    },
+    {
+      "hour": 17,
+      "count": 6709,
+      "percentage": 7.02
+    },
+    {
+      "hour": 18,
+      "count": 6853,
+      "percentage": 7.17
+    },
+    {
+      "hour": 19,
+      "count": 7226,
+      "percentage": 7.56
+    },
+    {
+      "hour": 20,
+      "count": 5890,
+      "percentage": 6.16
+    },
+    {
+      "hour": 21,
+      "count": 5571,
+      "percentage": 5.83
+    },
+    {
+      "hour": 22,
+      "count": 3956,
+      "percentage": 4.14
+    },
+    {
+      "hour": 23,
+      "count": 2957,
+      "percentage": 3.09
+    }
+  ],
+  "dailyDistribution": [
+    {
+      "day": 0,
+      "dayName": "Domingo",
+      "count": 9972,
+      "percentage": 10.43
+    },
+    {
+      "day": 1,
+      "dayName": "Lunes",
+      "count": 15462,
+      "percentage": 16.17
+    },
+    {
+      "day": 2,
+      "dayName": "Martes",
+      "count": 14710,
+      "percentage": 15.39
+    },
+    {
+      "day": 3,
+      "dayName": "Miércoles",
+      "count": 14712,
+      "percentage": 15.39
+    },
+    {
+      "day": 4,
+      "dayName": "Jueves",
+      "count": 13297,
+      "percentage": 13.91
+    },
+    {
+      "day": 5,
+      "dayName": "Viernes",
+      "count": 15001,
+      "percentage": 15.69
+    },
+    {
+      "day": 6,
+      "dayName": "Sábado",
+      "count": 12443,
+      "percentage": 13.02
+    }
+  ],
+  "monthlyTrend": [
+    {
+      "yearMonth": "2023-04",
+      "count": 2
+    },
+    {
+      "yearMonth": "2023-08",
+      "count": 1
+    },
+    {
+      "yearMonth": "2024-03",
+      "count": 1
+    },
+    {
+      "yearMonth": "2024-04",
+      "count": 65
+    },
+    {
+      "yearMonth": "2024-05",
+      "count": 2662
+    },
+    {
+      "yearMonth": "2024-06",
+      "count": 4818
+    },
+    {
+      "yearMonth": "2024-07",
+      "count": 5491
+    },
+    {
+      "yearMonth": "2024-08",
+      "count": 4550
+    },
+    {
+      "yearMonth": "2024-09",
+      "count": 3177
+    },
+    {
+      "yearMonth": "2024-10",
+      "count": 2321
+    },
+    {
+      "yearMonth": "2024-11",
+      "count": 2408
+    },
+    {
+      "yearMonth": "2024-12",
+      "count": 1955
+    },
+    {
+      "yearMonth": "2025-01",
+      "count": 2057
+    },
+    {
+      "yearMonth": "2025-02",
+      "count": 2400
+    },
+    {
+      "yearMonth": "2025-03",
+      "count": 2357
+    },
+    {
+      "yearMonth": "2025-04",
+      "count": 3757
+    },
+    {
+      "yearMonth": "2025-05",
+      "count": 2287
+    },
+    {
+      "yearMonth": "2025-06",
+      "count": 1648
+    },
+    {
+      "yearMonth": "2025-07",
+      "count": 3251
+    },
+    {
+      "yearMonth": "2025-08",
+      "count": 2952
+    },
+    {
+      "yearMonth": "2025-09",
+      "count": 2583
+    },
+    {
+      "yearMonth": "2025-10",
+      "count": 5855
+    },
+    {
+      "yearMonth": "2025-11",
+      "count": 12205
+    },
+    {
+      "yearMonth": "2025-12",
+      "count": 12337
+    },
+    {
+      "yearMonth": "2026-01",
+      "count": 11925
+    },
+    {
+      "yearMonth": "2026-02",
+      "count": 2532
+    }
+  ],
+  "peakWindows": [
+    {
+      "startHour": 14,
+      "endHour": 15,
+      "peakCount": 7387,
+      "description": "Hora pico: 14:00 - 15:00"
+    },
+    {
+      "startHour": 11,
+      "endHour": 22,
+      "peakCount": 73919,
+      "description": "Ventana de alta actividad: 11:00 - 22:00"
+    }
+  ],
+  "insights": [
+    "Lunes es el día más activo con 15,462 mensajes (16.17%)",
+    "Tarde (12-18h) tiene 154% más actividad que la mañana",
+    "Días hábiles tienen 31% más actividad que fines de semana",
+    "Actividad ha crecido 669750% comparando últimos 3 meses vs primeros 3"
+  ]
+}

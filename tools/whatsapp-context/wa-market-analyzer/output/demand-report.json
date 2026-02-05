@@ -1,0 +1,722 @@
+{
+  "generatedAt": "2026-02-05T07:24:59.258Z",
+  "biasFilterApplied": true,
+  "excludedChats": [
+    362,
+    363,
+    9206,
+    388,
+    397,
+    364,
+    365,
+    376,
+    377,
+    3384,
+    3385,
+    17541,
+    17542
+  ],
+  "totalMessagesAnalyzed": 95597,
+  "categories": [
+    {
+      "categoryId": "tramites",
+      "categoryName": "Trámites/Documentos",
+      "emoji": "📄",
+      "demandMentions": 370,
+      "supplyMentions": 34,
+      "gapRatio": 10.88,
+      "opportunity": "HIGH",
+      "topKeywords": [
+        {
+          "keyword": "dni",
+          "count": 806
+        },
+        {
+          "keyword": "turno",
+          "count": 567
+        },
+        {
+          "keyword": "cuit",
+          "count": 441
+        },
+        {
+          "keyword": "cuil",
+          "count": 433
+        },
+        {
+          "keyword": "residencia",
+          "count": 321
+        },
+        {
+          "keyword": "precaria",
+          "count": 217
+        },
+        {
+          "keyword": "ayuda con",
+          "count": 187
+        },
+        {
+          "keyword": "convalidación",
+          "count": 97
+        },
+        {
+          "keyword": "alguien sabe de",
+          "count": 88
+        },
+        {
+          "keyword": "turno para",
+          "count": 86
+        }
+      ],
+      "priceRange": {
+        "min": 35,
+        "max": 35,
+        "avg": 35,
+        "currency": "ARS",
+        "samples": 1
+      },
+      "sampleDemandMessages": [
+        "AGENDA DE DICIEMBRE ABIERTA‼️\nPedime tu turno para extensiones de pestañas y uñas🧸🤩 Cualquier cosa consulten✨Les dejo mi ig para que vean más diseños 💓\nhttps://www.instagram.com/belubrunostudio?igsh=MWhiNWcxczh0MnVteg==",
+        "por favor me ayuda con su alias",
+        "Nos ayuda con su alias por favor",
+        "me ayuda con su cvu y nombre titular por favor",
+        "Hola, alguien sabe de algjna odontología con las cuatro B ?"
+      ],
+      "sampleSupplyMessages": [
+        "Hola queridos compatriotas 🇪🇨👋✨\nSi van a viajar, recuerden que Argentina ahora exige seguro de salud/viaje para ingresar.\nNo tienen de qué preocuparse \nNosotros les ayudamos con:\n\n✅Seguros de viaje 100% válido para migración.\n✅Compra de pasajes\n✅ Gestión de traslados\n\nGestión de asistencia al viajero/ Seguros económicos y confiables ⚕️\n\n📞 1122521283\n📩 selvatikviajes@gmail.com",
+        "Hola queridos compatriotas 🇪🇨👋✨\nSi van a viajar, recuerden que Argentina ahora exige seguro de salud/viaje para ingresar.\nNo tienen de qué preocuparse \nNosotros les ayudamos con:\n\n✅Seguros de viaje 100% válido para migración.\n✅Compra de pasajes\n✅ Gestión de traslados\n\nGestión de asistencia al viajero/ Seguros económicos y confiables ⚕️\n📞 1122521283\n📩 selvatikviajes@gmail.com",
+        "Hola queridos compatriotas 🇪🇨👋✨\nSi van a viajar, recuerden que Argentina ahora exige seguro de salud/viaje para ingresar.\nNo tienen de qué preocuparse \nNosotros les ayudamos con:\n\n✅Seguros de viaje 100% válido para migración.\n✅Compra de pasajes\n✅ Gestión de traslados\n\nGestión de asistencia al viajero/ Seguros económicos y confiables ⚕️\n\n📞 1122521283\n📩 selvatikviajes@gmail.com",
+        "Hola queridos compatriotas 🇪🇨👋✨\nSi van a viajar, recuerden que Argentina ahora exige seguro de salud/viaje para ingresar.\nNo tienen de qué preocuparse \nNosotros les ayudamos con:\n\n✅Seguros de viaje 100% válido para migración.\n✅Compra de pasajes\n✅ Gestión de traslados\n\nGestión de asistencia al viajero/ Seguros económicos y confiables ⚕️\n\n📞 1122521283\n📩 selvatikviajes@gmail.com",
+        "El gasto total para ingresar cual seria? En la  situación que me quede un año, tendría que realizar el pago otra vez del la gestión de contracto o honorarios?"
+      ]
+    },
+    {
+      "categoryId": "vivienda",
+      "categoryName": "Vivienda",
+      "emoji": "🏠",
+      "demandMentions": 83,
+      "supplyMentions": 112,
+      "gapRatio": 0.74,
+      "opportunity": "LOW",
+      "topKeywords": [
+        {
+          "keyword": "alquiler",
+          "count": 1175
+        },
+        {
+          "keyword": "departamento",
+          "count": 1004
+        },
+        {
+          "keyword": "expensas",
+          "count": 800
+        },
+        {
+          "keyword": "monoambiente",
+          "count": 628
+        },
+        {
+          "keyword": "habitación",
+          "count": 484
+        },
+        {
+          "keyword": "habitacion",
+          "count": 340
+        },
+        {
+          "keyword": "residencia",
+          "count": 321
+        },
+        {
+          "keyword": "roomie",
+          "count": 287
+        },
+        {
+          "keyword": "depto",
+          "count": 149
+        },
+        {
+          "keyword": "dueño directo",
+          "count": 45
+        }
+      ],
+      "priceRange": {
+        "min": 230,
+        "max": 230,
+        "avg": 230,
+        "currency": "USD",
+        "samples": 1
+      },
+      "sampleDemandMessages": [
+        "Hola, busco roomie para dpto 2 ambientes, se comparte habitación con dos chicas más.\nSe ingresa sólo con el alquiler de 183.50 aparte se paga luz e internet.\nIngreso este 27-29 dic",
+        "Buenas noches busco departamento 3 ambientes y de 2 dormitorios en capital Federal",
+        "Buen día busco departamento para una sola persona \nCerca de la UCA o el Abasto Shopping \nGracias",
+        "Buenos días\nBusco departamento de una habitación en la plata, hasta $350 usd\nIngreso en enero o diciembre",
+        "Hola, busco roomie para dpto 2 ambientes, se comparte habitación con dos chicas más.\nSe ingresa sólo con el alquiler de 183.50 aparte se paga luz e internet.\nIngreso este 27-29 dic"
+      ],
+      "sampleSupplyMessages": [
+        "Alquilo hermoso departamento para estudiantes!\n📍 Villa Argüello – a 14 cuadras de la Facultad de Medicina y 2 cuadras del paradero de colectivos.\n✨ 3 habitaciones amplias y luminosas\n🛋️ Sala y comedor grande\n🛏️ Full amoblado (televisor, lavarropa, aire acondicionado, muebles, etc.)\n🚗 Cochera disponible\n🎥 Cámaras de seguridad\n📅 Contrato por 1 año – sin reajustes ni expensas\n🤝 Dueño directo",
+        "Departamento en alquiler con dueño directo\n1dormitorio\n📍cerca de plaza Italia",
+        "Alquilo habitación en palermo a 2 cuadras de av scalabriny ortiz",
+        "Hola, se alquila departamento de dos habitaciones para tres personas con dueño directo cerca de parque saveedra (La Plata)",
+        "Hola, busco roomie (mujer). Departamento 3 ambientes, compartido con tres chicas.\nIngreso a principios de noviembre. \nZona San Telmo, cerca de la universidad UAI. \n\nMás información al interno."
+      ]
+    },
+    {
+      "categoryId": "mascotas",
+      "categoryName": "Mascotas",
+      "emoji": "🐕",
+      "demandMentions": 3,
+      "supplyMentions": 7,
+      "gapRatio": 0.43,
+      "opportunity": "SATURATED",
+      "topKeywords": [
+        {
+          "keyword": "mascota",
+          "count": 273
+        },
+        {
+          "keyword": "gato",
+          "count": 79
+        },
+        {
+          "keyword": "gatito",
+          "count": 50
+        },
+        {
+          "keyword": "perro",
+          "count": 39
+        },
+        {
+          "keyword": "adopción",
+          "count": 35
+        },
+        {
+          "keyword": "adopcion",
+          "count": 14
+        },
+        {
+          "keyword": "cachorro",
+          "count": 9
+        },
+        {
+          "keyword": "veterinario",
+          "count": 5
+        },
+        {
+          "keyword": "cachorros",
+          "count": 4
+        },
+        {
+          "keyword": "adopción de",
+          "count": 3
+        }
+      ],
+      "priceRange": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "currency": "UNKNOWN",
+        "samples": 0
+      },
+      "sampleDemandMessages": [
+        "doy gata en adopción debido a que no la puedo cuidar mas, esta castrada, adopcion responsable.",
+        "Hola! Si tienen información sobre la adopción de gatitos bebés en 📍CABA\nGracias!",
+        "Hola, alguien conoce un grupo de adopción de gatitos?"
+      ],
+      "sampleSupplyMessages": [
+        "🐾 Hola cómo están, tengo cachorritos Salchicha Mini buscan familia 🏡💛\n\n¡Tienen 3 semanas de vida se entregan a finales de noviembre 🐶✨\nSon cachorros Dachshund mini (salchicha),\n\n📍 Ubicación: La Plata\n⸻\n\n🐕‍🦺 Macho:\n\t•\t🖤🤍 Blanco con negro (Piebald Tricolor) \n\n🐩 Hembras:\n\t•\t🤎 2 color café rojizo (Red)\n\n⸻\n\n💬 Si te interesa alguno podemos coordinar visita o más fotos 📸\nSon ideales como compañeros de casa o para familias — ¡una ternura total! 🐾💖",
+        "Doy en adopción hamster ruso no crece más de ese tamaño",
+        "🐾 Hola cómo están, tengo cachorritos Salchicha Mini buscan familia 🏡💛\n\n¡Tienen 3 semanas de vida se entregan a finales de noviembre 🐶✨\nSon cachorros Dachshund mini (salchicha),\n\n📍 Ubicación: La Plata\n⸻\n\n🐕‍🦺 Macho:\n\t•\t🖤🤍 Blanco con negro (Piebald Tricolor) \n\n🐩 Hembras:\n\t•\t🤎 2 color café rojizo (Red)\n\n⸻\n\n💬 Si te interesa alguno podemos coordinar visita o más fotos 📸\nSon ideales como compañeros de casa o para familias — ¡una ternura total! 🐾💖",
+        "Hola que tal, doy en adopción a Kila,  debido a que no me dejan tenerla mas en el departamento. Es una gatita de 6 meses, es super cariñosa, bien portada y esta sin castrar.",
+        "Doy en adopcion a gatito se llama Kira, macho, castrado por no poder seguir cuidandolo 《 tengo que mudarme y no lo puedo llevar》. Es muy cariñoso y le encanta jugar. Contactarse al 1162447868 Silvana"
+      ]
+    },
+    {
+      "categoryId": "electronicos",
+      "categoryName": "Electrónicos",
+      "emoji": "📱",
+      "demandMentions": 28,
+      "supplyMentions": 171,
+      "gapRatio": 0.16,
+      "opportunity": "SATURATED",
+      "topKeywords": [
+        {
+          "keyword": "ram",
+          "count": 6943
+        },
+        {
+          "keyword": "gb",
+          "count": 565
+        },
+        {
+          "keyword": "celular",
+          "count": 312
+        },
+        {
+          "keyword": "iphone",
+          "count": 309
+        },
+        {
+          "keyword": "cargador",
+          "count": 228
+        },
+        {
+          "keyword": "pantalla",
+          "count": 209
+        },
+        {
+          "keyword": "tablet",
+          "count": 199
+        },
+        {
+          "keyword": "samsung",
+          "count": 113
+        },
+        {
+          "keyword": "motorola",
+          "count": 107
+        },
+        {
+          "keyword": "vendo iphone",
+          "count": 72
+        }
+      ],
+      "priceRange": {
+        "min": 140,
+        "max": 140,
+        "avg": 140,
+        "currency": "USD",
+        "samples": 1
+      },
+      "sampleDemandMessages": [
+        "BUSCO IPHONE PARA HOY PARA PERMUTAR POR UN GAMA MAS ALTA",
+        "busco samsung gama alta para comprar o xiaomi",
+        "BUSCO IPHONE 12 PRO, 13, 13 PRO PARA MAÑANA!!!",
+        "Vendo $650.000 o Permuto IPHONE 13 PRO\nLibre de Icloud \nLibre de sim\nE-sim\n128gb\n97% de bateria \nBusco Iphone 12pro o pro max o algo parecido! \nO celular de gama similar o con diferencia a mi favor",
+        "BUSCO IPHONE PARA HOY PARA PERMUTAR POR UN GAMA MAS ALTA"
+      ],
+      "sampleSupplyMessages": [
+        "Vendo celulares moto e7i plus y moto e7i plus",
+        "Vendo Tablet Samsung A8. Usado-Como nuevo.💝 Color: SILVER\nPantalla de 10.5 pulgadas con 64 gb.\n$350.000\n\nTiene muy poco uso, viene en caja y con todos sus papeles + cargador original.\nTambién incluye:\n• Una funda negra con brillos \n• Lápiz genérico \n• Teclado y Mouse genérico",
+        "Vendo iphone 14 pro max 256GB / Batería en 85%",
+        "Vendo MOTOROLA G35\nNUEVO (lo compre recién y por cuestiones personales lo estoy vendiendo)\nNi siquiera lo usé\n\nAdemás de que tiene TODO (ya que es nuevo) \nTiene:\n- una funda extra nueva (aparte de la que le viene)\n- y vidrio templado recién colocado",
+        "VENDO MOTOROLA G54\n1 año de uso, sin ningún defecto, IMPECABLE \n\n\nTiene:\n- vidrio templado\n- La funda original y otra funda que usaba\n- cargador original \n- caja con manual \n- herramienta para extracción de Sim\n\n-Sistema de cámara de 50mp con OIS\n-Rendimiento 5G ultrarrapido 8GB memoria RAM\n\n$250mil"
+      ]
+    },
+    {
+      "categoryId": "transporte",
+      "categoryName": "Transporte",
+      "emoji": "🚗",
+      "demandMentions": 5,
+      "supplyMentions": 52,
+      "gapRatio": 0.1,
+      "opportunity": "SATURATED",
+      "topKeywords": [
+        {
+          "keyword": "auto",
+          "count": 970
+        },
+        {
+          "keyword": "viaje",
+          "count": 556
+        },
+        {
+          "keyword": "uber",
+          "count": 467
+        },
+        {
+          "keyword": "moto",
+          "count": 363
+        },
+        {
+          "keyword": "remis",
+          "count": 321
+        },
+        {
+          "keyword": "bici",
+          "count": 133
+        },
+        {
+          "keyword": "pasaje",
+          "count": 110
+        },
+        {
+          "keyword": "bicicleta",
+          "count": 55
+        },
+        {
+          "keyword": "vendo moto",
+          "count": 41
+        },
+        {
+          "keyword": "combustible",
+          "count": 14
+        }
+      ],
+      "priceRange": {
+        "min": 240,
+        "max": 450,
+        "avg": 276,
+        "currency": "ARS",
+        "samples": 33
+      },
+      "sampleDemandMessages": [
+        "“Hola! Alguien viaja a Guayaquil en estos días y puede llevar un encargo?”",
+        "Alguien viaja a EZE hoy por la noche para compartir el uber ?",
+        "Buenaas, de casualidad alguien viaja al aeropuerto de ezeiza el 6 de diciembre en la madrugada? Para compartir costos",
+        "Hola alguien viaja a Ezeiza el 22 de diciembre  a la madrugada , para compartir Uber",
+        "Hola, alguien viaja a Ecuador en los próximos días y lleva encomiendas?"
+      ],
+      "sampleSupplyMessages": [
+        "Vendo MOTOROLA G35\nNUEVO (lo compre recién y por cuestiones personales lo estoy vendiendo)\nNi siquiera lo usé\n\nAdemás de que tiene TODO (ya que es nuevo) \nTiene:\n- una funda extra nueva (aparte de la que le viene)\n- y vidrio templado recién colocado\n\n$450mil",
+        "Vendo MOTOROLA G35\nNUEVO (lo compre recién y por cuestiones personales lo estoy vendiendo)\nNi siquiera lo usé\n\nAdemás de que tiene TODO (ya que es nuevo) \nTiene:\n- una funda extra nueva (aparte de la que le viene)\n- y vidrio templado recién colocado\n\n$450mil",
+        "VENDO MOTOROLA G54\n1 año de uso, sin ningún defecto, IMPECABLE \n\n\nTiene:\n- vidrio templado\n- La funda original y otra funda que usaba\n- cargador original \n- caja con manual \n- herramienta para extracción de Sim\n\n-Sistema de cámara de 50mp con OIS\n-Rendimiento 5G ultrarrapido 8GB memoria RAM\n\n$260mil",
+        "Vendo MOTOROLA G35\nNUEVO (lo compre recién y por cuestiones personales lo estoy vendiendo)\nNi siquiera lo usé\n\nAdemás de que tiene TODO (ya que es nuevo) \nTiene:\n- una funda extra nueva (aparte de la que le viene)\n- y vidrio templado recién colocado\n\n$450mil",
+        "Viajo amanha e regresso el 29 ponele"
+      ]
+    },
+    {
+      "categoryId": "comida",
+      "categoryName": "Comida/Delivery",
+      "emoji": "🍔",
+      "demandMentions": 11,
+      "supplyMentions": 255,
+      "gapRatio": 0.04,
+      "opportunity": "SATURATED",
+      "topKeywords": [
+        {
+          "keyword": "delivery",
+          "count": 2738
+        },
+        {
+          "keyword": "postre",
+          "count": 1482
+        },
+        {
+          "keyword": "torta",
+          "count": 1233
+        },
+        {
+          "keyword": "tequeños",
+          "count": 1027
+        },
+        {
+          "keyword": "menú",
+          "count": 272
+        },
+        {
+          "keyword": "pedidos de",
+          "count": 211
+        },
+        {
+          "keyword": "encebollado",
+          "count": 186
+        },
+        {
+          "keyword": "arroz",
+          "count": 157
+        },
+        {
+          "keyword": "almuerzo",
+          "count": 63
+        },
+        {
+          "keyword": "empanadas",
+          "count": 52
+        }
+      ],
+      "priceRange": {
+        "min": 6,
+        "max": 6,
+        "avg": 6,
+        "currency": "USD",
+        "samples": 2
+      },
+      "sampleDemandMessages": [
+        "Hola, quien hace viajes desde buenos aires hasta Ezeiza?",
+        "Alguien vende comida ecuatoriana hoy",
+        "Hola buenas tardes, de casualidad alguien hace comidas a domicilio para sorpresa de cumpleaños",
+        "Alguien vende comida a esta hora?",
+        "Quien hace delivery de encebollado hoy?\nDaran ayudando que me lleva el diablo jajaja"
+      ],
+      "sampleSupplyMessages": [
+        "El mejor skincare y al mejor precio lo tenemos en DeMarca!! Pedidos de SheIn, Temu, Victoria's secret, The Ordinary y muchos más!! Visita nuestro Instagram https://www.instagram.com/demarca_online?igsh=Y294c3Y0c3VnZmk2",
+        "Buenas noches !!! Ya estamos tomando pedidos del rico pollo a la brasa , salchipapas, mostrito y mas. No dudes en consultarnos😊",
+        "🅰🅻🅸🆃🅰🆂 🅲🆁🅰🆉🆈\n🔥 ¡La promo que estabas esperando llegó!\n\n🍟Disfrutá de los combos más irresistibles, con el sabor casero que te encanta y papas incluidas en todas las opciones.\n\n🥤 Además, el día de hoy tenemos un:\n👉 💸 10% de descuento en tu compra \n\n⏰ Receptamos pedidos desde las 18:00\nPerfecto para la merienda, la cena o para darte ese gusto que merecés.\n\n📲 Escribinos y haz tu pedido ahora\nNo te quedes con las ganas…\n\n✨ ¡Comprueba por qué todos nos eligen una y otra vez!\n\n📍 CABA – Buenos Aires",
+        "🖤 Black November con ofertas imperdibles! 🛒\n\n📦 Envío gratis en La Plata en todas las compras de *mercado* que superen los $7.500.\n\n💰 Si tu compra supera los $15.000, te llevás un 10% de descuento.\n🔥 Y si gastás más de $30.000, el descuento sube al 15%.\n\n🕒 Promo válida por tiempo limitado y para todos los productos de la lista!\n👉 Aprovechá antes de que se acabe 😍\n\n\n\n📝 Es posible agregar comidas del menú del día a tu pedido de mercado 😋",
+        "Gente de Capital interesada que me hizo o hará pedidos de envíos 👇 Escríbame al privado para separarles su porción y llevarles cuando retire sus envíos"
+      ]
+    },
+    {
+      "categoryId": "trabajo",
+      "categoryName": "Trabajo/Empleo",
+      "emoji": "💼",
+      "demandMentions": 3,
+      "supplyMentions": 172,
+      "gapRatio": 0.02,
+      "opportunity": "SATURATED",
+      "topKeywords": [
+        {
+          "keyword": "contrato",
+          "count": 480
+        },
+        {
+          "keyword": "trabajo",
+          "count": 405
+        },
+        {
+          "keyword": "sueldo",
+          "count": 163
+        },
+        {
+          "keyword": "se busca",
+          "count": 146
+        },
+        {
+          "keyword": "se necesita",
+          "count": 41
+        },
+        {
+          "keyword": "remoto",
+          "count": 21
+        },
+        {
+          "keyword": "empleo",
+          "count": 17
+        },
+        {
+          "keyword": "salario",
+          "count": 9
+        },
+        {
+          "keyword": "freelance",
+          "count": 6
+        },
+        {
+          "keyword": "vacante",
+          "count": 5
+        }
+      ],
+      "priceRange": {
+        "min": 75,
+        "max": 700,
+        "avg": 304,
+        "currency": "USD",
+        "samples": 39
+      },
+      "sampleDemandMessages": [
+        "Busco laburo en zona la plata, de lo que sea full time me pueden escribir al interno gracias",
+        "Hola busco trabajo de limpieza, disponibilidad full time",
+        "Hola busco trabajo de limpieza porfavor necesito urgente 🙏🙏 si alguien podría ayudarme 🙏🙏"
+      ],
+      "sampleSupplyMessages": [
+        "Hola se busca romieeee para departamento a 4 cuadras de la facultad de medicina",
+        "Se busca roomie para compartir departamento (sin amoblar), a partir del *05 de diciembre*, ubicado en *calle 9 entre 60 y 61* , busco persona tranquila, ordenada y responsable. \n*Se paga:*\n- Alquiler: *165 USD*\n- ⁠Garantía: *200 USD*\n- ⁠Expensas \n- ⁠Luz y gas\nSe podría coordinar para ver el departamento. *Escribir al 1159816266*",
+        "Hola, se busca roomie/roomies para una habitación en un departamento ubicado en Balvanera, solo pagan el mes de arriendo y facturas (internet, luz y gas).",
+        "Se busca roomie mujer  para  compartir departamento amoblado con excelente vista 🪟 2 habitaciones, dos baños ,tres camas,pileta, TV cable, lavadora, y buena ubicación Dorrego 898 ( dueño directo contrato hasta marzo)",
+        "🏡Se busca roomie mujer para nuestra cliente estudiante mujer . Se busca estudiante ordenada responsable y que quiera y pueda compartir un monoambiente amoblado muy amplio con servicios incluidos.  Leer los requisitos del aviso y Más info por privado 💜🙌"
+      ]
+    },
+    {
+      "categoryId": "servicios",
+      "categoryName": "Servicios",
+      "emoji": "🔧",
+      "demandMentions": 0,
+      "supplyMentions": 7,
+      "gapRatio": 0,
+      "opportunity": "SATURATED",
+      "topKeywords": [
+        {
+          "keyword": "limpieza",
+          "count": 188
+        },
+        {
+          "keyword": "manicura",
+          "count": 155
+        },
+        {
+          "keyword": "pedicura",
+          "count": 112
+        },
+        {
+          "keyword": "técnico",
+          "count": 100
+        },
+        {
+          "keyword": "reparación",
+          "count": 94
+        },
+        {
+          "keyword": "plomero",
+          "count": 14
+        },
+        {
+          "keyword": "electricista",
+          "count": 13
+        },
+        {
+          "keyword": "servicio de limpieza",
+          "count": 7
+        },
+        {
+          "keyword": "peluquería",
+          "count": 5
+        },
+        {
+          "keyword": "depilación",
+          "count": 4
+        }
+      ],
+      "priceRange": {
+        "min": 160,
+        "max": 350,
+        "avg": 228,
+        "currency": "ARS",
+        "samples": 5
+      },
+      "sampleDemandMessages": [],
+      "sampleSupplyMessages": [
+        "Se realiza servicio de limpieza en La Plata y sus alrededores",
+        "Hola, alguien conoce algún servicio de limpieza?",
+        "Hola que tal, saben de un buen servicio de limpieza de PCs por acá?",
+        "Holaa ¿Alguien sabe de alguien que haga servicio de limpieza en departamentos, por favor? Es urgentee. 😭😭",
+        "Buenas noches, alguien que realice servicio de limpieza en CABA?"
+      ]
+    },
+    {
+      "categoryId": "educacion",
+      "categoryName": "Educación",
+      "emoji": "📚",
+      "demandMentions": 1,
+      "supplyMentions": 223,
+      "gapRatio": 0,
+      "opportunity": "SATURATED",
+      "topKeywords": [
+        {
+          "keyword": "medicina",
+          "count": 842
+        },
+        {
+          "keyword": "final",
+          "count": 823
+        },
+        {
+          "keyword": "facultad",
+          "count": 517
+        },
+        {
+          "keyword": "parcial",
+          "count": 488
+        },
+        {
+          "keyword": "fisiología",
+          "count": 473
+        },
+        {
+          "keyword": "universidad",
+          "count": 367
+        },
+        {
+          "keyword": "libros",
+          "count": 324
+        },
+        {
+          "keyword": "clases",
+          "count": 268
+        },
+        {
+          "keyword": "clases particulares",
+          "count": 139
+        },
+        {
+          "keyword": "anatomía",
+          "count": 114
+        }
+      ],
+      "priceRange": {
+        "min": 2,
+        "max": 15,
+        "avg": 11,
+        "currency": "ARS",
+        "samples": 6
+      },
+      "sampleDemandMessages": [
+        "Porque estamos en navidad \nYo no busco libros que no esten en la ficha de búsqueda \nQue para eso está \nHay que seguir las reglas del grupo que ponen los administradores"
+      ],
+      "sampleSupplyMessages": [
+        "CLASES PARTICULARES A BUEN PRECIO 📚 CONTACTANOS Y APROBA!! 🤩",
+        "¡Hola! 💕 Les dejo mi flyer.\nDoy clases de inglés online para todas las edades, ya sea para empezar, recuperar ritmo o preparar exámenes.\nSi quieren info, me escriben por privado 😊📲",
+        "CLASES PARTICULARES A BUEN PRECIO 📚 CONTACTANOS Y APROBA!! 🤩",
+        "Vendo libros de medicina, yo mismo hago entrega",
+        "📚 Clases Particulares de Matemáticas y Química General\n\n✅ Nivel: Secundaria\n✅ Apoyo en trabajos prácticos, preparación de exámenes y elaboración de resúmenes📑, informes📝.\n\nClases grupales y individuales 🤓 \n\n📍 Soy de La Plata\n💬 Tu consulta no molesta\n Precios accesibles\n\n📲 Contacto: \n2213527081 (David)\n+54 9 388 455-6686 (Pablo)"
+      ]
+    },
+    {
+      "categoryId": "ropa",
+      "categoryName": "Ropa/Moda",
+      "emoji": "👗",
+      "demandMentions": 0,
+      "supplyMentions": 32,
+      "gapRatio": 0,
+      "opportunity": "SATURATED",
+      "topKeywords": [
+        {
+          "keyword": "talle",
+          "count": 1727
+        },
+        {
+          "keyword": "ropa",
+          "count": 876
+        },
+        {
+          "keyword": "vestido",
+          "count": 246
+        },
+        {
+          "keyword": "remera",
+          "count": 153
+        },
+        {
+          "keyword": "calzado",
+          "count": 147
+        },
+        {
+          "keyword": "jean",
+          "count": 127
+        },
+        {
+          "keyword": "pantalón",
+          "count": 124
+        },
+        {
+          "keyword": "campera",
+          "count": 124
+        },
+        {
+          "keyword": "nike",
+          "count": 89
+        },
+        {
+          "keyword": "zapatillas",
+          "count": 66
+        }
+      ],
+      "priceRange": {
+        "min": 15,
+        "max": 15,
+        "avg": 15,
+        "currency": "ARS",
+        "samples": 2
+      },
+      "sampleDemandMessages": [],
+      "sampleSupplyMessages": [
+        "VENDO ROPA USADA DE MARCA PULL&BEAR Y ZARA  (LA CAMISA DE ZARA ES NUEVA ESTÁ CON SU ETIQUETA)",
+        "Vendo zapatillas adidas originales\n1 solo uso",
+        "Vendo zapatos talla 36 de mujer , marca PUMA en buen estado comprados en Maranton (Ecuador)",
+        "Hola vendo ropa Bonita para chicas 🎀✨\nEntregas: Capital y La Plata\n\nSiguenos: \nhttps://www.instagram.com/a_vender.ec?igsh=aG01bXJ3a3ZuOWtj&utm_source=qr",
+        "❗️REMATE DE ROPA BARATA❗️\nVendo ropa nueva y seminueva (no la uso más ) \n•Jean American Eagle 7mil \n•Musculosa de shein 2mil (Nueva)\n•Vestido 5mil \n•Corset 10mil (Nuevo)\n\nCUALQUIER CONSULTA ESCRIBIRME AL INTERNO🙃"
+      ]
+    }
+  ]
+}

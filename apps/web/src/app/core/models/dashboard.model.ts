@@ -81,6 +81,9 @@ export interface EarningsStats {
  * =================================
  */
 
+/**
+ * Legacy points breakdown (backward compatibility)
+ */
 export interface OwnerPointsBreakdown {
   availability_points: number;
   rating_points: number;
@@ -92,6 +95,119 @@ export interface OwnerPointsBreakdown {
   penalty_points: number;
   total_points: number;
 }
+
+// ============================================================================
+// SENIOR MODEL: Multiplicative Points System
+// ============================================================================
+
+// Import VAFailureReason from reward-pool.model to avoid duplication
+import type { VAFailureReason } from './reward-pool.model';
+export type { VAFailureReason };
+
+/**
+ * VA (Verified Availability) status for a car
+ * If VA = false, the car earns 0 points
+ */
+export interface VAStatus {
+  isVerified: boolean;
+  failureReasons: VAFailureReason[];
+  metrics: {
+    isReadyToBook: boolean;
+    responseTimeHours: number | null;
+    acceptanceRate30d: number;
+    cancellationRate90d: number;
+    priceDeviationPct: number | null;
+    isInCooldown: boolean;
+    isOwnerKYC: boolean;
+  };
+}
+
+/**
+ * Daily points for a single car (Senior Model)
+ * Formula: points = BASE_POINTS × VA × value_factor × rep_factor × demand_factor
+ */
+export interface CarDailyPoints {
+  carId: string;
+  carTitle: string;
+  date: string;
+  points: number;
+  isEligible: boolean;
+
+  // Breakdown (multiplicative)
+  basePoints: number;
+  vaStatus: boolean;
+  vaFailureReasons: VAFailureReason[];
+  valueFactor: number;
+  repFactor: number;
+  demandFactor: number;
+
+  // Human readable formula
+  formula: string;
+}
+
+/**
+ * Monthly summary for owner (Senior Model)
+ */
+export interface OwnerMonthlyPointsSummary {
+  ownerId: string;
+  month: string; // YYYY-MM
+
+  // Totals
+  totalPoints: number;
+  eligibleDays: number;
+  carsContributing: number;
+  carsCapped: number; // Excluded due to MAX_CARS limit
+
+  // Share
+  rawShare: number; // Before cap
+  cappedShare: number; // After MAX_SHARE cap
+  payoutUsd: number;
+
+  // Eligibility
+  isEligible: boolean;
+  eligibilityReasons: string[];
+  gamingRiskScore: number;
+
+  // Per-car breakdown
+  carPoints: Array<{
+    carId: string;
+    carTitle: string;
+    points: number;
+    eligibleDays: number;
+    avgDailyPoints: number;
+    factors: {
+      valueFactor: number;
+      repFactor: number;
+      demandFactor: number;
+    };
+  }>;
+}
+
+/**
+ * Pool configuration and status (Senior Model)
+ */
+export interface RewardPoolConfigSenior {
+  month: string; // YYYY-MM
+  totalPoolUsd: number;
+  totalPointsNetwork: number;
+  pointValueUsd: number;
+
+  // Caps
+  maxCarsPerOwner: number;
+  maxSharePerOwner: number;
+
+  // VA thresholds
+  vaMaxResponseHours: number;
+  vaMinAcceptanceRate: number;
+  vaMaxCancellationRate: number;
+
+  status: 'open' | 'calculating' | 'distributed' | 'closed';
+}
+
+/**
+ * Factor quality labels for UI
+ */
+export type FactorQuality = 'excellent' | 'good' | 'average' | 'below_average' | 'poor';
 
 export interface CommunityReward extends OwnerPointsBreakdown {
   id?: string;

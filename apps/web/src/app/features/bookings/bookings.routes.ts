@@ -20,7 +20,7 @@ import { VerificationGuard } from '@core/guards/verification.guard';
 export const BOOKINGS_ROUTES: Routes = [
   {
     path: '',
-    data: { layout: 'full-bleed', hideHeader: true, hideFooter: true, hideMobileNav: true },
+    data: { hideHeader: true },
     loadComponent: () => import('./bookings-hub/bookings-hub.page').then((m) => m.BookingsHubPage),
   },
   {

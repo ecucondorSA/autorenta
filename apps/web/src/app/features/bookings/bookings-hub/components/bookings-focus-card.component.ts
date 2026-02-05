@@ -1,93 +1,50 @@
-import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { PressScaleDirective } from '@shared/directives/press-scale.directive';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
-import { formatDateRange, formatRelativeTime } from '@shared/utils/date.utils';
+import { formatDateRange } from '@shared/utils/date.utils';
 import { FocusCard, BookingRole } from '../bookings-hub.types';
 import { Booking } from '@core/models';
+import { getBookingStatusTone } from '../bookings-hub.utils';
 
 @Component({
   selector: 'app-bookings-focus-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, IonIcon, PressScaleDirective, MoneyPipe],
+  imports: [RouterLink, IonIcon, MoneyPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="space-y-4">
-      <div class="flex items-center justify-between px-1">
-        <h2 class="text-xs font-black uppercase tracking-widest text-text-muted flex items-center gap-2">
-          <ion-icon name="flash-outline" class="text-cta-default"></ion-icon>
-          En Foco
-        </h2>
-      </div>
-
-      @if (card().booking; as focusBooking) {
-        <div 
-          appPressScale
-          [routerLink]="card().actionLink"
-          [queryParams]="card().actionQuery"
-          class="group relative overflow-hidden rounded-3xl border border-border-muted bg-white shadow-premium-md hover:shadow-premium-lg transition-all duration-500 p-6 sm:p-8 cursor-pointer"
-        >
-          <!-- Cinematic Background Pattern -->
-          <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-indigo-500/10 via-purple-500/5 to-transparent rounded-full -mr-20 -mt-20 blur-3xl"></div>
-          
-          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div class="space-y-4 max-w-xl">
-              <span 
-                class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border"
-                [class]="card().toneClass"
-              >
-                <span class="w-1.5 h-1.5 rounded-full bg-current mr-2 animate-pulse"></span>
-                {{ card().badge }}
-              </span>
-              
-              <div>
-                <h3 class="text-2xl sm:text-3xl font-black text-text-primary tracking-tight leading-tight">
-                  {{ card().title }}
-                </h3>
-                <p class="text-text-secondary font-medium mt-1">{{ card().subtitle }}</p>
-              </div>
-
-              <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-text-muted">
-                <div class="flex items-center gap-1.5">
-                  <ion-icon name="calendar-outline"></ion-icon>
-                  <span>{{ rangeLabel(focusBooking) }}</span>
-                </div>
-                <div class="flex items-center gap-1.5">
-                  <ion-icon name="time-outline"></ion-icon>
-                  <span>{{ timelineLabel(focusBooking) }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="flex flex-col items-start md:items-end gap-4">
-              <div class="text-3xl font-black text-text-primary font-mono tracking-tighter">
-                {{ focusBooking.total_amount | money }}
-              </div>
-              <button class="w-full md:w-auto px-6 py-3 bg-cta-default text-cta-text rounded-2xl font-black text-sm shadow-premium-hover hover:bg-cta-hover transition-all">
-                {{ card().actionLabel }}
-              </button>
-            </div>
-          </div>
+    @if (card().booking; as b) {
+      <a
+        [routerLink]="card().actionLink"
+        [queryParams]="card().actionQuery"
+        [class]="cardClass(b)"
+        class="block rounded-2xl p-4 border transition-all active:scale-[0.98]"
+      >
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <span class="inline-flex items-center gap-1.5 text-xs font-semibold">
+            <span [class]="dotClass(b)" class="w-2 h-2 rounded-full"></span>
+            {{ card().badge }}
+          </span>
+          <span class="text-lg font-bold text-slate-900 font-mono tabular-nums">
+            {{ b.total_amount | money }}
+          </span>
         </div>
-      } @else {
-        <!-- EMPTY STATE FOCUS -->
-        <div class="rounded-3xl border border-dashed border-border-muted bg-surface-secondary/30 p-12 text-center flex flex-col items-center">
-          <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-premium-sm mb-4">
-            <ion-icon name="shield-checkmark-outline" class="text-3xl text-emerald-500"></ion-icon>
+
+        <h3 class="text-base font-bold text-slate-900 mb-1">{{ card().title }}</h3>
+        <p class="text-sm text-slate-500 mb-3">{{ rangeLabel(b) }}</p>
+
+        @if (card().actionLabel) {
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-500">{{ card().subtitle }}</span>
+            <span class="text-sm font-semibold text-slate-900 flex items-center gap-1">
+              {{ card().actionLabel }}
+              <ion-icon name="chevron-forward-outline" class="text-xs"></ion-icon>
+            </span>
           </div>
-          <h3 class="text-lg font-black text-text-primary tracking-tight">Todo en orden</h3>
-          <p class="text-sm text-text-secondary mt-1 max-w-xs">No hay tareas urgentes en este momento. Te avisaremos si algo requiere tu atención.</p>
-          @if (role() === 'renter') {
-            <a routerLink="/marketplace" class="mt-6 text-cta-default font-black text-xs uppercase tracking-widest hover:underline">
-              Explorar Autos →
-            </a>
-          }
-        </div>
-      }
-    </section>
-  `
+        }
+      </a>
+    }
+  `,
 })
 export class BookingsFocusCardComponent {
   card = input.required<FocusCard>();
@@ -97,9 +54,25 @@ export class BookingsFocusCardComponent {
     return formatDateRange(booking.start_at, booking.end_at);
   }
 
-  timelineLabel(booking: Booking): string {
-    const moment = booking.status === 'in_progress' ? booking.end_at : (booking.start_at ?? null);
-    if (!moment) return 'Sin fecha';
-    return formatRelativeTime(moment);
+  cardClass(booking: Booking): string {
+    const tone = getBookingStatusTone(booking);
+    switch (tone) {
+      case 'warning': return 'bg-amber-50 border-amber-200';
+      case 'danger': return 'bg-red-50 border-red-200';
+      case 'info': return 'bg-blue-50 border-blue-200';
+      case 'success': return 'bg-emerald-50 border-emerald-200';
+      default: return 'bg-slate-50 border-slate-200';
+    }
+  }
+
+  dotClass(booking: Booking): string {
+    const tone = getBookingStatusTone(booking);
+    switch (tone) {
+      case 'warning': return 'bg-amber-500 animate-pulse';
+      case 'danger': return 'bg-red-500 animate-pulse';
+      case 'info': return 'bg-blue-500';
+      case 'success': return 'bg-emerald-500';
+      default: return 'bg-slate-400';
+    }
   }
 }

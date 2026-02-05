@@ -8,34 +8,20 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import type { Booking } from '@core/models';
 import { BookingsStore } from '@core/stores/bookings.store';
-import { formatRelativeTime } from '@shared/utils/date.utils';
 import { addIcons } from 'ionicons';
 import {
-  calendarOutline,
   carSportOutline,
-  chevronForwardOutline,
-  flashOutline,
-  hourglassOutline,
   searchOutline,
-  shieldCheckmarkOutline,
-  walletOutline,
-  notificationsOutline,
-  personOutline,
-  gridOutline,
-  listOutline,
-  filterOutline,
   addOutline,
-  chatbubbleEllipsesOutline,
-  timeOutline,
-  receiptOutline,
   alertCircleOutline,
-  locationOutline,
 } from 'ionicons/icons';
 
+import { IonIcon } from '@ionic/angular/standalone';
 import { BookingRole, BookingFilter, FilterItem, FocusCard, InsightItem, BookingQuickAction } from './bookings-hub.types';
 import { BookingsHeaderComponent } from './components/bookings-header.component';
 import { BookingsFocusCardComponent } from './components/bookings-focus-card.component';
@@ -44,60 +30,119 @@ import { BookingsQuickActionsComponent } from './components/bookings-quick-actio
 import { BookingsListComponent } from './components/bookings-list.component';
 import { getBookingDetailLink, getBookingStatusChipClass, getBookingStatusLabel } from './bookings-hub.utils';
 
-/**
- * BookingsHubPage - V3.0 Premium Redesign
- *
- * Implements Bento Grid layouts, Cinematic headers, and Defensive UI.
- * Standardized for High-Conversion Marketplaces.
- * Refactored to use Smart/Dumb component architecture.
- */
+
 @Component({
   standalone: true,
   selector: 'app-bookings-hub',
   imports: [
     CommonModule,
+    RouterLink,
+    IonIcon,
     BookingsHeaderComponent,
     BookingsFocusCardComponent,
     BookingsInsightsComponent,
     BookingsQuickActionsComponent,
-    BookingsListComponent
+    BookingsListComponent,
   ],
   template: `
-    <div class="min-h-screen bg-surface-base pb-32">
-      <!-- 1. CINEMATIC STICKY HEADER -->
+    <div class="min-h-screen bg-slate-50 pb-24">
+      <!-- HEADER -->
       <app-bookings-header
-        [userName]="userName()"
         [role]="role()"
         (roleChange)="setRole($event)"
       ></app-bookings-header>
 
-      <main class="container-page px-4 sm:px-6 pt-6 space-y-8 animate-fade-in">
-        
+      <main class="px-4 pt-5 space-y-5 max-w-2xl mx-auto">
+
+        <!-- LOADING STATE -->
         @if (loading()) {
-          <!-- BENTO SKELETON -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 animate-pulse">
-            <div class="h-48 bg-surface-secondary rounded-3xl col-span-1 md:col-span-2"></div>
-            <div class="h-48 bg-surface-secondary rounded-3xl"></div>
-            <div class="h-32 bg-surface-secondary rounded-3xl" *ngFor="let i of [1,2,3]"></div>
+          <div class="space-y-4 animate-pulse">
+            <div class="h-28 bg-white rounded-2xl"></div>
+            <div class="flex gap-3">
+              <div class="h-16 flex-1 bg-white rounded-xl"></div>
+              <div class="h-16 flex-1 bg-white rounded-xl"></div>
+              <div class="h-16 flex-1 bg-white rounded-xl"></div>
+            </div>
+            @for (i of [1, 2, 3]; track i) {
+              <div class="h-24 bg-white rounded-2xl"></div>
+            }
           </div>
-        } @else {
-          <!-- 2. FOCUS SECTION (Zen Priority) -->
-          <app-bookings-focus-card
-            [card]="focusCard()"
-            [role]="role()"
-          ></app-bookings-focus-card>
+        }
 
-          <!-- 3. INSIGHTS BENTO GRID -->
-          <app-bookings-insights
-            [items]="insightItems()"
-          ></app-bookings-insights>
+        <!-- ERROR STATE -->
+        @else if (hasError()) {
+          <div class="flex flex-col items-center justify-center py-20 text-center">
+            <div class="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mb-4">
+              <ion-icon name="alert-circle-outline" class="text-3xl text-red-400"></ion-icon>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">No pudimos cargar tus reservas</h3>
+            <p class="text-sm text-slate-500 mt-1 max-w-xs">Verifica tu conexion e intenta nuevamente.</p>
+            <button
+              (click)="retry()"
+              class="mt-5 px-5 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+            >
+              Reintentar
+            </button>
+          </div>
+        }
 
-          <!-- 4. QUICK ACTIONS -->
+        <!-- EMPTY STATE -->
+        @else if (currentBookings().length === 0) {
+          <div class="flex flex-col items-center justify-center py-16 text-center">
+            <div class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mb-5">
+              <ion-icon name="car-sport-outline" class="text-4xl text-slate-300"></ion-icon>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900">
+              {{ role() === 'owner' ? 'Sin reservas de tus autos' : 'Aun no tenes reservas' }}
+            </h3>
+            <p class="text-sm text-slate-500 mt-2 max-w-xs mx-auto">
+              {{ role() === 'owner'
+                ? 'Cuando alguien reserve tus autos, los veras aca.'
+                : 'Explora autos disponibles y reserva tu proximo viaje.' }}
+            </p>
+            @if (role() === 'renter') {
+              <a
+                routerLink="/marketplace"
+                class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+              >
+                <ion-icon name="search-outline"></ion-icon>
+                Explorar autos
+              </a>
+            } @else {
+              <a
+                routerLink="/cars/publish"
+                class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+              >
+                <ion-icon name="add-outline"></ion-icon>
+                Publicar auto
+              </a>
+            }
+          </div>
+        }
+
+        <!-- CONTENT -->
+        @else {
+          <!-- FOCUS CARD (only if there's an action needed) -->
+          @if (focusCard().booking) {
+            <app-bookings-focus-card
+              [card]="focusCard()"
+              [role]="role()"
+            ></app-bookings-focus-card>
+          }
+
+          <!-- STATS -->
+          @if (currentBookings().length > 0) {
+            <app-bookings-insights
+              [items]="insightItems()"
+            ></app-bookings-insights>
+          }
+
+          <!-- QUICK ACTIONS -->
           <app-bookings-quick-actions
             [actions]="quickActions()"
           ></app-bookings-quick-actions>
 
-          <!-- 5. RESERVAS LIST -->
+          <!-- BOOKINGS LIST -->
           <app-bookings-list
             [bookings]="sortedBookings()"
             [filters]="filters()"
@@ -109,22 +154,9 @@ import { getBookingDetailLink, getBookingStatusChipClass, getBookingStatusLabel 
       </main>
     </div>
   `,
-  styles: [
-    `
-      :host {
-        display: block;
-        min-height: 100vh;
-        background: var(--surface-base);
-      }
-      .animate-fade-in {
-        animation: fadeIn 0.5s ease-out forwards;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-    `,
-  ],
+  styles: [`
+    :host { display: block; }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookingsHubPage implements OnInit, OnDestroy {
@@ -136,103 +168,75 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   readonly role = signal<BookingRole>('renter');
   readonly filter = signal<BookingFilter>('all');
   readonly pendingApprovals = signal<number | null>(null);
-  readonly searchTerm = signal('');
-  readonly sortMode = signal<'priority' | 'date'>('priority');
+  readonly hasError = signal(false);
 
   readonly myBookings = this.store.myBookings;
   readonly ownerBookings = this.store.ownerBookings;
 
+  readonly currentBookings = computed(() =>
+    this.role() === 'owner' ? this.ownerBookings() : this.myBookings(),
+  );
+
   constructor() {
     addIcons({
-      calendarOutline,
       carSportOutline,
-      chevronForwardOutline,
-      flashOutline,
-      hourglassOutline,
       searchOutline,
-      shieldCheckmarkOutline,
-      walletOutline,
-      notificationsOutline,
-      personOutline,
-      gridOutline,
-      listOutline,
-      filterOutline,
       addOutline,
-      chatbubbleEllipsesOutline,
-      timeOutline,
-      receiptOutline,
       alertCircleOutline,
-      locationOutline,
     });
   }
 
-  readonly userName = computed(() => {
-    const profile = inject(AuthService).session$()?.user;
-    return profile?.email?.split('@')[0] || 'Usuario';
-  });
-
   readonly insightItems = computed<InsightItem[]>(() => {
-    const bookings = this.role() === 'owner' ? this.ownerBookings() : this.myBookings();
+    const bookings = this.currentBookings();
     const isOwner = this.role() === 'owner';
+
+    const activeCount = bookings.filter((b) => this.isActive(b)).length;
+    const pendingCount = bookings.filter((b) =>
+      isOwner ? this.isPendingOwnerApproval(b) : this.isPendingRenter(b),
+    ).length;
+    const historyCount = bookings.filter((b) => this.isHistory(b)).length;
 
     return [
       {
-        id: 'spent',
-        label: isOwner ? 'Ingresos' : 'Gasto',
-        value: this.sumLast30Days(bookings),
-        type: 'money',
-        icon: isOwner ? 'wallet-outline' : 'receipt-outline',
-      },
-      {
-        id: 'total',
-        label: isOwner ? 'Reservas' : 'Viajes',
-        value: bookings.length,
+        id: 'active',
+        label: 'Activas',
+        value: activeCount,
         type: 'count',
-        icon: 'car-sport-outline',
+        icon: 'rocket-outline',
       },
       {
-        id: 'next',
-        label: isOwner ? 'Prox. Entrega' : 'Próximo Viaje',
-        value: this.nextTripLabel(bookings),
-        type: 'text',
-        icon: 'calendar-outline',
+        id: 'pending',
+        label: isOwner ? 'Por aprobar' : 'Pendientes',
+        value: pendingCount,
+        type: 'count',
+        icon: 'hourglass-outline',
+      },
+      {
+        id: 'history',
+        label: 'Historial',
+        value: historyCount,
+        type: 'count',
+        icon: 'receipt-outline',
       },
     ];
   });
 
   readonly filters = computed<FilterItem[]>(() => {
-    const bookings = this.role() === 'owner' ? this.ownerBookings() : this.myBookings();
-    if (this.role() === 'owner') {
-      return [
-        { id: 'all', label: 'Todas', count: bookings.length },
-        {
-          id: 'approvals',
-          label: 'Aprobar',
-          count: bookings.filter((b) => this.isPendingOwnerApproval(b)).length,
-        },
-        {
-          id: 'active',
-          label: 'En curso',
-          count: bookings.filter((b) => this.isActive(b)).length,
-        },
-        {
-          id: 'history',
-          label: 'Historial',
-          count: bookings.filter((b) => this.isHistory(b)).length,
-        },
-      ];
-    }
+    const bookings = this.currentBookings();
+    const isOwner = this.role() === 'owner';
 
     return [
       { id: 'all', label: 'Todas', count: bookings.length },
       {
-        id: 'action',
-        label: 'Acción',
-        count: bookings.filter((b) => this.isPendingRenter(b)).length,
+        id: isOwner ? 'approvals' : 'action',
+        label: isOwner ? 'Aprobar' : 'Pendientes',
+        count: bookings.filter((b) =>
+          isOwner ? this.isPendingOwnerApproval(b) : this.isPendingRenter(b),
+        ).length,
       },
       {
         id: 'active',
-        label: 'En curso',
+        label: 'Activas',
         count: bookings.filter((b) => this.isActive(b)).length,
       },
       {
@@ -244,17 +248,17 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   });
 
   readonly focusCard = computed<FocusCard>(() => {
-    const bookings = this.role() === 'owner' ? this.ownerBookings() : this.myBookings();
+    const bookings = this.currentBookings();
     const focus = this.pickFocusBooking(bookings);
     if (!focus) {
       return {
         title: 'Todo en orden',
-        subtitle: 'No hay acciones urgentes por ahora.',
+        subtitle: 'No hay acciones urgentes.',
         badge: 'Sin urgencias',
         actionLabel: null,
         actionLink: null,
         actionQuery: null,
-        toneClass: 'bg-surface-secondary text-text-secondary border-border-muted',
+        toneClass: 'bg-slate-50 text-slate-500 border-slate-200',
         icon: 'shield-checkmark-outline',
         booking: null,
       };
@@ -262,14 +266,16 @@ export class BookingsHubPage implements OnInit, OnDestroy {
 
     const badge = getBookingStatusLabel(focus, this.role());
     const actionLabel = this.primaryActionLabel(focus);
-    const actionLink = actionLabel ? this.primaryActionLink(focus) : getBookingDetailLink(focus, this.role());
+    const actionLink = actionLabel
+      ? this.primaryActionLink(focus)
+      : getBookingDetailLink(focus, this.role());
 
     return {
       title: focus.car_title || 'Reserva',
       subtitle:
         this.role() === 'owner'
-          ? 'Tenés una reserva prioritaria para revisar.'
-          : 'Tu próxima acción está lista.',
+          ? 'Tenes una reserva para revisar.'
+          : 'Tu proxima accion esta lista.',
       badge,
       actionLabel: actionLabel ?? 'Ver detalle',
       actionLink,
@@ -283,110 +289,60 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   readonly quickActions = computed<BookingQuickAction[]>(() => {
     if (this.role() === 'owner') {
       return [
-        {
-          id: 'publish',
-          label: 'Publicar auto',
-          icon: 'add-outline',
-          link: '/cars/publish',
-        },
+        { id: 'publish', label: 'Publicar', icon: 'add-outline', link: '/cars/publish' },
         {
           id: 'approvals',
-          label: 'Aprobaciones',
+          label: 'Aprobar',
           icon: 'shield-checkmark-outline',
           link: '/bookings/pending-approval',
           badge: this.pendingApprovals() ?? 0,
         },
-        {
-          id: 'messages',
-          label: 'Mensajes',
-          icon: 'chatbubble-ellipses-outline',
-          link: '/messages',
-        },
+        { id: 'messages', label: 'Mensajes', icon: 'chatbubble-ellipses-outline', link: '/messages' },
       ];
     }
 
     return [
-      {
-        id: 'explore',
-        label: 'Explorar autos',
-        icon: 'search-outline',
-        link: '/cars',
-      },
-      {
-        id: 'messages',
-        label: 'Mensajes',
-        icon: 'chatbubble-ellipses-outline',
-        link: '/messages',
-      },
-      {
-        id: 'scout',
-        label: 'Modo Scout',
-        icon: 'flash-outline',
-        link: '/scout/map',
-      },
+      { id: 'explore', label: 'Explorar', icon: 'search-outline', link: '/marketplace' },
+      { id: 'messages', label: 'Mensajes', icon: 'chatbubble-ellipses-outline', link: '/messages' },
     ];
   });
 
   readonly filteredBookings = computed(() => {
-    const bookings = this.role() === 'owner' ? this.ownerBookings() : this.myBookings();
-    const filter = this.filter();
-    const role = this.role();
-    const searchTerm = this.searchTerm().trim().toLowerCase();
-    const filtered = bookings.filter((booking) => {
-      if (filter === 'all') return true;
+    const bookings = this.currentBookings();
+    const f = this.filter();
+    const isOwner = this.role() === 'owner';
 
-      if (role === 'owner') {
-        if (filter === 'approvals') return this.isPendingOwnerApproval(booking);
-        if (filter === 'active') return this.isActive(booking);
-        if (filter === 'history') return this.isHistory(booking);
-        return true;
-      }
-
-      if (filter === 'action') return this.isPendingRenter(booking);
-      if (filter === 'active') return this.isActive(booking);
-      if (filter === 'history') return this.isHistory(booking);
+    return bookings.filter((booking) => {
+      if (f === 'all') return true;
+      if (f === 'approvals') return this.isPendingOwnerApproval(booking);
+      if (f === 'action') return this.isPendingRenter(booking);
+      if (f === 'active') return this.isActive(booking);
+      if (f === 'history') return this.isHistory(booking);
       return true;
-    });
-
-    if (!searchTerm) {
-      return filtered;
-    }
-
-    return filtered.filter((booking) => {
-      const haystack = [
-        booking.car_title,
-        booking.car_city,
-        booking.car_province,
-        getBookingStatusLabel(booking, this.role()),
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase();
-      return haystack.includes(searchTerm);
     });
   });
 
   readonly sortedBookings = computed(() => {
     const bookings = this.filteredBookings();
-    if (this.sortMode() === 'date') {
-      return [...bookings].sort((a, b) => {
-        const aTime = a.start_at ? new Date(a.start_at).getTime() : 0;
-        const bTime = b.start_at ? new Date(b.start_at).getTime() : 0;
-        return aTime - bTime;
-      });
-    }
-
     return [...bookings].sort((a, b) => this.bookingPriority(a) - this.bookingPriority(b));
   });
 
   async ngOnInit(): Promise<void> {
-    await Promise.all([this.store.loadMyBookings(), this.store.loadOwnerBookings()]);
+    try {
+      await Promise.all([this.store.loadMyBookings(), this.store.loadOwnerBookings()]);
+    } catch {
+      this.hasError.set(true);
+    }
 
-    const session = await this.authService.ensureSession();
-    if (session?.user?.id) {
-      this.store.subscribeToUserBookings('renter');
-      this.store.subscribeToUserBookings('owner');
-      void this.loadPendingApprovals();
+    try {
+      const session = await this.authService.ensureSession();
+      if (session?.user?.id) {
+        this.store.subscribeToUserBookings('renter');
+        this.store.subscribeToUserBookings('owner');
+        void this.loadPendingApprovals();
+      }
+    } catch {
+      // Silently fail on realtime - data already loaded
     }
   }
 
@@ -403,13 +359,25 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     this.filter.set(filter);
   }
 
+  async retry(): Promise<void> {
+    this.hasError.set(false);
+    try {
+      await Promise.all([
+        this.store.loadMyBookings({ force: true }),
+        this.store.loadOwnerBookings({ force: true }),
+      ]);
+    } catch {
+      this.hasError.set(true);
+    }
+  }
+
   private primaryActionLabel(booking: Booking): string | null {
     if (this.role() === 'owner') {
-      if (booking.status === 'pending' && booking.payment_mode) return 'Revisar Solicitud';
+      if (booking.status === 'pending' && booking.payment_mode) return 'Revisar solicitud';
       if (booking.status === 'pending_review') return 'Finalizar';
       return null;
     }
-    if (this.canCompletePay(booking)) return 'Pagar Ahora';
+    if (this.canCompletePay(booking)) return 'Pagar ahora';
     return null;
   }
 
@@ -439,13 +407,16 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   }
 
   private isHistory(booking: Booking): boolean {
-    return ['completed', 'cancelled', 'expired'].includes(booking.status);
+    return ['completed', 'cancelled', 'expired', 'cancelled_renter', 'cancelled_owner', 'cancelled_system', 'rejected'].includes(booking.status);
   }
 
   private pickFocusBooking(bookings: Booking[]): Booking | null {
     if (bookings.length === 0) return null;
-    const sorted = [...bookings].sort((a, b) => this.bookingPriority(a) - this.bookingPriority(b));
-    return sorted[0] ?? null;
+    const actionable = [...bookings].sort((a, b) => this.bookingPriority(a) - this.bookingPriority(b));
+    const top = actionable[0];
+    // Only show focus if there's an actual action
+    if (top && this.bookingPriority(top) < 4) return top;
+    return null;
   }
 
   private bookingPriority(booking: Booking): number {
@@ -459,23 +430,6 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     if (booking.status === 'pending_review') return 2;
     if (this.isActive(booking)) return 3;
     return 4;
-  }
-
-  private sumLast30Days(bookings: Booking[]): number {
-    const now = Date.now();
-    const windowMs = 30 * 24 * 60 * 60 * 1000;
-    return bookings.reduce((acc, b) => {
-      if (!b.start_at) return acc;
-      const ts = new Date(b.start_at).getTime();
-      return (ts >= now - windowMs && ts <= now) ? acc + (b.total_amount ?? 0) : acc;
-    }, 0);
-  }
-
-  private nextTripLabel(bookings: Booking[]): string {
-    const upcoming = bookings
-      .filter((b) => b.start_at && !this.isHistory(b))
-      .sort((a, b) => new Date(a.start_at!).getTime() - new Date(b.start_at!).getTime())[0];
-    return upcoming?.start_at ? formatRelativeTime(upcoming.start_at) : '—';
   }
 
   private canCompletePay(booking: Booking): boolean {

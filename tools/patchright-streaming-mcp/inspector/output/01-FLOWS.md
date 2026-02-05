@@ -1,14 +1,14 @@
 # 🔄 Flujos de Usuario - AutoRenta
 
 > Documentación generada automáticamente por Patchright MCP Inspector
-> Fecha: 2026-02-04T03:07:46.775Z
+> Fecha: 2026-02-05T03:32:20.152Z
 
 ## Resumen
 
 | Flujo | Pasos | Estado |
 |-------|-------|--------|
 | Autenticación | 3 | ✅ |
-| Navegación | 9 páginas | ✅ |
+| Navegación | 0 páginas | ✅ |
 
 ## 1. Flujo de Autenticación
 
@@ -24,11 +24,11 @@
 - **URL**: `/auth/login`
 - **Estado**: ✅ Completado
 
-#### Paso 3: Login exitoso, redirigido a dashboard
+#### Paso 3: Login fallido
 
-- **URL**: `📜 Result: "https://autorentar.com/cars/list"
-⏱️ 11ms`
-- **Estado**: ✅ Completado
+- **URL**: `📜 Result: "https://autorentar.com/auth/login"
+⏱️ 3ms`
+- **Estado**: ❌ Error
 
 ### Diagrama del Flujo
 
@@ -63,12 +63,3 @@ Dashboard (/cars/list)
 
 | Página | Ruta | Descripción | Tiempo Carga |
 |--------|------|-------------|--------------|
-| landing | `/` | Landing page pública | 6181ms |
-| auth_login | `/auth/login` | Flujo de autenticación | 5922ms |
-| cars_list | `/cars/list` | Lista de autos (mapa) | 5476ms |
-| home_marketplace | `/home/marketplace` | Marketplace | 5907ms |
-| home_profile | `/home/profile` | Perfil de usuario | 5619ms |
-| home_bookings | `/home/bookings` | Mis reservas | 6513ms |
-| home_wallet | `/home/wallet` | Billetera | 5957ms |
-| home_cars | `/home/cars` | Mis autos | 5631ms |
-| home_notifications | `/home/notifications` | Notificaciones | 5405ms |

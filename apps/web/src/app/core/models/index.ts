@@ -116,6 +116,12 @@ export type Role = UserRole;
 export * from './fgo-v1-1.model';
 export * from './fgo.model';
 
+// Export Guarantee Tiers models (6-tier vehicle system)
+export * from './guarantee-tiers.model';
+
+// Export Reward Pool models (Senior Implementation)
+export * from './reward-pool.model';
+
 // Export Insurance models
 export * from './insurance.model';
 
