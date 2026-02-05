@@ -1185,7 +1185,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
         await this.router.navigate(['/bookings/detail-payment'], { queryParams });
       }
     }
-  };
+  }
 
   async onBookClick(): Promise<void> {
     const car = this.car();

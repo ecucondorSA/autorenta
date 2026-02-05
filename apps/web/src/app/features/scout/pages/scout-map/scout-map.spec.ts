@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ScoutMap } from './scout-map';
+import { ScoutMapPage } from './scout-map';
 
-describe('ScoutMap', () => {
-  let component: ScoutMap;
-  let fixture: ComponentFixture<ScoutMap>;
+describe('ScoutMapPage', () => {
+  let component: ScoutMapPage;
+  let fixture: ComponentFixture<ScoutMapPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ScoutMap]
+      imports: [ScoutMapPage]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ScoutMap);
+    fixture = TestBed.createComponent(ScoutMapPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
