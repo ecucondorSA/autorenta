@@ -1,3 +1,7 @@
+## 3.73.0 (2026-02-05)
+
+* feat(hero): add premium AI-generated hero image to /cars page ([a215e62](https://github.com/ecucondorSA/autorenta/commit/a215e62))
+
 ## <small>3.72.1 (2026-02-05)</small>
 
 * fix: rename QuickAction to BookingQuickAction to resolve duplicate type ([7ad0a86](https://github.com/ecucondorSA/autorenta/commit/7ad0a86))
