@@ -1,3 +1,7 @@
+## 3.76.0 (2026-02-05)
+
+* feat(bookings): redesign bookings hub page with fixed routing and clean UI ([58f1bd8](https://github.com/ecucondorSA/autorenta/commit/58f1bd8))
+
 ## 3.75.0 (2026-02-05)
 
 * feat: update membership tiers to scalable model (USD) ([8a08617](https://github.com/ecucondorSA/autorenta/commit/8a08617))
