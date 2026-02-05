@@ -19,6 +19,18 @@
 - **CI/CD:** Web deploy funcionando. Android requiere verificación de `cordova.variables.gradle`.
 - **MercadoPago:** Integración P2P operativa pero requiere supervisión en selección de destinatarios.
 - **Design:** EVITAR Wizards paso a paso y Modales intrusivos. Preferir navegación fluida y Bottom Sheets.
+- **Unit Tests:** 127 tests fallando (tech debt conocido, no bloquea CI). Tests compilan correctamente.
+- **Supabase:** Proyecto activo `aceacpaockyxgogxsfyc`. Proyecto anterior `pisqjmoklivzpwufhscx` deprecado por quota exceeded.
+
+### Modelo de Negocio: Comodato 15-70-15
+Distribución de pagos de reservas:
+- **15%** → Plataforma (Platform Fee)
+- **70%** → Reward Pool (distribución mensual a owners)
+- **15%** → FGO (Fondo de Garantía de Owners)
+
+Configuración en:
+- `apps/web/src/app/core/config/constants.ts`
+- `remote_config` table (keys: `PLATFORM_FEE_RATE`, `REWARD_POOL_RATE`, `FGO_CONTRIBUTION_RATE`)
 
 ---
 
@@ -68,10 +80,16 @@
 | **Subscriptions sin unsubscribe** | Memory leaks. Usar `takeUntilDestroyed()` o `async` pipe. |
 | **Hardcoded strings** | Usar constantes o i18n. |
 | **Términos técnicos en UI** | No mostrar "FIPE", "Binance", "API", "RPC", etc. Usar lenguaje amigable: "valor de mercado", "precio sugerido". |
+| **`.toPromise()` en RxJS** | Deprecated en RxJS 7+. Usar `firstValueFrom()` de 'rxjs'. |
 
 ---
 
 ## 5. Supabase Guidelines
+
+### Proyecto Activo
+- **Project ID:** `aceacpaockyxgogxsfyc`
+- **URL:** `https://aceacpaockyxgogxsfyc.supabase.co`
+- **Proyecto anterior (DEPRECADO):** `pisqjmoklivzpwufhscx` - No usar, quota exceeded.
 
 ### RPC & Queries
 ```typescript
