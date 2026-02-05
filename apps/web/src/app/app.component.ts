@@ -444,6 +444,12 @@ export class AppComponent implements OnInit {
       .subscribe(() => {
         this.syncLayoutFromRoute(this.activatedRoute);
         this.checkVerificationPage(this.router.url);
+
+        // Scroll the app shell container to top on every navigation
+        const scroller = document.getElementById('app-scroller');
+        if (scroller) {
+          scroller.scrollTo(0, 0);
+        }
       });
   }
 

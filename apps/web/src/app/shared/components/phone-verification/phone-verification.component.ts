@@ -177,10 +177,10 @@ import { OtpInputComponent } from '../otp-input/otp-input.component';
 export class PhoneVerificationComponent implements OnInit, OnDestroy {
   private readonly phoneVerificationService = inject(PhoneVerificationService);
 
-  // Phone verification is now enabled
-  // SMS uses Supabase Auth, with WhatsApp fallback via n8n
-  // Set to true only during maintenance
-  readonly SERVICE_TEMPORARILY_DISABLED = false;
+  // Phone verification temporarily disabled
+  // SMS/WhatsApp verification is optional and does not block the flow
+  // Set to false to re-enable when SMS provider is ready
+  readonly SERVICE_TEMPORARILY_DISABLED = true;
 
   readonly status = this.phoneVerificationService.status;
   readonly loading = this.phoneVerificationService.loading;

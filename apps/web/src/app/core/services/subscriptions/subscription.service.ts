@@ -79,8 +79,12 @@ export class SubscriptionService {
       return [];
     }
 
-    // Safe cast assuming DB matches interface
-    const plans = (data as unknown[]) as SubscriptionPlan[];
+    // Map DB rows to SubscriptionPlan interface
+    // DB uses 'slug' column, app uses 'tier' property
+    const plans = ((data ?? []) as Record<string, unknown>[]).map(row => ({
+      ...row,
+      tier: row['tier'] ?? row['slug'],
+    })) as unknown as SubscriptionPlan[];
     this.plans.set(plans);
     return plans;
   }

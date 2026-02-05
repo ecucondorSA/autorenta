@@ -125,7 +125,9 @@ export const appConfig: ApplicationConfig = {
       withPreloading(NoPreloading),
       // Note: withEnabledBlockingInitialNavigation removed - can cause SSR timeout
       withInMemoryScrolling({
-        scrollPositionRestoration: 'enabled',
+        // Disabled: scroll restoration targets window, but our app scrolls in #app-scroller div.
+        // Scroll-to-top on navigation is handled manually in AppComponent.
+        scrollPositionRestoration: 'disabled',
         anchorScrolling: 'enabled',
       }),
       // ✅ Native-like Page Transitions (with error handling for unsupported browsers)

@@ -46,6 +46,9 @@ export class EmailVerificationService extends VerificationBaseService<EmailVerif
     this.error.set(null);
 
     try {
+      // Refresh session first to prevent stale token issues (especially after OAuth login)
+      await this.supabase.auth.refreshSession();
+
       const {
         data: { user },
       } = await this.supabase.auth.getUser();
