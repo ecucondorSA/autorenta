@@ -1,3 +1,7 @@
+## <small>3.74.1 (2026-02-05)</small>
+
+* fix: show USD explicitly and use tier-based guarantees ([d9a5158](https://github.com/ecucondorSA/autorenta/commit/d9a5158))
+
 ## 3.74.0 (2026-02-05)
 
 * feat(db): add guarantee tier system with auto-calculation ([3245509](https://github.com/ecucondorSA/autorenta/commit/3245509))
