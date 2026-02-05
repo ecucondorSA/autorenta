@@ -1,3 +1,7 @@
+## <small>3.72.1 (2026-02-05)</small>
+
+* fix: rename QuickAction to BookingQuickAction to resolve duplicate type ([7ad0a86](https://github.com/ecucondorSA/autorenta/commit/7ad0a86))
+
 ## 3.72.0 (2026-02-05)
 
 * feat(marketing): add Nubank partnership pitch materials and LinkedIn outreach ([3b732fc](https://github.com/ecucondorSA/autorenta/commit/3b732fc))
