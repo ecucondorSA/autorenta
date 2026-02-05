@@ -1,3 +1,7 @@
+## <small>3.70.1 (2026-02-05)</small>
+
+* fix: update Supabase project ID in whatsapp-outreach tools ([dd3a043](https://github.com/ecucondorSA/autorenta/commit/dd3a043))
+
 ## 3.70.0 (2026-02-05)
 
 * feat: add community awards PDF and email workflow ([7570c6e](https://github.com/ecucondorSA/autorenta/commit/7570c6e))
