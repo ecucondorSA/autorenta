@@ -164,84 +164,94 @@ export const PREAUTH_PERCENTAGE = 0.05;
  * IMPORTANTE: Los tiers están basados en el VALOR del vehículo.
  * Definimos Holds agresivamente bajos para suscriptores para incentivar la conversión.
  */
+/**
+ * MODELO ESCALABLE DE MEMBRESÍAS - Todos los valores en USD
+ *
+ * Estructura de protección por tier:
+ * - Hold: Pre-autorización en tarjeta o bloqueo en wallet
+ * - Cobertura: Seguro incluido en la membresía
+ * - FGO Cap: Límite de cobertura del Fondo de Garantía
+ *
+ * Total Protección = Hold + Cobertura Membresía + FGO Cap
+ */
 export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig> = {
   club_standard: {
     tier: 'club_standard',
     name: 'Club Access',
-    description: 'Para autos económicos (valor < $20,000)',
-    price_cents: 1499, // $14.99
-    price_usd: 14.99,
-    coverage_limit_cents: 80000,
-    coverage_limit_usd: 800,
-    fgo_cap_cents: 80000,
-    fgo_cap_usd: 800,
+    description: 'Para autos económicos (valor < $20,000 USD)',
+    price_cents: 1999, // USD 19.99/mes
+    price_usd: 19.99,
+    coverage_limit_cents: 300000, // USD 3,000 cobertura membresía
+    coverage_limit_usd: 3000,
+    fgo_cap_cents: 150000, // USD 1,500 FGO cap
+    fgo_cap_usd: 1500,
     min_vehicle_value_usd: 0,
     max_vehicle_value_usd: 20000,
-    preauth_hold_cents: 60000, // $600 sin suscripción (Garantía Standard)
-    preauth_hold_usd: 600,
-    preauth_with_subscription_cents: 30000, // $300 con suscripción (50% OFF)
-    preauth_with_subscription_usd: 300,
-    target_segment: 'Autos con valor < $20,000',
+    preauth_hold_cents: 80000, // USD 800 sin suscripción
+    preauth_hold_usd: 800,
+    preauth_with_subscription_cents: 40000, // USD 400 con suscripción (50% OFF)
+    preauth_with_subscription_usd: 400,
+    target_segment: 'Autos con valor < $20,000 USD',
     features: [
-      'Garantía reducida al 50% ($300 USD)',
-      'Seguro de Franquicia incluido (cubrimos el gap)',
+      'Garantía reducida 50% (USD 400)',
+      'Cobertura de seguro USD 3,000',
+      'FGO protection USD 1,500',
+      'Protección total: USD 4,900',
       'Válido por 1 mes renovable',
-      'Uso ilimitado de reservas en autos económicos',
-      'Sin cargos ocultos',
       'Soporte prioritario 24/7',
     ],
   },
   club_black: {
     tier: 'club_black',
     name: 'Silver Access',
-    description: 'Para autos de gama media (valor $20,000 - $40,000)',
-    price_cents: 2999, // $29.99
-    price_usd: 29.99,
-    coverage_limit_cents: 120000,
-    coverage_limit_usd: 1200,
-    fgo_cap_cents: 120000,
-    fgo_cap_usd: 1200,
+    description: 'Para autos de gama media (valor $20,000 - $40,000 USD)',
+    price_cents: 3499, // USD 34.99/mes
+    price_usd: 34.99,
+    coverage_limit_cents: 600000, // USD 6,000 cobertura membresía
+    coverage_limit_usd: 6000,
+    fgo_cap_cents: 250000, // USD 2,500 FGO cap
+    fgo_cap_usd: 2500,
     min_vehicle_value_usd: 20000,
     max_vehicle_value_usd: 40000,
-    preauth_hold_cents: 120000, // $1,200 sin suscripción
-    preauth_hold_usd: 1200,
-    preauth_with_subscription_cents: 50000, // $500 con suscripción (~60% OFF)
-    preauth_with_subscription_usd: 500,
-    target_segment: 'Autos con valor $20,000 - $40,000',
+    preauth_hold_cents: 150000, // USD 1,500 sin suscripción
+    preauth_hold_usd: 1500,
+    preauth_with_subscription_cents: 75000, // USD 750 con suscripción (50% OFF)
+    preauth_with_subscription_usd: 750,
+    target_segment: 'Autos con valor $20,000 - $40,000 USD',
     features: [
-      'Garantía reducida ($500 USD)',
-      'Seguro de Franquicia incluido (cubrimos el gap)',
-      'Válido por 1 mes renovable',
-      'Acceso a autos económicos y de gama media',
-      'Sin cargos ocultos',
+      'Garantía reducida 50% (USD 750)',
+      'Cobertura de seguro USD 6,000',
+      'FGO protection USD 2,500',
+      'Protección total: USD 9,250',
+      'Acceso a autos económicos y gama media',
       'Soporte VIP prioritario 24/7',
     ],
   },
   club_luxury: {
     tier: 'club_luxury',
     name: 'Black Access',
-    description: 'Para autos premium y de lujo (valor > $40,000)',
-    price_cents: 5999, // $59.99
-    price_usd: 59.99,
-    coverage_limit_cents: 200000,
-    coverage_limit_usd: 2000,
-    fgo_cap_cents: 200000,
-    fgo_cap_usd: 2000,
+    description: 'Para autos premium y de lujo (valor > $40,000 USD)',
+    price_cents: 6999, // USD 69.99/mes
+    price_usd: 69.99,
+    coverage_limit_cents: 1500000, // USD 15,000 cobertura membresía
+    coverage_limit_usd: 15000,
+    fgo_cap_cents: 500000, // USD 5,000 FGO cap
+    fgo_cap_usd: 5000,
     min_vehicle_value_usd: 40000,
     max_vehicle_value_usd: null, // Sin límite superior
-    preauth_hold_cents: 250000, // $2,500 sin suscripción
-    preauth_hold_usd: 2500,
-    preauth_with_subscription_cents: 120000, // $1,200 con suscripción (50% OFF)
-    preauth_with_subscription_usd: 1200,
-    target_segment: 'Autos con valor > $40,000',
+    preauth_hold_cents: 300000, // USD 3,000 sin suscripción
+    preauth_hold_usd: 3000,
+    preauth_with_subscription_cents: 150000, // USD 1,500 con suscripción (50% OFF)
+    preauth_with_subscription_usd: 1500,
+    target_segment: 'Autos con valor > $40,000 USD',
     features: [
-      'Garantía reducida ($1,200 USD)',
-      'Seguro de Franquicia Premium',
-      'Válido por 1 mes renovable',
+      'Garantía reducida 50% (USD 1,500)',
+      'Cobertura de seguro USD 15,000',
+      'FGO protection USD 5,000',
+      'Protección total: USD 21,500',
       'Acceso a TODA la flota (incluyendo lujo)',
-      'Sin cargos ocultos',
       'Soporte VIP exclusivo 24/7',
-      'Prioridad en reservas de vehículos premium',
+      'Prioridad en reservas premium',
     ],
   },
 };
