@@ -232,3 +232,9 @@ dump_analysis/
 *.pma
 Cookies
 Cookies-journal
+
+# WhatsApp sensitive/large files
+tools/whatsapp-context/key
+tools/whatsapp-context/msgstore.db.crypt14
+tools/whatsapp-context/wa_backup_key.txt
+tools/whatsapp-context/*.db*

@@ -332,6 +332,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private clusterMaxZoom = 12; // Zoom level where clusters stop and individual markers show (synced with source clusterMaxZoom)
   private isShowingPhotoMarkers = false; // Track if we're showing HTML markers with photos
   private hasInitializedHybridMode = false; // Track first-run of hybrid mode
+  private clusterEventsRegistered = false; // Prevent duplicate event listener registration
   private virtualizationThreshold = 1000; // Only virtualize if NOT clustering (10K+ without clustering)
   private viewportBuffer = 0.1; // 10% buffer around viewport for smoother experience
   private maxVisibleMarkers = 500; // Increased for better 10K+ experience when not clustering
@@ -824,96 +825,102 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       });
     }
 
-    // Listen for render changes to update hybrid markers
-    this.map.on('render', () => {
-      if (!this.map || !this.useClustering) return;
-      // Only update if we are not moving (performance) or if needed
-      if (!this.map.isMoving()) {
-        this.updateHybridMarkers();
-      }
-    });
+    // Register event listeners ONCE — guard prevents duplicate registration
+    // on subsequent setupClustering() calls from ngOnChanges → updateMarkersBasedOnCount()
+    if (!this.clusterEventsRegistered) {
+      this.clusterEventsRegistered = true;
 
-    this.map.on('moveend', () => {
-      if (this.useClustering) {
-        this.updateHybridMarkers();
-      }
-    });
+      // Listen for render changes to update hybrid markers
+      this.map.on('render', () => {
+        if (!this.map || !this.useClustering) return;
+        // Only update if we are not moving (performance) or if needed
+        if (!this.map.isMoving()) {
+          this.updateHybridMarkers();
+        }
+      });
 
-    // Handle cluster clicks
-    this.map.on('click', this.clusterLayerId, (event: MapLayerMouseEvent) => {
-      if (!this.map) return;
+      this.map.on('moveend', () => {
+        if (this.useClustering) {
+          this.updateHybridMarkers();
+        }
+      });
 
-      const features = this.map.queryRenderedFeatures(event.point, {
-        layers: [this.clusterLayerId],
-      }) as MapboxGeoJSONFeature[];
+      // Handle cluster clicks
+      this.map.on('click', this.clusterLayerId, (event: MapLayerMouseEvent) => {
+        if (!this.map) return;
 
-      if (!features.length) {
-        return;
-      }
+        const features = this.map.queryRenderedFeatures(event.point, {
+          layers: [this.clusterLayerId],
+        }) as MapboxGeoJSONFeature[];
 
-      const properties = (features[0].properties || {}) as Record<string, unknown>;
-      const clusterId =
-        typeof properties['cluster_id'] === 'number'
-          ? (properties['cluster_id'] as number)
-          : undefined;
+        if (!features.length) {
+          return;
+        }
 
-      if (clusterId === undefined) {
-        return;
-      }
+        const properties = (features[0].properties || {}) as Record<string, unknown>;
+        const clusterId =
+          typeof properties['cluster_id'] === 'number'
+            ? (properties['cluster_id'] as number)
+            : undefined;
 
-      const source = this.map.getSource(this.clusterSourceId) as MapboxGeoJSONSource | undefined;
-      if (!source) {
-        return;
-      }
+        if (clusterId === undefined) {
+          return;
+        }
 
-      source.getClusterExpansionZoom(clusterId, (err, zoom) => {
-        if (err || zoom === null || zoom === undefined) return;
-        this.map?.easeTo({
-          center: event.lngLat,
-          zoom,
+        const source = this.map.getSource(this.clusterSourceId) as MapboxGeoJSONSource | undefined;
+        if (!source) {
+          return;
+        }
+
+        source.getClusterExpansionZoom(clusterId, (err, zoom) => {
+          if (err || zoom === null || zoom === undefined) return;
+          this.map?.easeTo({
+            center: event.lngLat,
+            zoom,
+          });
         });
       });
-    });
 
-    // Handle individual car clicks - emit with native event for isTrusted validation
-    this.map.on('click', 'cars-unclustered', (event: MapLayerMouseEvent) => {
-      const carFeature = event.features?.[0] as MapboxGeoJSONFeature | undefined;
-      const properties = (carFeature?.properties || {}) as Record<string, unknown>;
-      const carId =
-        typeof properties['carId'] === 'string' ? (properties['carId'] as string) : undefined;
-      if (carId) {
-        this.carSelected.emit(carId);
-        // Extract native event for validation (MapLayerMouseEvent has originalEvent)
-        const nativeEvent = (event as unknown as { originalEvent?: MouseEvent }).originalEvent || null;
-        this.carClickedWithEvent.emit({ carId, event: nativeEvent });
-        const car = this.cars.find((c) => c['carId'] === carId);
-        if (car) {
-          this.selectedCar.set(car);
+      // Handle individual car clicks - emit with native event for isTrusted validation
+      this.map.on('click', 'cars-unclustered', (event: MapLayerMouseEvent) => {
+        const carFeature = event.features?.[0] as MapboxGeoJSONFeature | undefined;
+        const properties = (carFeature?.properties || {}) as Record<string, unknown>;
+        const carId =
+          typeof properties['carId'] === 'string' ? (properties['carId'] as string) : undefined;
+        if (carId) {
+          this.carSelected.emit(carId);
+          // Extract native event for validation (MapLayerMouseEvent has originalEvent)
+          const nativeEvent = (event as unknown as { originalEvent?: MouseEvent }).originalEvent || null;
+          this.carClickedWithEvent.emit({ carId, event: nativeEvent });
+          const car = this.cars.find((c) => c['carId'] === carId);
+          if (car) {
+            this.selectedCar.set(car);
+          }
         }
-      }
-    });
+      });
 
-    // Change cursor on hover
-    this.map.on('mouseenter', this.clusterLayerId, () => {
-      if (this.map) {
-        this.map.getCanvas().style.cursor = 'pointer';
-      }
-    });
-    this.map.on('mouseleave', this.clusterLayerId, () => {
-      if (this.map) {
-        this.map.getCanvas().style.cursor = '';
-      }
-    });
+      // Change cursor on hover
+      this.map.on('mouseenter', this.clusterLayerId, () => {
+        if (this.map) {
+          this.map.getCanvas().style.cursor = 'pointer';
+        }
+      });
+      this.map.on('mouseleave', this.clusterLayerId, () => {
+        if (this.map) {
+          this.map.getCanvas().style.cursor = '';
+        }
+      });
 
-    // Add zoom listener for hybrid mode (clusters vs photo markers)
-    this.map.on('zoomend', () => this.handleZoomForHybridMode());
+      // Add zoom listener for hybrid mode (clusters vs photo markers)
+      this.map.on('zoomend', () => this.handleZoomForHybridMode());
 
-    // Add move listener to update photo markers when panning at high zoom
-    this.map.on('moveend', () => {
-      if (this.isShowingPhotoMarkers) {
-        this.updatePhotoMarkersInViewport();
-      }
-    });
+      // Add move listener to update photo markers when panning at high zoom
+      this.map.on('moveend', () => {
+        if (this.isShowingPhotoMarkers) {
+          this.updatePhotoMarkersInViewport();
+        }
+      });
+    }
 
     // Initial check for current zoom level
     this.handleZoomForHybridMode();
@@ -2884,6 +2891,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       this.map.remove();
       this.map = null;
     }
+
+    // Reset event registration flag so listeners are re-added if map is re-created
+    this.clusterEventsRegistered = false;
 
     // Clear component pools
     this.clearComponentPools();
