@@ -18,11 +18,20 @@ export class MoneyPipe implements PipeTransform {
     // Use appropriate locale based on currency
     const locale = currency === 'ARS' ? 'es-AR' : 'en-US';
 
+    // For USD, use explicit "US$" or "USD" to avoid confusion with ARS "$"
+    if (currency === 'USD') {
+      const formatted = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value);
+      return `USD ${formatted}`;
+    }
+
     return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency,
       currencyDisplay: 'symbol',
-      maximumFractionDigits: currency === 'USD' ? 2 : 0,
+      maximumFractionDigits: 0,
     }).format(value);
   }
 }

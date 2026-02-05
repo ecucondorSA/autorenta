@@ -625,28 +625,34 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   });
 
   /**
-   * Vista previa de garantía usando la misma lógica del checkout
+   * Vista previa de garantía usando sistema de tiers (USD)
+   * Club Access (< $20k): $800 | Silver ($20k-$40k): $1,500 | Black (> $40k): $3,000
    */
   readonly guaranteeEstimate = computed<GuaranteeEstimate | null>(() => {
-    // Note: We cannot fully calculate proper risk here without async calls to subscription service
-    // So we provide a safe estimation based on standard rules (non-subscribed user)
-    // Real calculation happens in booking-request page
     const car = this.car();
     const fxRate = this.currentFxRate();
 
     if (!car || !fxRate || fxRate <= 0) return null;
 
-    // Standard Rule: ~5% of vehicle value or default $600 USD
-    // This is just for display estimation
+    // Tier-based hold calculation (USD) - without membership
     const vehicleValueUsd = car.value_usd || 12000;
-    const holdEstimatedUsd = Math.round(vehicleValueUsd * 0.05);
+    let holdEstimatedUsd: number;
+
+    if (vehicleValueUsd < 20000) {
+      holdEstimatedUsd = 800; // Club Access tier
+    } else if (vehicleValueUsd < 40000) {
+      holdEstimatedUsd = 1500; // Silver Access tier
+    } else {
+      holdEstimatedUsd = 3000; // Black Access tier
+    }
+
     const holdEstimatedArs = holdEstimatedUsd * fxRate;
 
     return {
       fxRate,
       holdEstimatedUsd,
       holdEstimatedArs,
-      creditSecurityUsd: holdEstimatedUsd, // Standard equivalence
+      creditSecurityUsd: holdEstimatedUsd,
       creditSecurityArs: holdEstimatedArs,
     };
   });

@@ -35,6 +35,7 @@ import {
   CoverageUpgrade,
   getCoverageUpgradeName,
   getCoverageUpgradeCost,
+  calculateTierHoldUsd,
 } from '@core/models/booking-detail-payment.model';
 import {
   SubscriptionCoverageCheck,
@@ -822,7 +823,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     this.eligibilityReason.set(riskV2.eligibilityReason || '');
 
     // Construct RiskSnapshot for compatibility
-    const standardDeductibleUsd = Math.round(vehicleValueUsd * 0.05); // Estimate
+    const standardDeductibleUsd = calculateTierHoldUsd(vehicleValueUsd, false);
     
     // We maintain 'holdEstimatedUsd' to drive the logic downstream
     const holdEstimatedUsd = riskV2.guaranteeAmountUsd;

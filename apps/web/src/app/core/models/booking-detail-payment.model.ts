@@ -421,6 +421,20 @@ export function applyUpgradeToDeductible(baseDeductible: number, upgrade: Covera
 }
 
 /**
+ * Calcula hold basado en sistema de tiers (USD)
+ * Club Access (< $20k): $800 | Silver ($20k-$40k): $1,500 | Black (> $40k): $3,000
+ */
+export function calculateTierHoldUsd(vehicleValueUsd: number, hasSubscription = false): number {
+  if (vehicleValueUsd < 20000) {
+    return hasSubscription ? 400 : 800; // Club Access
+  } else if (vehicleValueUsd < 40000) {
+    return hasSubscription ? 750 : 1500; // Silver Access
+  } else {
+    return hasSubscription ? 1500 : 3000; // Black Access
+  }
+}
+
+/**
  * Calcula hold estimado para Argentina (modalidad con tarjeta)
  */
 export function calculateHoldEstimatedArs(
@@ -429,15 +443,15 @@ export function calculateHoldEstimatedArs(
   bucket: PricingBucketType,
 ): number {
   void bucket; // deprecated: se mantiene solo para compatibilidad
-  const holdUsd = vehicleValueUsd * 0.05;
+  const holdUsd = calculateTierHoldUsd(vehicleValueUsd, false);
   return Math.round(holdUsd * fxRate);
 }
 
 /**
- * Calcula Crédito de Seguridad requerido (modalidad sin tarjeta)
+ * Calcula Crédito de Seguridad requerido (modalidad sin tarjeta) - USD
  */
-export function calculateCreditSecurityUsd(_vehicleValueUsd: number): number {
-  return 600;
+export function calculateCreditSecurityUsd(vehicleValueUsd: number): number {
+  return calculateTierHoldUsd(vehicleValueUsd, false);
 }
 
 /**
