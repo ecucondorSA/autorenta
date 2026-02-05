@@ -1,3 +1,7 @@
+## <small>3.69.14 (2026-02-05)</small>
+
+* refactor: senior-level code quality improvements ([7b41ecc](https://github.com/ecucondorSA/autorenta/commit/7b41ecc))
+
 ## <small>3.69.13 (2026-02-05)</small>
 
 * perf: add OnPush change detection to 9 components ([b93c1d8](https://github.com/ecucondorSA/autorenta/commit/b93c1d8))
