@@ -1,3 +1,7 @@
+## 3.75.0 (2026-02-05)
+
+* feat: update membership tiers to scalable model (USD) ([8a08617](https://github.com/ecucondorSA/autorenta/commit/8a08617))
+
 ## <small>3.74.1 (2026-02-05)</small>
 
 * fix: show USD explicitly and use tier-based guarantees ([d9a5158](https://github.com/ecucondorSA/autorenta/commit/d9a5158))
