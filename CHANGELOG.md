@@ -1,3 +1,7 @@
+## 3.74.0 (2026-02-05)
+
+* feat(db): add guarantee tier system with auto-calculation ([3245509](https://github.com/ecucondorSA/autorenta/commit/3245509))
+
 ## <small>3.73.1 (2026-02-05)</small>
 
 * fix(db): add car_year to my_bookings and owner_bookings views ([4d00af1](https://github.com/ecucondorSA/autorenta/commit/4d00af1))
