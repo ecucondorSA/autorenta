@@ -1,3 +1,7 @@
+## <small>3.73.1 (2026-02-05)</small>
+
+* fix(db): add car_year to my_bookings and owner_bookings views ([4d00af1](https://github.com/ecucondorSA/autorenta/commit/4d00af1))
+
 ## 3.73.0 (2026-02-05)
 
 * feat(hero): add premium AI-generated hero image to /cars page ([a215e62](https://github.com/ecucondorSA/autorenta/commit/a215e62))
