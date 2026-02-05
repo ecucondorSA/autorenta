@@ -107,6 +107,13 @@ export class PaymentOrchestrationService {
    * and coordinates all necessary services.
    */
   processBookingPayment(params: BookingPaymentParams): Observable<PaymentResult> {
+    // Validate payment parameters before processing
+    const validationError = this.validatePaymentParams(params);
+    if (validationError) {
+      this.logger.error('Payment validation failed', validationError);
+      return throwError(() => new Error(validationError));
+    }
+
     this.logger.info('Processing booking payment', JSON.stringify({ params }));
 
     switch (params.method) {
@@ -119,6 +126,49 @@ export class PaymentOrchestrationService {
       default:
         return throwError(() => new Error(`Unknown payment method: ${params.method}`));
     }
+  }
+
+  /**
+   * Validate payment parameters before processing
+   * Returns error message if invalid, null if valid
+   */
+  private validatePaymentParams(params: BookingPaymentParams): string | null {
+    // Required fields
+    if (!params.bookingId?.trim()) {
+      return 'Booking ID is required';
+    }
+
+    if (!params.method) {
+      return 'Payment method is required';
+    }
+
+    if (typeof params.totalAmount !== 'number' || params.totalAmount <= 0) {
+      return 'Total amount must be a positive number';
+    }
+
+    if (!params.currency?.trim()) {
+      return 'Currency is required';
+    }
+
+    // Partial wallet validation
+    if (params.method === 'partial_wallet') {
+      if (typeof params.walletAmount !== 'number' || params.walletAmount <= 0) {
+        return 'Wallet amount is required for partial payment';
+      }
+
+      if (typeof params.cardAmount !== 'number' || params.cardAmount <= 0) {
+        return 'Card amount is required for partial payment';
+      }
+
+      // Validate split adds up to total
+      const splitTotal = params.walletAmount + params.cardAmount;
+      const tolerance = 0.01; // 1 cent tolerance for floating point
+      if (Math.abs(splitTotal - params.totalAmount) > tolerance) {
+        return `Payment split (${splitTotal}) does not match total (${params.totalAmount})`;
+      }
+    }
+
+    return null;
   }
 
   /**

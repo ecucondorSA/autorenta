@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@ang
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
 import {
   InsuranceClaim,
@@ -358,7 +359,7 @@ export class AdminClaimDetailPage implements OnInit {
   private async loadClaim(claimId: string) {
     try {
       this.loading.set(true);
-      const claim = await this.insuranceService.getClaimById(claimId).toPromise();
+      const claim = await firstValueFrom(this.insuranceService.getClaimById(claimId));
       if (!claim) {
         this.error.set('Siniestro no encontrado');
         return;

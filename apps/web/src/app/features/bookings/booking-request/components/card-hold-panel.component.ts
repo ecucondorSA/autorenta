@@ -7,6 +7,8 @@ import {
   signal,
   ChangeDetectionStrategy,
   DestroyRef,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
@@ -31,7 +33,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
   templateUrl: './card-hold-panel.component.html',
   styleUrls: ['./card-hold-panel.component.css'],
 })
-export class CardHoldPanelComponent {
+export class CardHoldPanelComponent implements OnChanges {
   @Input({ required: true }) riskSnapshot!: RiskSnapshot;
   @Input({ required: true }) fxSnapshot!: FxSnapshot;
   @Input() userId = '';
@@ -50,9 +52,11 @@ export class CardHoldPanelComponent {
   readonly isLoading = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly currentAuthSignal = signal<PaymentAuthorization | null>(null);
+  readonly retryCount = signal(0);
+  private readonly maxRetries = 3;
 
-  constructor() {
-    if (this.currentAuthorization) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['currentAuthorization'] && this.currentAuthorization) {
       this.currentAuthSignal.set(this.currentAuthorization);
       this.authorizationStatus.set(this.mapAuthStatus(this.currentAuthorization));
     }
@@ -148,15 +152,41 @@ export class CardHoldPanelComponent {
   onChangeCard(): void {
     const currentAuth = this.currentAuthSignal();
     if (currentAuth) {
+      this.isLoading.set(true);
       this.paymentAuthorizationService
         .cancelAuthorization(currentAuth.authorizedPaymentId)
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => {
-          this.currentAuthSignal.set(null);
-          this.authorizationStatus.set('idle');
-          this.authorizationChange.emit(null);
+        .subscribe({
+          next: () => {
+            this.currentAuthSignal.set(null);
+            this.authorizationStatus.set('idle');
+            this.authorizationChange.emit(null);
+            this.isLoading.set(false);
+            this.retryCount.set(0);
+          },
+          error: (err) => {
+            this.isLoading.set(false);
+            // If cancel fails, still allow changing card (best effort)
+            console.warn('Failed to cancel previous authorization:', err);
+            this.currentAuthSignal.set(null);
+            this.authorizationStatus.set('idle');
+            this.authorizationChange.emit(null);
+          },
         });
     }
+  }
+
+  /** Retry authorization after failure with exponential backoff */
+  onRetryWithBackoff(): void {
+    const currentRetry = this.retryCount();
+    if (currentRetry >= this.maxRetries) {
+      this.errorMessage.set('Máximo de reintentos alcanzado. Por favor, intente más tarde.');
+      return;
+    }
+
+    this.retryCount.set(currentRetry + 1);
+    this.authorizationStatus.set('idle');
+    this.errorMessage.set(null);
   }
 
   private mapAuthStatus(auth: PaymentAuthorization): 'idle' | 'authorized' | 'expired' | 'failed' {

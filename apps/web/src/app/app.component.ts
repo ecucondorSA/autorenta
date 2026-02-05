@@ -41,6 +41,7 @@ import { PwaService } from '@core/services/infrastructure/pwa.service';
 import { DeepLinkService } from '@core/services/infrastructure/deep-link.service';
 import { NotificationsService } from '@core/services/infrastructure/user-notifications.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { SplashScreenService } from '@core/services/ui/splash-screen.service';
 import { routeAnimations } from '@core/animations/route-animations'; // Importar animaciones
 import { GuidedTourService } from './core/guided-tour';
 import { FooterComponent } from './shared/components/footer/footer.component';
@@ -311,7 +312,8 @@ export class AppComponent implements OnInit {
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
   @ViewChild('sidebarPanel', { read: ElementRef }) sidebarPanel?: ElementRef<HTMLElement>;
   @ViewChild('profileButton', { read: ElementRef }) profileButton?: ElementRef<HTMLButtonElement>;
-  @ViewChild(SplashScreenComponent) splashScreen?: SplashScreenComponent;
+
+  private readonly splashService = inject(SplashScreenService);
 
   /**
    * Elements to exclude from profile menu click-outside detection
@@ -409,7 +411,7 @@ export class AppComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.openMobileMenuDrawer());
 
-    // Hide splash screen when app initialization is complete
+    // Hide splash screen after app initialization
     this.hideSplashWhenReady();
   }
 
@@ -417,12 +419,9 @@ export class AppComponent implements OnInit {
    * Hide splash screen after initial app data is loaded
    */
   private hideSplashWhenReady(): void {
-    // Use a small delay to ensure all initial data is loaded
-    // This prevents the splash from hiding too quickly
+    // Small delay to ensure initial data is loaded
     setTimeout(() => {
-      if (this.splashScreen) {
-        this.splashScreen.hideSplash();
-      }
+      this.splashService.hide();
     }, 500);
   }
 

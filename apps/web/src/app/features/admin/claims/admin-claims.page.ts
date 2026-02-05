@@ -9,6 +9,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
 import {
   InsuranceClaim,
@@ -286,7 +287,7 @@ export class AdminClaimsPage implements OnInit {
       // In a real implementation, we'd have an admin endpoint that returns ALL claims
       // For now, we'll use getMyClaims which is limited to the user's claims
       // TODO: Create admin endpoint to get all claims
-      const claims = await this.insuranceService.getMyClaims().toPromise();
+      const claims = await firstValueFrom(this.insuranceService.getMyClaims());
       this.claims.set(claims || []);
     } catch (err) {
       this.error.set('Error al cargar los siniestros');

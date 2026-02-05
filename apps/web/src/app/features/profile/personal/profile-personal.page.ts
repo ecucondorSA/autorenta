@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -202,6 +202,9 @@ import type { UserProfile, Role } from '../../../core/models';
                   <p class="mt-1 text-xs text-text-muted">
                     Este documento será verificado para habilitar ciertas funciones
                   </p>
+                  @if (govIdError()) {
+                    <p class="mt-1 text-xs text-error-text">{{ govIdError() }}</p>
+                  }
                 </div>
               </div>
             </app-section-card>
@@ -350,6 +353,8 @@ export class ProfilePersonalPage implements OnInit {
     return date.toISOString().split('T')[0];
   });
 
+  readonly govIdError = signal<string | null>(null);
+
   constructor() {
     // Initialize form when profile loads
     effect(() => {
@@ -377,9 +382,85 @@ export class ProfilePersonalPage implements OnInit {
       full_name: ['', [Validators.required, Validators.minLength(2)]],
       date_of_birth: [''],
       gov_id_type: [''],
-      gov_id_number: [''],
+      gov_id_number: ['', [this.govIdValidator.bind(this)]],
       role: ['renter'],
     });
+
+    // Re-validate gov_id_number when type changes
+    this.personalForm.get('gov_id_type')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.personalForm.get('gov_id_number')?.updateValueAndValidity();
+      });
+  }
+
+  /**
+   * Custom validator for government ID based on type
+   * - DNI: 7-8 digits only
+   * - CUIT: 11 digits in format XX-XXXXXXXX-X or XXXXXXXXXXX
+   * - Passport: 6-12 alphanumeric characters
+   */
+  private govIdValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value?.toString().trim();
+    if (!value) return null; // Optional field
+
+    const idType = this.personalForm?.get('gov_id_type')?.value;
+    if (!idType) return null;
+
+    // Remove dashes and spaces for validation
+    const cleanValue = value.replace(/[-\s]/g, '');
+
+    switch (idType) {
+      case 'dni':
+        // DNI: 7-8 digits
+        if (!/^\d{7,8}$/.test(cleanValue)) {
+          this.govIdError.set('El DNI debe tener 7 u 8 dígitos');
+          return { invalidDni: true };
+        }
+        break;
+
+      case 'cuit':
+        // CUIT: 11 digits with valid check digit
+        if (!/^\d{11}$/.test(cleanValue)) {
+          this.govIdError.set('El CUIT debe tener 11 dígitos');
+          return { invalidCuit: true };
+        }
+        // Validate CUIT check digit (Módulo 11)
+        if (!this.validateCuitCheckDigit(cleanValue)) {
+          this.govIdError.set('El dígito verificador del CUIT es inválido');
+          return { invalidCuitCheckDigit: true };
+        }
+        break;
+
+      case 'passport':
+        // Passport: 6-12 alphanumeric
+        if (!/^[A-Za-z0-9]{6,12}$/.test(cleanValue)) {
+          this.govIdError.set('El pasaporte debe tener entre 6 y 12 caracteres alfanuméricos');
+          return { invalidPassport: true };
+        }
+        break;
+    }
+
+    this.govIdError.set(null);
+    return null;
+  }
+
+  /**
+   * Validate Argentine CUIT check digit using Módulo 11 algorithm
+   */
+  private validateCuitCheckDigit(cuit: string): boolean {
+    const multipliers = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
+    const digits = cuit.split('').map(Number);
+
+    let sum = 0;
+    for (let i = 0; i < 10; i++) {
+      sum += digits[i] * multipliers[i];
+    }
+
+    const remainder = sum % 11;
+    const checkDigit = remainder === 0 ? 0 : remainder === 1 ? 9 : 11 - remainder;
+
+    return checkDigit === digits[10];
   }
 
   private updateFormFromProfile(profile: UserProfile): void {

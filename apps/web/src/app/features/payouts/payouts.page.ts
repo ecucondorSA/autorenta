@@ -9,7 +9,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { take } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { BankAccount, PayoutService } from '@core/services/payments/payout.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
@@ -183,27 +183,25 @@ export class PayoutsPage implements OnInit, OnDestroy {
       this.userId.set(user.data.user.id);
 
       // Load wallet balance
-      const wallet = await this.walletService.getBalance().pipe(take(1)).toPromise();
+      const wallet = await firstValueFrom(this.walletService.getBalance());
 
       if (wallet) {
         this.walletBalance.set(wallet.available_balance);
       }
 
       // Load payout stats
-      const stats = await this.payoutService
-        .getPayoutStats(user.data.user.id)
-        .pipe(take(1))
-        .toPromise();
+      const stats = await firstValueFrom(
+        this.payoutService.getPayoutStats(user.data.user.id)
+      );
 
       if (stats) {
         this.stats.set(stats);
       }
 
       // Load default bank account
-      const bankAccount = await this.payoutService
-        .getDefaultBankAccount(user.data.user.id)
-        .pipe(take(1))
-        .toPromise();
+      const bankAccount = await firstValueFrom(
+        this.payoutService.getDefaultBankAccount(user.data.user.id)
+      );
 
       this.defaultBankAccount.set(bankAccount || null);
     } catch (err) {

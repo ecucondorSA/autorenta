@@ -9,7 +9,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { take } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { BankAccount, PayoutService } from '@core/services/payments/payout.service';
 
 /**
@@ -496,10 +496,9 @@ export class BankAccountsComponent implements OnInit {
     this.error.set(null);
 
     try {
-      const accounts = await this.payoutService
-        .getUserBankAccounts(this.userId)
-        .pipe(take(1))
-        .toPromise();
+      const accounts = await firstValueFrom(
+        this.payoutService.getUserBankAccounts(this.userId)
+      );
 
       this.accounts.set(accounts || []);
     } catch (err) {
@@ -527,16 +526,15 @@ export class BankAccountsComponent implements OnInit {
 
     try {
       const formValue = this.form.getRawValue();
-      await this.payoutService
-        .addBankAccount(this.userId, {
+      await firstValueFrom(
+        this.payoutService.addBankAccount(this.userId, {
           accountHolder: formValue.accountHolder,
           accountNumber: formValue.accountNumber,
           accountType: formValue.accountType,
           bankCode: formValue.bankCode || 'AUTO',
           isDefault: formValue.isDefault,
         })
-        .pipe(take(1))
-        .toPromise();
+      );
 
       this.success.set('Cuenta bancaria agregada exitosamente');
       this.form.reset({ accountType: 'savings', isDefault: false });
@@ -558,10 +556,9 @@ export class BankAccountsComponent implements OnInit {
     this.success.set(null);
 
     try {
-      await this.payoutService
-        .setDefaultBankAccount(this.userId, accountId)
-        .pipe(take(1))
-        .toPromise();
+      await firstValueFrom(
+        this.payoutService.setDefaultBankAccount(this.userId, accountId)
+      );
 
       this.success.set('Cuenta predeterminada actualizada');
       await this.loadAccounts();

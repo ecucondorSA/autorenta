@@ -1,5 +1,6 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 import {
   Component,
   computed,
@@ -304,7 +305,9 @@ export class BookingCheckoutPage implements OnInit {
       const gateway = this.gatewayFactory.createBookingGateway('mercadopago');
 
       // Crear preferencia de pago
-      const preference = await gateway.createBookingPreference(this.bookingId(), true).toPromise();
+      const preference = await firstValueFrom(
+        gateway.createBookingPreference(this.bookingId(), true)
+      );
 
       if (!preference || !preference.success || !preference.init_point) {
         throw new Error('Error creando preferencia de pago');
@@ -361,13 +364,13 @@ export class BookingCheckoutPage implements OnInit {
 
     try {
       // 1. Lock funds
-      await this.walletService
-        .lockFunds(
+      await firstValueFrom(
+        this.walletService.lockFunds(
           this.bookingId(),
           this.amountInProviderCurrency(),
           `Pago de reserva #${this.bookingId()}`,
         )
-        .toPromise();
+      );
 
       // 2. Redirect to confirmation (like PayPal)
       // Since it's instant, we can simulate a "transaction" ID or use the booking ID

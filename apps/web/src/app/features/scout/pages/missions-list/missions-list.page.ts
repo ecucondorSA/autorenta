@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ScoutService, Bounty } from '../../services/scout.service';
@@ -7,6 +7,7 @@ import { ScoutAlarmService } from '../../services/scout-alarm.service';
 @Component({
   selector: 'app-missions-list',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterModule],
   template: `
     <div class="min-h-screen bg-gray-50 pb-20">

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
-import { take } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { Payout, PayoutService } from '@core/services/payments/payout.service';
 
 /**
@@ -353,10 +353,9 @@ export class PayoutHistoryComponent implements OnInit {
     this.error.set(null);
 
     try {
-      const payouts = await this.payoutService
-        .getUserPayouts(this.userId)
-        .pipe(take(1))
-        .toPromise();
+      const payouts = await firstValueFrom(
+        this.payoutService.getUserPayouts(this.userId)
+      );
 
       this.payouts.set(payouts || []);
     } catch (err) {

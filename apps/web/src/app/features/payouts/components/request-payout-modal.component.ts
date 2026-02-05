@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
+  DestroyRef,
   EventEmitter,
   inject,
   Input,
@@ -9,8 +10,9 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { take } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { BankAccount, PayoutService } from '@core/services/payments/payout.service';
 
 /**
@@ -508,6 +510,7 @@ export class RequestPayoutModalComponent {
 
   private readonly payoutService = inject(PayoutService);
   private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
@@ -570,7 +573,11 @@ export class RequestPayoutModalComponent {
     try {
       const amount = this.form.value.amount || 0;
 
-      await this.payoutService.requestPayout(this.userId, amount).pipe(take(1)).toPromise();
+      await firstValueFrom(
+        this.payoutService.requestPayout(this.userId, amount).pipe(
+          takeUntilDestroyed(this.destroyRef)
+        )
+      );
 
       this.payoutRequested.emit();
     } catch (err) {

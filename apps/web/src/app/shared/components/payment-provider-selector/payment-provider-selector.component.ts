@@ -10,6 +10,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';
 import { PaymentGatewayFactory } from '@core/services/payments/payment-gateway.factory';
@@ -138,7 +139,7 @@ export class PaymentProviderSelectorComponent implements OnInit {
   async loadExchangeRate(): Promise<void> {
     this.isLoading.set(true);
     try {
-      const snapshot = await this.fxService.getFxSnapshot().toPromise();
+      const snapshot = await firstValueFrom(this.fxService.getFxSnapshot());
       if (snapshot) {
         this.exchangeRate.set(snapshot.rate);
       } else {

@@ -156,9 +156,11 @@ export class AdminService {
   private readonly supabase = injectSupabase();
   private readonly logger = inject(LoggerService);
 
-  // Cache for admin roles (cleared on auth state change)
+  // Cache for admin roles (cleared on auth state change or TTL expiry)
   private rolesCache: AdminRole[] | null = null;
   private rolesCacheUserId: string | null = null;
+  private rolesCacheTimestamp: number = 0;
+  private readonly CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes TTL
 
   // ============================================================================
   // ROLE & PERMISSION CHECKING
@@ -179,13 +181,13 @@ export class AdminService {
       });
 
       if (error) {
-        this.logger['error']('Error checking admin status', 'AdminService', error);
+        this.logger.error('Error checking admin status', 'AdminService', error);
         return false;
       }
 
       return data === true;
     } catch (error) {
-      this.logger['error']('Error checking admin status', 'AdminService', error as Error);
+      this.logger.error('Error checking admin status', 'AdminService', error as Error);
       return false;
     }
   }
@@ -198,7 +200,7 @@ export class AdminService {
       const roles = await this.getAdminRoles();
       return roles.includes(role);
     } catch (error) {
-      this.logger['error'](`Error checking role ${role}`, 'AdminService', error as Error);
+      this.logger.error(`Error checking role ${role}`, 'AdminService', error as Error);
       return false;
     }
   }
@@ -213,7 +215,7 @@ export class AdminService {
       // Check if any of user's roles has this permission
       return roles.some((role) => PERMISSIONS_MATRIX[role]?.includes(permission));
     } catch (error) {
-      this.logger['error'](
+      this.logger.error(
         `Error checking permission ${permission}`,
         'AdminService',
         error as Error,
@@ -232,8 +234,14 @@ export class AdminService {
       } = await this.supabase.auth.getUser();
       if (!user) return [];
 
-      // Use cache if available for same user
-      if (this.rolesCache && this.rolesCacheUserId === user['id']) {
+      const now = Date.now();
+
+      // Use cache if available for same user and not expired
+      if (
+        this.rolesCache &&
+        this.rolesCacheUserId === user['id'] &&
+        now - this.rolesCacheTimestamp < this.CACHE_TTL_MS
+      ) {
         return this.rolesCache;
       }
 
@@ -242,17 +250,18 @@ export class AdminService {
       });
 
       if (error) {
-        this.logger['error']('Error fetching admin roles', 'AdminService', error);
+        this.logger.error('Error fetching admin roles', 'AdminService', error);
         return [];
       }
 
-      // Update cache
+      // Update cache with timestamp
       this.rolesCache = (data as AdminRole[]) ?? [];
       this.rolesCacheUserId = user['id'];
+      this.rolesCacheTimestamp = now;
 
       return this.rolesCache;
     } catch (error) {
-      this.logger['error']('Error fetching admin roles', 'AdminService', error as Error);
+      this.logger.error('Error fetching admin roles', 'AdminService', error as Error);
       return [];
     }
   }
@@ -277,6 +286,14 @@ export class AdminService {
   clearCache(): void {
     this.rolesCache = null;
     this.rolesCacheUserId = null;
+    this.rolesCacheTimestamp = 0;
+  }
+
+  /**
+   * Check if cache is stale (expired)
+   */
+  isCacheStale(): boolean {
+    return Date.now() - this.rolesCacheTimestamp >= this.CACHE_TTL_MS;
   }
 
   // ============================================================================
@@ -306,13 +323,13 @@ export class AdminService {
       });
 
       if (error) {
-        this.logger['error']('Error logging admin action', 'AdminService', error);
+        this.logger.error('Error logging admin action', 'AdminService', error);
         return null;
       }
 
       return data as string;
     } catch (error) {
-      this.logger['error']('Error logging admin action', 'AdminService', error as Error);
+      this.logger.error('Error logging admin action', 'AdminService', error as Error);
       return null;
     }
   }
@@ -358,7 +375,7 @@ export class AdminService {
       if (error) throw error;
       return (data ?? []) as AdminAuditLog[];
     } catch (error) {
-      this.logger['error']('Error fetching audit log', 'AdminService', error as Error);
+      this.logger.error('Error fetching audit log', 'AdminService', error as Error);
       throw error;
     }
   }
@@ -408,7 +425,7 @@ export class AdminService {
 
       return data as AdminUser;
     } catch (error) {
-      this.logger['error']('Error granting admin role', 'AdminService', error as Error);
+      this.logger.error('Error granting admin role', 'AdminService', error as Error);
       throw error;
     }
   }
@@ -451,7 +468,7 @@ export class AdminService {
         details: { reason },
       });
     } catch (error) {
-      this.logger['error']('Error revoking admin role', 'AdminService', error as Error);
+      this.logger.error('Error revoking admin role', 'AdminService', error as Error);
       throw error;
     }
   }
@@ -487,7 +504,7 @@ export class AdminService {
       if (error) throw error;
       return (data ?? []) as AdminUserWithProfile[];
     } catch (error) {
-      this.logger['error']('Error listing admin users', 'AdminService', error as Error);
+      this.logger.error('Error listing admin users', 'AdminService', error as Error);
       throw error;
     }
   }
@@ -1125,7 +1142,7 @@ export class AdminService {
         total: data?.total ?? 0,
       };
     } catch (error) {
-      this.logger['error']('Error fetching users with debt', 'AdminService', error as Error);
+      this.logger.error('Error fetching users with debt', 'AdminService', error as Error);
       throw error;
     }
   }

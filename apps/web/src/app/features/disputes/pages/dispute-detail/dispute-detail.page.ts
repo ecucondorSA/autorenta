@@ -186,6 +186,8 @@ export class DisputeDetailPage implements OnInit, OnDestroy {
   private readonly realtimeConnection = inject(RealtimeConnectionService);
 
   private realtimeChannel: RealtimeChannel | null = null;
+  private isDestroyed = false;
+  private currentSubscriptionId: string | null = null;
 
   disputeId = signal<string>('');
   d = signal<Dispute | undefined>(undefined);
@@ -207,12 +209,24 @@ export class DisputeDetailPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.isDestroyed = true;
+    this.cleanupRealtimeSubscription();
+  }
+
+  private cleanupRealtimeSubscription(): void {
+    if (this.currentSubscriptionId) {
+      this.realtimeConnection.unsubscribe(`dispute-dossier-${this.currentSubscriptionId}`);
+      this.currentSubscriptionId = null;
+    }
     if (this.realtimeChannel) {
       this.realtimeConnection.unsubscribe(this.realtimeChannel.topic);
+      this.realtimeChannel = null;
     }
   }
 
   private async loadAll(id: string) {
+    if (this.isDestroyed) return;
+
     this.loading.set(true);
     try {
       const [dispute, evidence, timeline] = await Promise.all([
@@ -220,20 +234,31 @@ export class DisputeDetailPage implements OnInit, OnDestroy {
         this.disputesService.listEvidence(id),
         this.disputesService.getTimeline(id)
       ]);
+
+      // Check again after async operation
+      if (this.isDestroyed) return;
+
       this.d.set(dispute);
       this.evidence.set(evidence);
       this.timeline.set(timeline);
     } catch (error) {
+      if (this.isDestroyed) return;
       console.error('Error loading dispute dossier', error);
     } finally {
-      this.loading.set(false);
+      if (!this.isDestroyed) {
+        this.loading.set(false);
+      }
     }
   }
 
   private setupRealtimeSubscription(disputeId: string): void {
-    if (this.realtimeChannel) {
-      this.realtimeConnection.unsubscribe(this.realtimeChannel.topic);
-    }
+    if (this.isDestroyed) return;
+
+    // Cleanup previous subscription before creating new one
+    this.cleanupRealtimeSubscription();
+
+    // Track current subscription ID to prevent stale callbacks
+    this.currentSubscriptionId = disputeId;
 
     this.realtimeChannel = this.realtimeConnection.subscribeWithRetry<DisputeTimelineEvent>(
       `dispute-dossier-${disputeId}`,
@@ -244,7 +269,10 @@ export class DisputeDetailPage implements OnInit, OnDestroy {
         filter: `dispute_id=eq.${disputeId}`,
       },
       () => {
-        void this.loadAll(disputeId);
+        // Only reload if this subscription is still active and component not destroyed
+        if (!this.isDestroyed && this.currentSubscriptionId === disputeId) {
+          void this.loadAll(disputeId);
+        }
       },
     );
   }

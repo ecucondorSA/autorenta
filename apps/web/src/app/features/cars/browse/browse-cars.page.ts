@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, computed, signal, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, computed, signal, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -19,6 +19,7 @@ import { BrowseStore } from './browse.store';
 @Component({
   selector: 'app-browse-cars',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     RouterModule,

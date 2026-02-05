@@ -180,6 +180,9 @@ export class InboxPage implements OnInit, OnDestroy {
 
   private realtimeChannel?: RealtimeChannel;
 
+  /** Track conversations being fetched to prevent race conditions */
+  private readonly pendingFetches = new Set<string>();
+
   async ngOnInit(): Promise<void> {
     const session = this.authService.session$();
     if (!session) {
@@ -293,12 +296,25 @@ export class InboxPage implements OnInit, OnDestroy {
 
   /**
    * Fetches and adds a new conversation (called only when a new conversation starts)
+   * Uses pendingFetches Set to prevent duplicate requests (race condition fix)
    */
   private async fetchAndAddNewConversation(
     conversationKey: string,
     message: Message,
     userId: string,
   ): Promise<void> {
+    // Prevent duplicate fetches for same conversation (race condition fix)
+    if (this.pendingFetches.has(conversationKey)) {
+      return;
+    }
+
+    // Check if already exists before fetching
+    if (this.conversations().some((c) => c['id'] === conversationKey)) {
+      return;
+    }
+
+    this.pendingFetches.add(conversationKey);
+
     try {
       const updatedConversation = await this.messagesService.listConversations(userId, {
         limit: 1,
@@ -310,9 +326,8 @@ export class InboxPage implements OnInit, OnDestroy {
       const conv = updatedConversation.conversations.find((c) => c['id'] === conversationKey);
       if (!conv) return;
 
-      // Add new conversation to the list
+      // Add new conversation to the list (double-check for race condition)
       this.conversations.update((convs) => {
-        // Check if it was already added (race condition)
         if (convs.some((c) => c['id'] === conversationKey)) return convs;
         return [conv, ...convs].sort(
           (a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime(),
@@ -320,6 +335,8 @@ export class InboxPage implements OnInit, OnDestroy {
       });
     } catch (error) {
       this.logger.error('Error fetching new conversation', { error });
+    } finally {
+      this.pendingFetches.delete(conversationKey);
     }
   }
 
