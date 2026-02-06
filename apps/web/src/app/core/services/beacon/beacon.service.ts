@@ -515,7 +515,7 @@ export class BeaconService {
       if (result.success) {
         this.logger.debug('[BeaconService] Relay successful:', result);
         if (result.points_earned) {
-          console.log(`[BeaconService] Scout earned ${result.points_earned} points!`);
+          this.logger.info(`[BeaconService] Scout earned ${result.points_earned} points!`);
         }
       } else {
         this.logger.error('[BeaconService] Relay failed:', result.error);
