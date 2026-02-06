@@ -31,6 +31,13 @@ import {
 } from '@core/models/guarantee-tiers.model';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 
+// Interface for the preference response to avoid 'any'
+interface MercadoPagoPreferenceResponse {
+  success: boolean;
+  init_point: string;
+  preference_id: string;
+}
+
 /**
  * Booking Checkout Page
  *
@@ -339,7 +346,7 @@ export class BookingCheckoutPage implements OnInit {
       // Crear preferencia de pago
       const preference = (await firstValueFrom(
         gateway.createBookingPreference(this.bookingId(), true)
-      )) as any;
+      )) as unknown as MercadoPagoPreferenceResponse;
 
       if (!preference || !preference.success || !preference.init_point) {
         throw new Error('Error creando preferencia de pago');
