@@ -1,7 +1,7 @@
 import { Component, inject, signal, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SupabaseService } from '@core/services/infrastructure/supabase.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
