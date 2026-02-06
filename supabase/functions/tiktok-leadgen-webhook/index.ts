@@ -129,21 +129,13 @@ serve(async (req) => {
       metadata: { fields: extracted.fields },
     };
 
-    const { data: leadData, error: leadError } = await supabase
-      .from('marketing_leads')
-      .upsert(leadRow, { onConflict: 'platform,lead_id' })
-      .select('id')
-      .single();
-
-    if (leadError) {
-      console.error('[tiktok-leadgen-webhook] Failed to upsert marketing_leads:', leadError);
+    const leadId = await upsertMarketingLead(supabase, leadRow, extracted.leadId);
+    if (!leadId) {
       return new Response(
-        JSON.stringify({ success: false, error: leadError.message }),
+        JSON.stringify({ success: false, error: 'Failed to store marketing lead' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
-
-    const leadId = leadData?.id;
 
     // Upsert outreach contact if phone exists
     if (extracted.phone) {
@@ -189,16 +181,12 @@ serve(async (req) => {
         },
       };
 
-      const { data: subscriberData, error: subscriberError } = await supabase
-        .from('email_subscribers')
-        .upsert(subscriberPayload, { onConflict: 'email' })
-        .select('id, active_sequences')
-        .single();
+      const subscriberRecord = await upsertEmailSubscriber(supabase, subscriberPayload);
 
-      if (subscriberError) {
-        console.warn('[tiktok-leadgen-webhook] email_subscribers upsert failed:', subscriberError.message);
+      if (!subscriberRecord) {
+        console.warn('[tiktok-leadgen-webhook] email_subscribers upsert failed');
       } else if (AUTO_ENROLL_SEQUENCE_SLUG) {
-        await autoEnrollSequence(supabase, subscriberData, AUTO_ENROLL_SEQUENCE_SLUG);
+        await autoEnrollSequence(supabase, subscriberRecord, AUTO_ENROLL_SEQUENCE_SLUG);
       }
     }
 
@@ -214,6 +202,131 @@ serve(async (req) => {
     );
   }
 });
+
+async function upsertMarketingLead(
+  supabase: ReturnType<typeof createClient>,
+  leadRow: Record<string, unknown>,
+  externalLeadId?: string,
+): Promise<string | null> {
+  try {
+    if (externalLeadId) {
+      const { data: existing, error: lookupError } = await supabase
+        .from('marketing_leads')
+        .select('id')
+        .eq('platform', leadRow.platform as string)
+        .eq('lead_id', externalLeadId)
+        .maybeSingle();
+
+      if (lookupError) {
+        console.error('[tiktok-leadgen-webhook] Failed to lookup marketing_leads:', lookupError);
+        return null;
+      }
+
+      if (existing?.id) {
+        const { data: updated, error: updateError } = await supabase
+          .from('marketing_leads')
+          .update(leadRow)
+          .eq('id', existing.id)
+          .select('id')
+          .single();
+
+        if (updateError) {
+          console.error('[tiktok-leadgen-webhook] Failed to update marketing_leads:', updateError);
+          return null;
+        }
+
+        return updated?.id ?? existing.id;
+      }
+    }
+
+    const { data: inserted, error: insertError } = await supabase
+      .from('marketing_leads')
+      .insert(leadRow)
+      .select('id')
+      .single();
+
+    if (insertError) {
+      console.error('[tiktok-leadgen-webhook] Failed to insert marketing_leads:', insertError);
+      return null;
+    }
+
+    return inserted?.id ?? null;
+  } catch (error) {
+    console.error('[tiktok-leadgen-webhook] Failed to store marketing lead:', error);
+    return null;
+  }
+}
+
+async function upsertEmailSubscriber(
+  supabase: ReturnType<typeof createClient>,
+  subscriberPayload: {
+    email: string;
+    first_name?: string | null;
+    last_name?: string | null;
+    user_type?: string | null;
+    source?: string | null;
+    status?: string | null;
+    metadata?: Record<string, unknown>;
+  },
+): Promise<{ id?: string; active_sequences?: Array<{ sequence_id: string }> } | null> {
+  try {
+    const { data: existing, error: lookupError } = await supabase
+      .from('email_subscribers')
+      .select('id, active_sequences, metadata, first_name, last_name')
+      .eq('email', subscriberPayload.email)
+      .maybeSingle();
+
+    if (lookupError) {
+      console.warn('[tiktok-leadgen-webhook] Failed to lookup email_subscribers:', lookupError.message);
+      return null;
+    }
+
+    if (existing?.id) {
+      const mergedMetadata = {
+        ...(existing.metadata as Record<string, unknown> | null) ?? {},
+        ...(subscriberPayload.metadata ?? {}),
+      };
+
+      const updatePayload = {
+        first_name: subscriberPayload.first_name ?? existing.first_name ?? null,
+        last_name: subscriberPayload.last_name ?? existing.last_name ?? null,
+        source: subscriberPayload.source ?? null,
+        metadata: mergedMetadata,
+        updated_at: new Date().toISOString(),
+      };
+
+      const { data: updated, error: updateError } = await supabase
+        .from('email_subscribers')
+        .update(updatePayload)
+        .eq('id', existing.id)
+        .select('id, active_sequences')
+        .single();
+
+      if (updateError) {
+        console.warn('[tiktok-leadgen-webhook] Failed to update email_subscribers:', updateError.message);
+        return { id: existing.id, active_sequences: existing.active_sequences };
+      }
+
+      return updated ?? { id: existing.id, active_sequences: existing.active_sequences };
+    }
+
+    const { data: inserted, error: insertError } = await supabase
+      .from('email_subscribers')
+      .insert(subscriberPayload)
+      .select('id, active_sequences')
+      .single();
+
+    if (insertError) {
+      console.warn('[tiktok-leadgen-webhook] Failed to insert email_subscribers:', insertError.message);
+      return null;
+    }
+
+    return inserted ?? null;
+  } catch (error) {
+    console.warn('[tiktok-leadgen-webhook] Failed to store email_subscriber:', error);
+    return null;
+  }
+}
 
 async function autoEnrollSequence(
   supabase: ReturnType<typeof createClient>,
