@@ -310,7 +310,6 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   readonly filteredBookings = computed(() => {
     const bookings = this.currentBookings();
     const f = this.filter();
-    const isOwner = this.role() === 'owner';
 
     return bookings.filter((booking) => {
       if (f === 'all') return true;

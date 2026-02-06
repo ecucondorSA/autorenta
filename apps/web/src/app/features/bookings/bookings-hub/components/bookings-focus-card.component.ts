@@ -1,10 +1,10 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
+import { Booking } from '@core/models';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { formatDateRange } from '@shared/utils/date.utils';
 import { FocusCard, BookingRole } from '../bookings-hub.types';
-import { Booking } from '@core/models';
 import { getBookingStatusTone } from '../bookings-hub.utils';
 
 @Component({
