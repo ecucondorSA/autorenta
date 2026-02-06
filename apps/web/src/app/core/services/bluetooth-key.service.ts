@@ -112,7 +112,7 @@ export class BluetoothKeyService {
         throw new Error('No device selected');
       }
 
-      this.device.addEventListener('gattserverdisconnected', () => this.handleDisconnection());
+      this.device.addEventListener('gattserverdisconnected', this.disconnectHandler);
       this.server = await this.device.gatt!.connect();
 
       this.deviceName.set(this.device.name || 'Unknown Car');
@@ -129,8 +129,11 @@ export class BluetoothKeyService {
   }
 
   disconnect() {
-    if (this.device && this.device.gatt?.connected) {
-      this.device.gatt.disconnect();
+    if (this.device) {
+      this.device.removeEventListener('gattserverdisconnected', this.disconnectHandler);
+      if (this.device.gatt?.connected) {
+        this.device.gatt.disconnect();
+      }
     }
     this.handleDisconnection();
   }
@@ -159,6 +162,8 @@ export class BluetoothKeyService {
       this.lockState.set(currentState); // Revert
     }
   }
+
+  private readonly disconnectHandler = () => this.handleDisconnection();
 
   private handleDisconnection() {
     this.connectionState.set('disconnected');

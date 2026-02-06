@@ -447,17 +447,37 @@ export class PreTripViewComponent implements OnInit, OnDestroy {
     () => this.checklist().filter((item) => item.checked).length,
   );
 
+  private readonly boundVisibilityHandler = this.handleVisibilityChange.bind(this);
+
   ngOnInit(): void {
     this.loadChecklistState();
     this.startTimer();
     this.fetchWeather();
+
+    if (this.isBrowser) {
+      document.addEventListener('visibilitychange', this.boundVisibilityHandler);
+    }
   }
 
   ngOnDestroy(): void {
     this.stopTimer();
+    if (this.isBrowser) {
+      document.removeEventListener('visibilitychange', this.boundVisibilityHandler);
+    }
+  }
+
+  private handleVisibilityChange(): void {
+    if (document.hidden) {
+      this.stopTimer();
+    } else {
+      this.startTimer();
+    }
   }
 
   private startTimer(): void {
+    // Avoid multiple intervals
+    if (this.intervalId) return;
+
     this.updateRemaining();
     this.intervalId = setInterval(() => this.updateRemaining(), 1000);
   }

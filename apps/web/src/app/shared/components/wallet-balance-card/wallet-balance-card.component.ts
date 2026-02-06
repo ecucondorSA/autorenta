@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   Component,
   computed,
@@ -11,6 +11,8 @@ import {
   runInInjectionContext,
   signal,
   ChangeDetectionStrategy,
+  DestroyRef,
+  PLATFORM_ID,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '@core/services/payments/wallet.service';
@@ -190,7 +192,14 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   private previousPendingCount = 0;
   private pendingWatcher?: EffectRef;
 
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly boundVisibilityHandler = this.handleVisibilityChange.bind(this);
+
   async ngOnInit(): Promise<void> {
+    if (this.isBrowser) {
+      document.addEventListener('visibilitychange', this.boundVisibilityHandler);
+    }
     // Auto-cargar balance al inicializar
     await this.loadBalance();
 
@@ -232,6 +241,9 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.isBrowser) {
+      document.removeEventListener('visibilitychange', this.boundVisibilityHandler);
+    }
     // Desuscribirse de cambios realtime
     this.walletService.unsubscribeFromWalletChanges().catch(() => { });
 
@@ -357,6 +369,14 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
     if (this.notificationTimer) {
       clearTimeout(this.notificationTimer);
       this.notificationTimer = undefined;
+    }
+  }
+
+  private handleVisibilityChange(): void {
+    if (document.hidden) {
+      this.stopAutoRefresh();
+    } else if (this.autoRefreshEnabled()) {
+      this.startAutoRefresh();
     }
   }
 

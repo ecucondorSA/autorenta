@@ -2339,6 +2339,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     let lastEaseToTime = 0;
     const easeToDebounceMs = 1000; // Prevent animations from stacking
     this.followLocationInterval = setInterval(() => {
+      // Pause updates if page is hidden to save battery
+      if (typeof document !== 'undefined' && document.hidden) return;
+
       if (this.userLocation && this.map) {
         const now = Date.now();
         // Only execute if enough time has passed since last animation

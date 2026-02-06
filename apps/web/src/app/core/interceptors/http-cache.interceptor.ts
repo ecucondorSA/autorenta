@@ -18,6 +18,7 @@ interface CacheEntry {
 
 class HttpCacheService {
   private cache = new Map<string, CacheEntry>();
+  private readonly MAX_CACHE_SIZE = 50;
 
   get(key: string, maxAge: number): HttpResponse<unknown> | null {
     const entry = this.cache.get(key);
@@ -33,6 +34,14 @@ class HttpCacheService {
   }
 
   set(key: string, response: HttpResponse<unknown>): void {
+    // Evict oldest entry if cache is full
+    if (this.cache.size >= this.MAX_CACHE_SIZE) {
+      const oldestKey = this.cache.keys().next().value;
+      if (oldestKey) {
+        this.cache.delete(oldestKey);
+      }
+    }
+
     this.cache.set(key, {
       response,
       timestamp: Date.now(),

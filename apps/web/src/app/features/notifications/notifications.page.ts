@@ -7,6 +7,8 @@ import {
   computed,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { TimeAgoPipe } from '@shared/pipes/time-ago.pipe';
+import { NotificationIconPipe } from '@shared/pipes/notification-icon.pipe';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -25,7 +27,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
   selector: 'app-notifications-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, TimeAgoPipe, NotificationIconPipe],
   styles: [
     `
       @keyframes slideInRight {
@@ -257,7 +259,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                                 'bg-cta-default/20': notification.type === 'info',
                               }"
                             >
-                              {{ getNotificationIcon(notification.type) }}
+                              {{ notification.type | notificationIcon }}
                             </div>
                           </div>
 
@@ -285,7 +287,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
 
                                 <!-- Timestamp -->
                                 <p class="mt-1 text-xs text-text-secondary sm:mt-2 sm:text-xs">
-                                  {{ getTimeAgo(notification.createdAt) }}
+                                  {{ notification.createdAt | timeAgo }}
                                 </p>
                               </div>
                             </div>
@@ -365,7 +367,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                                 'bg-cta-default/20': notification.type === 'info',
                               }"
                             >
-                              {{ getNotificationIcon(notification.type) }}
+                              {{ notification.type | notificationIcon }}
                             </div>
                           </div>
 
@@ -393,7 +395,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
 
                                 <!-- Timestamp -->
                                 <p class="mt-1 text-xs text-text-secondary sm:mt-2 sm:text-xs">
-                                  {{ getTimeAgo(notification.createdAt) }}
+                                  {{ notification.createdAt | timeAgo }}
                                 </p>
                               </div>
                             </div>
@@ -464,29 +466,16 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
 
                       <!-- Content -->
                       <div class="min-w-0 flex-1">
-                        <div
-                          class="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-2"
-                        >
-                          <div class="min-w-0 flex-1">
-                            <h3 class="text-sm font-semibold text-text-primary sm:text-base">
+                        <div class="flex-1 min-w-0">
+                          <div class="flex items-start justify-between">
+                            <p class="text-sm font-medium text-gray-900 truncate">
                               {{ notification.title }}
-                            </h3>
-                            <p class="mt-0.5 text-xs text-text-primary sm:mt-1 sm:text-sm">
-                              {{ notification.message }}
-                            </p>
-
-                            <!-- Metadata -->
-                            @if (notification.metadata) {
-                              <div
-                                class="mt-1 truncate text-xs text-text-secondary sm:mt-2 sm:text-xs"
-                              >
-                                {{ renderMetadata(notification) }}
                               </div>
                             }
 
                             <!-- Timestamp -->
                             <p class="mt-1 text-xs text-text-secondary sm:mt-2 sm:text-xs">
-                              {{ getTimeAgo(notification.createdAt) }}
+                              {{ notification.createdAt | timeAgo }}
                             </p>
                           </div>
                         </div>
@@ -694,31 +683,7 @@ export class NotificationsPage implements OnInit, OnDestroy {
     }
   }
 
-  getNotificationIcon(type: NotificationItem['type']): string {
-    switch (type) {
-      case 'success':
-        return '✅';
-      case 'warning':
-        return '⚠️';
-      case 'error':
-        return '❌';
-      case 'info':
-      default:
-        return 'ℹ️';
-    }
-  }
-
-  getTimeAgo(date: Date): string {
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-    if (diffInSeconds < 60) return 'Ahora mismo';
-    if (diffInSeconds < 3600) return `Hace ${Math.floor(diffInSeconds / 60)} min`;
-    if (diffInSeconds < 86400) return `Hace ${Math.floor(diffInSeconds / 3600)} h`;
-    if (diffInSeconds < 604800) return `Hace ${Math.floor(diffInSeconds / 86400)} días`;
-    if (diffInSeconds < 2592000) return `Hace ${Math.floor(diffInSeconds / 604800)} semanas`;
-    return `Hace ${Math.floor(diffInSeconds / 2592000)} meses`;
-  }
+  /* Removed getNotificationIcon and getTimeAgo as they are now pipes */
 
   renderMetadata(notification: ExtendedNotificationItem): string {
     const metadata = notification.metadata;

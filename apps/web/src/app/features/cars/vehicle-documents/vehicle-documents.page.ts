@@ -10,6 +10,13 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DateFormatPipe } from '@shared/pipes/date-format.pipe';
+import {
+  DocumentKindLabelPipe,
+  DocumentStatusLabelPipe,
+  DocumentKindIconPipe,
+  DocumentStatusColorPipe,
+} from '@shared/pipes/vehicle-document.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   VehicleDocumentsService,
@@ -40,7 +47,15 @@ import { CarsService } from '@core/services/cars/cars.service';
   selector: 'app-vehicle-documents',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DateFormatPipe,
+    DocumentKindLabelPipe,
+    DocumentStatusLabelPipe,
+    DocumentKindIconPipe,
+    DocumentStatusColorPipe,
+  ],
   templateUrl: './vehicle-documents.page.html',
   styleUrls: ['./vehicle-documents.page.css'],
 })
@@ -297,34 +312,7 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
     return missing;
   }
 
-  getStatusColor(status: VehicleDocument['status']): string {
-    const colors: Record<string, string> = {
-      pending: 'status-pending',
-      verified: 'status-verified',
-      rejected: 'status-rejected',
-    };
-    return colors[status || 'pending'];
-  }
-
-  getDocumentKindLabel(kind: VehicleDocumentKind): string {
-    return this.documentsService.getDocumentKindLabel(kind);
-  }
-
-  getStatusLabel(status: VehicleDocument['status']): string {
-    return this.documentsService.getStatusLabel(status || 'pending');
-  }
-
-  getDocumentKindIcon(kind: VehicleDocumentKind): string {
-    return this.documentsService.getDocumentKindIcon(kind);
-  }
-
-  formatDate(date: string): string {
-    return new Date(date).toLocaleDateString('es-AR', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    });
-  }
+  /* Removed helper methods: getDocumentKindLabel, getStatusLabel, getDocumentKindIcon, formatDate as they are now pipes */
 
   isExpiring(date?: string): boolean {
     if (!date) return false;
@@ -415,7 +403,7 @@ export class VehicleDocumentsPage implements OnInit, OnDestroy {
 
   getMissingDocsLabel(): string {
     return this.getMissingRequiredDocs()
-      .map((k) => this.getDocumentKindLabel(k))
+      .map((k) => this.documentsService.getDocumentKindLabel(k)) // Keep using service here as it's not in template
       .join(', ');
   }
 }

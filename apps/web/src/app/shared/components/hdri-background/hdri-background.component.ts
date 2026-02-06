@@ -10,6 +10,7 @@ import {
   OnDestroy,
   Output,
   ViewChild,
+  NgZone,
 } from '@angular/core';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
@@ -65,6 +66,7 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   private readonly logger = inject(LoggerService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly ngZone = inject(NgZone);
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   // Day HDRI (default, used 6am - 6pm)
@@ -92,15 +94,15 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     this.srcHighDay = value;
   }
 
-   @Input() autoRotate = true;
-   @Input() rotateSpeed = 0.000005; // Extremely slow, barely perceptible rotation
-   @Input() rotateSpeedMobile = 0.000001; // Even slower on mobile to reduce motion sickness
-   @Input() enableInteraction = true;
-   @Input() initialRotationY = 1.24; // Start showing the city in night mode
-   @Input() fov = 0.55; // Field of view (lower = more zoomed in)
+  @Input() autoRotate = true;
+  @Input() rotateSpeed = 0.000005; // Extremely slow, barely perceptible rotation
+  @Input() rotateSpeedMobile = 0.000001; // Even slower on mobile to reduce motion sickness
+  @Input() enableInteraction = true;
+  @Input() initialRotationY = 1.24; // Start showing the city in night mode
+  @Input() fov = 0.55; // Field of view (lower = more zoomed in)
 
-   // Detect mobile for slower rotation
-   private isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  // Detect mobile for slower rotation
+  private isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   @Output() hdriLoaded = new EventEmitter<void>();
 
@@ -136,12 +138,13 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   // Performance: Time-based animation (no FPS throttling - let rAF handle it)
   private lastFrameTime = 0;
 
-  // Mobile auto-rotate: Use setInterval instead of rAF to avoid browser throttling
+  // Mobile auto-rotate: Paused when hidden
   private mobileAutoRotateInterval: ReturnType<typeof setInterval> | null = null;
   private readonly MOBILE_AUTO_ROTATE_INTERVAL = 33; // ~30fps fixed interval
 
-  // Performance: Visibility Detection (pause when not in viewport)
+  // Performance: Visibility Detection (pause when not in viewport or tab hidden)
   private isVisible = true;
+  private isPageVisible = true;
   private intersectionObserver: IntersectionObserver | null = null;
 
   // Performance: Idle Detection (pause when no interaction)
@@ -304,6 +307,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     // Setup event listeners
     this.setupEventListeners();
+    this.setupPageVisibility();
 
     // Start resize observer
     this.setupResizeObserver();
@@ -574,7 +578,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     if (!this.isMobile || !this.autoRotate || this.mobileAutoRotateInterval) return;
 
     this.mobileAutoRotateInterval = setInterval(() => {
-      if (this.isDestroyed || this.isDragging || !this.isVisible) return;
+      if (this.isDestroyed || this.isDragging || !this.isVisible || !this.isPageVisible) return;
 
       // Fixed increment per interval (33ms * speed)
       const increment = this.rotateSpeedMobile * this.MOBILE_AUTO_ROTATE_INTERVAL;
@@ -604,8 +608,8 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       // Always schedule next frame to keep loop alive
       this.animationId = requestAnimationFrame(render);
 
-      // 1. Skip if not visible (IntersectionObserver)
-      if (!this.isVisible) return;
+      // 1. Skip if not visible (IntersectionObserver or Page Hidden)
+      if (!this.isVisible || !this.isPageVisible) return;
 
       // 2. Skip if idle and not auto-rotating (save CPU when user isn't interacting)
       if (this.isIdle && !this.autoRotate && !this.isDragging) return;
@@ -639,7 +643,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       this.draw();
     };
 
-    requestAnimationFrame(render);
+    this.ngZone.runOutsideAngular(() => {
+      requestAnimationFrame(render);
+    });
   }
 
   private draw(): void {
@@ -802,6 +808,27 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     );
 
     this.intersectionObserver.observe(canvas);
+  }
+
+  private setupPageVisibility(): void {
+    if (typeof document === 'undefined') return;
+
+    this.isPageVisible = !document.hidden;
+    document.addEventListener('visibilitychange', () => {
+      this.isPageVisible = !document.hidden;
+      this.logger.debug('[HdriBackground] Visibility changed:', this.isPageVisible ? 'VISIBLE' : 'HIDDEN');
+
+      // Force a frame when becoming visible to avoid visual glitch
+      if (this.isPageVisible && !this.isDestroyed) {
+        this.ngZone.runOutsideAngular(() => {
+          requestAnimationFrame((time) => {
+            // Restart loop if needed, but startRenderLoop is resilient
+            // We just ensure a frame is painted
+            if (this.gl && this.program) this.draw();
+          });
+        });
+      }
+    });
   }
 
   /**
