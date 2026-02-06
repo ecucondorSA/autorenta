@@ -14,12 +14,13 @@ import {
     sparklesOutline
 } from 'ionicons/icons';
 import { FipeAutocompleteComponent, FipeAutocompleteOption } from '../../shared/components/fipe-autocomplete/fipe-autocomplete.component';
+import { LeadCaptureFormComponent } from '../../shared/components/lead-capture-form/lead-capture-form.component';
 
 @Component({
     selector: 'app-owners-landing',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, FipeAutocompleteComponent, IonIcon],
+    imports: [CommonModule, FipeAutocompleteComponent, IonIcon, LeadCaptureFormComponent],
     templateUrl: './owners-landing.page.html',
     styleUrls: ['./owners-landing.page.scss']
 })

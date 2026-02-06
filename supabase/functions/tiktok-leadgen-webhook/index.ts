@@ -98,15 +98,25 @@ serve(async (req) => {
     }
 
     const parsedPayload = safeJsonParse(rawBody) || { raw: rawBody };
+
+    // Handle TikTok Ping/Verification events
+    if (parsedPayload.event === 'tiktok.ping' || parsedPayload.event === 'ping') {
+      console.log('[tiktok-leadgen-webhook] Received ping event, responding OK');
+      return new Response(
+        JSON.stringify({ success: true, message: 'pong' }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+
     const leadPayload = extractPayload(parsedPayload);
     const extracted = extractLead(leadPayload);
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
     const leadRow = {
-      platform: 'tiktok',
+      platform: parsedPayload.platform || 'tiktok',
       lead_id: extracted.leadId || null,
-      lead_type: 'instant_form',
+      lead_type: parsedPayload.lead_type || 'instant_form',
       form_id: extracted.formId || null,
       ad_id: extracted.adId || null,
       adgroup_id: extracted.adGroupId || null,
@@ -207,53 +217,22 @@ async function upsertMarketingLead(
   supabase: ReturnType<typeof createClient>,
   leadRow: Record<string, unknown>,
   externalLeadId?: string,
-): Promise<string | null> {
+): Promise<{ leadId: string | null, dbError: any | null }> {
   try {
-    if (externalLeadId) {
-      const { data: existing, error: lookupError } = await supabase
-        .from('marketing_leads')
-        .select('id')
-        .eq('platform', leadRow.platform as string)
-        .eq('lead_id', externalLeadId)
-        .maybeSingle();
+    const onConflict = externalLeadId ? 'platform,lead_id' : 'platform,email';
 
-      if (lookupError) {
-        console.error('[tiktok-leadgen-webhook] Failed to lookup marketing_leads:', lookupError);
-        return null;
-      }
-
-      if (existing?.id) {
-        const { data: updated, error: updateError } = await supabase
-          .from('marketing_leads')
-          .update(leadRow)
-          .eq('id', existing.id)
-          .select('id')
-          .single();
-
-        if (updateError) {
-          console.error('[tiktok-leadgen-webhook] Failed to update marketing_leads:', updateError);
-          return null;
-        }
-
-        return updated?.id ?? existing.id;
-      }
-    }
-
-    const { data: inserted, error: insertError } = await supabase
+    const { data, error } = await supabase
       .from('marketing_leads')
-      .insert(leadRow)
+      .upsert(leadRow, { 
+        onConflict,
+        ignoreDuplicates: false 
+      })
       .select('id')
       .single();
 
-    if (insertError) {
-      console.error('[tiktok-leadgen-webhook] Failed to insert marketing_leads:', insertError);
-      return null;
-    }
-
-    return inserted?.id ?? null;
+    return { leadId: data?.id ?? null, dbError: error };
   } catch (error) {
-    console.error('[tiktok-leadgen-webhook] Failed to store marketing lead:', error);
-    return null;
+    return { leadId: null, dbError: error };
   }
 }
 
@@ -403,52 +382,65 @@ function extractPayload(payload: any): any {
 function extractLead(payload: any): LeadExtracted {
   const fields = extractFieldMap(payload);
 
+  // Attempt to find fields directly in payload (Web Form style) or in TikTok fields map
   const leadId = coalesceString(
+    payload.lead_id,
     deepFind(payload, ['lead_id', 'leadid', 'lead'])?.toString(),
     fields['leadid'],
   );
 
   const formId = coalesceString(
+    payload.form_id,
     deepFind(payload, ['form_id', 'formid'])?.toString(),
     fields['formid'],
   );
 
   const adId = coalesceString(
+    payload.ad_id,
     deepFind(payload, ['ad_id', 'adid'])?.toString(),
     fields['adid'],
   );
 
   const adGroupId = coalesceString(
+    payload.adgroup_id,
     deepFind(payload, ['adgroup_id', 'adgroupid', 'ad_group_id'])?.toString(),
     fields['adgroupid'],
   );
 
   const campaignId = coalesceString(
+    payload.campaign_id,
     deepFind(payload, ['campaign_id', 'campaignid'])?.toString(),
     fields['campaignid'],
   );
 
   const advertiserId = coalesceString(
+    payload.advertiser_id,
     deepFind(payload, ['advertiser_id', 'advertiserid', 'advertiser'])?.toString(),
     fields['advertiserid'],
   );
 
-  const email = coalesceString(fields['email'], fields['correo'], fields['mail']);
-  const phone = coalesceString(fields['telefono'], fields['phone'], fields['celular'], fields['whatsapp']);
+  const email = coalesceString(payload.email, fields['email'], fields['correo'], fields['mail']);
+  const phone = coalesceString(payload.phone, fields['telefono'], fields['phone'], fields['celular'], fields['whatsapp']);
 
-  const fullName = coalesceString(fields['nombrecompleto'], fields['fullname'], fields['nombre'], fields['name']);
-  const firstName = coalesceString(fields['nombre'], fields['firstname']);
-  const lastName = coalesceString(fields['apellido'], fields['lastname']);
+  const fullName = coalesceString(payload.full_name, fields['nombrecompleto'], fields['fullname'], fields['nombre'], fields['name']);
+  const firstName = coalesceString(payload.first_name, fields['nombre'], fields['firstname']);
+  const lastName = coalesceString(payload.last_name, fields['apellido'], fields['lastname']);
 
-  const city = coalesceString(fields['ciudad'], fields['city'], fields['localidad'], fields['zona']);
-  const region = coalesceString(fields['region'], fields['provincia'], fields['state']);
-  const country = coalesceString(fields['pais'], fields['country']);
+  const city = coalesceString(payload.city, fields['ciudad'], fields['city'], fields['localidad'], fields['zona']);
+  const region = coalesceString(payload.region, fields['region'], fields['provincia'], fields['state']);
+  const country = coalesceString(payload.country, fields['pais'], fields['country']);
 
-  const carBrand = coalesceString(fields['marca'], fields['carbrand'], fields['brand']);
-  const carModel = coalesceString(fields['modelo'], fields['carmodel'], fields['model']);
-  const carYear = parseYear(coalesceString(fields['anio'], fields['ano'], fields['year'], fields['caryear']));
+  const carBrand = coalesceString(payload.car_brand, fields['marca'], fields['carbrand'], fields['brand']);
+  const carModel = coalesceString(payload.car_model, fields['modelo'], fields['carmodel'], fields['model']);
+  const carYear = parseYear(coalesceString(payload.car_year?.toString(), fields['anio'], fields['ano'], fields['year'], fields['caryear']));
 
-  const hasCar = parseBoolean(coalesceString(fields['tenesauto'], fields['tienesauto'], fields['hascar'], fields['tengoauto']));
+  // For hasCar, check direct boolean first, then string parsing
+  let hasCar: boolean | undefined = undefined;
+  if (typeof payload.has_car === 'boolean') {
+    hasCar = payload.has_car;
+  } else {
+    hasCar = parseBoolean(coalesceString(fields['tenesauto'], fields['tienesauto'], fields['hascar'], fields['tengoauto']));
+  }
 
   const submittedAtValue = deepFind(payload, ['create_time', 'created_time', 'event_time', 'submit_time', 'submitted_at']);
   const submittedAt = parseTimestamp(submittedAtValue);
