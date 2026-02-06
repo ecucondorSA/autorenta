@@ -1,0 +1,29 @@
+{
+  "name": "video-studio",
+  "version": "1.0.0",
+  "description": "Remotion video generator for AutoRenta",
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "start": "remotion preview src/index.ts",
+    "build": "remotion render src/index.ts CarPromo out/video.mp4",
+    "upgrade": "remotion upgrade",
+    "test": "eslint src --ext ts,tsx"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "4.0.110",
+    "@remotion/cli": "4.0.110",
+    "@remotion/shapes": "4.0.110",
+    "@remotion/transitions": "4.0.110"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/web": "^0.0.143",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.2",
+    "typescript": "^5.4.5",
+    "prettier": "^3.3.1"
+  }
+}
