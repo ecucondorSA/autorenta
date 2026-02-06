@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { PushNotifications, PushNotificationSchema, ActionPerformed, Token } from '@capacitor/push-notifications';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { ToastService } from '@core/services/ui/toast.service';
 
 @Injectable({
@@ -12,6 +13,7 @@ export class MobileNotificationService {
   private readonly supabase = inject(SupabaseClientService);
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
+  private readonly logger = inject(LoggerService);
 
   private readonly isNative = Capacitor.isNativePlatform();
   readonly hasPermission = signal<boolean>(false);
@@ -28,18 +30,18 @@ export class MobileNotificationService {
   private initListeners() {
     // On registration success, sync token with backend
     PushNotifications.addListener('registration', (token: Token) => {
-      console.log('[Push] Registration token:', token.value);
+      this.logger.debug('[Push] Registration token received');
       this.syncToken(token.value);
     });
 
     // On registration error
     PushNotifications.addListener('registrationError', (error: unknown) => {
-      console.error('[Push] Registration error:', error);
+      this.logger.error('[Push] Registration error', error);
     });
 
     // Handle received notification while app is in foreground
     PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
-      console.log('[Push] Notification received in foreground:', notification);
+      this.logger.debug('[Push] Notification received in foreground', notification);
 
       // In foreground, we show a discrete internal toast instead of system alert
       this.toast.info(notification.title || 'Nueva notificación', notification.body || '');
@@ -51,7 +53,7 @@ export class MobileNotificationService {
 
     // Handle tap on notification (from background/closed)
     PushNotifications.addListener('pushNotificationActionPerformed', (notification: ActionPerformed) => {
-      console.log('[Push] Notification action performed:', notification);
+      this.logger.debug('[Push] Notification action performed', notification);
       this.handleNavigation(notification.notification.data);
     });
   }
@@ -79,9 +81,9 @@ export class MobileNotificationService {
     try {
       const { error } = await this.supabase.rpc('sync_fcm_token', { p_token: token });
       if (error) throw error;
-      console.log('[Push] Token synced successfully');
+      this.logger.info('[Push] Token synced successfully');
     } catch (err) {
-      console.error('[Push] Failed to sync token:', err);
+      this.logger.error('[Push] Failed to sync token', err);
     }
   }
 

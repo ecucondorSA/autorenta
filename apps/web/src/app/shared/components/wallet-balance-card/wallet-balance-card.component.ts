@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '@core/services/payments/wallet.service';
+import { ToastService } from '@core/services/ui/toast.service';
 
 /**
  * WalletBalanceCardComponent
@@ -47,6 +48,7 @@ import { WalletService } from '@core/services/payments/wallet.service';
 export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   private readonly walletService = inject(WalletService);
   private readonly injector = inject(Injector);
+  private readonly toastService = inject(ToastService);
   private refreshInterval?: number;
 
   // ==================== INPUTS & OUTPUTS ====================
@@ -206,10 +208,10 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
         this.showDepositConfirmedToast(transaction as unknown as Record<string, unknown>);
 
         // Recargar pending deposits
-        this.loadPendingDeposits().catch(() => {});
+        this.loadPendingDeposits().catch(() => { });
       },
       // Callback para cualquier cambio en transacciones
-      () => {},
+      () => { },
     );
 
     // Iniciar auto-refresh si está habilitado
@@ -231,7 +233,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // Desuscribirse de cambios realtime
-    this.walletService.unsubscribeFromWalletChanges().catch(() => {});
+    this.walletService.unsubscribeFromWalletChanges().catch(() => { });
 
     // Limpiar interval al destruir componente
     if (this.refreshInterval) {
@@ -301,10 +303,11 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
 
       // 4. Mostrar mensaje al usuario si se confirmó algún depósito
       if (pollResult.confirmed > 0) {
-        alert(`✅ ${pollResult['message']}\n\nTu balance se ha actualizado.`);
+        this.toastService.success('Depósito confirmado', `${pollResult['message']}. Tu balance se ha actualizado.`);
       } else if (this.pendingDeposits() > 0) {
-        alert(
-          '⏳ Tus depósitos aún están pendientes de aprobación en MercadoPago.\n\nPueden tardar algunos minutos. Te notificaremos cuando se acrediten.',
+        this.toastService.info(
+          'Depósitos pendientes',
+          'Tus depósitos están siendo procesados por MercadoPago. Te notificaremos cuando se acrediten.',
         );
       }
     } catch {
@@ -429,12 +432,11 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
       maximumFractionDigits: 2,
     }).format(amount);
 
-    // Mostrar notificación con alert (temporal hasta implementar un sistema de toasts)
-    alert(
-      `✅ Depósito Confirmado!\n\n${formattedAmount} se acreditaron a tu wallet.\n\nTu balance ha sido actualizado.`,
+    // Mostrar notificación toast de confirmación
+    this.toastService.success(
+      'Depósito confirmado',
+      `${formattedAmount} se acreditaron a tu wallet.`,
     );
-
-    // TODO: Reemplazar con un toast notification component más elegante
   }
 
   /**
@@ -443,10 +445,9 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   async copyToClipboard(text: string): Promise<void> {
     try {
       await navigator.clipboard.writeText(text);
-      // TODO: Agregar toast notification en vez de alert
-      alert(`✅ Copiado al portapapeles: ${text}`);
+      this.toastService.success('Copiado', `${text} copiado al portapapeles`);
     } catch {
-      alert('❌ Error al copiar. Por favor, copia manualmente.');
+      this.toastService.error('Error', 'No se pudo copiar. Cópialo manualmente.');
     }
   }
 }

@@ -266,7 +266,18 @@ Si la respuesta a cualquiera es "no", **investigar primero, codear después**.
 
 ---
 
-## 13. Post-Implementation Review (OBLIGATORIO)
+## 13. Infraestructura de Automatización
+
+### Configuración del Navegador (Patchright/Puppeteer)
+Para mantener sesiones activas (TikTok, MercadoPago) y evitar bloqueos:
+
+- **Profile Path:** `/home/edu/.autorenta-bot-profile`
+- **Binary Path:** Dejar vacío (usar binario interno de Patchright para mejor anti-detect).
+- **CDP Port:** `9223` (evitar conflicto con puerto default 9222).
+
+---
+
+## 14. Post-Implementation Review (OBLIGATORIO)
 
 Después de cada implementación de UI/UX, Claude DEBE ser autocrítico y verificar:
 

@@ -567,7 +567,7 @@ async function mpTransfer(page, alias, amount, expectedName) {
 // ========== Configuration ==========
 const CONFIG = {
   headless: process.env.HEADLESS === 'true', // Default to false (visible) unless HEADLESS=true
-  profilePath: process.env.BROWSER_PROFILE || '/home/edu/.patchright-profile',
+  profilePath: process.env.BROWSER_PROFILE || '/home/edu/.autorenta-bot-profile',
   channel: 'chrome', // Use installed Google Chrome (not bundled Chromium which crashes)
   eventBufferSize: 100,
   compactOutput: true,
@@ -1343,7 +1343,10 @@ class PatchrightStreamingMCP {
           '--disable-dev-shm-usage',
           '--disable-gpu',
           '--no-first-run',
-          '--no-default-browser-check'
+          '--no-default-browser-check',
+          '--window-size=1920,1080',
+          '--start-maximized',
+          '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
         ];
 
         // For existing Chrome profiles, use base dir + profile-directory arg

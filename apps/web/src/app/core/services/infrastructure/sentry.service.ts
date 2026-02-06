@@ -230,13 +230,8 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
     // Configure what data to send
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     beforeSend(event: any, _hint: any) {
-      // TESTING MODE: Send ALL errors to Sentry (including development)
-      // TODO: Revert this after testing is complete
-      // const storage = getLocalStorage();
-      // const testMode = storage ? storage.getItem('sentry-test-mode') : null;
-      // if (!environment.production && !testMode) {
-      //   return null;
-      // }
+      // Production-only: Skip in development unless explicitly enabled
+      // (Sentry is already disabled in dev via environment check in initSentry)
 
       // Sanitize sensitive data
       if (event.request) {
