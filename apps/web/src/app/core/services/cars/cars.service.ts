@@ -229,7 +229,10 @@ export class CarsService {
           avatar_url,
           rating_avg,
           rating_count,
-          created_at
+          created_at,
+          email_verified,
+          phone_verified,
+          id_verified
         )
       `,
       )
@@ -303,7 +306,10 @@ export class CarsService {
           avatar_url,
           rating_avg,
           rating_count,
-          created_at
+          created_at,
+          email_verified,
+          phone_verified,
+          id_verified
         )
       `,
         { count: 'exact' },

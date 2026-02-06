@@ -15,7 +15,10 @@
 
     <!-- Image Container -->
     <div class="relative w-20 h-14 overflow-hidden rounded-xl bg-surface-secondary">
-      <img [src]="car.photoUrl || '/assets/images/car-placeholder.svg'" class="w-full h-full object-cover"
+      <img [src]="car.photoUrl || '/assets/images/car-placeholder.svg'"
+        class="w-full h-full object-cover transition-all"
+        [class.grayscale]="!isOwnerVerified"
+        [class.opacity-60]="!isOwnerVerified"
         [alt]="car.title || 'Auto'">
 
       <!-- Gradient for text contrast -->
@@ -24,8 +27,9 @@
 
     <!-- Price Badge (Floating) -->
     <div
-      class="absolute -bottom-2 -right-1 bg-black text-white px-2.5 py-1 rounded-full shadow-lg border border-white/20 transition-transform duration-300 group-hover:scale-105"
-      [class.bg-brand-primary]="isSelected" [class.text-black]="isSelected" [class.border-transparent]="isSelected"
+      class="absolute -bottom-2 -right-1 px-2.5 py-1 rounded-full shadow-lg border transition-transform duration-300 group-hover:scale-105"
+      [ngClass]="isOwnerVerified ? 'bg-black text-white border-white/20' : 'bg-zinc-600 text-zinc-300 border-zinc-500/30'"
+      [class.bg-brand-primary]="isSelected && isOwnerVerified" [class.text-black]="isSelected && isOwnerVerified" [class.border-transparent]="isSelected && isOwnerVerified"
       [class.font-black]="isSelected">
       <span class="text-[11px] font-bold block leading-none font-satoshi">
         \${{ car.pricePerDay | number:'1.0-0' }}

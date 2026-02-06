@@ -9,6 +9,7 @@ export interface CarOwner {
   created_at: string;
   email_verified: boolean;
   phone_verified: boolean;
+  id_verified?: boolean;
 }
 
 export interface CarBrand {

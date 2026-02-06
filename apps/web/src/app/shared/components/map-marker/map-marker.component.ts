@@ -13,4 +13,8 @@ import { CarMapLocation } from '@core/services/cars/car-locations.service';
 export class MapMarkerComponent {
   @Input() car!: CarMapLocation;
   @Input() isSelected: boolean = false;
+
+  get isOwnerVerified(): boolean {
+    return this.car?.ownerVerified !== false;
+  }
 }

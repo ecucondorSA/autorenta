@@ -692,6 +692,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         currency: car['currency'] || 'USD',
         photoUrl: car.photoUrl,
         availabilityStatus: car.availabilityStatus || 'available',
+        ownerVerified: car.ownerVerified ?? true,
       },
     }));
 
@@ -1514,7 +1515,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
               title: feature.properties?.['title'] || '',
               currency: feature.properties?.['currency'] || 'USD',
               photoUrl: feature.properties?.['photoUrl'] || '',
-              availabilityStatus: feature.properties?.['availabilityStatus']
+              availabilityStatus: feature.properties?.['availabilityStatus'],
+              ownerVerified: feature.properties?.['ownerVerified'] ?? true,
             } as CarMapLocation;
 
             const markerData = this.createCarMarker(minimalCar);

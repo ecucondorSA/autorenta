@@ -284,6 +284,15 @@ export class CarCardComponent implements OnInit, OnDestroy {
   /**
    * Verifica si el auto tiene Instant Booking habilitado
    */
+  readonly isOwnerVerified = computed(() => {
+    const car = this._car();
+    if (!car?.owner) return true; // Default to verified if no owner data (avoid false grey)
+    return (
+      car.owner.email_verified === true &&
+      car.owner.id_verified === true
+    );
+  });
+
   readonly hasInstantBooking = computed(() => {
     const car = this._car();
     if (!car) return false;

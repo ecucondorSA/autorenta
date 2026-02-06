@@ -45,6 +45,8 @@ export interface CarMapLocation {
   transmission?: string;
   seats?: number;
   fuelType?: string;
+  // Owner verification
+  ownerVerified?: boolean;
 }
 
 interface CacheEntry {
@@ -264,6 +266,36 @@ export class CarLocationsService {
         }
       },
     );
+    // Listen for profile verification changes (owner_verified depends on profiles flags)
+    channel.on(
+      'postgres_changes',
+      { schema: 'public', table: 'profiles', event: 'UPDATE' },
+      (payload: RealtimePostgresChangesPayload<Record<string, unknown>>) => {
+        const newRecord = payload.new as Record<string, unknown> | undefined;
+        const oldRecord = payload.old as Record<string, unknown> | undefined;
+        // Only refresh if verification fields changed
+        if (
+          newRecord?.['email_verified'] !== oldRecord?.['email_verified'] ||
+          newRecord?.['id_verified'] !== oldRecord?.['id_verified']
+        ) {
+          this.cache = null; // Invalidate cache to force fresh fetch with new owner_verified
+          notifyAllSubscribers();
+        }
+      },
+    );
+    // Listen for user_documents changes (license verification affects owner_verified)
+    channel.on(
+      'postgres_changes',
+      { schema: 'public', table: 'user_documents', event: '*' },
+      (payload: RealtimePostgresChangesPayload<Record<string, unknown>>) => {
+        const newRecord = payload.new as Record<string, unknown> | undefined;
+        const kind = newRecord?.['kind'] as string | undefined;
+        if (kind === 'license_front' || kind === 'license_back') {
+          this.cache = null;
+          notifyAllSubscribers();
+        }
+      },
+    );
 
     void channel.subscribe((status) => {
       if (status === 'SUBSCRIBED') {
@@ -322,7 +354,7 @@ export class CarLocationsService {
     let query = this.supabase
       .from('v_cars_with_main_photo')
       .select(
-        'id, title, status, price_per_day, currency, location_city, location_state, location_country, location_lat, location_lng, main_photo_url, photo_gallery, description, updated_at, auto_approval, min_rental_days, max_rental_days, deposit_required, deposit_amount, insurance_included, uses_dynamic_pricing',
+        'id, title, status, price_per_day, currency, location_city, location_state, location_country, location_lat, location_lng, main_photo_url, photo_gallery, description, updated_at, auto_approval, min_rental_days, max_rental_days, deposit_required, deposit_amount, insurance_included, uses_dynamic_pricing, owner_verified',
       )
       .eq('status', 'active')
       .not('location_lat', 'is', null)
@@ -692,6 +724,7 @@ export class CarLocationsService {
       depositAmount,
       insuranceIncluded,
       usesDynamicPricing,
+      ownerVerified: car['owner_verified'] === true || record['owner_verified'] === true,
     };
   }
 
