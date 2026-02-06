@@ -316,7 +316,7 @@ export class FileUploadService {
   /**
    * Compress an image file
    */
-  private async compressImage(
+  public async compressImage(
     file: File,
     options: { maxSizeMB: number; maxWidthOrHeight: number }
   ): Promise<File> {

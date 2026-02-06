@@ -4,13 +4,14 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BookingContract, ContractsService } from '@core/services/bookings/contracts.service';
+import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 import { Booking } from '../../../core/models';
 
 @Component({
   selector: 'app-contracts-management',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, IonicModule, RouterModule],
+  imports: [FormsModule, IonicModule, RouterModule, SkeletonLoaderComponent],
   templateUrl: './contracts-management.page.html',
   styleUrls: ['./contracts-management.page.scss'],
 })

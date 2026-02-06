@@ -132,11 +132,10 @@
     </div>
   }
 
-  <!-- Loading State -->
+  <!-- Loading State with Skeleton -->
   @if (loading() && !showCreateForm()) {
-    <div class="flex flex-col items-center justify-center py-12">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p class="mt-4 text-text-secondary">Cargando disputas...</p>
+    <div class="py-4">
+      <app-skeleton-loader type="list" [count]="3"></app-skeleton-loader>
     </div>
   }
 

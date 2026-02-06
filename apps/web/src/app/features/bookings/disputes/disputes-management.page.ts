@@ -24,13 +24,14 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import { DEFAULT_DOCUMENT_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
+import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 import { Booking } from '../../../core/models';
 
 @Component({
   selector: 'app-disputes-management',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, IonicModule, RouterModule],
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule, SkeletonLoaderComponent],
   templateUrl: './disputes-management.page.html',
   styleUrls: ['./disputes-management.page.scss'],
 })

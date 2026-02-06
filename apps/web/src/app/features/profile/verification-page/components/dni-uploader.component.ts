@@ -41,7 +41,7 @@ interface ExtractedField {
   verified: boolean;
 }
 
-const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
+const MAX_UPLOAD_BYTES = 50 * 1024 * 1024; // 50MB (handled by service compression)
 
 @Component({
   selector: 'app-dni-uploader',

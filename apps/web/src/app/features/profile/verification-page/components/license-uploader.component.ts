@@ -45,7 +45,7 @@ interface ExtractedField {
   isExpired?: boolean;
 }
 
-const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
+const MAX_UPLOAD_BYTES = 50 * 1024 * 1024; // 50MB (handled by service compression)
 
 import { ToastService } from '@core/services/ui/toast.service';
 
