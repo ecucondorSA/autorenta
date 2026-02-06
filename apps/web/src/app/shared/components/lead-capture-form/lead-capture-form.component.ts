@@ -213,6 +213,15 @@ export class LeadCaptureFormComponent {
 
       if (error) throw error;
 
+      // 🎯 TikTok Pixel Tracking
+      if ((window as any).ttq) {
+        (window as any).ttq.track('CompleteRegistration', {
+          content_name: 'Owner Lead',
+          value: 0,
+          currency: 'USD'
+        });
+      }
+
       this.isSubmitted.set(true);
       this.toast.show('¡Te contactaremos pronto!', 'success');
     } catch (error) {

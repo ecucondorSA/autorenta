@@ -57,3 +57,14 @@ verify_jwt = false
 # Function handles authentication manually for better error handling
 # This allows us to provide user-friendly error messages on auth failures
 verify_jwt = false
+
+[functions.lead-welcome-notification]
+enabled = true
+verify_jwt = true
+import_map = "./functions/lead-welcome-notification/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/lead-welcome-notification/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/lead-welcome-notification/*.html" ]
