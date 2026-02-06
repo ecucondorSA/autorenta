@@ -2,341 +2,265 @@
   <div class="max-w-2xl mx-auto px-4">
     <!-- Header -->
     <div class="flex items-center gap-4 mb-6">
-      <button
-        type="button"
-        (click)="cancel()"
-        class="p-2 rounded-full hover:bg-surface-secondary transition-colors"
-        aria-label="Volver"
-      >
+      <button type="button" (click)="cancel()" class="p-2 rounded-full hover:bg-surface-secondary transition-colors"
+        aria-label="Volver">
         <ion-icon name="arrow-back" class="text-2xl text-text-primary"></ion-icon>
       </button>
       <h1 class="text-2xl font-bold text-text-primary font-satoshi">Check-Out del Auto</h1>
     </div>
 
-    <!-- Loading State -->
+    <!-- Loading State (Skeleton) -->
     @if (loading()) {
-      <div class="text-center py-16">
-        <ion-spinner name="crescent" color="primary"></ion-spinner>
-        <p class="mt-4 text-text-secondary">Cargando reserva...</p>
-      </div>
+    <div class="max-w-2xl mx-auto mt-6 space-y-6">
+      <app-skeleton-loader type="card" [count]="1"></app-skeleton-loader>
+      <app-skeleton-loader type="text" [count]="3"></app-skeleton-loader>
+    </div>
     }
 
     <!-- Check-Out Form -->
     @if (!loading() && booking()) {
-      <!-- Booking Info Card -->
-      <div class="card-premium p-6 mb-6">
-        <h2 class="text-xl font-bold text-text-primary mb-4 font-satoshi">
-          Información de la Reserva
-        </h2>
-        <div class="space-y-3">
-          <div class="flex justify-between">
-            <span class="text-text-secondary">Auto:</span>
-            <span class="font-semibold">{{ booking()?.car?.title }}</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-text-secondary">Locatario:</span>
-            <span class="font-semibold">{{ booking()?.renter_id || 'N/A' }}</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-text-secondary">Período:</span>
-            <span class="font-semibold">
-              {{ formatBookingDate(booking()?.start_at) }} -
-              {{ formatBookingDate(booking()?.end_at) }}
-            </span>
-          </div>
+    <!-- Booking Info Card -->
+    <div class="card-premium p-6 mb-6">
+      <h2 class="text-xl font-bold text-text-primary mb-4 font-satoshi">
+        Información de la Reserva
+      </h2>
+      <div class="space-y-3">
+        <div class="flex justify-between">
+          <span class="text-text-secondary">Auto:</span>
+          <span class="font-semibold">{{ booking()?.car?.title }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-text-secondary">Locatario:</span>
+          <span class="font-semibold">{{ booking()?.renter_id || 'N/A' }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-text-secondary">Período:</span>
+          <span class="font-semibold">
+            {{ formatBookingDate(booking()?.start_at) }} -
+            {{ formatBookingDate(booking()?.end_at) }}
+          </span>
         </div>
       </div>
+    </div>
 
-      <!-- Check-In Comparison Card -->
-      @if (checkInData()) {
-        <div class="bg-cta-default/10 border border-cta-default/40 rounded-xl p-4 mb-6">
-          <h3 class="font-semibold text-cta-default mb-3 font-satoshi">Estado al Check-In</h3>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between">
-              <span class="text-cta-default">Kilometraje:</span>
-              <span class="font-semibold text-cta-default"
-                >{{ checkInData().odometer_reading | number }} km</span
-              >
-            </div>
-            <div class="flex justify-between">
-              <span class="text-cta-default">Combustible:</span>
-              <span class="font-semibold text-cta-default">{{ checkInData().fuel_level }}%</span>
-            </div>
-          </div>
+    <!-- Check-In Comparison Card -->
+    @if (checkInData()) {
+    <div class="bg-cta-default/10 border border-cta-default/40 rounded-xl p-4 mb-6">
+      <h3 class="font-semibold text-cta-default mb-3 font-satoshi">Estado al Check-In</h3>
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between">
+          <span class="text-cta-default">Kilometraje:</span>
+          <span class="font-semibold text-cta-default">{{ checkInData().odometer_reading | number }} km</span>
         </div>
-      }
+        <div class="flex justify-between">
+          <span class="text-cta-default">Combustible:</span>
+          <span class="font-semibold text-cta-default">{{ checkInData().fuel_level }}%</span>
+        </div>
+      </div>
+    </div>
+    }
 
-      <!-- Step 1: Inspection (Split View) -->
-      @if (step() === 'inspection') {
-        <div class="mb-8">
-          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <p class="text-sm text-blue-800">
-              <strong>Instrucciones:</strong> Compara el estado actual con el Check-in. Si hay daños nuevos, documéntalos claramente.
-            </p>
-          </div>
+    <!-- Step 1: Inspection (Split View) -->
+    @if (step() === 'inspection') {
+    <div class="mb-8">
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <p class="text-sm text-blue-800">
+          <strong>Instrucciones:</strong> Compara el estado actual con el Check-in. Si hay daños nuevos, documéntalos
+          claramente.
+        </p>
+      </div>
 
-          <!-- Split Layout Container -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-            
-            <!-- LEFT: Reference (Check-In Data) -->
-            <div class="space-y-4">
-              <h3 class="text-sm font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2">
-                <ion-icon name="time-outline"></ion-icon>
-                Estado Inicial (Check-In)
-              </h3>
-              
-              <div class="bg-surface-raised border border-border-default rounded-2xl p-4 shadow-sm">
-                <!-- Metrics -->
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                  <div class="bg-surface-base p-3 rounded-xl border border-border-default">
-                    <p class="text-xs text-text-secondary mb-1">Odómetro</p>
-                    <p class="font-mono font-bold text-text-primary">{{ checkInData()?.odometer_reading | number }} km</p>
-                  </div>
-                  <div class="bg-surface-base p-3 rounded-xl border border-border-default">
-                    <p class="text-xs text-text-secondary mb-1">Combustible</p>
-                    <p class="font-mono font-bold text-text-primary">{{ checkInData()?.fuel_level }}%</p>
-                  </div>
-                </div>
+      <!-- Split Layout Container -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
 
-                <!-- Photos Grid -->
-                <div>
-                  <p class="text-xs text-text-secondary mb-2">Fotos de entrega:</p>
-                  @if (checkInData()?.photos?.length) {
-                    <div class="grid grid-cols-3 gap-2">
-                      @for (photo of checkInData().photos; track photo.url) {
-                        <div class="aspect-square rounded-lg overflow-hidden bg-surface-secondary border border-border-default relative group">
-                          <img [src]="photo.url" class="w-full h-full object-cover" loading="lazy" alt="Foto de entrega del vehículo">
-                          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
-                        </div>
-                      }
-                    </div>
-                  } @else {
-                    <div class="text-center py-8 bg-surface-base rounded-xl border border-dashed border-border-muted text-text-muted text-xs">
-                      Sin fotos de check-in
-                    </div>
-                  }
-                </div>
+        <!-- LEFT: Reference (Check-In Data) -->
+        <div class="space-y-4">
+          <h3 class="text-sm font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2">
+            <ion-icon name="time-outline"></ion-icon>
+            Estado Inicial (Check-In)
+          </h3>
+
+          <div class="bg-surface-raised border border-border-default rounded-2xl p-4 shadow-sm">
+            <!-- Metrics -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="bg-surface-base p-3 rounded-xl border border-border-default">
+                <p class="text-xs text-text-secondary mb-1">Odómetro</p>
+                <p class="font-mono font-bold text-text-primary">{{ checkInData()?.odometer_reading | number }} km</p>
+              </div>
+              <div class="bg-surface-base p-3 rounded-xl border border-border-default">
+                <p class="text-xs text-text-secondary mb-1">Combustible</p>
+                <p class="font-mono font-bold text-text-primary">{{ checkInData()?.fuel_level }}%</p>
               </div>
             </div>
 
-            <!-- RIGHT: Action (Check-Out Form) -->
-            <div class="space-y-4">
-              <h3 class="text-sm font-bold text-cta-default uppercase tracking-wider flex items-center gap-2">
-                <ion-icon name="camera-outline"></ion-icon>
-                Estado Final (Ahora)
-              </h3>
+            <!-- Photos Grid -->
+            <div>
+              <p class="text-xs text-text-secondary mb-2">Fotos de entrega:</p>
+              @if (checkInData()?.photos?.length) {
+              <div class="grid grid-cols-3 gap-2">
+                @for (photo of checkInData().photos; track photo.url) {
+                <div
+                  class="aspect-square rounded-lg overflow-hidden bg-surface-secondary border border-border-default relative group">
+                  <img [src]="photo.url" class="w-full h-full object-cover" loading="lazy"
+                    alt="Foto de entrega del vehículo">
+                  <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
+                </div>
+                }
+              </div>
+              } @else {
+              <div
+                class="text-center py-8 bg-surface-base rounded-xl border border-dashed border-border-muted text-text-muted text-xs">
+                Sin fotos de check-in
+              </div>
+              }
+            </div>
+          </div>
+        </div>
 
-              <!-- Mode Selector -->
-              <div class="mb-4">
-                <div class="grid grid-cols-3 gap-2">
-                  <!-- Photos Mode -->
-                  <button
-                    type="button"
-                    class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all"
-                    [class]="
+        <!-- RIGHT: Action (Check-Out Form) -->
+        <div class="space-y-4">
+          <h3 class="text-sm font-bold text-cta-default uppercase tracking-wider flex items-center gap-2">
+            <ion-icon name="camera-outline"></ion-icon>
+            Estado Final (Ahora)
+          </h3>
+
+          <!-- Mode Selector -->
+          <div class="mb-4">
+            <div class="grid grid-cols-3 gap-2">
+              <!-- Photos Mode -->
+              <button type="button" class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all"
+                [class]="
                       inspectionMode() === 'photos'
                         ? 'border-cta-default bg-cta-default/10'
                         : 'border-border-default bg-surface-base hover:border-border-muted'
-                    "
-                    (click)="setInspectionMode('photos')"
-                  >
-                    <ion-icon
-                      name="camera"
-                      class="text-2xl"
-                      [class]="
+                    " (click)="setInspectionMode('photos')">
+                <ion-icon name="camera" class="text-2xl" [class]="
                         inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-secondary'
-                      "
-                    ></ion-icon>
-                    <span
-                      class="font-medium text-xs"
-                      [class]="inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-primary'"
-                      >Fotos</span
-                    >
-                  </button>
+                      "></ion-icon>
+                <span class="font-medium text-xs"
+                  [class]="inspectionMode() === 'photos' ? 'text-cta-default' : 'text-text-primary'">Fotos</span>
+              </button>
 
-                  <!-- Video Batch Mode -->
-                  <button
-                    type="button"
-                    class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative"
-                    [class]="
+              <!-- Video Batch Mode -->
+              <button type="button"
+                class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative" [class]="
                       inspectionMode() === 'video'
                         ? 'border-cta-default bg-cta-default/10'
                         : 'border-border-default bg-surface-base hover:border-border-muted'
-                    "
-                    (click)="setInspectionMode('video')"
-                  >
-                    <span
-                      class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full"
-                      >IA</span
-                    >
-                    <ion-icon
-                      name="videocam"
-                      class="text-2xl"
-                      [class]="
+                    " (click)="setInspectionMode('video')">
+                <span
+                  class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded-full">IA</span>
+                <ion-icon name="videocam" class="text-2xl" [class]="
                         inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-secondary'
-                      "
-                    ></ion-icon>
-                    <span
-                      class="font-medium text-xs"
-                      [class]="inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-primary'"
-                      >Video</span
-                    >
-                  </button>
+                      "></ion-icon>
+                <span class="font-medium text-xs"
+                  [class]="inspectionMode() === 'video' ? 'text-cta-default' : 'text-text-primary'">Video</span>
+              </button>
 
-                  <!-- Live Mode -->
-                  <button
-                    type="button"
-                    class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative"
-                    [class]="
+              <!-- Live Mode -->
+              <button type="button"
+                class="flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all relative" [class]="
                       inspectionMode() === 'live'
                         ? 'border-purple-500 bg-purple-500/10'
                         : 'border-border-default bg-surface-base hover:border-border-muted'
-                    "
-                    (click)="setInspectionMode('live')"
-                  >
-                    <span
-                      class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold rounded-full animate-pulse"
-                      >LIVE</span
-                    >
-                    <ion-icon
-                      name="radio"
-                      class="text-2xl"
-                      [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-secondary'"
-                    ></ion-icon>
-                    <span
-                      class="font-medium text-xs"
-                      [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-primary'"
-                      >En Vivo</span
-                    >
-                  </button>
-                </div>
-              </div>
-
-              <!-- Inspection Component -->
-              @switch (inspectionMode()) {
-                @case ('live') {
-                  <app-video-inspection-live
-                    [bookingId]="booking()!.id"
-                    stage="check_out"
-                    (inspectionCompleted)="onInspectionCompleted($event)"
-                    (inspectionCancelled)="cancel()"
-                    (switchToPhotos)="switchToPhotos()"
-                  ></app-video-inspection-live>
-                }
-                @case ('video') {
-                  <app-video-inspection-ai
-                    [bookingId]="booking()!.id"
-                    stage="check_out"
-                    (inspectionCompleted)="onInspectionCompleted($event)"
-                    (inspectionCancelled)="cancel()"
-                    (switchToPhotos)="switchToPhotos()"
-                  ></app-video-inspection-ai>
-                }
-                @default {
-                  <app-inspection-uploader
-                    [bookingId]="booking()!.id"
-                    [stage]="'check_out'"
-                    (inspectionCompleted)="onInspectionCompleted($event)"
-                    (inspectionCancelled)="cancel()"
-                  ></app-inspection-uploader>
-                }
-              }
+                    " (click)="setInspectionMode('live')">
+                <span
+                  class="absolute -top-2 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold rounded-full animate-pulse">LIVE</span>
+                <ion-icon name="radio" class="text-2xl"
+                  [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-secondary'"></ion-icon>
+                <span class="font-medium text-xs"
+                  [class]="inspectionMode() === 'live' ? 'text-purple-500' : 'text-text-primary'">En Vivo</span>
+              </button>
             </div>
           </div>
+
+          <!-- Inspection Component -->
+          @switch (inspectionMode()) {
+          @case ('live') {
+          <app-video-inspection-live [bookingId]="booking()!.id" stage="check_out"
+            (inspectionCompleted)="onInspectionCompleted($event)" (inspectionCancelled)="cancel()"
+            (switchToPhotos)="switchToPhotos()"></app-video-inspection-live>
+          }
+          @case ('video') {
+          <app-video-inspection-ai [bookingId]="booking()!.id" stage="check_out"
+            (inspectionCompleted)="onInspectionCompleted($event)" (inspectionCancelled)="cancel()"
+            (switchToPhotos)="switchToPhotos()"></app-video-inspection-ai>
+          }
+          @default {
+          <app-inspection-uploader [bookingId]="booking()!.id" [stage]="'check_out'"
+            (inspectionCompleted)="onInspectionCompleted($event)"
+            (inspectionCancelled)="cancel()"></app-inspection-uploader>
+          }
+          }
         </div>
-      }
+      </div>
+    </div>
+    }
 
-      <!-- Step 2: Damage Claim -->
-      @if (step() === 'damages') {
-        <div class="mb-8">
-          <div class="card-premium p-6">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="font-bold text-text-primary font-satoshi">
-                ¿Hay daños nuevos que reportar?
-              </h3>
-              <ion-toggle
-                [checked]="hasDamages()"
-                (ionChange)="toggleDamages()"
-                color="danger"
-              ></ion-toggle>
-            </div>
+    <!-- Step 2: Damage Claim -->
+    @if (step() === 'damages') {
+    <div class="mb-8">
+      <div class="card-premium p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-text-primary font-satoshi">
+            ¿Hay daños nuevos que reportar?
+          </h3>
+          <ion-toggle [checked]="hasDamages()" (ionChange)="toggleDamages()" color="danger"></ion-toggle>
+        </div>
 
-            <!-- Damages Form (if hasDamages) -->
-            @if (hasDamages()) {
-              <div class="space-y-4 pt-4 border-t border-border-default">
-                <div class="bg-warning-bg border border-warning-border rounded-lg p-3">
-                  <p class="text-sm text-warning-strong">
-                    El monto de daños se deducirá del depósito de garantía ($250 USD) del locatario.
-                  </p>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-text-primary mb-2"
-                    >Monto del daño (USD) *</label
-                  >
-                  <input
-                    type="number"
-                    [value]="damageAmount()"
-                    (input)="damageAmount.set($any($event.target).value)"
-                    placeholder="Ej: 50"
-                    min="1"
-                    max="250"
-                    class="w-full px-4 py-3 rounded-xl border border-border-default focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 outline-none transition-all"
-                    aria-label="Ej: 50"
-                  />
-                  <p class="mt-1 text-xs text-text-muted">Máximo: $250 USD</p>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-text-primary mb-2"
-                    >Descripción del daño *</label
-                  >
-                  <textarea
-                    [value]="damagesNotes()"
-                    (input)="damagesNotes.set($any($event.target).value)"
-                    rows="4"
-                    placeholder="Describe el daño en detalle..."
-                    class="w-full px-4 py-3 rounded-xl border border-border-default focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 outline-none transition-all resize-none"
-                  ></textarea>
-                </div>
-              </div>
-            }
-
-            <!-- No Damages (if !hasDamages) -->
-            @if (!hasDamages()) {
-              <div class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mt-4">
-                <div class="flex items-center gap-2">
-                  <ion-icon name="checkmark-circle" class="text-success-strong text-2xl"></ion-icon>
-                  <span class="text-sm text-success-strong"
-                    >El auto fue devuelto en buenas condiciones</span
-                  >
-                </div>
-              </div>
-            }
+        <!-- Damages Form (if hasDamages) -->
+        @if (hasDamages()) {
+        <div class="space-y-4 pt-4 border-t border-border-default">
+          <div class="bg-warning-bg border border-warning-border rounded-lg p-3">
+            <p class="text-sm text-warning-strong">
+              El monto de daños se deducirá del depósito de garantía ($250 USD) del locatario.
+            </p>
           </div>
-
-          <!-- Submit Buttons -->
-          <div class="flex gap-4 mt-6">
-            <button
-              type="button"
-              (click)="step.set('inspection')"
-              class="flex-1 px-6 py-3 rounded-xl border-2 border-border-default text-text-secondary font-semibold hover:bg-surface-secondary transition-all"
-              [disabled]="submitting()"
-            >
-              Volver a Fotos
-            </button>
-            <button
-              type="button"
-              (click)="submitCheckOut()"
-              [disabled]="!canSubmitDamages() || submitting()"
-              class="flex-1 px-6 py-3 rounded-xl bg-cta-default text-cta-text-pure font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            >
-              @if (submitting()) {
-                <ion-spinner name="crescent" class="mr-2"></ion-spinner>
-              }
-              {{ submitting() ? 'Procesando...' : 'Finalizar Check-Out' }}
-            </button>
+          <div>
+            <label class="block text-sm font-medium text-text-primary mb-2">Monto del daño (USD) *</label>
+            <input type="number" [value]="damageAmount()" (input)="damageAmount.set($any($event.target).value)"
+              placeholder="Ej: 50" min="1" max="250"
+              class="w-full px-4 py-3 rounded-xl border border-border-default focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 outline-none transition-all"
+              aria-label="Ej: 50" />
+            <p class="mt-1 text-xs text-text-muted">Máximo: $250 USD</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-text-primary mb-2">Descripción del daño *</label>
+            <textarea [value]="damagesNotes()" (input)="damagesNotes.set($any($event.target).value)" rows="4"
+              placeholder="Describe el daño en detalle..."
+              class="w-full px-4 py-3 rounded-xl border border-border-default focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 outline-none transition-all resize-none"></textarea>
           </div>
         </div>
-      }
+        }
+
+        <!-- No Damages (if !hasDamages) -->
+        @if (!hasDamages()) {
+        <div class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mt-4">
+          <div class="flex items-center gap-2">
+            <ion-icon name="checkmark-circle" class="text-success-strong text-2xl"></ion-icon>
+            <span class="text-sm text-success-strong">El auto fue devuelto en buenas condiciones</span>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Submit Buttons -->
+      <div class="flex gap-4 mt-6">
+        <button type="button" (click)="step.set('inspection')"
+          class="flex-1 px-6 py-3 rounded-xl border-2 border-border-default text-text-secondary font-semibold hover:bg-surface-secondary transition-all"
+          [disabled]="submitting()">
+          Volver a Fotos
+        </button>
+        <button type="button" (click)="submitCheckOut()" [disabled]="!canSubmitDamages() || submitting()"
+          class="flex-1 px-6 py-3 rounded-xl bg-cta-default text-cta-text-pure font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+          @if (submitting()) {
+          <ion-spinner name="crescent" class="mr-2"></ion-spinner>
+          }
+          {{ submitting() ? 'Procesando...' : 'Finalizar Check-Out' }}
+        </button>
+      </div>
+    </div>
+    }
     }
   </div>
 </div>

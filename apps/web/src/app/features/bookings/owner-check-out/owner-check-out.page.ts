@@ -18,6 +18,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { IonicModule } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
+import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 import { Booking, BookingStatus } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 import { VideoInspectionAIComponent } from '../../../shared/components/video-inspection-ai/video-inspection-ai.component';
@@ -43,6 +44,7 @@ type InspectionMode = 'photos' | 'video' | 'live';
     InspectionUploaderComponent,
     VideoInspectionAIComponent,
     VideoInspectionLiveComponent,
+    SkeletonLoaderComponent,
   ],
   templateUrl: './owner-check-out.page.html',
   styleUrls: ['./owner-check-out.page.css'],

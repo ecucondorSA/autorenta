@@ -15,6 +15,7 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { PaymentsService } from '@core/services/payments/payments.service';
 import { IonicModule } from '@ionic/angular';
+import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 import { Booking } from '../../../core/models';
 import { ReferralBannerComponent } from '../../../shared/components/referral-banner/referral-banner.component';
 
@@ -24,7 +25,7 @@ type PaymentStatus = 'pending' | 'completed' | 'failed' | 'timeout';
   selector: 'app-booking-success',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, RouterModule, ReferralBannerComponent],
+  imports: [CommonModule, IonicModule, RouterModule, ReferralBannerComponent, SkeletonLoaderComponent],
   templateUrl: './booking-success.page.html',
   styleUrls: ['./booking-success.page.scss'],
 })

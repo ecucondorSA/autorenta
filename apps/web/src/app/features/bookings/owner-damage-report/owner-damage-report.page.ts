@@ -14,6 +14,7 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { IonicModule } from '@ionic/angular';
+import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 import { v4 as uuidv4 } from 'uuid';
 import { Booking } from '../../../core/models';
 import { formatDate } from '../../../shared/utils/date.utils';
@@ -32,7 +33,7 @@ import { formatDate } from '../../../shared/utils/date.utils';
   selector: 'app-owner-damage-report',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule, SkeletonLoaderComponent],
   templateUrl: './owner-damage-report.page.html',
   styleUrl: './owner-damage-report.page.css',
 })
