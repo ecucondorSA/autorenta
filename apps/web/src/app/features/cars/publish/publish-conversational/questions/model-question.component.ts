@@ -50,14 +50,14 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
         </svg>
         <input
           type="text"
-          [(ngModel)]="searchQuery"
+          [ngModel]="searchQuery()"
           (ngModelChange)="onSearch($event)"
           placeholder="Buscar modelo..."
           class="w-full pr-12 py-4 bg-surface-raised border-2 border-border-default rounded-2xl text-lg focus:ring-0 focus:border-cta-default transition-all placeholder:text-text-muted"
           style="padding-left: 52px !important;"
           [disabled]="isLoading()"
         />
-        @if (searchQuery && !isLoading()) {
+        @if (searchQuery() && !isLoading()) {
           <button
             type="button"
             (click)="clearSearch()"
@@ -114,7 +114,7 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
       }
 
       <!-- No results -->
-      @if (!isLoading() && searchQuery.length >= 2 && filteredModels().length === 0) {
+      @if (!isLoading() && searchQuery().length >= 2 && filteredModels().length === 0) {
         <div class="text-center py-8 text-text-secondary">
           <p>No encontramos ese modelo</p>
           <p class="text-sm mt-1">Intentá con otro nombre</p>
@@ -210,7 +210,7 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
   readonly fipeValueLoaded = output<number>();
 
   // State
-  searchQuery = '';
+  readonly searchQuery = signal('');
   readonly isLoading = signal(false);
   readonly isLoadingValue = signal(false);
   readonly models = signal<FipeModel[]>([]);
@@ -218,7 +218,7 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
   readonly marketValueUsd = signal<number | null>(null);
 
   readonly filteredModels = computed(() => {
-    const query = this.searchQuery.toLowerCase().trim();
+    const query = this.searchQuery().toLowerCase().trim();
     const allModels = this.models();
     if (!query) return allModels;
     return allModels.filter((m) => m.name.toLowerCase().includes(query));
@@ -264,11 +264,11 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
   }
 
   onSearch(query: string): void {
-    this.searchQuery = query;
+    this.searchQuery.set(query);
   }
 
   clearSearch(): void {
-    this.searchQuery = '';
+    this.searchQuery.set('');
   }
 
   clearSelection(): void {
@@ -278,7 +278,7 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
 
   async selectModel(model: FipeModel): Promise<void> {
     this.selectedModel.set(model);
-    this.searchQuery = '';  // Clear search to show all models
+    this.searchQuery.set('');  // Clear search to show all models
     this.modelSelected.emit({ code: model.code, name: model.name });
 
     // Load FIPE value
