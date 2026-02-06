@@ -355,14 +355,14 @@ export class BeaconService {
   private async processScannedDevice(device: BleDevice): Promise<void> {
     if (!BluetoothLowEnergy) return;
 
-    // DEBUG: Log ALL devices found during scan
-    this.logger.debug('[BeaconService] 🔍 DEVICE FOUND:', device.name || 'unnamed', 'RSSI:', device.rssi, 'ID:', device.deviceId);
+    // DEBUG: Log ALL devices found during scan - OFF for production to save battery
+    // this.logger.debug('[BeaconService] 🔍 DEVICE FOUND:', device.name || 'unnamed', 'RSSI:', device.rssi, 'ID:', device.deviceId);
     this.deviceCount++;
 
     // Show toast for first 3 devices found (avoid spam)
-    if (this.deviceCount <= 3) {
-      this.showDebugToast(`🔍 #${this.deviceCount}: ${device.name || 'sin nombre'}`, 'primary');
-    }
+    // if (this.deviceCount <= 3) {
+    //   this.showDebugToast(`🔍 #${this.deviceCount}: ${device.name || 'sin nombre'}`, 'primary');
+    // }
 
     // Check if this looks like an AutoRenta beacon (name starts with AR-)
     if (!device.name?.startsWith('AR-')) {

@@ -41,7 +41,12 @@ export class LocationTrackingService {
   private watchId: number | null = null;
   private updateInterval: Subscription | null = null;
   private currentTrackingId = signal<string | null>(null);
+
   private isTracking = signal(false);
+
+  // Optimization: Throttle updates to prevent overheating
+  private lastUpdateTime = 0;
+  private readonly MIN_UPDATE_INTERVAL_MS = 10000; // Only sync to DB every 10 seconds max
 
   constructor(private supabaseService: SupabaseClientService) {
     this.supabaseClient = this.supabaseService.getClient();
@@ -278,6 +283,13 @@ export class LocationTrackingService {
     // Watch position with high accuracy
     this.watchId = navigator.geolocation.watchPosition(
       (position) => {
+        // Optimization: Throttle DB updates
+        const now = Date.now();
+        if (now - this.lastUpdateTime < this.MIN_UPDATE_INTERVAL_MS) {
+          return;
+        }
+        this.lastUpdateTime = now;
+
         const location: LocationUpdate = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
