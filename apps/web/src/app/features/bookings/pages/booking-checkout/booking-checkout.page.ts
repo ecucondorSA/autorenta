@@ -11,6 +11,17 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { normalizeRecordToUsd } from '@core/utils/currency.utils';
 import { PaymentProvider } from '@core/models/payment.model';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { PaymentGatewayFactory } from '@core/services/payments/payment-gateway.factory';
+import { WalletService } from '@core/services/payments/wallet.service';
+import { DriverProfileService } from '@core/services/auth/driver-profile.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { PayPalButtonComponent } from '@shared/components/paypal-button/paypal-button.component';
+import { PaymentProviderSelectorComponent } from '@shared/components/payment-provider-selector/payment-provider-selector.component';
+import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
+import { PressScaleDirective } from '@shared/directives/press-scale.directive';
+import { SpringCollapseDirective } from '@shared/directives/spring-collapse.directive';
+import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
 import {
   calcHoldAndBuydown,
   getVehicleTierByValue,
@@ -326,9 +337,9 @@ export class BookingCheckoutPage implements OnInit {
       const gateway = this.gatewayFactory.createBookingGateway('mercadopago');
 
       // Crear preferencia de pago
-      const preference = await firstValueFrom(
+      const preference = (await firstValueFrom(
         gateway.createBookingPreference(this.bookingId(), true)
-      );
+      )) as any;
 
       if (!preference || !preference.success || !preference.init_point) {
         throw new Error('Error creando preferencia de pago');

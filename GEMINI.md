@@ -29,6 +29,9 @@
   - 🚫 **PROHIBIDO `any`:** Nunca usar `any` para silenciar errores. Es deuda técnica inaceptable.
   - ✅ **Usar `unknown`:** Para datos inciertos (errores, API responses), usar `unknown` y validarlos con Type Guards (`instanceof Error`, `zod`, etc.).
   - **Interfaces Explícitas:** Tipar siempre las respuestas de APIs y objetos globales (ej: `window.ethereum`, `window.ttq`).
+  - **Null vs Undefined:**
+    - Usar `undefined` para valores opcionales o aún no cargados.
+    - Usar `null` para valores explícitamente vacíos o reseteados (ej: `user = null` al logout).
 - **Tailwind CSS:** Única fuente de estilos. No crear clases CSS personalizadas a menos que sea un componente de UI Kit reutilizable.
 - **Iconos:** Usar `<app-icon>`. Imports explícitos, nunca barrels.
 - **Sintaxis:** ESM y sintaxis moderna de Angular (`@if`, `@for`, `inject()`).

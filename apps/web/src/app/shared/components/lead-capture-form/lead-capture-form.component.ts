@@ -196,7 +196,7 @@ export class LeadCaptureFormComponent {
     const rawData = this.leadForm.value;
 
     try {
-      const { error } = await this.supabase.client
+      const { error } = await this.supabase
         .from('marketing_leads')
         .insert({
           platform: 'web_landing',
