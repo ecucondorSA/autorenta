@@ -127,6 +127,7 @@ export class DepositPage implements OnInit {
       const { data, error } = await this.supabase
         .from('exchange_rates')
         .select('rate, last_updated')
+        .eq('pair', 'USDARS')
         .eq('is_active', true)
         .order('last_updated', { ascending: false })
         .limit(1)

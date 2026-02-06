@@ -190,10 +190,20 @@ export class IdentityLevelService implements OnDestroy {
     this.error.set(null);
 
     try {
+      // Refresh session to prevent stale JWT tokens (especially after OAuth login)
+      await this.supabase.auth.refreshSession();
+
       const { data, error } = await this.supabase.rpc('get_verification_progress');
 
       if (error) {
         throw error;
+      }
+
+      // The RPC returns {success: false, error: '...'} when auth fails
+      // instead of a Supabase error - validate the response
+      const result = data as Record<string, unknown>;
+      if (result && result['success'] === false) {
+        throw new Error((result['error'] as string) || 'Error al obtener progreso');
       }
 
       const progress = data as VerificationProgress;

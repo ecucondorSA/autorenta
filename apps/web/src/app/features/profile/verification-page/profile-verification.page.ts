@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 
 import { RouterModule, ActivatedRoute } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
 
 import { ProfileStore } from '@core/stores/profile.store';
 import { IdentityLevelService } from '@core/services/verification/identity-level.service';
@@ -25,7 +24,6 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
   standalone: true,
   imports: [
     RouterModule,
-    IonicModule,
     EmailVerificationComponent,
     PhoneVerificationComponent,
     SelfieCaptureComponent,
@@ -41,145 +39,157 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
       >
         <div class="max-w-2xl mx-auto px-4 h-full flex items-center justify-between">
           <a
-            routerLink="/profile"
+            [routerLink]="returnUrl() || '/profile'"
             class="p-2 -ml-2 rounded-full hover:bg-surface-hover text-text-secondary hover:text-text-primary transition-colors"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
           </a>
           <span class="text-sm font-semibold text-text-primary">Verificación de Cuenta</span>
           <div class="w-9"></div>
-          <!-- Spacer for balance -->
         </div>
       </nav>
 
       <main class="max-w-md mx-auto px-4 pt-24 pb-20">
-        <!-- Progress Header (Compact) -->
-        <div class="flex items-center justify-between mb-8">
-          <div class="flex flex-col">
-            <h1 class="text-xl font-bold text-text-primary">
-              @if (isLevelComplete(2)) {
-                Prueba de Vida
-              } @else if (isLevelComplete(1)) {
-                Documentos
-              } @else {
-                Contacto
-              }
-            </h1>
-            <p class="text-xs text-text-secondary">Paso {{ completedSteps() + 1 }} de 3</p>
-          </div>
-          <div class="w-12 h-12 relative flex items-center justify-center">
-            <svg class="w-full h-full -rotate-90 text-surface-raised" viewBox="0 0 36 36">
-              <!-- Background Circle -->
-              <path
-                class="text-border-default"
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-              />
-              <!-- Progress Circle -->
-              <path
-                class="text-cta-default transition-all duration-1000 ease-out"
-                [attr.stroke-dasharray]="progressPercentage() + ', 100'"
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="round"
-              />
-            </svg>
-            <span class="absolute text-[10px] font-bold text-text-primary"
-              >{{ progressPercentage() }}%</span
-            >
-          </div>
-        </div>
 
-        <!-- STEP 1: Contact (Edit Mode or Hidden) -->
-        @if (!isLevelComplete(1) || expandedSections().has(1)) {
-          <div class="animate-fade-in">
-            <app-email-verification></app-email-verification>
-            <div class="mt-4"></div>
-            <app-phone-verification></app-phone-verification>
+        <!-- Loading State -->
+        @if (dataLoading()) {
+          <div class="space-y-6 animate-pulse">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="h-6 w-32 bg-slate-200 rounded"></div>
+                <div class="h-3 w-20 bg-slate-100 rounded mt-2"></div>
+              </div>
+              <div class="w-12 h-12 bg-slate-200 rounded-full"></div>
+            </div>
+            <div class="h-24 bg-slate-100 rounded-2xl"></div>
+            <div class="h-24 bg-slate-100 rounded-2xl"></div>
           </div>
         }
 
-        <!-- STEP 2: Documents (Focus Mode) -->
-        @if (canAccessLevel(2) && !isLevelComplete(2)) {
-          <div class="animate-fade-in space-y-6">
-            @if (!isDniVerified()) {
-              <div>
-                <h2 class="text-lg font-semibold text-text-primary mb-1">Documento de Identidad</h2>
-                <p class="text-sm text-text-secondary mb-4">Sube una foto clara de tu DNI.</p>
-                <app-dni-uploader></app-dni-uploader>
+        @if (!dataLoading()) {
+          <!-- Progress Header -->
+          <div class="flex items-center justify-between mb-8">
+            <div class="flex flex-col">
+              <h1 class="text-xl font-bold text-text-primary">{{ currentStepTitle() }}</h1>
+              <p class="text-xs text-text-secondary">Paso {{ currentStepNumber() }} de 3</p>
+            </div>
+            <div class="w-12 h-12 relative flex items-center justify-center">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                <path
+                  class="text-border-default"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none" stroke="currentColor" stroke-width="3"
+                />
+                <path
+                  class="text-cta-default transition-all duration-1000 ease-out"
+                  [attr.stroke-dasharray]="progressPercentage() + ', 100'"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                />
+              </svg>
+              <span class="absolute text-[10px] font-bold text-text-primary">{{ progressPercentage() }}%</span>
+            </div>
+          </div>
+
+          <!-- STEP 1: Contact -->
+          @if (!isLevelComplete(1)) {
+            <!-- Step 1 Active: Show email + phone -->
+            <div class="animate-fade-in">
+              <app-email-verification></app-email-verification>
+              <div class="mt-4"></div>
+              <app-phone-verification></app-phone-verification>
+            </div>
+          } @else {
+            <!-- Step 1 Complete: Green summary -->
+            <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-emerald-900">Contacto verificado</p>
+                    <p class="text-xs text-emerald-700">{{ userEmail() }}</p>
+                  </div>
+                </div>
+                <span class="text-xs font-medium text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">Listo</span>
               </div>
-            } @else {
-              <div>
-                <h2 class="text-lg font-semibold text-text-primary mb-1">Licencia de Conducir</h2>
-                <p class="text-sm text-text-secondary mb-4">Requerido para poder conducir.</p>
-                <app-license-uploader
-                  [hideCountrySelector]="false"
-                  (verificationCompleted)="onLicenseVerificationComplete()"
-                ></app-license-uploader>
+            </div>
+
+            <!-- STEP 2: Documents -->
+            @if (canAccessLevel(2) && !isLevelComplete(2)) {
+              <div class="animate-fade-in space-y-6">
+                @if (!isDniVerified()) {
+                  <div>
+                    <h2 class="text-lg font-semibold text-text-primary mb-1">Documento de Identidad</h2>
+                    <p class="text-sm text-text-secondary mb-4">Sube una foto clara de tu DNI.</p>
+                    <app-dni-uploader></app-dni-uploader>
+                  </div>
+                } @else {
+                  <div>
+                    <h2 class="text-lg font-semibold text-text-primary mb-1">Licencia de Conducir</h2>
+                    <p class="text-sm text-text-secondary mb-4">Requerido para poder conducir.</p>
+                    <app-license-uploader
+                      [hideCountrySelector]="false"
+                      (verificationCompleted)="onLicenseVerificationComplete()"
+                    ></app-license-uploader>
+                  </div>
+                }
               </div>
             }
-          </div>
-        }
 
-        <!-- STEP 3: Selfie (Focus Mode) -->
-        @if (canAccessLevel(3) && !isLevelComplete(3)) {
-          <div class="animate-fade-in">
-            <h2 class="text-lg font-semibold text-text-primary mb-1">Prueba de Vida</h2>
-            <p class="text-sm text-text-secondary mb-4">Validaremos que eres tú en tiempo real.</p>
-            <app-selfie-capture></app-selfie-capture>
-          </div>
-        }
+            <!-- STEP 2 Complete -->
+            @if (isLevelComplete(2)) {
+              <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-emerald-900">Documentos verificados</p>
+                    <p class="text-xs text-emerald-700">DNI y licencia confirmados</p>
+                  </div>
+                </div>
+              </div>
 
-        <!-- Success State -->
-        @if (progressPercentage() === 100) {
-          <div
-            class="fixed inset-0 z-[60] bg-surface-base flex flex-col items-center justify-center p-6 animate-scale-up"
-          >
-            <div
-              class="w-24 h-24 rounded-full bg-success-100 flex items-center justify-center text-success-600 mb-6 shadow-lg animate-bounce"
-            >
-              <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+              <!-- STEP 3: Selfie -->
+              @if (canAccessLevel(3) && !isLevelComplete(3)) {
+                <div class="animate-fade-in">
+                  <h2 class="text-lg font-semibold text-text-primary mb-1">Prueba de Vida</h2>
+                  <p class="text-sm text-text-secondary mb-4">Validaremos que eres tú en tiempo real.</p>
+                  <app-selfie-capture></app-selfie-capture>
+                </div>
+              }
+            }
+          }
+
+          <!-- Success State -->
+          @if (progressPercentage() === 100) {
+            <div class="fixed inset-0 z-[60] bg-surface-base flex flex-col items-center justify-center p-6 animate-scale-up">
+              <div class="w-24 h-24 rounded-full bg-success-100 flex items-center justify-center text-success-600 mb-6 shadow-lg animate-bounce">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 class="text-3xl font-bold text-text-primary mb-2 text-center">¡Estás Verificado!</h2>
+              <p class="text-text-secondary text-center max-w-xs mb-10">Ya puedes disfrutar de la experiencia completa de AutoRenta.</p>
+              <a
+                [routerLink]="returnUrl() || '/cars'"
+                class="w-full max-w-sm py-4 bg-cta-default text-white font-bold rounded-2xl shadow-xl hover:bg-cta-hover transition-transform active:scale-95 text-center flex items-center justify-center gap-2"
+              >
+                Continuar
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
             </div>
-            <h2 class="text-3xl font-bold text-text-primary mb-2 text-center">
-              ¡Estás Verificado!
-            </h2>
-            <p class="text-text-secondary text-center max-w-xs mb-10">
-              Ya puedes disfrutar de la experiencia completa de AutoRenta.
-            </p>
-
-            <a
-              routerLink="/cars"
-              class="w-full max-w-sm py-4 bg-cta-default text-white font-bold rounded-2xl shadow-xl hover:bg-cta-hover transition-transform active:scale-95 text-center flex items-center justify-center gap-2"
-            >
-              Explorar Autos
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
-            </a>
-          </div>
+          }
         }
       </main>
     </div>
@@ -188,11 +198,6 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
     `
       :host {
         display: block;
-      }
-
-      /* Smooth grid animation for collapsible sections */
-      .grid-rows-\\[0fr\\] > * {
-        min-height: 0;
       }
 
       /* Custom focus ring */
@@ -223,38 +228,40 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
 
   readonly profile = this.profileStore.profile;
-  readonly loading = this.profileStore.loading;
+  readonly userEmail = this.profileStore.userEmail;
+  readonly dataLoading = signal(true);
 
-  // Contextual message based on reason query param
-  readonly verificationReason = signal<string | null>(null);
-
-  // Track expanded sections
-  readonly expandedSections = signal<Set<number>>(new Set([1]));
+  // Return URL from query params (to navigate back after verification)
+  readonly returnUrl = signal<string | null>(null);
 
   // Get verification progress data
   readonly verificationProgress = this.identityService.verificationProgress;
   readonly requirements = computed(() => this.verificationProgress()?.requirements);
-  readonly userDocuments = this.verificationService.documents;
 
   // Progress percentage from service
   readonly progressPercentage = computed(() => {
     return this.verificationProgress()?.progress_percentage ?? 0;
   });
 
-  // Count completed steps
-  readonly completedSteps = computed(() => {
-    let count = 0;
-    if (this.isLevelComplete(1)) count++;
-    if (this.isLevelComplete(2)) count++;
-    if (this.isLevelComplete(3)) count++;
-    return count;
+  // Current step title based on progress
+  readonly currentStepTitle = computed(() => {
+    if (this.isLevelComplete(2)) return 'Prueba de Vida';
+    if (this.isLevelComplete(1)) return 'Documentos';
+    return 'Contacto';
+  });
+
+  // Current step number (first incomplete step)
+  readonly currentStepNumber = computed(() => {
+    if (!this.isLevelComplete(1)) return 1;
+    if (!this.isLevelComplete(2)) return 2;
+    return 3;
   });
 
   async ngOnInit(): Promise<void> {
-    // Check for contextual message based on reason
-    const reason = this.route.snapshot.queryParamMap.get('reason');
-    if (reason) {
-      this.setContextualMessage(reason);
+    // Extract query params
+    const returnUrlParam = this.route.snapshot.queryParamMap.get('returnUrl');
+    if (returnUrlParam) {
+      this.returnUrl.set(returnUrlParam);
     }
 
     if (!this.profile()) {
@@ -266,58 +273,16 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
     // Load verification progress
     try {
       await this.identityService.getVerificationProgress();
-      this.autoExpandCurrentLevel();
-
-      // Subscribe to realtime updates for automatic UI refresh
       await this.identityService.subscribeToRealtimeUpdates();
     } catch (e) {
       console.error('Failed to load verification progress:', e);
+    } finally {
+      this.dataLoading.set(false);
     }
   }
 
   ngOnDestroy(): void {
-    // Cleanup realtime subscription
     this.identityService.unsubscribeFromRealtime();
-  }
-
-  private setContextualMessage(reason: string): void {
-    const messages: Record<string, string> = {
-      booking_verification_required:
-        'Para poder alquilar un auto, necesitas completar la verificación de tu identidad.',
-      email_verification_required:
-        'Verifica tu email para acceder a todas las funciones de la plataforma.',
-      verification_check_failed:
-        'Hubo un problema verificando tu cuenta. Por favor, completa los pasos pendientes.',
-    };
-
-    this.verificationReason.set(messages[reason] || null);
-  }
-
-  private autoExpandCurrentLevel(): void {
-    const sections = new Set<number>();
-
-    // Always show the current active level
-    if (!this.isLevelComplete(1)) {
-      sections.add(1);
-    } else if (!this.isLevelComplete(2) && this.canAccessLevel(2)) {
-      sections.add(2);
-    } else if (!this.isLevelComplete(3) && this.canAccessLevel(3)) {
-      sections.add(3);
-    }
-
-    this.expandedSections.set(sections);
-  }
-
-  toggleSection(level: number): void {
-    if (!this.canAccessLevel(level)) return;
-
-    const sections = new Set(this.expandedSections());
-    if (sections.has(level)) {
-      sections.delete(level);
-    } else {
-      sections.add(level);
-    }
-    this.expandedSections.set(sections);
   }
 
   isLevelComplete(level: number): boolean {
@@ -343,135 +308,12 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
     return false;
   }
 
-  isEmailVerified(): boolean {
-    return this.requirements()?.level_1?.email_verified ?? false;
-  }
-
-  isPhoneVerified(): boolean {
-    return this.requirements()?.level_1?.phone_verified ?? false;
-  }
-
   isDniVerified(): boolean {
     return this.requirements()?.level_2?.document_verified ?? false;
   }
 
-  isDniInReview(): boolean {
-    // Documento subido pero no verificado
-    const verified = this.isDniVerified();
-    if (verified) return false;
-    return this.userDocuments().some((doc) => ['gov_id_front', 'gov_id_back'].includes(doc.kind));
-  }
-
-  isLicenseVerified(): boolean {
-    return this.requirements()?.level_2?.driver_license_verified ?? false;
-  }
-
-  isLicenseInReview(): boolean {
-    // Licencia subida pero no verificada
-    const verified = this.isLicenseVerified();
-    if (verified) return false;
-    return this.userDocuments().some((doc) =>
-      ['driver_license', 'license_front', 'license_back'].includes(doc.kind),
-    );
-  }
-
-  getProgressLabel(): string {
-    const progress = this.progressPercentage();
-    if (progress === 100) return 'Verificación completa';
-    if (progress >= 80) return 'Casi terminado';
-    if (progress >= 50) return 'Buen progreso';
-    if (progress > 0) return 'En progreso';
-    return 'Sin verificar';
-  }
-
-  getProgressLineWidth(): string {
-    const completed = this.completedSteps();
-    if (completed === 0) return '0%';
-    if (completed === 1) return '33%';
-    if (completed === 2) return '66%';
-    return '100%';
-  }
-
-  getStatusLabel(level: number): string {
-    if (this.isLevelComplete(level)) return 'Completado';
-    if (!this.canAccessLevel(level)) return 'Bloqueado';
-    return 'En progreso';
-  }
-
-  getStatusBadgeClass(level: number): string {
-    if (this.isLevelComplete(level)) {
-      return 'bg-success-100 text-success-700';
-    }
-    if (!this.canAccessLevel(level)) {
-      return 'bg-surface-hover text-text-muted';
-    }
-    return 'bg-cta-default/10 text-cta-default';
-  }
-
-  getCardClass(level: number): string {
-    if (this.isLevelComplete(level)) {
-      return 'border-success-200 bg-success-50/30';
-    }
-    if (!this.canAccessLevel(level)) {
-      return 'border-border-subtle';
-    }
-    // Active level - subtle highlight
-    return 'border-cta-default/30 shadow-sm';
-  }
-
-  getIconContainerClass(level: number): string {
-    if (this.isLevelComplete(level)) {
-      return 'bg-success-100 text-success-600';
-    }
-    if (!this.canAccessLevel(level)) {
-      return 'bg-surface-hover text-text-muted';
-    }
-    return 'bg-cta-default/10 text-cta-default';
-  }
-
-  getStepCircleClass(level: number): string {
-    if (this.isLevelComplete(level)) {
-      return 'bg-success-500 text-white focus:ring-success-500';
-    }
-    if (!this.canAccessLevel(level)) {
-      return 'bg-surface-hover text-text-muted border-2 border-border-subtle';
-    }
-    // Current active step
-    if (this.isCurrentStep(level)) {
-      return 'bg-cta-default text-cta-text focus:ring-cta-default';
-    }
-    return 'bg-surface-raised text-text-secondary border-2 border-border-default focus:ring-cta-default';
-  }
-
-  private isCurrentStep(level: number): boolean {
-    // Current step is the first incomplete step that is accessible
-    if (level === 1 && !this.isLevelComplete(1)) return true;
-    if (
-      level === 2 &&
-      this.isLevelComplete(1) &&
-      !this.isLevelComplete(2) &&
-      this.canAccessLevel(2)
-    )
-      return true;
-    if (
-      level === 3 &&
-      this.isLevelComplete(2) &&
-      !this.isLevelComplete(3) &&
-      this.canAccessLevel(3)
-    )
-      return true;
-    return false;
-  }
   onLicenseVerificationComplete(): void {
-    // Auto-advance to next step (Level 3 - Selfie)
-    // We add a small delay to allow the store to update via realtime/optimistic updates
-    setTimeout(() => {
-      if (this.canAccessLevel(3)) {
-        const sections = new Set(this.expandedSections());
-        sections.add(3); // Open Selfie
-        sections.delete(2); // Close Documents (optional, reduces clutter)
-        this.expandedSections.set(sections);
-      }
-    }, 1500);
+    // Refresh progress after license verification
+    void this.identityService.getVerificationProgress();
   }
 }
