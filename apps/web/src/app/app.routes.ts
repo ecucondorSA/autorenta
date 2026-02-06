@@ -326,12 +326,6 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'ganar',
-    data: { layout: 'full-bleed' },
-    loadComponent: () =>
-      import('./features/owners-landing/owners-landing.page').then((m) => m.OwnersLandingPage),
-  },
-  {
     path: 'mp-callback',
     loadComponent: () =>
       import('./features/mp-callback/mp-callback.page').then((m) => m.MpCallbackPage),
