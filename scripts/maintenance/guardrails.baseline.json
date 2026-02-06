@@ -105,7 +105,8 @@
       "wallet_get_balance",
       "wallet_lock_funds",
       "wallet_lock_rental_and_deposit",
-      "wallet_transfer"
+      "wallet_transfer",
+      "wallet_initiate_deposit"
     ]
   }
 }
