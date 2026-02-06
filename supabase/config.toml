@@ -52,10 +52,6 @@ verify_jwt = false
 # Security: Validates webhook signature via X-Hub-Signature-256 header
 verify_jwt = false
 
-[functions.process-email-sequences]
-# Triggered by pg_cron, auth handled via Service Role Key in header
-verify_jwt = false
-
 [functions.send-otp-via-n8n]
 # OTP via WhatsApp/SMS - disable middleware JWT verification
 # Function handles authentication manually for better error handling

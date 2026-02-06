@@ -1,0 +1,45 @@
+name: Authority Weekly Report
+
+on:
+  schedule:
+    # Monday 09:00 UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    inputs:
+      force_update:
+        description: 'Update authority metrics before generating report'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      webhook_url:
+        description: 'Override webhook URL for this run (optional)'
+        required: false
+        type: string
+
+jobs:
+  report:
+    name: Generate Authority Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run weekly report
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          AUTHORITY_REPORT_WEBHOOK: ${{ secrets.AUTHORITY_REPORT_WEBHOOK }}
+          FORCE_UPDATE: ${{ inputs.force_update || 'true' }}
+          WEBHOOK_URL: ${{ inputs.webhook_url }}
+        run: node scripts/cron/authority-report.mjs

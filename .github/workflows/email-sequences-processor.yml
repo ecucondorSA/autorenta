@@ -23,29 +23,20 @@ jobs:
     timeout-minutes: 10
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Procesar secuencias pendientes
-        run: |
-          echo "🔄 Procesando secuencias de email..."
-
-          RESPONSE=$(curl -s -X POST \
-            "${{ secrets.SUPABASE_URL }}/functions/v1/process-email-sequences" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d '{}')
-
-          echo "Respuesta: $RESPONSE"
-
-          # Check for errors
-          if echo "$RESPONSE" | grep -q '"error"'; then
-            echo "❌ Error procesando secuencias"
-            exit 1
-          fi
-
-          SENT=$(echo "$RESPONSE" | jq -r '.sent // 0')
-          PROCESSED=$(echo "$RESPONSE" | jq -r '.processed // 0')
-
-          echo "✅ Procesados: $PROCESSED suscriptores"
-          echo "📧 Emails enviados: $SENT"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: node scripts/cron/process-email-sequences.mjs
 
       - name: Registrar resultado
         if: always()

@@ -14,31 +14,19 @@ jobs:
     timeout-minutes: 10
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Buscar usuarios inactivos
-        run: |
-          echo "🔍 Buscando usuarios inactivos (+30 días)..."
-
-          RESPONSE=$(curl -s -X POST \
-            "${{ secrets.SUPABASE_URL }}/functions/v1/trigger-reengagement" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d '{}')
-
-          echo "Respuesta: $RESPONSE"
-
-          # Check for errors
-          if echo "$RESPONSE" | grep -q '"error"'; then
-            echo "❌ Error en re-engagement"
-            exit 1
-          fi
-
-          ADDED=$(echo "$RESPONSE" | jq -r '.added // 0')
-          SKIPPED=$(echo "$RESPONSE" | jq -r '.skipped // 0')
-          TOTAL=$(echo "$RESPONSE" | jq -r '.total_inactive // 0')
-
-          echo "✅ Usuarios inactivos encontrados: $TOTAL"
-          echo "➕ Agregados a re-engagement: $ADDED"
-          echo "⏭️ Saltados (ya en secuencia): $SKIPPED"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/cron/trigger-reengagement.mjs
 
       - name: Registrar resultado
         if: always()

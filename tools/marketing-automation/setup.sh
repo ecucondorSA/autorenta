@@ -106,12 +106,11 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
     echo "Deploying marketing-webhook..."
     supabase functions deploy marketing-webhook --no-verify-jwt || echo -e "${YELLOW}⚠️  Deployment failed${NC}"
     
-    echo "Deploying marketing-reset-daily..."
-    supabase functions deploy marketing-reset-daily --no-verify-jwt || echo -e "${YELLOW}⚠️  Deployment failed${NC}"
+    echo "Skipping marketing-reset-daily (now runs via GitHub Actions)"
 else
     echo "Skipping Edge Function deployment. Deploy later with:"
     echo "   supabase functions deploy marketing-webhook --no-verify-jwt"
-    echo "   supabase functions deploy marketing-reset-daily --no-verify-jwt"
+    echo "   marketing-reset-daily now runs via GitHub Actions (marketing-reset-daily.yml)"
 fi
 
 echo ""
