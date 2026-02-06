@@ -43,6 +43,10 @@ verify_jwt = false
 # TikTok Events API - public for analytics tracking (anonymous users too)
 verify_jwt = false
 
+[functions.tiktok-leadgen-webhook]
+# TikTok Lead Gen Webhook - public endpoint for Instant Form leads
+verify_jwt = false
+
 [functions.github-webhook-handler]
 # GitHub webhook handler - public for receiving GitHub Actions events
 # Security: Validates webhook signature via X-Hub-Signature-256 header

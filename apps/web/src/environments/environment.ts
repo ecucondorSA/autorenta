@@ -26,7 +26,7 @@ export const environment = buildEnvironment({
   // IMPORTANTE: Configurar via variable de entorno en Cloudflare Pages
   // NG_APP_GOOGLE_GEOLOCATION_API_KEY - API Key de Google Cloud Console (Geolocation API)
   googleGeolocationApiKey: undefined, // Se configura via NG_APP_GOOGLE_GEOLOCATION_API_KEY
-  enableTikTok: false,
+  enableTikTok: true,
   enableFacebook: false,
   // Sentry Configuration
   // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages

@@ -24,8 +24,8 @@ import { getCorsHeaders } from '../_shared/cors.ts';
 
 // Content types: legacy + new authority system + expanded types
 type ContentType = 'tip' | 'promo' | 'car_spotlight' | 'testimonial' | 'seasonal' | 'community' | 'authority' | 'emotional' | 'educational' | 'promotional';
-// ACTIVE PLATFORMS ONLY (TikTok/Twitter suspended 2026-01-22)
-type Platform = 'instagram' | 'facebook';
+// ACTIVE PLATFORMS (TikTok requires video media)
+type Platform = 'instagram' | 'facebook' | 'tiktok';
 type Language = 'es' | 'pt';
 
 // Authority Concept from database (scroll-stopping psychology)
@@ -45,6 +45,7 @@ interface GenerateContentRequest {
   theme?: string;
   language?: Language;
   generate_image?: boolean;
+  video_url?: string; // Optional: pre-generated video URL (required for TikTok)
   batch_mode?: boolean; // Generate posts for all daily slots
   save_to_db?: boolean;
   authority_concept_id?: string; // Optional: Override random selection with specific concept ID
@@ -96,11 +97,12 @@ const SUPABASE_SERVICE_KEY = (
 ).trim();
 const MARKETING_MEDIA_BUCKET = Deno.env.get('MARKETING_MEDIA_BUCKET') || 'car-images';
 
-// Platform-specific constraints (TikTok/Twitter suspended 2026-01-22)
+// Platform-specific constraints
 // SEO 2025: Instagram ya no prioriza hashtags, máximo 5 relevantes es óptimo
 const PLATFORM_LIMITS: Record<Platform, { maxChars: number; maxHashtags: number; style: string }> = {
   instagram: { maxChars: 2200, maxHashtags: 5, style: 'engaging, visual-focused, lifestyle, SEO-optimized' },
   facebook: { maxChars: 500, maxHashtags: 5, style: 'conversational, community-focused, authentic' },
+  tiktok: { maxChars: 2200, maxHashtags: 5, style: 'short, punchy, TikTok-native tone' },
 };
 
 // Content type templates
@@ -187,7 +189,18 @@ serve(async (req) => {
 
   try {
     const request: GenerateContentRequest = await req.json();
-    const { content_type, platform, car_id, theme, language = 'es', generate_image = false, batch_mode = false, save_to_db = false, authority_concept_id } = request;
+    const {
+      content_type,
+      platform,
+      car_id,
+      theme,
+      language = 'es',
+      generate_image = false,
+      video_url,
+      batch_mode = false,
+      save_to_db = false,
+      authority_concept_id,
+    } = request;
 
     // Validate required fields
     if (!content_type || !platform) {
@@ -241,7 +254,8 @@ serve(async (req) => {
       let imageContent: { url?: string; base64?: string } | undefined;
       let imageUploadError: string | undefined;
       let imageDebug: string | undefined;
-      if (generate_image) {
+      const canGenerateImage = generate_image && platform !== 'tiktok';
+      if (canGenerateImage) {
         console.log('[generate-marketing-content] generate_image=true, calling generateMarketingImage...');
         console.log('[generate-marketing-content] GEMINI_API_KEY exists:', !!GEMINI_API_KEY);
         const imageResult = await generateMarketingImage(carData, content_type);
@@ -285,6 +299,46 @@ serve(async (req) => {
 
       // Save to DB if requested - DUAL PLATFORM (Instagram + Facebook)
       if (save_to_db) {
+        if (platform === 'tiktok') {
+          if (!video_url) {
+            console.warn('[generate-marketing-content] SKIPPING TikTok post - video_url is required.');
+          } else {
+            const queueItem = {
+              platform: 'tiktok',
+              content_type,
+              text_content: textContent.caption,
+              media_url: video_url,
+              media_type: 'video',
+              hashtags: textContent.hashtags,
+              scheduled_for: timeStr,
+              status: 'pending',
+              hook_variant_id: textContent.hook_variant_id || null,
+              metadata: {
+                car_id: carData?.id,
+                theme,
+                language,
+                alt_text: textContent.alt_text || '',
+                seo_keywords: textContent.seo_keywords || [],
+                call_to_action: textContent.call_to_action || '',
+                hook_variant_id: textContent.hook_variant_id || null,
+                original_platform: platform,
+              },
+            };
+
+            const { error: dbError } = await supabase
+              .from('marketing_content_queue')
+              .insert(queueItem);
+
+            if (dbError) {
+              console.error('[generate-marketing-content] TikTok DB insert failed:', dbError);
+              resultItem.error = `DB Save Failed: ${dbError.message}`;
+            } else {
+              console.log(`[generate-marketing-content] Saved TikTok post at ${timeStr}`);
+            }
+          }
+          continue;
+        }
+
         const mediaUrl = imageContent?.url;
         const mediaType = imageContent ? 'image' : null;
 
@@ -1352,7 +1406,6 @@ async function getRandomAvailableCar(
 function getBestTimes(platform: Platform): { hour: number; minute: number }[] {
   // Best posting times for Argentina (UTC-3)
   // Based on engagement data for Latin American audiences
-  // TikTok/Twitter suspended 2026-01-22
   const bestTimes: Record<Platform, { hour: number; minute: number }[]> = {
     instagram: [
       { hour: 12, minute: 0 },  // 12pm Argentina
@@ -1363,6 +1416,12 @@ function getBestTimes(platform: Platform): { hour: number; minute: number }[] {
       { hour: 13, minute: 0 },  // 1pm Argentina
       { hour: 16, minute: 0 },  // 4pm Argentina
       { hour: 20, minute: 0 },  // 8pm Argentina
+    ],
+    tiktok: [
+      { hour: 11, minute: 0 },  // 11am Argentina
+      { hour: 15, minute: 0 },  // 3pm Argentina
+      { hour: 20, minute: 0 },  // 8pm Argentina
+      { hour: 22, minute: 0 },  // 10pm Argentina
     ],
   };
   return bestTimes[platform];

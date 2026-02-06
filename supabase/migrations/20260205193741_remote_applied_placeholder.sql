@@ -1,0 +1,3 @@
+-- Placeholder migration
+-- This version exists in the remote migration history but was missing locally.
+-- No-op to align migration history.

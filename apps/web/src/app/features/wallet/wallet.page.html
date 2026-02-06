@@ -111,38 +111,38 @@
         <div
           appHoverLift
           [liftAmount]="4"
-          class="col-span-2 sm:col-span-1 glass-card-elevated bg-gradient-to-br from-success-light/20 to-success-light/5 rounded-2xl p-4 sm:p-5 ring-2 ring-success-500/20"
+          class="col-span-2 sm:col-span-1 glass-card-elevated bg-gradient-to-br from-cta-default/20 to-cta-default/5 rounded-2xl p-4 sm:p-5 ring-2 ring-cta-default/30"
           data-tour-step="wallet-balance"
         >
-          <p class="text-xs uppercase tracking-wider text-success-strong/80 font-semibold mb-1 sm:mb-2">
+          <p class="text-xs uppercase tracking-wider text-text-primary font-bold mb-1 sm:mb-2 opacity-80">
             Disponible
           </p>
-          <p class="text-2xl sm:text-3xl lg:text-4xl font-bold text-success-strong tabular-nums">
+          <p class="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-primary tabular-nums">
             ${{ availableBalanceSummary() | number: '1.2-2' }}
           </p>
         </div>
 
-        <!-- Crédito Protegido -->
+        <!-- Crédito Protegido (Vault Style) -->
         <div
           appHoverLift
           [liftAmount]="4"
-          class="glass-card bg-gradient-to-br from-warning-bg/40 to-warning-bg/10 rounded-2xl p-4 sm:p-5"
+          class="glass-card bg-gradient-to-br from-surface-secondary to-surface-base rounded-2xl p-4 sm:p-5 border border-border-default"
         >
           <div class="flex items-center justify-between mb-1 sm:mb-2">
-            <p class="text-[10px] sm:text-xs uppercase tracking-wider text-warning-strong/80 font-semibold">
+            <p class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-bold opacity-80">
               Protegido
             </p>
-            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-warning-bg flex items-center justify-center">
-              <app-icon name="lock" [size]="10" cssClass="text-warning-strong sm:hidden" />
-              <app-icon name="lock" [size]="12" cssClass="text-warning-strong hidden sm:block" />
+            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-raised border border-border-default flex items-center justify-center">
+              <app-icon name="lock" [size]="10" cssClass="text-text-secondary sm:hidden" />
+              <app-icon name="lock" [size]="12" cssClass="text-text-secondary hidden sm:block" />
             </div>
           </div>
-          <p class="text-lg sm:text-xl lg:text-2xl font-bold text-warning-strong tabular-nums">
+          <p class="text-lg sm:text-xl lg:text-2xl font-bold text-text-primary tabular-nums">
             ${{ protectedCreditBalance() | number: '1.2-2' }}
           </p>
-          <div class="mt-2 sm:mt-3 w-full bg-warning-border/30 rounded-full h-1.5 sm:h-2 overflow-hidden">
+          <div class="mt-2 sm:mt-3 w-full bg-surface-raised border border-border-default rounded-full h-1.5 sm:h-2 overflow-hidden">
             <div
-              class="bg-gradient-to-r from-warning-500 to-warning-400 h-full rounded-full transition-all duration-500"
+              class="bg-text-secondary/30 h-full rounded-full transition-all duration-500"
               [style.width.%]="protectedCreditProgress()"
             ></div>
           </div>
@@ -198,14 +198,14 @@
       <!-- Depósitos pendientes -->
       @if (pendingDepositsCount() > 0) {
         <div
-          class="mt-4 flex items-center gap-2 text-sm text-warning-strong bg-warning-bg/30 rounded-lg px-4 py-3 border border-warning-border/50"
+          class="mt-4 flex items-center gap-2 text-sm text-cta-default bg-cta-default/10 rounded-lg px-4 py-3 border border-cta-default/30"
         >
           <app-icon name="clock" [size]="16" cssClass="animate-pulse" />
           <span>{{ pendingDepositsCount() }} depósito(s) pendiente(s) de acreditación</span>
           <button
             type="button"
             (click)="refreshWalletData()"
-            class="ml-auto text-xs font-semibold underline hover:no-underline"
+            class="ml-auto text-xs font-bold underline hover:no-underline"
           >
             Actualizar
           </button>
@@ -317,7 +317,7 @@
               (click)="setActiveTab('coverage')"
               appPressScale
               [ngClass]="{
-                'bg-amber-500 text-white shadow-sm': activeTab() === 'coverage',
+                'bg-cta-default text-cta-text shadow-sm': activeTab() === 'coverage',
                 'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
                   activeTab() !== 'coverage',
               }"
@@ -387,12 +387,12 @@
                 ></app-withdrawal-request-form>
 
                 @if (activeBankAccounts().length === 0) {
-                  <div class="bg-warning-bg/30 border border-warning-border/50 rounded-lg p-4">
+                  <div class="bg-cta-default/5 border border-cta-default/20 rounded-lg p-4">
                     <div class="flex items-start gap-3">
                       <app-icon
                         name="alert-triangle"
                         [size]="20"
-                        cssClass="text-warning-strong mt-0.5 flex-shrink-0"
+                        cssClass="text-cta-default mt-0.5 flex-shrink-0"
                       />
                       <div>
                         <p class="text-sm text-text-primary">
@@ -401,7 +401,7 @@
                         <button
                           type="button"
                           (click)="setWithdrawalMode('accounts')"
-                          class="mt-2 text-sm font-medium text-warning-strong underline hover:no-underline transition"
+                          class="mt-2 text-sm font-bold text-cta-default underline hover:no-underline transition"
                         >
                           Agregar cuenta bancaria
                         </button>
@@ -444,18 +444,18 @@
         @if (activeTab() === 'coverage' && subscriptionService.subscription()) {
           <!-- Tab de Cobertura del Club -->
           <div class="space-y-6">
-            <div class="bg-amber-50/50 rounded-xl p-6 border border-amber-200/50">
+            <div class="bg-surface-raised rounded-xl p-6 border border-border-default">
               <div class="flex items-start gap-4">
                 <div
-                  class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center"
+                  class="flex-shrink-0 w-12 h-12 rounded-full bg-surface-secondary flex items-center justify-center border border-border-default"
                 >
-                  <app-icon name="shield" [size]="24" cssClass="text-amber-600" />
+                  <app-icon name="shield" [size]="24" cssClass="text-text-primary" />
                 </div>
                 <div class="flex-1">
-                  <h3 class="text-lg font-semibold text-amber-900">
+                  <h3 class="text-lg font-semibold text-text-primary">
                     Historial de uso de cobertura
                   </h3>
-                  <p class="text-sm text-amber-700 mt-1">
+                  <p class="text-sm text-text-secondary mt-1">
                     Aquí verás las deducciones realizadas de tu saldo de cobertura por daños o
                     claims.
                   </p>
@@ -463,7 +463,7 @@
                 <button
                   type="button"
                   (click)="handleViewClubHistory()"
-                  class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-amber-100 text-amber-700 hover:bg-amber-200 transition"
+                  class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-surface-secondary text-text-primary hover:bg-surface-hover border border-border-default transition"
                 >
                   Ver completo
                   <app-icon name="external-link" [size]="14" />
@@ -476,7 +476,7 @@
               <app-icon
                 name="shield-check"
                 [size]="48"
-                cssClass="mx-auto mb-4 text-success-strong/30"
+                cssClass="mx-auto mb-4 text-border-default"
               />
               <p class="text-lg font-medium">Sin deducciones registradas</p>
               <p class="text-sm mt-1">Tu cobertura no ha sido utilizada aún. ¡Excelente!</p>

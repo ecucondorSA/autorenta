@@ -91,11 +91,13 @@ export class LoginPage implements OnInit, OnDestroy {
   });
 
   async ngOnInit(): Promise<void> {
-    // Si venimos redirigidos desde una ruta protegida, abrimos el formulario directo.
-    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-    if (returnUrl) {
+    // Si venimos redirigidos desde una ruta protegida o entramos directo a login,
+    // abrimos el formulario automáticamente para mejorar la UX.
+    
+    // P1.1 FIX: Auto-abrir formulario para evitar doble click "Ingresar" -> "Ingresar"
+    setTimeout(() => {
       this.showForm.set(true);
-    }
+    }, 300);
 
     // Verificar disponibilidad de biometría nativa
     const biometricStatus = await this.biometric.checkAvailability();

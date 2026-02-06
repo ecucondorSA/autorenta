@@ -136,14 +136,23 @@
             buttonClass="icon-button h-10 w-10 lg:h-11 lg:w-11"
             ariaLabel="Compartir Autorentar"
           ></app-share-button>
-          <!-- User Profile Button -->
+          <!-- User Profile Button / Auth Actions -->
           @if (!isAuthenticatedSig()) {
-            <a
-              routerLink="/auth/login"
-              class="btn-accent shadow-soft hover:shadow-elevated transition-shadow duration-200"
-            >
-              {{ 'auth.login.button' | translate }}
-            </a>
+            @if (isLoginPage()) {
+              <a
+                routerLink="/auth/register"
+                class="btn-ghost shadow-soft hover:shadow-elevated transition-shadow duration-200"
+              >
+                Crear cuenta
+              </a>
+            } @else {
+              <a
+                routerLink="/auth/login"
+                class="btn-accent shadow-soft hover:shadow-elevated transition-shadow duration-200"
+              >
+                {{ 'auth.login.button' | translate }}
+              </a>
+            }
           }
           <!-- Profile Menu Dropdown -->
           @if (isAuthenticatedSig()) {

@@ -1,29 +1,11 @@
-import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { CommonModule } from '@angular/common';
-import { firstValueFrom } from 'rxjs';
 import {
-  Component,
-  computed,
-  inject,
-  OnInit,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';
-import { BookingsService } from '@core/services/bookings/bookings.service';
-import { DriverProfileService } from '@core/services/auth/driver-profile.service';
-import { PaymentGatewayFactory } from '@core/services/payments/payment-gateway.factory';
-import { WalletService } from '@core/services/payments/wallet.service';
-import { normalizeRecordToUsd } from '@core/utils/currency.utils';
-// UI 2026 Directives
-import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
-import { PressScaleDirective } from '@shared/directives/press-scale.directive';
-import { SpringCollapseDirective } from '@shared/directives/spring-collapse.directive';
-import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
-import { formatDate } from '../../../../shared/utils/date.utils';
-import { PaymentProviderSelectorComponent } from '../../../../shared/components/payment-provider-selector/payment-provider-selector.component';
-import { PayPalButtonComponent } from '../../../../shared/components/paypal-button/paypal-button.component';
+  calcHoldAndBuydown,
+  getVehicleTierByValue,
+  getVehicleTierName,
+  type HoldCalculation,
+  type MembershipPlan,
+} from '@core/models/guarantee-tiers.model';
+import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 
 /**
  * Booking Checkout Page
@@ -67,6 +49,7 @@ export class BookingCheckoutPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);
   readonly walletService = inject(WalletService);
   readonly driverProfileService = inject(DriverProfileService);
+  readonly subscriptionService = inject(SubscriptionService);
 
   // Expose Math for template
   readonly Math = Math;
@@ -83,6 +66,28 @@ export class BookingCheckoutPage implements OnInit {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   booking = signal<any>(null);
+
+  /**
+   * Información de garantía calculada con el nuevo sistema de 6 niveles
+   */
+  readonly guaranteeInfo = computed<HoldCalculation | null>(() => {
+    const booking = this.booking();
+    if (!booking || !booking.car) return null;
+
+    const carValue = booking.car.value_usd || 10000;
+    const vehicleTier = getVehicleTierByValue(carValue);
+    
+    // Mapping current user subscription to logic membership plan
+    const userTier = this.subscriptionService.tier();
+    const plan: MembershipPlan = userTier ? 
+      (userTier === 'club_standard' ? 'club' : 
+       userTier === 'club_black' ? 'silver' : 
+       userTier === 'club_luxury' ? 'black' : 'none') : 'none';
+
+    return calcHoldAndBuydown(vehicleTier, plan);
+  });
+
+  getVehicleTierName = getVehicleTierName;
 
   formatBookingDate(date?: string | Date | null): string {
     if (!date) return '-';

@@ -301,6 +301,8 @@ export class AppComponent implements OnInit {
   readonly userProfile = signal<UserProfile | null>(null);
   readonly isOnVerificationPage = signal(false);
   readonly isHomePage = signal(false); // Header transparente en homepage
+  readonly isLoginPage = signal(false); // Ocultar botón "Ingresar" en login
+  readonly isRegisterPage = signal(false); // Ocultar botón "Registrar" en registro
   readonly isPanicMode = signal(false);
   readonly pendingApprovalCount = signal(0); // Contador de solicitudes pendientes para propietarios
 
@@ -501,6 +503,8 @@ export class AppComponent implements OnInit {
 
     const isHome = currentUrl === '/' || currentUrl === '';
     this.isHomePage.set(isHome);
+    this.isLoginPage.set(currentUrl.startsWith('/auth/login'));
+    this.isRegisterPage.set(currentUrl.startsWith('/auth/register'));
     this.isPanicMode.set(currentUrl.startsWith('/panic'));
   }
 

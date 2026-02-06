@@ -3,10 +3,11 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import {
-  SubscriptionTier,
-  SubscriptionTierConfig,
-  SUBSCRIPTION_TIERS,
-} from '@core/models/subscription.model';
+  MembershipPlan,
+  MembershipPlanConfig,
+  MEMBERSHIP_CONFIG,
+  getVehicleTierName,
+} from '@core/models/guarantee-tiers.model';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 
@@ -22,16 +23,16 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
           <div class="flex items-center gap-2 mb-1">
-            <ion-icon name="sparkles" class="text-amber-500"></ion-icon>
+            <ion-icon name="sparkles" class="text-cta-default"></ion-icon>
             <p class="text-xs uppercase tracking-widest text-text-secondary font-semibold">
               Autorentar Club
             </p>
           </div>
           <h2 class="text-xl sm:text-2xl font-bold text-text-primary">
-            Mejora tu plan con Silver y Black
+            Protección a medida de tu viaje
           </h2>
           <p class="text-sm text-text-secondary mt-1">
-            Más cobertura, menos depósito y acceso a autos de mayor valor.
+            Garantías reducidas hasta el 50% y cobertura extendida según el auto que elijas.
           </p>
         </div>
         <button
@@ -45,7 +46,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
       </div>
 
       <div class="grid gap-4 md:grid-cols-3">
-        @for (tier of tiers; track tier.tier) {
+        @for (tier of tiers; track tier.plan) {
           <div [class]="getPlanCardClass(tier)">
             <div class="flex items-start justify-between gap-3">
               <div class="space-y-1">
@@ -53,26 +54,26 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
                   Plan
                 </p>
                 <h3 class="text-lg font-bold text-text-primary">{{ tier.name }}</h3>
-                <p class="text-xs text-text-secondary">{{ tier.description }}</p>
+                <p class="text-xs text-text-secondary">Hasta autos {{ getVehicleTierName(tier.maxVehicleTier) }}</p>
               </div>
               <div class="flex flex-col items-end gap-2">
-                @if (tier.tier === 'club_black') {
+                @if (tier.plan === 'silver') {
                   <span
-                    class="px-2 py-0.5 rounded-full bg-gray-700 text-white text-[10px] font-bold"
+                    class="px-2 py-0.5 rounded-full bg-gray-900 text-white text-[10px] font-bold"
                   >
                     MAS POPULAR
                   </span>
                 }
-                @if (tier.tier === 'club_luxury') {
+                @if (tier.plan === 'black') {
                   <span
-                    class="px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-[10px] font-bold"
+                    class="px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-600 to-cta-default text-cta-text text-[10px] font-bold"
                   >
                     PREMIUM
                   </span>
                 }
-                @if (isCurrentTier(tier.tier)) {
+                @if (isCurrentTier(tier.plan)) {
                   <span
-                    class="px-2 py-0.5 rounded-full bg-success-strong/10 text-success-strong text-[10px] font-bold"
+                    class="px-2 py-0.5 rounded-full bg-cta-default/10 text-cta-default text-[10px] font-bold border border-cta-default/20"
                   >
                     ACTUAL
                   </span>
@@ -81,19 +82,19 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
             </div>
 
             <div class="flex items-baseline gap-1">
-              <span class="text-2xl font-bold text-text-primary">\${{ tier.price_usd }}</span>
+              <span class="text-2xl font-bold text-text-primary">\${{ tier.priceMonthlyUsd }}</span>
               <span class="text-xs text-text-secondary">/mes</span>
             </div>
 
             <div [class]="getCoverageBoxClass(tier)" class="rounded-lg p-3">
-              <p class="text-xs uppercase tracking-widest font-semibold opacity-80">Cobertura</p>
-              <p class="text-base font-semibold">\${{ tier.coverage_limit_usd }} USD</p>
+              <p class="text-xs uppercase tracking-widest font-semibold opacity-80">Garantía Off</p>
+              <p class="text-base font-semibold">{{ tier.holdDiscountPct * 100 }}% de descuento</p>
             </div>
 
             <ul class="space-y-1">
-              @for (feature of previewFeatures(tier); track feature) {
+              @for (feature of tier.features; track feature) {
                 <li class="flex items-start gap-2 text-xs text-text-secondary">
-                  <ion-icon name="checkmark-circle" class="text-success-strong mt-0.5"></ion-icon>
+                  <ion-icon name="checkmark-circle" class="text-cta-default mt-0.5"></ion-icon>
                   {{ feature }}
                 </li>
               }
@@ -101,19 +102,19 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
 
             <button
               type="button"
-              (click)="selectPlan(tier.tier)"
-              [disabled]="isCurrentTier(tier.tier) || isDowngrade(tier.tier)"
+              (click)="selectPlan(tier.plan)"
+              [disabled]="isCurrentTier(tier.plan) || isDowngrade(tier.plan)"
               [class]="getCtaButtonClass(tier)"
               class="w-full mt-2 py-2.5 rounded-lg text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              @if (isCurrentTier(tier.tier)) {
+              @if (isCurrentTier(tier.plan)) {
                 Plan actual
-              } @else if (isDowngrade(tier.tier)) {
+              } @else if (isDowngrade(tier.plan)) {
                 Plan inferior
               } @else if (hasActiveSubscription()) {
                 Mejorar a {{ tier.name }}
               } @else {
-                Unirse por \${{ tier.price_usd }}/mes
+                Unirse por \${{ tier.priceMonthlyUsd }}/mes
               }
             </button>
           </div>
@@ -130,78 +131,95 @@ export class ClubPlansPreviewComponent {
   readonly subscription = this.subscriptionService.subscription;
   readonly hasActiveSubscription = this.subscriptionService.hasActiveSubscription;
 
-  readonly tiers: SubscriptionTierConfig[] = [
-    SUBSCRIPTION_TIERS['club_standard'],
-    SUBSCRIPTION_TIERS['club_black'],
-    SUBSCRIPTION_TIERS['club_luxury'],
+  // New Membership Config
+  readonly tiers: MembershipPlanConfig[] = [
+    MEMBERSHIP_CONFIG['club'],
+    MEMBERSHIP_CONFIG['silver'],
+    MEMBERSHIP_CONFIG['black'],
   ];
 
-  previewFeatures(tier: SubscriptionTierConfig): string[] {
-    return tier.features.slice(0, 2);
-  }
+  getVehicleTierName = getVehicleTierName;
 
-  isCurrentTier(tier: SubscriptionTier): boolean {
-    const sub = this.subscription();
-    return sub?.tier === tier && sub.status === 'active';
-  }
-
-  isDowngrade(tier: SubscriptionTier): boolean {
+  isCurrentTier(plan: MembershipPlan): boolean {
     const sub = this.subscription();
     if (!sub || sub.status !== 'active') return false;
-    return this.getTierRank(tier) < this.getTierRank(sub.tier);
+    
+    // Mapping DB slug to Logic plan
+    const mapping: Record<string, MembershipPlan> = {
+      club_standard: 'club',
+      club_black: 'silver',
+      club_luxury: 'black'
+    };
+    return mapping[sub.tier] === plan;
   }
 
-  getPlanCardClass(tier: SubscriptionTierConfig): string {
+  isDowngrade(plan: MembershipPlan): boolean {
+    const sub = this.subscription();
+    if (!sub || sub.status !== 'active') return false;
+    
+    const mapping: Record<string, number> = {
+      club_standard: 1,
+      club_black: 2,
+      club_luxury: 3
+    };
+    
+    const targetMapping: Record<MembershipPlan, number> = {
+      none: 0,
+      club: 1,
+      silver: 2,
+      black: 3
+    };
+
+    return targetMapping[plan] < mapping[sub.tier];
+  }
+
+  getPlanCardClass(tier: MembershipPlanConfig): string {
     const base = 'rounded-xl border p-4 space-y-4 transition shadow-sm';
-    const current = this.isCurrentTier(tier.tier)
-      ? 'ring-2 ring-success-strong/40 border-success-strong/40'
+    const current = this.isCurrentTier(tier.plan)
+      ? 'ring-2 ring-cta-default/40 border-cta-default/40'
       : 'border-border-default/50';
 
-    if (tier.tier === 'club_luxury') {
-      return `${base} ${current} bg-gradient-to-br from-amber-500/10 to-amber-700/10`;
+    if (tier.plan === 'black') {
+      return `${base} ${current} bg-gradient-to-br from-gray-900 to-gray-800 text-white`;
     }
-    if (tier.tier === 'club_black') {
-      return `${base} ${current} bg-gradient-to-br from-gray-900/5 to-gray-700/5`;
+    if (tier.plan === 'silver') {
+      return `${base} ${current} bg-gradient-to-br from-surface-secondary to-surface-base`;
     }
-    return `${base} ${current} bg-gradient-to-br from-amber-500/5 to-surface-raised`;
+    return `${base} ${current} bg-gradient-to-br from-cta-default/5 to-surface-raised`;
   }
 
-  getCoverageBoxClass(tier: SubscriptionTierConfig): string {
-    if (tier.tier === 'club_luxury') {
-      return 'bg-amber-500/10 text-amber-700';
+  getCoverageBoxClass(tier: MembershipPlanConfig): string {
+    if (tier.plan === 'black') {
+      return 'bg-white/10 text-white';
     }
-    if (tier.tier === 'club_black') {
-      return 'bg-gray-900/10 text-gray-800';
-    }
-    return 'bg-amber-500/10 text-amber-700';
+    return 'bg-cta-default/10 text-text-primary';
   }
 
-  getCtaButtonClass(tier: SubscriptionTierConfig): string {
-    if (tier.tier === 'club_luxury') {
-      return 'bg-gradient-to-r from-amber-500 to-yellow-400 text-black hover:from-amber-400 hover:to-yellow-300';
+  getCtaButtonClass(tier: MembershipPlanConfig): string {
+    if (this.isCurrentTier(tier.plan)) {
+      return 'bg-surface-secondary text-text-secondary border border-border-default';
     }
-    if (tier.tier === 'club_black') {
-      return 'bg-gray-900 text-white hover:bg-gray-800';
+    if (this.isDowngrade(tier.plan)) {
+      return 'bg-surface-secondary text-text-secondary opacity-50';
     }
-    return 'bg-amber-500 text-black hover:bg-amber-400';
+    // "Radioactive" Call to Action for all upgrade buttons
+    return 'bg-cta-default text-cta-text font-bold shadow-lg shadow-cta-default/20 hover:bg-cta-hover hover:shadow-cta-default/40 hover:-translate-y-0.5';
   }
 
-  selectPlan(tier: SubscriptionTier): void {
+  selectPlan(tier: MembershipPlan): void {
+    // Map back to DB tier for navigation
+    const dbMapping: Record<MembershipPlan, string> = {
+      club: 'club_standard',
+      silver: 'club_black',
+      black: 'club_luxury',
+      none: ''
+    };
     this.analytics.trackEvent('club_plan_selected', { tier, source: 'wallet' });
-    void this.router.navigate(['/wallet/club/subscribe'], { queryParams: { tier } });
+    void this.router.navigate(['/wallet/club/subscribe'], { queryParams: { tier: dbMapping[tier] } });
   }
 
   viewAllPlans(): void {
     this.analytics.trackEvent('club_view_plans_clicked', { source: 'wallet' });
     void this.router.navigate(['/wallet/club/plans']);
-  }
-
-  private getTierRank(tier: SubscriptionTier): number {
-    const tierHierarchy: Record<SubscriptionTier, number> = {
-      club_standard: 1,
-      club_black: 2,
-      club_luxury: 3,
-    };
-    return tierHierarchy[tier] ?? 0;
   }
 }

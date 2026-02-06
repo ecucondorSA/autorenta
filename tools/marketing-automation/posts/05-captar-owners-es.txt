@@ -1,43 +1,64 @@
-═══════════════════════════════════════════════════════════════
-POST 5: CAPTAR OWNERS (Para conseguir propietarios)
-═══════════════════════════════════════════════════════════════
+===============================================================
+POST 5: CAPTAR OWNERS - Tono 2026 (bajo, proceso, sin humo)
+===============================================================
 
-💰 ¿Tenés un auto que pasa días estacionado?
+Hice numeros con el auto parado
 
-Quiero compartir algo que descubrí hace poco:
+Entre seguro, patente, cochera y service, el auto me estaba saliendo caro sin usarlo.
 
-Existe una forma de generar ingresos extra con tu auto
-cuando no lo usás. Es como Airbnb pero para autos.
+Probe publicarlo algunos dias al mes (solo cuando no lo necesito). No es "plata facil", pero me ayudo a cubrir gastos fijos.
 
-Básicamente:
-- Publicás tu auto en una plataforma
-- Elegís los días que querés alquilarlo
-- Vos ponés el precio
-- La plataforma se encarga del seguro y verificación de usuarios
+Lo que me daba miedo era el tema riesgo. Lo que me cerro fue ver el proceso:
+- Verificacion de conductor (DNI + licencia + selfie)
+- Check-in con fotos antes y despues
+- Reglas claras de cobertura (incluida franquicia)
 
-Algunos propietarios ganan entre $30.000-80.000 ARS por fin de semana
-dependiendo del auto.
+Si me decis modelo/ano te paso una estimacion por dia y en que casos conviene / en cuales no.
 
-Si te interesa saber más, comentá o mandame DM que te cuento
-cómo funciona.
+===============================================================
+RESPUESTA EN DM O COMENTARIOS (cuando pregunten):
+===============================================================
 
-(No es agencia ni concesionaria, es peer-to-peer entre personas)
+Te cuento como funciona en la practica:
 
-═══════════════════════════════════════════════════════════════
-RESPUESTA EN DM O COMENTARIOS:
-═══════════════════════════════════════════════════════════════
+1. Publicas tu auto con fotos (5 min)
+2. Elegis que dias esta disponible y a que precio
+3. El que quiere alquilar pasa verificacion de identidad
+4. Antes de entregarle, se hace check-in con fotos del estado
+5. Cuando lo devuelve, check-out con fotos
+6. Cobras por la plataforma (wallet con retiro a tu cuenta)
 
-Hola! Te cuento:
+Lo que cubre:
+- Verificacion completa del conductor
+- Check-in/check-out documentado
+- Cobertura durante el uso (incluida franquicia segun el caso)
 
-La plataforma se llama AutoRentar (autorentar.com/owner/rent-your-car)
+Lo que NO es:
+- No es "plata facil" ni "ingreso pasivo"
+- Requiere que vos estes disponible para entregar/recibir
+- Tenes que mantener el auto en condiciones
 
-Funciona así:
-1. Registrás tu auto con fotos y descripción
-2. Ponés tu disponibilidad y precio por día
-3. Los arrendatarios reservan y pagan por la plataforma
-4. Vos entregás el auto y listo
+La app se llama AutoRentar: autorentar.com
 
-El seguro está incluido y verifican a todos los usuarios
-con DNI y licencia.
+Si queres, pasame modelo y ano y te digo cuanto estan cobrando otros dueños parecidos.
 
-Si tenés más dudas, preguntame!
+===============================================================
+OBJECIONES FRECUENTES:
+===============================================================
+
+"Y si me lo chocan?"
+> Hay cobertura durante el uso. El check-in con fotos documenta
+  el estado antes y despues. La franquicia esta cubierta segun el plan.
+  Igualmente, vos siempre podes rechazar una reserva si algo no te cierra.
+
+"No confio en desconocidos"
+> Se verifica identidad con DNI + licencia + selfie en tiempo real.
+  Podes ver el perfil y reviews antes de aceptar. Y siempre podes decir que no.
+
+"Cuanto se lleva la plataforma?"
+> 15%. Vos pones el precio que queres recibir.
+
+"Mi auto es viejo/tiene muchos km"
+> No hay minimo de modelo. Lo que importa es que este en condiciones
+  mecanicas y tenga papeles al dia. Muchos autos populares (Gol, Corsa, Clio)
+  tienen buena demanda justamente porque son economicos.

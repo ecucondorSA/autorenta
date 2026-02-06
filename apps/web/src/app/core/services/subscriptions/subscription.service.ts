@@ -7,13 +7,11 @@
 
 import { computed, inject, Injectable, signal } from '@angular/core';
 import {
-  calculatePreauthorization as calculatePreauthorizationLocal,
-  canAccessVehicle,
-  formatPreauthorizationInfo,
-  getRequiredTierByVehicleValue,
-  getTierConfig,
-  getUpgradeRecommendation as getUpgradeRecommendationLocal,
-  SUBSCRIPTION_TIERS,
+  calcHoldAndBuydown,
+  getVehicleTierByValue,
+  type MembershipPlan,
+} from '@core/models/guarantee-tiers.model';
+import {
   type ActiveSubscription,
   type PreauthorizationCalculation,
   type SubscriptionCoverageCheck,
@@ -23,6 +21,11 @@ import {
   type SubscriptionUsageLogWithDetails,
   type UpgradeRecommendation,
   type UserClubBenefits,
+  SUBSCRIPTION_TIERS,
+  getTierConfig,
+  getRequiredTierByVehicleValue,
+  canAccessVehicle,
+  formatPreauthorizationInfo,
 } from '@core/models/subscription.model';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
@@ -30,23 +33,23 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
 // Cache configuration
 const SUBSCRIPTION_STALE_TIME_MS = 30_000; // 30 seconds
 
-interface FunctionsErrorContext {
-  json?: () => Promise<{ message?: string; error?: string }>;
-  text?: () => Promise<string>;
-  status?: number;
-}
-
-interface FunctionsError {
-  message?: string;
-  context?: FunctionsErrorContext;
-}
-
 @Injectable({
   providedIn: 'root',
 })
 export class SubscriptionService {
   private readonly supabase = inject(SupabaseClientService);
   private readonly logger = inject(LoggerService);
+
+  // Helper to map DB tiers to logic plans
+  private mapTierToPlan(tier: SubscriptionTier | null): MembershipPlan {
+    if (!tier) return 'none';
+    const mapping: Record<string, MembershipPlan> = {
+      club_standard: 'club',
+      club_black: 'silver',
+      club_luxury: 'black',
+    };
+    return mapping[tier] || 'none';
+  }
 
   // ============================================================================
   // SIGNALS: Single source of truth for subscription state
@@ -659,10 +662,24 @@ export class SubscriptionService {
 
   /**
    * Calculate preauthorization locally (without server call)
-   * Useful for instant UI feedback
+   * Uses the new 6-tier vehicle model
    */
   calculatePreauthorizationLocal(vehicleValueUsd: number): PreauthorizationCalculation {
-    return calculatePreauthorizationLocal(vehicleValueUsd, this.tier());
+    const vehicleTier = getVehicleTierByValue(vehicleValueUsd);
+    const membershipPlan = this.mapTierToPlan(this.tier());
+    const calculation = calcHoldAndBuydown(vehicleTier, membershipPlan);
+
+    return {
+      holdAmountCents: calculation.holdUsd * 100,
+      holdAmountUsd: calculation.holdUsd,
+      baseHoldCents: calculation.baseHoldUsd * 100,
+      baseHoldUsd: calculation.baseHoldUsd,
+      discountApplied: calculation.discountApplied,
+      discountReason: calculation.discountApplied ? `Descuento ${calculation.membershipPlan}` : undefined,
+      requiredTier: this.tier() || 'club_standard', // Fallback
+      fgoCap: calculation.buyDownFgoUsd,
+      formula: calculation.formula,
+    };
   }
 
   /**

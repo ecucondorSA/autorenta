@@ -11,9 +11,8 @@ import {
 import { IonicModule } from '@ionic/angular';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import {
-  SubscriptionTier,
-  SUBSCRIPTION_TIERS,
   SUBSCRIPTION_STATUS_LABELS,
+  type SubscriptionTier,
 } from '@core/models/subscription.model';
 
 @Component({
@@ -25,21 +24,21 @@ import {
     <!-- Loading State -->
     @if (loading()) {
       <div
-        class="rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 p-6 animate-pulse"
+        class="rounded-2xl bg-gradient-to-br from-cta-default/10 to-cta-default/5 p-6 animate-pulse border border-cta-default/20"
       >
-        <div class="h-6 w-32 bg-amber-500/30 rounded mb-4"></div>
-        <div class="h-4 w-48 bg-amber-500/20 rounded"></div>
+        <div class="h-6 w-32 bg-cta-default/20 rounded mb-4"></div>
+        <div class="h-4 w-48 bg-cta-default/10 rounded"></div>
       </div>
     }
 
     <!-- No Subscription - Promotional Banner -->
     @if (!loading() && !hasSubscription()) {
       <div
-        class="rounded-2xl border-2 border-dashed border-amber-500/50 bg-gradient-to-br from-amber-500/5 to-amber-600/10 p-6 space-y-4"
+        class="rounded-2xl border border-cta-default/30 bg-gradient-to-br from-cta-default/5 to-surface-raised p-6 space-y-4 shadow-sm"
       >
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
-            <ion-icon name="shield-checkmark" class="text-2xl text-amber-500"></ion-icon>
+          <div class="w-12 h-12 rounded-full bg-cta-default/10 flex items-center justify-center border border-cta-default/20">
+            <ion-icon name="shield-checkmark" class="text-2xl text-cta-default"></ion-icon>
           </div>
           <div>
             <h3 class="text-lg font-bold text-text-primary">Autorentar Club</h3>
@@ -49,29 +48,29 @@ import {
 
         <div class="space-y-2">
           <div class="flex items-center gap-2 text-sm text-text-secondary">
-            <ion-icon name="checkmark-circle" class="text-success-strong"></ion-icon>
+            <ion-icon name="checkmark-circle" class="text-cta-default"></ion-icon>
             <span>Depósito $0 en la mayoría de autos</span>
           </div>
           <div class="flex items-center gap-2 text-sm text-text-secondary">
-            <ion-icon name="checkmark-circle" class="text-success-strong"></ion-icon>
-            <span>Cobertura hasta $500 o $1,000 USD</span>
+            <ion-icon name="checkmark-circle" class="text-cta-default"></ion-icon>
+            <span>Descuentos de hasta el 50% en garantía</span>
           </div>
           <div class="flex items-center gap-2 text-sm text-text-secondary">
-            <ion-icon name="checkmark-circle" class="text-success-strong"></ion-icon>
-            <span>Renovación anual sin compromiso</span>
+            <ion-icon name="checkmark-circle" class="text-cta-default"></ion-icon>
+            <span>FGO Buy-down incluido en todos los planes</span>
           </div>
         </div>
 
         <div class="flex gap-3">
           <button
             (click)="join.emit('club_standard')"
-            class="flex-1 py-3 px-4 rounded-xl bg-amber-500 text-black font-semibold text-sm hover:bg-amber-400 transition-colors"
+            class="flex-1 py-3 px-4 rounded-xl bg-cta-default text-cta-text font-bold text-sm hover:bg-cta-hover transition-all shadow-md shadow-cta-default/20 active:scale-95"
           >
-            Unirse por $300/mes
+            Unirse por $19.99/mes
           </button>
           <button
             (click)="viewPlans.emit()"
-            class="py-3 px-4 rounded-xl border border-amber-500/50 text-amber-500 font-medium text-sm hover:bg-amber-500/10 transition-colors"
+            class="py-3 px-4 rounded-xl border border-border-default text-text-secondary font-bold text-sm hover:bg-surface-secondary transition-colors"
           >
             Ver planes
           </button>
@@ -114,22 +113,17 @@ import {
         <div class="relative space-y-2">
           <div class="flex items-baseline justify-between">
             <span class="text-3xl font-bold text-white">
-              \${{ balanceUsd() | number: '1.0-0' }}
+              {{ discountPct() * 100 }}% OFF
             </span>
             <span class="text-sm text-white/70">
-              de \${{ coverageLimitUsd() | number: '1.0-0' }} disponibles
+              En garantías de vehículos
             </span>
           </div>
 
-          <!-- Progress Bar -->
-          <div class="h-2 bg-white/20 rounded-full overflow-hidden">
-            <div
-              class="h-full bg-white transition-all duration-500 rounded-full"
-              [style.width.%]="balancePercent()"
-            ></div>
-          </div>
-
-          <p class="text-xs text-white/60">{{ balancePercent() }}% de cobertura disponible</p>
+          <!-- Description -->
+          <p class="text-xs text-white/80 font-medium">
+            Tu plan te permite alquilar autos hasta nivel <strong>{{ maxTierName() }}</strong> con beneficio.
+          </p>
         </div>
 
         <!-- Expiration Warning -->
@@ -194,7 +188,34 @@ export class ClubMembershipCardComponent implements OnInit {
   readonly tierName = computed(() => {
     const sub = this.subscription();
     if (!sub) return '';
-    return SUBSCRIPTION_TIERS[sub.tier].name;
+    const mapping: Record<string, string> = {
+      club_standard: 'Club Access',
+      club_black: 'Silver Access',
+      club_luxury: 'Black Access',
+    };
+    return mapping[sub.tier] || sub.tier;
+  });
+
+  readonly discountPct = computed(() => {
+    const sub = this.subscription();
+    if (!sub) return 0;
+    const mapping: Record<string, number> = {
+      club_standard: 0.25,
+      club_black: 0.4,
+      club_luxury: 0.5,
+    };
+    return mapping[sub.tier] || 0;
+  });
+
+  readonly maxTierName = computed(() => {
+    const sub = this.subscription();
+    if (!sub) return '';
+    const mapping: Record<string, string> = {
+      club_standard: 'Standard',
+      club_black: 'Premium',
+      club_luxury: 'Luxury',
+    };
+    return mapping[sub.tier] || 'Standard';
   });
 
   readonly statusLabel = computed(() => {
@@ -230,23 +251,23 @@ export class ClubMembershipCardComponent implements OnInit {
   readonly cardClasses = computed(() => {
     const tier = this.subscription()?.tier;
     if (tier === 'club_black') {
-      return 'bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700';
+      return 'bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 shadow-xl';
     }
-    // club_standard - gold theme
-    return 'bg-gradient-to-br from-amber-600 to-amber-700';
+    // club_standard - New Neon Premium Theme
+    return 'bg-gradient-to-br from-cta-default to-emerald-600 text-cta-text shadow-lg shadow-cta-default/20';
   });
 
   readonly statusBadgeClasses = computed(() => {
     const status = this.subscription()?.status;
     switch (status) {
       case 'active':
-        return 'bg-green-500/20 text-green-300';
+        return 'bg-white/20 text-white backdrop-blur-md border border-white/30';
       case 'depleted':
-        return 'bg-red-500/20 text-red-300';
+        return 'bg-red-500/20 text-red-100';
       case 'expired':
         return 'bg-gray-500/20 text-gray-300';
       default:
-        return 'bg-white/20 text-white';
+        return 'bg-white/10 text-white';
     }
   });
 

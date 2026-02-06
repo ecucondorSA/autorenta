@@ -654,13 +654,17 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
 
     if (!car || !fxRate || fxRate <= 0) return null;
 
-    // ✅ NEW: Use 6-tier system
-    const vehicleValueUsd = car.value_usd || 12000;
+    // ✅ NEW: Use 6-tier system with ACTUAL user membership
+    const vehicleValueUsd = car.value_usd || 8000; // Default to Starter if not set
     const vehicleTier = getVehicleTierByValue(vehicleValueUsd);
 
-    // Calculate hold without membership (default view)
-    // TODO: Get user's actual membership plan from subscription service
-    const membershipPlan: MembershipPlan = 'none';
+    // Get user's actual membership plan from subscription service logic
+    const userTier = this.subscriptionService.tier();
+    const membershipPlan: MembershipPlan = userTier ? 
+      (userTier === 'club_standard' ? 'club' : 
+       userTier === 'club_black' ? 'silver' : 
+       userTier === 'club_luxury' ? 'black' : 'none') : 'none';
+    
     const holdCalc = calcHoldAndBuydown(vehicleTier, membershipPlan);
 
     const holdEstimatedUsd = holdCalc.holdUsd;

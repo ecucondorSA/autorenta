@@ -1,36 +1,54 @@
-═══════════════════════════════════════════════════════════════
-POST 7: OWNER - PROBLEMA/SOLUCIÓN (Para grupos argentinos)
-═══════════════════════════════════════════════════════════════
+===============================================================
+POST 7: HOOK BUSCABLE - Tono 2026 (pregunta concreta + numeros)
+===============================================================
 
-📊 DATO: El auto promedio en Argentina pasa 95% del tiempo ESTACIONADO.
+VERSION A: Hook con pregunta buscable
+===============================================================
 
-Eso son 23 horas por día sin generar nada.
-Mientras tanto, pagás seguro, patente, cochera...
+Cuanto cuesta tener el auto parado por mes en Argentina?
 
-¿Y si esas horas generaran plata?
+Hice la cuenta con mi caso:
+- Seguro: ~$XX.000/mes
+- Patente: ~$XX.000/trimestre
+- Cochera: ~$XX.000/mes (si no tenes garage)
+- Service anual: ~$XX.000 prorrateado
+- Devaluacion: pierde valor igual lo uses o no
 
-Existe una forma de alquilar tu auto por días cuando no lo usás.
-Vos ponés el precio. Vos elegís los días. Vos aprobás quién lo alquila.
+Total: el auto me sale ~$XXX.000/mes sin moverlo.
 
-Es como Airbnb pero para autos.
-Incluye seguro durante el alquiler y verificación de usuarios.
+Hace unos meses empece a publicarlo algunos dias al mes cuando no lo uso. No cubre todo, pero me baja bastante el costo fijo.
 
-Comenta "INFO" si querés saber cómo funciona.
+Si alguien quiere hacer el mismo calculo con su auto, pasame modelo/ano y les tiro un estimado.
 
-═══════════════════════════════════════════════════════════════
-RESPUESTA PARA COMENTARIOS:
-═══════════════════════════════════════════════════════════════
+===============================================================
+VERSION B: Hook directo (mas corto)
+===============================================================
 
-Hola! Te cuento cómo funciona:
+Dato por si a alguien le sirve: si tenes el auto parado varios dias al mes, hay gente que lo publica por dia para cubrir seguro y patente.
 
-1. Registrás tu auto en la plataforma (5 min)
-2. Ponés tu disponibilidad y precio por día
-3. Los arrendatarios reservan y pagan online
-4. Vos entregás el auto y listo
+El proceso es: verificacion del que lo usa (DNI + licencia), check-in con fotos antes y despues, y reglas claras de cobertura.
 
-La plataforma se llama AutoRentar (autorentar.com/owner/rent-your-car)
+Si quieren, pasame modelo y les digo cuanto se esta pagando aprox.
 
-El seguro está incluido y todos los usuarios son verificados
-con DNI y licencia de conducir.
+===============================================================
+RESPUESTA CUANDO PREGUNTEN:
+===============================================================
 
-¿Qué auto tenés? Te puedo dar una estimación de cuánto podrías ganar.
+La app se llama AutoRentar (autorentar.com).
+
+Funciona asi:
+1. Publicar tu auto con fotos y disponibilidad
+2. El que quiere alquilar pasa verificacion de identidad
+3. Check-in con fotos del estado antes de entregarlo
+4. Check-out con fotos cuando lo devuelve
+5. Cobras por wallet
+
+Que cubre:
+- Verificacion completa (DNI + licencia + selfie)
+- Documentacion del estado (fotos)
+- Cobertura durante el uso
+
+Que no es: no es "ingreso pasivo" ni "plata facil". Requiere que estes
+disponible para entregar y recibir, y que mantengas el auto en condiciones.
+
+Pasame modelo/ano y te digo cuanto estan cobrando otros duenos.

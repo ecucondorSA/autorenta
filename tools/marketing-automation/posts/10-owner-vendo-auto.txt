@@ -1,63 +1,56 @@
-═══════════════════════════════════════════════════════════════
-POST 10: MENSAJE PARA GENTE QUE PUBLICA "VENDO AUTO"
-(Para enviar por DM en Marketplace/OLX)
-═══════════════════════════════════════════════════════════════
+===============================================================
+POST 10: DM PARA VENDEDORES DE AUTO - Tono 2026 (cero presion)
+===============================================================
 
 MENSAJE INICIAL:
-═══════════════════════════════════════════════════════════════
+===============================================================
 
-Hola! Vi tu publicación del [MARCA MODELO].
+Hola, como estas? Vi tu [MARCA MODELO]. Se ve muy cuidado, exitos con la venta.
 
-Mientras encontrás comprador, ¿pensaste en alquilarlo?
-Hay apps tipo Airbnb de autos donde podés generar ingresos
-con el auto mientras está en venta.
+Te dejo un dato cortito: mientras esperas comprador (a veces tarda), algunos duenos lo publican por dia para cubrir gastos fijos. Si se vende, se pausa y listo.
 
-Algunos owners sacan $300-500 USD/mes dependiendo del auto.
-El seguro está incluido y verifican a todos los usuarios.
+Si te interesa, te paso como es el proceso y que cosas conviene revisar antes (verificacion, check-in, cobertura/franquicia).
 
-Si te interesa te cuento cómo funciona. Sin compromiso.
-
-═══════════════════════════════════════════════════════════════
+===============================================================
 FOLLOW-UP SI RESPONDEN INTERESADOS:
-═══════════════════════════════════════════════════════════════
+===============================================================
 
-Genial! Te cuento:
+Te cuento como funciona en la practica:
 
-La app se llama AutoRentar. Funciona así:
+1. Publicas el auto con fotos y condiciones (5 min)
+2. Elegis que dias queres que este disponible
+3. El que quiere usarlo pasa verificacion (DNI + licencia + selfie)
+4. Antes de entregar: check-in con fotos del estado del auto
+5. Cuando lo devuelve: check-out con fotos
+6. Cobras por wallet y retiras a tu cuenta
 
-1. Registrás tu auto con fotos (5 min)
-2. Ponés los días que querés alquilar y el precio
-3. Los arrendatarios reservan y pagan por la app
-4. Vos entregás el auto y cuando lo devuelven, cobrás
+Que cubre:
+- Verificacion completa del conductor
+- Documentacion del estado (fotos antes/despues)
+- Cobertura durante el uso (incluida franquicia segun plan)
 
-El seguro cubre durante todo el alquiler y verifican
-identidad de todos (DNI + licencia + selfie).
+Un [MARCA MODELO] como el tuyo esta saliendo aprox $[ESTIMACION]/dia.
+Si lo publicas [X] dias al mes, te ayuda a cubrir seguro + patente.
 
-Un [MARCA MODELO] como el tuyo podría generar ~$[ESTIMACIÓN]/mes
-alquilándolo [X] días.
+La app: autorentar.com
 
-Link para registrar tu auto:
-autorentar.com/owner/rent-your-car
+No es compromiso - si vendes el auto, pausas y listo.
 
-¿Te interesa probarlo? El registro es gratis y sin compromiso.
-
-═══════════════════════════════════════════════════════════════
+===============================================================
 OBJECIONES COMUNES:
-═══════════════════════════════════════════════════════════════
+===============================================================
 
 "No me dan confianza los desconocidos"
-→ Todos los usuarios pasan verificación de identidad.
-  Podés ver reviews de otros owners antes de aceptar.
-  Y siempre podés rechazar una reserva si no te convence.
+> Se verifica identidad con DNI + licencia + selfie.
+  Podes ver perfil y reviews. Siempre podes rechazar.
 
-"¿Y si lo chocan?"
-→ El seguro de la plataforma cubre durante el alquiler.
-  Vos no pagás nada si hay un siniestro.
+"Y si lo chocan?"
+> Cobertura durante el uso. Check-in con fotos documenta
+  el estado. La franquicia esta cubierta segun el plan.
 
-"Mi auto está en venta, no quiero complicarme"
-→ Justamente, mientras está publicado podés generar ingresos.
-  Si lo vendés, simplemente pausás las reservas.
-  Muchos venden más rápido porque el comprador ve que el auto "trabaja".
+"Mi auto esta en venta, no quiero complicarme"
+> Justamente, mientras esta publicado para vender, puede
+  estar generando para cubrir gastos. Si se vende, pausas.
 
-"¿Cuánto se lleva la plataforma?"
-→ La comisión es del 15%. Vos ponés el precio final que querés recibir.
+"Cuanto se lleva la plataforma?"
+> 15%. Vos pones el precio que queres recibir.

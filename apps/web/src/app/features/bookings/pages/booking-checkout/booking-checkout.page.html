@@ -51,54 +51,83 @@
       <!-- Main Column -->
       <div class="space-y-5">
         <!-- Booking Summary Card -->
-        <article class="glass-card p-bento-md" appHoverLift [liftAmount]="3">
-          <h2 class="text-lg font-bold text-text-primary mb-4 pb-3 border-b border-border-default">
-            Resumen de la Reserva
-          </h2>
+        <article class="glass-card p-bento-md shadow-sm border border-border-default" appHoverLift [liftAmount]="3">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-border-default">
+            <h2 class="text-lg font-bold text-text-primary">Resumen del Uso Compartido</h2>
+            @if (guaranteeInfo(); as info) {
+              <span class="text-[10px] font-black uppercase px-2 py-1 rounded bg-cta-default/10 text-cta-default border border-cta-default/20">
+                Tier {{ getVehicleTierName(info.vehicleTier) }}
+              </span>
+            }
+          </div>
+          
           @if (booking()) {
-            <div class="space-y-3">
+            <div class="space-y-4">
               <!-- Car Info -->
-              <div
-                class="flex justify-between items-center py-2"
-                appStaggerEnter
-                [staggerIndex]="0"
-              >
-                <span class="text-sm text-text-muted">Vehículo</span>
-                <span class="text-sm text-text-primary font-medium">
-                  {{ booking().car?.brand }} {{ booking().car?.model }}
-                </span>
+              <div class="flex gap-4 items-center p-3 bg-surface-secondary/50 rounded-2xl border border-border-default/30">
+                <div class="w-16 h-16 rounded-xl bg-surface-base border border-border-default overflow-hidden">
+                  <img [src]="booking().car?.photos?.[0]?.url || '/assets/placeholder-car.webp'" class="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p class="text-sm font-bold text-text-primary">{{ booking().car?.brand }} {{ booking().car?.model }}</p>
+                  <p class="text-xs text-text-secondary">{{ booking().car?.year }} · {{ booking().car?.transmission }}</p>
+                </div>
               </div>
-              <!-- Date Range -->
-              <div
-                class="flex justify-between items-center py-2"
-                appStaggerEnter
-                [staggerIndex]="1"
-              >
-                <span class="text-sm text-text-muted">Desde</span>
-                <span class="text-sm text-text-primary font-medium">
-                  {{ formatBookingDate(booking().start_date) }}
-                </span>
+
+              <!-- Date Details -->
+              <div class="grid grid-cols-2 gap-3">
+                <div class="p-3 bg-surface-base border border-border-default rounded-2xl">
+                  <p class="text-[9px] font-black text-text-muted uppercase tracking-widest">Desde</p>
+                  <p class="text-xs font-bold text-text-primary">{{ formatBookingDate(booking().start_date) }}</p>
+                </div>
+                <div class="p-3 bg-surface-base border border-border-default rounded-2xl">
+                  <p class="text-[9px] font-black text-text-muted uppercase tracking-widest">Hasta</p>
+                  <p class="text-xs font-bold text-text-primary">{{ formatBookingDate(booking().end_date) }}</p>
+                </div>
               </div>
-              <div
-                class="flex justify-between items-center py-2"
-                appStaggerEnter
-                [staggerIndex]="2"
-              >
-                <span class="text-sm text-text-muted">Hasta</span>
-                <span class="text-sm text-text-primary font-medium">
-                  {{ formatBookingDate(booking().end_date) }}
-                </span>
+
+              <!-- Price Breakdown -->
+              <div class="space-y-2 pt-2">
+                <div class="flex justify-between items-center text-sm">
+                  <span class="text-text-muted">Costo del Uso ({{ booking().days_count || 1 }} días)</span>
+                  <span class="font-bold text-text-primary">{{ formatCurrency(bookingTotalUsd(), 'USD') }}</span>
+                </div>
+
+                @if (guaranteeInfo(); as info) {
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="text-text-muted">Compensación de Seguridad (Hold)</span>
+                    <div class="flex flex-col items-end">
+                      @if (info.discountApplied) {
+                        <span class="text-[10px] text-text-muted line-through">{{ info.baseHoldUsd | money }}</span>
+                        <span class="font-bold text-cta-default italic">{{ info.holdUsd | money }}</span>
+                      } @else {
+                        <span class="font-bold text-text-primary">{{ info.holdUsd | money }}</span>
+                      }
+                    </div>
+                  </div>
+                  
+                  @if (info.discountApplied) {
+                    <div class="p-2.5 rounded-xl bg-cta-default/5 border border-cta-default/10 flex items-center gap-2">
+                      <app-icon name="sparkles" [size]="14" cssClass="text-cta-default" />
+                      <p class="text-[10px] text-cta-default font-bold uppercase tracking-tight">
+                        ✨ Beneficio Club: {{ info.buyDownFgoUsd | money }} cubiertos por FGO
+                      </p>
+                    </div>
+                  }
+                }
               </div>
-              <!-- Total -->
-              <div
-                class="flex justify-between items-center pt-4 mt-2 border-t-2 border-border-default"
-                appStaggerEnter
-                [staggerIndex]="3"
-              >
-                <span class="text-sm font-semibold text-text-primary">Total Original</span>
-                <span class="text-balance-md text-text-primary">
-                  {{ formatCurrency(bookingTotalUsd(), 'USD') }}
-                </span>
+
+              <!-- Grand Total Info -->
+              <div class="pt-4 mt-2 border-t-2 border-border-default flex justify-between items-end">
+                <div>
+                  <p class="text-[10px] font-black text-text-muted uppercase tracking-widest">Total Autorización</p>
+                  <p class="text-[9px] text-text-muted leading-tight max-w-[180px]">Uso + Hold (Hold se libera al finalizar)</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-2xl font-black text-text-primary italic tracking-tighter">
+                    {{ formatCurrency(bookingTotalUsd() + (guaranteeInfo()?.holdUsd || 0), 'USD') }}
+                  </p>
+                </div>
               </div>
             </div>
           }
@@ -420,14 +449,14 @@
         <!-- Amount Display -->
         @if (amountInProviderCurrency() > 0) {
           <div
-            class="rounded-2xl p-6 text-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg"
+            class="rounded-3xl p-8 text-center bg-cta-default text-cta-text shadow-xl shadow-cta-default/20 border-2 border-cta-default"
             appHoverLift
             [liftAmount]="4"
           >
-            <p class="text-sm opacity-90 mb-2">
-              Total a pagar con {{ selectedProvider() === 'paypal' ? 'PayPal' : 'MercadoPago' }}:
+            <p class="text-[10px] font-black uppercase tracking-widest opacity-70 mb-2">
+              Total a pagar con {{ selectedProvider() === 'paypal' ? 'PayPal' : 'MercadoPago' }}
             </p>
-            <p class="text-balance-xl font-bold">
+            <p class="text-4xl font-black italic tracking-tighter">
               {{ formatCurrency(amountInProviderCurrency(), providerCurrency()) }}
             </p>
           </div>
@@ -440,11 +469,10 @@
             <div class="space-y-3">
               <button
                 type="button"
-                class="w-full py-4 px-6 rounded-xl font-semibold text-white bg-[#009ee3] hover:bg-[#0088cc] disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg"
+                class="w-full py-5 px-6 rounded-2xl font-black uppercase tracking-widest text-white bg-[#009ee3] hover:bg-[#0088cc] disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95"
                 [disabled]="!isPaymentButtonEnabled() || isProcessingPayment()"
                 (click)="handleMercadoPagoPayment()"
                 appPressScale
-                [disabled]="isProcessingPayment()"
               >
                 @if (isProcessingPayment()) {
                   <svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24">
@@ -468,19 +496,6 @@
                   <span>Pagar con MercadoPago</span>
                 }
               </button>
-              <p
-                class="flex items-center justify-center gap-2 text-xs text-text-muted p-3 bg-surface-secondary rounded-lg"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                Serás redirigido a MercadoPago para completar el pago
-              </p>
             </div>
           }
 
@@ -494,19 +509,6 @@
                 (paymentApproved)="handlePayPalApprove($event)"
                 (paymentError)="handlePayPalError($event)"
               />
-              <p
-                class="flex items-center justify-center gap-2 text-xs text-text-muted p-3 bg-surface-secondary rounded-lg"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                  />
-                </svg>
-                Pago seguro procesado por PayPal
-              </p>
             </div>
           }
 
@@ -515,23 +517,23 @@
             <div class="space-y-3">
               <!-- Balance Info -->
               <div
-                class="p-4 rounded-xl border border-border-default"
-                [class.bg-success-50]="hasSufficientBalance()"
-                [class.border-success-200]="hasSufficientBalance()"
+                class="p-5 rounded-2xl border-2 transition-all"
+                [class.bg-cta-default/5]="hasSufficientBalance()"
+                [class.border-cta-default/30]="hasSufficientBalance()"
                 [class.bg-error-50]="!hasSufficientBalance()"
                 [class.border-error-200]="!hasSufficientBalance()"
               >
                 <div class="flex justify-between items-center mb-2">
                   <span
-                    class="text-sm font-medium"
-                    [class.text-success-800]="hasSufficientBalance()"
+                    class="text-xs font-black uppercase tracking-widest"
+                    [class.text-cta-default]="hasSufficientBalance()"
                     [class.text-error-800]="!hasSufficientBalance()"
                   >
                     Saldo Disponible
                   </span>
                   <span
-                    class="font-bold font-mono"
-                    [class.text-success-700]="hasSufficientBalance()"
+                    class="text-lg font-black italic tracking-tighter"
+                    [class.text-text-primary]="hasSufficientBalance()"
                     [class.text-error-700]="!hasSufficientBalance()"
                   >
                     {{ formatCurrency(walletService.availableBalance(), 'USD') }}
@@ -539,17 +541,10 @@
                 </div>
 
                 @if (!hasSufficientBalance()) {
-                  <div class="flex items-center gap-2 text-xs text-error-600">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                      />
-                    </svg>
+                  <div class="flex items-center gap-2 text-xs text-error-600 font-medium">
+                    <app-icon name="alert-circle" [size]="16" />
                     <span
-                      >Saldo insuficiente. Necesitas cargar al menos
+                      >Saldo insuficiente. Necesitas cargar
                       {{
                         formatCurrency(
                           amountInProviderCurrency() - walletService.availableBalance(),
@@ -561,7 +556,7 @@
                   </div>
                   <a
                     routerLink="/wallet/deposit"
-                    class="mt-3 block w-full py-2 px-3 bg-white border border-error-200 text-error-700 text-center rounded-lg text-xs font-semibold hover:bg-error-50 transition-colors"
+                    class="mt-4 block w-full py-3 px-3 bg-white border-2 border-error-200 text-error-700 text-center rounded-xl text-xs font-black uppercase tracking-widest hover:bg-error-50 transition-all"
                   >
                     Cargar Saldo →
                   </a>
@@ -570,7 +565,7 @@
 
               <button
                 type="button"
-                class="w-full py-4 px-6 rounded-xl font-semibold text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:bg-gray-400 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg"
+                class="w-full py-5 px-6 rounded-2xl font-black uppercase tracking-widest text-cta-text bg-cta-default hover:bg-cta-hover disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all shadow-xl shadow-cta-default/20 active:scale-95"
                 [disabled]="!isPaymentButtonEnabled() || !hasSufficientBalance()"
                 (click)="handleWalletPayment()"
                 appPressScale
@@ -594,17 +589,7 @@
                   </svg>
                   <span>Procesando...</span>
                 } @else {
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                  <span
-                    >Pagar con Saldo ({{ formatCurrency(amountInProviderCurrency(), 'USD') }})</span
-                  >
+                  <span>Pagar con Saldo Club</span>
                 }
               </button>
             </div>

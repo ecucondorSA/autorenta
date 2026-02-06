@@ -16,11 +16,16 @@
         "accounts:create": "node scripts/create-accounts.js create",
         "accounts:single": "node scripts/create-accounts.js single",
         "warmup": "node scripts/warmup-protocol.js daily",
-        "warmup:single": "node scripts/warmup-protocol.js run"
+        "warmup:single": "node scripts/warmup-protocol.js run",
+        "supply:scan": "node scripts/supply-hunter.mjs scan",
+        "supply:engage": "node scripts/supply-hunter.mjs engage",
+        "supply:dry-run": "node scripts/supply-hunter.mjs engage --dry-run",
+        "supply:stats": "node scripts/supply-hunter.mjs stats"
     },
     "dependencies": {
         "@supabase/supabase-js": "^2.39.0",
         "dotenv": "^16.3.1",
+        "patchright": "^1.49.1",
         "playwright": "^1.40.1"
     },
     "devDependencies": {
