@@ -3,6 +3,7 @@ import { environment } from '@environment';
 import type { VehicleCategory } from '@core/models';
 import type { LocationCoords } from '@core/models/marketplace.model';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 
 export interface QuoteBreakdown {
@@ -109,6 +110,7 @@ const DEFAULT_DAILY_RATE_PCT = 0.003;
 export class PricingService {
   private readonly supabase = injectSupabase();
   private readonly distanceCalculator = inject(DistanceCalculatorService);
+  private readonly logger = inject(LoggerService);
 
   /** Cache for vehicle categories to avoid N+1 queries */
   private categoriesCache: Map<string, string> | null = null;
@@ -219,7 +221,7 @@ export class PricingService {
       .order('display_order');
 
     if (error) {
-      console.error('[PricingService] Error fetching vehicle categories:', error);
+      this.logger.error('[PricingService] Error fetching vehicle categories', error);
       return [];
     }
     return data || [];
@@ -323,7 +325,7 @@ export class PricingService {
       const result: FipeValueResult = await response.json();
       return result;
     } catch (error) {
-      console.error('[PricingService] getFipeValueRealtime failed:', error);
+      this.logger.error('[PricingService] getFipeValueRealtime failed', error);
       return null;
     }
   }
@@ -385,20 +387,20 @@ export class PricingService {
       if (response.ok) {
         const result = await response.json();
         if (result.success && result.data) {
-          console.log(`[PricingService] Got ${result.data.length} brands from Edge Function (cached)`);
+          this.logger.debug(`[PricingService] Got ${result.data.length} brands from Edge Function (cached)`);
           return result.data;
         }
       }
 
       // Fallback to direct API (may hit rate limit)
-      console.warn('[PricingService] Edge Function failed, falling back to direct FIPE API');
+      this.logger.warn('[PricingService] Edge Function failed, falling back to direct FIPE API');
       const directResponse = await fetch('https://parallelum.com.br/fipe/api/v2/cars/brands');
       if (!directResponse.ok) {
         return [];
       }
       return await directResponse.json();
     } catch (error) {
-      console.error('[PricingService] getFipeBrands failed:', error);
+      this.logger.error('[PricingService] getFipeBrands failed', error);
       return [];
     }
   }
@@ -425,13 +427,13 @@ export class PricingService {
       if (response.ok) {
         const result = await response.json();
         if (result.success && result.data) {
-          console.log(`[PricingService] Got ${result.data.length} models for brand ${brandCode} from Edge Function (cached)`);
+          this.logger.debug(`[PricingService] Got ${result.data.length} models for brand ${brandCode}`);
           return result.data;
         }
       }
 
       // Fallback to direct API (may hit rate limit)
-      console.warn(`[PricingService] Edge Function failed for brand ${brandCode}, falling back to direct FIPE API`);
+      this.logger.warn(`[PricingService] Edge Function failed for brand ${brandCode}, falling back to direct FIPE API`);
       const directResponse = await fetch(
         `https://parallelum.com.br/fipe/api/v2/cars/brands/${brandCode}/models`,
       );
@@ -440,7 +442,7 @@ export class PricingService {
       }
       return await directResponse.json();
     } catch (error) {
-      console.error(`[PricingService] getFipeModels failed for brand ${brandCode}:`, error);
+      this.logger.error(`[PricingService] getFipeModels failed for brand ${brandCode}`, error);
       return [];
     }
   }
@@ -491,7 +493,7 @@ export class PricingService {
 
       return availableModels;
     } catch (error) {
-      console.error(`[PricingService] getFipeModelsByYear failed:`, error);
+      this.logger.error('[PricingService] getFipeModelsByYear failed', error);
       return [];
     }
   }
@@ -532,8 +534,8 @@ export class PricingService {
 
         // ✅ FIX: Handle rate limiting with exponential backoff
         if (response.status === 429) {
-          const backoffMs = Math.pow(2, attempt) * 1000; // 1s, 2s, 4s
-          console.warn(`[PricingService] Rate limited (429), retrying in ${backoffMs}ms...`);
+          const backoffMs = Math.pow(2, attempt) * 1000;
+          this.logger.warn(`[PricingService] Rate limited (429), retrying in ${backoffMs}ms...`);
           await this.delay(backoffMs);
           continue;
         }
@@ -557,7 +559,7 @@ export class PricingService {
     }
 
     if (lastError) {
-      console.warn(`[PricingService] checkModelYearAvailability failed after ${maxRetries} attempts:`, lastError.message);
+      this.logger.warn(`[PricingService] checkModelYearAvailability failed after ${maxRetries} attempts`, lastError);
     }
     return false;
   }
@@ -643,7 +645,7 @@ export class PricingService {
       } = await this.supabase.auth.getSession();
 
       if (!session) {
-        console.error('[PricingService] No session for secure pricing');
+        this.logger.error('[PricingService] No session for secure pricing');
         return null;
       }
 
@@ -658,13 +660,13 @@ export class PricingService {
       );
 
       if (error) {
-        console.error('[PricingService] Secure pricing error:', error);
+        this.logger.error('[PricingService] Secure pricing error', error);
         return null;
       }
 
       return data ?? null;
     } catch (error) {
-      console.error('[PricingService] getSecurePricingEstimate failed:', error);
+      this.logger.error('[PricingService] getSecurePricingEstimate failed', error);
       return null;
     }
   }
@@ -748,8 +750,8 @@ export class PricingService {
         error: `No se encontró información de precio para ${baseName} ${params.year}`,
       };
     } catch (error) {
-      console.error(
-        `[PricingService] getFipeValueByBaseModel failed for ${params.brand} ${params.baseModel}:`,
+      this.logger.error(
+        `[PricingService] getFipeValueByBaseModel failed for ${params.brand} ${params.baseModel}`,
         error,
       );
       return null;
