@@ -25,7 +25,10 @@
 ## 2. Convenciones Técnicas
 
 - **Gestión de Paquetes:** Uso exclusivo de `pnpm`.
-- **TypeScript Estricto:** No `any`. No `unknown` sin validación. Tipos explícitos en retornos de funciones públicas.
+- **TypeScript Estricto (ZERO TOLERANCE):**
+  - 🚫 **PROHIBIDO `any`:** Nunca usar `any` para silenciar errores. Es deuda técnica inaceptable.
+  - ✅ **Usar `unknown`:** Para datos inciertos (errores, API responses), usar `unknown` y validarlos con Type Guards (`instanceof Error`, `zod`, etc.).
+  - **Interfaces Explícitas:** Tipar siempre las respuestas de APIs y objetos globales (ej: `window.ethereum`, `window.ttq`).
 - **Tailwind CSS:** Única fuente de estilos. No crear clases CSS personalizadas a menos que sea un componente de UI Kit reutilizable.
 - **Iconos:** Usar `<app-icon>`. Imports explícitos, nunca barrels.
 - **Sintaxis:** ESM y sintaxis moderna de Angular (`@if`, `@for`, `inject()`).

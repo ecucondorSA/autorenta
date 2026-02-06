@@ -300,7 +300,10 @@ export class BookingCheckoutPage implements OnInit {
     if (event.provider === 'wallet') {
       this.walletService
         .fetchBalance()
-        .catch((err: any) => this.logger.warn('Error refreshing wallet balance on selection', err));
+        .catch((err: unknown) => {
+          const errorMsg = err instanceof Error ? err.message : String(err);
+          this.logger.warn('Error refreshing wallet balance on selection', { error: errorMsg });
+        });
     }
 
     // Limpiar preferencia previa de MercadoPago
