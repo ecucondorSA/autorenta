@@ -154,10 +154,10 @@ import {
 })
 export class LeadCaptureFormComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly supabase = inject(SupabaseService);
+  private readonly supabase = inject(SupabaseClientService);
   private readonly toast = inject(ToastService);
 
-  @Input() carContext: { brand?: string, model?: string, year?: number } | null = null;
+  @Input() carContext: { brand?: string | null, model?: string | null, year?: number | null } | null = null;
 
   readonly isSubmitting = signal(false);
   readonly isSubmitted = signal(false);
@@ -223,10 +223,10 @@ export class LeadCaptureFormComponent {
       }
 
       this.isSubmitted.set(true);
-      this.toast.show('¡Te contactaremos pronto!', 'success');
+      this.toast.success('¡Recibido!', 'Te contactaremos pronto por WhatsApp.');
     } catch (error) {
       console.error('Error saving lead:', error);
-      this.toast.show('Hubo un problema. Por favor reintenta.', 'error');
+      this.toast.error('Error', 'Hubo un problema. Por favor reintenta.');
     } finally {
       this.isSubmitting.set(false);
     }
