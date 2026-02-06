@@ -1,4 +1,5 @@
 import { Injectable, inject, signal, computed, NgZone } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Platform, ToastController } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 import { SupabaseClientService } from '../infrastructure/supabase-client.service';
@@ -50,6 +51,7 @@ export class BeaconService {
   private readonly ngZone = inject(NgZone);
   private readonly supabase = inject(SupabaseClientService);
   private readonly toastCtrl = inject(ToastController);
+  private readonly logger = inject(LoggerService);
 
   // Debug toast counter to track activity
   private deviceCount = 0;
@@ -90,7 +92,7 @@ export class BeaconService {
    */
   async initialize(): Promise<boolean> {
     if (!this.isNative()) {
-      console.warn('[BeaconService] BLE not available on web platform');
+      this.logger.warn('[BeaconService] BLE not available on web platform');
       this._status.set('error');
       this._lastError.set('BLE not available on web');
       return false;
@@ -115,11 +117,11 @@ export class BeaconService {
       await BluetoothLowEnergy.initialize({ mode: 'peripheral' });
 
       this._status.set('ready');
-      console.log('[BeaconService] Initialized successfully');
+      this.logger.debug('[BeaconService] Initialized successfully');
       this.showDebugToast('✅ BLE Plugin inicializado', 'success');
       return true;
     } catch (error) {
-      console.error('[BeaconService] Initialization failed:', error);
+      this.logger.error('[BeaconService] Initialization failed:', error);
       this._status.set('error');
       this._lastError.set(error instanceof Error ? error.message : 'Unknown error');
       this.showDebugToast(`❌ BLE Error: ${error instanceof Error ? error.message : 'Unknown'}`, 'danger');
@@ -138,7 +140,7 @@ export class BeaconService {
     longitude: number
   ): Promise<boolean> {
     if (!this.isReady() || !BluetoothLowEnergy) {
-      console.error('[BeaconService] Not ready to broadcast');
+      this.logger.error('[BeaconService] Not ready to broadcast');
       return false;
     }
 
@@ -154,12 +156,12 @@ export class BeaconService {
 
       // Encode to binary
       const payload = this.protocol.encode(message);
-      console.log('[BeaconService] Broadcasting payload:', this.uint8ArrayToHex(payload));
+      this.logger.debug('[BeaconService] Broadcasting payload:', this.uint8ArrayToHex(payload));
 
       // On iOS, keep screen awake
       if (this.isIOS() && KeepAwake) {
         await KeepAwake.keepAwake();
-        console.log('[BeaconService] Keep-awake enabled for iOS');
+        this.logger.debug('[BeaconService] Keep-awake enabled for iOS');
       }
 
       // Start Android foreground service for background operation
@@ -169,9 +171,9 @@ export class BeaconService {
             title: 'AutoRenta SOS Activo',
             body: 'Emitiendo señal de emergencia...',
           });
-          console.log('[BeaconService] Foreground service started');
+          this.logger.debug('[BeaconService] Foreground service started');
         } catch (fgError) {
-          console.warn('[BeaconService] Foreground service not available:', fgError);
+          this.logger.warn('[BeaconService] Foreground service not available:', fgError);
         }
       }
 
@@ -189,11 +191,11 @@ export class BeaconService {
 
       this._isBroadcasting.set(true);
       this._mode.set(this._isScanning() ? 'both' : 'broadcasting');
-      console.log('[BeaconService] Broadcasting started:', BeaconMessageType[type]);
+      this.logger.debug('[BeaconService] Broadcasting started:', BeaconMessageType[type]);
 
       return true;
     } catch (error) {
-      console.error('[BeaconService] Failed to start broadcasting:', error);
+      this.logger.error('[BeaconService] Failed to start broadcasting:', error);
       this._lastError.set(error instanceof Error ? error.message : 'Broadcast failed');
       return false;
     }
@@ -224,9 +226,9 @@ export class BeaconService {
 
       this._isBroadcasting.set(false);
       this._mode.set(this._isScanning() ? 'scanning' : 'idle');
-      console.log('[BeaconService] Broadcasting stopped');
+      this.logger.debug('[BeaconService] Broadcasting stopped');
     } catch (error) {
-      console.error('[BeaconService] Failed to stop broadcasting:', error);
+      this.logger.error('[BeaconService] Failed to stop broadcasting:', error);
     }
   }
 
@@ -239,16 +241,16 @@ export class BeaconService {
       // Try to initialize if not ready
       const initialized = await this.initialize();
       if (!initialized) {
-        console.error('[BeaconService] Failed to initialize for scanning');
+        this.logger.error('[BeaconService] Failed to initialize for scanning');
         return false;
       }
     }
 
-    console.log('[BeaconService] Starting scan mode...');
+    this.logger.debug('[BeaconService] Starting scan mode...');
 
     // Ensure plugin is loaded
     if (!BluetoothLowEnergy) {
-      console.error('[BeaconService] BLE plugin not loaded after init');
+      this.logger.error('[BeaconService] BLE plugin not loaded after init');
       return false;
     }
 
@@ -258,9 +260,9 @@ export class BeaconService {
     // Note: This may fail if already broadcasting, which is OK
     try {
       await ble.initialize({ mode: 'central' });
-      console.log('[BeaconService] Initialized in central mode');
+      this.logger.debug('[BeaconService] Initialized in central mode');
     } catch (initError) {
-      console.log('[BeaconService] Central init skipped (may already be active):', initError);
+      this.logger.debug('[BeaconService] Central init skipped (may already be active):', initError);
     }
 
     try {
@@ -298,12 +300,12 @@ export class BeaconService {
         this.scanIntervalId = setInterval(() => {
           this.performScan();
         }, this.SCAN_INTERVAL_MS);
-        console.log('[BeaconService] Continuous scanning enabled (duty cycling)');
+        this.logger.debug('[BeaconService] Continuous scanning enabled (duty cycling)');
       }
 
       return true;
     } catch (error) {
-      console.error('[BeaconService] Failed to start scanning:', error);
+      this.logger.error('[BeaconService] Failed to start scanning:', error);
       this._lastError.set(error instanceof Error ? error.message : 'Scan failed');
       return false;
     }
@@ -314,11 +316,11 @@ export class BeaconService {
    */
   private async performScan(): Promise<void> {
     if (!BluetoothLowEnergy) {
-      console.error('[BeaconService] ❌ BLE plugin not available for scan!');
+      this.logger.error('[BeaconService] ❌ BLE plugin not available for scan!');
       return;
     }
 
-    console.log('[BeaconService] 📡📡📡 STARTING SCAN CYCLE 📡📡📡');
+    this.logger.debug('[BeaconService] 📡📡📡 STARTING SCAN CYCLE 📡📡📡');
 
     try {
       // Start scanning for ALL nearby BLE devices
@@ -327,7 +329,7 @@ export class BeaconService {
         allowDuplicates: true,
       });
 
-      console.log('[BeaconService] ✅ SCAN STARTED - Listening for devices...');
+      this.logger.debug('[BeaconService] ✅ SCAN STARTED - Listening for devices...');
       this.deviceCount = 0;
       this.showDebugToast('📡 Escaneando BLE (10s)...', 'primary');
 
@@ -335,14 +337,14 @@ export class BeaconService {
       setTimeout(async () => {
         try {
           await BluetoothLowEnergy?.stopScan();
-          console.log('[BeaconService] ⏹️ Scan cycle complete');
+          this.logger.debug('[BeaconService] ⏹️ Scan cycle complete');
           this.showDebugToast(`⏹️ Scan completo: ${this.deviceCount} dispositivos`, this.deviceCount > 0 ? 'success' : 'warning');
         } catch {
           // Ignore stop errors
         }
       }, this.SCAN_DURATION_MS);
     } catch (error) {
-      console.error('[BeaconService] ❌ Scan error:', error);
+      this.logger.error('[BeaconService] ❌ Scan error:', error);
     }
   }
 
@@ -354,7 +356,7 @@ export class BeaconService {
     if (!BluetoothLowEnergy) return;
 
     // DEBUG: Log ALL devices found during scan
-    console.log('[BeaconService] 🔍 DEVICE FOUND:', device.name || 'unnamed', 'RSSI:', device.rssi, 'ID:', device.deviceId);
+    this.logger.debug('[BeaconService] 🔍 DEVICE FOUND:', device.name || 'unnamed', 'RSSI:', device.rssi, 'ID:', device.deviceId);
     this.deviceCount++;
 
     // Show toast for first 3 devices found (avoid spam)
@@ -367,8 +369,8 @@ export class BeaconService {
       return;
     }
 
-    console.log('[BeaconService] 🚨🚨🚨 AUTORENTA BEACON DETECTED! 🚨🚨🚨');
-    console.log('[BeaconService] Device:', device.name, 'RSSI:', device.rssi, 'ID:', device.deviceId);
+    this.logger.debug('[BeaconService] 🚨🚨🚨 AUTORENTA BEACON DETECTED! 🚨🚨🚨');
+    this.logger.debug('[BeaconService] Device:', device.name, 'RSSI:', device.rssi, 'ID:', device.deviceId);
 
     // Show prominent toast for AutoRenta beacon
     this.showDebugToast(`🚨 ¡BEACON ${device.name} DETECTADO!`, 'danger');
@@ -421,7 +423,7 @@ export class BeaconService {
       }
     });
 
-    console.log('[BeaconService] ✅ Beacon detected and registered:', BeaconMessageType[beaconType]);
+    this.logger.debug('[BeaconService] ✅ Beacon detected and registered:', BeaconMessageType[beaconType]);
 
     // Relay to backend
     await this.relayToBackend(detected);
@@ -458,9 +460,9 @@ export class BeaconService {
 
       this._isScanning.set(false);
       this._mode.set(this._isBroadcasting() ? 'broadcasting' : 'idle');
-      console.log('[BeaconService] Scanning stopped');
+      this.logger.debug('[BeaconService] Scanning stopped');
     } catch (error) {
-      console.error('[BeaconService] Failed to stop scanning:', error);
+      this.logger.error('[BeaconService] Failed to stop scanning:', error);
     }
   }
 
@@ -482,7 +484,7 @@ export class BeaconService {
       const accessToken = sessionData.session?.access_token;
 
       if (!accessToken) {
-        console.warn('[BeaconService] No auth session, skipping relay');
+        this.logger.warn('[BeaconService] No auth session, skipping relay');
         return;
       }
 
@@ -511,15 +513,15 @@ export class BeaconService {
       const result = await response.json();
 
       if (result.success) {
-        console.log('[BeaconService] Relay successful:', result);
+        this.logger.debug('[BeaconService] Relay successful:', result);
         if (result.points_earned) {
           console.log(`[BeaconService] Scout earned ${result.points_earned} points!`);
         }
       } else {
-        console.error('[BeaconService] Relay failed:', result.error);
+        this.logger.error('[BeaconService] Relay failed:', result.error);
       }
     } catch (error) {
-      console.error('[BeaconService] Relay error:', error);
+      this.logger.error('[BeaconService] Relay error:', error);
     }
   }
 
