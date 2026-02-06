@@ -1,3 +1,16 @@
+import { CommonModule, formatDate } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { normalizeRecordToUsd } from '@core/utils/currency.utils';
+import { PaymentProvider } from '@core/models/payment.model';
 import {
   calcHoldAndBuydown,
   getVehicleTierByValue,
@@ -287,7 +300,7 @@ export class BookingCheckoutPage implements OnInit {
     if (event.provider === 'wallet') {
       this.walletService
         .fetchBalance()
-        .catch((err) => this.logger.warn('Error refreshing wallet balance on selection', err));
+        .catch((err: any) => this.logger.warn('Error refreshing wallet balance on selection', err));
     }
 
     // Limpiar preferencia previa de MercadoPago
