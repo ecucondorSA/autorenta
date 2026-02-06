@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { normalizeRecordToUsd } from '@core/utils/currency.utils';
-import { PaymentProvider } from '@core/models/payment.model';
+import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { PaymentGatewayFactory } from '@core/services/payments/payment-gateway.factory';
 import { WalletService } from '@core/services/payments/wallet.service';
@@ -22,6 +22,8 @@ import { HoverLiftDirective } from '@shared/directives/hover-lift.directive';
 import { PressScaleDirective } from '@shared/directives/press-scale.directive';
 import { SpringCollapseDirective } from '@shared/directives/spring-collapse.directive';
 import { StaggerEnterDirective } from '@shared/directives/stagger-enter.directive';
+import { IconComponent } from '@shared/components/icon/icon.component';
+import { MoneyPipe } from '@shared/pipes/money.pipe';
 import {
   calcHoldAndBuydown,
   getVehicleTierByValue,
@@ -68,6 +70,8 @@ interface MercadoPagoPreferenceResponse {
     PressScaleDirective,
     StaggerEnterDirective,
     SpringCollapseDirective,
+    IconComponent,
+    MoneyPipe,
   ],
   templateUrl: './booking-checkout.page.html',
   styleUrls: ['./booking-checkout.page.css'],
@@ -107,13 +111,13 @@ export class BookingCheckoutPage implements OnInit {
 
     const carValue = booking.car.value_usd || 10000;
     const vehicleTier = getVehicleTierByValue(carValue);
-    
+
     // Mapping current user subscription to logic membership plan
     const userTier = this.subscriptionService.tier();
-    const plan: MembershipPlan = userTier ? 
-      (userTier === 'club_standard' ? 'club' : 
-       userTier === 'club_black' ? 'silver' : 
-       userTier === 'club_luxury' ? 'black' : 'none') : 'none';
+    const plan: MembershipPlan = userTier ?
+      (userTier === 'club_standard' ? 'club' :
+        userTier === 'club_black' ? 'silver' :
+          userTier === 'club_luxury' ? 'black' : 'none') : 'none';
 
     return calcHoldAndBuydown(vehicleTier, plan);
   });
@@ -122,7 +126,7 @@ export class BookingCheckoutPage implements OnInit {
 
   formatBookingDate(date?: string | Date | null): string {
     if (!date) return '-';
-    return formatDate(date, { format: 'medium' });
+    return formatDate(date, 'medium', 'es-AR');
   }
 
   /**

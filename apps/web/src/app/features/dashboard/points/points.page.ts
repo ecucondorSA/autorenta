@@ -7,13 +7,12 @@ import {
   MAX_POOL_SHARE_PER_OWNER,
 } from '@core/models/reward-pool.model';
 import { RewardPoolService } from '@core/services/payments/reward-pool.service';
-import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 
 @Component({
   selector: 'app-points-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, MoneyPipe, DecimalPipe, PercentPipe],
+  imports: [CommonModule, RouterLink, DecimalPipe, PercentPipe],
   templateUrl: './points.page.html',
 })
 export class PointsPage implements OnInit {

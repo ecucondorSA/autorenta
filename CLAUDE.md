@@ -666,6 +666,7 @@ pkill -f "pnpm.*build"
 - **Contexto:** Leer siempre `task.md` y `implementation_plan.md` antes de escribir código.
 - **Acción Directa:** Ejecutar tareas simples y bien definidas inmediatamente.
 - **Confirmación:** Cambios complejos (refactors, migraciones de BD) requieren un plan y aprobación del usuario.
+- **CERO DEUDA TÉCNICA (NO FLOJERA):** No existe "lo optimizo después". El código se escribe **perfecto y optimizado HOY**. Si ves algo mal, arréglalo AHORA. Prohibido dejar `TODO` para "el futuro" en lógica crítica.
 
 ---
 

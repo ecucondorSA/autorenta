@@ -33,6 +33,15 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
 // Cache configuration
 const SUBSCRIPTION_STALE_TIME_MS = 30_000; // 30 seconds
 
+// Type for Supabase Functions errors
+interface FunctionsError extends Error {
+  context?: {
+    json?: () => Promise<{ message?: string; error?: string }>;
+    text?: () => Promise<string>;
+    status?: number;
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -656,7 +665,7 @@ export class SubscriptionService {
     } catch (err) {
       this.logger.error('Error calculating preauthorization from server', err);
       // Fallback to local calculation
-      return calculatePreauthorizationLocal(vehicleValueUsd, this.tier());
+      return this.calculatePreauthorizationLocal(vehicleValueUsd);
     }
   }
 
@@ -703,7 +712,7 @@ export class SubscriptionService {
       } = await this.supabase.auth.getSession();
       if (!session?.user) {
         const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
-        const preauth = calculatePreauthorizationLocal(vehicleValueUsd, null);
+        const preauth = this.calculatePreauthorizationLocal(vehicleValueUsd);
         return {
           hasSubscription: false,
           canBook: true,
@@ -758,7 +767,20 @@ export class SubscriptionService {
    * Get upgrade recommendation for a vehicle
    */
   getUpgradeRecommendation(vehicleValueUsd: number): UpgradeRecommendation {
-    return getUpgradeRecommendationLocal(vehicleValueUsd, this.tier());
+    // Use the exported function from the model
+    const access = canAccessVehicle(this.tier(), vehicleValueUsd);
+
+    // If user tier is sufficient, no upgrade needed
+    if (!access.reason) {
+      return { recommended: false };
+    }
+
+    // Recommend upgrade to required tier
+    return {
+      recommended: true,
+      upgradeTo: access.requiredTier,
+      reason: access.reason,
+    };
   }
 
   /**
