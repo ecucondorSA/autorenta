@@ -122,7 +122,7 @@
 <div class="separator-fade"></div>
 
 <!-- CARS LISTING SECTION (Marketplace) -->
-<section class="py-8 sm:py-12 lg:py-24 bg-surface-base">
+<section id="catalog" class="py-8 sm:py-12 lg:py-24 bg-surface-base">
   <div class="max-w-7xl mx-auto px-6 lg:px-12">
     <!-- Section Header -->
     <div
@@ -147,8 +147,7 @@
           <select id="sort-order" [value]="sortOrder()" (change)="onSortOrderChange($event)"
             class="select-premium bg-surface-raised border-border-default text-text-primary focus:ring-cta-default"
             aria-label="Ordenar lista de autos">
-            <option value="distance">Más cercanos</option>
-            <option value="score">Relevancia</option>
+            <option value="newest">Más recientes</option>
             <option value="price_asc">Menor aporte</option>
             <option value="price_desc">Mayor aporte</option>
             <option value="rating">Mejor valorados</option>
@@ -191,7 +190,8 @@
       </div>
 
       <!-- DESKTOP: Grid View (Robust Auto-Fill) -->
-      <div class="hidden sm:grid gap-6 w-full" [style.grid-template-columns]="'repeat(auto-fill, minmax(300px, 1fr))'">
+      <div class="hidden sm:grid gap-6 w-full justify-center"
+        [style.grid-template-columns]="'repeat(auto-fit, minmax(280px, 360px))'">
 
         <!-- CAR CARD LOOP -->
         @for (car of visibleCars(); track trackByCarId(i, car); let i = $index) {

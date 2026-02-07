@@ -84,7 +84,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly totalPages = computed(() => Math.max(1, Math.ceil(this.cars().length / this.itemsPerPage)));
 
   // Sort State
-  readonly sortOrder = signal<'price_asc' | 'price_desc' | 'newest'>('newest');
+  // Keep this aligned with the template options; avoid showing blank selections.
+  readonly sortOrder = signal<'newest' | 'price_asc' | 'price_desc' | 'rating'>('newest');
 
   // Filter State
   readonly selectedCategory = signal<string>('all');
@@ -119,6 +120,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       case 'price_asc': cars.sort((a, b) => a.price_per_day - b.price_per_day); break;
       case 'price_desc': cars.sort((a, b) => b.price_per_day - a.price_per_day); break;
       case 'newest': cars.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()); break;
+      case 'rating': cars.sort((a, b) => (b.rating_avg || 0) - (a.rating_avg || 0)); break;
     }
 
     const start = (this.currentPage() - 1) * this.itemsPerPage;
@@ -240,7 +242,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   onSortOrderChange(event: Event) {
-    const value = (event.target as HTMLSelectElement).value as 'price_asc' | 'price_desc' | 'newest';
+    const value = (event.target as HTMLSelectElement).value as 'newest' | 'price_asc' | 'price_desc' | 'rating';
     this.sortOrder.set(value);
     this.currentPage.set(1);
   }
