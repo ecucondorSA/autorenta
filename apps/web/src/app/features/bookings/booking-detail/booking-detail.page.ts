@@ -104,13 +104,13 @@ import {
   BookingFlowCardComponent,
   FlowActionEvent,
 } from '../../../shared/components/booking-flow-card/booking-flow-card.component';
+import { PreTripViewComponent } from '../bookings-hub/views/pre-trip/pre-trip-view.component';
 import { BookingTimelineComponent } from './booking-timeline.component';
 import { BookingActionsCardComponent } from './booking-actions-card.component';
 import { BookingCheckInInfoCardComponent } from './booking-check-in-info-card.component';
 import { BookingExtensionsManagerComponent } from './booking-extensions-manager.component';
 import { BookingStatusComponent } from './booking-status.component';
 import { BookingTrafficFinesManagerComponent } from './booking-traffic-fines-manager.component';
-import { PreTripViewComponent } from '../bookings-hub/views/pre-trip/pre-trip-view.component';
 
 interface ReturnChecklistItem {
   id: string;

@@ -11,7 +11,6 @@ import {
   runInInjectionContext,
   signal,
   ChangeDetectionStrategy,
-  DestroyRef,
   PLATFORM_ID,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';

@@ -40,13 +40,10 @@ jobs:
         with:
           version: 8
 
-      - name: Install Dependencies
+      # FIX: Install dependencies at ROOT to handle workspaces
+      - name: Install Dependencies (Root)
         run: pnpm install
-        working-directory: apps/video-studio
-
-      # Install supabase-js in root for the upload script
-      - name: Install Tool Dependencies
-        run: npm install @supabase/supabase-js
+        # No working-directory, run at root
 
       - name: Install FFMPEG
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
@@ -66,7 +63,8 @@ jobs:
         working-directory: apps/video-studio
         run: |
           echo "Rendering with props: $PROPS"
-          npx remotion render src/index.ts CarPromo out/video.mp4 --props="$PROPS" --gl=angle
+          # Use npx from root node_modules or pnpm exec
+          pnpm exec remotion render src/index.ts CarPromo out/video.mp4 --props="$PROPS" --gl=angle
 
       - name: Upload to Supabase Storage
         env:

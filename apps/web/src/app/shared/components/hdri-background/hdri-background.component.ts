@@ -817,7 +817,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       // Force a frame when becoming visible to avoid visual glitch
       if (this.isPageVisible && !this.isDestroyed) {
         this.ngZone.runOutsideAngular(() => {
-          requestAnimationFrame((time) => {
+          requestAnimationFrame((_time) => {
             // Restart loop if needed, but startRenderLoop is resilient
             // We just ensure a frame is painted
             if (this.gl && this.program) this.draw();
