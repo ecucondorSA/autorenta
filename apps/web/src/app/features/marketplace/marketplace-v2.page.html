@@ -190,12 +190,13 @@
       </div>
 
       <!-- DESKTOP: Grid View (Robust Auto-Fill) -->
-      <div class="hidden sm:grid gap-6 w-full justify-center"
-        [style.grid-template-columns]="'repeat(auto-fit, minmax(280px, 360px))'">
+      <div class="hidden sm:grid gap-6 w-full items-start"
+        [style.grid-template-columns]="'repeat(auto-fill, minmax(280px, 1fr))'">
 
         <!-- CAR CARD LOOP -->
         @for (car of visibleCars(); track trackByCarId(i, car); let i = $index) {
-        <div class="h-full w-full opacity-0 animate-fade-in-up" [style.animation-delay]="i * 50 + 'ms'"
+        <div class="h-full w-full max-w-[380px] justify-self-start opacity-0 animate-fade-in-up"
+          [style.animation-delay]="i * 50 + 'ms'"
           style="animation-fill-mode: forwards;">
           <app-car-card [car]="car" [distance]="undefined" [showOwnerActions]="false"
             class="h-full block"></app-car-card>
