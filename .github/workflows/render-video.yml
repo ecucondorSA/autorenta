@@ -63,8 +63,9 @@ jobs:
         working-directory: apps/video-studio
         run: |
           echo "Rendering with props: $PROPS"
-          # Use npx from root node_modules or pnpm exec
-          pnpm exec remotion render src/index.ts CarPromo out/video.mp4 --props="$PROPS" --gl=angle
+          # FIX: Use swangle (software rendering) for CI stability
+          # --chrome-prop=--disable-gpu prevents crash on headless runners
+          pnpm exec remotion render src/index.ts CarPromo out/video.mp4 --props="$PROPS" --gl=swangle --chrome-prop=--disable-gpu --chrome-prop=--no-sandbox --log=verbose
 
       - name: Upload to Supabase Storage
         env:
