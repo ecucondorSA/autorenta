@@ -1,0 +1,167 @@
+<div class="min-h-screen bg-surface-base pb-24 sm:pb-10 pt-[env(safe-area-inset-top)]">
+  <header
+    class="sticky top-0 z-40 bg-surface-base/95 backdrop-blur-sm border-b border-border-default/60"
+  >
+    <div class="flex items-center justify-between px-4 py-3">
+      <div>
+        <p class="text-[11px] uppercase tracking-widest text-text-muted font-semibold">
+          {{ copy.kicker }}
+        </p>
+        <h1 class="text-xl sm:text-2xl font-semibold text-text-primary">{{ copy.title }}</h1>
+      </div>
+      <a
+        routerLink="/notifications"
+        class="p-2 rounded-full hover:bg-surface-secondary transition-colors"
+        [attr.aria-label]="copy.notificationsLabel"
+      >
+        <app-icon name="bell" [size]="20" cssClass="text-text-secondary" />
+      </a>
+    </div>
+  </header>
+
+  <main class="container-page px-3 sm:px-4 md:px-container space-y-6 sm:space-y-8">
+    @if (walletError(); as error) {
+      <div class="rounded-2xl border border-error-border bg-error-bg p-4">
+        <div class="flex items-start gap-3">
+          <app-icon name="warning" [size]="20" cssClass="text-error-strong" />
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-error-strong">{{ copy.walletErrorTitle }}</p>
+            <p class="text-xs text-error-strong mt-1">{{ error.message }}</p>
+            <button
+              type="button"
+              (click)="refreshWallet()"
+              class="mt-3 text-xs font-semibold text-error-strong underline"
+            >
+              {{ copy.walletErrorAction }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <section class="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm font-semibold text-text-primary">{{ copy.summaryTitle }}</p>
+          <p class="text-xs text-text-secondary">{{ copy.subtitle }}</p>
+        </div>
+        <a
+          routerLink="/wallet/history"
+          class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-700"
+        >
+          {{ copy.historyLink }}
+          <app-icon name="chevron-right" [size]="14" cssClass="text-emerald-600" />
+        </a>
+      </div>
+
+      @if (walletLoading()) {
+        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+          <div class="h-20 rounded-2xl bg-surface-secondary animate-pulse"></div>
+          <div class="h-20 rounded-2xl bg-surface-secondary animate-pulse"></div>
+          <div class="h-20 rounded-2xl bg-surface-secondary animate-pulse"></div>
+        </div>
+      } @else {
+        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+          <div class="rounded-2xl border border-border-default bg-surface-raised p-4">
+            <p class="text-xs uppercase tracking-wider text-text-muted font-semibold">
+              {{ copy.summaryAvailable }}
+            </p>
+            <p class="mt-2 text-xl font-bold text-text-primary tabular-nums">
+              {{ availableBalance() | money }}
+            </p>
+          </div>
+          <div class="rounded-2xl border border-border-default bg-surface-raised p-4">
+            <p class="text-xs uppercase tracking-wider text-text-muted font-semibold">
+              {{ copy.summaryLocked }}
+            </p>
+            <p class="mt-2 text-xl font-bold text-text-primary tabular-nums">
+              {{ lockedBalance() | money }}
+            </p>
+          </div>
+          <div class="rounded-2xl border border-border-default bg-surface-raised p-4">
+            <p class="text-xs uppercase tracking-wider text-text-muted font-semibold">
+              {{ copy.summaryWithdrawable }}
+            </p>
+            <p class="mt-2 text-xl font-bold text-text-primary tabular-nums">
+              {{ withdrawableBalance() | money }}
+            </p>
+          </div>
+        </div>
+      }
+    </section>
+
+    <section class="space-y-3">
+      <div class="flex items-end justify-between">
+        <div>
+          <p class="text-sm font-semibold text-text-primary">{{ copy.quickActionsTitle }}</p>
+          <p class="text-xs text-text-secondary">{{ copy.quickActionsHint }}</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        @for (action of actions; track action.id) {
+          <a
+            [routerLink]="action.route"
+            appPressScale
+            class="group rounded-2xl border bg-surface-raised p-4 transition-all hover:shadow-lg {{ action.classes.card }}"
+          >
+            <div
+              class="h-10 w-10 rounded-xl flex items-center justify-center {{ action.classes.iconBg }}"
+            >
+              <app-icon [name]="action.icon" [size]="18" [cssClass]="action.classes.icon" />
+            </div>
+            <div class="mt-3 space-y-1">
+              <p class="text-sm font-semibold text-text-primary">{{ action.label }}</p>
+              <p class="text-xs text-text-secondary">{{ action.description }}</p>
+            </div>
+            <div class="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-text-muted">
+              {{ copy.quickActionsCta }}
+              <app-icon name="chevron-right" [size]="14" cssClass="text-text-muted" />
+            </div>
+          </a>
+        }
+      </div>
+    </section>
+
+    <section class="space-y-3">
+      <p class="text-sm font-semibold text-text-primary">{{ copy.sectionsTitle }}</p>
+      <div class="grid gap-4 lg:grid-cols-3">
+        @for (section of sections; track section.id) {
+          <a
+            [routerLink]="section.route"
+            class="group rounded-2xl border border-border-default bg-surface-raised p-5 transition-all hover:shadow-lg {{ section.classes.card }}"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div
+                  class="h-11 w-11 rounded-2xl flex items-center justify-center {{ section.classes.iconBg }}"
+                >
+                  <app-icon [name]="section.icon" [size]="20" [cssClass]="section.classes.icon" />
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-text-primary">{{ section.title }}</p>
+                  <p class="text-xs text-text-secondary">{{ section.description }}</p>
+                </div>
+              </div>
+              @if (section.badge) {
+                <span
+                  class="text-[10px] font-semibold px-2 py-1 rounded-full {{ section.classes.badge }}"
+                >
+                  {{ section.badge }}
+                </span>
+              }
+            </div>
+            <p class="mt-4 text-xs text-text-secondary">{{ section.helper }}</p>
+            <div class="mt-4">
+              <span
+                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold {{ section.classes.cta }}"
+              >
+                {{ section.cta }}
+                <app-icon name="chevron-right" [size]="14" cssClass="text-white" />
+              </span>
+            </div>
+          </a>
+        }
+      </div>
+    </section>
+  </main>
+</div>

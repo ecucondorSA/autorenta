@@ -5,7 +5,8 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-config({ path: join(__dirname, '../../.env') });
+// MCP over stdio must not print to stdout; dotenv prints an info line by default.
+config({ path: join(__dirname, '../../.env'), quiet: true });
 
 export interface SecurityDefinerFunction {
   function_name: string;

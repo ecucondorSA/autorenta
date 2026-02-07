@@ -376,7 +376,7 @@
                       </p>
                     </div>
                     <a
-                      routerLink="/wallet"
+                      routerLink="/finanzas"
                       (click)="closeProfileMenu()"
                       class="menu-item group"
                       role="menuitem"
@@ -386,63 +386,8 @@
                       >
                         <app-icon name="wallet" [size]="18" />
                       </div>
-                      <span class="flex-1">Wallet</span>
+                      <span class="flex-1">Finanzas</span>
                       <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <a
-                      routerLink="/wallet/payouts"
-                      (click)="closeProfileMenu()"
-                      class="menu-item group"
-                      role="menuitem"
-                    >
-                      <div
-                        class="menu-icon bg-emerald-500/10 text-emerald-600 group-hover:bg-emerald-500/20"
-                      >
-                        <svg
-                          class="h-[18px] w-[18px]"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                          />
-                        </svg>
-                      </div>
-                      <span class="flex-1">Retiros</span>
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <a
-                      routerLink="/dashboard/earnings"
-                      (click)="closeProfileMenu()"
-                      class="menu-item group"
-                      role="menuitem"
-                    >
-                      <div
-                        class="menu-icon bg-emerald-500/10 text-emerald-600 group-hover:bg-emerald-500/20"
-                      >
-                        <svg
-                          class="h-[18px] w-[18px]"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                          />
-                        </svg>
-                      </div>
-                      <span class="flex-1 font-luxury">Mis Ganancias</span>
-                      <span
-                        class="text-xs font-semibold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700"
-                        >NEW</span
-                      >
                     </a>
                     <div class="my-2 mx-3 border-t border-border-subtle"></div>
                     <!-- SECCIÓN: CONFIGURACIÓN -->

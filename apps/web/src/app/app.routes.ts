@@ -451,6 +451,14 @@ export const routes: Routes = [
       import('./features/users/public-profile.page').then((m) => m.PublicProfilePage),
   },
   {
+    path: 'finanzas',
+    canMatch: [AuthGuard],
+    data: { layout: 'full-bleed', hideHeader: true },
+    loadComponent: () =>
+      import('./features/finanzas/finanzas.page').then((m) => m.FinanzasPage),
+    title: 'Finanzas - AutoRenta',
+  },
+  {
     path: 'wallet',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },

@@ -287,8 +287,9 @@ serve(async (req) => {
 
         if (uploadResult?.publicUrl) {
           imageContent.url = uploadResult.publicUrl;
-          // Optional: Clear base64 to save bandwidth in response if URL is available
-          // imageContent.base64 = undefined;
+          // Clear base64 to save bandwidth in response
+          delete imageContent.base64;
+          console.log('[generate-marketing-content] Cleared base64 from response');
         } else {
           imageUploadError = uploadResult?.error || 'Unknown storage error';
           console.error('[generate-marketing-content] Image upload failed:', imageUploadError);

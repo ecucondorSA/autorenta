@@ -6,7 +6,8 @@ import { dirname } from 'path';
 
 // Cargar variables de entorno
 const __dirname = dirname(fileURLToPath(import.meta.url));
-config({ path: join(__dirname, '../../.env') });
+// MCP over stdio must not print to stdout; dotenv prints an info line by default.
+config({ path: join(__dirname, '../../.env'), quiet: true });
 
 interface CacheEntry {
   data: any;
