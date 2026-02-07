@@ -40,7 +40,7 @@ jobs:
         with:
           version: 8
 
-      # FIX: Install dependencies at ROOT to handle workspaces
+      # FIX: Install dependencies at ROOT to handle workspaces correctly
       - name: Install Dependencies (Root)
         run: pnpm install
         # No working-directory, run at root
