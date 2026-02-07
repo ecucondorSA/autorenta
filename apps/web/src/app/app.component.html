@@ -227,15 +227,20 @@
                   </div>
                   <div class="py-2">
                     <!-- SECCIÓN: MIS ACTIVIDADES -->
-                    <div class="px-4 py-2">
-                      <p class="text-xs font-bold uppercase tracking-wider text-blue-600">
-                        Mis Actividades
-                      </p>
-                    </div>
-                    <a
-                      routerLink="/bookings"
-                      (click)="closeProfileMenu()"
-                      class="menu-item group"
+	                    <div class="px-4 py-2">
+	                      <p class="text-xs font-bold uppercase tracking-wider text-blue-600">
+	                        Mis Actividades
+	                      </p>
+	                    </div>
+	                    <div class="px-4 pt-3 pb-1">
+	                      <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+	                        Viajes
+	                      </p>
+	                    </div>
+	                    <a
+	                      routerLink="/bookings"
+	                      (click)="closeProfileMenu()"
+	                      class="menu-item group"
                       role="menuitem"
                     >
                       <div
@@ -243,13 +248,33 @@
                       >
                         <app-icon name="calendar" [size]="18" />
                       </div>
-                      <span class="flex-1">Mis Reservas</span>
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <a
-                      routerLink="/cars/my"
-                      (click)="closeProfileMenu()"
-                      class="menu-item group"
+	                      <span class="flex-1">Mis Reservas</span>
+	                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+	                    </a>
+	                    <a
+	                      routerLink="/favorites"
+	                      (click)="closeProfileMenu()"
+	                      class="menu-item group"
+	                      role="menuitem"
+	                    >
+	                      <div
+	                        class="menu-icon bg-blue-500/10 text-blue-600 group-hover:bg-blue-500/20"
+	                      >
+	                        <app-icon name="heart" [size]="18" />
+	                      </div>
+	                      <span class="flex-1">Favoritos</span>
+	                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+	                    </a>
+	                    <div class="my-2 mx-3 border-t border-border-subtle"></div>
+	                    <div class="px-4 pt-2 pb-1">
+	                      <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+	                        Mis autos
+	                      </p>
+	                    </div>
+	                    <a
+	                      routerLink="/cars/my"
+	                      (click)="closeProfileMenu()"
+	                      class="menu-item group"
                       role="menuitem"
                     >
                       <div
@@ -257,11 +282,11 @@
                       >
                         <app-icon name="archive" [size]="18" />
                       </div>
-                      <span class="flex-1">Mis Autos</span>
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <a
-                      routerLink="/bookings/owner"
+	                      <span class="flex-1">Mis Autos</span>
+	                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+	                    </a>
+	                    <a
+	                      routerLink="/bookings/owner"
                       (click)="closeProfileMenu()"
                       class="menu-item group"
                       role="menuitem"
@@ -283,18 +308,18 @@
                           />
                         </svg>
                       </div>
-                      <span class="flex-1">Solicitudes Pendientes</span>
-                      @if (pendingApprovalCount() > 0) {
-                        <span
-                          class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse"
+	                      <span class="flex-1">Solicitudes Pendientes</span>
+	                      @if (pendingApprovalCount() > 0) {
+	                        <span
+	                          class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse"
                         >
                           {{ pendingApprovalCount() }}
                         </span>
                       }
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <a
-                      routerLink="/bookings/calendar"
+	                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+	                    </a>
+	                    <a
+	                      routerLink="/bookings/calendar"
                       (click)="closeProfileMenu()"
                       class="menu-item group"
                       role="menuitem"
@@ -316,27 +341,13 @@
                           />
                         </svg>
                       </div>
-                      <span class="flex-1">Calendario</span>
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <a
-                      routerLink="/favorites"
-                      (click)="closeProfileMenu()"
-                      class="menu-item group"
-                      role="menuitem"
-                    >
-                      <div
-                        class="menu-icon bg-blue-500/10 text-blue-600 group-hover:bg-blue-500/20"
-                      >
-                        <app-icon name="heart" [size]="18" />
-                      </div>
-                      <span class="flex-1">Favoritos</span>
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <div class="my-2 mx-3 border-t border-border-subtle"></div>
-                    <!-- SECCIÓN: COMUNICACIÓN -->
-                    <div class="px-4 py-2">
-                      <p class="text-xs font-bold uppercase tracking-wider text-violet-600">
+	                      <span class="flex-1">Calendario</span>
+	                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+	                    </a>
+	                    <div class="my-2 mx-3 border-t border-border-subtle"></div>
+	                    <!-- SECCIÓN: COMUNICACIÓN -->
+	                    <div class="px-4 py-2">
+	                      <p class="text-xs font-bold uppercase tracking-wider text-violet-600">
                         Comunicación
                       </p>
                     </div>
