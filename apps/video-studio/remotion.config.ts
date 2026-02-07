@@ -10,6 +10,3 @@ Config.setConcurrency(1);
 
 // Ensure we use the right pixel format for compatibility
 Config.setPixelFormat('yuv420p');
-
-// Set log level to verbose for better debugging in CI
-Config.setLogLevel('verbose');
