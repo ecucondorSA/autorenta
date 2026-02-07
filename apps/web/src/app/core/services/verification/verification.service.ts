@@ -250,21 +250,18 @@ export class VerificationService implements OnDestroy {
 
       if (error) throw error;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const normalized: UserVerificationStatus[] = (data ?? []).map((row: any) => ({
-        user_id: row.user_id as string,
-        role: (row.role ?? 'driver') as VerificationRole,
-        status: (row.status ?? 'PENDIENTE') as UserVerificationStatus['status'],
-        missing_docs: Array.isArray(row.missing_docs)
-          ? (row.missing_docs as string[])
-          : row.missing_docs
-            ? (Object.values(row.missing_docs) as string[])
-            : [],
-        notes: row.notes ?? undefined,
-        metadata: (row.metadata ?? undefined) as Record<string, unknown> | undefined,
-        created_at: row.created_at ?? undefined,
-        updated_at: row.updated_at ?? undefined,
-      }));
+      const normalized: UserVerificationStatus[] = (data ?? []).map(
+        (row: Database['public']['Tables']['user_verifications']['Row']) => ({
+          user_id: row.user_id,
+          role: (row.role ?? 'driver') as VerificationRole,
+          status: (row.status ?? 'PENDIENTE') as UserVerificationStatus['status'],
+          missing_docs: row.missing_docs ?? [],
+          notes: row.notes ?? undefined,
+          metadata: (row.metadata as Record<string, unknown> | undefined) ?? undefined,
+          created_at: row.created_at ?? undefined,
+          updated_at: row.updated_at ?? undefined,
+        }),
+      );
 
       this.statuses.set(normalized);
       return normalized;
