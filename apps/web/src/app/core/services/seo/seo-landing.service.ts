@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { from, Observable, map } from 'rxjs';
 
 export interface SeoPageData {
@@ -32,6 +33,7 @@ export interface SeoPageData {
 })
 export class SeoLandingService {
   private readonly supabase = injectSupabase();
+  private readonly logger = inject(LoggerService);
 
   /**
    * Fetches SEO landing page data from the Edge Function / RPC
@@ -47,7 +49,7 @@ export class SeoLandingService {
     ).pipe(
       map(({ data, error }) => {
         if (error) {
-          console.error('[SeoLandingService] RPC Error:', error);
+          this.logger.error('[SeoLandingService] RPC Error:', error);
           throw error;
         }
         return (data as unknown as SeoPageData) || null;

@@ -919,11 +919,11 @@ export class AdminService {
       });
 
       if (error) {
-        console.error('Error sending approval email:', error);
+        this.logger.error('Error sending approval email:', error);
         // Don't throw - email is not critical for the approval process
       }
     } catch (error) {
-      console.error('Failed to send approval email:', error);
+      this.logger.error('Failed to send approval email:', error);
       // Don't throw - email is not critical
     }
   }
@@ -947,11 +947,11 @@ export class AdminService {
       });
 
       if (error) {
-        console.error('Error sending rejection email:', error);
+        this.logger.error('Error sending rejection email:', error);
         // Don't throw - email is not critical
       }
     } catch (error) {
-      console.error('Failed to send rejection email:', error);
+      this.logger.error('Failed to send rejection email:', error);
       // Don't throw - email is not critical
     }
   }

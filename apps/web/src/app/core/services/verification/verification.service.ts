@@ -208,7 +208,7 @@ export class VerificationService implements OnDestroy {
 
     // SECURITY FIX #2: Rollback - eliminar archivo si el registro en DB falla
     if (upsertError) {
-      console.error('Error creating document record, rolling back file upload:', upsertError);
+      this.logger.error('Error creating document record, rolling back file upload:', upsertError);
 
       // Intentar eliminar el archivo subido para mantener consistencia
       try {
@@ -216,7 +216,7 @@ export class VerificationService implements OnDestroy {
         this.logger.debug('Rollback successful: file removed from storage');
       } catch (rollbackError) {
         // Log pero no fallar - el archivo huérfano se puede limpiar después
-        console.error('Rollback failed: could not remove uploaded file:', rollbackError);
+        this.logger.error('Rollback failed: could not remove uploaded file:', rollbackError);
       }
 
       throw new Error(
@@ -467,25 +467,25 @@ export class VerificationService implements OnDestroy {
         });
 
         if (error) {
-          console.error('[VerifyDocument] Edge Function Error:', error);
+          this.logger.error('[VerifyDocument] Edge Function Error:', error);
 
           // Read response body if available
           if (error instanceof Error && 'context' in error) {
             const context = (error as { context: unknown }).context;
-            console.error('[VerifyDocument] Error Context:', context);
+            this.logger.error('[VerifyDocument] Error Context:', context);
 
             if (context instanceof Response && !context.bodyUsed) {
               try {
                 const responseText = await context.clone().text();
-                console.error('[VerifyDocument] Response Body:', responseText);
+                this.logger.error('[VerifyDocument] Response Body:', responseText);
                 try {
                   const jsonBody = JSON.parse(responseText);
-                  console.error('[VerifyDocument] Parsed Error:', jsonBody);
+                  this.logger.error('[VerifyDocument] Parsed Error:', jsonBody);
                 } catch {
                   // Not JSON, already logged as text
                 }
               } catch (error: unknown) {
-                console.error('[VerifyDocument] Could not read response body:', error);
+                this.logger.error('[VerifyDocument] Could not read response body:', error);
               }
             }
           }

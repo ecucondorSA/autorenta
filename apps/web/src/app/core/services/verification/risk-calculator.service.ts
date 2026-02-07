@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { FranchiseTableService } from '@core/services/payments/franchise-table.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * Tipos de pago soportados
@@ -57,6 +58,7 @@ export interface RiskCalculation {
 export class RiskCalculatorService {
   private readonly franchiseService = inject(FranchiseTableService);
   private readonly supabase = injectSupabase();
+  private readonly logger = inject(LoggerService);
 
   /**
    * Determina el bucket del auto según su valor
@@ -116,7 +118,7 @@ export class RiskCalculatorService {
           guaranteeDiscountPct = Math.round((1.0 - guaranteeMultiplier) * 100);
         } 
       } catch (err) {
-        console.warn('[RiskCalculator] Error fetching profile, using standard 1.0x:', err);
+        this.logger.warn('[RiskCalculator] Error fetching profile, using standard 1.0x:', err);
       }
     }
 
