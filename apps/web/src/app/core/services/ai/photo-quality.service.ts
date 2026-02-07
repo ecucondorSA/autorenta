@@ -98,7 +98,7 @@ export class PhotoQualityService {
   private readonly supabaseClient = inject(SupabaseClientService).getClient();
   private readonly logger = inject(LoggerService);
 
-  private readonly EDGE_FUNCTION_URL = 'validate-photo-quality';
+  private readonly EDGE_FUNCTION_URL = 'ai-vision-service/validate-quality';
 
   // Signals for reactive state
   readonly isValidating = signal(false);

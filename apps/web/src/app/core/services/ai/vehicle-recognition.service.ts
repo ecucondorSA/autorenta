@@ -112,7 +112,7 @@ export class VehicleRecognitionService {
   private readonly supabaseClient = inject(SupabaseClientService).getClient();
   private readonly logger = inject(LoggerService);
 
-  private readonly EDGE_FUNCTION_URL = 'recognize-vehicle';
+  private readonly EDGE_FUNCTION_URL = 'ai-vision-service/recognize-vehicle';
 
   // Signals
   readonly isProcessing = signal(false);

@@ -62,7 +62,7 @@ export class PlateDetectionService {
   private readonly supabaseClient = inject(SupabaseClientService).getClient();
   private readonly logger = inject(LoggerService);
 
-  private readonly EDGE_FUNCTION_URL = 'detect-license-plates';
+  private readonly EDGE_FUNCTION_URL = 'ai-vision-service/detect-plates';
 
   // Signals
   readonly isDetecting = signal(false);
