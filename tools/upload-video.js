@@ -23,6 +23,27 @@ async function upload() {
   const fileName = `marketing/videos/${jobId}.mp4`;
   const bucketName = process.env.MARKETING_BUCKET || 'marketing-media';
 
+  console.log(`Checking if bucket '${bucketName}' exists...`);
+  const { data: bucket, error: bucketError } = await supabase.storage.getBucket(bucketName);
+
+  if (bucketError && bucketError.message.includes('not found')) {
+      console.log(`Bucket '${bucketName}' not found. Creating it...`);
+      const { data: newBucket, error: createError } = await supabase.storage.createBucket(bucketName, {
+          public: true,
+          fileSizeLimit: 52428800, // 50MB
+          allowedMimeTypes: ['video/mp4', 'image/png', 'image/jpeg', 'image/webp']
+      });
+      
+      if (createError) {
+          console.error('Failed to create bucket:', createError);
+          // Try to continue anyway, maybe race condition or permission issue that allows upload but not create
+      } else {
+          console.log(`Bucket '${bucketName}' created successfully.`);
+      }
+  } else if (bucketError) {
+      console.warn('Error checking bucket:', bucketError);
+  }
+
   console.log(`Uploading ${videoPath} to ${bucketName}/${fileName}...`);
 
   const { data, error } = await supabase.storage
