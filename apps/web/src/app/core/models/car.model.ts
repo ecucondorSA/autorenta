@@ -1,4 +1,4 @@
-import type { CancelPolicy, CarStatus, FuelType, Transmission } from '@core/types/database.types';
+import type { CancelPolicy, CarStatus, FuelType, Transmission } from '@core/models';
 
 export interface CarOwner {
   id: string;

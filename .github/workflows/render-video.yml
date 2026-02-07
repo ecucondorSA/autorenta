@@ -1,0 +1,111 @@
+
+name: Render Marketing Video
+
+on:
+  repository_dispatch:
+    types: [render-video]
+
+jobs:
+  render:
+    name: Render Video
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install Dependencies
+        run: pnpm install
+        working-directory: apps/video-studio
+
+      - name: Install FFMPEG
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Render Video
+        id: render
+        working-directory: apps/video-studio
+        env:
+          INPUT_PROPS: ${{ toJson(github.event.client_payload.props) }}
+        run: |
+          echo "Rendering video with props: $INPUT_PROPS"
+          # Render CarPromo composition
+          npx remotion render src/index.ts CarPromo out/video.mp4 --props="$INPUT_PROPS" --gl=angle
+          
+          echo "Render complete."
+
+      - name: Upload to Supabase Storage
+        id: upload
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          JOB_ID: ${{ github.event.client_payload.job_id }}
+        run: |
+          # Use a simple node script to upload the file
+          # We write it inline to avoid dependency on local tools scripts
+          cat <<EOF > upload.js
+          const { createClient } = require('@supabase/supabase-js');
+          const fs = require('fs');
+          
+          const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+          
+          async function upload() {
+            const fileBuffer = fs.readFileSync('apps/video-studio/out/video.mp4');
+            const fileName = `marketing/videos/${process.env.JOB_ID}.mp4`;
+            
+            console.log('Uploading to:', fileName);
+            
+            const { data, error } = await supabase.storage
+              .from('marketing-media') // Bucket name (check if correct)
+              .upload(fileName, fileBuffer, {
+                contentType: 'video/mp4',
+                upsert: true
+              });
+              
+            if (error) {
+              console.error('Upload error:', error);
+              process.exit(1);
+            }
+            
+            const { data: publicUrl } = supabase.storage
+              .from('marketing-media')
+              .getPublicUrl(fileName);
+              
+            console.log('Public URL:', publicUrl.publicUrl);
+            
+            // Save URL to a file to read in next step
+            fs.writeFileSync('video_url.txt', publicUrl.publicUrl);
+          }
+          
+upload();
+          EOF
+          
+          # Need supabase-js available in root or video-studio
+          # We'll rely on it being installed in video-studio
+          cd apps/video-studio
+          node ../../upload.js
+
+      - name: Update Database Record
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          JOB_ID: ${{ github.event.client_payload.job_id }}
+        run: |
+          VIDEO_URL=$(cat apps/video-studio/video_url.txt)
+          
+          # Call Supabase API to update the record
+          curl -X PATCH "$SUPABASE_URL/rest/v1/marketing_content_queue?id=eq.$JOB_ID" \
+            -H "apikey: $SUPABASE_SERVICE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"media_url\": \"$VIDEO_URL\", \"status\": \"pending\", \"media_type\": \"video\"}"
+            
+          echo "Database updated with video URL"

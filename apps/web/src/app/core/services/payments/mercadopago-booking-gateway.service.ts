@@ -75,7 +75,7 @@ export class MercadoPagoBookingGatewayService implements PaymentGateway {
 
     // Obtener URL base de Supabase desde configuración
     const supabaseUrl = this.getSupabaseUrl();
-    const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-create-booking-preference`;
+    const edgeFunctionUrl = `${supabaseUrl}/functions/v1/payments-gateway/preferences/create`;
 
     // Llamar a Edge Function
     const response = await fetch(edgeFunctionUrl, {

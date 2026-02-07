@@ -14,7 +14,6 @@ export interface DetailedVerificationStatus {
   notes?: string;
 }
 
-type UserVerificationRow = Database['public']['Tables']['user_verifications']['Row'];
 type UserDocumentRow = Database['public']['Tables']['user_documents']['Row'];
 
 
@@ -251,8 +250,9 @@ export class VerificationService implements OnDestroy {
 
       if (error) throw error;
 
-      const normalized: UserVerificationStatus[] = (data ?? []).map((row: UserVerificationRow) => ({
-        user_id: row.user_id,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const normalized: UserVerificationStatus[] = (data ?? []).map((row: any) => ({
+        user_id: row.user_id as string,
         role: (row.role ?? 'driver') as VerificationRole,
         status: (row.status ?? 'PENDIENTE') as UserVerificationStatus['status'],
         missing_docs: Array.isArray(row.missing_docs)
@@ -260,10 +260,10 @@ export class VerificationService implements OnDestroy {
           : row.missing_docs
             ? (Object.values(row.missing_docs) as string[])
             : [],
-        notes: row.notes ?? null,
-        metadata: (row.metadata ?? null) as Record<string, unknown> | null,
-        created_at: row.created_at,
-        updated_at: row.updated_at,
+        notes: row.notes ?? undefined,
+        metadata: (row.metadata ?? undefined) as Record<string, unknown> | undefined,
+        created_at: row.created_at ?? undefined,
+        updated_at: row.updated_at ?? undefined,
       }));
 
       this.statuses.set(normalized);

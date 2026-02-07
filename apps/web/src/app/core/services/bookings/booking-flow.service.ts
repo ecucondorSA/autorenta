@@ -656,6 +656,30 @@ export class BookingFlowService {
         icon: 'warning-outline',
         description: 'Se reportó un daño durante la inspección',
       },
+      pending_deposit: {
+        label: 'Depósito Pendiente',
+        color: 'warning',
+        icon: 'wallet-outline',
+        description: 'Esperando el depósito de garantía',
+      },
+      pending_owner_approval: {
+        label: 'Aprobación Pendiente',
+        color: 'warning',
+        icon: 'time-outline',
+        description: 'Esperando aprobación del propietario',
+      },
+      pending_return: {
+        label: 'Devolución Pendiente',
+        color: 'warning',
+        icon: 'arrow-back-outline',
+        description: 'Vehículo en proceso de devolución',
+      },
+      dispute: {
+        label: 'En Disputa',
+        color: 'danger',
+        icon: 'hammer-outline',
+        description: 'Caso en revisión por soporte',
+      },
     };
 
     const baseInfo = statusMap[status] || {

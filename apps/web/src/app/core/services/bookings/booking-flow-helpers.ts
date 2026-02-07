@@ -33,6 +33,23 @@ export function isValidStatusTransition(
       'cancelled_system',
       'payment_validation_failed',
     ],
+    pending_deposit: [
+      'confirmed',
+      'cancelled',
+      'expired',
+      'cancelled_renter',
+      'cancelled_owner',
+      'cancelled_system',
+    ],
+    pending_owner_approval: [
+      'confirmed',
+      'rejected',
+      'cancelled',
+      'expired',
+      'cancelled_renter',
+      'cancelled_owner',
+      'cancelled_system',
+    ],
     pending_approval: [
       'pending_payment',
       'confirmed',
@@ -66,6 +83,14 @@ export function isValidStatusTransition(
       'cancelled_owner',
       'cancelled_system',
     ],
+    pending_return: [
+      'returned',
+      'completed',
+      'inspected_good',
+      'damage_reported',
+      'disputed',
+    ],
+    dispute: ['disputed', 'resolved', 'completed'],
     disputed: ['resolved', 'cancelled_system'],
     resolved: ['completed'], // Resolved leads to completed
     completed: [],
@@ -340,6 +365,30 @@ export function getBookingStatusDisplay(status: BookingStatus): {
       color: 'danger',
       icon: '⚠️',
       description: 'Se reportaron daños durante la inspección.',
+    },
+    pending_deposit: {
+      label: 'Pendiente de Depósito',
+      color: 'warning',
+      icon: '💰',
+      description: 'Esperando depósito de garantía',
+    },
+    pending_owner_approval: {
+      label: 'Pendiente de Aprobación',
+      color: 'warning',
+      icon: '⏳',
+      description: 'Esperando aprobación del propietario',
+    },
+    pending_return: {
+      label: 'Pendiente de Devolución',
+      color: 'warning',
+      icon: '🔙',
+      description: 'Vehículo en proceso de devolución',
+    },
+    dispute: {
+      label: 'En Disputa',
+      color: 'danger',
+      icon: '⚖️',
+      description: 'Caso en revisión por equipo de soporte',
     },
   };
 

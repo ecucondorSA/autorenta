@@ -10,10 +10,8 @@
  * from Supabase. These types serve as temporary definitions until then.
  */
 
-import type { AdminRole } from './database.types';
-
-// Re-export AdminRole from DB enums for consistency
-export type { AdminRole } from './database.types';
+// Admin role enum - matches database enum
+export type AdminRole = 'super_admin' | 'operations' | 'support' | 'finance';
 
 // ============================================================================
 // ADMIN USER

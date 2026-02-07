@@ -1,30 +1,59 @@
-import type {
-  BookingStatus,
-  DocumentKind,
-  KycStatus,
-  PaymentProvider,
-  PaymentStatus,
-  UserRole,
-} from '../types/database.types';
 import type { Car } from './car.model';
 import type { BookingDepositStatus } from './wallet.model';
 
-// Re-export enum types from database.types
-export type {
-  BookingStatus,
-  CancelPolicy,
-  CarStatus,
-  DocumentKind,
-  FuelType,
-  KycStatus,
-  PaymentProvider,
-  PaymentStatus,
-  Transmission,
-  UserRole,
-} from '../types/database.types';
+// ============================================================================
+// Locally defined enum types
+// database.types.ts is auto-generated but doesn't export enum types properly
+// These match the database enums and are defined here for TypeScript
+// ============================================================================
+export type PaymentProvider = 'mercadopago' | 'stripe' | 'paypal' | 'wallet' | 'manual';
+export type PaymentStatus = 'pending' | 'authorized' | 'captured' | 'failed' | 'refunded' | 'cancelled' | 'approved' | 'rejected';
+export type Transmission = 'manual' | 'automatic';
+export type UserRole = 'renter' | 'owner' | 'both';
+export type FuelType = 'gasoline' | 'diesel' | 'electric' | 'electrico' | 'hybrid' | 'gnc' | 'flex';
+export type CancelPolicy = 'flexible' | 'moderate' | 'strict';
+export type CarStatus = 'active' | 'inactive' | 'pending' | 'suspended' | 'draft';
+export type BookingStatus =
+  | 'pending'
+  | 'pending_payment'
+  | 'pending_deposit'
+  | 'pending_owner_approval'
+  | 'pending_approval'
+  | 'pending_review'
+  | 'confirmed'
+  | 'in_progress'
+  | 'pending_return'
+  | 'returned'
+  | 'inspected_good'
+  | 'damage_reported'
+  | 'completed'
+  | 'resolved'
+  | 'cancelled'
+  | 'cancelled_renter'
+  | 'cancelled_owner'
+  | 'cancelled_system'
+  | 'rejected'
+  | 'no_show'
+  | 'payment_validation_failed'
+  | 'expired'
+  | 'dispute'
+  | 'disputed'
+  | 'pending_dispute_resolution';
+export type DocumentKind =
+  | 'gov_id_front'
+  | 'gov_id_back'
+  | 'driver_license'
+  | 'license_front'
+  | 'license_back'
+  | 'vehicle_registration'
+  | 'vehicle_insurance'
+  | 'utility_bill'
+  | 'selfie'
+  | 'criminal_record';
+export type KycStatus = 'not_started' | 'pending' | 'verified' | 'rejected';
 
 // Admin types
-export type { AdminAuditLog } from '../types/admin.types';
+export type { AdminAuditLog, AdminRole } from '../types/admin.types';
 
 // Re-export Supabase types for use throughout the app
 export type {

@@ -43,20 +43,23 @@ export class EmailService {
   ): Promise<{ success: boolean; error?: string }> {
     try {
       const { data: result, error } = await this.supabase.functions.invoke(
-      'communications-service/email/send',
-      {
-        to: booking.renter.email,
-        subject: `Reserva confirmada: ${booking.car.brand} ${booking.car.model}`,
-        templateId: 'booking_confirmed',
-        data: {
-          booking_id: booking.id,
-          car_brand: booking.car.brand,
-          car_model: booking.car.model,
-          start_date: booking.start_date,
-          end_date: booking.end_date,
-          renter_name: booking.renter.full_name
-        }
-      }
+        'email-service',
+        {
+          body: {
+            template: 'booking-confirmation',
+            to: data.recipientEmail,
+            recipientName: data.recipientName,
+            data: {
+              bookingId: data.bookingId,
+              carBrand: data.carBrand,
+              carModel: data.carModel,
+              startDate: data.startDate,
+              endDate: data.endDate,
+              totalPrice: data.totalPrice,
+              currency: data.currency,
+            },
+          },
+        },
       );
 
       if (error) {
@@ -84,11 +87,12 @@ export class EmailService {
     recipientName: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await this.supabase.functions.invoke('send-booking-cancellation-email', {
+      const { error } = await this.supabase.functions.invoke('email-service', {
         body: {
-          bookingId,
-          recipientEmail,
+          template: 'booking-cancellation',
+          to: recipientEmail,
           recipientName,
+          data: { bookingId },
         },
       });
 
@@ -117,12 +121,12 @@ export class EmailService {
     startDate: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await this.supabase.functions.invoke('send-booking-reminder-email', {
+      const { error } = await this.supabase.functions.invoke('email-service', {
         body: {
-          bookingId,
-          recipientEmail,
+          template: 'booking-reminder',
+          to: recipientEmail,
           recipientName,
-          startDate,
+          data: { bookingId, startDate },
         },
       });
 

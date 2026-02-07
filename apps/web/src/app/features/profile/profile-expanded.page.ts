@@ -287,7 +287,7 @@ export class ProfileExpandedPage implements OnInit {
       not_started: 'text-text-muted',
     };
 
-    return classMap[status] || classMap.not_started;
+    return classMap[status] || classMap['not_started'];
   }
 
   /**
@@ -301,7 +301,7 @@ export class ProfileExpandedPage implements OnInit {
       not_started: 'Sin Enviar',
     };
 
-    return labelMap[status] || labelMap.not_started;
+    return labelMap[status] || labelMap['not_started'];
   }
 
   /**

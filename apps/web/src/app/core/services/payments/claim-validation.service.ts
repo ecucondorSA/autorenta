@@ -2,12 +2,21 @@ import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { InspectionStage, BookingInspection, isInspectionComplete } from '@core/models';
-import type { DamageType } from '@core/types/database.types';
-export type { DamageType } from '@core/types/database.types';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { DamageDetectionService } from '@core/services/verification/damage-detection.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+
+// Damage type enum - matches database enum
+export type DamageType =
+  | 'scratch'
+  | 'dent'
+  | 'broken_glass'
+  | 'tire_damage'
+  | 'mechanical'
+  | 'interior'
+  | 'missing_item'
+  | 'other';
 
 /**
  * Daño individual reportado
