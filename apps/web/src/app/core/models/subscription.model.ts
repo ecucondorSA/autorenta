@@ -28,11 +28,26 @@ export type SubscriptionRow = Database['public']['Tables']['subscriptions']['Row
 export type SubscriptionInsert = Database['public']['Tables']['subscriptions']['Insert'];
 export type SubscriptionUpdate = Database['public']['Tables']['subscriptions']['Update'];
 
-// Note: subscription_usage_logs may not exist in schema, use conditional type
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SubscriptionUsageLogRow = any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SubscriptionUsageLogInsert = any;
+/**
+ * Subscription Usage Log
+ * Returned by get_subscription_usage_history RPC as JSON
+ */
+export interface SubscriptionUsageLogRow {
+  id: string;
+  subscription_id: string;
+  booking_id: string;
+  amount_cents: number;
+  description: string;
+  created_at: string;
+  [key: string]: unknown; // Allow additional fields from JSON response
+}
+
+export interface SubscriptionUsageLogInsert {
+  subscription_id: string;
+  booking_id: string;
+  amount_cents: number;
+  description: string;
+}
 
 // ============================================================================
 // Application Types

@@ -484,8 +484,8 @@ export class VerificationService implements OnDestroy {
                 } catch {
                   // Not JSON, already logged as text
                 }
-              } catch (e) {
-                console.error('[VerifyDocument] Could not read response body:', e);
+              } catch (error: unknown) {
+                console.error('[VerifyDocument] Could not read response body:', error);
               }
             }
           }
@@ -559,8 +559,8 @@ export class VerificationService implements OnDestroy {
         maxWidthOrHeight: 1920,
       });
       this.logger.info(`Document compressed: ${(file.size / 1024).toFixed(0)}KB -> ${(processedFile.size / 1024).toFixed(0)}KB`);
-    } catch (e) {
-      this.logger.warn('Compression failed, proceeding with original', e);
+    } catch (error: unknown) {
+      this.logger.warn('Compression failed, proceeding with original', error);
     }
 
     // Determinar tipo de documento y lado
