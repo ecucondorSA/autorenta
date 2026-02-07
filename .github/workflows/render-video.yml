@@ -21,6 +21,10 @@ on:
         description: 'Job ID (optional)'
         required: false
         default: 'manual-test'
+      compositionId:
+        description: 'Composition ID (CarPromo or CarPromoV2)'
+        required: false
+        default: 'CarPromo'
 
 jobs:
   render:
@@ -54,18 +58,20 @@ jobs:
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "PROPS={\"carName\": \"${{ inputs.carName }}\", \"pricePerDay\": ${{ inputs.pricePerDay }}, \"imageUrl\": \"${{ inputs.imageUrl }}\"}" >> $GITHUB_ENV
             echo "JOB_ID=${{ inputs.jobId }}" >> $GITHUB_ENV
+            echo "COMP_ID=${{ inputs.compositionId }}" >> $GITHUB_ENV
           else
             echo "PROPS=${{ toJson(github.event.client_payload.props) }}" >> $GITHUB_ENV
             echo "JOB_ID=${{ github.event.client_payload.job_id }}" >> $GITHUB_ENV
+            echo "COMP_ID=${{ github.event.client_payload.composition_id || 'CarPromo' }}" >> $GITHUB_ENV
           fi
 
       - name: Render Video
         working-directory: apps/video-studio
         run: |
-          echo "Rendering with props: $PROPS"
+          echo "Rendering with props: $PROPS using Composition: $COMP_ID"
           # FIX: Use swangle (software rendering) for CI stability
           # --chrome-prop=--disable-gpu prevents crash on headless runners
-          pnpm exec remotion render src/index.ts CarPromo out/video.mp4 --props="$PROPS" --gl=swangle --chrome-prop=--disable-gpu --chrome-prop=--no-sandbox --log=verbose
+          pnpm exec remotion render src/index.ts $COMP_ID out/video.mp4 --props="$PROPS" --gl=swangle --chrome-prop=--disable-gpu --chrome-prop=--no-sandbox --log=verbose
 
       - name: Upload to Supabase Storage
         env:
