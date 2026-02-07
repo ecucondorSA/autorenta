@@ -1,9 +1,26 @@
-
 name: Render Marketing Video
 
 on:
   repository_dispatch:
     types: [render-video]
+  workflow_dispatch:
+    inputs:
+      carName:
+        description: 'Car Name'
+        required: true
+        default: 'Fiat Cronos'
+      pricePerDay:
+        description: 'Price Per Day'
+        required: true
+        default: '45000'
+      imageUrl:
+        description: 'Image URL'
+        required: true
+        default: 'https://http2.mlstatic.com/D_NQ_NP_977366-MLA74676867375_022024-O.webp'
+      jobId:
+        description: 'Job ID (optional)'
+        required: false
+        default: 'manual-test'
 
 jobs:
   render:
@@ -27,85 +44,51 @@ jobs:
         run: pnpm install
         working-directory: apps/video-studio
 
+      # Install supabase-js in root for the upload script
+      - name: Install Tool Dependencies
+        run: npm install @supabase/supabase-js
+
       - name: Install FFMPEG
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
-      - name: Render Video
-        id: render
-        working-directory: apps/video-studio
-        env:
-          INPUT_PROPS: ${{ toJson(github.event.client_payload.props) }}
+      - name: Determine Props
+        id: props
         run: |
-          echo "Rendering video with props: $INPUT_PROPS"
-          # Render CarPromo composition
-          npx remotion render src/index.ts CarPromo out/video.mp4 --props="$INPUT_PROPS" --gl=angle
-          
-          echo "Render complete."
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "PROPS={\"carName\": \"${{ inputs.carName }}\", \"pricePerDay\": ${{ inputs.pricePerDay }}, \"imageUrl\": \"${{ inputs.imageUrl }}\"}" >> $GITHUB_ENV
+            echo "JOB_ID=${{ inputs.jobId }}" >> $GITHUB_ENV
+          else
+            echo "PROPS=${{ toJson(github.event.client_payload.props) }}" >> $GITHUB_ENV
+            echo "JOB_ID=${{ github.event.client_payload.job_id }}" >> $GITHUB_ENV
+          fi
+
+      - name: Render Video
+        working-directory: apps/video-studio
+        run: |
+          echo "Rendering with props: $PROPS"
+          npx remotion render src/index.ts CarPromo out/video.mp4 --props="$PROPS" --gl=angle
 
       - name: Upload to Supabase Storage
-        id: upload
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          JOB_ID: ${{ github.event.client_payload.job_id }}
+          JOB_ID: ${{ env.JOB_ID }}
+          MARKETING_BUCKET: 'marketing-media' 
         run: |
-          # Use a simple node script to upload the file
-          # We write it inline to avoid dependency on local tools scripts
-          cat <<EOF > upload.js
-          const { createClient } = require('@supabase/supabase-js');
-          const fs = require('fs');
-          
-          const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-          
-          async function upload() {
-            const fileBuffer = fs.readFileSync('apps/video-studio/out/video.mp4');
-            const fileName = `marketing/videos/${process.env.JOB_ID}.mp4`;
-            
-            console.log('Uploading to:', fileName);
-            
-            const { data, error } = await supabase.storage
-              .from('marketing-media') // Bucket name (check if correct)
-              .upload(fileName, fileBuffer, {
-                contentType: 'video/mp4',
-                upsert: true
-              });
-              
-            if (error) {
-              console.error('Upload error:', error);
-              process.exit(1);
-            }
-            
-            const { data: publicUrl } = supabase.storage
-              .from('marketing-media')
-              .getPublicUrl(fileName);
-              
-            console.log('Public URL:', publicUrl.publicUrl);
-            
-            // Save URL to a file to read in next step
-            fs.writeFileSync('video_url.txt', publicUrl.publicUrl);
-          }
-          
-upload();
-          EOF
-          
-          # Need supabase-js available in root or video-studio
-          # We'll rely on it being installed in video-studio
-          cd apps/video-studio
-          node ../../upload.js
+          node tools/upload-video.js
 
-      - name: Update Database Record
+      - name: Update Database Record (If Job ID exists)
+        if: env.JOB_ID != 'manual-test'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          JOB_ID: ${{ github.event.client_payload.job_id }}
+          JOB_ID: ${{ env.JOB_ID }}
         run: |
-          VIDEO_URL=$(cat apps/video-studio/video_url.txt)
+          VIDEO_URL=$(cat video_url.txt)
+          echo "Updating DB for Job $JOB_ID with URL $VIDEO_URL"
           
-          # Call Supabase API to update the record
           curl -X PATCH "$SUPABASE_URL/rest/v1/marketing_content_queue?id=eq.$JOB_ID" \
             -H "apikey: $SUPABASE_SERVICE_KEY" \
             -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
             -H "Content-Type: application/json" \
             -d "{\"media_url\": \"$VIDEO_URL\", \"status\": \"pending\", \"media_type\": \"video\"}"
-            
-          echo "Database updated with video URL"
