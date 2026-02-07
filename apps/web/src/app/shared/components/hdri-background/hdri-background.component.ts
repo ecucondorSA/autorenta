@@ -113,6 +113,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     return `url('${src}')`;
   }
 
+  // Track WebGL resources for cleanup
+  private quadBuffer: WebGLBuffer | null = null;
+
   private gl: WebGLRenderingContext | null = null;
   private program: WebGLProgram | null = null;
   private texture: WebGLTexture | null = null;
@@ -277,11 +280,16 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     const canvas = this.canvasRef?.nativeElement;
     if (!canvas) return;
 
+    // Handle Context Loss (Critical for resilience)
+    canvas.addEventListener('webglcontextlost', this.handleContextLost, false);
+    canvas.addEventListener('webglcontextrestored', this.handleContextRestored, false);
+
     // Get WebGL context
     this.gl = canvas.getContext('webgl', {
       alpha: false,
       antialias: false,
       preserveDrawingBuffer: false,
+      failIfMajorPerformanceCaveat: false, // Allow software renderer if needed
     });
 
     if (!this.gl) {
@@ -318,6 +326,22 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     // Start idle timer
     this.resetIdleTimer();
   }
+
+  // Robustness: Handle Context Loss
+  private handleContextLost = (event: Event) => {
+    event.preventDefault(); // allow restoration
+    this.logger.warn('[HdriBackground] WebGL Context Lost');
+    if (this.animationId !== null) {
+      cancelAnimationFrame(this.animationId);
+      this.animationId = null;
+    }
+  };
+
+  // Robustness: Handle Context Restored
+  private handleContextRestored = () => {
+    this.logger.info('[HdriBackground] WebGL Context Restored');
+    this.initWebGL();
+  };
 
   private createProgram(): WebGLProgram | null {
     if (!this.gl) return null;
@@ -364,8 +388,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     const positions = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
-    const buffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+    // Track buffer to prevent memory leak
+    this.quadBuffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.quadBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, positions, this.gl.STATIC_DRAW);
 
     const positionLocation = this.gl.getAttribLocation(this.program, 'a_position');
@@ -410,7 +435,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     this.texture = this.gl.createTexture();
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
 
-    // Placeholder pixel while loading
+    // Placeholder pixel while loading (invisible 1x1)
     this.gl.texImage2D(
       this.gl.TEXTURE_2D,
       0,
@@ -423,41 +448,12 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       new Uint8Array([30, 30, 30, 255]),
     );
 
-    // Step 1: Load low-res placeholder first (fast FCP)
-    const lowResImage = new Image();
-    lowResImage.crossOrigin = 'anonymous'; // Enable CORS for safety
+    // DIRECT LOAD STRATEGY (User Request: "Stable from beginning")
+    // We skip the Low-Res/LQIP phase to avoid the "blurry to sharp" transition.
+    // Instead, we show the static high-quality 2D image (z-0) until the
+    // 3D 8K texture is fully loaded, then fade it in seamlessly.
 
-    lowResImage.onload = () => {
-      if (this.isDestroyed || !this.gl || !this.texture) return;
-      this.logger.debug('[HdriBackground] Low-res loaded:', sources.low);
-
-      this.updateTexture(lowResImage);
-
-      // Trigger fade-in immediately with low-res
-      this.isLoaded = true;
-      this.hdriLoaded.emit();
-      this.cdr.markForCheck(); // FORCE UPDATE
-      this.startRenderLoop();
-
-      // Trigger "The Glance" animation to hint interactivity
-      this.triggerGlanceAnimation();
-
-      // High-res is already loading in parallel (started below)
-    };
-
-    lowResImage.onerror = (err) => {
-      console.warn(
-        '[HdriBackground] Failed to load low-res, falling back to high-res:',
-        sources.low,
-        err,
-      );
-      // Fallback: load high-res directly
-      this.loadHighResTexture(sources.high);
-    };
-
-    lowResImage.src = sources.low;
-
-    // Step 2: Start loading high-res in background immediately
+    // Start loading high-res immediately
     this.loadHighResTexture(sources.high);
   }
 
@@ -878,6 +874,10 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     const canvas = this.canvasRef?.nativeElement;
     if (canvas) {
+      // Remove context loss listeners
+      canvas.removeEventListener('webglcontextlost', this.handleContextLost);
+      canvas.removeEventListener('webglcontextrestored', this.handleContextRestored);
+
       canvas.removeEventListener('mousedown', this.onMouseDown);
       canvas.removeEventListener('mousemove', this.onMouseMove);
       canvas.removeEventListener('mouseup', this.onMouseUp);
@@ -887,10 +887,13 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       canvas.removeEventListener('touchend', this.onTouchEnd);
     }
 
-    // Clean up WebGL resources
+    // Clean up WebGL resources to prevent GPU memory leaks
     if (this.gl) {
       this.gl.deleteProgram(this.program);
       this.gl.deleteTexture(this.texture);
+      if (this.quadBuffer) {
+        this.gl.deleteBuffer(this.quadBuffer);
+      }
     }
   }
 

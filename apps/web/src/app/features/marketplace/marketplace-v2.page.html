@@ -3,20 +3,17 @@
 <section class="hero-minimal relative h-screen w-full bg-black">
   <!-- Static Hero Image Background (Fast loading, mobile optimized) -->
   <div class="absolute inset-0 z-0">
-    <img
-      src="/assets/images/hero-marketplace.webp"
-      alt="Premium SUV en Buenos Aires al atardecer"
-      class="w-full h-full object-cover object-center brightness-[0.85] saturate-[1.1]"
-      loading="eager"
-      fetchpriority="high"
-    />
+    <img src="/assets/images/hero-marketplace.webp" alt="Premium SUV en Buenos Aires al atardecer"
+      class="w-full h-full object-cover object-center brightness-[0.85] saturate-[1.1]" loading="eager"
+      fetchpriority="high" />
   </div>
 
   <!-- HDRI Background - Desktop Only (Lazy Loaded, WebGL) -->
   <div class="absolute inset-0 z-[1] hidden lg:block brightness-[1.1] saturate-[1.2] contrast-[1.05]">
     @defer (on viewport) {
     <app-hdri-background #hdriViewer src="/assets/hdri/suburban_parking_area_8k.webp" [autoRotate]="true"
-      [enableInteraction]="true" [initialRotationY]="4.5" [fov]="0.35" (hdriLoaded)="onHdriLoaded()" class="w-full h-full">
+      [enableInteraction]="true" [initialRotationY]="4.5" [fov]="0.35" (hdriLoaded)="onHdriLoaded()"
+      class="w-full h-full">
     </app-hdri-background>
     } @placeholder {
     <div class="w-full h-full"></div>
@@ -69,10 +66,10 @@
 
   <!-- Minimal Content Overlay - Bottom Left -->
   <div class="absolute bottom-0 left-0 right-0 z-40 p-6 pb-[100px] sm:p-10 sm:pb-10 lg:p-16 pointer-events-none">
-    <div class="max-w-4xl pointer-events-auto">
+    <div class="max-w-4xl">
       <!-- Headline -->
       <h1
-        class="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-black font-friendly text-white leading-[0.95] tracking-tight mb-6 drop-shadow-2xl text-glow hero-text-contrast">
+        class="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-black font-friendly text-white leading-[0.95] tracking-tight mb-6 drop-shadow-2xl text-glow hero-text-contrast select-none pointer-events-none">
         <span class="text-[#FFFF00]">Comparte</span> tu auto<br />
         <span class="block text-2xl sm:text-3xl lg:text-4xl font-bold mt-2 text-white/90">entre <span
             class="text-[#FFFF00] font-friendly">vecinos</span>:</span>
@@ -80,18 +77,18 @@
       </h1>
 
       <!-- Subtext -->
-      <p class="animate-fade-in-up delay-100 text-white/80 text-lg sm:text-xl font-friendly mb-8 max-w-lg leading-relaxed font-medium drop-shadow-md"
+      <p class="animate-fade-in-up delay-100 text-white/80 text-lg sm:text-xl font-friendly mb-8 max-w-lg leading-relaxed font-medium drop-shadow-md select-none pointer-events-none"
         style="hyphens: none; -webkit-hyphens: none">
         ¿Por qué ir lejos? Hay autos increíbles estacionados muy cerca tuyo...
       </p>
 
-      <!-- Smart Search Bar -->
-      <div class="animate-fade-in-up delay-200 w-full mb-6">
+      <!-- Smart Search Bar (Interactive) -->
+      <div class="animate-fade-in-up delay-200 w-full mb-6 pointer-events-auto">
         <app-smart-search-bar (searchSubmit)="onSmartSearch($event)"></app-smart-search-bar>
       </div>
 
       <!-- Trust Badges - Compact con Security Badge -->
-      <div class="flex items-center gap-4 mt-6 text-white/70 text-xs">
+      <div class="flex items-center gap-4 mt-6 text-white/70 text-xs select-none pointer-events-none">
         <span class="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full">
           <img src="/assets/images/design-assets/security_badge.png" alt="Seguridad verificada"
             class="w-5 h-5 object-contain" loading="lazy" />
@@ -128,18 +125,18 @@
 <section class="py-8 sm:py-12 lg:py-24 bg-surface-base">
   <div class="max-w-7xl mx-auto px-6 lg:px-12">
     <!-- Section Header -->
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-6 gap-6 sticky top-[72px] z-30 bg-surface-base/95 backdrop-blur-md py-4 -mx-6 px-6 lg:-mx-12 lg:px-12 border-b border-border-default/50 transition-all duration-300">
+    <div
+      class="flex flex-col lg:flex-row lg:items-end justify-between mb-6 gap-6 sticky top-[72px] z-30 bg-surface-base/95 backdrop-blur-md py-4 -mx-6 px-6 lg:-mx-12 lg:px-12 border-b border-border-default/50 transition-all duration-300">
       <div class="flex items-center gap-4 overflow-x-auto pb-1 scrollbar-hide w-full lg:w-auto">
         @for (cat of categories; track cat.id) {
-          <button (click)="selectCategory(cat.id)" 
-            [class.bg-text-primary]="selectedCategory() === cat.id"
-            [class.text-surface-base]="selectedCategory() === cat.id"
-            [class.bg-surface-raised]="selectedCategory() !== cat.id"
-            [class.text-text-secondary]="selectedCategory() !== cat.id"
-            class="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all whitespace-nowrap hover:scale-105 active:scale-95 border border-border-default shadow-sm">
-            <ion-icon [name]="cat.icon" class="text-lg"></ion-icon>
-            {{ cat.label }}
-          </button>
+        <button (click)="selectCategory(cat.id)" [class.bg-text-primary]="selectedCategory() === cat.id"
+          [class.text-surface-base]="selectedCategory() === cat.id"
+          [class.bg-surface-raised]="selectedCategory() !== cat.id"
+          [class.text-text-secondary]="selectedCategory() !== cat.id"
+          class="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all whitespace-nowrap hover:scale-105 active:scale-95 border border-border-default shadow-sm">
+          <ion-icon [name]="cat.icon" class="text-lg"></ion-icon>
+          {{ cat.label }}
+        </button>
         }
       </div>
 
@@ -147,15 +144,16 @@
         <!-- Sort Dropdown -->
         <div class="relative">
           <label for="sort-order" class="sr-only">Ordenar autos por</label>
-                      <select id="sort-order" [value]="sortOrder()" (change)="onSortOrderChange($event)"
-                      class="select-premium bg-surface-raised border-border-default text-text-primary focus:ring-cta-default"
-                      aria-label="Ordenar lista de autos">
-                      <option value="distance">Más cercanos</option>
-                      <option value="score">Relevancia</option>
-                      <option value="price_asc">Menor aporte</option>
-                      <option value="price_desc">Mayor aporte</option>
-                      <option value="rating">Mejor valorados</option>
-                    </select>        </div>
+          <select id="sort-order" [value]="sortOrder()" (change)="onSortOrderChange($event)"
+            class="select-premium bg-surface-raised border-border-default text-text-primary focus:ring-cta-default"
+            aria-label="Ordenar lista de autos">
+            <option value="distance">Más cercanos</option>
+            <option value="score">Relevancia</option>
+            <option value="price_asc">Menor aporte</option>
+            <option value="price_desc">Mayor aporte</option>
+            <option value="rating">Mejor valorados</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -169,12 +167,8 @@
           role="region" aria-label="Autos disponibles - Scroll horizontal">
           @for (car of visibleCars(); track trackByCarId(i, car); let i = $index) {
           <div class="relative flex-shrink-0 w-[85vw] h-full snap-center" style="min-height: 400px;">
-            <app-car-card
-              [car]="car"
-              [distance]="undefined"
-              [showOwnerActions]="false"
-              class="h-full w-full block"
-            ></app-car-card>
+            <app-car-card [car]="car" [distance]="undefined" [showOwnerActions]="false"
+              class="h-full w-full block"></app-car-card>
           </div>
           }
 
@@ -197,42 +191,38 @@
       </div>
 
       <!-- DESKTOP: Grid View (Robust Auto-Fill) -->
-      <div class="hidden sm:grid gap-6 w-full"
-           [style.grid-template-columns]="'repeat(auto-fill, minmax(300px, 1fr))'">
-        
+      <div class="hidden sm:grid gap-6 w-full" [style.grid-template-columns]="'repeat(auto-fill, minmax(300px, 1fr))'">
+
         <!-- CAR CARD LOOP -->
         @for (car of visibleCars(); track trackByCarId(i, car); let i = $index) {
-        <div class="h-full w-full opacity-0 animate-fade-in-up" [style.animation-delay]="i * 50 + 'ms'" style="animation-fill-mode: forwards;">
-          <app-car-card
-            [car]="car"
-            [distance]="undefined"
-            [showOwnerActions]="false"
-            class="h-full block"
-          ></app-car-card>
+        <div class="h-full w-full opacity-0 animate-fade-in-up" [style.animation-delay]="i * 50 + 'ms'"
+          style="animation-fill-mode: forwards;">
+          <app-car-card [car]="car" [distance]="undefined" [showOwnerActions]="false"
+            class="h-full block"></app-car-card>
         </div>
         }
 
         <!-- Loading skeleton -->
         @if (loading()) {
-          @for (_ of [].constructor(8); track _) {
-          <div
-            class="bg-zinc-900/50 rounded-3xl overflow-hidden border border-zinc-800 shadow-sm h-full flex flex-col animate-pulse">
-            <div class="aspect-[4/3] bg-zinc-800"></div>
-            <div class="p-5 space-y-4 flex-1">
-              <div class="flex justify-between items-start">
-                <div class="space-y-2 w-2/3">
-                  <div class="h-6 bg-zinc-800 rounded w-3/4"></div>
-                  <div class="h-4 bg-zinc-800/50 rounded w-1/2"></div>
-                </div>
-                <div class="h-8 w-12 bg-zinc-800 rounded-lg"></div>
+        @for (_ of [].constructor(8); track _) {
+        <div
+          class="bg-zinc-900/50 rounded-3xl overflow-hidden border border-zinc-800 shadow-sm h-full flex flex-col animate-pulse">
+          <div class="aspect-[4/3] bg-zinc-800"></div>
+          <div class="p-5 space-y-4 flex-1">
+            <div class="flex justify-between items-start">
+              <div class="space-y-2 w-2/3">
+                <div class="h-6 bg-zinc-800 rounded w-3/4"></div>
+                <div class="h-4 bg-zinc-800/50 rounded w-1/2"></div>
               </div>
-              <div class="pt-4 mt-auto border-t border-zinc-800/50 flex justify-between">
-                <div class="h-4 w-16 bg-zinc-800 rounded"></div>
-                <div class="h-10 w-32 bg-zinc-800 rounded-xl"></div>
-              </div>
+              <div class="h-8 w-12 bg-zinc-800 rounded-lg"></div>
+            </div>
+            <div class="pt-4 mt-auto border-t border-zinc-800/50 flex justify-between">
+              <div class="h-4 w-16 bg-zinc-800 rounded"></div>
+              <div class="h-10 w-32 bg-zinc-800 rounded-xl"></div>
             </div>
           </div>
-          }
+        </div>
+        }
         }
 
         <!-- Empty state -->
@@ -240,7 +230,8 @@
         <div class="col-span-full empty-state-card py-24 text-center">
           <div
             class="w-48 h-48 mx-auto mb-8 rounded-full overflow-hidden shadow-2xl border-4 border-zinc-800 relative group">
-            <div class="absolute inset-0 bg-indigo-500/20 group-hover:bg-indigo-500/0 transition-colors duration-500"></div>
+            <div class="absolute inset-0 bg-indigo-500/20 group-hover:bg-indigo-500/0 transition-colors duration-500">
+            </div>
             <img src="/assets/images/ui/empty-search-street.webp" alt="Calle vacía"
               class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700"
               width="192" height="192" />
@@ -252,10 +243,12 @@
             Intenta ampliar tu búsqueda o sé el primero en publicar un auto aquí.
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button (click)="clearQuickFilters()" class="px-8 py-3 rounded-xl border-2 border-zinc-200 hover:border-zinc-900 font-bold transition-all text-text-primary">
+            <button (click)="clearQuickFilters()"
+              class="px-8 py-3 rounded-xl border-2 border-zinc-200 hover:border-zinc-900 font-bold transition-all text-text-primary">
               Limpiar filtros
             </button>
-            <button routerLink="/ganar" class="px-8 py-3 rounded-xl bg-cta-default hover:bg-cta-hover text-cta-text font-bold transition-all shadow-lg shadow-cta-default/20">
+            <button routerLink="/ganar"
+              class="px-8 py-3 rounded-xl bg-cta-default hover:bg-cta-hover text-cta-text font-bold transition-all shadow-lg shadow-cta-default/20">
               Publicar mi auto
             </button>
           </div>
@@ -275,7 +268,8 @@
             Error de conexión
           </h3>
           <p class="text-text-secondary mb-8">{{ error() }}</p>
-          <button (click)="loadCars()" class="px-8 py-3 bg-zinc-900 text-white rounded-xl font-bold hover:bg-black transition-colors">
+          <button (click)="loadCars()"
+            class="px-8 py-3 bg-zinc-900 text-white rounded-xl font-bold hover:bg-black transition-colors">
             Reintentar
           </button>
         </div>
@@ -311,11 +305,11 @@
       </div>
       }
 
-      <!-- Total cars info -->
-      <div class="text-center py-3 px-4 bg-surface-raised/50 rounded-lg border border-border-default/50">
+      <!-- Total cars info (Removed for cleaner UI) -->
+      <!-- <div class="text-center py-3 px-4 bg-surface-raised/50 rounded-lg border border-border-default/50">
         <span class="text-lg font-bold text-primary-600">{{ totalCarsCount() }}</span>
         <span class="text-sm text-text-secondary ml-1">autos disponibles en tu zona</span>
-      </div>
+      </div> -->
     </div>
     <!-- This closes Space-y-6 container -->
   </div>
@@ -328,57 +322,67 @@
 <section class="py-16 bg-white relative overflow-hidden border-y border-zinc-200">
 
   <!-- 1. Background Depth (Subtle) -->
-  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-100/50 via-white to-white pointer-events-none"></div>
+  <div
+    class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-100/50 via-white to-white pointer-events-none">
+  </div>
 
   <!-- 2. Noise Texture (Subtle Grain) -->
-  <div class="absolute inset-0 opacity-[0.02]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')"></div>
+  <div class="absolute inset-0 opacity-[0.02]"
+    style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')">
+  </div>
 
   <div class="relative z-10 max-w-[100vw]">
     <!-- Marquee Container with Fade Masks -->
     <div class="overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]">
-      
+
       <!-- The Ticker Track -->
       <div class="flex items-center gap-24 animate-marquee whitespace-nowrap py-2">
-        
+
         <!-- BLOCK 1 -->
         <div class="flex items-center gap-24">
-          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+          <span
+            class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
             MERCADOPAGO
           </span>
-          
+
           <span class="text-zinc-300 text-2xl">❖</span>
 
-          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+          <span
+            class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
             ECUCONDOR SAS
           </span>
 
           <span class="text-zinc-300 text-2xl">❖</span>
 
-          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+          <span
+            class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
             AUTAMEDICA
           </span>
-          
+
           <span class="text-zinc-300 text-2xl">❖</span>
         </div>
 
         <!-- BLOCK 2 (Clone for Loop) -->
         <div class="flex items-center gap-24">
-          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+          <span
+            class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
             MERCADOPAGO
           </span>
-          
+
           <span class="text-zinc-300 text-2xl">❖</span>
 
-          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+          <span
+            class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
             ECUCONDOR SAS
           </span>
 
           <span class="text-zinc-300 text-2xl">❖</span>
 
-          <span class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
+          <span
+            class="text-xl md:text-2xl font-black font-satoshi tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-zinc-600 via-zinc-400 to-zinc-200 drop-shadow-[0_0_10px_rgba(0,0,0,0.1)] transform translate-z-0">
             AUTAMEDICA
           </span>
-          
+
           <span class="text-zinc-300 text-2xl">❖</span>
         </div>
 
@@ -390,26 +394,31 @@
 <!-- 4. OWNER CTA + CALCULADORA (HYBRID: STORY + TECH) -->
 <section class="py-24 bg-zinc-950 relative overflow-hidden text-white border-t border-white/5">
   <!-- Subtle Background Pattern -->
-  <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/10 via-zinc-950/0 to-transparent opacity-50 pointer-events-none"></div>
-  
+  <div
+    class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/10 via-zinc-950/0 to-transparent opacity-50 pointer-events-none">
+  </div>
+
   <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
     <div class="grid lg:grid-cols-2 gap-16 items-center">
-      
+
       <!-- Left: Human Story (Martin) -->
       <div>
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 mb-6 backdrop-blur-md">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 mb-6 backdrop-blur-md">
           <span class="w-2 h-2 rounded-full bg-brand-primary animate-pulse"></span>
           <span class="text-brand-primary font-bold text-xs uppercase tracking-wider">Para Anfitriones</span>
         </div>
-        
+
         <h2 class="text-4xl md:text-5xl font-black font-satoshi text-white mb-6 leading-tight tracking-tight">
           Tu auto estacionado genera gastos.<br />
           En Autorentar,
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-emerald-400">compensás esos costos.</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-emerald-400">compensás esos
+            costos.</span>
         </h2>
 
         <!-- Testimonial Card (Dark Mode) -->
-        <div class="bg-zinc-900/80 border border-white/10 rounded-2xl p-6 mb-8 hover:border-brand-primary/30 transition-colors duration-300">
+        <div
+          class="bg-zinc-900/80 border border-white/10 rounded-2xl p-6 mb-8 hover:border-brand-primary/30 transition-colors duration-300">
           <div class="flex flex-col md:flex-row items-center md:items-start gap-5">
             <div class="flex-shrink-0 relative">
               <div class="absolute inset-0 bg-brand-primary blur-md opacity-20 rounded-full"></div>
@@ -431,24 +440,31 @@
           <!-- Expanded Story (Desktop) -->
           <div class="mt-5 pt-5 border-t border-white/5 text-sm text-zinc-400 leading-relaxed hidden md:block">
             <p>
-              "Al revisar los datos hice el clic: casi cubro los costos del auto entero sin tocar mi sueldo. 
-              <span class="text-zinc-200 font-medium">No sé si va a durar 2 años o 5, pero mientras la matemática sirva, yo sigo compartiendo.</span>"
+              "Al revisar los datos hice el clic: casi cubro los costos del auto entero sin tocar mi sueldo.
+              <span class="text-zinc-200 font-medium">No sé si va a durar 2 años o 5, pero mientras la matemática sirva,
+                yo sigo compartiendo.</span>"
             </p>
           </div>
         </div>
 
         <div class="flex items-center gap-6">
-          <button (click)="onPublishClick()" class="btn-primary px-8 py-4 rounded-xl font-bold text-lg shadow-lg shadow-brand-primary/20 hover:scale-105 transition-transform flex items-center gap-2">
+          <button (click)="onPublishClick()"
+            class="btn-primary px-8 py-4 rounded-xl font-bold text-lg shadow-lg shadow-brand-primary/20 hover:scale-105 transition-transform flex items-center gap-2">
             Publicar auto gratis
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
           </button>
-          
+
           <!-- Avatar Stack -->
           <div class="hidden sm:flex items-center gap-3">
             <div class="flex -space-x-3">
-              <img src="https://i.pravatar.cc/100?img=33" alt="Miembro de la comunidad AutoRenta" class="w-10 h-10 rounded-full border-2 border-zinc-950" />
-              <img src="https://i.pravatar.cc/100?img=47" alt="Miembro de la comunidad AutoRenta" class="w-10 h-10 rounded-full border-2 border-zinc-950" />
-              <div class="w-10 h-10 rounded-full bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center text-[10px] font-bold text-white">
+              <img src="https://i.pravatar.cc/100?img=33" alt="Miembro de la comunidad AutoRenta"
+                class="w-10 h-10 rounded-full border-2 border-zinc-950" />
+              <img src="https://i.pravatar.cc/100?img=47" alt="Miembro de la comunidad AutoRenta"
+                class="w-10 h-10 rounded-full border-2 border-zinc-950" />
+              <div
+                class="w-10 h-10 rounded-full bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center text-[10px] font-bold text-white">
                 +4k
               </div>
             </div>
@@ -460,10 +476,13 @@
       <!-- Right: Titanium Dashboard Widget -->
       <div class="relative group">
         <!-- Glow Effect behind card -->
-        <div class="absolute -inset-1 bg-gradient-to-r from-brand-primary to-emerald-500 rounded-[2rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-        
-        <div class="bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-          
+        <div
+          class="absolute -inset-1 bg-gradient-to-r from-brand-primary to-emerald-500 rounded-[2rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200">
+        </div>
+
+        <div
+          class="bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+
           <!-- Header -->
           <div class="flex justify-between items-start mb-8">
             <div>
@@ -472,7 +491,8 @@
             </div>
             <div class="bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full flex items-center gap-2">
               <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
               <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wide">Activo</span>
@@ -491,10 +511,15 @@
             <div class="w-full bg-brand-primary/40 rounded-t-sm h-[65%] relative group/bar"></div>
             <div class="w-full bg-brand-primary/60 rounded-t-sm h-[80%] relative group/bar"></div>
             <div class="w-full bg-brand-primary/80 rounded-t-sm h-[90%] relative group/bar">
-              <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">Dic</div>
+              <div
+                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity">
+                Dic</div>
             </div>
-            <div class="w-full bg-brand-primary rounded-t-sm h-[100%] shadow-[0_0_15px_rgba(57,255,20,0.3)] relative group/bar">
-              <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded">Ene</div>
+            <div
+              class="w-full bg-brand-primary rounded-t-sm h-[100%] shadow-[0_0_15px_rgba(57,255,20,0.3)] relative group/bar">
+              <div
+                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded">
+                Ene</div>
             </div>
           </div>
 
@@ -503,7 +528,8 @@
             <div class="group/input">
               <div class="flex justify-between text-sm mb-3 font-medium">
                 <span class="text-zinc-400 group-hover/input:text-zinc-300 transition-colors">Valor de Mercado</span>
-                <span class="text-white font-mono bg-zinc-800 px-2 py-0.5 rounded text-xs border border-zinc-700">{{ calculatorCarValue() | currency:'USD':'symbol':'1.0-0' }}</span>
+                <span class="text-white font-mono bg-zinc-800 px-2 py-0.5 rounded text-xs border border-zinc-700">{{
+                  calculatorCarValue() | currency:'USD':'symbol':'1.0-0' }}</span>
               </div>
               <input type="range" [(ngModel)]="calculatorCarValue" min="5000" max="50000" step="1000"
                 class="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-brand-primary hover:accent-emerald-400 transition-all" />
@@ -513,7 +539,8 @@
             <div class="group/input">
               <div class="flex justify-between text-sm mb-3 font-medium">
                 <span class="text-zinc-400 group-hover/input:text-zinc-300 transition-colors">Disponibilidad</span>
-                <span class="text-white font-mono bg-zinc-800 px-2 py-0.5 rounded text-xs border border-zinc-700">{{ calculatorDays() }} días/mes</span>
+                <span class="text-white font-mono bg-zinc-800 px-2 py-0.5 rounded text-xs border border-zinc-700">{{
+                  calculatorDays() }} días/mes</span>
               </div>
               <input type="range" [(ngModel)]="calculatorDays" min="1" max="30" step="1"
                 class="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-brand-primary hover:accent-emerald-400 transition-all" />
@@ -527,7 +554,8 @@
                   {{ (calculatorEstimate().netResult * 1.25) | currency: 'USD' : 'symbol-narrow' : '1.0-0' }}
                 </p>
               </div>
-              <div class="bg-gradient-to-br from-brand-primary/20 to-emerald-900/20 rounded-xl p-4 border border-brand-primary/20 relative overflow-hidden">
+              <div
+                class="bg-gradient-to-br from-brand-primary/20 to-emerald-900/20 rounded-xl p-4 border border-brand-primary/20 relative overflow-hidden">
                 <div class="absolute inset-0 bg-brand-primary/5 animate-pulse"></div>
                 <p class="text-[10px] text-emerald-400 uppercase font-bold mb-1 relative z-10">Tu Neto Mensual</p>
                 <p class="text-2xl font-black text-white font-mono tracking-tight relative z-10">
@@ -535,8 +563,9 @@
                 </p>
               </div>
             </div>
-            
-            <button (click)="onPublishClick()" class="w-full py-4 rounded-xl font-bold text-sm uppercase tracking-widest text-black bg-white hover:bg-zinc-200 transition-colors shadow-lg shadow-white/5 mt-2">
+
+            <button (click)="onPublishClick()"
+              class="w-full py-4 rounded-xl font-bold text-sm uppercase tracking-widest text-black bg-white hover:bg-zinc-200 transition-colors shadow-lg shadow-white/5 mt-2">
               Comenzar ahora
             </button>
           </div>
@@ -780,4 +809,3 @@
     </div>
   </div>
 </section>
-

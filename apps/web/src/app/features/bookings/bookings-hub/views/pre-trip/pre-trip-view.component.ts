@@ -9,6 +9,8 @@ import {
   computed,
   inject,
   PLATFORM_ID,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
@@ -265,14 +267,14 @@ interface WeatherData {
 
         <!-- View Details CTA -->
         <section class="pt-4">
-          <a
-            [routerLink]="['/bookings', booking.id]"
+          <button
+            (click)="viewDetails.emit()"
             class="w-full btn-primary flex items-center justify-center gap-2 py-3 rounded-xl font-medium"
             appPressScale
           >
             <app-icon name="file-text" class="w-5 h-5" />
             Ver Detalle Completo
-          </a>
+          </button>
         </section>
       </main>
     </div>
@@ -326,6 +328,7 @@ interface WeatherData {
 export class PreTripViewComponent implements OnInit, OnDestroy {
   @Input({ required: true }) booking!: Booking;
   @Input() hoursToPickup = 48;
+  @Output() viewDetails = new EventEmitter<void>();
 
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);

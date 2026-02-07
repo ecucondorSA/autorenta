@@ -460,18 +460,29 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                             'bg-cta-default/20': notification.type === 'info',
                           }"
                         >
-                          {{ getNotificationIcon(notification.type) }}
+                          {{ notification.type | notificationIcon }}
                         </div>
                       </div>
 
                       <!-- Content -->
                       <div class="min-w-0 flex-1">
-                        <div class="flex-1 min-w-0">
-                          <div class="flex items-start justify-between">
-                            <p class="text-sm font-medium text-gray-900 truncate">
-                              {{ notification.title }}
-                              </div>
-                            }
+                          <div class="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
+                            <div class="min-w-0 flex-1">
+                              <h3 class="text-sm font-semibold text-text-primary sm:text-base">
+                                {{ notification.title }}
+                              </h3>
+                              <p class="mt-0.5 text-xs text-text-primary sm:mt-1 sm:text-sm">
+                                {{ notification.message }}
+                              </p>
+                              
+                              <!-- Metadata -->
+                              @if (notification.metadata) {
+                                <div
+                                  class="mt-1 truncate text-xs text-text-secondary sm:mt-2 sm:text-xs"
+                                >
+                                  {{ renderMetadata(notification) }}
+                                </div>
+                              }
 
                             <!-- Timestamp -->
                             <p class="mt-1 text-xs text-text-secondary sm:mt-2 sm:text-xs">

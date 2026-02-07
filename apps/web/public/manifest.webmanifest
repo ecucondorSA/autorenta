@@ -3,13 +3,20 @@
   "short_name": "Autorentar",
   "description": "Alquiler de autos entre personas. Encuentra el auto perfecto para tu viaje. Reserva fácil, rápida y segura. PWA segura con HTTPS y certificado SSL válido.",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone"],
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
   "scope": "/",
   "start_url": "/",
   "theme_color": "#2c4a52",
   "background_color": "#FAF9F6",
   "orientation": "portrait-primary",
-  "categories": ["travel", "business", "lifestyle"],
+  "categories": [
+    "travel",
+    "business",
+    "lifestyle"
+  ],
   "lang": "es-UY",
   "dir": "ltr",
   "prefer_related_applications": false,
@@ -31,7 +38,7 @@
       "url": "/cars?source=shortcut",
       "icons": [
         {
-          "src": "icons/icon-192x192.png",
+          "src": "/assets/icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -44,7 +51,7 @@
       "url": "/cars/publish?source=shortcut",
       "icons": [
         {
-          "src": "icons/icon-192x192.png",
+          "src": "/assets/icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -57,7 +64,7 @@
       "url": "/bookings?source=shortcut",
       "icons": [
         {
-          "src": "icons/icon-192x192.png",
+          "src": "/assets/icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -70,7 +77,7 @@
       "url": "/profile?source=shortcut",
       "icons": [
         {
-          "src": "icons/icon-192x192.png",
+          "src": "/assets/icons/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -79,26 +86,16 @@
   ],
   "icons": [
     {
-      "src": "icons/icon-192x192.png",
+      "src": "/assets/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable any"
     },
     {
-      "src": "icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/maskable-icon-512.png",
+      "src": "/assets/icons/icon-192.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "icons/monochrome-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "monochrome"
+      "purpose": "maskable any"
     }
   ]
 }

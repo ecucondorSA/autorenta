@@ -77,6 +77,10 @@ function autorentaImageLoader(config: ImageLoaderConfig): string {
 
   // Supabase Storage Transformation support
   // Project: aceacpaockyxgogxsfyc.supabase.co (production)
+  // Supabase Storage Transformation support
+  // Project: aceacpaockyxgogxsfyc.supabase.co (production)
+  // DISABLE FOR NOW: Render API returning 403 Forbidden
+  /*
   if (src.includes('aceacpaockyxgogxsfyc.supabase.co/storage/v1/object/public/') ||
       src.includes('pisqjmoklivzpwufhscx.supabase.co/storage/v1/object/public/')) {
     try {
@@ -94,6 +98,7 @@ function autorentaImageLoader(config: ImageLoaderConfig): string {
       return src;
     }
   }
+  */
 
   // Unsplash Optimization
   if (src.includes('unsplash.com') || src.includes('images.unsplash.com')) {
@@ -191,11 +196,11 @@ export const appConfig: ApplicationConfig = {
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode()
       ? {
-          provide: APP_INITIALIZER,
-          useFactory: initializePerformanceMonitoring,
-          deps: [PerformanceMonitoringService, LoggerService],
-          multi: true,
-        }
+        provide: APP_INITIALIZER,
+        useFactory: initializePerformanceMonitoring,
+        deps: [PerformanceMonitoringService, LoggerService],
+        multi: true,
+      }
       : [],
     // ✅ Debug Service initialization (para e2e tests)
     // Siempre inicializar para exponer window.__AR_DEBUG__

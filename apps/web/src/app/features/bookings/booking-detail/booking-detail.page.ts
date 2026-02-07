@@ -110,6 +110,7 @@ import { BookingCheckInInfoCardComponent } from './booking-check-in-info-card.co
 import { BookingExtensionsManagerComponent } from './booking-extensions-manager.component';
 import { BookingStatusComponent } from './booking-status.component';
 import { BookingTrafficFinesManagerComponent } from './booking-traffic-fines-manager.component';
+import { PreTripViewComponent } from '../bookings-hub/views/pre-trip/pre-trip-view.component';
 
 interface ReturnChecklistItem {
   id: string;
@@ -193,6 +194,7 @@ const DISPUTE_STATUSES = new Set<BookingStatus>([
     BookingFlowCardComponent,
     HoverLiftDirective,
     StaggerEnterDirective,
+    PreTripViewComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -265,6 +267,32 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly returnChecklistStoragePrefix = 'autorenta:return-checklist:';
   private returnChecklistSaveTimeout: number | null = null;
+
+  // Pre-Trip Mode Logic
+  preTripModeDisabled = signal(false);
+
+  readonly showPreTripMode = computed(() => {
+    const booking = this.booking();
+    if (!booking || this.preTripModeDisabled()) return false;
+
+    // Only for confirmed bookings
+    if (booking.status !== 'confirmed') return false;
+
+    // Only for renters
+    if (!this.isRenter()) return false;
+
+    // Only within 48h of start
+    if (!booking.start_at) return false;
+    const start = new Date(booking.start_at).getTime();
+    const now = Date.now();
+    const diffHours = (start - now) / (1000 * 60 * 60);
+
+    return diffHours > 0 && diffHours <= 48;
+  });
+
+  disablePreTripMode(): void {
+    this.preTripModeDisabled.set(true);
+  }
 
   readonly isApprovalFlow = computed(() => !!this.booking()?.payment_mode);
 
