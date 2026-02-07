@@ -536,8 +536,8 @@ export class AuthService implements OnDestroy {
     // Guardar state en sessionStorage para validación
     sessionStorage.setItem(this.TIKTOK_STATE_KEY, state);
 
-    // Construir URL de TikTok
-    const tiktokAuthUrl = new URL('https://www.tiktok.com/v2/oauth/authorize/');
+    // Construir URL de TikTok (v2 API - https://developers.tiktok.com/doc/oauth-user-access-token-management)
+    const tiktokAuthUrl = new URL('https://www.tiktok.com/v2/auth/authorize/');
     tiktokAuthUrl.searchParams.set('client_key', TIKTOK_CLIENT_ID);
     tiktokAuthUrl.searchParams.set('redirect_uri', redirectUri);
     tiktokAuthUrl.searchParams.set('response_type', 'code');
