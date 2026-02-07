@@ -1,0 +1,57 @@
+name: Wallet Reconciliation
+
+on:
+  schedule:
+    # Daily at 2:00 AM UTC (11 PM Argentina)
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  reconcile-wallets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Call wallet-reconciliation Edge Function
+        id: reconcile
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "💰 Running wallet reconciliation..."
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "${SUPABASE_URL}/functions/v1/wallet-reconciliation" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+            -H "Content-Type: application/json")
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response: $BODY" | jq . 2>/dev/null || echo "$BODY"
+          
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ Failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
+          
+          DISCREPANCIES=$(echo "$BODY" | jq -r '.discrepancies // 0')
+          echo "discrepancies=$DISCREPANCIES" >> $GITHUB_OUTPUT
+          
+          if [ "$DISCREPANCIES" -gt "0" ]; then
+            echo "::warning::Found $DISCREPANCIES wallet discrepancies"
+          else
+            echo "✅ All wallets balanced"
+          fi
+
+      - name: Create Summary
+        if: always()
+        run: |
+          echo "## 💰 Wallet Reconciliation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Discrepancies | ${{ steps.reconcile.outputs.discrepancies || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Run time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY

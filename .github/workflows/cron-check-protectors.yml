@@ -1,0 +1,46 @@
+name: Check Expiring Protectors
+
+on:
+  schedule:
+    # Daily at 9:00 AM UTC (6:00 AM Argentina)
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-protectors:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Call check-expiring-protectors Edge Function
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "🛡️ Checking expiring bonus protectors..."
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "${SUPABASE_URL}/functions/v1/check-expiring-protectors" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+            -H "Content-Type: application/json")
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response: $BODY"
+          
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ Failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
+          
+          SENT=$(echo "$BODY" | jq -r '.sent // 0')
+          ERRORS=$(echo "$BODY" | jq -r '.errors // 0')
+          echo "✅ Notifications sent: $SENT, Errors: $ERRORS"
+
+      - name: Create Summary
+        if: always()
+        run: |
+          echo "## 🛡️ Check Expiring Protectors" >> $GITHUB_STEP_SUMMARY
+          echo "Run time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY

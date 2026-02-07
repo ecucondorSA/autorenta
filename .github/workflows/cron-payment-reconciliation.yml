@@ -1,0 +1,62 @@
+name: Payment Reconciliation
+
+on:
+  schedule:
+    # Daily at 3:00 AM UTC (midnight Argentina)
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  reconcile-payments:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Call payment-reconciliation Edge Function
+        id: reconcile
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "💳 Running payment reconciliation..."
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "${SUPABASE_URL}/functions/v1/payment-reconciliation" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+            -H "Content-Type: application/json")
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response: $BODY" | jq . 2>/dev/null || echo "$BODY"
+          
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ Failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
+          
+          TOTAL=$(echo "$BODY" | jq -r '.total_checked // 0')
+          MISMATCHES=$(echo "$BODY" | jq -r '.mismatches // 0')
+          
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
+          echo "mismatches=$MISMATCHES" >> $GITHUB_OUTPUT
+          
+          if [ "$MISMATCHES" -gt "0" ]; then
+            echo "::error::Found $MISMATCHES payment mismatches!"
+            exit 1
+          else
+            echo "✅ All $TOTAL payments reconciled"
+          fi
+
+      - name: Create Summary
+        if: always()
+        run: |
+          echo "## 💳 Payment Reconciliation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Payments Checked | ${{ steps.reconcile.outputs.total || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Mismatches | ${{ steps.reconcile.outputs.mismatches || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Run time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
