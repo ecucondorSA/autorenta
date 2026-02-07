@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: "14.1"
   }
   public: {
     Tables: {
@@ -124,415 +124,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "marketing_campaigns"
             referencedColumns: ["id"]
-          },
-        ]
-      }
-      accident_reports: {
-        Row: {
-          accident_date: string
-          actual_damage_cents: number | null
-          booking_id: string
-          charge_transaction_id: string | null
-          created_at: string
-          deductible_charged_cents: number | null
-          description: string
-          estimated_damage_cents: number | null
-          evidence_urls: string[] | null
-          fault_percentage: number | null
-          id: string
-          insurance_claim_id: string | null
-          insurance_claim_status: string | null
-          location: string | null
-          location_coords: Json | null
-          police_report_number: string | null
-          police_report_url: string | null
-          renter_at_fault: boolean | null
-          reporter_id: string
-          reporter_type: string
-          resolution_notes: string | null
-          resolved_at: string | null
-          resolved_by: string | null
-          status: Database["public"]["Enums"]["accident_status"]
-          updated_at: string
-        }
-        Insert: {
-          accident_date: string
-          actual_damage_cents?: number | null
-          booking_id: string
-          charge_transaction_id?: string | null
-          created_at?: string
-          deductible_charged_cents?: number | null
-          description: string
-          estimated_damage_cents?: number | null
-          evidence_urls?: string[] | null
-          fault_percentage?: number | null
-          id?: string
-          insurance_claim_id?: string | null
-          insurance_claim_status?: string | null
-          location?: string | null
-          location_coords?: Json | null
-          police_report_number?: string | null
-          police_report_url?: string | null
-          renter_at_fault?: boolean | null
-          reporter_id: string
-          reporter_type: string
-          resolution_notes?: string | null
-          resolved_at?: string | null
-          resolved_by?: string | null
-          status?: Database["public"]["Enums"]["accident_status"]
-          updated_at?: string
-        }
-        Update: {
-          accident_date?: string
-          actual_damage_cents?: number | null
-          booking_id?: string
-          charge_transaction_id?: string | null
-          created_at?: string
-          deductible_charged_cents?: number | null
-          description?: string
-          estimated_damage_cents?: number | null
-          evidence_urls?: string[] | null
-          fault_percentage?: number | null
-          id?: string
-          insurance_claim_id?: string | null
-          insurance_claim_status?: string | null
-          location?: string | null
-          location_coords?: Json | null
-          police_report_number?: string | null
-          police_report_url?: string | null
-          renter_at_fault?: boolean | null
-          reporter_id?: string
-          reporter_type?: string
-          resolution_notes?: string | null
-          resolved_at?: string | null
-          resolved_by?: string | null
-          status?: Database["public"]["Enums"]["accident_status"]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
-            isOneToOne: false
-            referencedRelation: "v_wallet_locks_status"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
-            isOneToOne: false
-            referencedRelation: "v_wallet_transfers_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
-            isOneToOne: false
-            referencedRelation: "wallet_transactions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "accident_reports_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      account_deletion_requests: {
-        Row: {
-          created_at: string | null
-          email: string
-          expires_at: string
-          id: string
-          ip_address: string | null
-          reason: string | null
-          token: string
-          used_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          email: string
-          expires_at: string
-          id?: string
-          ip_address?: string | null
-          reason?: string | null
-          token: string
-          used_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          email?: string
-          expires_at?: string
-          id?: string
-          ip_address?: string | null
-          reason?: string | null
-          token?: string
-          used_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "account_deletion_requests_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "account_deletion_requests_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "account_deletion_requests_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "account_deletion_requests_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "account_deletion_requests_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "account_deletion_requests_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "account_deletion_requests_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "account_deletion_requests_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "account_deletion_requests_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "account_deletion_requests_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
           },
         ]
       }
@@ -673,63 +264,6 @@ export type Database = {
         }
         Relationships: []
       }
-      accounting_journal_entries: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          description: string | null
-          entry_number: string
-          id: string
-          notes: string | null
-          posted_at: string | null
-          reference_id: string | null
-          reference_table: string | null
-          reversed_at: string | null
-          reversed_by: string | null
-          status: string
-          total_credit: number
-          total_debit: number
-          transaction_type: string
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          description?: string | null
-          entry_number: string
-          id?: string
-          notes?: string | null
-          posted_at?: string | null
-          reference_id?: string | null
-          reference_table?: string | null
-          reversed_at?: string | null
-          reversed_by?: string | null
-          status: string
-          total_credit?: number
-          total_debit?: number
-          transaction_type: string
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          description?: string | null
-          entry_number?: string
-          id?: string
-          notes?: string | null
-          posted_at?: string | null
-          reference_id?: string | null
-          reference_table?: string | null
-          reversed_at?: string | null
-          reversed_by?: string | null
-          status?: string
-          total_credit?: number
-          total_debit?: number
-          transaction_type?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
       accounting_ledger: {
         Row: {
           account_code: string
@@ -744,7 +278,6 @@ export type Database = {
           id: string
           is_closing_entry: boolean | null
           is_reversed: boolean | null
-          journal_entry_id: string | null
           reference_id: string | null
           reference_type: string | null
           user_id: string | null
@@ -762,7 +295,6 @@ export type Database = {
           id?: string
           is_closing_entry?: boolean | null
           is_reversed?: boolean | null
-          journal_entry_id?: string | null
           reference_id?: string | null
           reference_type?: string | null
           user_id?: string | null
@@ -780,7 +312,6 @@ export type Database = {
           id?: string
           is_closing_entry?: boolean | null
           is_reversed?: boolean | null
-          journal_entry_id?: string | null
           reference_id?: string | null
           reference_type?: string | null
           user_id?: string | null
@@ -790,29 +321,8 @@ export type Database = {
             foreignKeyName: "accounting_ledger_account_code_fkey"
             columns: ["account_code"]
             isOneToOne: false
-            referencedRelation: "accounting_balance_sheet"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "accounting_ledger_account_code_fkey"
-            columns: ["account_code"]
-            isOneToOne: false
             referencedRelation: "accounting_chart_of_accounts"
             referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "accounting_ledger_account_code_fkey"
-            columns: ["account_code"]
-            isOneToOne: false
-            referencedRelation: "accounting_income_statement"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "accounting_ledger_journal_entry_id_fkey"
-            columns: ["journal_entry_id"]
-            isOneToOne: false
-            referencedRelation: "accounting_journal_entries"
-            referencedColumns: ["id"]
           },
         ]
       }
@@ -962,120 +472,10 @@ export type Database = {
         }
         Relationships: []
       }
-      accounting_revenue_recognition: {
-        Row: {
-          booking_id: string
-          booking_status: string | null
-          commission_amount: number
-          created_at: string | null
-          currency: string | null
-          gross_amount: number
-          id: string
-          is_recognized: boolean | null
-          ledger_batch_id: string | null
-          notes: string | null
-          owner_amount: number
-          performance_obligation_met: boolean | null
-          recognition_date: string | null
-          revenue_type: string
-          updated_at: string | null
-        }
-        Insert: {
-          booking_id: string
-          booking_status?: string | null
-          commission_amount: number
-          created_at?: string | null
-          currency?: string | null
-          gross_amount: number
-          id?: string
-          is_recognized?: boolean | null
-          ledger_batch_id?: string | null
-          notes?: string | null
-          owner_amount: number
-          performance_obligation_met?: boolean | null
-          recognition_date?: string | null
-          revenue_type: string
-          updated_at?: string | null
-        }
-        Update: {
-          booking_id?: string
-          booking_status?: string | null
-          commission_amount?: number
-          created_at?: string | null
-          currency?: string | null
-          gross_amount?: number
-          id?: string
-          is_recognized?: boolean | null
-          ledger_batch_id?: string | null
-          notes?: string | null
-          owner_amount?: number
-          performance_obligation_met?: boolean | null
-          recognition_date?: string | null
-          revenue_type?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "accounting_revenue_recognition_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
       admin_audit_log: {
         Row: {
           action: string
+          admin_role: Database["public"]["Enums"]["admin_role"]
           admin_user_id: string
           created_at: string
           details: Json | null
@@ -1087,6 +487,7 @@ export type Database = {
         }
         Insert: {
           action: string
+          admin_role: Database["public"]["Enums"]["admin_role"]
           admin_user_id: string
           created_at?: string
           details?: Json | null
@@ -1098,6 +499,7 @@ export type Database = {
         }
         Update: {
           action?: string
+          admin_role?: Database["public"]["Enums"]["admin_role"]
           admin_user_id?: string
           created_at?: string
           details?: Json | null
@@ -1220,153 +622,14 @@ export type Database = {
         }
         Relationships: []
       }
-      audit_log: {
-        Row: {
-          action: string
-          actor_id: string | null
-          actor_type: string
-          changed_fields: string[] | null
-          created_at: string
-          entity_id: string
-          entity_type: string
-          id: string
-          ip_address: unknown
-          metadata: Json | null
-          new_values: Json | null
-          old_values: Json | null
-          request_id: string | null
-          source: string | null
-          user_agent: string | null
-        }
-        Insert: {
-          action: string
-          actor_id?: string | null
-          actor_type?: string
-          changed_fields?: string[] | null
-          created_at?: string
-          entity_id: string
-          entity_type: string
-          id?: string
-          ip_address?: unknown
-          metadata?: Json | null
-          new_values?: Json | null
-          old_values?: Json | null
-          request_id?: string | null
-          source?: string | null
-          user_agent?: string | null
-        }
-        Update: {
-          action?: string
-          actor_id?: string | null
-          actor_type?: string
-          changed_fields?: string[] | null
-          created_at?: string
-          entity_id?: string
-          entity_type?: string
-          id?: string
-          ip_address?: unknown
-          metadata?: Json | null
-          new_values?: Json | null
-          old_values?: Json | null
-          request_id?: string | null
-          source?: string | null
-          user_agent?: string | null
-        }
-        Relationships: []
-      }
-      authorized_repair_shops: {
-        Row: {
-          address: string
-          business_hours: Json | null
-          city: string
-          contract_number: string | null
-          country: string
-          created_at: string
-          email: string | null
-          emergency_service: boolean | null
-          id: string
-          is_active: boolean | null
-          latitude: number | null
-          longitude: number | null
-          name: string
-          phone: string | null
-          pickup_available: boolean | null
-          services: string[] | null
-          state: string | null
-          supported_brands: string[]
-          supports_ev: boolean | null
-          type: string
-          updated_at: string
-          verified: boolean | null
-          verified_at: string | null
-          whatsapp: string | null
-        }
-        Insert: {
-          address: string
-          business_hours?: Json | null
-          city: string
-          contract_number?: string | null
-          country?: string
-          created_at?: string
-          email?: string | null
-          emergency_service?: boolean | null
-          id?: string
-          is_active?: boolean | null
-          latitude?: number | null
-          longitude?: number | null
-          name: string
-          phone?: string | null
-          pickup_available?: boolean | null
-          services?: string[] | null
-          state?: string | null
-          supported_brands: string[]
-          supports_ev?: boolean | null
-          type: string
-          updated_at?: string
-          verified?: boolean | null
-          verified_at?: string | null
-          whatsapp?: string | null
-        }
-        Update: {
-          address?: string
-          business_hours?: Json | null
-          city?: string
-          contract_number?: string | null
-          country?: string
-          created_at?: string
-          email?: string | null
-          emergency_service?: boolean | null
-          id?: string
-          is_active?: boolean | null
-          latitude?: number | null
-          longitude?: number | null
-          name?: string
-          phone?: string | null
-          pickup_available?: boolean | null
-          services?: string[] | null
-          state?: string | null
-          supported_brands?: string[]
-          supports_ev?: boolean | null
-          type?: string
-          updated_at?: string
-          verified?: boolean | null
-          verified_at?: string | null
-          whatsapp?: string | null
-        }
-        Relationships: []
-      }
       bank_accounts: {
         Row: {
           account_holder_id: string
           account_holder_name: string
           account_number: string
-          account_number_encrypted: string | null
           account_type: string
-          alias_encrypted: string | null
           bank_code: string | null
           bank_name: string | null
-          bank_name_encrypted: string | null
-          cbu_encrypted: string | null
           created_at: string | null
           id: string
           is_default: boolean | null
@@ -1379,13 +642,9 @@ export type Database = {
           account_holder_id: string
           account_holder_name: string
           account_number: string
-          account_number_encrypted?: string | null
           account_type: string
-          alias_encrypted?: string | null
           bank_code?: string | null
           bank_name?: string | null
-          bank_name_encrypted?: string | null
-          cbu_encrypted?: string | null
           created_at?: string | null
           id?: string
           is_default?: boolean | null
@@ -1398,13 +657,9 @@ export type Database = {
           account_holder_id?: string
           account_holder_name?: string
           account_number?: string
-          account_number_encrypted?: string | null
           account_type?: string
-          alias_encrypted?: string | null
           bank_code?: string | null
           bank_name?: string | null
-          bank_name_encrypted?: string | null
-          cbu_encrypted?: string | null
           created_at?: string | null
           id?: string
           is_default?: boolean | null
@@ -1415,2542 +670,174 @@ export type Database = {
         }
         Relationships: []
       }
-      booking_alert_config: {
+      bonus_protector_options: {
         Row: {
-          booking_id: string
-          connection_lost_enabled: boolean
-          connection_lost_threshold_minutes: number
-          created_at: string
-          geofence_exit_enabled: boolean
-          geofence_exit_notify_owner: boolean
-          geofence_exit_notify_renter: boolean
-          geofence_exit_notify_support: boolean
-          geofence_grace_minutes: number
-          late_return_enabled: boolean
-          late_return_escalate_support_minutes: number
-          late_return_grace_minutes: number
-          late_return_notify_owner: boolean
-          speed_alert_enabled: boolean
-          speed_alert_threshold_seconds: number
-          speed_limit_kmh: number
-          speed_notify_owner: boolean
-          speed_notify_renter: boolean
-          updated_at: string
-        }
-        Insert: {
-          booking_id: string
-          connection_lost_enabled?: boolean
-          connection_lost_threshold_minutes?: number
-          created_at?: string
-          geofence_exit_enabled?: boolean
-          geofence_exit_notify_owner?: boolean
-          geofence_exit_notify_renter?: boolean
-          geofence_exit_notify_support?: boolean
-          geofence_grace_minutes?: number
-          late_return_enabled?: boolean
-          late_return_escalate_support_minutes?: number
-          late_return_grace_minutes?: number
-          late_return_notify_owner?: boolean
-          speed_alert_enabled?: boolean
-          speed_alert_threshold_seconds?: number
-          speed_limit_kmh?: number
-          speed_notify_owner?: boolean
-          speed_notify_renter?: boolean
-          updated_at?: string
-        }
-        Update: {
-          booking_id?: string
-          connection_lost_enabled?: boolean
-          connection_lost_threshold_minutes?: number
-          created_at?: string
-          geofence_exit_enabled?: boolean
-          geofence_exit_notify_owner?: boolean
-          geofence_exit_notify_renter?: boolean
-          geofence_exit_notify_support?: boolean
-          geofence_grace_minutes?: number
-          late_return_enabled?: boolean
-          late_return_escalate_support_minutes?: number
-          late_return_grace_minutes?: number
-          late_return_notify_owner?: boolean
-          speed_alert_enabled?: boolean
-          speed_alert_threshold_seconds?: number
-          speed_limit_kmh?: number
-          speed_notify_owner?: boolean
-          speed_notify_renter?: boolean
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_alert_config_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_alert_config_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_alert_config_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_alert_config_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_alert_config_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_alert_config_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_alert_config_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_alert_config_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      booking_claims: {
-        Row: {
-          booking_id: string
-          claim_amount_cents: number | null
-          claim_currency: string
           created_at: string | null
-          damage_type: string | null
-          description: string | null
-          evidence_photos: Json | null
-          fault_attributed: boolean | null
+          description: string
           id: string
-          police_report_url: string | null
-          resolution_notes: string | null
-          resolved_at: string | null
-          resolved_by: string | null
-          severity: number | null
-          status: string | null
+          price_cents: number
+          price_usd: number
+          protection_level: number
           updated_at: string | null
-          user_id: string
+          validity_days: number
         }
         Insert: {
-          booking_id: string
-          claim_amount_cents?: number | null
-          claim_currency?: string
           created_at?: string | null
-          damage_type?: string | null
-          description?: string | null
-          evidence_photos?: Json | null
-          fault_attributed?: boolean | null
+          description: string
           id?: string
-          police_report_url?: string | null
-          resolution_notes?: string | null
-          resolved_at?: string | null
-          resolved_by?: string | null
-          severity?: number | null
-          status?: string | null
+          price_cents: number
+          price_usd: number
+          protection_level: number
           updated_at?: string | null
-          user_id: string
+          validity_days?: number
         }
         Update: {
-          booking_id?: string
-          claim_amount_cents?: number | null
-          claim_currency?: string
           created_at?: string | null
-          damage_type?: string | null
-          description?: string | null
-          evidence_photos?: Json | null
-          fault_attributed?: boolean | null
+          description?: string
           id?: string
-          police_report_url?: string | null
-          resolution_notes?: string | null
-          resolved_at?: string | null
-          resolved_by?: string | null
-          severity?: number | null
-          status?: string | null
+          price_cents?: number
+          price_usd?: number
+          protection_level?: number
           updated_at?: string | null
-          user_id?: string
+          validity_days?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      booking_contracts: {
-        Row: {
-          accepted_at: string | null
-          accepted_by_renter: boolean
-          booking_id: string
-          clauses_accepted: Json | null
-          contract_data: Json | null
-          contract_locale: string
-          contract_version: string
-          created_at: string | null
-          ev_clauses_accepted: Json | null
-          id: string
-          pdf_error: string | null
-          pdf_generated_at: string | null
-          pdf_generation_status: string | null
-          pdf_storage_path: string | null
-          pdf_url: string | null
-          renter_device_fingerprint: string | null
-          renter_ip_address: unknown
-          renter_user_agent: string | null
-          terms_version: string
-          updated_at: string | null
-        }
-        Insert: {
-          accepted_at?: string | null
-          accepted_by_renter?: boolean
-          booking_id: string
-          clauses_accepted?: Json | null
-          contract_data?: Json | null
-          contract_locale?: string
-          contract_version?: string
-          created_at?: string | null
-          ev_clauses_accepted?: Json | null
-          id?: string
-          pdf_error?: string | null
-          pdf_generated_at?: string | null
-          pdf_generation_status?: string | null
-          pdf_storage_path?: string | null
-          pdf_url?: string | null
-          renter_device_fingerprint?: string | null
-          renter_ip_address?: unknown
-          renter_user_agent?: string | null
-          terms_version: string
-          updated_at?: string | null
-        }
-        Update: {
-          accepted_at?: string | null
-          accepted_by_renter?: boolean
-          booking_id?: string
-          clauses_accepted?: Json | null
-          contract_data?: Json | null
-          contract_locale?: string
-          contract_version?: string
-          created_at?: string | null
-          ev_clauses_accepted?: Json | null
-          id?: string
-          pdf_error?: string | null
-          pdf_generated_at?: string | null
-          pdf_generation_status?: string | null
-          pdf_storage_path?: string | null
-          pdf_url?: string | null
-          renter_device_fingerprint?: string | null
-          renter_ip_address?: unknown
-          renter_user_agent?: string | null
-          terms_version?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_contracts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      booking_extension_requests: {
-        Row: {
-          booking_id: string
-          created_at: string
-          estimated_cost_amount: number | null
-          estimated_cost_currency: string | null
-          id: string
-          new_end_at: string
-          original_end_at: string
-          owner_id: string
-          owner_response: string | null
-          renter_id: string
-          renter_message: string | null
-          request_status: string
-          requested_at: string
-          responded_at: string | null
-          updated_at: string
-        }
-        Insert: {
-          booking_id: string
-          created_at?: string
-          estimated_cost_amount?: number | null
-          estimated_cost_currency?: string | null
-          id?: string
-          new_end_at: string
-          original_end_at: string
-          owner_id: string
-          owner_response?: string | null
-          renter_id: string
-          renter_message?: string | null
-          request_status?: string
-          requested_at?: string
-          responded_at?: string | null
-          updated_at?: string
-        }
-        Update: {
-          booking_id?: string
-          created_at?: string
-          estimated_cost_amount?: number | null
-          estimated_cost_currency?: string | null
-          id?: string
-          new_end_at?: string
-          original_end_at?: string
-          owner_id?: string
-          owner_response?: string | null
-          renter_id?: string
-          renter_message?: string | null
-          request_status?: string
-          requested_at?: string
-          responded_at?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_extension_requests_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      booking_extensions: {
-        Row: {
-          additional_amount_cents: number
-          additional_days: number
-          approved_at: string | null
-          approved_by: string | null
-          booking_id: string
-          created_at: string
-          id: string
-          original_end_at: string
-          payment_transaction_id: string | null
-          rejected_reason: string | null
-          requested_by: string
-          requested_end_at: string
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          additional_amount_cents: number
-          additional_days: number
-          approved_at?: string | null
-          approved_by?: string | null
-          booking_id: string
-          created_at?: string
-          id?: string
-          original_end_at: string
-          payment_transaction_id?: string | null
-          rejected_reason?: string | null
-          requested_by: string
-          requested_end_at: string
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          additional_amount_cents?: number
-          additional_days?: number
-          approved_at?: string | null
-          approved_by?: string | null
-          booking_id?: string
-          created_at?: string
-          id?: string
-          original_end_at?: string
-          payment_transaction_id?: string | null
-          rejected_reason?: string | null
-          requested_by?: string
-          requested_end_at?: string
-          status?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_extensions_requested_by_fkey"
-            columns: ["requested_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      booking_extras_config: {
-        Row: {
-          active: boolean
-          advance_hours_required: number | null
-          car_id: string | null
-          created_at: string
-          daily_rate_usd: number
-          description: string | null
-          extra_name: string
-          extra_type: string
-          id: string
-          max_quantity: number
-          one_time_fee_usd: number | null
-          owner_id: string | null
-          requires_advance_booking: boolean | null
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          advance_hours_required?: number | null
-          car_id?: string | null
-          created_at?: string
-          daily_rate_usd: number
-          description?: string | null
-          extra_name: string
-          extra_type: string
-          id?: string
-          max_quantity?: number
-          one_time_fee_usd?: number | null
-          owner_id?: string | null
-          requires_advance_booking?: boolean | null
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          advance_hours_required?: number | null
-          car_id?: string | null
-          created_at?: string
-          daily_rate_usd?: number
-          description?: string | null
-          extra_name?: string
-          extra_type?: string
-          id?: string
-          max_quantity?: number
-          one_time_fee_usd?: number | null
-          owner_id?: string | null
-          requires_advance_booking?: boolean | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_extras_config_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      booking_inspections: {
-        Row: {
-          booking_id: string
-          created_at: string
-          fuel_level: number | null
-          id: string
-          inspector_id: string
-          latitude: number | null
-          longitude: number | null
-          odometer: number | null
-          photos: Json
-          signed_at: string | null
-          stage: string
-          updated_at: string
-        }
-        Insert: {
-          booking_id: string
-          created_at?: string
-          fuel_level?: number | null
-          id?: string
-          inspector_id: string
-          latitude?: number | null
-          longitude?: number | null
-          odometer?: number | null
-          photos?: Json
-          signed_at?: string | null
-          stage: string
-          updated_at?: string
-        }
-        Update: {
-          booking_id?: string
-          created_at?: string
-          fuel_level?: number | null
-          id?: string
-          inspector_id?: string
-          latitude?: number | null
-          longitude?: number | null
-          odometer?: number | null
-          photos?: Json
-          signed_at?: string | null
-          stage?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_inspections_inspector_id_fkey"
-            columns: ["inspector_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      booking_insurance_coverage: {
-        Row: {
-          activated_at: string | null
-          booking_id: string
-          certificate_number: string | null
-          certificate_url: string | null
-          coverage_end: string
-          coverage_start: string
-          created_at: string | null
-          daily_premium_charged: number | null
-          deductible_amount: number
-          id: string
-          liability_coverage: number
-          policy_id: string
-          status: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          activated_at?: string | null
-          booking_id: string
-          certificate_number?: string | null
-          certificate_url?: string | null
-          coverage_end: string
-          coverage_start: string
-          created_at?: string | null
-          daily_premium_charged?: number | null
-          deductible_amount: number
-          id?: string
-          liability_coverage: number
-          policy_id: string
-          status?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          activated_at?: string | null
-          booking_id?: string
-          certificate_number?: string | null
-          certificate_url?: string | null
-          coverage_end?: string
-          coverage_start?: string
-          created_at?: string | null
-          daily_premium_charged?: number | null
-          deductible_amount?: number
-          id?: string
-          liability_coverage?: number
-          policy_id?: string
-          status?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_insurance_coverage_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_insurance_coverage_policy_id_fkey"
-            columns: ["policy_id"]
-            isOneToOne: false
-            referencedRelation: "insurance_policies"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      booking_location_tracking: {
-        Row: {
-          accuracy: number | null
-          booking_id: string
-          created_at: string | null
-          distance_to_destination: number | null
-          estimated_arrival_time: string | null
-          heading: number | null
-          id: string
-          latitude: number
-          longitude: number
-          speed: number | null
-          status: string
-          tracking_type: string
-          updated_at: string | null
-          user_id: string
-          user_role: string
-        }
-        Insert: {
-          accuracy?: number | null
-          booking_id: string
-          created_at?: string | null
-          distance_to_destination?: number | null
-          estimated_arrival_time?: string | null
-          heading?: number | null
-          id?: string
-          latitude: number
-          longitude: number
-          speed?: number | null
-          status?: string
-          tracking_type: string
-          updated_at?: string | null
-          user_id: string
-          user_role: string
-        }
-        Update: {
-          accuracy?: number | null
-          booking_id?: string
-          created_at?: string | null
-          distance_to_destination?: number | null
-          estimated_arrival_time?: string | null
-          heading?: number | null
-          id?: string
-          latitude?: number
-          longitude?: number
-          speed?: number | null
-          status?: string
-          tracking_type?: string
-          updated_at?: string | null
-          user_id?: string
-          user_role?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "booking_location_tracking_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      booking_payment_events: {
-        Row: {
-          actor_id: string | null
-          actor_type: string | null
-          amount_cents: number | null
-          booking_id: string
-          correlation_id: string | null
-          created_at: string
-          currency: string | null
-          error_code: string | null
-          error_message: string | null
-          event_data: Json
-          event_type: Database["public"]["Enums"]["payment_event_type"]
-          id: string
-          idempotency_key: string | null
-          ip_address: unknown
-          new_status: string | null
-          payment_provider: string | null
-          previous_status: string | null
-          processed_at: string | null
-          provider_response: Json | null
-          provider_transaction_id: string | null
-          user_agent: string | null
-        }
-        Insert: {
-          actor_id?: string | null
-          actor_type?: string | null
-          amount_cents?: number | null
-          booking_id: string
-          correlation_id?: string | null
-          created_at?: string
-          currency?: string | null
-          error_code?: string | null
-          error_message?: string | null
-          event_data?: Json
-          event_type: Database["public"]["Enums"]["payment_event_type"]
-          id?: string
-          idempotency_key?: string | null
-          ip_address?: unknown
-          new_status?: string | null
-          payment_provider?: string | null
-          previous_status?: string | null
-          processed_at?: string | null
-          provider_response?: Json | null
-          provider_transaction_id?: string | null
-          user_agent?: string | null
-        }
-        Update: {
-          actor_id?: string | null
-          actor_type?: string | null
-          amount_cents?: number | null
-          booking_id?: string
-          correlation_id?: string | null
-          created_at?: string
-          currency?: string | null
-          error_code?: string | null
-          error_message?: string | null
-          event_data?: Json
-          event_type?: Database["public"]["Enums"]["payment_event_type"]
-          id?: string
-          idempotency_key?: string | null
-          ip_address?: unknown
-          new_status?: string | null
-          payment_provider?: string | null
-          previous_status?: string | null
-          processed_at?: string | null
-          provider_response?: Json | null
-          provider_transaction_id?: string | null
-          user_agent?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_payment_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      booking_risk_snapshot: {
-        Row: {
-          booking_id: string
-          bucket: string
-          car_location_lat: number | null
-          car_location_lng: number | null
-          country_code: string
-          created_at: string | null
-          currency: string
-          distance_km: number | null
-          distance_risk_multiplier: number | null
-          distance_risk_tier: string | null
-          estimated_deposit: number | null
-          estimated_hold_amount: number | null
-          franchise_usd: number
-          fx_snapshot: number
-          fx_snapshot_date: string | null
-          guarantee_amount_ars: number | null
-          guarantee_amount_usd: number | null
-          guarantee_type: string | null
-          has_card: boolean
-          has_wallet_security: boolean
-          meta: Json | null
-          min_hold_ars: number | null
-          renter_location_lat: number | null
-          renter_location_lng: number | null
-          requires_revalidation: boolean | null
-          revalidation_reason: string | null
-          rollover_franchise_usd: number | null
-          standard_franchise_usd: number | null
-        }
-        Insert: {
-          booking_id: string
-          bucket: string
-          car_location_lat?: number | null
-          car_location_lng?: number | null
-          country_code: string
-          created_at?: string | null
-          currency?: string
-          distance_km?: number | null
-          distance_risk_multiplier?: number | null
-          distance_risk_tier?: string | null
-          estimated_deposit?: number | null
-          estimated_hold_amount?: number | null
-          franchise_usd: number
-          fx_snapshot?: number
-          fx_snapshot_date?: string | null
-          guarantee_amount_ars?: number | null
-          guarantee_amount_usd?: number | null
-          guarantee_type?: string | null
-          has_card?: boolean
-          has_wallet_security?: boolean
-          meta?: Json | null
-          min_hold_ars?: number | null
-          renter_location_lat?: number | null
-          renter_location_lng?: number | null
-          requires_revalidation?: boolean | null
-          revalidation_reason?: string | null
-          rollover_franchise_usd?: number | null
-          standard_franchise_usd?: number | null
-        }
-        Update: {
-          booking_id?: string
-          bucket?: string
-          car_location_lat?: number | null
-          car_location_lng?: number | null
-          country_code?: string
-          created_at?: string | null
-          currency?: string
-          distance_km?: number | null
-          distance_risk_multiplier?: number | null
-          distance_risk_tier?: string | null
-          estimated_deposit?: number | null
-          estimated_hold_amount?: number | null
-          franchise_usd?: number
-          fx_snapshot?: number
-          fx_snapshot_date?: string | null
-          guarantee_amount_ars?: number | null
-          guarantee_amount_usd?: number | null
-          guarantee_type?: string | null
-          has_card?: boolean
-          has_wallet_security?: boolean
-          meta?: Json | null
-          min_hold_ars?: number | null
-          renter_location_lat?: number | null
-          renter_location_lng?: number | null
-          requires_revalidation?: boolean | null
-          revalidation_reason?: string | null
-          rollover_franchise_usd?: number | null
-          standard_franchise_usd?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_risk_snapshot_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      booking_tracking_settings: {
-        Row: {
-          background_tracking_enabled: boolean
-          booking_id: string
-          created_at: string
-          default_geofence_radius_km: number
-          geofencing_enabled: boolean
-          owner_can_view_history: boolean
-          owner_can_view_location: boolean
-          speed_alert_enabled: boolean
-          speed_limit_kmh: number
-          tracking_enabled: boolean
-          tracking_interval_seconds: number
-          updated_at: string
-        }
-        Insert: {
-          background_tracking_enabled?: boolean
-          booking_id: string
-          created_at?: string
-          default_geofence_radius_km?: number
-          geofencing_enabled?: boolean
-          owner_can_view_history?: boolean
-          owner_can_view_location?: boolean
-          speed_alert_enabled?: boolean
-          speed_limit_kmh?: number
-          tracking_enabled?: boolean
-          tracking_interval_seconds?: number
-          updated_at?: string
-        }
-        Update: {
-          background_tracking_enabled?: boolean
-          booking_id?: string
-          created_at?: string
-          default_geofence_radius_km?: number
-          geofencing_enabled?: boolean
-          owner_can_view_history?: boolean
-          owner_can_view_location?: boolean
-          speed_alert_enabled?: boolean
-          speed_limit_kmh?: number
-          tracking_enabled?: boolean
-          tracking_interval_seconds?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_tracking_settings_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_tracking_settings_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_tracking_settings_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_tracking_settings_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_tracking_settings_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_tracking_settings_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_tracking_settings_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "booking_tracking_settings_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      booking_waitlist: {
-        Row: {
-          car_id: string
-          created_at: string
-          end_date: string
-          expires_at: string
-          id: string
-          notified_at: string | null
-          start_date: string
-          status: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          car_id: string
-          created_at?: string
-          end_date: string
-          expires_at?: string
-          id?: string
-          notified_at?: string | null
-          start_date: string
-          status?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          car_id?: string
-          created_at?: string
-          end_date?: string
-          expires_at?: string
-          id?: string
-          notified_at?: string | null
-          start_date?: string
-          status?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "booking_waitlist_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       bookings: {
         Row: {
-          actual_return_at: string | null
-          agreement_type: string | null
-          approval_expires_at: string | null
-          approval_status: string | null
-          approved_at: string | null
-          approved_by: string | null
-          authorized_payment_id: string | null
           auto_release_at: string | null
-          breakdown: Json | null
-          calendar_sync_enabled: boolean | null
-          calendar_synced_at: string | null
-          cancellation_fee_cents: number | null
-          cancellation_policy_id: number | null
           cancellation_reason: string | null
           cancelled_at: string | null
           cancelled_by: string | null
-          cancelled_by_role:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
-            | null
           car_id: string
-          comodato_agreement_id: string | null
           completed_at: string | null
-          completion_status: string | null
           coverage_snapshot: Json | null
-          coverage_upgrade: string | null
-          created_at: string
-          currency: string
+          created_at: string | null
+          currency: string | null
           daily_rate: number | null
-          damage_amount_cents: number | null
-          damage_description: string | null
-          days_count: number | null
-          delivery_distance_km: number | null
-          delivery_fee_cents: number | null
-          delivery_required: boolean | null
           deposit_amount_cents: number | null
-          deposit_covered_by: string | null
-          deposit_lock_expires_at: string | null
-          deposit_status: string | null
-          discounts_cents: number | null
-          dispute_amount_cents: number | null
           dispute_evidence: Json | null
-          dispute_evidence_urls: string[] | null
-          dispute_opened_at: string | null
           dispute_reason: string | null
-          dispute_resolution: string | null
           dispute_resolved_at: string | null
-          distance_risk_tier: string | null
           dropoff_location_id: string | null
-          dropoff_location_lat: number | null
-          dropoff_location_lng: number | null
-          dynamic_price_snapshot: Json | null
           end_at: string
-          expires_at: string | null
-          fees_cents: number | null
-          fgo_contribution_cents: number | null
-          fuel_level_checkin: number | null
-          fuel_level_checkout: number | null
-          fuel_penalty_cents: number | null
-          fuel_penalty_charged_at: string | null
           funds_released_at: string | null
-          google_calendar_event_id: string | null
-          guarantee_amount_cents: number | null
-          guarantee_type: string | null
-          has_damages: boolean | null
-          has_dynamic_pricing: boolean | null
-          hold_authorization_id: string | null
-          hold_expires_at: string | null
           id: string
-          idempotency_key: string | null
           inspection_comment: string | null
           inspection_evidence: Json | null
           inspection_status: string | null
-          insurance_cents: number | null
           insurance_fee: number | null
           is_instant_booking: boolean | null
-          late_return_charged_at: string | null
-          late_return_hours: number | null
-          late_return_penalty_cents: number | null
-          mercadopago_split_id: string | null
-          metadata: Json | null
-          mp_security_deposit_order_id: string | null
-          nightly_rate_cents: number | null
           notes: string | null
-          overdue_hours: number | null
-          owner_amount_paid: number | null
-          owner_confirmed_at: string | null
           owner_confirmed_delivery: boolean | null
           owner_fee: number | null
-          owner_id: string | null
-          owner_payment_amount: number | null
-          paid_at: string | null
-          payment_id: string | null
-          payment_init_point: string | null
-          payment_method: string | null
+          owner_id: string
           payment_mode: string | null
-          payment_preference_id: string | null
-          payment_provider:
-            | Database["public"]["Enums"]["payment_provider"]
-            | null
-          payment_split_completed: boolean | null
-          payment_split_validated_at: string | null
-          payout_date: string | null
-          payout_error_message: string | null
-          payout_retry_count: number | null
-          payout_status:
-            | Database["public"]["Enums"]["payout_status_enum"]
-            | null
           pickup_location_id: string | null
-          pickup_location_lat: number | null
-          pickup_location_lng: number | null
-          platform_fee: number | null
-          platform_fee_collected: number | null
-          price_lock_token: string | null
-          price_locked_until: string | null
-          provider_collector_id: string | null
-          provider_split_payment_id: string | null
-          reauthorization_count: number | null
-          rejection_reason: string | null
-          rental_amount_cents: number | null
-          renter_confirmed_at: string | null
           renter_confirmed_payment: boolean | null
           renter_id: string
-          requires_revalidation: boolean | null
-          return_protocol_started_at: string | null
-          return_status: string | null
           returned_at: string | null
-          reward_pool_contribution_cents: number | null
-          risk_snapshot_booking_id: string | null
-          risk_snapshot_date: string | null
-          risk_snapshot_id: string | null
           service_fee: number | null
           start_at: string
-          status: Database["public"]["Enums"]["booking_status"]
-          subscription_coverage_cents: number | null
-          subscription_id: string | null
+          status: Database["public"]["Enums"]["booking_status"] | null
           subscription_tier_at_booking: string | null
           subtotal: number | null
-          subtotal_cents: number | null
-          total_amount: number
-          total_cents: number | null
           total_days: number | null
           total_price: number | null
-          total_price_ars: number | null
-          updated_at: string
-          wallet_amount_cents: number | null
+          updated_at: string | null
           wallet_lock_id: string | null
           wallet_status: string | null
         }
         Insert: {
-          actual_return_at?: string | null
-          agreement_type?: string | null
-          approval_expires_at?: string | null
-          approval_status?: string | null
-          approved_at?: string | null
-          approved_by?: string | null
-          authorized_payment_id?: string | null
           auto_release_at?: string | null
-          breakdown?: Json | null
-          calendar_sync_enabled?: boolean | null
-          calendar_synced_at?: string | null
-          cancellation_fee_cents?: number | null
-          cancellation_policy_id?: number | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
           cancelled_by?: string | null
-          cancelled_by_role?:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
-            | null
           car_id: string
-          comodato_agreement_id?: string | null
           completed_at?: string | null
-          completion_status?: string | null
           coverage_snapshot?: Json | null
-          coverage_upgrade?: string | null
-          created_at?: string
-          currency?: string
+          created_at?: string | null
+          currency?: string | null
           daily_rate?: number | null
-          damage_amount_cents?: number | null
-          damage_description?: string | null
-          days_count?: number | null
-          delivery_distance_km?: number | null
-          delivery_fee_cents?: number | null
-          delivery_required?: boolean | null
           deposit_amount_cents?: number | null
-          deposit_covered_by?: string | null
-          deposit_lock_expires_at?: string | null
-          deposit_status?: string | null
-          discounts_cents?: number | null
-          dispute_amount_cents?: number | null
           dispute_evidence?: Json | null
-          dispute_evidence_urls?: string[] | null
-          dispute_opened_at?: string | null
           dispute_reason?: string | null
-          dispute_resolution?: string | null
           dispute_resolved_at?: string | null
-          distance_risk_tier?: string | null
           dropoff_location_id?: string | null
-          dropoff_location_lat?: number | null
-          dropoff_location_lng?: number | null
-          dynamic_price_snapshot?: Json | null
           end_at: string
-          expires_at?: string | null
-          fees_cents?: number | null
-          fgo_contribution_cents?: number | null
-          fuel_level_checkin?: number | null
-          fuel_level_checkout?: number | null
-          fuel_penalty_cents?: number | null
-          fuel_penalty_charged_at?: string | null
           funds_released_at?: string | null
-          google_calendar_event_id?: string | null
-          guarantee_amount_cents?: number | null
-          guarantee_type?: string | null
-          has_damages?: boolean | null
-          has_dynamic_pricing?: boolean | null
-          hold_authorization_id?: string | null
-          hold_expires_at?: string | null
           id?: string
-          idempotency_key?: string | null
           inspection_comment?: string | null
           inspection_evidence?: Json | null
           inspection_status?: string | null
-          insurance_cents?: number | null
           insurance_fee?: number | null
           is_instant_booking?: boolean | null
-          late_return_charged_at?: string | null
-          late_return_hours?: number | null
-          late_return_penalty_cents?: number | null
-          mercadopago_split_id?: string | null
-          metadata?: Json | null
-          mp_security_deposit_order_id?: string | null
-          nightly_rate_cents?: number | null
           notes?: string | null
-          overdue_hours?: number | null
-          owner_amount_paid?: number | null
-          owner_confirmed_at?: string | null
           owner_confirmed_delivery?: boolean | null
           owner_fee?: number | null
-          owner_id?: string | null
-          owner_payment_amount?: number | null
-          paid_at?: string | null
-          payment_id?: string | null
-          payment_init_point?: string | null
-          payment_method?: string | null
+          owner_id: string
           payment_mode?: string | null
-          payment_preference_id?: string | null
-          payment_provider?:
-            | Database["public"]["Enums"]["payment_provider"]
-            | null
-          payment_split_completed?: boolean | null
-          payment_split_validated_at?: string | null
-          payout_date?: string | null
-          payout_error_message?: string | null
-          payout_retry_count?: number | null
-          payout_status?:
-            | Database["public"]["Enums"]["payout_status_enum"]
-            | null
           pickup_location_id?: string | null
-          pickup_location_lat?: number | null
-          pickup_location_lng?: number | null
-          platform_fee?: number | null
-          platform_fee_collected?: number | null
-          price_lock_token?: string | null
-          price_locked_until?: string | null
-          provider_collector_id?: string | null
-          provider_split_payment_id?: string | null
-          reauthorization_count?: number | null
-          rejection_reason?: string | null
-          rental_amount_cents?: number | null
-          renter_confirmed_at?: string | null
           renter_confirmed_payment?: boolean | null
           renter_id: string
-          requires_revalidation?: boolean | null
-          return_protocol_started_at?: string | null
-          return_status?: string | null
           returned_at?: string | null
-          reward_pool_contribution_cents?: number | null
-          risk_snapshot_booking_id?: string | null
-          risk_snapshot_date?: string | null
-          risk_snapshot_id?: string | null
           service_fee?: number | null
           start_at: string
-          status?: Database["public"]["Enums"]["booking_status"]
-          subscription_coverage_cents?: number | null
-          subscription_id?: string | null
+          status?: Database["public"]["Enums"]["booking_status"] | null
           subscription_tier_at_booking?: string | null
           subtotal?: number | null
-          subtotal_cents?: number | null
-          total_amount: number
-          total_cents?: number | null
           total_days?: number | null
           total_price?: number | null
-          total_price_ars?: number | null
-          updated_at?: string
-          wallet_amount_cents?: number | null
+          updated_at?: string | null
           wallet_lock_id?: string | null
           wallet_status?: string | null
         }
         Update: {
-          actual_return_at?: string | null
-          agreement_type?: string | null
-          approval_expires_at?: string | null
-          approval_status?: string | null
-          approved_at?: string | null
-          approved_by?: string | null
-          authorized_payment_id?: string | null
           auto_release_at?: string | null
-          breakdown?: Json | null
-          calendar_sync_enabled?: boolean | null
-          calendar_synced_at?: string | null
-          cancellation_fee_cents?: number | null
-          cancellation_policy_id?: number | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
           cancelled_by?: string | null
-          cancelled_by_role?:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
-            | null
           car_id?: string
-          comodato_agreement_id?: string | null
           completed_at?: string | null
-          completion_status?: string | null
           coverage_snapshot?: Json | null
-          coverage_upgrade?: string | null
-          created_at?: string
-          currency?: string
+          created_at?: string | null
+          currency?: string | null
           daily_rate?: number | null
-          damage_amount_cents?: number | null
-          damage_description?: string | null
-          days_count?: number | null
-          delivery_distance_km?: number | null
-          delivery_fee_cents?: number | null
-          delivery_required?: boolean | null
           deposit_amount_cents?: number | null
-          deposit_covered_by?: string | null
-          deposit_lock_expires_at?: string | null
-          deposit_status?: string | null
-          discounts_cents?: number | null
-          dispute_amount_cents?: number | null
           dispute_evidence?: Json | null
-          dispute_evidence_urls?: string[] | null
-          dispute_opened_at?: string | null
           dispute_reason?: string | null
-          dispute_resolution?: string | null
           dispute_resolved_at?: string | null
-          distance_risk_tier?: string | null
           dropoff_location_id?: string | null
-          dropoff_location_lat?: number | null
-          dropoff_location_lng?: number | null
-          dynamic_price_snapshot?: Json | null
           end_at?: string
-          expires_at?: string | null
-          fees_cents?: number | null
-          fgo_contribution_cents?: number | null
-          fuel_level_checkin?: number | null
-          fuel_level_checkout?: number | null
-          fuel_penalty_cents?: number | null
-          fuel_penalty_charged_at?: string | null
           funds_released_at?: string | null
-          google_calendar_event_id?: string | null
-          guarantee_amount_cents?: number | null
-          guarantee_type?: string | null
-          has_damages?: boolean | null
-          has_dynamic_pricing?: boolean | null
-          hold_authorization_id?: string | null
-          hold_expires_at?: string | null
           id?: string
-          idempotency_key?: string | null
           inspection_comment?: string | null
           inspection_evidence?: Json | null
           inspection_status?: string | null
-          insurance_cents?: number | null
           insurance_fee?: number | null
           is_instant_booking?: boolean | null
-          late_return_charged_at?: string | null
-          late_return_hours?: number | null
-          late_return_penalty_cents?: number | null
-          mercadopago_split_id?: string | null
-          metadata?: Json | null
-          mp_security_deposit_order_id?: string | null
-          nightly_rate_cents?: number | null
           notes?: string | null
-          overdue_hours?: number | null
-          owner_amount_paid?: number | null
-          owner_confirmed_at?: string | null
           owner_confirmed_delivery?: boolean | null
           owner_fee?: number | null
-          owner_id?: string | null
-          owner_payment_amount?: number | null
-          paid_at?: string | null
-          payment_id?: string | null
-          payment_init_point?: string | null
-          payment_method?: string | null
+          owner_id?: string
           payment_mode?: string | null
-          payment_preference_id?: string | null
-          payment_provider?:
-            | Database["public"]["Enums"]["payment_provider"]
-            | null
-          payment_split_completed?: boolean | null
-          payment_split_validated_at?: string | null
-          payout_date?: string | null
-          payout_error_message?: string | null
-          payout_retry_count?: number | null
-          payout_status?:
-            | Database["public"]["Enums"]["payout_status_enum"]
-            | null
           pickup_location_id?: string | null
-          pickup_location_lat?: number | null
-          pickup_location_lng?: number | null
-          platform_fee?: number | null
-          platform_fee_collected?: number | null
-          price_lock_token?: string | null
-          price_locked_until?: string | null
-          provider_collector_id?: string | null
-          provider_split_payment_id?: string | null
-          reauthorization_count?: number | null
-          rejection_reason?: string | null
-          rental_amount_cents?: number | null
-          renter_confirmed_at?: string | null
           renter_confirmed_payment?: boolean | null
           renter_id?: string
-          requires_revalidation?: boolean | null
-          return_protocol_started_at?: string | null
-          return_status?: string | null
           returned_at?: string | null
-          reward_pool_contribution_cents?: number | null
-          risk_snapshot_booking_id?: string | null
-          risk_snapshot_date?: string | null
-          risk_snapshot_id?: string | null
           service_fee?: number | null
           start_at?: string
-          status?: Database["public"]["Enums"]["booking_status"]
-          subscription_coverage_cents?: number | null
-          subscription_id?: string | null
+          status?: Database["public"]["Enums"]["booking_status"] | null
           subscription_tier_at_booking?: string | null
           subtotal?: number | null
-          subtotal_cents?: number | null
-          total_amount?: number
-          total_cents?: number | null
           total_days?: number | null
           total_price?: number | null
-          total_price_ars?: number | null
-          updated_at?: string
-          wallet_amount_cents?: number | null
+          updated_at?: string | null
           wallet_lock_id?: string | null
           wallet_status?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_authorized_payment_id_fkey"
-            columns: ["authorized_payment_id"]
-            isOneToOne: false
-            referencedRelation: "payment_intents"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "bookings_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
@@ -3961,36 +848,8 @@ export type Database = {
             foreignKeyName: "bookings_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "bookings_car_id_fkey"
@@ -4005,1096 +864,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_instant_booking_cars"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_comodato_agreement_id_fkey"
-            columns: ["comodato_agreement_id"]
-            isOneToOne: false
-            referencedRelation: "comodato_agreements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_payment_id_fkey"
-            columns: ["payment_id"]
-            isOneToOne: false
-            referencedRelation: "payments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_risk_snapshot_booking_id_fkey"
-            columns: ["risk_snapshot_booking_id"]
-            isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_risk_snapshot_id_fkey"
-            columns: ["risk_snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_subscription_id_fkey"
-            columns: ["subscription_id"]
-            isOneToOne: false
-            referencedRelation: "subscriptions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_bookings_risk_snapshot"
-            columns: ["risk_snapshot_booking_id"]
-            isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      bookings_cancellation: {
-        Row: {
-          booking_id: string
-          cancel_policy_id: number | null
-          cancellation_fee_cents: number | null
-          cancellation_reason: string | null
-          cancelled_at: string
-          cancelled_by: string | null
-          cancelled_by_role:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
-            | null
-          created_at: string
-        }
-        Insert: {
-          booking_id: string
-          cancel_policy_id?: number | null
-          cancellation_fee_cents?: number | null
-          cancellation_reason?: string | null
-          cancelled_at?: string
-          cancelled_by?: string | null
-          cancelled_by_role?:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
-            | null
-          created_at?: string
-        }
-        Update: {
-          booking_id?: string
-          cancel_policy_id?: number | null
-          cancellation_fee_cents?: number | null
-          cancellation_reason?: string | null
-          cancelled_at?: string
-          cancelled_by?: string | null
-          cancelled_by_role?:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
-            | null
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
-            columns: ["cancelled_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      bookings_confirmation: {
-        Row: {
-          booking_id: string
-          created_at: string
-          dropoff_confirmed_at: string | null
-          dropoff_confirmed_by: string | null
-          funds_released_at: string | null
-          owner_confirmed_at: string | null
-          pickup_confirmed_at: string | null
-          pickup_confirmed_by: string | null
-          renter_confirmed_at: string | null
-          returned_at: string | null
-          updated_at: string
-        }
-        Insert: {
-          booking_id: string
-          created_at?: string
-          dropoff_confirmed_at?: string | null
-          dropoff_confirmed_by?: string | null
-          funds_released_at?: string | null
-          owner_confirmed_at?: string | null
-          pickup_confirmed_at?: string | null
-          pickup_confirmed_by?: string | null
-          renter_confirmed_at?: string | null
-          returned_at?: string | null
-          updated_at?: string
-        }
-        Update: {
-          booking_id?: string
-          created_at?: string
-          dropoff_confirmed_at?: string | null
-          dropoff_confirmed_by?: string | null
-          funds_released_at?: string | null
-          owner_confirmed_at?: string | null
-          pickup_confirmed_at?: string | null
-          pickup_confirmed_by?: string | null
-          renter_confirmed_at?: string | null
-          returned_at?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
-            columns: ["dropoff_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
-            columns: ["pickup_confirmed_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      bookings_insurance: {
-        Row: {
-          booking_id: string
-          coverage_upgrade: string | null
-          created_at: string
-          guarantee_amount_cents: number | null
-          guarantee_type: string | null
-          insurance_coverage_id: string | null
-          insurance_premium_total: number | null
-          updated_at: string
-        }
-        Insert: {
-          booking_id: string
-          coverage_upgrade?: string | null
-          created_at?: string
-          guarantee_amount_cents?: number | null
-          guarantee_type?: string | null
-          insurance_coverage_id?: string | null
-          insurance_premium_total?: number | null
-          updated_at?: string
-        }
-        Update: {
-          booking_id?: string
-          coverage_upgrade?: string | null
-          created_at?: string
-          guarantee_amount_cents?: number | null
-          guarantee_type?: string | null
-          insurance_coverage_id?: string | null
-          insurance_premium_total?: number | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_insurance_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      bookings_payment: {
-        Row: {
-          booking_id: string
-          created_at: string
-          deposit_status: string | null
-          paid_at: string | null
-          payment_method: string | null
-          payment_mode: string | null
-          updated_at: string
-          wallet_charged_at: string | null
-          wallet_status: string | null
-        }
-        Insert: {
-          booking_id: string
-          created_at?: string
-          deposit_status?: string | null
-          paid_at?: string | null
-          payment_method?: string | null
-          payment_mode?: string | null
-          updated_at?: string
-          wallet_charged_at?: string | null
-          wallet_status?: string | null
-        }
-        Update: {
-          booking_id?: string
-          created_at?: string
-          deposit_status?: string | null
-          paid_at?: string | null
-          payment_method?: string | null
-          payment_mode?: string | null
-          updated_at?: string
-          wallet_charged_at?: string | null
-          wallet_status?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_payment_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      bookings_pricing: {
-        Row: {
-          booking_id: string
-          breakdown: Json | null
-          created_at: string
-          days_count: number | null
-          discounts_cents: number | null
-          fees_cents: number | null
-          insurance_cents: number | null
-          nightly_rate_cents: number | null
-          subtotal_cents: number | null
-          total_cents: number | null
-          updated_at: string
-        }
-        Insert: {
-          booking_id: string
-          breakdown?: Json | null
-          created_at?: string
-          days_count?: number | null
-          discounts_cents?: number | null
-          fees_cents?: number | null
-          insurance_cents?: number | null
-          nightly_rate_cents?: number | null
-          subtotal_cents?: number | null
-          total_cents?: number | null
-          updated_at?: string
-        }
-        Update: {
-          booking_id?: string
-          breakdown?: Json | null
-          created_at?: string
-          days_count?: number | null
-          discounts_cents?: number | null
-          fees_cents?: number | null
-          insurance_cents?: number | null
-          nightly_rate_cents?: number | null
-          subtotal_cents?: number | null
-          total_cents?: number | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_pricing_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      bounties: {
-        Row: {
-          booking_id: string | null
-          car_id: string
-          created_at: string | null
-          created_by: string | null
-          currency: string | null
-          expires_at: string | null
-          id: string
-          radius_meters: number | null
-          reward_amount: number | null
-          status: Database["public"]["Enums"]["bounty_status"] | null
-          target_location: unknown
-        }
-        Insert: {
-          booking_id?: string | null
-          car_id: string
-          created_at?: string | null
-          created_by?: string | null
-          currency?: string | null
-          expires_at?: string | null
-          id?: string
-          radius_meters?: number | null
-          reward_amount?: number | null
-          status?: Database["public"]["Enums"]["bounty_status"] | null
-          target_location: unknown
-        }
-        Update: {
-          booking_id?: string | null
-          car_id?: string
-          created_at?: string | null
-          created_by?: string | null
-          currency?: string | null
-          expires_at?: string | null
-          id?: string
-          radius_meters?: number | null
-          reward_amount?: number | null
-          status?: Database["public"]["Enums"]["bounty_status"] | null
-          target_location?: unknown
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bounties_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounties_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounties_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounties_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounties_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bounties_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bounties_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bounties_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bounties_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounties_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounties_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounties_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bounties_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bounties_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bounties_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bounties_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounties_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      bounty_claims: {
-        Row: {
-          ai_verification_json: Json | null
-          bounty_id: string
-          confidence_score: number | null
-          distance_to_target_meters: number | null
-          gps_location: unknown
-          id: string
-          is_verified: boolean | null
-          payment_status: string | null
-          payment_tx_id: string | null
-          photo_url: string
-          rejection_reason: string | null
-          scout_id: string
-          status: string | null
-          timestamp_captured: string | null
-        }
-        Insert: {
-          ai_verification_json?: Json | null
-          bounty_id: string
-          confidence_score?: number | null
-          distance_to_target_meters?: number | null
-          gps_location: unknown
-          id?: string
-          is_verified?: boolean | null
-          payment_status?: string | null
-          payment_tx_id?: string | null
-          photo_url: string
-          rejection_reason?: string | null
-          scout_id: string
-          status?: string | null
-          timestamp_captured?: string | null
-        }
-        Update: {
-          ai_verification_json?: Json | null
-          bounty_id?: string
-          confidence_score?: number | null
-          distance_to_target_meters?: number | null
-          gps_location?: unknown
-          id?: string
-          is_verified?: boolean | null
-          payment_status?: string | null
-          payment_tx_id?: string | null
-          photo_url?: string
-          rejection_reason?: string | null
-          scout_id?: string
-          status?: string | null
-          timestamp_captured?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bounty_claims_bounty_id_fkey"
-            columns: ["bounty_id"]
-            isOneToOne: false
-            referencedRelation: "bounties"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounty_claims_scout_id_fkey"
-            columns: ["scout_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bounty_claims_scout_id_fkey"
-            columns: ["scout_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounty_claims_scout_id_fkey"
-            columns: ["scout_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bounty_claims_scout_id_fkey"
-            columns: ["scout_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounty_claims_scout_id_fkey"
-            columns: ["scout_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounty_claims_scout_id_fkey"
-            columns: ["scout_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounty_claims_scout_id_fkey"
-            columns: ["scout_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bounty_claims_scout_id_fkey"
-            columns: ["scout_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bounty_claims_scout_id_fkey"
-            columns: ["scout_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bounty_claims_scout_id_fkey"
-            columns: ["scout_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
           },
         ]
       }
@@ -5245,13 +1014,6 @@ export type Database = {
             foreignKeyName: "car_blocked_dates_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
             referencedRelation: "cars"
             referencedColumns: ["id"]
           },
@@ -5259,36 +1021,8 @@ export type Database = {
             foreignKeyName: "car_blocked_dates_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_blocked_dates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "car_blocked_dates_car_id_fkey"
@@ -5302,310 +1036,6 @@ export type Database = {
             columns: ["car_id"]
             isOneToOne: false
             referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      car_brands: {
-        Row: {
-          country: string | null
-          created_at: string | null
-          id: string
-          logo_url: string | null
-          name: string
-          updated_at: string | null
-        }
-        Insert: {
-          country?: string | null
-          created_at?: string | null
-          id?: string
-          logo_url?: string | null
-          name: string
-          updated_at?: string | null
-        }
-        Update: {
-          country?: string | null
-          created_at?: string | null
-          id?: string
-          logo_url?: string | null
-          name?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      car_handover_points: {
-        Row: {
-          car_id: string
-          created_at: string | null
-          id: string
-          kind: string
-          lat: number
-          lng: number
-          radius_m: number
-        }
-        Insert: {
-          car_id: string
-          created_at?: string | null
-          id?: string
-          kind: string
-          lat: number
-          lng: number
-          radius_m?: number
-        }
-        Update: {
-          car_id?: string
-          created_at?: string | null
-          id?: string
-          kind?: string
-          lat?: number
-          lng?: number
-          radius_m?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_handover_points_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      car_icp_monthly: {
-        Row: {
-          availability_score: number
-          avg_rating: number | null
-          calculated_at: string
-          cancellations_by_owner: number
-          car_id: string
-          category_score: number
-          created_at: string
-          days_available: number
-          days_booked: number
-          days_in_month: number
-          demand_score: number
-          icp_score: number
-          id: string
-          owner_id: string
-          paid_at: string | null
-          payout_status: string | null
-          pool_payout_cents: number | null
-          pool_share_percent: number | null
-          quality_score: number
-          rating_count: number
-          total_bookings: number
-          total_views: number
-          year_month: string
-        }
-        Insert: {
-          availability_score?: number
-          avg_rating?: number | null
-          calculated_at?: string
-          cancellations_by_owner?: number
-          car_id: string
-          category_score?: number
-          created_at?: string
-          days_available?: number
-          days_booked?: number
-          days_in_month?: number
-          demand_score?: number
-          icp_score?: number
-          id?: string
-          owner_id: string
-          paid_at?: string | null
-          payout_status?: string | null
-          pool_payout_cents?: number | null
-          pool_share_percent?: number | null
-          quality_score?: number
-          rating_count?: number
-          total_bookings?: number
-          total_views?: number
-          year_month: string
-        }
-        Update: {
-          availability_score?: number
-          avg_rating?: number | null
-          calculated_at?: string
-          cancellations_by_owner?: number
-          car_id?: string
-          category_score?: number
-          created_at?: string
-          days_available?: number
-          days_booked?: number
-          days_in_month?: number
-          demand_score?: number
-          icp_score?: number
-          id?: string
-          owner_id?: string
-          paid_at?: string | null
-          payout_status?: string | null
-          pool_payout_cents?: number | null
-          pool_share_percent?: number | null
-          quality_score?: number
-          rating_count?: number
-          total_bookings?: number
-          total_views?: number
-          year_month?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      car_models: {
-        Row: {
-          brand_id: string | null
-          category: string | null
-          created_at: string | null
-          doors: number | null
-          id: string
-          name: string
-          seats: number | null
-          updated_at: string | null
-        }
-        Insert: {
-          brand_id?: string | null
-          category?: string | null
-          created_at?: string | null
-          doors?: number | null
-          id?: string
-          name: string
-          seats?: number | null
-          updated_at?: string | null
-        }
-        Update: {
-          brand_id?: string | null
-          category?: string | null
-          created_at?: string | null
-          doors?: number | null
-          id?: string
-          name?: string
-          seats?: number | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "car_models_brand_id_fkey"
-            columns: ["brand_id"]
-            isOneToOne: false
-            referencedRelation: "car_brands"
             referencedColumns: ["id"]
           },
         ]
@@ -5613,42 +1043,32 @@ export type Database = {
       car_photos: {
         Row: {
           car_id: string
-          created_at: string
+          created_at: string | null
           id: string
-          is_cover: boolean
-          position: number
-          sort_order: number
-          stored_path: string
+          position: number | null
+          sort_order: number | null
+          stored_path: string | null
           url: string
         }
         Insert: {
           car_id: string
-          created_at?: string
+          created_at?: string | null
           id?: string
-          is_cover?: boolean
-          position?: number
-          sort_order?: number
-          stored_path: string
+          position?: number | null
+          sort_order?: number | null
+          stored_path?: string | null
           url: string
         }
         Update: {
           car_id?: string
-          created_at?: string
+          created_at?: string | null
           id?: string
-          is_cover?: boolean
-          position?: number
-          sort_order?: number
-          stored_path?: string
+          position?: number | null
+          sort_order?: number | null
+          stored_path?: string | null
           url?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "car_photos_car_id_fkey"
             columns: ["car_id"]
@@ -5660,36 +1080,8 @@ export type Database = {
             foreignKeyName: "car_photos_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_photos_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "car_photos_car_id_fkey"
@@ -5770,13 +1162,6 @@ export type Database = {
             foreignKeyName: "car_pricing_matrix_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: true
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_pricing_matrix_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
             referencedRelation: "cars"
             referencedColumns: ["id"]
           },
@@ -5784,36 +1169,8 @@ export type Database = {
             foreignKeyName: "car_pricing_matrix_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: true
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_pricing_matrix_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_pricing_matrix_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_pricing_matrix_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_pricing_matrix_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "car_pricing_matrix_car_id_fkey"
@@ -5838,172 +1195,44 @@ export type Database = {
           },
         ]
       }
-      car_security_devices: {
-        Row: {
-          battery_level: number | null
-          car_id: string
-          created_at: string | null
-          device_identifier: string | null
-          device_type: Database["public"]["Enums"]["security_device_type"]
-          id: string
-          is_active: boolean | null
-          last_ping: string | null
-          location_in_vehicle: string | null
-        }
-        Insert: {
-          battery_level?: number | null
-          car_id: string
-          created_at?: string | null
-          device_identifier?: string | null
-          device_type: Database["public"]["Enums"]["security_device_type"]
-          id?: string
-          is_active?: boolean | null
-          last_ping?: string | null
-          location_in_vehicle?: string | null
-        }
-        Update: {
-          battery_level?: number | null
-          car_id?: string
-          created_at?: string | null
-          device_identifier?: string | null
-          device_type?: Database["public"]["Enums"]["security_device_type"]
-          id?: string
-          is_active?: boolean | null
-          last_ping?: string | null
-          location_in_vehicle?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "car_security_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_security_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_security_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_security_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_security_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_security_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_security_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_security_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_security_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       car_stats: {
         Row: {
-          acceptance_rate: number | null
-          avg_response_time_hours: number | null
-          cancellation_rate: number | null
-          cancelled_bookings: number | null
+          avg_rating: number | null
           car_id: string
           completed_bookings: number | null
-          last_review_at: string | null
-          rating_accuracy_avg: number | null
-          rating_avg: number | null
-          rating_checkin_avg: number | null
-          rating_cleanliness_avg: number | null
-          rating_communication_avg: number | null
-          rating_location_avg: number | null
-          rating_value_avg: number | null
+          created_at: string | null
+          last_booking_at: string | null
+          review_count: number | null
           reviews_count: number | null
           total_bookings: number | null
+          total_revenue: number | null
           updated_at: string | null
         }
         Insert: {
-          acceptance_rate?: number | null
-          avg_response_time_hours?: number | null
-          cancellation_rate?: number | null
-          cancelled_bookings?: number | null
+          avg_rating?: number | null
           car_id: string
           completed_bookings?: number | null
-          last_review_at?: string | null
-          rating_accuracy_avg?: number | null
-          rating_avg?: number | null
-          rating_checkin_avg?: number | null
-          rating_cleanliness_avg?: number | null
-          rating_communication_avg?: number | null
-          rating_location_avg?: number | null
-          rating_value_avg?: number | null
+          created_at?: string | null
+          last_booking_at?: string | null
+          review_count?: number | null
           reviews_count?: number | null
           total_bookings?: number | null
+          total_revenue?: number | null
           updated_at?: string | null
         }
         Update: {
-          acceptance_rate?: number | null
-          avg_response_time_hours?: number | null
-          cancellation_rate?: number | null
-          cancelled_bookings?: number | null
+          avg_rating?: number | null
           car_id?: string
           completed_bookings?: number | null
-          last_review_at?: string | null
-          rating_accuracy_avg?: number | null
-          rating_avg?: number | null
-          rating_checkin_avg?: number | null
-          rating_cleanliness_avg?: number | null
-          rating_communication_avg?: number | null
-          rating_location_avg?: number | null
-          rating_value_avg?: number | null
+          created_at?: string | null
+          last_booking_at?: string | null
+          review_count?: number | null
           reviews_count?: number | null
           total_bookings?: number | null
+          total_revenue?: number | null
           updated_at?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "car_stats_car_id_fkey"
             columns: ["car_id"]
@@ -6015,36 +1244,8 @@ export type Database = {
             foreignKeyName: "car_stats_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: true
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_stats_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "car_stats_car_id_fkey"
@@ -6057,219 +1258,6 @@ export type Database = {
             foreignKeyName: "car_stats_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: true
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      car_tracking_points: {
-        Row: {
-          id: string
-          lat: number
-          lng: number
-          recorded_at: string
-          session_id: string
-        }
-        Insert: {
-          id?: string
-          lat: number
-          lng: number
-          recorded_at?: string
-          session_id: string
-        }
-        Update: {
-          id?: string
-          lat?: number
-          lng?: number
-          recorded_at?: string
-          session_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "car_tracking_points_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "car_tracking_sessions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      car_tracking_sessions: {
-        Row: {
-          active: boolean
-          booking_id: string
-          created_at: string | null
-          ended_at: string | null
-          id: string
-          started_at: string
-        }
-        Insert: {
-          active?: boolean
-          booking_id: string
-          created_at?: string | null
-          ended_at?: string | null
-          id?: string
-          started_at?: string
-        }
-        Update: {
-          active?: boolean
-          booking_id?: string
-          created_at?: string | null
-          ended_at?: string | null
-          id?: string
-          started_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "car_tracking_sessions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      car_views: {
-        Row: {
-          car_id: string
-          id: string
-          session_id: string | null
-          source: string | null
-          view_duration_seconds: number | null
-          viewed_at: string | null
-          viewer_id: string | null
-          viewer_ip: string | null
-        }
-        Insert: {
-          car_id: string
-          id?: string
-          session_id?: string | null
-          source?: string | null
-          view_duration_seconds?: number | null
-          viewed_at?: string | null
-          viewer_id?: string | null
-          viewer_ip?: string | null
-        }
-        Update: {
-          car_id?: string
-          id?: string
-          session_id?: string | null
-          source?: string | null
-          view_duration_seconds?: number | null
-          viewed_at?: string | null
-          viewer_id?: string | null
-          viewer_ip?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_views_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
             referencedRelation: "v_instant_booking_cars"
             referencedColumns: ["id"]
           },
@@ -6291,41 +1279,28 @@ export type Database = {
           allow_second_driver: boolean | null
           allow_smoking: boolean | null
           allowed_provinces: string[] | null
-          annual_expense_estimate_cents: number | null
           auto_approval: boolean | null
           availability_end_date: string | null
           availability_start_date: string | null
           brand: string | null
           brand_id: string | null
           brand_text_backup: string | null
-          can_receive_payments: boolean | null
-          cancel_policy: Database["public"]["Enums"]["cancel_policy"]
-          category_id: string | null
-          city: string
+          city: string | null
           color: string | null
-          country: string
-          created_at: string
-          currency: string
-          custom_daily_rate_pct: number | null
-          deleted_at: string | null
-          delivery_options: Json | null
+          country: string | null
+          created_at: string | null
+          currency: string | null
           deposit_amount: number | null
           deposit_required: boolean | null
           description: string | null
           doors: number | null
-          earnings_limit_reached: boolean | null
-          estimated_daily_cost_cents: number | null
-          estimated_value_usd: number | null
           extra_km_price: number | null
           features: Json | null
-          fipe_code: string | null
-          fipe_last_sync: string | null
-          fuel: string | null
           fuel_policy: string | null
-          fuel_price_per_liter_cents: number | null
-          fuel_tank_liters: number | null
-          fuel_type: string | null
+          fuel_type: Database["public"]["Enums"]["fuel_type"] | null
+          has_telemetry: boolean | null
           id: string
+          instant_booking: boolean | null
           instant_booking_enabled: boolean | null
           instant_booking_min_score: number | null
           instant_booking_require_verified: boolean | null
@@ -6334,14 +1309,12 @@ export type Database = {
           insurance_expires_at: string | null
           insurance_included: boolean | null
           insurance_policy_number: string | null
-          last_personal_use_verified_at: string | null
+          kill_switch_enabled: boolean | null
+          last_heartbeat: string | null
           location_city: string | null
           location_country: string | null
-          location_geom: unknown
           location_lat: number | null
           location_lng: number | null
-          location_neighborhood: string | null
-          location_postal_code: string | null
           location_province: string | null
           location_state: string | null
           location_street: string | null
@@ -6355,41 +1328,25 @@ export type Database = {
           model: string | null
           model_id: string | null
           model_text_backup: string | null
-          organization_id: string | null
           owner_id: string
-          payment_methods: Json | null
           photos_quality_checked: boolean | null
           photos_quality_score: number | null
-          plate: string | null
           plates_auto_blurred: boolean | null
-          price_override: boolean | null
-          price_per_day: number
-          price_per_day_cents: number | null
-          province: string
+          price_per_day: number | null
+          province: string | null
           rating_avg: number | null
-          rating_count: number | null
-          region_id: string | null
+          review_count: number | null
           seats: number | null
           second_driver_cost: number | null
-          security_deposit_usd: number | null
-          sharing_mode: string | null
-          sharing_suspended_at: string | null
-          sharing_suspension_reason: string | null
-          status: Database["public"]["Enums"]["car_status"]
-          terms_and_conditions: string | null
-          title: string
-          total_bookings: number | null
-          transmission: string | null
-          updated_at: string
+          status: Database["public"]["Enums"]["car_status"] | null
+          telemetry_provider: string | null
+          title: string | null
+          transmission: Database["public"]["Enums"]["transmission_type"] | null
+          updated_at: string | null
           uses_dynamic_pricing: boolean | null
-          value_ars: number | null
-          value_auto_sync_enabled: boolean | null
-          value_brl: number | null
           value_usd: number | null
-          value_usd_source: string | null
-          vin: string | null
+          vehicle_tier: Database["public"]["Enums"]["vehicle_tier"] | null
           year: number | null
-          ytd_earnings_cents: number | null
         }
         Insert: {
           ai_condition_analysis?: Json | null
@@ -6406,41 +1363,28 @@ export type Database = {
           allow_second_driver?: boolean | null
           allow_smoking?: boolean | null
           allowed_provinces?: string[] | null
-          annual_expense_estimate_cents?: number | null
           auto_approval?: boolean | null
           availability_end_date?: string | null
           availability_start_date?: string | null
           brand?: string | null
           brand_id?: string | null
           brand_text_backup?: string | null
-          can_receive_payments?: boolean | null
-          cancel_policy?: Database["public"]["Enums"]["cancel_policy"]
-          category_id?: string | null
-          city: string
+          city?: string | null
           color?: string | null
-          country?: string
-          created_at?: string
-          currency?: string
-          custom_daily_rate_pct?: number | null
-          deleted_at?: string | null
-          delivery_options?: Json | null
+          country?: string | null
+          created_at?: string | null
+          currency?: string | null
           deposit_amount?: number | null
           deposit_required?: boolean | null
           description?: string | null
           doors?: number | null
-          earnings_limit_reached?: boolean | null
-          estimated_daily_cost_cents?: number | null
-          estimated_value_usd?: number | null
           extra_km_price?: number | null
           features?: Json | null
-          fipe_code?: string | null
-          fipe_last_sync?: string | null
-          fuel?: string | null
           fuel_policy?: string | null
-          fuel_price_per_liter_cents?: number | null
-          fuel_tank_liters?: number | null
-          fuel_type?: string | null
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
+          has_telemetry?: boolean | null
           id?: string
+          instant_booking?: boolean | null
           instant_booking_enabled?: boolean | null
           instant_booking_min_score?: number | null
           instant_booking_require_verified?: boolean | null
@@ -6449,14 +1393,12 @@ export type Database = {
           insurance_expires_at?: string | null
           insurance_included?: boolean | null
           insurance_policy_number?: string | null
-          last_personal_use_verified_at?: string | null
+          kill_switch_enabled?: boolean | null
+          last_heartbeat?: string | null
           location_city?: string | null
           location_country?: string | null
-          location_geom?: unknown
           location_lat?: number | null
           location_lng?: number | null
-          location_neighborhood?: string | null
-          location_postal_code?: string | null
           location_province?: string | null
           location_state?: string | null
           location_street?: string | null
@@ -6470,41 +1412,25 @@ export type Database = {
           model?: string | null
           model_id?: string | null
           model_text_backup?: string | null
-          organization_id?: string | null
           owner_id: string
-          payment_methods?: Json | null
           photos_quality_checked?: boolean | null
           photos_quality_score?: number | null
-          plate?: string | null
           plates_auto_blurred?: boolean | null
-          price_override?: boolean | null
-          price_per_day: number
-          price_per_day_cents?: number | null
-          province: string
+          price_per_day?: number | null
+          province?: string | null
           rating_avg?: number | null
-          rating_count?: number | null
-          region_id?: string | null
+          review_count?: number | null
           seats?: number | null
           second_driver_cost?: number | null
-          security_deposit_usd?: number | null
-          sharing_mode?: string | null
-          sharing_suspended_at?: string | null
-          sharing_suspension_reason?: string | null
-          status?: Database["public"]["Enums"]["car_status"]
-          terms_and_conditions?: string | null
-          title: string
-          total_bookings?: number | null
-          transmission?: string | null
-          updated_at?: string
+          status?: Database["public"]["Enums"]["car_status"] | null
+          telemetry_provider?: string | null
+          title?: string | null
+          transmission?: Database["public"]["Enums"]["transmission_type"] | null
+          updated_at?: string | null
           uses_dynamic_pricing?: boolean | null
-          value_ars?: number | null
-          value_auto_sync_enabled?: boolean | null
-          value_brl?: number | null
           value_usd?: number | null
-          value_usd_source?: string | null
-          vin?: string | null
+          vehicle_tier?: Database["public"]["Enums"]["vehicle_tier"] | null
           year?: number | null
-          ytd_earnings_cents?: number | null
         }
         Update: {
           ai_condition_analysis?: Json | null
@@ -6521,41 +1447,28 @@ export type Database = {
           allow_second_driver?: boolean | null
           allow_smoking?: boolean | null
           allowed_provinces?: string[] | null
-          annual_expense_estimate_cents?: number | null
           auto_approval?: boolean | null
           availability_end_date?: string | null
           availability_start_date?: string | null
           brand?: string | null
           brand_id?: string | null
           brand_text_backup?: string | null
-          can_receive_payments?: boolean | null
-          cancel_policy?: Database["public"]["Enums"]["cancel_policy"]
-          category_id?: string | null
-          city?: string
+          city?: string | null
           color?: string | null
-          country?: string
-          created_at?: string
-          currency?: string
-          custom_daily_rate_pct?: number | null
-          deleted_at?: string | null
-          delivery_options?: Json | null
+          country?: string | null
+          created_at?: string | null
+          currency?: string | null
           deposit_amount?: number | null
           deposit_required?: boolean | null
           description?: string | null
           doors?: number | null
-          earnings_limit_reached?: boolean | null
-          estimated_daily_cost_cents?: number | null
-          estimated_value_usd?: number | null
           extra_km_price?: number | null
           features?: Json | null
-          fipe_code?: string | null
-          fipe_last_sync?: string | null
-          fuel?: string | null
           fuel_policy?: string | null
-          fuel_price_per_liter_cents?: number | null
-          fuel_tank_liters?: number | null
-          fuel_type?: string | null
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
+          has_telemetry?: boolean | null
           id?: string
+          instant_booking?: boolean | null
           instant_booking_enabled?: boolean | null
           instant_booking_min_score?: number | null
           instant_booking_require_verified?: boolean | null
@@ -6564,14 +1477,12 @@ export type Database = {
           insurance_expires_at?: string | null
           insurance_included?: boolean | null
           insurance_policy_number?: string | null
-          last_personal_use_verified_at?: string | null
+          kill_switch_enabled?: boolean | null
+          last_heartbeat?: string | null
           location_city?: string | null
           location_country?: string | null
-          location_geom?: unknown
           location_lat?: number | null
           location_lng?: number | null
-          location_neighborhood?: string | null
-          location_postal_code?: string | null
           location_province?: string | null
           location_state?: string | null
           location_street?: string | null
@@ -6585,126 +1496,40 @@ export type Database = {
           model?: string | null
           model_id?: string | null
           model_text_backup?: string | null
-          organization_id?: string | null
           owner_id?: string
-          payment_methods?: Json | null
           photos_quality_checked?: boolean | null
           photos_quality_score?: number | null
-          plate?: string | null
           plates_auto_blurred?: boolean | null
-          price_override?: boolean | null
-          price_per_day?: number
-          price_per_day_cents?: number | null
-          province?: string
+          price_per_day?: number | null
+          province?: string | null
           rating_avg?: number | null
-          rating_count?: number | null
-          region_id?: string | null
+          review_count?: number | null
           seats?: number | null
           second_driver_cost?: number | null
-          security_deposit_usd?: number | null
-          sharing_mode?: string | null
-          sharing_suspended_at?: string | null
-          sharing_suspension_reason?: string | null
-          status?: Database["public"]["Enums"]["car_status"]
-          terms_and_conditions?: string | null
-          title?: string
-          total_bookings?: number | null
-          transmission?: string | null
-          updated_at?: string
+          status?: Database["public"]["Enums"]["car_status"] | null
+          telemetry_provider?: string | null
+          title?: string | null
+          transmission?: Database["public"]["Enums"]["transmission_type"] | null
+          updated_at?: string | null
           uses_dynamic_pricing?: boolean | null
-          value_ars?: number | null
-          value_auto_sync_enabled?: boolean | null
-          value_brl?: number | null
           value_usd?: number | null
-          value_usd_source?: string | null
-          vin?: string | null
+          vehicle_tier?: Database["public"]["Enums"]["vehicle_tier"] | null
           year?: number | null
-          ytd_earnings_cents?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "cars_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "vehicle_categories"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
+            foreignKeyName: "cars_owner_id_profiles_fkey"
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "me_profile"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
+            foreignKeyName: "cars_owner_id_profiles_fkey"
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
           },
         ]
       }
@@ -6753,13 +1578,6 @@ export type Database = {
             foreignKeyName: "cars_fipe_history_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_fipe_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
             referencedRelation: "cars"
             referencedColumns: ["id"]
           },
@@ -6767,36 +1585,8 @@ export type Database = {
             foreignKeyName: "cars_fipe_history_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_fipe_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "cars_fipe_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "cars_fipe_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "cars_fipe_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "cars_fipe_history_car_id_fkey"
@@ -6807,962 +1597,6 @@ export type Database = {
           },
           {
             foreignKeyName: "cars_fipe_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      claim_type_definitions: {
-        Row: {
-          category: string
-          created_at: string
-          description_en: string | null
-          description_es: string | null
-          display_order: number | null
-          icon: string | null
-          is_active: boolean | null
-          label_en: string
-          label_es: string
-          requires_ev_data: boolean | null
-          severity_default: string | null
-          type_code: string
-        }
-        Insert: {
-          category: string
-          created_at?: string
-          description_en?: string | null
-          description_es?: string | null
-          display_order?: number | null
-          icon?: string | null
-          is_active?: boolean | null
-          label_en: string
-          label_es: string
-          requires_ev_data?: boolean | null
-          severity_default?: string | null
-          type_code: string
-        }
-        Update: {
-          category?: string
-          created_at?: string
-          description_en?: string | null
-          description_es?: string | null
-          display_order?: number | null
-          icon?: string | null
-          is_active?: boolean | null
-          label_en?: string
-          label_es?: string
-          requires_ev_data?: boolean | null
-          severity_default?: string | null
-          type_code?: string
-        }
-        Relationships: []
-      }
-      claims: {
-        Row: {
-          booking_id: string
-          created_at: string
-          damages: Json
-          ev_specific_data: Json | null
-          fraud_warnings: Json | null
-          id: string
-          locked_at: string | null
-          locked_by: string | null
-          notes: string | null
-          owner_claims_30d: number | null
-          processed_at: string | null
-          reported_by: string
-          resolution_notes: string | null
-          resolved_at: string | null
-          resolved_by: string | null
-          status: Database["public"]["Enums"]["claim_status"]
-          total_estimated_cost_usd: number
-          updated_at: string
-          waterfall_result: Json | null
-        }
-        Insert: {
-          booking_id: string
-          created_at?: string
-          damages?: Json
-          ev_specific_data?: Json | null
-          fraud_warnings?: Json | null
-          id?: string
-          locked_at?: string | null
-          locked_by?: string | null
-          notes?: string | null
-          owner_claims_30d?: number | null
-          processed_at?: string | null
-          reported_by: string
-          resolution_notes?: string | null
-          resolved_at?: string | null
-          resolved_by?: string | null
-          status?: Database["public"]["Enums"]["claim_status"]
-          total_estimated_cost_usd?: number
-          updated_at?: string
-          waterfall_result?: Json | null
-        }
-        Update: {
-          booking_id?: string
-          created_at?: string
-          damages?: Json
-          ev_specific_data?: Json | null
-          fraud_warnings?: Json | null
-          id?: string
-          locked_at?: string | null
-          locked_by?: string | null
-          notes?: string | null
-          owner_claims_30d?: number | null
-          processed_at?: string | null
-          reported_by?: string
-          resolution_notes?: string | null
-          resolved_at?: string | null
-          resolved_by?: string | null
-          status?: Database["public"]["Enums"]["claim_status"]
-          total_estimated_cost_usd?: number
-          updated_at?: string
-          waterfall_result?: Json | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      community_memberships: {
-        Row: {
-          created_at: string | null
-          expulsion_reason: string | null
-          id: string
-          joined_at: string
-          onboarding_completed: boolean | null
-          owner_id: string
-          status: string
-          suspended_at: string | null
-          suspension_reason: string | null
-          terms_accepted_at: string | null
-          terms_version: string | null
-          tier: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          expulsion_reason?: string | null
-          id?: string
-          joined_at?: string
-          onboarding_completed?: boolean | null
-          owner_id: string
-          status?: string
-          suspended_at?: string | null
-          suspension_reason?: string | null
-          terms_accepted_at?: string | null
-          terms_version?: string | null
-          tier?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          expulsion_reason?: string | null
-          id?: string
-          joined_at?: string
-          onboarding_completed?: boolean | null
-          owner_id?: string
-          status?: string
-          suspended_at?: string | null
-          suspension_reason?: string | null
-          terms_accepted_at?: string | null
-          terms_version?: string | null
-          tier?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: true
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: true
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: true
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: true
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: true
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: true
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: true
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "community_memberships_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: true
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      community_rewards: {
-        Row: {
-          amount_cents: number | null
-          approved_at: string | null
-          approved_by: string | null
-          availability_points: number | null
-          bonus_points: number | null
-          calculated_at: string | null
-          calculation_details: Json | null
-          created_at: string | null
-          currency: string | null
-          id: string
-          notes: string | null
-          owner_id: string
-          paid_at: string | null
-          participation_points: number | null
-          penalty_points: number | null
-          period_month: number
-          period_year: number
-          rating_points: number | null
-          referral_points: number | null
-          response_time_points: number | null
-          seniority_points: number | null
-          status: string | null
-          total_points: number | null
-          updated_at: string | null
-          wallet_transaction_id: string | null
-        }
-        Insert: {
-          amount_cents?: number | null
-          approved_at?: string | null
-          approved_by?: string | null
-          availability_points?: number | null
-          bonus_points?: number | null
-          calculated_at?: string | null
-          calculation_details?: Json | null
-          created_at?: string | null
-          currency?: string | null
-          id?: string
-          notes?: string | null
-          owner_id: string
-          paid_at?: string | null
-          participation_points?: number | null
-          penalty_points?: number | null
-          period_month: number
-          period_year: number
-          rating_points?: number | null
-          referral_points?: number | null
-          response_time_points?: number | null
-          seniority_points?: number | null
-          status?: string | null
-          total_points?: number | null
-          updated_at?: string | null
-          wallet_transaction_id?: string | null
-        }
-        Update: {
-          amount_cents?: number | null
-          approved_at?: string | null
-          approved_by?: string | null
-          availability_points?: number | null
-          bonus_points?: number | null
-          calculated_at?: string | null
-          calculation_details?: Json | null
-          created_at?: string | null
-          currency?: string | null
-          id?: string
-          notes?: string | null
-          owner_id?: string
-          paid_at?: string | null
-          participation_points?: number | null
-          penalty_points?: number | null
-          period_month?: number
-          period_year?: number
-          rating_points?: number | null
-          referral_points?: number | null
-          response_time_points?: number | null
-          seniority_points?: number | null
-          status?: string | null
-          total_points?: number | null
-          updated_at?: string | null
-          wallet_transaction_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "community_rewards_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "community_rewards_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "community_rewards_wallet_transaction_id_fkey"
-            columns: ["wallet_transaction_id"]
-            isOneToOne: false
-            referencedRelation: "v_wallet_locks_status"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_wallet_transaction_id_fkey"
-            columns: ["wallet_transaction_id"]
-            isOneToOne: false
-            referencedRelation: "v_wallet_transfers_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "community_rewards_wallet_transaction_id_fkey"
-            columns: ["wallet_transaction_id"]
-            isOneToOne: false
-            referencedRelation: "wallet_transactions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      comodato_agreements: {
-        Row: {
-          booking_id: string
-          borrower_accepted_at: string | null
-          borrower_id: string
-          borrower_ip: string | null
-          borrower_user_agent: string | null
-          car_id: string
-          created_at: string | null
-          end_at: string
-          id: string
-          owner_accepted_at: string | null
-          owner_id: string
-          owner_ip: string | null
-          owner_user_agent: string | null
-          return_condition: string | null
-          return_notes: string | null
-          returned_at: string | null
-          start_at: string
-          status: string | null
-          terms_hash: string | null
-          terms_version: string
-          updated_at: string | null
-        }
-        Insert: {
-          booking_id: string
-          borrower_accepted_at?: string | null
-          borrower_id: string
-          borrower_ip?: string | null
-          borrower_user_agent?: string | null
-          car_id: string
-          created_at?: string | null
-          end_at: string
-          id?: string
-          owner_accepted_at?: string | null
-          owner_id: string
-          owner_ip?: string | null
-          owner_user_agent?: string | null
-          return_condition?: string | null
-          return_notes?: string | null
-          returned_at?: string | null
-          start_at: string
-          status?: string | null
-          terms_hash?: string | null
-          terms_version?: string
-          updated_at?: string | null
-        }
-        Update: {
-          booking_id?: string
-          borrower_accepted_at?: string | null
-          borrower_id?: string
-          borrower_ip?: string | null
-          borrower_user_agent?: string | null
-          car_id?: string
-          created_at?: string | null
-          end_at?: string
-          id?: string
-          owner_accepted_at?: string | null
-          owner_id?: string
-          owner_ip?: string | null
-          owner_user_agent?: string | null
-          return_condition?: string | null
-          return_notes?: string | null
-          returned_at?: string | null
-          start_at?: string
-          status?: string | null
-          terms_hash?: string | null
-          terms_version?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_borrower_id_fkey"
-            columns: ["borrower_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "comodato_agreements_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      conversion_events: {
-        Row: {
-          car_id: string | null
-          created_at: string
-          event_data: Json | null
-          event_type: string
-          id: string
-          user_id: string | null
-        }
-        Insert: {
-          car_id?: string | null
-          created_at?: string
-          event_data?: Json | null
-          event_type: string
-          id?: string
-          user_id?: string | null
-        }
-        Update: {
-          car_id?: string | null
-          created_at?: string
-          event_data?: Json | null
-          event_type?: string
-          id?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "conversion_events_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "conversion_events_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
             referencedRelation: "v_instant_booking_cars"
@@ -7896,143 +1730,114 @@ export type Database = {
         }
         Relationships: []
       }
-      damage_analysis_logs: {
+      daily_car_points: {
         Row: {
-          analyzed_at: string
-          booking_id: string
-          check_in_image_url: string
-          check_out_image_url: string
-          confidence_average: number | null
-          created_at: string
-          damages_detected: Json
+          acceptance_rate_30d: number
+          base_points: number
+          cancellation_rate_90d: number
+          car_id: string
+          created_at: string | null
+          date: string
+          demand_factor: number
+          formula: string | null
           id: string
-          model_used: string
-          pair_index: number
-          summary: string | null
+          is_eligible: boolean
+          is_ready_to_book: boolean
+          owner_id: string
+          points: number
+          price_deviation_pct: number | null
+          rep_factor: number
+          response_time_hours: number | null
+          va_failure_reasons: string[] | null
+          va_status: boolean
+          value_factor: number
         }
         Insert: {
-          analyzed_at?: string
-          booking_id: string
-          check_in_image_url: string
-          check_out_image_url: string
-          confidence_average?: number | null
-          created_at?: string
-          damages_detected?: Json
+          acceptance_rate_30d?: number
+          base_points?: number
+          cancellation_rate_90d?: number
+          car_id: string
+          created_at?: string | null
+          date: string
+          demand_factor?: number
+          formula?: string | null
           id?: string
-          model_used?: string
-          pair_index?: number
-          summary?: string | null
+          is_eligible?: boolean
+          is_ready_to_book?: boolean
+          owner_id: string
+          points?: number
+          price_deviation_pct?: number | null
+          rep_factor?: number
+          response_time_hours?: number | null
+          va_failure_reasons?: string[] | null
+          va_status?: boolean
+          value_factor?: number
         }
         Update: {
-          analyzed_at?: string
-          booking_id?: string
-          check_in_image_url?: string
-          check_out_image_url?: string
-          confidence_average?: number | null
-          created_at?: string
-          damages_detected?: Json
+          acceptance_rate_30d?: number
+          base_points?: number
+          cancellation_rate_90d?: number
+          car_id?: string
+          created_at?: string | null
+          date?: string
+          demand_factor?: number
+          formula?: string | null
           id?: string
-          model_used?: string
-          pair_index?: number
-          summary?: string | null
+          is_eligible?: boolean
+          is_ready_to_book?: boolean
+          owner_id?: string
+          points?: number
+          price_deviation_pct?: number | null
+          rep_factor?: number
+          response_time_hours?: number | null
+          va_failure_reasons?: string[] | null
+          va_status?: boolean
+          value_factor?: number
         }
         Relationships: [
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: "daily_car_points_car_id_fkey"
+            columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
+            referencedRelation: "cars"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: "daily_car_points_car_id_fkey"
+            columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "bookings"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: "daily_car_points_car_id_fkey"
+            columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "my_bookings"
+            referencedRelation: "v_cars_with_main_photo"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: "daily_car_points_car_id_fkey"
+            columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "owner_bookings"
+            referencedRelation: "v_instant_booking_cars"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: "daily_car_points_owner_id_fkey"
+            columns: ["owner_id"]
             isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: "daily_car_points_owner_id_fkey"
+            columns: ["owner_id"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "damage_analysis_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
-      }
-      damage_type_definitions: {
-        Row: {
-          category: string
-          created_at: string
-          description_es: string | null
-          display_order: number | null
-          icon: string | null
-          is_active: boolean | null
-          label_en: string
-          label_es: string
-          requires_ev_inspection: boolean | null
-          type_code: string
-        }
-        Insert: {
-          category: string
-          created_at?: string
-          description_es?: string | null
-          display_order?: number | null
-          icon?: string | null
-          is_active?: boolean | null
-          label_en: string
-          label_es: string
-          requires_ev_inspection?: boolean | null
-          type_code: string
-        }
-        Update: {
-          category?: string
-          created_at?: string
-          description_es?: string | null
-          display_order?: number | null
-          icon?: string | null
-          is_active?: boolean | null
-          label_en?: string
-          label_es?: string
-          requires_ev_inspection?: boolean | null
-          type_code?: string
-        }
-        Relationships: []
       }
       design_token_overrides: {
         Row: {
@@ -8070,466 +1875,44 @@ export type Database = {
         }
         Relationships: []
       }
-      dispute_evidence: {
-        Row: {
-          created_at: string | null
-          dispute_id: string
-          id: string
-          note: string | null
-          path: string
-        }
-        Insert: {
-          created_at?: string | null
-          dispute_id: string
-          id?: string
-          note?: string | null
-          path: string
-        }
-        Update: {
-          created_at?: string | null
-          dispute_id?: string
-          id?: string
-          note?: string | null
-          path?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "dispute_evidence_dispute_id_fkey"
-            columns: ["dispute_id"]
-            isOneToOne: false
-            referencedRelation: "disputes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      disputes: {
-        Row: {
-          booking_id: string
-          created_at: string | null
-          description: string | null
-          id: string
-          kind: Database["public"]["Enums"]["dispute_kind"]
-          opened_by: string
-          resolved_at: string | null
-          resolved_by: string | null
-          status: Database["public"]["Enums"]["dispute_status"]
-        }
-        Insert: {
-          booking_id: string
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          kind: Database["public"]["Enums"]["dispute_kind"]
-          opened_by: string
-          resolved_at?: string | null
-          resolved_by?: string | null
-          status?: Database["public"]["Enums"]["dispute_status"]
-        }
-        Update: {
-          booking_id?: string
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          kind?: Database["public"]["Enums"]["dispute_kind"]
-          opened_by?: string
-          resolved_at?: string | null
-          resolved_by?: string | null
-          status?: Database["public"]["Enums"]["dispute_status"]
-        }
-        Relationships: [
-          {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "disputes_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "disputes_opened_by_fkey"
-            columns: ["opened_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "disputes_resolved_by_fkey"
-            columns: ["resolved_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      driver_class_history: {
-        Row: {
-          booking_id: string | null
-          claim_id: string | null
-          class_change: number
-          created_at: string | null
-          id: string
-          new_class: number
-          notes: string | null
-          old_class: number
-          reason: string
-          user_id: string
-        }
-        Insert: {
-          booking_id?: string | null
-          claim_id?: string | null
-          class_change: number
-          created_at?: string | null
-          id?: string
-          new_class: number
-          notes?: string | null
-          old_class: number
-          reason: string
-          user_id: string
-        }
-        Update: {
-          booking_id?: string | null
-          claim_id?: string | null
-          class_change?: number
-          created_at?: string | null
-          id?: string
-          new_class?: number
-          notes?: string | null
-          old_class?: number
-          reason?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "driver_class_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "driver_class_history_claim_id_fkey"
-            columns: ["claim_id"]
-            isOneToOne: false
-            referencedRelation: "booking_claims"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      driver_protection_addons: {
-        Row: {
-          addon_type: string
-          claims_used: number | null
-          created_at: string | null
-          currency: string
-          expires_at: string | null
-          id: string
-          is_active: boolean | null
-          max_protected_claims: number | null
-          price_paid_cents: number
-          protection_level: number | null
-          purchase_date: string | null
-          used_at: string | null
-          user_id: string
-        }
-        Insert: {
-          addon_type: string
-          claims_used?: number | null
-          created_at?: string | null
-          currency?: string
-          expires_at?: string | null
-          id?: string
-          is_active?: boolean | null
-          max_protected_claims?: number | null
-          price_paid_cents: number
-          protection_level?: number | null
-          purchase_date?: string | null
-          used_at?: string | null
-          user_id: string
-        }
-        Update: {
-          addon_type?: string
-          claims_used?: number | null
-          created_at?: string | null
-          currency?: string
-          expires_at?: string | null
-          id?: string
-          is_active?: boolean | null
-          max_protected_claims?: number | null
-          price_paid_cents?: number
-          protection_level?: number | null
-          purchase_date?: string | null
-          used_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
       driver_risk_profile: {
         Row: {
-          claims_with_fault: number | null
+          claims_with_fault: number
           class: number
-          clean_bookings: number | null
-          created_at: string | null
-          driver_score: number | null
-          good_years: number | null
+          created_at: string
+          driver_score: number
+          good_years: number
           last_claim_at: string | null
           last_claim_with_fault: boolean | null
           last_class_update: string | null
-          total_bookings: number | null
-          total_claims: number | null
-          updated_at: string | null
+          total_claims: number
+          updated_at: string
           user_id: string
         }
         Insert: {
-          claims_with_fault?: number | null
+          claims_with_fault?: number
           class?: number
-          clean_bookings?: number | null
-          created_at?: string | null
-          driver_score?: number | null
-          good_years?: number | null
+          created_at?: string
+          driver_score?: number
+          good_years?: number
           last_claim_at?: string | null
           last_claim_with_fault?: boolean | null
           last_class_update?: string | null
-          total_bookings?: number | null
-          total_claims?: number | null
-          updated_at?: string | null
+          total_claims?: number
+          updated_at?: string
           user_id: string
         }
         Update: {
-          claims_with_fault?: number | null
+          claims_with_fault?: number
           class?: number
-          clean_bookings?: number | null
-          created_at?: string | null
-          driver_score?: number | null
-          good_years?: number | null
+          created_at?: string
+          driver_score?: number
+          good_years?: number
           last_claim_at?: string | null
           last_claim_with_fault?: boolean | null
           last_class_update?: string | null
-          total_bookings?: number | null
-          total_claims?: number | null
-          updated_at?: string | null
+          total_claims?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -8620,108 +2003,6 @@ export type Database = {
           total_drivers?: number
         }
         Relationships: []
-      }
-      driver_telemetry: {
-        Row: {
-          booking_id: string | null
-          created_at: string | null
-          driver_score: number | null
-          hard_brakes: number | null
-          id: string
-          night_driving_hours: number | null
-          risk_zones_visited: number | null
-          speed_violations: number | null
-          telemetry_data: Json | null
-          total_km: number | null
-          trip_date: string | null
-          user_id: string
-        }
-        Insert: {
-          booking_id?: string | null
-          created_at?: string | null
-          driver_score?: number | null
-          hard_brakes?: number | null
-          id?: string
-          night_driving_hours?: number | null
-          risk_zones_visited?: number | null
-          speed_violations?: number | null
-          telemetry_data?: Json | null
-          total_km?: number | null
-          trip_date?: string | null
-          user_id: string
-        }
-        Update: {
-          booking_id?: string | null
-          created_at?: string | null
-          driver_score?: number | null
-          hard_brakes?: number | null
-          id?: string
-          night_driving_hours?: number | null
-          risk_zones_visited?: number | null
-          speed_violations?: number | null
-          telemetry_data?: Json | null
-          total_km?: number | null
-          trip_date?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "driver_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
       }
       edge_brain_memory: {
         Row: {
@@ -9163,50 +2444,35 @@ export type Database = {
           },
         ]
       }
-      encryption_audit_log: {
+      email_verification_audit_log: {
         Row: {
+          attempted_operation: string
           created_at: string
-          error_message: string | null
+          email_verified: boolean
           id: string
-          message_id: string | null
-          operation: string
-          success: boolean
-          user_id: string | null
+          ip_address: unknown
+          user_agent: string | null
+          user_id: string
         }
         Insert: {
+          attempted_operation: string
           created_at?: string
-          error_message?: string | null
+          email_verified: boolean
           id?: string
-          message_id?: string | null
-          operation: string
-          success: boolean
-          user_id?: string | null
+          ip_address?: unknown
+          user_agent?: string | null
+          user_id: string
         }
         Update: {
+          attempted_operation?: string
           created_at?: string
-          error_message?: string | null
+          email_verified?: boolean
           id?: string
-          message_id?: string | null
-          operation?: string
-          success?: boolean
-          user_id?: string | null
+          ip_address?: unknown
+          user_agent?: string | null
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "encryption_audit_log_message_id_fkey"
-            columns: ["message_id"]
-            isOneToOne: false
-            referencedRelation: "messages"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "encryption_audit_log_message_id_fkey"
-            columns: ["message_id"]
-            isOneToOne: false
-            referencedRelation: "messages_decrypted"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       encryption_keys: {
         Row: {
@@ -9234,516 +2500,6 @@ export type Database = {
           rotated_at?: string | null
         }
         Relationships: []
-      }
-      ev_appraisal_rules: {
-        Row: {
-          appraiser_certifications: string[] | null
-          brands: string[] | null
-          created_at: string
-          damage_matrix: Json
-          description: string | null
-          id: string
-          inspection_points: Json
-          is_active: boolean | null
-          name: string
-          requires_certified_appraiser: boolean | null
-          requires_official_service: boolean | null
-          vehicle_types: string[] | null
-        }
-        Insert: {
-          appraiser_certifications?: string[] | null
-          brands?: string[] | null
-          created_at?: string
-          damage_matrix: Json
-          description?: string | null
-          id?: string
-          inspection_points: Json
-          is_active?: boolean | null
-          name: string
-          requires_certified_appraiser?: boolean | null
-          requires_official_service?: boolean | null
-          vehicle_types?: string[] | null
-        }
-        Update: {
-          appraiser_certifications?: string[] | null
-          brands?: string[] | null
-          created_at?: string
-          damage_matrix?: Json
-          description?: string | null
-          id?: string
-          inspection_points?: Json
-          is_active?: boolean | null
-          name?: string
-          requires_certified_appraiser?: boolean | null
-          requires_official_service?: boolean | null
-          vehicle_types?: string[] | null
-        }
-        Relationships: []
-      }
-      ev_appraisals: {
-        Row: {
-          appraisal_number: string
-          appraiser_certifications: string[] | null
-          appraiser_company: string | null
-          appraiser_license: string | null
-          appraiser_name: string
-          booking_id: string | null
-          car_id: string
-          claim_id: string | null
-          completed_at: string | null
-          created_at: string
-          full_report_url: string | null
-          id: string
-          inspection_results: Json
-          notes: string | null
-          overall_condition: string | null
-          performed_at: string
-          performed_at_address: string | null
-          performed_at_shop_id: string | null
-          photos: Json | null
-          repair_cost_estimate: number | null
-          repair_recommended: boolean | null
-          rule_id: string | null
-          status: string
-          total_damage_cost: number | null
-        }
-        Insert: {
-          appraisal_number: string
-          appraiser_certifications?: string[] | null
-          appraiser_company?: string | null
-          appraiser_license?: string | null
-          appraiser_name: string
-          booking_id?: string | null
-          car_id: string
-          claim_id?: string | null
-          completed_at?: string | null
-          created_at?: string
-          full_report_url?: string | null
-          id?: string
-          inspection_results?: Json
-          notes?: string | null
-          overall_condition?: string | null
-          performed_at: string
-          performed_at_address?: string | null
-          performed_at_shop_id?: string | null
-          photos?: Json | null
-          repair_cost_estimate?: number | null
-          repair_recommended?: boolean | null
-          rule_id?: string | null
-          status?: string
-          total_damage_cost?: number | null
-        }
-        Update: {
-          appraisal_number?: string
-          appraiser_certifications?: string[] | null
-          appraiser_company?: string | null
-          appraiser_license?: string | null
-          appraiser_name?: string
-          booking_id?: string | null
-          car_id?: string
-          claim_id?: string | null
-          completed_at?: string | null
-          created_at?: string
-          full_report_url?: string | null
-          id?: string
-          inspection_results?: Json
-          notes?: string | null
-          overall_condition?: string | null
-          performed_at?: string
-          performed_at_address?: string | null
-          performed_at_shop_id?: string | null
-          photos?: Json | null
-          repair_cost_estimate?: number | null
-          repair_recommended?: boolean | null
-          rule_id?: string | null
-          status?: string
-          total_damage_cost?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ev_appraisals_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_performed_at_shop_id_fkey"
-            columns: ["performed_at_shop_id"]
-            isOneToOne: false
-            referencedRelation: "authorized_repair_shops"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_appraisals_rule_id_fkey"
-            columns: ["rule_id"]
-            isOneToOne: false
-            referencedRelation: "ev_appraisal_rules"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      ev_dealership_contacts: {
-        Row: {
-          address: string | null
-          brand: string
-          city: string | null
-          country: string | null
-          created_at: string
-          email: string | null
-          emergency_phone: string | null
-          id: string
-          is_active: boolean | null
-          is_official: boolean | null
-          location: unknown
-          name: string
-          operating_hours: Json | null
-          phone: string | null
-          province: string | null
-          service_types: string[] | null
-          updated_at: string
-          website: string | null
-          whatsapp: string | null
-        }
-        Insert: {
-          address?: string | null
-          brand: string
-          city?: string | null
-          country?: string | null
-          created_at?: string
-          email?: string | null
-          emergency_phone?: string | null
-          id?: string
-          is_active?: boolean | null
-          is_official?: boolean | null
-          location?: unknown
-          name: string
-          operating_hours?: Json | null
-          phone?: string | null
-          province?: string | null
-          service_types?: string[] | null
-          updated_at?: string
-          website?: string | null
-          whatsapp?: string | null
-        }
-        Update: {
-          address?: string | null
-          brand?: string
-          city?: string | null
-          country?: string | null
-          created_at?: string
-          email?: string | null
-          emergency_phone?: string | null
-          id?: string
-          is_active?: boolean | null
-          is_official?: boolean | null
-          location?: unknown
-          name?: string
-          operating_hours?: Json | null
-          phone?: string | null
-          province?: string | null
-          service_types?: string[] | null
-          updated_at?: string
-          website?: string | null
-          whatsapp?: string | null
-        }
-        Relationships: []
-      }
-      ev_incident_protocols: {
-        Row: {
-          booking_id: string
-          car_id: string
-          claim_id: string | null
-          completed_at: string | null
-          created_at: string
-          current_section_index: number | null
-          device_info: Json | null
-          id: string
-          initiated_by: string
-          initiated_by_role: string
-          last_updated_at: string
-          location: Json | null
-          risk_assessment: Json | null
-          sections: Json
-          started_at: string
-          updated_at: string
-        }
-        Insert: {
-          booking_id: string
-          car_id: string
-          claim_id?: string | null
-          completed_at?: string | null
-          created_at?: string
-          current_section_index?: number | null
-          device_info?: Json | null
-          id?: string
-          initiated_by: string
-          initiated_by_role: string
-          last_updated_at?: string
-          location?: Json | null
-          risk_assessment?: Json | null
-          sections?: Json
-          started_at?: string
-          updated_at?: string
-        }
-        Update: {
-          booking_id?: string
-          car_id?: string
-          claim_id?: string | null
-          completed_at?: string | null
-          created_at?: string
-          current_section_index?: number | null
-          device_info?: Json | null
-          id?: string
-          initiated_by?: string
-          initiated_by_role?: string
-          last_updated_at?: string
-          location?: Json | null
-          risk_assessment?: Json | null
-          sections?: Json
-          started_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ev_incident_protocols_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_incident_protocols_claim_id_fkey"
-            columns: ["claim_id"]
-            isOneToOne: false
-            referencedRelation: "claims"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       ev_policies: {
         Row: {
@@ -9802,13 +2558,6 @@ export type Database = {
             foreignKeyName: "ev_policies_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: true
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
             referencedRelation: "cars"
             referencedColumns: ["id"]
           },
@@ -9816,36 +2565,8 @@ export type Database = {
             foreignKeyName: "ev_policies_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: true
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "ev_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "ev_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "ev_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "ev_policies_car_id_fkey"
@@ -9911,13 +2632,6 @@ export type Database = {
             foreignKeyName: "ev_policy_violations_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ev_policy_violations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
             referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
@@ -9943,75 +2657,10 @@ export type Database = {
             referencedColumns: ["booking_id"]
           },
           {
-            foreignKeyName: "ev_policy_violations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "ev_policy_violations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "ev_policy_violations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
             foreignKeyName: "ev_policy_violations_policy_id_fkey"
             columns: ["policy_id"]
             isOneToOne: false
             referencedRelation: "ev_policies"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      ev_protocol_photos: {
-        Row: {
-          caption: string | null
-          id: string
-          metadata: Json | null
-          photo_url: string
-          protocol_id: string
-          section_id: string
-          thumbnail_url: string | null
-          uploaded_at: string
-          uploaded_by: string
-        }
-        Insert: {
-          caption?: string | null
-          id?: string
-          metadata?: Json | null
-          photo_url: string
-          protocol_id: string
-          section_id: string
-          thumbnail_url?: string | null
-          uploaded_at?: string
-          uploaded_by: string
-        }
-        Update: {
-          caption?: string | null
-          id?: string
-          metadata?: Json | null
-          photo_url?: string
-          protocol_id?: string
-          section_id?: string
-          thumbnail_url?: string | null
-          uploaded_at?: string
-          uploaded_by?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ev_protocol_photos_protocol_id_fkey"
-            columns: ["protocol_id"]
-            isOneToOne: false
-            referencedRelation: "ev_incident_protocols"
             referencedColumns: ["id"]
           },
         ]
@@ -10132,13 +2781,6 @@ export type Database = {
             foreignKeyName: "evidence_packages_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "evidence_packages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
             referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
@@ -10161,27 +2803,6 @@ export type Database = {
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "evidence_packages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "evidence_packages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "evidence_packages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
             referencedColumns: ["booking_id"]
           },
         ]
@@ -10227,34 +2848,121 @@ export type Database = {
       }
       exchange_rates: {
         Row: {
-          created_at: string
-          id: string
-          is_active: boolean
-          last_updated: string
+          id: number
+          is_active: boolean | null
+          last_updated: string | null
           pair: string
           rate: number
-          source: string
-          updated_at: string
+          source: string | null
+          updated_at: string | null
         }
         Insert: {
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          last_updated?: string
+          id?: number
+          is_active?: boolean | null
+          last_updated?: string | null
           pair: string
           rate: number
-          source?: string
-          updated_at?: string
+          source?: string | null
+          updated_at?: string | null
         }
         Update: {
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          last_updated?: string
+          id?: number
+          is_active?: boolean | null
+          last_updated?: string | null
           pair?: string
           rate?: number
-          source?: string
-          updated_at?: string
+          source?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      fb_posts_log: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          group_url: string | null
+          id: string
+          post_content: string
+          post_type: string
+          posted_at: string | null
+          screenshot_url: string | null
+          success: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          group_url?: string | null
+          id?: string
+          post_content: string
+          post_type: string
+          posted_at?: string | null
+          screenshot_url?: string | null
+          success?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          group_url?: string | null
+          id?: string
+          post_content?: string
+          post_type?: string
+          posted_at?: string | null
+          screenshot_url?: string | null
+          success?: boolean | null
+        }
+        Relationships: []
+      }
+      fb_prospects: {
+        Row: {
+          car_brand: string | null
+          car_model: string | null
+          car_year: number | null
+          contacted_at: string | null
+          converted_at: string | null
+          created_at: string | null
+          facebook_name: string | null
+          facebook_user_id: string | null
+          id: string
+          notes: string | null
+          photos_count: number | null
+          responded_at: string | null
+          source_group: string | null
+          source_post_url: string | null
+          status: string | null
+        }
+        Insert: {
+          car_brand?: string | null
+          car_model?: string | null
+          car_year?: number | null
+          contacted_at?: string | null
+          converted_at?: string | null
+          created_at?: string | null
+          facebook_name?: string | null
+          facebook_user_id?: string | null
+          id?: string
+          notes?: string | null
+          photos_count?: number | null
+          responded_at?: string | null
+          source_group?: string | null
+          source_post_url?: string | null
+          status?: string | null
+        }
+        Update: {
+          car_brand?: string | null
+          car_model?: string | null
+          car_year?: number | null
+          contacted_at?: string | null
+          converted_at?: string | null
+          created_at?: string | null
+          facebook_name?: string | null
+          facebook_user_id?: string | null
+          id?: string
+          notes?: string | null
+          photos_count?: number | null
+          responded_at?: string | null
+          source_group?: string | null
+          source_post_url?: string | null
+          status?: string | null
         }
         Relationships: []
       }
@@ -10447,89 +3155,184 @@ export type Database = {
         }
         Relationships: []
       }
-      fees: {
+      fgo_claims: {
         Row: {
-          amount: number
-          booking_id: string
+          amount_approved: number | null
+          amount_requested: number
+          booking_id: string | null
+          claim_type: string
+          claimant_id: string
           created_at: string | null
+          evidence_urls: string[] | null
           id: string
-          kind: string
-          refundable: boolean
+          paid_at: string | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          reviewed_by: string | null
+          status: string | null
         }
         Insert: {
-          amount: number
-          booking_id: string
+          amount_approved?: number | null
+          amount_requested: number
+          booking_id?: string | null
+          claim_type: string
+          claimant_id: string
           created_at?: string | null
+          evidence_urls?: string[] | null
           id?: string
-          kind: string
-          refundable?: boolean
+          paid_at?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
         }
         Update: {
-          amount?: number
-          booking_id?: string
+          amount_approved?: number | null
+          amount_requested?: number
+          booking_id?: string | null
+          claim_type?: string
+          claimant_id?: string
           created_at?: string | null
+          evidence_urls?: string[] | null
           id?: string
-          kind?: string
-          refundable?: boolean
+          paid_at?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "fees_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fees_booking_id_fkey"
+            foreignKeyName: "fgo_claims_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
+            foreignKeyName: "fgo_claims_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "my_bookings"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
+            foreignKeyName: "fgo_claims_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
+            foreignKeyName: "fgo_claims_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "owner_pending_approvals"
             referencedColumns: ["booking_id"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: "fgo_claims_claimant_id_fkey"
+            columns: ["claimant_id"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: "fgo_claims_claimant_id_fkey"
+            columns: ["claimant_id"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fees_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: "fgo_claims_reviewed_by_fkey"
+            columns: ["reviewed_by"]
             isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fgo_claims_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fgo_contributions: {
+        Row: {
+          amount: number
+          booking_id: string
+          created_at: string | null
+          id: string
+        }
+        Insert: {
+          amount: number
+          booking_id: string
+          created_at?: string | null
+          id?: string
+        }
+        Update: {
+          amount?: number
+          booking_id?: string
+          created_at?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fgo_contributions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fgo_contributions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fgo_contributions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fgo_contributions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_pending_approvals"
             referencedColumns: ["booking_id"]
           },
         ]
+      }
+      fgo_fund: {
+        Row: {
+          balance: number | null
+          id: string
+          total_claims_paid: number | null
+          total_collected: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          balance?: number | null
+          id?: string
+          total_claims_paid?: number | null
+          total_collected?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          balance?: number | null
+          id?: string
+          total_claims_paid?: number | null
+          total_collected?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       fgo_metrics: {
         Row: {
@@ -10675,124 +3478,32 @@ export type Database = {
         }
         Relationships: []
       }
-      fleet_bonuses: {
+      fipe_cache: {
         Row: {
-          avg_rating: number | null
-          bonus_amount_usd: number | null
-          car_id: string
+          cache_key: string
           created_at: string | null
-          currency: string | null
+          data: Json
+          expires_at: string
           id: string
-          min_rating_required: number | null
-          organization_id: string
-          paid_at: string | null
-          status: string | null
-          trips_completed: number | null
-          trips_required: number | null
           updated_at: string | null
         }
         Insert: {
-          avg_rating?: number | null
-          bonus_amount_usd?: number | null
-          car_id: string
+          cache_key: string
           created_at?: string | null
-          currency?: string | null
+          data: Json
+          expires_at: string
           id?: string
-          min_rating_required?: number | null
-          organization_id: string
-          paid_at?: string | null
-          status?: string | null
-          trips_completed?: number | null
-          trips_required?: number | null
           updated_at?: string | null
         }
         Update: {
-          avg_rating?: number | null
-          bonus_amount_usd?: number | null
-          car_id?: string
+          cache_key?: string
           created_at?: string | null
-          currency?: string | null
+          data?: Json
+          expires_at?: string
           id?: string
-          min_rating_required?: number | null
-          organization_id?: string
-          paid_at?: string | null
-          status?: string | null
-          trips_completed?: number | null
-          trips_required?: number | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fleet_bonuses_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fleet_bonuses_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       fx_rates: {
         Row: {
@@ -10839,283 +3550,48 @@ export type Database = {
         }
         Relationships: []
       }
-      geofence_alerts: {
+      google_calendar_tokens: {
         Row: {
-          acknowledged: boolean
-          acknowledged_at: string | null
-          acknowledged_by: string | null
-          alert_type: string
-          booking_id: string
-          created_at: string
-          distance_from_center: number | null
-          geofence_id: string
-          id: string
-          latitude: number
-          longitude: number
-          resolution_notes: string | null
-          severity: string
-          speed_at_alert: number | null
-        }
-        Insert: {
-          acknowledged?: boolean
-          acknowledged_at?: string | null
-          acknowledged_by?: string | null
-          alert_type: string
-          booking_id: string
-          created_at?: string
-          distance_from_center?: number | null
-          geofence_id: string
-          id?: string
-          latitude: number
-          longitude: number
-          resolution_notes?: string | null
-          severity?: string
-          speed_at_alert?: number | null
-        }
-        Update: {
-          acknowledged?: boolean
-          acknowledged_at?: string | null
-          acknowledged_by?: string | null
-          alert_type?: string
-          booking_id?: string
-          created_at?: string
-          distance_from_center?: number | null
-          geofence_id?: string
-          id?: string
-          latitude?: number
-          longitude?: number
-          resolution_notes?: string | null
-          severity?: string
-          speed_at_alert?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "geofence_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "geofence_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "geofence_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "geofence_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "geofence_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "geofence_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "geofence_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "geofence_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "geofence_alerts_geofence_id_fkey"
-            columns: ["geofence_id"]
-            isOneToOne: false
-            referencedRelation: "geofence_zones"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      geofence_zones: {
-        Row: {
-          alert_on_enter: boolean
-          alert_on_exit: boolean
-          booking_id: string
-          center_latitude: number
-          center_longitude: number
-          color: string | null
-          created_at: string
-          created_by: string | null
-          description: string | null
-          id: string
-          is_active: boolean
-          max_speed_kmh: number | null
-          name: string | null
-          polygon_geojson: Json | null
-          radius_meters: number
-          time_restrictions: Json | null
-          updated_at: string
-          zone_type: string
-        }
-        Insert: {
-          alert_on_enter?: boolean
-          alert_on_exit?: boolean
-          booking_id: string
-          center_latitude: number
-          center_longitude: number
-          color?: string | null
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          is_active?: boolean
-          max_speed_kmh?: number | null
-          name?: string | null
-          polygon_geojson?: Json | null
-          radius_meters?: number
-          time_restrictions?: Json | null
-          updated_at?: string
-          zone_type?: string
-        }
-        Update: {
-          alert_on_enter?: boolean
-          alert_on_exit?: boolean
-          booking_id?: string
-          center_latitude?: number
-          center_longitude?: number
-          color?: string | null
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          is_active?: boolean
-          max_speed_kmh?: number | null
-          name?: string | null
-          polygon_geojson?: Json | null
-          radius_meters?: number
-          time_restrictions?: Json | null
-          updated_at?: string
-          zone_type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "geofence_zones_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "geofence_zones_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "geofence_zones_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "geofence_zones_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "geofence_zones_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "geofence_zones_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "geofence_zones_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "geofence_zones_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      idempotency_keys: {
-        Row: {
-          completed_at: string | null
-          created_at: string
-          entity_id: string | null
+          access_token: string
+          connected_at: string | null
+          created_at: string | null
           expires_at: string
-          id: string
-          idempotency_key: string
-          operation_type: string
-          request_hash: string | null
-          response_body: Json | null
-          response_status: number | null
-          status: string | null
-          user_id: string | null
+          last_synced_at: string | null
+          primary_calendar_id: string | null
+          refresh_token: string
+          scope: string
+          sync_enabled: boolean | null
+          token_type: string | null
+          updated_at: string | null
+          user_id: string
         }
         Insert: {
-          completed_at?: string | null
-          created_at?: string
-          entity_id?: string | null
-          expires_at?: string
-          id?: string
-          idempotency_key: string
-          operation_type: string
-          request_hash?: string | null
-          response_body?: Json | null
-          response_status?: number | null
-          status?: string | null
-          user_id?: string | null
+          access_token: string
+          connected_at?: string | null
+          created_at?: string | null
+          expires_at: string
+          last_synced_at?: string | null
+          primary_calendar_id?: string | null
+          refresh_token: string
+          scope: string
+          sync_enabled?: boolean | null
+          token_type?: string | null
+          updated_at?: string | null
+          user_id: string
         }
         Update: {
-          completed_at?: string | null
-          created_at?: string
-          entity_id?: string | null
+          access_token?: string
+          connected_at?: string | null
+          created_at?: string | null
           expires_at?: string
-          id?: string
-          idempotency_key?: string
-          operation_type?: string
-          request_hash?: string | null
-          response_body?: Json | null
-          response_status?: number | null
-          status?: string | null
-          user_id?: string | null
+          last_synced_at?: string | null
+          primary_calendar_id?: string | null
+          refresh_token?: string
+          scope?: string
+          sync_enabled?: boolean | null
+          token_type?: string | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -11188,13 +3664,6 @@ export type Database = {
             foreignKeyName: "immobilizer_commands_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "immobilizer_commands_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
             referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
@@ -11218,34 +3687,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_pending_approvals"
             referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "immobilizer_commands_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "immobilizer_commands_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "immobilizer_commands_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "immobilizer_commands_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "immobilizer_commands_car_id_fkey"
@@ -11258,36 +3699,8 @@ export type Database = {
             foreignKeyName: "immobilizer_commands_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "immobilizer_commands_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "immobilizer_commands_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "immobilizer_commands_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "immobilizer_commands_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "immobilizer_commands_car_id_fkey"
@@ -11298,647 +3711,6 @@ export type Database = {
           },
           {
             foreignKeyName: "immobilizer_commands_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      insurance_addons: {
-        Row: {
-          active: boolean | null
-          addon_type: string
-          benefit_amount: number | null
-          created_at: string | null
-          daily_cost: number
-          description: string | null
-          id: string
-          name: string
-        }
-        Insert: {
-          active?: boolean | null
-          addon_type: string
-          benefit_amount?: number | null
-          created_at?: string | null
-          daily_cost: number
-          description?: string | null
-          id?: string
-          name: string
-        }
-        Update: {
-          active?: boolean | null
-          addon_type?: string
-          benefit_amount?: number | null
-          created_at?: string | null
-          daily_cost?: number
-          description?: string | null
-          id?: string
-          name?: string
-        }
-        Relationships: []
-      }
-      insurance_claims: {
-        Row: {
-          adjuster_contact: string | null
-          assigned_adjuster: string | null
-          booking_id: string
-          charge_source: string | null
-          charged_at: string | null
-          charged_by: string | null
-          claim_type: string
-          closed_at: string | null
-          created_at: string
-          deductible_charged: number | null
-          description: string
-          estimated_damage_amount: number | null
-          evidence_photos: Json | null
-          id: string
-          incident_date: string
-          incident_location: string | null
-          insurance_payout: number | null
-          location: string | null
-          metadata: Json | null
-          photos: Json | null
-          police_report_number: string | null
-          police_report_url: string | null
-          policy_id: string | null
-          reported_by: string
-          reporter_role: string
-          resolution_notes: string | null
-          status: string
-          subscription_deducted_cents: number | null
-          updated_at: string
-          wallet_charged_cents: number | null
-        }
-        Insert: {
-          adjuster_contact?: string | null
-          assigned_adjuster?: string | null
-          booking_id: string
-          charge_source?: string | null
-          charged_at?: string | null
-          charged_by?: string | null
-          claim_type: string
-          closed_at?: string | null
-          created_at?: string
-          deductible_charged?: number | null
-          description: string
-          estimated_damage_amount?: number | null
-          evidence_photos?: Json | null
-          id?: string
-          incident_date: string
-          incident_location?: string | null
-          insurance_payout?: number | null
-          location?: string | null
-          metadata?: Json | null
-          photos?: Json | null
-          police_report_number?: string | null
-          police_report_url?: string | null
-          policy_id?: string | null
-          reported_by: string
-          reporter_role: string
-          resolution_notes?: string | null
-          status?: string
-          subscription_deducted_cents?: number | null
-          updated_at?: string
-          wallet_charged_cents?: number | null
-        }
-        Update: {
-          adjuster_contact?: string | null
-          assigned_adjuster?: string | null
-          booking_id?: string
-          charge_source?: string | null
-          charged_at?: string | null
-          charged_by?: string | null
-          claim_type?: string
-          closed_at?: string | null
-          created_at?: string
-          deductible_charged?: number | null
-          description?: string
-          estimated_damage_amount?: number | null
-          evidence_photos?: Json | null
-          id?: string
-          incident_date?: string
-          incident_location?: string | null
-          insurance_payout?: number | null
-          location?: string | null
-          metadata?: Json | null
-          photos?: Json | null
-          police_report_number?: string | null
-          police_report_url?: string | null
-          policy_id?: string | null
-          reported_by?: string
-          reporter_role?: string
-          resolution_notes?: string | null
-          status?: string
-          subscription_deducted_cents?: number | null
-          updated_at?: string
-          wallet_charged_cents?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_charged_by_fkey"
-            columns: ["charged_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_charged_by_fkey"
-            columns: ["charged_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_charged_by_fkey"
-            columns: ["charged_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_charged_by_fkey"
-            columns: ["charged_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_charged_by_fkey"
-            columns: ["charged_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_charged_by_fkey"
-            columns: ["charged_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_charged_by_fkey"
-            columns: ["charged_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_charged_by_fkey"
-            columns: ["charged_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_charged_by_fkey"
-            columns: ["charged_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_charged_by_fkey"
-            columns: ["charged_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "insurance_claims_reported_by_fkey"
-            columns: ["reported_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      insurance_notifications: {
-        Row: {
-          attachments: Json | null
-          body: string
-          body_hash: string | null
-          booking_id: string
-          broker_email: string | null
-          broker_name: string | null
-          claim_number: string | null
-          claim_status: string | null
-          created_at: string | null
-          id: string
-          insurance_company: string
-          notification_type: string
-          police_report_id: string | null
-          policy_number: string | null
-          protocol_event_id: string | null
-          response_content: string | null
-          response_received_at: string | null
-          sent_at: string | null
-          sent_to: string | null
-          sent_via: string | null
-          status: string | null
-          subject: string
-          updated_at: string | null
-        }
-        Insert: {
-          attachments?: Json | null
-          body: string
-          body_hash?: string | null
-          booking_id: string
-          broker_email?: string | null
-          broker_name?: string | null
-          claim_number?: string | null
-          claim_status?: string | null
-          created_at?: string | null
-          id?: string
-          insurance_company: string
-          notification_type: string
-          police_report_id?: string | null
-          policy_number?: string | null
-          protocol_event_id?: string | null
-          response_content?: string | null
-          response_received_at?: string | null
-          sent_at?: string | null
-          sent_to?: string | null
-          sent_via?: string | null
-          status?: string | null
-          subject: string
-          updated_at?: string | null
-        }
-        Update: {
-          attachments?: Json | null
-          body?: string
-          body_hash?: string | null
-          booking_id?: string
-          broker_email?: string | null
-          broker_name?: string | null
-          claim_number?: string | null
-          claim_status?: string | null
-          created_at?: string | null
-          id?: string
-          insurance_company?: string
-          notification_type?: string
-          police_report_id?: string | null
-          policy_number?: string | null
-          protocol_event_id?: string | null
-          response_content?: string | null
-          response_received_at?: string | null
-          sent_at?: string | null
-          sent_to?: string | null
-          sent_via?: string | null
-          status?: string | null
-          subject?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "insurance_notifications_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "insurance_notifications_police_report_id_fkey"
-            columns: ["police_report_id"]
-            isOneToOne: false
-            referencedRelation: "police_reports"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_notifications_protocol_event_id_fkey"
-            columns: ["protocol_event_id"]
-            isOneToOne: false
-            referencedRelation: "return_protocol_events"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      insurance_policies: {
-        Row: {
-          annual_premium: number | null
-          car_id: string | null
-          created_at: string | null
-          daily_premium: number | null
-          deductible_fixed_amount: number | null
-          deductible_min_amount: number | null
-          deductible_percentage: number | null
-          deductible_type: string | null
-          fire_coverage: boolean | null
-          id: string
-          insurer: string
-          liability_coverage_amount: number | null
-          metadata: Json | null
-          misappropriation_coverage: boolean | null
-          misappropriation_limit: number | null
-          own_damage_coverage: boolean | null
-          owner_id: string | null
-          owner_policy_document_url: string | null
-          owner_policy_end: string | null
-          owner_policy_number: string | null
-          owner_policy_start: string | null
-          platform_contract_end: string | null
-          platform_contract_start: string | null
-          platform_policy_number: string | null
-          policy_type: string
-          status: string | null
-          theft_coverage: boolean | null
-          updated_at: string | null
-          verification_date: string | null
-          verified_by_admin: boolean | null
-        }
-        Insert: {
-          annual_premium?: number | null
-          car_id?: string | null
-          created_at?: string | null
-          daily_premium?: number | null
-          deductible_fixed_amount?: number | null
-          deductible_min_amount?: number | null
-          deductible_percentage?: number | null
-          deductible_type?: string | null
-          fire_coverage?: boolean | null
-          id?: string
-          insurer: string
-          liability_coverage_amount?: number | null
-          metadata?: Json | null
-          misappropriation_coverage?: boolean | null
-          misappropriation_limit?: number | null
-          own_damage_coverage?: boolean | null
-          owner_id?: string | null
-          owner_policy_document_url?: string | null
-          owner_policy_end?: string | null
-          owner_policy_number?: string | null
-          owner_policy_start?: string | null
-          platform_contract_end?: string | null
-          platform_contract_start?: string | null
-          platform_policy_number?: string | null
-          policy_type: string
-          status?: string | null
-          theft_coverage?: boolean | null
-          updated_at?: string | null
-          verification_date?: string | null
-          verified_by_admin?: boolean | null
-        }
-        Update: {
-          annual_premium?: number | null
-          car_id?: string | null
-          created_at?: string | null
-          daily_premium?: number | null
-          deductible_fixed_amount?: number | null
-          deductible_min_amount?: number | null
-          deductible_percentage?: number | null
-          deductible_type?: string | null
-          fire_coverage?: boolean | null
-          id?: string
-          insurer?: string
-          liability_coverage_amount?: number | null
-          metadata?: Json | null
-          misappropriation_coverage?: boolean | null
-          misappropriation_limit?: number | null
-          own_damage_coverage?: boolean | null
-          owner_id?: string | null
-          owner_policy_document_url?: string | null
-          owner_policy_end?: string | null
-          owner_policy_number?: string | null
-          owner_policy_start?: string | null
-          platform_contract_end?: string | null
-          platform_contract_start?: string | null
-          platform_policy_number?: string | null
-          policy_type?: string
-          status?: string | null
-          theft_coverage?: boolean | null
-          updated_at?: string | null
-          verification_date?: string | null
-          verified_by_admin?: boolean | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "insurance_policies_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "insurance_policies_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
             referencedRelation: "v_instant_booking_cars"
@@ -12054,13 +3826,6 @@ export type Database = {
             foreignKeyName: "iot_devices_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "iot_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
             referencedRelation: "cars"
             referencedColumns: ["id"]
           },
@@ -12068,36 +3833,8 @@ export type Database = {
             foreignKeyName: "iot_devices_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "iot_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "iot_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "iot_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "iot_devices_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "iot_devices_car_id_fkey"
@@ -12114,48 +3851,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      kyc_user_blocks: {
-        Row: {
-          block_type: string
-          blocked_at: string
-          created_at: string
-          details: Json | null
-          id: string
-          reason: string
-          unblock_reason: string | null
-          unblocked_at: string | null
-          unblocked_by: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          block_type: string
-          blocked_at?: string
-          created_at?: string
-          details?: Json | null
-          id?: string
-          reason: string
-          unblock_reason?: string | null
-          unblocked_at?: string | null
-          unblocked_by?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          block_type?: string
-          blocked_at?: string
-          created_at?: string
-          details?: Json | null
-          id?: string
-          reason?: string
-          unblock_reason?: string | null
-          unblocked_at?: string | null
-          unblocked_by?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
       }
       marketing_alerts: {
         Row: {
@@ -12693,6 +4388,99 @@ export type Database = {
         }
         Relationships: []
       }
+      marketing_leads: {
+        Row: {
+          ad_id: string | null
+          adgroup_id: string | null
+          advertiser_id: string | null
+          campaign_id: string | null
+          car_brand: string | null
+          car_model: string | null
+          car_year: number | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          email: string | null
+          first_name: string | null
+          form_id: string | null
+          full_name: string | null
+          has_car: boolean | null
+          id: string
+          last_name: string | null
+          lead_id: string | null
+          lead_type: string | null
+          metadata: Json | null
+          phone: string | null
+          platform: string
+          raw_payload: Json
+          received_at: string | null
+          region: string | null
+          status: string | null
+          submitted_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          ad_id?: string | null
+          adgroup_id?: string | null
+          advertiser_id?: string | null
+          campaign_id?: string | null
+          car_brand?: string | null
+          car_model?: string | null
+          car_year?: number | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          form_id?: string | null
+          full_name?: string | null
+          has_car?: boolean | null
+          id?: string
+          last_name?: string | null
+          lead_id?: string | null
+          lead_type?: string | null
+          metadata?: Json | null
+          phone?: string | null
+          platform: string
+          raw_payload?: Json
+          received_at?: string | null
+          region?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          ad_id?: string | null
+          adgroup_id?: string | null
+          advertiser_id?: string | null
+          campaign_id?: string | null
+          car_brand?: string | null
+          car_model?: string | null
+          car_year?: number | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          form_id?: string | null
+          full_name?: string | null
+          has_car?: boolean | null
+          id?: string
+          last_name?: string | null
+          lead_id?: string | null
+          lead_type?: string | null
+          metadata?: Json | null
+          phone?: string | null
+          platform?: string
+          raw_payload?: Json
+          received_at?: string | null
+          region?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       marketing_metrics_daily: {
         Row: {
           campaign_id: string
@@ -12922,46 +4710,42 @@ export type Database = {
           body: string
           booking_id: string | null
           car_id: string | null
-          created_at: string
+          created_at: string | null
           delivered_at: string | null
           id: string
+          is_flagged: boolean | null
+          is_system_message: boolean | null
           read_at: string | null
           recipient_id: string
           sender_id: string
-          updated_at: string
         }
         Insert: {
           body: string
           booking_id?: string | null
           car_id?: string | null
-          created_at?: string
+          created_at?: string | null
           delivered_at?: string | null
           id?: string
+          is_flagged?: boolean | null
+          is_system_message?: boolean | null
           read_at?: string | null
           recipient_id: string
           sender_id: string
-          updated_at?: string
         }
         Update: {
           body?: string
           booking_id?: string | null
           car_id?: string | null
-          created_at?: string
+          created_at?: string | null
           delivered_at?: string | null
           id?: string
+          is_flagged?: boolean | null
+          is_system_message?: boolean | null
           read_at?: string | null
           recipient_id?: string
           sender_id?: string
-          updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "messages_booking_id_fkey"
             columns: ["booking_id"]
@@ -12991,34 +4775,6 @@ export type Database = {
             referencedColumns: ["booking_id"]
           },
           {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "messages_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
@@ -13029,36 +4785,8 @@ export type Database = {
             foreignKeyName: "messages_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "messages_car_id_fkey"
@@ -13072,256 +4800,6 @@ export type Database = {
             columns: ["car_id"]
             isOneToOne: false
             referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      monitoring_alerts: {
-        Row: {
-          alert_type: string
-          created_at: string
-          id: string
-          message: string
-          metadata: Json | null
-          resolved_at: string | null
-          severity: string
-          status: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          alert_type: string
-          created_at?: string
-          id?: string
-          message: string
-          metadata?: Json | null
-          resolved_at?: string | null
-          severity: string
-          status?: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          alert_type?: string
-          created_at?: string
-          id?: string
-          message?: string
-          metadata?: Json | null
-          resolved_at?: string | null
-          severity?: string
-          status?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      monitoring_performance_metrics: {
-        Row: {
-          created_at: string
-          id: string
-          metadata: Json | null
-          metric_name: string
-          metric_unit: string
-          metric_value: number
-          recorded_at: string
-          resource_name: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          metadata?: Json | null
-          metric_name: string
-          metric_unit: string
-          metric_value: number
-          recorded_at?: string
-          resource_name?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          metadata?: Json | null
-          metric_name?: string
-          metric_unit?: string
-          metric_value?: number
-          recorded_at?: string
-          resource_name?: string | null
-        }
-        Relationships: []
-      }
-      mp_onboarding_states: {
-        Row: {
-          access_token: string | null
-          auth_code: string | null
-          collector_id: number | null
-          completed_at: string | null
-          created_at: string
-          error_message: string | null
-          expires_at: string | null
-          id: string
-          last_sync_at: string | null
-          public_key: string | null
-          redirect_url: string | null
-          refresh_token: string | null
-          state_token: string | null
-          status: string
-          token_expires_at: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          access_token?: string | null
-          auth_code?: string | null
-          collector_id?: number | null
-          completed_at?: string | null
-          created_at?: string
-          error_message?: string | null
-          expires_at?: string | null
-          id?: string
-          last_sync_at?: string | null
-          public_key?: string | null
-          redirect_url?: string | null
-          refresh_token?: string | null
-          state_token?: string | null
-          status?: string
-          token_expires_at?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          access_token?: string | null
-          auth_code?: string | null
-          collector_id?: number | null
-          completed_at?: string | null
-          created_at?: string
-          error_message?: string | null
-          expires_at?: string | null
-          id?: string
-          last_sync_at?: string | null
-          public_key?: string | null
-          redirect_url?: string | null
-          refresh_token?: string | null
-          state_token?: string | null
-          status?: string
-          token_expires_at?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      mp_webhook_logs: {
-        Row: {
-          booking_id: string | null
-          event_id: string | null
-          id: string
-          ip_address: unknown
-          payload: Json
-          payment_id: string | null
-          processed: boolean | null
-          processed_at: string | null
-          processing_error: string | null
-          received_at: string | null
-          resource_id: string | null
-          resource_type: string | null
-          split_id: string | null
-          user_agent: string | null
-          webhook_type: string
-        }
-        Insert: {
-          booking_id?: string | null
-          event_id?: string | null
-          id?: string
-          ip_address?: unknown
-          payload: Json
-          payment_id?: string | null
-          processed?: boolean | null
-          processed_at?: string | null
-          processing_error?: string | null
-          received_at?: string | null
-          resource_id?: string | null
-          resource_type?: string | null
-          split_id?: string | null
-          user_agent?: string | null
-          webhook_type: string
-        }
-        Update: {
-          booking_id?: string | null
-          event_id?: string | null
-          id?: string
-          ip_address?: unknown
-          payload?: Json
-          payment_id?: string | null
-          processed?: boolean | null
-          processed_at?: string | null
-          processing_error?: string | null
-          received_at?: string | null
-          resource_id?: string | null
-          resource_type?: string | null
-          split_id?: string | null
-          user_agent?: string | null
-          webhook_type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "mp_webhook_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "mp_webhook_logs_split_id_fkey"
-            columns: ["split_id"]
-            isOneToOne: false
-            referencedRelation: "payment_splits"
             referencedColumns: ["id"]
           },
         ]
@@ -13422,45 +4900,6 @@ export type Database = {
           template_code?: string | null
           title?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      notification_logs: {
-        Row: {
-          channel: string
-          created_at: string | null
-          error_message: string | null
-          id: string
-          metadata: Json | null
-          recipient_email: string | null
-          recipient_phone: string | null
-          recipient_type: string | null
-          status: string
-          updated_at: string | null
-        }
-        Insert: {
-          channel: string
-          created_at?: string | null
-          error_message?: string | null
-          id?: string
-          metadata?: Json | null
-          recipient_email?: string | null
-          recipient_phone?: string | null
-          recipient_type?: string | null
-          status?: string
-          updated_at?: string | null
-        }
-        Update: {
-          channel?: string
-          created_at?: string | null
-          error_message?: string | null
-          id?: string
-          metadata?: Json | null
-          recipient_email?: string | null
-          recipient_phone?: string | null
-          recipient_type?: string | null
-          status?: string
-          updated_at?: string | null
         }
         Relationships: []
       }
@@ -13694,251 +5133,6 @@ export type Database = {
         }
         Relationships: []
       }
-      onboarding_plan_templates: {
-        Row: {
-          canonical: Json
-          created_at: string
-          critical_step_keys: string[] | null
-          id: string
-          plan_code: string
-          role: string
-          updated_at: string
-          version: string
-        }
-        Insert: {
-          canonical: Json
-          created_at?: string
-          critical_step_keys?: string[] | null
-          id?: string
-          plan_code: string
-          role: string
-          updated_at?: string
-          version: string
-        }
-        Update: {
-          canonical?: Json
-          created_at?: string
-          critical_step_keys?: string[] | null
-          id?: string
-          plan_code?: string
-          role?: string
-          updated_at?: string
-          version?: string
-        }
-        Relationships: []
-      }
-      organization_members: {
-        Row: {
-          commission_fixed_percent: number | null
-          joined_at: string | null
-          organization_id: string
-          role: string
-          user_id: string
-        }
-        Insert: {
-          commission_fixed_percent?: number | null
-          joined_at?: string | null
-          organization_id: string
-          role: string
-          user_id: string
-        }
-        Update: {
-          commission_fixed_percent?: number | null
-          joined_at?: string | null
-          organization_id?: string
-          role?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "organization_members_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "organization_members_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      organizations: {
-        Row: {
-          created_at: string | null
-          id: string
-          logo_url: string | null
-          name: string
-          owner_id: string
-          tax_id: string | null
-          type: string
-          updated_at: string | null
-          verified: boolean | null
-          website: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          logo_url?: string | null
-          name: string
-          owner_id: string
-          tax_id?: string | null
-          type: string
-          updated_at?: string | null
-          verified?: boolean | null
-          website?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          logo_url?: string | null
-          name?: string
-          owner_id?: string
-          tax_id?: string | null
-          type?: string
-          updated_at?: string | null
-          verified?: boolean | null
-          website?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "organizations_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
       otp_delivery_logs: {
         Row: {
           channel: string
@@ -13978,330 +5172,178 @@ export type Database = {
         }
         Relationships: []
       }
-      outbound_requests: {
-        Row: {
-          body: Json | null
-          created_at: string
-          endpoint: string
-          error: string | null
-          headers: Json | null
-          id: string
-          method: string
-          response_body: Json | null
-          response_status: number | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          body?: Json | null
-          created_at?: string
-          endpoint: string
-          error?: string | null
-          headers?: Json | null
-          id?: string
-          method?: string
-          response_body?: Json | null
-          response_status?: number | null
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          body?: Json | null
-          created_at?: string
-          endpoint?: string
-          error?: string | null
-          headers?: Json | null
-          id?: string
-          method?: string
-          response_body?: Json | null
-          response_status?: number | null
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       outreach_campaigns: {
         Row: {
-          campaign_type: string
+          completed_at: string | null
           created_at: string | null
+          created_by: string | null
           description: string | null
           id: string
-          is_active: boolean | null
-          max_days_since_contact: number | null
-          max_per_day: number | null
-          message_template: string
-          min_days_since_contact: number | null
+          messages_delivered: number | null
+          messages_read: number | null
+          messages_sent: number | null
           name: string
-          send_time_end: string | null
-          send_time_start: string | null
-          target_region: string[] | null
-          target_status: string[] | null
-          total_responses: number | null
-          total_sent: number | null
+          responses_received: number | null
+          scheduled_at: string | null
+          started_at: string | null
+          status: string | null
+          target_tags: string[] | null
+          template_message: string
+          updated_at: string | null
         }
         Insert: {
-          campaign_type: string
+          completed_at?: string | null
           created_at?: string | null
+          created_by?: string | null
           description?: string | null
           id?: string
-          is_active?: boolean | null
-          max_days_since_contact?: number | null
-          max_per_day?: number | null
-          message_template: string
-          min_days_since_contact?: number | null
+          messages_delivered?: number | null
+          messages_read?: number | null
+          messages_sent?: number | null
           name: string
-          send_time_end?: string | null
-          send_time_start?: string | null
-          target_region?: string[] | null
-          target_status?: string[] | null
-          total_responses?: number | null
-          total_sent?: number | null
+          responses_received?: number | null
+          scheduled_at?: string | null
+          started_at?: string | null
+          status?: string | null
+          target_tags?: string[] | null
+          template_message: string
+          updated_at?: string | null
         }
         Update: {
-          campaign_type?: string
+          completed_at?: string | null
           created_at?: string | null
+          created_by?: string | null
           description?: string | null
           id?: string
-          is_active?: boolean | null
-          max_days_since_contact?: number | null
-          max_per_day?: number | null
-          message_template?: string
-          min_days_since_contact?: number | null
+          messages_delivered?: number | null
+          messages_read?: number | null
+          messages_sent?: number | null
           name?: string
-          send_time_end?: string | null
-          send_time_start?: string | null
-          target_region?: string[] | null
-          target_status?: string[] | null
-          total_responses?: number | null
-          total_sent?: number | null
+          responses_received?: number | null
+          scheduled_at?: string | null
+          started_at?: string | null
+          status?: string | null
+          target_tags?: string[] | null
+          template_message?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
       outreach_contacts: {
         Row: {
-          anniversary: string | null
-          birthday: string | null
-          car_brand: string | null
-          car_model: string | null
-          car_year: number | null
-          city: string | null
-          company: string | null
-          converted_at: string | null
-          country: string | null
           created_at: string | null
-          current_platform: string | null
-          detected_intent: string | null
-          email: string | null
-          engagement_score: number | null
-          family_notes: string | null
-          first_contact_at: string | null
           first_name: string | null
-          followup_reason: string | null
           followup_sent: boolean | null
           followup_sent_at: string | null
           full_name: string | null
-          has_car: boolean | null
           id: string
-          interests: string[] | null
-          last_message_received_at: string | null
+          is_active: boolean | null
           last_message_sent_at: string | null
-          last_name: string | null
           last_outreach_at: string | null
           last_response_at: string | null
-          messages_received: number | null
           messages_sent: number | null
-          next_followup_at: string | null
+          metadata: Json | null
           notes: string | null
-          objections: string[] | null
-          occupation: string | null
-          pain_points: string[] | null
           phone: string
-          potential_score: number | null
-          province: string | null
-          referrals_converted: number | null
-          referrals_given: number | null
-          referred_by: string | null
-          region: string | null
           requires_human: boolean | null
-          response_rate: number | null
           source: string | null
           status: string | null
+          tags: string[] | null
+          tiktok_lead_id: string | null
           updated_at: string | null
           whatsapp_id: string | null
         }
         Insert: {
-          anniversary?: string | null
-          birthday?: string | null
-          car_brand?: string | null
-          car_model?: string | null
-          car_year?: number | null
-          city?: string | null
-          company?: string | null
-          converted_at?: string | null
-          country?: string | null
           created_at?: string | null
-          current_platform?: string | null
-          detected_intent?: string | null
-          email?: string | null
-          engagement_score?: number | null
-          family_notes?: string | null
-          first_contact_at?: string | null
           first_name?: string | null
-          followup_reason?: string | null
           followup_sent?: boolean | null
           followup_sent_at?: string | null
           full_name?: string | null
-          has_car?: boolean | null
           id?: string
-          interests?: string[] | null
-          last_message_received_at?: string | null
+          is_active?: boolean | null
           last_message_sent_at?: string | null
-          last_name?: string | null
           last_outreach_at?: string | null
           last_response_at?: string | null
-          messages_received?: number | null
           messages_sent?: number | null
-          next_followup_at?: string | null
+          metadata?: Json | null
           notes?: string | null
-          objections?: string[] | null
-          occupation?: string | null
-          pain_points?: string[] | null
           phone: string
-          potential_score?: number | null
-          province?: string | null
-          referrals_converted?: number | null
-          referrals_given?: number | null
-          referred_by?: string | null
-          region?: string | null
           requires_human?: boolean | null
-          response_rate?: number | null
           source?: string | null
           status?: string | null
+          tags?: string[] | null
+          tiktok_lead_id?: string | null
           updated_at?: string | null
           whatsapp_id?: string | null
         }
         Update: {
-          anniversary?: string | null
-          birthday?: string | null
-          car_brand?: string | null
-          car_model?: string | null
-          car_year?: number | null
-          city?: string | null
-          company?: string | null
-          converted_at?: string | null
-          country?: string | null
           created_at?: string | null
-          current_platform?: string | null
-          detected_intent?: string | null
-          email?: string | null
-          engagement_score?: number | null
-          family_notes?: string | null
-          first_contact_at?: string | null
           first_name?: string | null
-          followup_reason?: string | null
           followup_sent?: boolean | null
           followup_sent_at?: string | null
           full_name?: string | null
-          has_car?: boolean | null
           id?: string
-          interests?: string[] | null
-          last_message_received_at?: string | null
+          is_active?: boolean | null
           last_message_sent_at?: string | null
-          last_name?: string | null
           last_outreach_at?: string | null
           last_response_at?: string | null
-          messages_received?: number | null
           messages_sent?: number | null
-          next_followup_at?: string | null
+          metadata?: Json | null
           notes?: string | null
-          objections?: string[] | null
-          occupation?: string | null
-          pain_points?: string[] | null
           phone?: string
-          potential_score?: number | null
-          province?: string | null
-          referrals_converted?: number | null
-          referrals_given?: number | null
-          referred_by?: string | null
-          region?: string | null
           requires_human?: boolean | null
-          response_rate?: number | null
           source?: string | null
           status?: string | null
+          tags?: string[] | null
+          tiktok_lead_id?: string | null
           updated_at?: string | null
           whatsapp_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "outreach_contacts_referred_by_fkey"
-            columns: ["referred_by"]
+            foreignKeyName: "outreach_contacts_tiktok_lead_id_fkey"
+            columns: ["tiktok_lead_id"]
             isOneToOne: false
-            referencedRelation: "outreach_contacts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "outreach_contacts_referred_by_fkey"
-            columns: ["referred_by"]
-            isOneToOne: false
-            referencedRelation: "v_contacts_followup_today"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "outreach_contacts_referred_by_fkey"
-            columns: ["referred_by"]
-            isOneToOne: false
-            referencedRelation: "v_upcoming_birthdays"
+            referencedRelation: "marketing_leads"
             referencedColumns: ["id"]
           },
         ]
       }
       outreach_messages: {
         Row: {
-          contact_id: string
+          contact_id: string | null
           content: string
           created_at: string | null
-          delivered_at: string | null
-          detected_intent: string | null
           direction: string
+          error_message: string | null
           id: string
-          keywords: string[] | null
           message_type: string | null
-          read_at: string | null
-          sentiment: string | null
+          metadata: Json | null
           status: string | null
-          template_used: string | null
           whatsapp_message_id: string | null
         }
         Insert: {
-          contact_id: string
+          contact_id?: string | null
           content: string
           created_at?: string | null
-          delivered_at?: string | null
-          detected_intent?: string | null
           direction: string
+          error_message?: string | null
           id?: string
-          keywords?: string[] | null
           message_type?: string | null
-          read_at?: string | null
-          sentiment?: string | null
+          metadata?: Json | null
           status?: string | null
-          template_used?: string | null
           whatsapp_message_id?: string | null
         }
         Update: {
-          contact_id?: string
+          contact_id?: string | null
           content?: string
           created_at?: string | null
-          delivered_at?: string | null
-          detected_intent?: string | null
           direction?: string
+          error_message?: string | null
           id?: string
-          keywords?: string[] | null
           message_type?: string | null
-          read_at?: string | null
-          sentiment?: string | null
+          metadata?: Json | null
           status?: string | null
-          template_used?: string | null
           whatsapp_message_id?: string | null
         }
         Relationships: [
@@ -14312,738 +5354,263 @@ export type Database = {
             referencedRelation: "outreach_contacts"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "outreach_messages_contact_id_fkey"
-            columns: ["contact_id"]
-            isOneToOne: false
-            referencedRelation: "v_contacts_followup_today"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "outreach_messages_contact_id_fkey"
-            columns: ["contact_id"]
-            isOneToOne: false
-            referencedRelation: "v_upcoming_birthdays"
-            referencedColumns: ["id"]
-          },
         ]
       }
-      outreach_referrals: {
+      owner_cooldowns: {
         Row: {
-          converted_at: string | null
+          booking_id: string | null
+          car_id: string | null
           created_at: string | null
+          ends_at: string
           id: string
-          referred_id: string
-          referrer_id: string
-          reward_given: boolean | null
-          reward_given_at: string | null
-          reward_type: string | null
-          status: string | null
-        }
-        Insert: {
-          converted_at?: string | null
-          created_at?: string | null
-          id?: string
-          referred_id: string
-          referrer_id: string
-          reward_given?: boolean | null
-          reward_given_at?: string | null
-          reward_type?: string | null
-          status?: string | null
-        }
-        Update: {
-          converted_at?: string | null
-          created_at?: string | null
-          id?: string
-          referred_id?: string
-          referrer_id?: string
-          reward_given?: boolean | null
-          reward_given_at?: string | null
-          reward_type?: string | null
-          status?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "outreach_referrals_referred_id_fkey"
-            columns: ["referred_id"]
-            isOneToOne: false
-            referencedRelation: "outreach_contacts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "outreach_referrals_referred_id_fkey"
-            columns: ["referred_id"]
-            isOneToOne: false
-            referencedRelation: "v_contacts_followup_today"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "outreach_referrals_referred_id_fkey"
-            columns: ["referred_id"]
-            isOneToOne: false
-            referencedRelation: "v_upcoming_birthdays"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "outreach_referrals_referrer_id_fkey"
-            columns: ["referrer_id"]
-            isOneToOne: false
-            referencedRelation: "outreach_contacts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "outreach_referrals_referrer_id_fkey"
-            columns: ["referrer_id"]
-            isOneToOne: false
-            referencedRelation: "v_contacts_followup_today"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "outreach_referrals_referrer_id_fkey"
-            columns: ["referrer_id"]
-            isOneToOne: false
-            referencedRelation: "v_upcoming_birthdays"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      outreach_special_dates: {
-        Row: {
-          contact_id: string
-          created_at: string | null
-          date_type: string
-          date_value: string
-          description: string | null
-          id: string
-          last_message_year: number | null
-        }
-        Insert: {
-          contact_id: string
-          created_at?: string | null
-          date_type: string
-          date_value: string
-          description?: string | null
-          id?: string
-          last_message_year?: number | null
-        }
-        Update: {
-          contact_id?: string
-          created_at?: string | null
-          date_type?: string
-          date_value?: string
-          description?: string | null
-          id?: string
-          last_message_year?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "outreach_special_dates_contact_id_fkey"
-            columns: ["contact_id"]
-            isOneToOne: false
-            referencedRelation: "outreach_contacts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "outreach_special_dates_contact_id_fkey"
-            columns: ["contact_id"]
-            isOneToOne: false
-            referencedRelation: "v_contacts_followup_today"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "outreach_special_dates_contact_id_fkey"
-            columns: ["contact_id"]
-            isOneToOne: false
-            referencedRelation: "v_upcoming_birthdays"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      owner_availability: {
-        Row: {
-          car_id: string
-          date: string
-          declared_at: string | null
-          id: string
-          is_available: boolean | null
-          occupied_by_booking_id: string | null
-          occupied_by_personal_use: boolean | null
           owner_id: string
+          reason: string
+          starts_at: string
         }
         Insert: {
-          car_id: string
-          date: string
-          declared_at?: string | null
+          booking_id?: string | null
+          car_id?: string | null
+          created_at?: string | null
+          ends_at: string
           id?: string
-          is_available?: boolean | null
-          occupied_by_booking_id?: string | null
-          occupied_by_personal_use?: boolean | null
           owner_id: string
+          reason: string
+          starts_at?: string
         }
         Update: {
-          car_id?: string
-          date?: string
-          declared_at?: string | null
+          booking_id?: string | null
+          car_id?: string | null
+          created_at?: string | null
+          ends_at?: string
           id?: string
-          is_available?: boolean | null
-          occupied_by_booking_id?: string | null
-          occupied_by_personal_use?: boolean | null
           owner_id?: string
+          reason?: string
+          starts_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: "owner_cooldowns_booking_id_fkey"
+            columns: ["booking_id"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
+            referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
+            foreignKeyName: "owner_cooldowns_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "owner_cooldowns_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "owner_cooldowns_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "owner_cooldowns_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
             referencedRelation: "cars"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
+            foreignKeyName: "owner_cooldowns_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "owner_availability_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "owner_availability_car_id_fkey"
+            foreignKeyName: "owner_cooldowns_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
             referencedRelation: "v_cars_with_main_photo"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "owner_availability_car_id_fkey"
+            foreignKeyName: "owner_cooldowns_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
             referencedRelation: "v_instant_booking_cars"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "owner_availability_occupied_by_booking_id_fkey"
-            columns: ["occupied_by_booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "owner_availability_owner_id_fkey"
+            foreignKeyName: "owner_cooldowns_owner_id_fkey"
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "me_profile"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
+            foreignKeyName: "owner_cooldowns_owner_id_fkey"
             columns: ["owner_id"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      owner_gaming_signals: {
+        Row: {
+          action_taken: string | null
+          details: Json | null
+          detected_at: string | null
+          id: string
+          notes: string | null
+          owner_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          risk_score: number
+          signal_type: string
+          status: string
+        }
+        Insert: {
+          action_taken?: string | null
+          details?: Json | null
+          detected_at?: string | null
+          id?: string
+          notes?: string | null
+          owner_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk_score?: number
+          signal_type: string
+          status?: string
+        }
+        Update: {
+          action_taken?: string | null
+          details?: Json | null
+          detected_at?: string | null
+          id?: string
+          notes?: string | null
+          owner_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk_score?: number
+          signal_type?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "owner_gaming_signals_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
+            foreignKeyName: "owner_gaming_signals_owner_id_fkey"
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: "owner_gaming_signals_reviewed_by_fkey"
+            columns: ["reviewed_by"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
+            referencedRelation: "me_profile"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
+            foreignKeyName: "owner_gaming_signals_reviewed_by_fkey"
+            columns: ["reviewed_by"]
             isOneToOne: false
-            referencedRelation: "public_owner_info"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "owner_availability_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
           },
         ]
       }
-      owner_usage_limits: {
+      owner_monthly_summary: {
         Row: {
-          annual_expense_limit_cents: number | null
-          block_reason: string | null
-          blocked_at: string | null
-          car_id: string
-          consecutive_days_current: number | null
+          calculated_at: string | null
+          capped_share: number
+          cars_capped: number
+          cars_contributing: number
           created_at: string | null
-          days_shared: number | null
+          eligibility_reasons: string[] | null
+          eligible_days: number
+          gaming_risk_score: number | null
           id: string
-          is_blocked: boolean | null
-          max_consecutive_allowed: number | null
-          max_days_allowed: number | null
-          min_personal_days_required: number | null
-          month: number
-          personal_use_days: number | null
-          unblocked_at: string | null
+          is_eligible: boolean
+          month: string
+          owner_id: string
+          paid_at: string | null
+          payout_status: string
+          payout_usd: number
+          points_used: number
+          raw_share: number
+          total_points: number
           updated_at: string | null
-          year: number
-          ytd_earnings_cents: number | null
         }
         Insert: {
-          annual_expense_limit_cents?: number | null
-          block_reason?: string | null
-          blocked_at?: string | null
-          car_id: string
-          consecutive_days_current?: number | null
+          calculated_at?: string | null
+          capped_share?: number
+          cars_capped?: number
+          cars_contributing?: number
           created_at?: string | null
-          days_shared?: number | null
+          eligibility_reasons?: string[] | null
+          eligible_days?: number
+          gaming_risk_score?: number | null
           id?: string
-          is_blocked?: boolean | null
-          max_consecutive_allowed?: number | null
-          max_days_allowed?: number | null
-          min_personal_days_required?: number | null
-          month: number
-          personal_use_days?: number | null
-          unblocked_at?: string | null
+          is_eligible?: boolean
+          month: string
+          owner_id: string
+          paid_at?: string | null
+          payout_status?: string
+          payout_usd?: number
+          points_used?: number
+          raw_share?: number
+          total_points?: number
           updated_at?: string | null
-          year: number
-          ytd_earnings_cents?: number | null
         }
         Update: {
-          annual_expense_limit_cents?: number | null
-          block_reason?: string | null
-          blocked_at?: string | null
-          car_id?: string
-          consecutive_days_current?: number | null
+          calculated_at?: string | null
+          capped_share?: number
+          cars_capped?: number
+          cars_contributing?: number
           created_at?: string | null
-          days_shared?: number | null
+          eligibility_reasons?: string[] | null
+          eligible_days?: number
+          gaming_risk_score?: number | null
           id?: string
-          is_blocked?: boolean | null
-          max_consecutive_allowed?: number | null
-          max_days_allowed?: number | null
-          min_personal_days_required?: number | null
-          month?: number
-          personal_use_days?: number | null
-          unblocked_at?: string | null
+          is_eligible?: boolean
+          month?: string
+          owner_id?: string
+          paid_at?: string | null
+          payout_status?: string
+          payout_usd?: number
+          points_used?: number
+          raw_share?: number
+          total_points?: number
           updated_at?: string | null
-          year?: number
-          ytd_earnings_cents?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: "owner_monthly_summary_owner_id_fkey"
+            columns: ["owner_id"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
+            referencedRelation: "me_profile"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: "owner_monthly_summary_owner_id_fkey"
+            columns: ["owner_id"]
             isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "owner_usage_limits_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
-      }
-      p2p_config: {
-        Row: {
-          binance_trade_url: string | null
-          country_code: string
-          country_name: string
-          created_at: string | null
-          fiat_currency: string
-          id: string
-          is_active: boolean | null
-          max_order_fiat: number | null
-          min_order_fiat: number | null
-          payment_methods: string | null
-          price_margin_percentage: number | null
-          price_update_interval_minutes: number | null
-          timezone: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          binance_trade_url?: string | null
-          country_code: string
-          country_name: string
-          created_at?: string | null
-          fiat_currency: string
-          id?: string
-          is_active?: boolean | null
-          max_order_fiat?: number | null
-          min_order_fiat?: number | null
-          payment_methods?: string | null
-          price_margin_percentage?: number | null
-          price_update_interval_minutes?: number | null
-          timezone?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          binance_trade_url?: string | null
-          country_code?: string
-          country_name?: string
-          created_at?: string | null
-          fiat_currency?: string
-          id?: string
-          is_active?: boolean | null
-          max_order_fiat?: number | null
-          min_order_fiat?: number | null
-          payment_methods?: string | null
-          price_margin_percentage?: number | null
-          price_update_interval_minutes?: number | null
-          timezone?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      p2p_events: {
-        Row: {
-          created_at: string | null
-          error_message: string | null
-          event_type: string
-          id: string
-          new_status: string | null
-          order_id: string | null
-          payload: Json | null
-          previous_status: string | null
-          service_name: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          error_message?: string | null
-          event_type: string
-          id?: string
-          new_status?: string | null
-          order_id?: string | null
-          payload?: Json | null
-          previous_status?: string | null
-          service_name?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          error_message?: string | null
-          event_type?: string
-          id?: string
-          new_status?: string | null
-          order_id?: string | null
-          payload?: Json | null
-          previous_status?: string | null
-          service_name?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "p2p_events_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "p2p_orders"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      p2p_market_prices: {
-        Row: {
-          available_amount: number | null
-          created_at: string | null
-          crypto_currency: string
-          detected_at: string | null
-          fiat_currency: string
-          id: string
-          max_order_limit: number | null
-          min_order_limit: number | null
-          order_type: string
-          payment_methods: string | null
-          price_per_unit: number
-          ranking_position: number | null
-          source_user_completion_rate: number | null
-          source_user_id: string | null
-          source_user_name: string | null
-          source_user_trades: number | null
-        }
-        Insert: {
-          available_amount?: number | null
-          created_at?: string | null
-          crypto_currency?: string
-          detected_at?: string | null
-          fiat_currency: string
-          id?: string
-          max_order_limit?: number | null
-          min_order_limit?: number | null
-          order_type: string
-          payment_methods?: string | null
-          price_per_unit: number
-          ranking_position?: number | null
-          source_user_completion_rate?: number | null
-          source_user_id?: string | null
-          source_user_name?: string | null
-          source_user_trades?: number | null
-        }
-        Update: {
-          available_amount?: number | null
-          created_at?: string | null
-          crypto_currency?: string
-          detected_at?: string | null
-          fiat_currency?: string
-          id?: string
-          max_order_limit?: number | null
-          min_order_limit?: number | null
-          order_type?: string
-          payment_methods?: string | null
-          price_per_unit?: number
-          ranking_position?: number | null
-          source_user_completion_rate?: number | null
-          source_user_id?: string | null
-          source_user_name?: string | null
-          source_user_trades?: number | null
-        }
-        Relationships: []
-      }
-      p2p_orders: {
-        Row: {
-          amount_crypto: number | null
-          amount_fiat: number
-          binance_marked_paid_at: string | null
-          binance_released_at: string | null
-          completed_at: string | null
-          counterparty_id: string | null
-          counterparty_name: string | null
-          currency: string
-          detected_at: string | null
-          id: string
-          last_error: string | null
-          lock_expires_at: string | null
-          locked_by: string | null
-          max_retries: number | null
-          mp_transfer_id: string | null
-          mp_transfer_status: string | null
-          mp_transferred_at: string | null
-          order_number: string
-          order_type: string
-          payment_alias: string | null
-          payment_cvu: string | null
-          payment_holder: string | null
-          retry_count: number | null
-          status: string
-          updated_at: string | null
-        }
-        Insert: {
-          amount_crypto?: number | null
-          amount_fiat: number
-          binance_marked_paid_at?: string | null
-          binance_released_at?: string | null
-          completed_at?: string | null
-          counterparty_id?: string | null
-          counterparty_name?: string | null
-          currency?: string
-          detected_at?: string | null
-          id?: string
-          last_error?: string | null
-          lock_expires_at?: string | null
-          locked_by?: string | null
-          max_retries?: number | null
-          mp_transfer_id?: string | null
-          mp_transfer_status?: string | null
-          mp_transferred_at?: string | null
-          order_number: string
-          order_type: string
-          payment_alias?: string | null
-          payment_cvu?: string | null
-          payment_holder?: string | null
-          retry_count?: number | null
-          status?: string
-          updated_at?: string | null
-        }
-        Update: {
-          amount_crypto?: number | null
-          amount_fiat?: number
-          binance_marked_paid_at?: string | null
-          binance_released_at?: string | null
-          completed_at?: string | null
-          counterparty_id?: string | null
-          counterparty_name?: string | null
-          currency?: string
-          detected_at?: string | null
-          id?: string
-          last_error?: string | null
-          lock_expires_at?: string | null
-          locked_by?: string | null
-          max_retries?: number | null
-          mp_transfer_id?: string | null
-          mp_transfer_status?: string | null
-          mp_transferred_at?: string | null
-          order_number?: string
-          order_type?: string
-          payment_alias?: string | null
-          payment_cvu?: string | null
-          payment_holder?: string | null
-          retry_count?: number | null
-          status?: string
-          updated_at?: string | null
-        }
-        Relationships: []
       }
       passkey_challenges: {
         Row: {
@@ -15153,13 +5720,6 @@ export type Database = {
             foreignKeyName: "payment_captures_queue_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_captures_queue_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
             referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
@@ -15182,564 +5742,6 @@ export type Database = {
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_captures_queue_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_captures_queue_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_captures_queue_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      payment_failure_tracking: {
-        Row: {
-          booking_id: string | null
-          created_at: string | null
-          failure_reason: string | null
-          id: string
-          last_retry_at: string | null
-          next_retry_at: string | null
-          payment_id: string
-          retry_count: number | null
-          status: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          booking_id?: string | null
-          created_at?: string | null
-          failure_reason?: string | null
-          id?: string
-          last_retry_at?: string | null
-          next_retry_at?: string | null
-          payment_id: string
-          retry_count?: number | null
-          status?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          booking_id?: string | null
-          created_at?: string | null
-          failure_reason?: string | null
-          id?: string
-          last_retry_at?: string | null
-          next_retry_at?: string | null
-          payment_id?: string
-          retry_count?: number | null
-          status?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "payment_failure_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_failure_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_failure_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_failure_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_failure_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_failure_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_failure_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_failure_tracking_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      payment_intents: {
-        Row: {
-          amount: number
-          amount_ars: number | null
-          amount_authorized_cents: number | null
-          amount_captured_cents: number | null
-          amount_usd: number | null
-          authorized_at: string | null
-          booking_id: string | null
-          canceled_at: string | null
-          capture: boolean | null
-          captured_at: string | null
-          card_holder_name: string | null
-          card_last4: string | null
-          created_at: string
-          currency: string
-          description: string | null
-          expires_at: string | null
-          external_reference: string | null
-          fx_rate: number | null
-          id: string
-          idempotency_key: string | null
-          intent_type: string | null
-          is_preauth: boolean | null
-          metadata: Json | null
-          mp_order_id: string | null
-          mp_order_status: string | null
-          mp_status: string | null
-          mp_status_detail: string | null
-          payment_method_id: string | null
-          preauth_expires_at: string | null
-          provider: Database["public"]["Enums"]["payment_provider"]
-          provider_intent_id: string | null
-          status: Database["public"]["Enums"]["payment_status"]
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          amount: number
-          amount_ars?: number | null
-          amount_authorized_cents?: number | null
-          amount_captured_cents?: number | null
-          amount_usd?: number | null
-          authorized_at?: string | null
-          booking_id?: string | null
-          canceled_at?: string | null
-          capture?: boolean | null
-          captured_at?: string | null
-          card_holder_name?: string | null
-          card_last4?: string | null
-          created_at?: string
-          currency?: string
-          description?: string | null
-          expires_at?: string | null
-          external_reference?: string | null
-          fx_rate?: number | null
-          id?: string
-          idempotency_key?: string | null
-          intent_type?: string | null
-          is_preauth?: boolean | null
-          metadata?: Json | null
-          mp_order_id?: string | null
-          mp_order_status?: string | null
-          mp_status?: string | null
-          mp_status_detail?: string | null
-          payment_method_id?: string | null
-          preauth_expires_at?: string | null
-          provider: Database["public"]["Enums"]["payment_provider"]
-          provider_intent_id?: string | null
-          status?: Database["public"]["Enums"]["payment_status"]
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          amount?: number
-          amount_ars?: number | null
-          amount_authorized_cents?: number | null
-          amount_captured_cents?: number | null
-          amount_usd?: number | null
-          authorized_at?: string | null
-          booking_id?: string | null
-          canceled_at?: string | null
-          capture?: boolean | null
-          captured_at?: string | null
-          card_holder_name?: string | null
-          card_last4?: string | null
-          created_at?: string
-          currency?: string
-          description?: string | null
-          expires_at?: string | null
-          external_reference?: string | null
-          fx_rate?: number | null
-          id?: string
-          idempotency_key?: string | null
-          intent_type?: string | null
-          is_preauth?: boolean | null
-          metadata?: Json | null
-          mp_order_id?: string | null
-          mp_order_status?: string | null
-          mp_status?: string | null
-          mp_status_detail?: string | null
-          payment_method_id?: string | null
-          preauth_expires_at?: string | null
-          provider?: Database["public"]["Enums"]["payment_provider"]
-          provider_intent_id?: string | null
-          status?: Database["public"]["Enums"]["payment_status"]
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_intents_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      payment_issues: {
-        Row: {
-          booking_id: string | null
-          created_at: string | null
-          details: Json | null
-          id: string
-          issue_type: string
-          payment_id: string | null
-          priority: number | null
-          resolution_notes: string | null
-          resolved: boolean | null
-          resolved_at: string | null
-          resolved_by: string | null
-          severity: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          booking_id?: string | null
-          created_at?: string | null
-          details?: Json | null
-          id?: string
-          issue_type: string
-          payment_id?: string | null
-          priority?: number | null
-          resolution_notes?: string | null
-          resolved?: boolean | null
-          resolved_at?: string | null
-          resolved_by?: string | null
-          severity?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          booking_id?: string | null
-          created_at?: string | null
-          details?: Json | null
-          id?: string
-          issue_type?: string
-          payment_id?: string | null
-          priority?: number | null
-          resolution_notes?: string | null
-          resolved?: boolean | null
-          resolved_at?: string | null
-          resolved_by?: string | null
-          severity?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_issues_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      payment_references: {
-        Row: {
-          amount_ars: number
-          amount_usd: number
-          created_at: string | null
-          expires_at: string
-          id: string
-          mp_payment_id: string | null
-          pair: string
-          rate_used: number
-          reference_code: string
-          status: string
-          transaction_type: string
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          amount_ars: number
-          amount_usd: number
-          created_at?: string | null
-          expires_at: string
-          id?: string
-          mp_payment_id?: string | null
-          pair: string
-          rate_used: number
-          reference_code: string
-          status?: string
-          transaction_type: string
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          amount_ars?: number
-          amount_usd?: number
-          created_at?: string | null
-          expires_at?: string
-          id?: string
-          mp_payment_id?: string | null
-          pair?: string
-          rate_used?: number
-          reference_code?: string
-          status?: string
-          transaction_type?: string
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      payment_splits: {
-        Row: {
-          agreement_type: string | null
-          booking_id: string
-          collector_id: string | null
-          created_at: string | null
-          currency: string
-          fgo_cents: number | null
-          id: string
-          marketplace_id: string | null
-          metadata: Json | null
-          owner_amount_cents: number
-          payment_id: string | null
-          platform_fee_cents: number
-          reward_pool_cents: number | null
-          status: string | null
-          total_amount_cents: number
-          transferred_at: string | null
-          updated_at: string | null
-          validated_at: string | null
-        }
-        Insert: {
-          agreement_type?: string | null
-          booking_id: string
-          collector_id?: string | null
-          created_at?: string | null
-          currency?: string
-          fgo_cents?: number | null
-          id?: string
-          marketplace_id?: string | null
-          metadata?: Json | null
-          owner_amount_cents: number
-          payment_id?: string | null
-          platform_fee_cents: number
-          reward_pool_cents?: number | null
-          status?: string | null
-          total_amount_cents: number
-          transferred_at?: string | null
-          updated_at?: string | null
-          validated_at?: string | null
-        }
-        Update: {
-          agreement_type?: string | null
-          booking_id?: string
-          collector_id?: string | null
-          created_at?: string | null
-          currency?: string
-          fgo_cents?: number | null
-          id?: string
-          marketplace_id?: string | null
-          metadata?: Json | null
-          owner_amount_cents?: number
-          payment_id?: string | null
-          platform_fee_cents?: number
-          reward_pool_cents?: number | null
-          status?: string | null
-          total_amount_cents?: number
-          transferred_at?: string | null
-          updated_at?: string | null
-          validated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payment_splits_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
             referencedColumns: ["booking_id"]
           },
         ]
@@ -15747,87 +5749,44 @@ export type Database = {
       payments: {
         Row: {
           amount: number
-          amount_authorized_cents: number | null
-          amount_captured_cents: number | null
-          authorized_at: string | null
           booking_id: string
-          canceled_at: string | null
-          captured_at: string | null
-          card_last4: string | null
           created_at: string
           currency: string
-          description: string | null
-          expires_at: string | null
           id: string
-          idempotency_key: string | null
-          is_hold: boolean | null
           metadata: Json | null
           payment_intent_id: string | null
-          payment_method_id: string | null
           provider: Database["public"]["Enums"]["payment_provider"]
           provider_payment_id: string | null
           status: Database["public"]["Enums"]["payment_status"]
           updated_at: string
-          user_id: string | null
         }
         Insert: {
           amount: number
-          amount_authorized_cents?: number | null
-          amount_captured_cents?: number | null
-          authorized_at?: string | null
           booking_id: string
-          canceled_at?: string | null
-          captured_at?: string | null
-          card_last4?: string | null
           created_at?: string
           currency?: string
-          description?: string | null
-          expires_at?: string | null
           id?: string
-          idempotency_key?: string | null
-          is_hold?: boolean | null
           metadata?: Json | null
           payment_intent_id?: string | null
-          payment_method_id?: string | null
           provider: Database["public"]["Enums"]["payment_provider"]
           provider_payment_id?: string | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
-          user_id?: string | null
         }
         Update: {
           amount?: number
-          amount_authorized_cents?: number | null
-          amount_captured_cents?: number | null
-          authorized_at?: string | null
           booking_id?: string
-          canceled_at?: string | null
-          captured_at?: string | null
-          card_last4?: string | null
           created_at?: string
           currency?: string
-          description?: string | null
-          expires_at?: string | null
           id?: string
-          idempotency_key?: string | null
-          is_hold?: boolean | null
           metadata?: Json | null
           payment_intent_id?: string | null
-          payment_method_id?: string | null
           provider?: Database["public"]["Enums"]["payment_provider"]
           provider_payment_id?: string | null
           status?: Database["public"]["Enums"]["payment_status"]
           updated_at?: string
-          user_id?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "payments_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "payments_booking_id_fkey"
             columns: ["booking_id"]
@@ -15856,137 +5815,76 @@ export type Database = {
             referencedRelation: "owner_pending_approvals"
             referencedColumns: ["booking_id"]
           },
-          {
-            foreignKeyName: "payments_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payments_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payments_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "payments_payment_intent_id_fkey"
-            columns: ["payment_intent_id"]
-            isOneToOne: false
-            referencedRelation: "payment_intents"
-            referencedColumns: ["id"]
-          },
         ]
       }
-      payouts: {
+      pending_webhook_events: {
         Row: {
-          amount: number
-          bank_account_id: string | null
-          completed_at: string | null
-          created_at: string
-          currency: string
-          failure_reason: string | null
+          created_at: string | null
+          event_type: string
           id: string
-          provider: string
-          provider_payout_id: string | null
-          provider_response: Json | null
-          split_id: string | null
-          status: string
-          user_id: string
+          payload: Json
+          processed_at: string | null
+          status: string | null
+          target_url: string
         }
         Insert: {
-          amount: number
-          bank_account_id?: string | null
-          completed_at?: string | null
-          created_at?: string
-          currency?: string
-          failure_reason?: string | null
+          created_at?: string | null
+          event_type: string
           id?: string
-          provider?: string
-          provider_payout_id?: string | null
-          provider_response?: Json | null
-          split_id?: string | null
-          status?: string
-          user_id: string
+          payload: Json
+          processed_at?: string | null
+          status?: string | null
+          target_url: string
         }
         Update: {
-          amount?: number
-          bank_account_id?: string | null
-          completed_at?: string | null
-          created_at?: string
-          currency?: string
-          failure_reason?: string | null
+          created_at?: string | null
+          event_type?: string
           id?: string
-          provider?: string
-          provider_payout_id?: string | null
-          provider_response?: Json | null
-          split_id?: string | null
-          status?: string
-          user_id?: string
+          payload?: Json
+          processed_at?: string | null
+          status?: string | null
+          target_url?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "payouts_bank_account_id_fkey"
-            columns: ["bank_account_id"]
-            isOneToOne: false
-            referencedRelation: "bank_accounts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payouts_bank_account_id_fkey"
-            columns: ["bank_account_id"]
-            isOneToOne: false
-            referencedRelation: "bank_accounts_decrypted"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       phone_otp_codes: {
         Row: {
-          attempts: number
+          attempts: number | null
           channel: string
           code: string
-          created_at: string
+          created_at: string | null
           expires_at: string
           id: string
           phone: string
-          updated_at: string
+          updated_at: string | null
           user_id: string
-          verified: boolean
+          verified: boolean | null
           verified_at: string | null
         }
         Insert: {
-          attempts?: number
+          attempts?: number | null
           channel?: string
           code: string
-          created_at?: string
+          created_at?: string | null
           expires_at: string
           id?: string
           phone: string
-          updated_at?: string
+          updated_at?: string | null
           user_id: string
-          verified?: boolean
+          verified?: boolean | null
           verified_at?: string | null
         }
         Update: {
-          attempts?: number
+          attempts?: number | null
           channel?: string
           code?: string
-          created_at?: string
+          created_at?: string | null
           expires_at?: string
           id?: string
           phone?: string
-          updated_at?: string
+          updated_at?: string | null
           user_id?: string
-          verified?: boolean
+          verified?: boolean | null
           verified_at?: string | null
         }
         Relationships: []
@@ -16045,13 +5943,6 @@ export type Database = {
             foreignKeyName: "photo_quality_logs_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photo_quality_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
             referencedRelation: "cars"
             referencedColumns: ["id"]
           },
@@ -16059,36 +5950,8 @@ export type Database = {
             foreignKeyName: "photo_quality_logs_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "photo_quality_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "photo_quality_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "photo_quality_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "photo_quality_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "photo_quality_logs_car_id_fkey"
@@ -16145,13 +6008,6 @@ export type Database = {
             foreignKeyName: "plate_detection_logs_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "plate_detection_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
             referencedRelation: "cars"
             referencedColumns: ["id"]
           },
@@ -16159,36 +6015,8 @@ export type Database = {
             foreignKeyName: "plate_detection_logs_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "plate_detection_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "plate_detection_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "plate_detection_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "plate_detection_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "plate_detection_logs_car_id_fkey"
@@ -16239,48 +6067,6 @@ export type Database = {
         }
         Relationships: []
       }
-      platform_fee_config: {
-        Row: {
-          active: boolean
-          applies_to: string
-          created_at: string
-          fee_type: string
-          fee_value: number
-          id: string
-          max_fee_usd: number | null
-          min_booking_usd: number | null
-          name: string
-          valid_from: string
-          valid_until: string | null
-        }
-        Insert: {
-          active?: boolean
-          applies_to: string
-          created_at?: string
-          fee_type: string
-          fee_value: number
-          id?: string
-          max_fee_usd?: number | null
-          min_booking_usd?: number | null
-          name: string
-          valid_from?: string
-          valid_until?: string | null
-        }
-        Update: {
-          active?: boolean
-          applies_to?: string
-          created_at?: string
-          fee_type?: string
-          fee_value?: number
-          id?: string
-          max_fee_usd?: number | null
-          min_booking_usd?: number | null
-          name?: string
-          valid_from?: string
-          valid_until?: string | null
-        }
-        Relationships: []
-      }
       playbook_executions: {
         Row: {
           booking_id: string | null
@@ -16326,13 +6112,6 @@ export type Database = {
             foreignKeyName: "playbook_executions_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "playbook_executions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
             referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
@@ -16355,27 +6134,6 @@ export type Database = {
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "playbook_executions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "playbook_executions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "playbook_executions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
             referencedColumns: ["booking_id"]
           },
           {
@@ -16451,837 +6209,35 @@ export type Database = {
           },
         ]
       }
-      police_reports: {
-        Row: {
-          attachments: Json | null
-          booking_end_at: string
-          booking_id: string
-          booking_start_at: string
-          car_id: string
-          created_at: string | null
-          id: string
-          last_contact_at: string | null
-          last_known_location_address: string | null
-          last_known_location_lat: number | null
-          last_known_location_lng: number | null
-          license_plate: string | null
-          officer_name: string | null
-          official_report_number: string | null
-          owner_document_number: string | null
-          owner_document_type: string | null
-          owner_full_name: string | null
-          owner_id: string
-          owner_signature_hash: string | null
-          owner_signature_ip: string | null
-          owner_signature_user_agent: string | null
-          owner_signed_at: string | null
-          police_station: string | null
-          protocol_event_id: string | null
-          renter_address: string | null
-          renter_document_number: string | null
-          renter_document_type: string | null
-          renter_full_name: string | null
-          renter_id: string
-          renter_phone: string | null
-          report_content: string | null
-          report_hash: string | null
-          status: string | null
-          submitted_at: string | null
-          updated_at: string | null
-          vehicle_description: string | null
-        }
-        Insert: {
-          attachments?: Json | null
-          booking_end_at: string
-          booking_id: string
-          booking_start_at: string
-          car_id: string
-          created_at?: string | null
-          id?: string
-          last_contact_at?: string | null
-          last_known_location_address?: string | null
-          last_known_location_lat?: number | null
-          last_known_location_lng?: number | null
-          license_plate?: string | null
-          officer_name?: string | null
-          official_report_number?: string | null
-          owner_document_number?: string | null
-          owner_document_type?: string | null
-          owner_full_name?: string | null
-          owner_id: string
-          owner_signature_hash?: string | null
-          owner_signature_ip?: string | null
-          owner_signature_user_agent?: string | null
-          owner_signed_at?: string | null
-          police_station?: string | null
-          protocol_event_id?: string | null
-          renter_address?: string | null
-          renter_document_number?: string | null
-          renter_document_type?: string | null
-          renter_full_name?: string | null
-          renter_id: string
-          renter_phone?: string | null
-          report_content?: string | null
-          report_hash?: string | null
-          status?: string | null
-          submitted_at?: string | null
-          updated_at?: string | null
-          vehicle_description?: string | null
-        }
-        Update: {
-          attachments?: Json | null
-          booking_end_at?: string
-          booking_id?: string
-          booking_start_at?: string
-          car_id?: string
-          created_at?: string | null
-          id?: string
-          last_contact_at?: string | null
-          last_known_location_address?: string | null
-          last_known_location_lat?: number | null
-          last_known_location_lng?: number | null
-          license_plate?: string | null
-          officer_name?: string | null
-          official_report_number?: string | null
-          owner_document_number?: string | null
-          owner_document_type?: string | null
-          owner_full_name?: string | null
-          owner_id?: string
-          owner_signature_hash?: string | null
-          owner_signature_ip?: string | null
-          owner_signature_user_agent?: string | null
-          owner_signed_at?: string | null
-          police_station?: string | null
-          protocol_event_id?: string | null
-          renter_address?: string | null
-          renter_document_number?: string | null
-          renter_document_type?: string | null
-          renter_full_name?: string | null
-          renter_id?: string
-          renter_phone?: string | null
-          report_content?: string | null
-          report_hash?: string | null
-          status?: string | null
-          submitted_at?: string | null
-          updated_at?: string | null
-          vehicle_description?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "police_reports_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "police_reports_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "police_reports_protocol_event_id_fkey"
-            columns: ["protocol_event_id"]
-            isOneToOne: false
-            referencedRelation: "return_protocol_events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "police_reports_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      pool_monthly_totals: {
-        Row: {
-          calculated_at: string | null
-          cars_participating: number
-          created_at: string
-          distributed_at: string | null
-          id: string
-          owners_participating: number
-          status: string | null
-          total_bookings: number
-          total_icp_sum: number
-          total_pool_cents: number
-          updated_at: string
-          year_month: string
-        }
-        Insert: {
-          calculated_at?: string | null
-          cars_participating?: number
-          created_at?: string
-          distributed_at?: string | null
-          id?: string
-          owners_participating?: number
-          status?: string | null
-          total_bookings?: number
-          total_icp_sum?: number
-          total_pool_cents?: number
-          updated_at?: string
-          year_month: string
-        }
-        Update: {
-          calculated_at?: string | null
-          cars_participating?: number
-          created_at?: string
-          distributed_at?: string | null
-          id?: string
-          owners_participating?: number
-          status?: string | null
-          total_bookings?: number
-          total_icp_sum?: number
-          total_pool_cents?: number
-          updated_at?: string
-          year_month?: string
-        }
-        Relationships: []
-      }
-      post_incident_certificates: {
-        Row: {
-          booking_id: string | null
-          car_id: string
-          certificate_number: string
-          certificate_type: string
-          claim_id: string | null
-          created_at: string
-          id: string
-          inspection_data: Json
-          inspector_company: string | null
-          inspector_license: string | null
-          inspector_name: string
-          inspector_signature_url: string | null
-          is_valid: boolean | null
-          notes: string | null
-          overall_status: string
-          pdf_url: string | null
-          photos: Json | null
-          repair_order_id: string | null
-          signed_at: string | null
-          valid_until: string | null
-        }
-        Insert: {
-          booking_id?: string | null
-          car_id: string
-          certificate_number: string
-          certificate_type: string
-          claim_id?: string | null
-          created_at?: string
-          id?: string
-          inspection_data: Json
-          inspector_company?: string | null
-          inspector_license?: string | null
-          inspector_name: string
-          inspector_signature_url?: string | null
-          is_valid?: boolean | null
-          notes?: string | null
-          overall_status: string
-          pdf_url?: string | null
-          photos?: Json | null
-          repair_order_id?: string | null
-          signed_at?: string | null
-          valid_until?: string | null
-        }
-        Update: {
-          booking_id?: string | null
-          car_id?: string
-          certificate_number?: string
-          certificate_type?: string
-          claim_id?: string | null
-          created_at?: string
-          id?: string
-          inspection_data?: Json
-          inspector_company?: string | null
-          inspector_license?: string | null
-          inspector_name?: string
-          inspector_signature_url?: string | null
-          is_valid?: boolean | null
-          notes?: string | null
-          overall_status?: string
-          pdf_url?: string | null
-          photos?: Json | null
-          repair_order_id?: string | null
-          signed_at?: string | null
-          valid_until?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "post_incident_certificates_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_incident_certificates_repair_order_id_fkey"
-            columns: ["repair_order_id"]
-            isOneToOne: false
-            referencedRelation: "repair_orders"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      pricing_calculations: {
-        Row: {
-          base_price: number
-          booking_id: string | null
-          calculation_details: Json | null
-          created_at: string | null
-          day_factor: number
-          demand_factor: number
-          event_factor: number
-          final_price: number
-          hour_factor: number
-          id: string
-          region_id: string | null
-          user_factor: number
-          user_id: string | null
-        }
-        Insert: {
-          base_price: number
-          booking_id?: string | null
-          calculation_details?: Json | null
-          created_at?: string | null
-          day_factor: number
-          demand_factor: number
-          event_factor?: number
-          final_price: number
-          hour_factor: number
-          id?: string
-          region_id?: string | null
-          user_factor: number
-          user_id?: string | null
-        }
-        Update: {
-          base_price?: number
-          booking_id?: string | null
-          calculation_details?: Json | null
-          created_at?: string | null
-          day_factor?: number
-          demand_factor?: number
-          event_factor?: number
-          final_price?: number
-          hour_factor?: number
-          id?: string
-          region_id?: string | null
-          user_factor?: number
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "pricing_calculations_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "pricing_calculations_region_id_fkey"
-            columns: ["region_id"]
-            isOneToOne: false
-            referencedRelation: "pricing_regions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       pricing_class_factors: {
         Row: {
           class: number
-          created_at: string | null
+          created_at: string
           description: string | null
           fee_multiplier: number
           guarantee_multiplier: number
-          is_active: boolean | null
-          updated_at: string | null
+          is_active: boolean
+          updated_at: string
         }
         Insert: {
           class: number
-          created_at?: string | null
+          created_at?: string
           description?: string | null
           fee_multiplier: number
           guarantee_multiplier: number
-          is_active?: boolean | null
-          updated_at?: string | null
+          is_active?: boolean
+          updated_at?: string
         }
         Update: {
           class?: number
-          created_at?: string | null
+          created_at?: string
           description?: string | null
           fee_multiplier?: number
           guarantee_multiplier?: number
-          is_active?: boolean | null
-          updated_at?: string | null
+          is_active?: boolean
+          updated_at?: string
         }
         Relationships: []
-      }
-      pricing_cron_health: {
-        Row: {
-          created_at: string | null
-          duration_ms: number | null
-          error_message: string | null
-          id: string
-          job_name: string
-          last_run_at: string
-          regions_updated: number | null
-          status: string
-        }
-        Insert: {
-          created_at?: string | null
-          duration_ms?: number | null
-          error_message?: string | null
-          id?: string
-          job_name: string
-          last_run_at?: string
-          regions_updated?: number | null
-          status: string
-        }
-        Update: {
-          created_at?: string | null
-          duration_ms?: number | null
-          error_message?: string | null
-          id?: string
-          job_name?: string
-          last_run_at?: string
-          regions_updated?: number | null
-          status?: string
-        }
-        Relationships: []
-      }
-      pricing_day_factors: {
-        Row: {
-          created_at: string | null
-          day_of_week: number
-          factor: number
-          id: string
-          region_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          day_of_week: number
-          factor?: number
-          id?: string
-          region_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          day_of_week?: number
-          factor?: number
-          id?: string
-          region_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pricing_day_factors_region_id_fkey"
-            columns: ["region_id"]
-            isOneToOne: false
-            referencedRelation: "pricing_regions"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       pricing_demand_snapshots: {
         Row: {
@@ -17291,7 +6247,7 @@ export type Database = {
           id: string
           price_multiplier: number
           region: string
-          surge_factor: number | null
+          region_id: string | null
           total_cars: number
         }
         Insert: {
@@ -17301,7 +6257,7 @@ export type Database = {
           id?: string
           price_multiplier: number
           region: string
-          surge_factor?: number | null
+          region_id?: string | null
           total_cars: number
         }
         Update: {
@@ -17311,222 +6267,10 @@ export type Database = {
           id?: string
           price_multiplier?: number
           region?: string
-          surge_factor?: number | null
+          region_id?: string | null
           total_cars?: number
         }
         Relationships: []
-      }
-      pricing_hour_factors: {
-        Row: {
-          created_at: string | null
-          description: string | null
-          factor: number
-          hour_end: number
-          hour_start: number
-          id: string
-          region_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          description?: string | null
-          factor?: number
-          hour_end: number
-          hour_start: number
-          id?: string
-          region_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          description?: string | null
-          factor?: number
-          hour_end?: number
-          hour_start?: number
-          id?: string
-          region_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pricing_hour_factors_region_id_fkey"
-            columns: ["region_id"]
-            isOneToOne: false
-            referencedRelation: "pricing_regions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      pricing_overrides: {
-        Row: {
-          car_id: string
-          day: string
-          id: string
-          price_per_day: number
-        }
-        Insert: {
-          car_id: string
-          day: string
-          id?: string
-          price_per_day: number
-        }
-        Update: {
-          car_id?: string
-          day?: string
-          id?: string
-          price_per_day?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pricing_overrides_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      pricing_regions: {
-        Row: {
-          active: boolean | null
-          base_price_per_hour: number
-          country_code: string
-          created_at: string | null
-          currency: string
-          fuel_cost_multiplier: number | null
-          id: string
-          inflation_rate: number | null
-          name: string
-          updated_at: string | null
-        }
-        Insert: {
-          active?: boolean | null
-          base_price_per_hour: number
-          country_code: string
-          created_at?: string | null
-          currency: string
-          fuel_cost_multiplier?: number | null
-          id?: string
-          inflation_rate?: number | null
-          name: string
-          updated_at?: string | null
-        }
-        Update: {
-          active?: boolean | null
-          base_price_per_hour?: number
-          country_code?: string
-          created_at?: string | null
-          currency?: string
-          fuel_cost_multiplier?: number | null
-          id?: string
-          inflation_rate?: number | null
-          name?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      pricing_seasonal_rules: {
-        Row: {
-          active: boolean
-          created_at: string
-          description: string | null
-          id: string
-          name: string
-          priority: number
-          region_id: string | null
-          season_end: string
-          season_start: string
-          seasonal_factor: number
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          description?: string | null
-          id?: string
-          name: string
-          priority?: number
-          region_id?: string | null
-          season_end: string
-          season_start: string
-          seasonal_factor: number
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          description?: string | null
-          id?: string
-          name?: string
-          priority?: number
-          region_id?: string | null
-          season_end?: string
-          season_start?: string
-          seasonal_factor?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pricing_seasonal_rules_region_id_fkey"
-            columns: ["region_id"]
-            isOneToOne: false
-            referencedRelation: "pricing_regions"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       pricing_seasons: {
         Row: {
@@ -17567,311 +6311,96 @@ export type Database = {
         }
         Relationships: []
       }
-      pricing_special_events: {
-        Row: {
-          active: boolean | null
-          created_at: string | null
-          end_date: string
-          factor: number
-          id: string
-          name: string
-          region_id: string | null
-          start_date: string
-        }
-        Insert: {
-          active?: boolean | null
-          created_at?: string | null
-          end_date: string
-          factor?: number
-          id?: string
-          name: string
-          region_id?: string | null
-          start_date: string
-        }
-        Update: {
-          active?: boolean | null
-          created_at?: string | null
-          end_date?: string
-          factor?: number
-          id?: string
-          name?: string
-          region_id?: string | null
-          start_date?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pricing_special_events_region_id_fkey"
-            columns: ["region_id"]
-            isOneToOne: false
-            referencedRelation: "pricing_regions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      pricing_user_factors: {
-        Row: {
-          created_at: string | null
-          description: string | null
-          factor: number
-          id: string
-          min_rentals: number | null
-          user_type: string
-        }
-        Insert: {
-          created_at?: string | null
-          description?: string | null
-          factor?: number
-          id?: string
-          min_rentals?: number | null
-          user_type: string
-        }
-        Update: {
-          created_at?: string | null
-          description?: string | null
-          factor?: number
-          id?: string
-          min_rentals?: number | null
-          user_type?: string
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
-          address_line1: string | null
-          address_line1_encrypted: string | null
-          address_line2: string | null
-          address_line2_encrypted: string | null
           avatar_url: string | null
           average_rating: number | null
-          avg_response_time_minutes: number | null
           cancellation_count_90d: number | null
           cancelled_rentals_count: number | null
-          city: string | null
-          community_member_since: string | null
-          community_participation_score: number | null
-          community_tier: string | null
           completed_rentals_count: number | null
-          country: string | null
-          created_at: string | null
-          date_of_birth: string | null
-          deleted_at: string | null
+          created_at: string
+          default_currency: string
           disputes_count: number | null
-          dni_encrypted: string | null
-          driver_license_class: string | null
-          driver_license_number_encrypted: string | null
-          driver_license_points: number | null
-          driver_license_professional: boolean | null
-          email: string | null
           email_verified: boolean | null
-          full_name: string | null
-          gov_id_number: string | null
-          gov_id_number_encrypted: string | null
-          gov_id_type: string | null
-          home_latitude: number | null
-          home_longitude: number | null
+          email_verified_at: string | null
+          full_name: string
           id: string
           id_verified: boolean | null
-          identity_country: string | null
-          identity_document_number: string | null
-          identity_locked: boolean | null
-          identity_verified_at: string | null
-          is_admin: boolean | null
-          is_deleted: boolean | null
+          is_admin: boolean
           last_cancellation_check: string | null
-          last_community_activity_at: string | null
-          location_verified_at: string | null
-          mercadopago_access_token: string | null
-          mercadopago_access_token_expires_at: string | null
-          mercadopago_account_type: string | null
-          mercadopago_collector_id: string | null
-          mercadopago_connected: boolean | null
-          mercadopago_connected_at: string | null
-          mercadopago_country: string | null
-          mercadopago_oauth_state: string | null
-          mercadopago_public_key: string | null
-          mercadopago_refresh_token: string | null
-          mercadopago_site_id: string | null
-          mp_onboarding_completed: boolean | null
-          mp_onboarding_url: string | null
           onboarding: Database["public"]["Enums"]["onboarding_status"]
           phone: string | null
-          phone_encrypted: string | null
           phone_verified: boolean | null
-          postal_code: string | null
-          postal_code_encrypted: string | null
-          preferred_search_radius_km: number | null
-          primary_goal: string | null
+          phone_verified_at: string | null
           rating_avg: number | null
           rating_count: number | null
           renter_level: string | null
           renter_level_updated_at: string | null
           risk_score: number | null
           risk_score_updated_at: string | null
-          role: string | null
-          state: string | null
-          total_availability_days: number | null
+          role: string
           updated_at: string | null
           visibility_penalty_until: string | null
-          whatsapp: string | null
-          whatsapp_encrypted: string | null
         }
         Insert: {
-          address_line1?: string | null
-          address_line1_encrypted?: string | null
-          address_line2?: string | null
-          address_line2_encrypted?: string | null
           avatar_url?: string | null
           average_rating?: number | null
-          avg_response_time_minutes?: number | null
           cancellation_count_90d?: number | null
           cancelled_rentals_count?: number | null
-          city?: string | null
-          community_member_since?: string | null
-          community_participation_score?: number | null
-          community_tier?: string | null
           completed_rentals_count?: number | null
-          country?: string | null
-          created_at?: string | null
-          date_of_birth?: string | null
-          deleted_at?: string | null
+          created_at?: string
+          default_currency?: string
           disputes_count?: number | null
-          dni_encrypted?: string | null
-          driver_license_class?: string | null
-          driver_license_number_encrypted?: string | null
-          driver_license_points?: number | null
-          driver_license_professional?: boolean | null
-          email?: string | null
           email_verified?: boolean | null
-          full_name?: string | null
-          gov_id_number?: string | null
-          gov_id_number_encrypted?: string | null
-          gov_id_type?: string | null
-          home_latitude?: number | null
-          home_longitude?: number | null
+          email_verified_at?: string | null
+          full_name: string
           id: string
           id_verified?: boolean | null
-          identity_country?: string | null
-          identity_document_number?: string | null
-          identity_locked?: boolean | null
-          identity_verified_at?: string | null
-          is_admin?: boolean | null
-          is_deleted?: boolean | null
+          is_admin?: boolean
           last_cancellation_check?: string | null
-          last_community_activity_at?: string | null
-          location_verified_at?: string | null
-          mercadopago_access_token?: string | null
-          mercadopago_access_token_expires_at?: string | null
-          mercadopago_account_type?: string | null
-          mercadopago_collector_id?: string | null
-          mercadopago_connected?: boolean | null
-          mercadopago_connected_at?: string | null
-          mercadopago_country?: string | null
-          mercadopago_oauth_state?: string | null
-          mercadopago_public_key?: string | null
-          mercadopago_refresh_token?: string | null
-          mercadopago_site_id?: string | null
-          mp_onboarding_completed?: boolean | null
-          mp_onboarding_url?: string | null
           onboarding?: Database["public"]["Enums"]["onboarding_status"]
           phone?: string | null
-          phone_encrypted?: string | null
           phone_verified?: boolean | null
-          postal_code?: string | null
-          postal_code_encrypted?: string | null
-          preferred_search_radius_km?: number | null
-          primary_goal?: string | null
+          phone_verified_at?: string | null
           rating_avg?: number | null
           rating_count?: number | null
           renter_level?: string | null
           renter_level_updated_at?: string | null
           risk_score?: number | null
           risk_score_updated_at?: string | null
-          role?: string | null
-          state?: string | null
-          total_availability_days?: number | null
+          role?: string
           updated_at?: string | null
           visibility_penalty_until?: string | null
-          whatsapp?: string | null
-          whatsapp_encrypted?: string | null
         }
         Update: {
-          address_line1?: string | null
-          address_line1_encrypted?: string | null
-          address_line2?: string | null
-          address_line2_encrypted?: string | null
           avatar_url?: string | null
           average_rating?: number | null
-          avg_response_time_minutes?: number | null
           cancellation_count_90d?: number | null
           cancelled_rentals_count?: number | null
-          city?: string | null
-          community_member_since?: string | null
-          community_participation_score?: number | null
-          community_tier?: string | null
           completed_rentals_count?: number | null
-          country?: string | null
-          created_at?: string | null
-          date_of_birth?: string | null
-          deleted_at?: string | null
+          created_at?: string
+          default_currency?: string
           disputes_count?: number | null
-          dni_encrypted?: string | null
-          driver_license_class?: string | null
-          driver_license_number_encrypted?: string | null
-          driver_license_points?: number | null
-          driver_license_professional?: boolean | null
-          email?: string | null
           email_verified?: boolean | null
-          full_name?: string | null
-          gov_id_number?: string | null
-          gov_id_number_encrypted?: string | null
-          gov_id_type?: string | null
-          home_latitude?: number | null
-          home_longitude?: number | null
+          email_verified_at?: string | null
+          full_name?: string
           id?: string
           id_verified?: boolean | null
-          identity_country?: string | null
-          identity_document_number?: string | null
-          identity_locked?: boolean | null
-          identity_verified_at?: string | null
-          is_admin?: boolean | null
-          is_deleted?: boolean | null
+          is_admin?: boolean
           last_cancellation_check?: string | null
-          last_community_activity_at?: string | null
-          location_verified_at?: string | null
-          mercadopago_access_token?: string | null
-          mercadopago_access_token_expires_at?: string | null
-          mercadopago_account_type?: string | null
-          mercadopago_collector_id?: string | null
-          mercadopago_connected?: boolean | null
-          mercadopago_connected_at?: string | null
-          mercadopago_country?: string | null
-          mercadopago_oauth_state?: string | null
-          mercadopago_public_key?: string | null
-          mercadopago_refresh_token?: string | null
-          mercadopago_site_id?: string | null
-          mp_onboarding_completed?: boolean | null
-          mp_onboarding_url?: string | null
           onboarding?: Database["public"]["Enums"]["onboarding_status"]
           phone?: string | null
-          phone_encrypted?: string | null
           phone_verified?: boolean | null
-          postal_code?: string | null
-          postal_code_encrypted?: string | null
-          preferred_search_radius_km?: number | null
-          primary_goal?: string | null
+          phone_verified_at?: string | null
           rating_avg?: number | null
           rating_count?: number | null
           renter_level?: string | null
           renter_level_updated_at?: string | null
           risk_score?: number | null
           risk_score_updated_at?: string | null
-          role?: string | null
-          state?: string | null
-          total_availability_days?: number | null
+          role?: string
           updated_at?: string | null
           visibility_penalty_until?: string | null
-          whatsapp?: string | null
-          whatsapp_encrypted?: string | null
         }
         Relationships: []
       }
@@ -17983,139 +6512,6 @@ export type Database = {
         }
         Relationships: []
       }
-      rate_limit_tracking: {
-        Row: {
-          created_at: string
-          endpoint: string
-          first_request_at: string
-          id: string
-          identifier: string
-          identifier_type: string
-          last_request_at: string
-          request_count: number
-          window_end: string
-          window_start: string
-        }
-        Insert: {
-          created_at?: string
-          endpoint: string
-          first_request_at?: string
-          id?: string
-          identifier: string
-          identifier_type: string
-          last_request_at?: string
-          request_count?: number
-          window_end: string
-          window_start?: string
-        }
-        Update: {
-          created_at?: string
-          endpoint?: string
-          first_request_at?: string
-          id?: string
-          identifier?: string
-          identifier_type?: string
-          last_request_at?: string
-          request_count?: number
-          window_end?: string
-          window_start?: string
-        }
-        Relationships: []
-      }
-      recommendation_clicks: {
-        Row: {
-          car_id: string
-          context: Json | null
-          created_at: string | null
-          id: string
-          position: number | null
-          recommendation_type: string
-          user_id: string | null
-        }
-        Insert: {
-          car_id: string
-          context?: Json | null
-          created_at?: string | null
-          id?: string
-          position?: number | null
-          recommendation_type: string
-          user_id?: string | null
-        }
-        Update: {
-          car_id?: string
-          context?: Json | null
-          created_at?: string | null
-          id?: string
-          position?: number | null
-          recommendation_type?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "recommendation_clicks_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recommendation_clicks_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recommendation_clicks_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recommendation_clicks_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "recommendation_clicks_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "recommendation_clicks_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "recommendation_clicks_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "recommendation_clicks_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recommendation_clicks_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       recovery_cases: {
         Row: {
           assigned_at: string | null
@@ -18206,13 +6602,6 @@ export type Database = {
             foreignKeyName: "recovery_cases_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recovery_cases_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
             referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
@@ -18236,131 +6625,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "owner_pending_approvals"
             referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "recovery_cases_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "recovery_cases_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "recovery_cases_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-        ]
-      }
-      recovery_ops: {
-        Row: {
-          assigned_partner_id: string | null
-          car_id: string
-          claim_id: string | null
-          id: string
-          police_report_id: string | null
-          recovery_dossier_url: string | null
-          status: Database["public"]["Enums"]["op_status"] | null
-          timeline: Json | null
-        }
-        Insert: {
-          assigned_partner_id?: string | null
-          car_id: string
-          claim_id?: string | null
-          id?: string
-          police_report_id?: string | null
-          recovery_dossier_url?: string | null
-          status?: Database["public"]["Enums"]["op_status"] | null
-          timeline?: Json | null
-        }
-        Update: {
-          assigned_partner_id?: string | null
-          car_id?: string
-          claim_id?: string | null
-          id?: string
-          police_report_id?: string | null
-          recovery_dossier_url?: string | null
-          status?: Database["public"]["Enums"]["op_status"] | null
-          timeline?: Json | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "recovery_ops_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recovery_ops_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recovery_ops_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recovery_ops_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "recovery_ops_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "recovery_ops_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "recovery_ops_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "recovery_ops_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recovery_ops_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recovery_ops_claim_id_fkey"
-            columns: ["claim_id"]
-            isOneToOne: false
-            referencedRelation: "bounty_claims"
-            referencedColumns: ["id"]
           },
         ]
       }
@@ -18399,52 +6663,46 @@ export type Database = {
       }
       referral_rewards: {
         Row: {
-          admin_notes: string | null
           amount_cents: number
           approved_at: string | null
-          created_at: string
-          currency: string
+          created_at: string | null
+          currency: string | null
           expires_at: string | null
           id: string
           notes: string | null
           paid_at: string | null
-          referral_id: string
-          reward_type: string
-          status: string
+          referral_id: string | null
+          reward_type: string | null
+          status: string | null
           user_id: string
-          wallet_transaction_id: string | null
         }
         Insert: {
-          admin_notes?: string | null
           amount_cents: number
           approved_at?: string | null
-          created_at?: string
-          currency?: string
+          created_at?: string | null
+          currency?: string | null
           expires_at?: string | null
           id?: string
           notes?: string | null
           paid_at?: string | null
-          referral_id: string
-          reward_type: string
-          status?: string
+          referral_id?: string | null
+          reward_type?: string | null
+          status?: string | null
           user_id: string
-          wallet_transaction_id?: string | null
         }
         Update: {
-          admin_notes?: string | null
           amount_cents?: number
           approved_at?: string | null
-          created_at?: string
-          currency?: string
+          created_at?: string | null
+          currency?: string | null
           expires_at?: string | null
           id?: string
           notes?: string | null
           paid_at?: string | null
-          referral_id?: string
-          reward_type?: string
-          status?: string
+          referral_id?: string | null
+          reward_type?: string | null
+          status?: string | null
           user_id?: string
-          wallet_transaction_id?: string | null
         }
         Relationships: [
           {
@@ -18515,541 +6773,16 @@ export type Database = {
           },
         ]
       }
-      rental_terms_templates: {
-        Row: {
-          active: boolean
-          allow_pets: boolean
-          allow_smoking: boolean
-          cancellation_penalty_percentage: number | null
-          created_at: string
-          extra_km_price_usd: number | null
-          free_cancellation_hours: number | null
-          fuel_policy: string
-          general_cleaning_fee_usd: number | null
-          id: string
-          is_default: boolean
-          late_return_penalties: Json
-          mileage_limit_km: number | null
-          name: string
-          owner_id: string | null
-          pet_cleaning_fee_usd: number | null
-          smoking_penalty_usd: number | null
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          allow_pets?: boolean
-          allow_smoking?: boolean
-          cancellation_penalty_percentage?: number | null
-          created_at?: string
-          extra_km_price_usd?: number | null
-          free_cancellation_hours?: number | null
-          fuel_policy?: string
-          general_cleaning_fee_usd?: number | null
-          id?: string
-          is_default?: boolean
-          late_return_penalties?: Json
-          mileage_limit_km?: number | null
-          name: string
-          owner_id?: string | null
-          pet_cleaning_fee_usd?: number | null
-          smoking_penalty_usd?: number | null
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          allow_pets?: boolean
-          allow_smoking?: boolean
-          cancellation_penalty_percentage?: number | null
-          created_at?: string
-          extra_km_price_usd?: number | null
-          free_cancellation_hours?: number | null
-          fuel_policy?: string
-          general_cleaning_fee_usd?: number | null
-          id?: string
-          is_default?: boolean
-          late_return_penalties?: Json
-          mileage_limit_km?: number | null
-          name?: string
-          owner_id?: string | null
-          pet_cleaning_fee_usd?: number | null
-          smoking_penalty_usd?: number | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "rental_terms_templates_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      repair_orders: {
-        Row: {
-          booking_id: string | null
-          car_id: string
-          claim_id: string | null
-          completed_at: string | null
-          covered_by_insurance: boolean | null
-          created_at: string
-          damage_description: string
-          estimated_cost: number | null
-          estimated_days: number | null
-          final_cost: number | null
-          id: string
-          insurance_claim_number: string | null
-          invoice_url: string | null
-          is_ev_specific: boolean | null
-          notes: string | null
-          order_number: string
-          paid_by: string | null
-          payment_status: string | null
-          photos_after: Json | null
-          photos_before: Json | null
-          repair_type: string
-          report_url: string | null
-          shop_id: string
-          started_at: string | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          booking_id?: string | null
-          car_id: string
-          claim_id?: string | null
-          completed_at?: string | null
-          covered_by_insurance?: boolean | null
-          created_at?: string
-          damage_description: string
-          estimated_cost?: number | null
-          estimated_days?: number | null
-          final_cost?: number | null
-          id?: string
-          insurance_claim_number?: string | null
-          invoice_url?: string | null
-          is_ev_specific?: boolean | null
-          notes?: string | null
-          order_number: string
-          paid_by?: string | null
-          payment_status?: string | null
-          photos_after?: Json | null
-          photos_before?: Json | null
-          repair_type: string
-          report_url?: string | null
-          shop_id: string
-          started_at?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          booking_id?: string | null
-          car_id?: string
-          claim_id?: string | null
-          completed_at?: string | null
-          covered_by_insurance?: boolean | null
-          created_at?: string
-          damage_description?: string
-          estimated_cost?: number | null
-          estimated_days?: number | null
-          final_cost?: number | null
-          id?: string
-          insurance_claim_number?: string | null
-          invoice_url?: string | null
-          is_ev_specific?: boolean | null
-          notes?: string | null
-          order_number?: string
-          paid_by?: string | null
-          payment_status?: string | null
-          photos_after?: Json | null
-          photos_before?: Json | null
-          repair_type?: string
-          report_url?: string | null
-          shop_id?: string
-          started_at?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "repair_orders_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "repair_orders_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "repair_orders_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "repair_orders_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "repair_orders_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "repair_orders_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "repair_orders_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "repair_orders_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "repair_orders_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "repair_orders_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "repair_orders_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "repair_orders_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "repair_orders_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "repair_orders_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "repair_orders_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "repair_orders_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "repair_orders_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "repair_orders_shop_id_fkey"
-            columns: ["shop_id"]
-            isOneToOne: false
-            referencedRelation: "authorized_repair_shops"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      return_protocol_events: {
-        Row: {
-          booking_id: string
-          created_at: string | null
-          event_type: string
-          executed_at: string | null
-          executed_by: string | null
-          executed_by_user_id: string | null
-          failure_reason: string | null
-          hours_since_end: number | null
-          id: string
-          metadata: Json | null
-          retry_count: number | null
-          scheduled_for: string | null
-          status: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          booking_id: string
-          created_at?: string | null
-          event_type: string
-          executed_at?: string | null
-          executed_by?: string | null
-          executed_by_user_id?: string | null
-          failure_reason?: string | null
-          hours_since_end?: number | null
-          id?: string
-          metadata?: Json | null
-          retry_count?: number | null
-          scheduled_for?: string | null
-          status?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          booking_id?: string
-          created_at?: string | null
-          event_type?: string
-          executed_at?: string | null
-          executed_by?: string | null
-          executed_by_user_id?: string | null
-          failure_reason?: string | null
-          hours_since_end?: number | null
-          id?: string
-          metadata?: Json | null
-          retry_count?: number | null
-          scheduled_for?: string | null
-          status?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "return_protocol_events_executed_by_user_id_fkey"
-            columns: ["executed_by_user_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
       reviews: {
         Row: {
-          booking_id: string
+          booking_id: string | null
           comment: string | null
-          created_at: string
+          created_at: string | null
           id: string
-          is_car_review: boolean
-          is_renter_review: boolean
-          rating: number
+          is_car_review: boolean | null
+          is_renter_review: boolean | null
+          is_visible: boolean | null
+          rating: number | null
           rating_accuracy: number | null
           rating_care: number | null
           rating_checkin: number | null
@@ -19060,18 +6793,19 @@ export type Database = {
           rating_recommend: number | null
           rating_rules: number | null
           rating_value: number | null
+          review_type: string | null
           reviewee_id: string
           reviewer_id: string
-          updated_at: string
         }
         Insert: {
-          booking_id: string
+          booking_id?: string | null
           comment?: string | null
-          created_at?: string
+          created_at?: string | null
           id?: string
-          is_car_review?: boolean
-          is_renter_review?: boolean
-          rating: number
+          is_car_review?: boolean | null
+          is_renter_review?: boolean | null
+          is_visible?: boolean | null
+          rating?: number | null
           rating_accuracy?: number | null
           rating_care?: number | null
           rating_checkin?: number | null
@@ -19082,18 +6816,19 @@ export type Database = {
           rating_recommend?: number | null
           rating_rules?: number | null
           rating_value?: number | null
+          review_type?: string | null
           reviewee_id: string
           reviewer_id: string
-          updated_at?: string
         }
         Update: {
-          booking_id?: string
+          booking_id?: string | null
           comment?: string | null
-          created_at?: string
+          created_at?: string | null
           id?: string
-          is_car_review?: boolean
-          is_renter_review?: boolean
-          rating?: number
+          is_car_review?: boolean | null
+          is_renter_review?: boolean | null
+          is_visible?: boolean | null
+          rating?: number | null
           rating_accuracy?: number | null
           rating_care?: number | null
           rating_checkin?: number | null
@@ -19104,18 +6839,11 @@ export type Database = {
           rating_recommend?: number | null
           rating_rules?: number | null
           rating_value?: number | null
+          review_type?: string | null
           reviewee_id?: string
           reviewer_id?: string
-          updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "reviews_booking_id_fkey"
             columns: ["booking_id"]
@@ -19144,121 +6872,364 @@ export type Database = {
             referencedRelation: "owner_pending_approvals"
             referencedColumns: ["booking_id"]
           },
+        ]
+      }
+      reward_pool_balances: {
+        Row: {
+          created_at: string | null
+          distributed_at: string | null
+          id: string
+          period_end: string
+          period_start: string
+          status: string | null
+          total_collected: number | null
+          total_distributed: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          distributed_at?: string | null
+          id?: string
+          period_end: string
+          period_start: string
+          status?: string | null
+          total_collected?: number | null
+          total_distributed?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          distributed_at?: string | null
+          id?: string
+          period_end?: string
+          period_start?: string
+          status?: string | null
+          total_collected?: number | null
+          total_distributed?: number | null
+        }
+        Relationships: []
+      }
+      reward_pool_config: {
+        Row: {
+          created_at: string | null
+          distributed_at: string | null
+          id: string
+          max_cars_per_owner: number
+          max_share_per_owner: number
+          month: string
+          source: string
+          status: string
+          total_pool_usd: number
+          updated_at: string | null
+          va_max_cancellation_rate: number
+          va_max_response_hours: number
+          va_min_acceptance_rate: number
+        }
+        Insert: {
+          created_at?: string | null
+          distributed_at?: string | null
+          id?: string
+          max_cars_per_owner?: number
+          max_share_per_owner?: number
+          month: string
+          source?: string
+          status?: string
+          total_pool_usd: number
+          updated_at?: string | null
+          va_max_cancellation_rate?: number
+          va_max_response_hours?: number
+          va_min_acceptance_rate?: number
+        }
+        Update: {
+          created_at?: string | null
+          distributed_at?: string | null
+          id?: string
+          max_cars_per_owner?: number
+          max_share_per_owner?: number
+          month?: string
+          source?: string
+          status?: string
+          total_pool_usd?: number
+          updated_at?: string | null
+          va_max_cancellation_rate?: number
+          va_max_response_hours?: number
+          va_min_acceptance_rate?: number
+        }
+        Relationships: []
+      }
+      reward_pool_contributions: {
+        Row: {
+          amount: number
+          booking_id: string
+          created_at: string | null
+          id: string
+          owner_id: string
+          pool_id: string
+        }
+        Insert: {
+          amount: number
+          booking_id: string
+          created_at?: string | null
+          id?: string
+          owner_id: string
+          pool_id: string
+        }
+        Update: {
+          amount?: number
+          booking_id?: string
+          created_at?: string | null
+          id?: string
+          owner_id?: string
+          pool_id?: string
+        }
+        Relationships: [
           {
-            foreignKeyName: "reviews_booking_id_fkey"
+            foreignKeyName: "reward_pool_contributions_booking_id_fkey"
             columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reward_pool_contributions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reward_pool_contributions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reward_pool_contributions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_pending_approvals"
             referencedColumns: ["booking_id"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: "reward_pool_contributions_owner_id_fkey"
+            columns: ["owner_id"]
             isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "reviews_booking_id_fkey"
+            foreignKeyName: "reward_pool_contributions_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reward_pool_contributions_pool_id_fkey"
+            columns: ["pool_id"]
+            isOneToOne: false
+            referencedRelation: "reward_pool_balances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reward_pool_contributions_pool_id_fkey"
+            columns: ["pool_id"]
+            isOneToOne: false
+            referencedRelation: "v_current_reward_pool"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reward_pool_payouts: {
+        Row: {
+          amount: number
+          created_at: string | null
+          error_message: string | null
+          id: string
+          mercadopago_payout_id: string | null
+          owner_id: string
+          paid_at: string | null
+          payout_status: string | null
+          pool_id: string
+          share_percentage: number | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          mercadopago_payout_id?: string | null
+          owner_id: string
+          paid_at?: string | null
+          payout_status?: string | null
+          pool_id: string
+          share_percentage?: number | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          mercadopago_payout_id?: string | null
+          owner_id?: string
+          paid_at?: string | null
+          payout_status?: string | null
+          pool_id?: string
+          share_percentage?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reward_pool_payouts_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reward_pool_payouts_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reward_pool_payouts_pool_id_fkey"
+            columns: ["pool_id"]
+            isOneToOne: false
+            referencedRelation: "reward_pool_balances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reward_pool_payouts_pool_id_fkey"
+            columns: ["pool_id"]
+            isOneToOne: false
+            referencedRelation: "v_current_reward_pool"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      risk_assessments: {
+        Row: {
+          booking_id: string | null
+          created_at: string | null
+          id: string
+          risk_factors: Json | null
+          risk_score: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          booking_id?: string | null
+          created_at?: string | null
+          id?: string
+          risk_factors?: Json | null
+          risk_score?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          booking_id?: string | null
+          created_at?: string | null
+          id?: string
+          risk_factors?: Json | null
+          risk_score?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_assessments_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_assessments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_assessments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_assessments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
             referencedColumns: ["booking_id"]
           },
         ]
       }
-      reward_criteria_config: {
+      risk_events: {
         Row: {
-          calculation_formula: string | null
-          created_at: string | null
-          criterion: string
-          description: string | null
-          display_name: string
+          booking_id: string | null
+          created_at: string
+          details: Json | null
           id: string
-          is_active: boolean | null
-          max_points_per_month: number | null
-          points_per_unit: number
-          updated_at: string | null
-          weight_percentage: number
-        }
-        Insert: {
-          calculation_formula?: string | null
-          created_at?: string | null
-          criterion: string
-          description?: string | null
-          display_name: string
-          id?: string
-          is_active?: boolean | null
-          max_points_per_month?: number | null
-          points_per_unit: number
-          updated_at?: string | null
-          weight_percentage: number
-        }
-        Update: {
-          calculation_formula?: string | null
-          created_at?: string | null
-          criterion?: string
-          description?: string | null
-          display_name?: string
-          id?: string
-          is_active?: boolean | null
-          max_points_per_month?: number | null
-          points_per_unit?: number
-          updated_at?: string | null
-          weight_percentage?: number
-        }
-        Relationships: []
-      }
-      reward_pool: {
-        Row: {
-          adjustments_cents: number | null
-          cents_per_point: number | null
-          closed_at: string | null
-          contributions_cents: number | null
-          created_at: string | null
-          currency: string | null
-          id: string
-          period_month: number
-          period_year: number
+          owner_id: string | null
+          renter_id: string | null
+          risk_score: number | null
+          risk_type: string
           status: string | null
-          total_available_cents: number | null
-          total_distributed_cents: number | null
-          total_points_in_period: number | null
-          updated_at: string | null
         }
         Insert: {
-          adjustments_cents?: number | null
-          cents_per_point?: number | null
-          closed_at?: string | null
-          contributions_cents?: number | null
-          created_at?: string | null
-          currency?: string | null
+          booking_id?: string | null
+          created_at?: string
+          details?: Json | null
           id?: string
-          period_month: number
-          period_year: number
+          owner_id?: string | null
+          renter_id?: string | null
+          risk_score?: number | null
+          risk_type: string
           status?: string | null
-          total_available_cents?: number | null
-          total_distributed_cents?: number | null
-          total_points_in_period?: number | null
-          updated_at?: string | null
         }
         Update: {
-          adjustments_cents?: number | null
-          cents_per_point?: number | null
-          closed_at?: string | null
-          contributions_cents?: number | null
-          created_at?: string | null
-          currency?: string | null
+          booking_id?: string | null
+          created_at?: string
+          details?: Json | null
           id?: string
-          period_month?: number
-          period_year?: number
+          owner_id?: string | null
+          renter_id?: string | null
+          risk_score?: number | null
+          risk_type?: string
           status?: string | null
-          total_available_cents?: number | null
-          total_distributed_cents?: number | null
-          total_points_in_period?: number | null
-          updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "risk_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+        ]
       }
       risk_score_history: {
         Row: {
@@ -19358,214 +7329,6 @@ export type Database = {
           version?: number
         }
         Relationships: []
-      }
-      search_history: {
-        Row: {
-          created_at: string | null
-          id: string
-          results_count: number | null
-          search_params: Json
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          results_count?: number | null
-          search_params: Json
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          results_count?: number | null
-          search_params?: Json
-          user_id?: string
-        }
-        Relationships: []
-      }
-      signed_event_traces: {
-        Row: {
-          booking_id: string | null
-          car_id: string | null
-          created_at: string
-          cumulative_hash: string
-          event_data: Json
-          event_timestamp: string
-          event_type: string
-          id: string
-          previous_signature: string | null
-          previous_trace_id: string | null
-          server_id: string | null
-          server_timestamp: string
-          signature: string
-          signature_version: number
-          verified: boolean | null
-          verified_at: string | null
-        }
-        Insert: {
-          booking_id?: string | null
-          car_id?: string | null
-          created_at?: string
-          cumulative_hash: string
-          event_data: Json
-          event_timestamp: string
-          event_type: string
-          id?: string
-          previous_signature?: string | null
-          previous_trace_id?: string | null
-          server_id?: string | null
-          server_timestamp?: string
-          signature: string
-          signature_version?: number
-          verified?: boolean | null
-          verified_at?: string | null
-        }
-        Update: {
-          booking_id?: string | null
-          car_id?: string | null
-          created_at?: string
-          cumulative_hash?: string
-          event_data?: Json
-          event_timestamp?: string
-          event_type?: string
-          id?: string
-          previous_signature?: string | null
-          previous_trace_id?: string | null
-          server_id?: string | null
-          server_timestamp?: string
-          signature?: string
-          signature_version?: number
-          verified?: boolean | null
-          verified_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "signed_event_traces_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "signed_event_traces_previous_trace_id_fkey"
-            columns: ["previous_trace_id"]
-            isOneToOne: false
-            referencedRelation: "signed_event_traces"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       social_media_credentials: {
         Row: {
@@ -19715,30 +7478,6 @@ export type Database = {
         }
         Relationships: []
       }
-      spatial_ref_sys: {
-        Row: {
-          auth_name: string | null
-          auth_srid: number | null
-          proj4text: string | null
-          srid: number
-          srtext: string | null
-        }
-        Insert: {
-          auth_name?: string | null
-          auth_srid?: number | null
-          proj4text?: string | null
-          srid: number
-          srtext?: string | null
-        }
-        Update: {
-          auth_name?: string | null
-          auth_srid?: number | null
-          proj4text?: string | null
-          srid?: number
-          srtext?: string | null
-        }
-        Relationships: []
-      }
       special_events: {
         Row: {
           countries: string[] | null
@@ -19787,199 +7526,98 @@ export type Database = {
         }
         Relationships: []
       }
-      subscription_usage_logs: {
+      subscription_plans: {
         Row: {
-          amount_deducted_cents: number
-          balance_after_cents: number
-          balance_before_cents: number
-          booking_id: string | null
-          claim_id: string | null
-          created_at: string
+          billing_interval: string | null
+          created_at: string | null
+          currency: string | null
           description: string | null
+          features: Json
           id: string
-          performed_by: string | null
-          reason: string
-          subscription_id: string
+          is_active: boolean | null
+          name: string
+          price_cents: number
+          slug: string
+          tier: string | null
+          updated_at: string | null
         }
         Insert: {
-          amount_deducted_cents: number
-          balance_after_cents: number
-          balance_before_cents: number
-          booking_id?: string | null
-          claim_id?: string | null
-          created_at?: string
+          billing_interval?: string | null
+          created_at?: string | null
+          currency?: string | null
           description?: string | null
+          features?: Json
           id?: string
-          performed_by?: string | null
-          reason: string
-          subscription_id: string
+          is_active?: boolean | null
+          name: string
+          price_cents: number
+          slug: string
+          tier?: string | null
+          updated_at?: string | null
         }
         Update: {
-          amount_deducted_cents?: number
-          balance_after_cents?: number
-          balance_before_cents?: number
-          booking_id?: string | null
-          claim_id?: string | null
-          created_at?: string
+          billing_interval?: string | null
+          created_at?: string | null
+          currency?: string | null
           description?: string | null
+          features?: Json
           id?: string
-          performed_by?: string | null
-          reason?: string
-          subscription_id?: string
+          is_active?: boolean | null
+          name?: string
+          price_cents?: number
+          slug?: string
+          tier?: string | null
+          updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_performed_by_fkey"
-            columns: ["performed_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "subscription_usage_logs_subscription_id_fkey"
-            columns: ["subscription_id"]
-            isOneToOne: false
-            referencedRelation: "subscriptions"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
+      }
+      subscription_policies: {
+        Row: {
+          base_guarantee_usd: number
+          max_gap_coverage_annual_usd: number | null
+          min_clean_trips_required: number | null
+          price_monthly_usd: number
+          reduced_guarantee_usd: number
+          telemetry_required: boolean | null
+          tier_id: string
+          updated_at: string | null
+          waiting_period_hours: number | null
+        }
+        Insert: {
+          base_guarantee_usd: number
+          max_gap_coverage_annual_usd?: number | null
+          min_clean_trips_required?: number | null
+          price_monthly_usd: number
+          reduced_guarantee_usd: number
+          telemetry_required?: boolean | null
+          tier_id: string
+          updated_at?: string | null
+          waiting_period_hours?: number | null
+        }
+        Update: {
+          base_guarantee_usd?: number
+          max_gap_coverage_annual_usd?: number | null
+          min_clean_trips_required?: number | null
+          price_monthly_usd?: number
+          reduced_guarantee_usd?: number
+          telemetry_required?: boolean | null
+          tier_id?: string
+          updated_at?: string | null
+          waiting_period_hours?: number | null
+        }
+        Relationships: []
       }
       subscriptions: {
         Row: {
-          cancellation_reason: string | null
-          cancelled_at: string | null
           coverage_limit_cents: number
           created_at: string
-          currency: string
           expires_at: string
-          fgo_cap_cents: number | null
           id: string
-          max_vehicle_value_usd: number | null
-          metadata: Json
-          min_vehicle_value_usd: number | null
+          metadata: Json | null
           payment_external_id: string | null
-          payment_provider: string | null
+          payment_provider: string
           payment_transaction_id: string | null
-          purchase_amount_cents: number
+          plan_id: string | null
           remaining_balance_cents: number
           starts_at: string
           status: Database["public"]["Enums"]["subscription_status"]
@@ -19988,44 +7626,32 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          cancellation_reason?: string | null
-          cancelled_at?: string | null
           coverage_limit_cents: number
           created_at?: string
-          currency?: string
           expires_at: string
-          fgo_cap_cents?: number | null
           id?: string
-          max_vehicle_value_usd?: number | null
-          metadata?: Json
-          min_vehicle_value_usd?: number | null
+          metadata?: Json | null
           payment_external_id?: string | null
-          payment_provider?: string | null
+          payment_provider: string
           payment_transaction_id?: string | null
-          purchase_amount_cents: number
+          plan_id?: string | null
           remaining_balance_cents: number
           starts_at?: string
           status?: Database["public"]["Enums"]["subscription_status"]
-          tier?: Database["public"]["Enums"]["subscription_tier"]
+          tier: Database["public"]["Enums"]["subscription_tier"]
           updated_at?: string
           user_id: string
         }
         Update: {
-          cancellation_reason?: string | null
-          cancelled_at?: string | null
           coverage_limit_cents?: number
           created_at?: string
-          currency?: string
           expires_at?: string
-          fgo_cap_cents?: number | null
           id?: string
-          max_vehicle_value_usd?: number | null
-          metadata?: Json
-          min_vehicle_value_usd?: number | null
+          metadata?: Json | null
           payment_external_id?: string | null
-          payment_provider?: string | null
+          payment_provider?: string
           payment_transaction_id?: string | null
-          purchase_amount_cents?: number
+          plan_id?: string | null
           remaining_balance_cents?: number
           starts_at?: string
           status?: Database["public"]["Enums"]["subscription_status"]
@@ -20035,74 +7661,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "subscriptions_payment_transaction_id_fkey"
+            columns: ["payment_transaction_id"]
             isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
+            referencedRelation: "v_wallet_history"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "subscriptions_payment_transaction_id_fkey"
+            columns: ["payment_transaction_id"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "wallet_history"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "subscriptions_payment_transaction_id_fkey"
+            columns: ["payment_transaction_id"]
             isOneToOne: false
-            referencedRelation: "profiles_decrypted"
+            referencedRelation: "wallet_transactions"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
             isOneToOne: false
-            referencedRelation: "public_owner_info"
+            referencedRelation: "subscription_plans"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
           },
         ]
       }
@@ -20179,134 +7763,75 @@ export type Database = {
       }
       support_tickets: {
         Row: {
+          assigned_team: string | null
           assigned_to: string | null
-          attachment_urls: string[] | null
           booking_id: string | null
-          car_id: string | null
-          category: Database["public"]["Enums"]["ticket_category"]
+          category: string
           created_at: string
-          description: string
+          description: string | null
           id: string
-          resolution_notes: string | null
+          priority: string
+          recovery_case_id: string | null
+          resolution_summary: string | null
           resolved_at: string | null
-          status: Database["public"]["Enums"]["ticket_status"]
+          satisfaction_rating: number | null
+          sla_deadline_at: string | null
+          source: string | null
+          status: string
+          subcategory: string | null
           subject: string
+          tags: string[] | null
+          ticket_number: string
           updated_at: string
-          urgency: Database["public"]["Enums"]["ticket_urgency"]
           user_id: string
         }
         Insert: {
+          assigned_team?: string | null
           assigned_to?: string | null
-          attachment_urls?: string[] | null
           booking_id?: string | null
-          car_id?: string | null
-          category: Database["public"]["Enums"]["ticket_category"]
+          category: string
           created_at?: string
-          description: string
+          description?: string | null
           id?: string
-          resolution_notes?: string | null
+          priority?: string
+          recovery_case_id?: string | null
+          resolution_summary?: string | null
           resolved_at?: string | null
-          status?: Database["public"]["Enums"]["ticket_status"]
+          satisfaction_rating?: number | null
+          sla_deadline_at?: string | null
+          source?: string | null
+          status?: string
+          subcategory?: string | null
           subject: string
+          tags?: string[] | null
+          ticket_number: string
           updated_at?: string
-          urgency?: Database["public"]["Enums"]["ticket_urgency"]
           user_id: string
         }
         Update: {
+          assigned_team?: string | null
           assigned_to?: string | null
-          attachment_urls?: string[] | null
           booking_id?: string | null
-          car_id?: string | null
-          category?: Database["public"]["Enums"]["ticket_category"]
+          category?: string
           created_at?: string
-          description?: string
+          description?: string | null
           id?: string
-          resolution_notes?: string | null
+          priority?: string
+          recovery_case_id?: string | null
+          resolution_summary?: string | null
           resolved_at?: string | null
-          status?: Database["public"]["Enums"]["ticket_status"]
+          satisfaction_rating?: number | null
+          sla_deadline_at?: string | null
+          source?: string | null
+          status?: string
+          subcategory?: string | null
           subject?: string
+          tags?: string[] | null
+          ticket_number?: string
           updated_at?: string
-          urgency?: Database["public"]["Enums"]["ticket_urgency"]
           user_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "support_tickets_booking_id_fkey"
             columns: ["booking_id"]
@@ -20336,158 +7861,11 @@ export type Database = {
             referencedColumns: ["booking_id"]
           },
           {
-            foreignKeyName: "support_tickets_booking_id_fkey"
-            columns: ["booking_id"]
+            foreignKeyName: "support_tickets_recovery_case_id_fkey"
+            columns: ["recovery_case_id"]
             isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
+            referencedRelation: "recovery_cases"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
           },
         ]
       }
@@ -20509,693 +7887,24 @@ export type Database = {
         }
         Relationships: []
       }
-      system_health: {
-        Row: {
-          checked_at: string
-          component: string
-          details: Json | null
-          id: string
-          latency_ms: number | null
-          status: string
-        }
-        Insert: {
-          checked_at?: string
-          component: string
-          details?: Json | null
-          id?: string
-          latency_ms?: number | null
-          status: string
-        }
-        Update: {
-          checked_at?: string
-          component?: string
-          details?: Json | null
-          id?: string
-          latency_ms?: number | null
-          status?: string
-        }
-        Relationships: []
-      }
-      tracking_alerts: {
-        Row: {
-          acknowledged_at: string | null
-          acknowledged_by: string | null
-          booking_id: string
-          category: string
-          created_at: string
-          escalated_at: string | null
-          escalated_to: string | null
-          escalation_ticket_id: string | null
-          geofence_id: string | null
-          id: string
-          latitude: number | null
-          longitude: number | null
-          message: string | null
-          metadata: Json | null
-          notifications_sent: Json | null
-          resolution_notes: string | null
-          resolved_at: string | null
-          resolved_by: string | null
-          severity: string
-          speed_kmh: number | null
-          status: string
-          title: string
-        }
-        Insert: {
-          acknowledged_at?: string | null
-          acknowledged_by?: string | null
-          booking_id: string
-          category: string
-          created_at?: string
-          escalated_at?: string | null
-          escalated_to?: string | null
-          escalation_ticket_id?: string | null
-          geofence_id?: string | null
-          id?: string
-          latitude?: number | null
-          longitude?: number | null
-          message?: string | null
-          metadata?: Json | null
-          notifications_sent?: Json | null
-          resolution_notes?: string | null
-          resolved_at?: string | null
-          resolved_by?: string | null
-          severity?: string
-          speed_kmh?: number | null
-          status?: string
-          title: string
-        }
-        Update: {
-          acknowledged_at?: string | null
-          acknowledged_by?: string | null
-          booking_id?: string
-          category?: string
-          created_at?: string
-          escalated_at?: string | null
-          escalated_to?: string | null
-          escalation_ticket_id?: string | null
-          geofence_id?: string | null
-          id?: string
-          latitude?: number | null
-          longitude?: number | null
-          message?: string | null
-          metadata?: Json | null
-          notifications_sent?: Json | null
-          resolution_notes?: string | null
-          resolved_at?: string | null
-          resolved_by?: string | null
-          severity?: string
-          speed_kmh?: number | null
-          status?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "tracking_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tracking_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tracking_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tracking_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tracking_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "tracking_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "tracking_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "tracking_alerts_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "tracking_alerts_geofence_id_fkey"
-            columns: ["geofence_id"]
-            isOneToOne: false
-            referencedRelation: "geofence_zones"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      traffic_infractions: {
-        Row: {
-          amount_cents: number
-          booking_id: string
-          charge_transaction_id: string | null
-          charged_at: string | null
-          created_at: string
-          description: string
-          dismissed_at: string | null
-          dispute_deadline: string
-          disputed_at: string | null
-          evidence_urls: string[] | null
-          id: string
-          infraction_date: string
-          official_ticket_number: string | null
-          owner_id: string
-          renter_id: string
-          renter_response: string | null
-          status: Database["public"]["Enums"]["infraction_status"]
-          updated_at: string
-        }
-        Insert: {
-          amount_cents: number
-          booking_id: string
-          charge_transaction_id?: string | null
-          charged_at?: string | null
-          created_at?: string
-          description: string
-          dismissed_at?: string | null
-          dispute_deadline?: string
-          disputed_at?: string | null
-          evidence_urls?: string[] | null
-          id?: string
-          infraction_date: string
-          official_ticket_number?: string | null
-          owner_id: string
-          renter_id: string
-          renter_response?: string | null
-          status?: Database["public"]["Enums"]["infraction_status"]
-          updated_at?: string
-        }
-        Update: {
-          amount_cents?: number
-          booking_id?: string
-          charge_transaction_id?: string | null
-          charged_at?: string | null
-          created_at?: string
-          description?: string
-          dismissed_at?: string | null
-          dispute_deadline?: string
-          disputed_at?: string | null
-          evidence_urls?: string[] | null
-          id?: string
-          infraction_date?: string
-          official_ticket_number?: string | null
-          owner_id?: string
-          renter_id?: string
-          renter_response?: string | null
-          status?: Database["public"]["Enums"]["infraction_status"]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
-            isOneToOne: false
-            referencedRelation: "v_wallet_locks_status"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
-            isOneToOne: false
-            referencedRelation: "v_wallet_transfers_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_charge_transaction_id_fkey"
-            columns: ["charge_transaction_id"]
-            isOneToOne: false
-            referencedRelation: "wallet_transactions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "traffic_infractions_renter_id_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      transactions: {
-        Row: {
-          base_amount: number
-          created_at: string | null
-          id: string
-          mp_payment_id: string | null
-          pair: string
-          payment_reference: string | null
-          rate_used: number
-          status: string | null
-          target_amount: number
-          transaction_type: string
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          base_amount: number
-          created_at?: string | null
-          id?: string
-          mp_payment_id?: string | null
-          pair: string
-          payment_reference?: string | null
-          rate_used: number
-          status?: string | null
-          target_amount: number
-          transaction_type: string
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          base_amount?: number
-          created_at?: string | null
-          id?: string
-          mp_payment_id?: string | null
-          pair?: string
-          payment_reference?: string | null
-          rate_used?: number
-          status?: string | null
-          target_amount?: number
-          transaction_type?: string
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
       user_blocks: {
         Row: {
           blocked_id: string
           blocker_id: string
           created_at: string
           id: string
-          reason: string | null
         }
         Insert: {
           blocked_id: string
           blocker_id: string
           created_at?: string
           id?: string
-          reason?: string | null
         }
         Update: {
           blocked_id?: string
           blocker_id?: string
           created_at?: string
           id?: string
-          reason?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocked_id_fkey"
-            columns: ["blocked_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_blocks_blocker_id_fkey"
-            columns: ["blocker_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      user_bonus_malus: {
-        Row: {
-          created_at: string | null
-          id: string
-          metrics: Json | null
-          next_recalculation_at: string | null
-          tier: string | null
-          total_factor: number | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          metrics?: Json | null
-          next_recalculation_at?: string | null
-          tier?: string | null
-          total_factor?: number | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          metrics?: Json | null
-          next_recalculation_at?: string | null
-          tier?: string | null
-          total_factor?: number | null
-          updated_at?: string | null
-          user_id?: string
         }
         Relationships: []
       }
@@ -21241,176 +7950,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_favorite_cars: {
-        Row: {
-          car_id: string
-          created_at: string
-          id: string
-          user_id: string
-        }
-        Insert: {
-          car_id: string
-          created_at?: string
-          id?: string
-          user_id: string
-        }
-        Update: {
-          car_id?: string
-          created_at?: string
-          id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_favorite_cars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_favorites: {
-        Row: {
-          car_id: string
-          created_at: string | null
-          id: string
-          user_id: string
-        }
-        Insert: {
-          car_id: string
-          created_at?: string | null
-          id?: string
-          user_id: string
-        }
-        Update: {
-          car_id?: string
-          created_at?: string | null
-          id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_favorites_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       user_identity_levels: {
         Row: {
           country: string | null
@@ -21435,11 +7974,7 @@ export type Database = {
           extracted_gender: string | null
           extracted_nationality: string | null
           face_match_score: number | null
-          face_verification_attempts: number | null
-          face_verification_last_failed_at: string | null
           id_verified_at: string | null
-          kyc_blocked_at: string | null
-          kyc_blocked_reason: string | null
           last_ocr_confidence: number | null
           last_ocr_face_confidence: number | null
           last_ocr_has_face: boolean | null
@@ -21479,11 +8014,7 @@ export type Database = {
           extracted_gender?: string | null
           extracted_nationality?: string | null
           face_match_score?: number | null
-          face_verification_attempts?: number | null
-          face_verification_last_failed_at?: string | null
           id_verified_at?: string | null
-          kyc_blocked_at?: string | null
-          kyc_blocked_reason?: string | null
           last_ocr_confidence?: number | null
           last_ocr_face_confidence?: number | null
           last_ocr_has_face?: boolean | null
@@ -21523,11 +8054,7 @@ export type Database = {
           extracted_gender?: string | null
           extracted_nationality?: string | null
           face_match_score?: number | null
-          face_verification_attempts?: number | null
-          face_verification_last_failed_at?: string | null
           id_verified_at?: string | null
-          kyc_blocked_at?: string | null
-          kyc_blocked_reason?: string | null
           last_ocr_confidence?: number | null
           last_ocr_face_confidence?: number | null
           last_ocr_has_face?: boolean | null
@@ -21546,170 +8073,267 @@ export type Database = {
         }
         Relationships: []
       }
-      user_onboarding_plans: {
+      user_risk_scores: {
         Row: {
-          completed_at: string | null
-          completed_steps: Json | null
-          created_at: string
-          current_step: string | null
+          account_age_months: number | null
+          average_rating: number | null
+          cancellations_late: number | null
+          created_at: string | null
+          current_score: number | null
+          damages_reported: number | null
+          disputes_lost: number | null
+          disputes_won: number | null
           id: string
-          metadata: Json | null
-          plan_code: string
-          plan_version: string
-          role: string
-          status: string
-          updated_at: string
+          last_calculated_at: string | null
+          rentals_without_incidents: number | null
+          score_percentage: number | null
+          total_rentals: number | null
+          traffic_infractions: number | null
+          updated_at: string | null
           user_id: string
         }
         Insert: {
-          completed_at?: string | null
-          completed_steps?: Json | null
-          created_at?: string
-          current_step?: string | null
+          account_age_months?: number | null
+          average_rating?: number | null
+          cancellations_late?: number | null
+          created_at?: string | null
+          current_score?: number | null
+          damages_reported?: number | null
+          disputes_lost?: number | null
+          disputes_won?: number | null
           id?: string
-          metadata?: Json | null
-          plan_code: string
-          plan_version: string
-          role: string
-          status?: string
-          updated_at?: string
+          last_calculated_at?: string | null
+          rentals_without_incidents?: number | null
+          score_percentage?: number | null
+          total_rentals?: number | null
+          traffic_infractions?: number | null
+          updated_at?: string | null
           user_id: string
         }
         Update: {
-          completed_at?: string | null
-          completed_steps?: Json | null
-          created_at?: string
-          current_step?: string | null
+          account_age_months?: number | null
+          average_rating?: number | null
+          cancellations_late?: number | null
+          created_at?: string | null
+          current_score?: number | null
+          damages_reported?: number | null
+          disputes_lost?: number | null
+          disputes_won?: number | null
           id?: string
-          metadata?: Json | null
-          plan_code?: string
-          plan_version?: string
-          role?: string
-          status?: string
-          updated_at?: string
+          last_calculated_at?: string | null
+          rentals_without_incidents?: number | null
+          score_percentage?: number | null
+          total_rentals?: number | null
+          traffic_infractions?: number | null
+          updated_at?: string | null
           user_id?: string
-        }
-        Relationships: []
-      }
-      user_onboarding_steps: {
-        Row: {
-          action: string | null
-          completed_at: string | null
-          created_at: string
-          data: Json | null
-          description: string | null
-          id: string
-          plan_id: string
-          position: number
-          status: string
-          step_key: string
-          title: string | null
-          updated_at: string
-        }
-        Insert: {
-          action?: string | null
-          completed_at?: string | null
-          created_at?: string
-          data?: Json | null
-          description?: string | null
-          id?: string
-          plan_id: string
-          position: number
-          status?: string
-          step_key: string
-          title?: string | null
-          updated_at?: string
-        }
-        Update: {
-          action?: string | null
-          completed_at?: string | null
-          created_at?: string
-          data?: Json | null
-          description?: string | null
-          id?: string
-          plan_id?: string
-          position?: number
-          status?: string
-          step_key?: string
-          title?: string | null
-          updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "user_onboarding_steps_plan_id_fkey"
-            columns: ["plan_id"]
-            isOneToOne: false
-            referencedRelation: "user_onboarding_plans"
+            foreignKeyName: "user_risk_scores_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_risk_scores_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
       }
-      user_verifications: {
+      user_risk_stats: {
         Row: {
-          created_at: string
-          metadata: Json | null
-          missing_docs: Json
-          notes: string | null
-          role: string
-          status: string
-          updated_at: string
+          clean_trips_count: number | null
+          gap_coverage_used_usd: number | null
+          last_claim_date: string | null
+          strikes_count: number | null
+          updated_at: string | null
           user_id: string
         }
         Insert: {
-          created_at?: string
-          metadata?: Json | null
-          missing_docs?: Json
-          notes?: string | null
-          role: string
-          status?: string
-          updated_at?: string
+          clean_trips_count?: number | null
+          gap_coverage_used_usd?: number | null
+          last_claim_date?: string | null
+          strikes_count?: number | null
+          updated_at?: string | null
           user_id: string
         }
         Update: {
-          created_at?: string
-          metadata?: Json | null
-          missing_docs?: Json
-          notes?: string | null
-          role?: string
-          status?: string
-          updated_at?: string
+          clean_trips_count?: number | null
+          gap_coverage_used_usd?: number | null
+          last_claim_date?: string | null
+          strikes_count?: number | null
+          updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_stats: {
+        Row: {
+          badges: Json | null
+          cancellation_count: number | null
+          cancellation_rate: number | null
+          is_super_host: boolean | null
+          is_top_host: boolean | null
+          is_verified_renter: boolean | null
+          last_review_received_at: string | null
+          owner_rating_accuracy_avg: number | null
+          owner_rating_avg: number | null
+          owner_rating_checkin_avg: number | null
+          owner_rating_cleanliness_avg: number | null
+          owner_rating_communication_avg: number | null
+          owner_rating_location_avg: number | null
+          owner_rating_value_avg: number | null
+          owner_response_rate: number | null
+          owner_response_time_hours: number | null
+          owner_reviews_count: number | null
+          renter_rating_accuracy_avg: number | null
+          renter_rating_avg: number | null
+          renter_rating_checkin_avg: number | null
+          renter_rating_cleanliness_avg: number | null
+          renter_rating_communication_avg: number | null
+          renter_reviews_count: number | null
+          total_bookings_as_owner: number | null
+          total_bookings_as_renter: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          badges?: Json | null
+          cancellation_count?: number | null
+          cancellation_rate?: number | null
+          is_super_host?: boolean | null
+          is_top_host?: boolean | null
+          is_verified_renter?: boolean | null
+          last_review_received_at?: string | null
+          owner_rating_accuracy_avg?: number | null
+          owner_rating_avg?: number | null
+          owner_rating_checkin_avg?: number | null
+          owner_rating_cleanliness_avg?: number | null
+          owner_rating_communication_avg?: number | null
+          owner_rating_location_avg?: number | null
+          owner_rating_value_avg?: number | null
+          owner_response_rate?: number | null
+          owner_response_time_hours?: number | null
+          owner_reviews_count?: number | null
+          renter_rating_accuracy_avg?: number | null
+          renter_rating_avg?: number | null
+          renter_rating_checkin_avg?: number | null
+          renter_rating_cleanliness_avg?: number | null
+          renter_rating_communication_avg?: number | null
+          renter_reviews_count?: number | null
+          total_bookings_as_owner?: number | null
+          total_bookings_as_renter?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          badges?: Json | null
+          cancellation_count?: number | null
+          cancellation_rate?: number | null
+          is_super_host?: boolean | null
+          is_top_host?: boolean | null
+          is_verified_renter?: boolean | null
+          last_review_received_at?: string | null
+          owner_rating_accuracy_avg?: number | null
+          owner_rating_avg?: number | null
+          owner_rating_checkin_avg?: number | null
+          owner_rating_cleanliness_avg?: number | null
+          owner_rating_communication_avg?: number | null
+          owner_rating_location_avg?: number | null
+          owner_rating_value_avg?: number | null
+          owner_response_rate?: number | null
+          owner_response_time_hours?: number | null
+          owner_reviews_count?: number | null
+          renter_rating_accuracy_avg?: number | null
+          renter_rating_avg?: number | null
+          renter_rating_checkin_avg?: number | null
+          renter_rating_cleanliness_avg?: number | null
+          renter_rating_communication_avg?: number | null
+          renter_reviews_count?: number | null
+          total_bookings_as_owner?: number | null
+          total_bookings_as_renter?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_verifications: {
+        Row: {
+          created_at: string | null
+          document_type: string
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          missing_docs: string[] | null
+          notes: string | null
+          role: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          document_type: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          missing_docs?: string[] | null
+          notes?: string | null
+          role?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          document_type?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          missing_docs?: string[] | null
+          notes?: string | null
+          role?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+          verified_at?: string | null
         }
         Relationships: []
       }
       user_wallets: {
         Row: {
-          autorentar_credit_balance_cents: number
           available_balance_cents: number
           balance_cents: number
-          cash_deposit_balance_cents: number
-          community_rewards_balance_cents: number | null
           created_at: string
           currency: string
+          id: string
           locked_balance_cents: number
           updated_at: string
           user_id: string
         }
         Insert: {
-          autorentar_credit_balance_cents?: number
           available_balance_cents?: number
           balance_cents?: number
-          cash_deposit_balance_cents?: number
-          community_rewards_balance_cents?: number | null
           created_at?: string
           currency?: string
+          id?: string
           locked_balance_cents?: number
           updated_at?: string
           user_id: string
         }
         Update: {
-          autorentar_credit_balance_cents?: number
           available_balance_cents?: number
           balance_cents?: number
-          cash_deposit_balance_cents?: number
-          community_rewards_balance_cents?: number | null
           created_at?: string
           currency?: string
+          id?: string
           locked_balance_cents?: number
           updated_at?: string
           user_id?: string
@@ -21863,153 +8487,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_manual_reviewed_by_fkey"
-            columns: ["manual_reviewed_by"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "vehicle_documents_vehicle_id_fkey"
             columns: ["vehicle_id"]
             isOneToOne: false
@@ -22020,36 +8497,8 @@ export type Database = {
             foreignKeyName: "vehicle_documents_vehicle_id_fkey"
             columns: ["vehicle_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_documents_vehicle_id_fkey"
-            columns: ["vehicle_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "vehicle_documents_vehicle_id_fkey"
@@ -22066,219 +8515,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      vehicle_location_history: {
-        Row: {
-          accuracy: number | null
-          altitude: number | null
-          battery_level: number | null
-          booking_id: string
-          car_id: string
-          created_at: string
-          device_id: string | null
-          heading: number | null
-          id: string
-          is_charging: boolean | null
-          latitude: number
-          longitude: number
-          network_type: string | null
-          recorded_at: string
-          source: string
-          speed: number | null
-        }
-        Insert: {
-          accuracy?: number | null
-          altitude?: number | null
-          battery_level?: number | null
-          booking_id: string
-          car_id: string
-          created_at?: string
-          device_id?: string | null
-          heading?: number | null
-          id?: string
-          is_charging?: boolean | null
-          latitude: number
-          longitude: number
-          network_type?: string | null
-          recorded_at?: string
-          source?: string
-          speed?: number | null
-        }
-        Update: {
-          accuracy?: number | null
-          altitude?: number | null
-          battery_level?: number | null
-          booking_id?: string
-          car_id?: string
-          created_at?: string
-          device_id?: string | null
-          heading?: number | null
-          id?: string
-          is_charging?: boolean | null
-          latitude?: number
-          longitude?: number
-          network_type?: string | null
-          recorded_at?: string
-          source?: string
-          speed?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "vehicle_location_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_location_history_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      vehicle_model_equivalents: {
-        Row: {
-          active: boolean
-          brand: string
-          confidence_level: string
-          created_at: string
-          id: string
-          model_argentina: string
-          model_brazil: string
-          notes: string | null
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          brand: string
-          confidence_level?: string
-          created_at?: string
-          id?: string
-          model_argentina: string
-          model_brazil: string
-          notes?: string | null
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          brand?: string
-          confidence_level?: string
-          created_at?: string
-          id?: string
-          model_argentina?: string
-          model_brazil?: string
-          notes?: string | null
-          updated_at?: string
-        }
-        Relationships: []
       }
       vehicle_pricing_models: {
         Row: {
@@ -22387,13 +8623,6 @@ export type Database = {
             foreignKeyName: "vehicle_recognition_logs_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_recognition_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
             referencedRelation: "cars"
             referencedColumns: ["id"]
           },
@@ -22401,36 +8630,8 @@ export type Database = {
             foreignKeyName: "vehicle_recognition_logs_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_recognition_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_recognition_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_recognition_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_recognition_logs_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "vehicle_recognition_logs_car_id_fkey"
@@ -22568,13 +8769,6 @@ export type Database = {
             foreignKeyName: "vehicle_telemetry_booking_id_fkey"
             columns: ["booking_id"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
             referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
@@ -22600,34 +8794,6 @@ export type Database = {
             referencedColumns: ["booking_id"]
           },
           {
-            foreignKeyName: "vehicle_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "vehicle_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "vehicle_telemetry_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "vehicle_telemetry_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "vehicle_telemetry_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
@@ -22638,36 +8804,8 @@ export type Database = {
             foreignKeyName: "vehicle_telemetry_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vehicle_telemetry_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_telemetry_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_telemetry_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "vehicle_telemetry_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "vehicle_telemetry_car_id_fkey"
@@ -22684,6 +8822,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      vehicle_tier_config: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          hold_base_usd: number
+          tier: Database["public"]["Enums"]["vehicle_tier"]
+          updated_at: string | null
+          value_max_usd: number | null
+          value_min_usd: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          hold_base_usd: number
+          tier: Database["public"]["Enums"]["vehicle_tier"]
+          updated_at?: string | null
+          value_max_usd?: number | null
+          value_min_usd?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          hold_base_usd?: number
+          tier?: Database["public"]["Enums"]["vehicle_tier"]
+          updated_at?: string | null
+          value_max_usd?: number | null
+          value_min_usd?: number | null
+        }
+        Relationships: []
       }
       wallet_audit_log: {
         Row: {
@@ -22771,66 +8939,66 @@ export type Database = {
       }
       wallet_transactions: {
         Row: {
+          admin_notes: string | null
           amount: number
+          balance_after_cents: number | null
+          category: string | null
           completed_at: string | null
           created_at: string
           currency: string
           description: string | null
-          expired_at: string | null
-          expires_at: string | null
           id: string
-          locked_until: string | null
-          metadata: Json | null
+          idempotency_key: string | null
+          is_withdrawable: boolean
           provider: string | null
+          provider_metadata: Json | null
           provider_transaction_id: string | null
           reference_id: string | null
           reference_type: string | null
-          related_booking_id: string | null
-          renewal_count: number | null
           status: string
           type: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          admin_notes?: string | null
           amount: number
+          balance_after_cents?: number | null
+          category?: string | null
           completed_at?: string | null
           created_at?: string
           currency?: string
           description?: string | null
-          expired_at?: string | null
-          expires_at?: string | null
           id?: string
-          locked_until?: string | null
-          metadata?: Json | null
+          idempotency_key?: string | null
+          is_withdrawable?: boolean
           provider?: string | null
+          provider_metadata?: Json | null
           provider_transaction_id?: string | null
           reference_id?: string | null
           reference_type?: string | null
-          related_booking_id?: string | null
-          renewal_count?: number | null
           status?: string
           type: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          admin_notes?: string | null
           amount?: number
+          balance_after_cents?: number | null
+          category?: string | null
           completed_at?: string | null
           created_at?: string
           currency?: string
           description?: string | null
-          expired_at?: string | null
-          expires_at?: string | null
           id?: string
-          locked_until?: string | null
-          metadata?: Json | null
+          idempotency_key?: string | null
+          is_withdrawable?: boolean
           provider?: string | null
+          provider_metadata?: Json | null
           provider_transaction_id?: string | null
           reference_id?: string | null
           reference_type?: string | null
-          related_booking_id?: string | null
-          renewal_count?: number | null
           status?: string
           type?: string
           updated_at?: string
@@ -22838,125 +9006,116 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
+            foreignKeyName: "wallet_transactions_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
+            referencedRelation: "me_profile"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
+            foreignKeyName: "wallet_transactions_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "bookings"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "wallet_transactions_related_booking_id_fkey"
-            columns: ["related_booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
           },
         ]
       }
-      webhook_dead_letter: {
+      wallets: {
         Row: {
-          created_at: string
-          error_code: string | null
-          error_message: string | null
-          event_id: string | null
-          failed_at: string
+          balance: number | null
+          created_at: string | null
+          currency: string | null
+          id: string
+          locked_balance: number | null
+          pending_balance: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          balance?: number | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          locked_balance?: number | null
+          pending_balance?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          balance?: number | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          locked_balance?: number | null
+          pending_balance?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      webhook_retry_queue: {
+        Row: {
+          created_at: string | null
+          error_history: Json | null
+          event_id: string
           headers: Json | null
           id: string
+          last_error_details: Json | null
+          last_error_message: string | null
           last_retry_at: string | null
           max_retries: number | null
-          metadata: Json | null
+          mp_payment_id: string | null
           next_retry_at: string | null
           payload: Json
           resolution_notes: string | null
           resolved_at: string | null
           resolved_by: string | null
           retry_count: number | null
-          status: string | null
-          updated_at: string
+          status: string
+          updated_at: string | null
           webhook_type: string
         }
         Insert: {
-          created_at?: string
-          error_code?: string | null
-          error_message?: string | null
-          event_id?: string | null
-          failed_at?: string
+          created_at?: string | null
+          error_history?: Json | null
+          event_id: string
           headers?: Json | null
           id?: string
+          last_error_details?: Json | null
+          last_error_message?: string | null
           last_retry_at?: string | null
           max_retries?: number | null
-          metadata?: Json | null
+          mp_payment_id?: string | null
           next_retry_at?: string | null
           payload: Json
           resolution_notes?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
           retry_count?: number | null
-          status?: string | null
-          updated_at?: string
+          status?: string
+          updated_at?: string | null
           webhook_type: string
         }
         Update: {
-          created_at?: string
-          error_code?: string | null
-          error_message?: string | null
-          event_id?: string | null
-          failed_at?: string
+          created_at?: string | null
+          error_history?: Json | null
+          event_id?: string
           headers?: Json | null
           id?: string
+          last_error_details?: Json | null
+          last_error_message?: string | null
           last_retry_at?: string | null
           max_retries?: number | null
-          metadata?: Json | null
+          mp_payment_id?: string | null
           next_retry_at?: string | null
           payload?: Json
           resolution_notes?: string | null
           resolved_at?: string | null
           resolved_by?: string | null
           retry_count?: number | null
-          status?: string | null
-          updated_at?: string
+          status?: string
+          updated_at?: string | null
           webhook_type?: string
         }
         Relationships: []
@@ -23057,13 +9216,6 @@ export type Database = {
             referencedRelation: "bank_accounts"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "withdrawal_requests_bank_account_id_fkey"
-            columns: ["bank_account_id"]
-            isOneToOne: false
-            referencedRelation: "bank_accounts_decrypted"
-            referencedColumns: ["id"]
-          },
         ]
       }
       withdrawal_transactions: {
@@ -23115,141 +9267,21 @@ export type Database = {
       }
     }
     Views: {
-      _schema_cache_refresh: {
-        Row: {
-          deposit_amount_cents: number | null
-          id: string | null
-          rental_amount_cents: number | null
-          total_amount: number | null
-          total_cents: number | null
-        }
-        Insert: {
-          deposit_amount_cents?: number | null
-          id?: string | null
-          rental_amount_cents?: number | null
-          total_amount?: number | null
-          total_cents?: number | null
-        }
-        Update: {
-          deposit_amount_cents?: number | null
-          id?: string | null
-          rental_amount_cents?: number | null
-          total_amount?: number | null
-          total_cents?: number | null
-        }
-        Relationships: []
-      }
-      accounting_balance_sheet: {
-        Row: {
-          account_type: string | null
-          balance: number | null
-          code: string | null
-          name: string | null
-          sub_type: string | null
-        }
-        Insert: {
-          account_type?: string | null
-          balance?: never
-          code?: string | null
-          name?: string | null
-          sub_type?: string | null
-        }
-        Update: {
-          account_type?: string | null
-          balance?: never
-          code?: string | null
-          name?: string | null
-          sub_type?: string | null
-        }
-        Relationships: []
-      }
-      accounting_cash_flow: {
-        Row: {
-          balance: number | null
-          created_at: string | null
-          date: string | null
-          description: string | null
-          id: string | null
-          inflow: number | null
-          outflow: number | null
-          transaction_type: string | null
-          type: string | null
-        }
-        Relationships: []
-      }
-      accounting_commissions_report: {
-        Row: {
-          avg_commission: number | null
-          period: string | null
-          total_bookings: number | null
-          total_commissions: number | null
-        }
-        Relationships: []
-      }
-      accounting_dashboard: {
-        Row: {
-          active_security_deposits: number | null
-          fgo_provision: number | null
-          monthly_expenses: number | null
-          monthly_income: number | null
-          monthly_profit: number | null
-          total_assets: number | null
-          total_equity: number | null
-          total_liabilities: number | null
-          wallet_liability: number | null
-        }
-        Relationships: []
-      }
-      accounting_income_statement: {
-        Row: {
-          account_type: string | null
-          amount: number | null
-          code: string | null
-          name: string | null
-          period: string | null
-        }
-        Relationships: []
-      }
       accounting_provisions_report: {
         Row: {
+          created_at: string | null
           current_balance: number | null
           id: string | null
+          notes: string | null
           provision_amount: number | null
           provision_date: string | null
           provision_type: string | null
           reference_id: string | null
+          reference_table: string | null
+          release_date: string | null
           released_amount: number | null
           status: string | null
           utilized_amount: number | null
-        }
-        Insert: {
-          current_balance?: number | null
-          id?: string | null
-          provision_amount?: number | null
-          provision_date?: string | null
-          provision_type?: string | null
-          reference_id?: string | null
-          released_amount?: number | null
-          status?: string | null
-          utilized_amount?: number | null
-        }
-        Update: {
-          current_balance?: number | null
-          id?: string | null
-          provision_amount?: number | null
-          provision_date?: string | null
-          provision_type?: string | null
-          reference_id?: string | null
-          released_amount?: number | null
-          status?: string | null
-          utilized_amount?: number | null
-        }
-        Relationships: []
-      }
-      accounting_wallet_reconciliation: {
-        Row: {
-          amount: number | null
-          source: string | null
         }
         Relationships: []
       }
@@ -23289,210 +9321,57 @@ export type Database = {
         }
         Relationships: []
       }
-      bank_accounts_decrypted: {
+      bonus_malus_cron_jobs: {
         Row: {
-          account_holder_id: string | null
-          account_holder_name: string | null
-          account_number: string | null
-          account_type: string | null
-          alias: string | null
-          bank_code: string | null
-          bank_name: string | null
-          cbu: string | null
-          created_at: string | null
-          id: string | null
-          is_default: boolean | null
-          updated_at: string | null
-          user_id: string | null
-          verified: boolean | null
-          verified_at: string | null
+          active: boolean | null
+          jobid: number | null
+          jobname: string | null
+          ran_recently: boolean | null
+          schedule: string | null
         }
         Insert: {
-          account_holder_id?: string | null
-          account_holder_name?: string | null
-          account_number?: never
-          account_type?: string | null
-          alias?: never
-          bank_code?: string | null
-          bank_name?: never
-          cbu?: never
-          created_at?: string | null
-          id?: string | null
-          is_default?: boolean | null
-          updated_at?: string | null
-          user_id?: string | null
-          verified?: boolean | null
-          verified_at?: string | null
+          active?: boolean | null
+          jobid?: number | null
+          jobname?: string | null
+          ran_recently?: never
+          schedule?: string | null
         }
         Update: {
-          account_holder_id?: string | null
-          account_holder_name?: string | null
-          account_number?: never
-          account_type?: string | null
-          alias?: never
-          bank_code?: string | null
-          bank_name?: never
-          cbu?: never
-          created_at?: string | null
-          id?: string | null
-          is_default?: boolean | null
-          updated_at?: string | null
-          user_id?: string | null
-          verified?: boolean | null
-          verified_at?: string | null
+          active?: boolean | null
+          jobid?: number | null
+          jobname?: string | null
+          ran_recently?: never
+          schedule?: string | null
         }
         Relationships: []
       }
-      bookable_cars: {
+      booking_stats_daily: {
         Row: {
-          auto_approval: boolean | null
-          brand: string | null
-          brand_id: string | null
-          brand_text_backup: string | null
-          can_receive_payments: boolean | null
-          category_id: string | null
-          city: string | null
-          color: string | null
-          country: string | null
-          created_at: string | null
-          currency: string | null
-          custom_daily_rate_pct: number | null
-          deleted_at: string | null
-          delivery_options: Json | null
-          deposit_amount: number | null
-          deposit_required: boolean | null
-          description: string | null
-          doors: number | null
-          estimated_value_usd: number | null
-          features: Json | null
-          fipe_code: string | null
-          fipe_last_sync: string | null
-          fuel: string | null
-          fuel_type: string | null
-          id: string | null
-          insurance_included: boolean | null
-          location_city: string | null
-          location_country: string | null
-          location_lat: number | null
-          location_lng: number | null
-          location_neighborhood: string | null
-          location_postal_code: string | null
-          location_province: string | null
-          location_state: string | null
-          location_street: string | null
-          location_street_number: string | null
-          max_rental_days: number | null
-          mileage: number | null
-          min_rental_days: number | null
-          model: string | null
-          model_id: string | null
-          model_text_backup: string | null
-          owner_email: string | null
-          owner_id: string | null
-          owner_mp_completed: boolean | null
-          owner_name: string | null
-          payment_methods: Json | null
-          plate: string | null
-          price_per_day: number | null
-          price_per_day_cents: number | null
-          province: string | null
-          rating_avg: number | null
-          rating_count: number | null
-          region_id: string | null
-          seats: number | null
-          status: Database["public"]["Enums"]["car_status"] | null
-          terms_and_conditions: string | null
-          title: string | null
-          transmission: string | null
-          updated_at: string | null
-          uses_dynamic_pricing: boolean | null
-          value_ars: number | null
-          value_auto_sync_enabled: boolean | null
-          value_brl: number | null
-          value_usd: number | null
-          value_usd_source: string | null
-          vin: string | null
-          year: number | null
+          active_bookings: number | null
+          avg_booking_value: number | null
+          avg_daily_rate: number | null
+          avg_total_days: number | null
+          cancelled_bookings: number | null
+          completed_bookings: number | null
+          damage_reported_bookings: number | null
+          day: string | null
+          disputed_bookings: number | null
+          inspected_good_bookings: number | null
+          instant_bookings: number | null
+          insurance_fee_total: number | null
+          owner_fee_total: number | null
+          payment_failed_bookings: number | null
+          pending_bookings: number | null
+          returned_bookings: number | null
+          service_fee_total: number | null
+          subtotal_gmv: number | null
+          total_bookings: number | null
+          total_gmv: number | null
+          total_rental_days: number | null
+          unique_cars: number | null
+          unique_renters: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "cars_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "vehicle_categories"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
+        Relationships: []
       }
       campaign_performance: {
         Row: {
@@ -23513,150 +9392,6 @@ export type Database = {
           status: string | null
           target_audience: string | null
           total_revenue: number | null
-        }
-        Relationships: []
-      }
-      car_latest_location: {
-        Row: {
-          car_id: string | null
-          lat: number | null
-          lng: number | null
-          recorded_at: string | null
-          session_id: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_tracking_points_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "car_tracking_sessions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      cars_multi_currency: {
-        Row: {
-          brand_text_backup: string | null
-          fipe_code: string | null
-          fipe_last_sync: string | null
-          id: string | null
-          implied_brl_usd_rate: number | null
-          implied_usd_ars_rate: number | null
-          location_country: string | null
-          model_text_backup: string | null
-          value_ars: number | null
-          value_brl: number | null
-          value_usd: number | null
-          value_usd_source: string | null
-          year: number | null
-        }
-        Insert: {
-          brand_text_backup?: string | null
-          fipe_code?: string | null
-          fipe_last_sync?: string | null
-          id?: string | null
-          implied_brl_usd_rate?: never
-          implied_usd_ars_rate?: never
-          location_country?: string | null
-          model_text_backup?: string | null
-          value_ars?: number | null
-          value_brl?: number | null
-          value_usd?: number | null
-          value_usd_source?: string | null
-          year?: number | null
-        }
-        Update: {
-          brand_text_backup?: string | null
-          fipe_code?: string | null
-          fipe_last_sync?: string | null
-          id?: string | null
-          implied_brl_usd_rate?: never
-          implied_usd_ars_rate?: never
-          location_country?: string | null
-          model_text_backup?: string | null
-          value_ars?: number | null
-          value_brl?: number | null
-          value_usd?: number | null
-          value_usd_source?: string | null
-          year?: number | null
-        }
-        Relationships: []
-      }
-      cars_payment_status_diagnostic: {
-        Row: {
-          can_receive_payments: boolean | null
-          car_id: string | null
-          car_name: string | null
-          diagnostic: string | null
-          owner_collector_id: string | null
-          owner_created_at: string | null
-          owner_email: string | null
-          owner_id: string | null
-          owner_mp_completed: boolean | null
-          status: Database["public"]["Enums"]["car_status"] | null
         }
         Relationships: []
       }
@@ -23730,48 +9465,6 @@ export type Database = {
         }
         Relationships: []
       }
-      geography_columns: {
-        Row: {
-          coord_dimension: number | null
-          f_geography_column: unknown
-          f_table_catalog: unknown
-          f_table_name: unknown
-          f_table_schema: unknown
-          srid: number | null
-          type: string | null
-        }
-        Relationships: []
-      }
-      geometry_columns: {
-        Row: {
-          coord_dimension: number | null
-          f_geometry_column: unknown
-          f_table_catalog: string | null
-          f_table_name: unknown
-          f_table_schema: unknown
-          srid: number | null
-          type: string | null
-        }
-        Insert: {
-          coord_dimension?: number | null
-          f_geometry_column?: unknown
-          f_table_catalog?: string | null
-          f_table_name?: unknown
-          f_table_schema?: unknown
-          srid?: number | null
-          type?: string | null
-        }
-        Update: {
-          coord_dimension?: number | null
-          f_geometry_column?: unknown
-          f_table_catalog?: string | null
-          f_table_name?: unknown
-          f_table_schema?: unknown
-          srid?: number | null
-          type?: string | null
-        }
-        Relationships: []
-      }
       marketing_daily_metrics: {
         Row: {
           avg_hashtags: number | null
@@ -23798,511 +9491,100 @@ export type Database = {
       }
       marketing_system_health: {
         Row: {
-          active_monitors: number | null
-          active_personas: number | null
-          checked_at: string | null
-          pending_content: number | null
-          unresolved_alerts: number | null
+          category: string | null
+          metrics: Json | null
         }
         Relationships: []
       }
       me_profile: {
         Row: {
-          address_line1: string | null
-          address_line1_encrypted: string | null
-          address_line2: string | null
-          address_line2_encrypted: string | null
           avatar_url: string | null
-          avg_response_time_minutes: number | null
           can_book_cars: boolean | null
           can_publish_cars: boolean | null
           cancellation_count_90d: number | null
-          city: string | null
-          community_member_since: string | null
-          community_participation_score: number | null
-          community_tier: string | null
-          country: string | null
           created_at: string | null
-          date_of_birth: string | null
-          deleted_at: string | null
-          dni_encrypted: string | null
-          driver_license_class: string | null
-          driver_license_number_encrypted: string | null
-          driver_license_points: number | null
-          driver_license_professional: boolean | null
-          email: string | null
-          email_verified: boolean | null
+          default_currency: string | null
           full_name: string | null
-          gov_id_number: string | null
-          gov_id_number_encrypted: string | null
-          gov_id_type: string | null
-          home_latitude: number | null
-          home_longitude: number | null
           id: string | null
-          id_verified: boolean | null
-          identity_country: string | null
-          identity_document_number: string | null
-          identity_locked: boolean | null
-          identity_verified_at: string | null
           is_admin: boolean | null
-          is_deleted: boolean | null
           last_cancellation_check: string | null
-          last_community_activity_at: string | null
-          location_verified_at: string | null
-          mercadopago_access_token: string | null
-          mercadopago_access_token_expires_at: string | null
-          mercadopago_account_type: string | null
-          mercadopago_collector_id: string | null
-          mercadopago_connected: boolean | null
-          mercadopago_connected_at: string | null
-          mercadopago_country: string | null
-          mercadopago_oauth_state: string | null
-          mercadopago_public_key: string | null
-          mercadopago_refresh_token: string | null
-          mercadopago_site_id: string | null
-          mp_onboarding_completed: boolean | null
-          mp_onboarding_url: string | null
-          onboarding: Database["public"]["Enums"]["onboarding_status"] | null
-          phone: string | null
-          phone_encrypted: string | null
-          phone_verified: boolean | null
-          postal_code: string | null
-          postal_code_encrypted: string | null
-          preferred_search_radius_km: number | null
-          primary_goal: string | null
-          rating_avg: number | null
-          rating_count: number | null
           renter_level: string | null
           renter_level_updated_at: string | null
           role: string | null
-          state: string | null
-          total_availability_days: number | null
-          updated_at: string | null
           visibility_penalty_until: string | null
-          whatsapp: string | null
-          whatsapp_encrypted: string | null
         }
         Insert: {
-          address_line1?: string | null
-          address_line1_encrypted?: string | null
-          address_line2?: string | null
-          address_line2_encrypted?: string | null
           avatar_url?: string | null
-          avg_response_time_minutes?: number | null
           can_book_cars?: never
           can_publish_cars?: never
           cancellation_count_90d?: number | null
-          city?: string | null
-          community_member_since?: string | null
-          community_participation_score?: number | null
-          community_tier?: string | null
-          country?: string | null
           created_at?: string | null
-          date_of_birth?: string | null
-          deleted_at?: string | null
-          dni_encrypted?: string | null
-          driver_license_class?: string | null
-          driver_license_number_encrypted?: string | null
-          driver_license_points?: number | null
-          driver_license_professional?: boolean | null
-          email?: string | null
-          email_verified?: boolean | null
+          default_currency?: string | null
           full_name?: string | null
-          gov_id_number?: string | null
-          gov_id_number_encrypted?: string | null
-          gov_id_type?: string | null
-          home_latitude?: number | null
-          home_longitude?: number | null
           id?: string | null
-          id_verified?: boolean | null
-          identity_country?: string | null
-          identity_document_number?: string | null
-          identity_locked?: boolean | null
-          identity_verified_at?: string | null
           is_admin?: boolean | null
-          is_deleted?: boolean | null
           last_cancellation_check?: string | null
-          last_community_activity_at?: string | null
-          location_verified_at?: string | null
-          mercadopago_access_token?: string | null
-          mercadopago_access_token_expires_at?: string | null
-          mercadopago_account_type?: string | null
-          mercadopago_collector_id?: string | null
-          mercadopago_connected?: boolean | null
-          mercadopago_connected_at?: string | null
-          mercadopago_country?: string | null
-          mercadopago_oauth_state?: string | null
-          mercadopago_public_key?: string | null
-          mercadopago_refresh_token?: string | null
-          mercadopago_site_id?: string | null
-          mp_onboarding_completed?: boolean | null
-          mp_onboarding_url?: string | null
-          onboarding?: Database["public"]["Enums"]["onboarding_status"] | null
-          phone?: string | null
-          phone_encrypted?: string | null
-          phone_verified?: boolean | null
-          postal_code?: string | null
-          postal_code_encrypted?: string | null
-          preferred_search_radius_km?: number | null
-          primary_goal?: string | null
-          rating_avg?: number | null
-          rating_count?: number | null
           renter_level?: string | null
           renter_level_updated_at?: string | null
           role?: string | null
-          state?: string | null
-          total_availability_days?: number | null
-          updated_at?: string | null
           visibility_penalty_until?: string | null
-          whatsapp?: string | null
-          whatsapp_encrypted?: string | null
         }
         Update: {
-          address_line1?: string | null
-          address_line1_encrypted?: string | null
-          address_line2?: string | null
-          address_line2_encrypted?: string | null
           avatar_url?: string | null
-          avg_response_time_minutes?: number | null
           can_book_cars?: never
           can_publish_cars?: never
           cancellation_count_90d?: number | null
-          city?: string | null
-          community_member_since?: string | null
-          community_participation_score?: number | null
-          community_tier?: string | null
-          country?: string | null
           created_at?: string | null
-          date_of_birth?: string | null
-          deleted_at?: string | null
-          dni_encrypted?: string | null
-          driver_license_class?: string | null
-          driver_license_number_encrypted?: string | null
-          driver_license_points?: number | null
-          driver_license_professional?: boolean | null
-          email?: string | null
-          email_verified?: boolean | null
+          default_currency?: string | null
           full_name?: string | null
-          gov_id_number?: string | null
-          gov_id_number_encrypted?: string | null
-          gov_id_type?: string | null
-          home_latitude?: number | null
-          home_longitude?: number | null
           id?: string | null
-          id_verified?: boolean | null
-          identity_country?: string | null
-          identity_document_number?: string | null
-          identity_locked?: boolean | null
-          identity_verified_at?: string | null
           is_admin?: boolean | null
-          is_deleted?: boolean | null
           last_cancellation_check?: string | null
-          last_community_activity_at?: string | null
-          location_verified_at?: string | null
-          mercadopago_access_token?: string | null
-          mercadopago_access_token_expires_at?: string | null
-          mercadopago_account_type?: string | null
-          mercadopago_collector_id?: string | null
-          mercadopago_connected?: boolean | null
-          mercadopago_connected_at?: string | null
-          mercadopago_country?: string | null
-          mercadopago_oauth_state?: string | null
-          mercadopago_public_key?: string | null
-          mercadopago_refresh_token?: string | null
-          mercadopago_site_id?: string | null
-          mp_onboarding_completed?: boolean | null
-          mp_onboarding_url?: string | null
-          onboarding?: Database["public"]["Enums"]["onboarding_status"] | null
-          phone?: string | null
-          phone_encrypted?: string | null
-          phone_verified?: boolean | null
-          postal_code?: string | null
-          postal_code_encrypted?: string | null
-          preferred_search_radius_km?: number | null
-          primary_goal?: string | null
-          rating_avg?: number | null
-          rating_count?: number | null
           renter_level?: string | null
           renter_level_updated_at?: string | null
           role?: string | null
-          state?: string | null
-          total_availability_days?: number | null
-          updated_at?: string | null
           visibility_penalty_until?: string | null
-          whatsapp?: string | null
-          whatsapp_encrypted?: string | null
         }
         Relationships: []
       }
-      messages_decrypted: {
-        Row: {
-          body: string | null
-          body_encrypted: string | null
-          booking_id: string | null
-          car_id: string | null
-          created_at: string | null
-          delivered_at: string | null
-          id: string | null
-          read_at: string | null
-          recipient_id: string | null
-          sender_id: string | null
-        }
-        Insert: {
-          body?: never
-          body_encrypted?: string | null
-          booking_id?: string | null
-          car_id?: string | null
-          created_at?: string | null
-          delivered_at?: string | null
-          id?: string | null
-          read_at?: string | null
-          recipient_id?: string | null
-          sender_id?: string | null
-        }
-        Update: {
-          body?: never
-          body_encrypted?: string | null
-          booking_id?: string | null
-          car_id?: string | null
-          created_at?: string | null
-          delivered_at?: string | null
-          id?: string | null
-          read_at?: string | null
-          recipient_id?: string | null
-          sender_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "my_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_bookings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "owner_pending_approvals"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "messages_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       my_bookings: {
         Row: {
-          authorized_payment_id: string | null
-          breakdown: Json | null
-          calendar_sync_enabled: boolean | null
-          calendar_synced_at: string | null
-          cancellation_fee_cents: number | null
-          cancellation_policy_id: number | null
           cancellation_reason: string | null
           cancelled_at: string | null
           car_brand: string | null
+          car_city: string | null
           car_id: string | null
-          car_location_lat: number | null
-          car_location_lng: number | null
           car_model: string | null
           car_owner_id: string | null
+          car_province: string | null
           car_title: string | null
-          coverage_upgrade: string | null
+          car_year: number | null
           created_at: string | null
           currency: string | null
-          days_count: number | null
-          delivery_distance_km: number | null
-          delivery_fee_cents: number | null
-          delivery_required: boolean | null
-          deposit_amount_cents: number | null
-          discounts_cents: number | null
-          distance_risk_tier: string | null
-          dropoff_location_lat: number | null
-          dropoff_location_lng: number | null
-          dynamic_price_snapshot: Json | null
+          daily_rate: number | null
           end_at: string | null
-          expires_at: string | null
-          fees_cents: number | null
-          google_calendar_event_id: string | null
-          guarantee_amount_cents: number | null
-          guarantee_type: string | null
-          has_dynamic_pricing: boolean | null
-          hold_authorization_id: string | null
-          hold_expires_at: string | null
           id: string | null
-          idempotency_key: string | null
           inspection_status: string | null
-          insurance_cents: number | null
-          mercadopago_split_id: string | null
-          nightly_rate_cents: number | null
-          owner_amount_paid: number | null
+          insurance_fee: number | null
+          main_photo_url: string | null
+          notes: string | null
           owner_avatar: string | null
-          owner_confirmed_delivery: boolean | null
+          owner_id: string | null
           owner_name: string | null
-          owner_payment_amount: number | null
-          paid_at: string | null
-          payment_id: string | null
-          payment_init_point: string | null
           payment_mode: string | null
-          payment_preference_id: string | null
-          payment_provider:
-            | Database["public"]["Enums"]["payment_provider"]
-            | null
-          payment_split_completed: boolean | null
-          payment_split_validated_at: string | null
-          payment_status: Database["public"]["Enums"]["payment_status"] | null
-          payment_table_provider:
-            | Database["public"]["Enums"]["payment_provider"]
-            | null
-          payout_date: string | null
-          payout_error_message: string | null
-          payout_retry_count: number | null
-          payout_status:
-            | Database["public"]["Enums"]["payout_status_enum"]
-            | null
-          pickup_location_lat: number | null
-          pickup_location_lng: number | null
-          platform_fee: number | null
-          platform_fee_collected: number | null
-          price_lock_token: string | null
-          price_locked_until: string | null
-          provider_collector_id: string | null
-          provider_split_payment_id: string | null
-          reauthorization_count: number | null
-          renter_confirmed_payment: boolean | null
+          payment_status: string | null
           renter_id: string | null
-          requires_revalidation: boolean | null
           returned_at: string | null
-          risk_snapshot_booking_id: string | null
-          risk_snapshot_date: string | null
-          risk_snapshot_id: string | null
+          service_fee: number | null
           start_at: string | null
           status: Database["public"]["Enums"]["booking_status"] | null
-          subtotal_cents: number | null
+          subtotal: number | null
           total_amount: number | null
-          total_cents: number | null
-          total_price_ars: number | null
+          total_days: number | null
+          total_price: number | null
           updated_at: string | null
-          wallet_lock_id: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "bookings_authorized_payment_id_fkey"
-            columns: ["authorized_payment_id"]
-            isOneToOne: false
-            referencedRelation: "payment_intents"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "bookings_car_id_fkey"
             columns: ["car_id"]
@@ -24314,36 +9596,8 @@ export type Database = {
             foreignKeyName: "bookings_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "bookings_car_id_fkey"
@@ -24360,284 +9614,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "bookings_payment_id_fkey"
-            columns: ["payment_id"]
-            isOneToOne: false
-            referencedRelation: "payments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_risk_snapshot_booking_id_fkey"
-            columns: ["risk_snapshot_booking_id"]
-            isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_risk_snapshot_id_fkey"
-            columns: ["risk_snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["car_owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
+            foreignKeyName: "cars_owner_id_profiles_fkey"
             columns: ["car_owner_id"]
             isOneToOne: false
             referencedRelation: "me_profile"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["car_owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
+            foreignKeyName: "cars_owner_id_profiles_fkey"
             columns: ["car_owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["car_owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["car_owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["car_owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["car_owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["car_owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["car_owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "fk_bookings_risk_snapshot"
-            columns: ["risk_snapshot_booking_id"]
-            isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
           },
         ]
       }
       owner_bookings: {
         Row: {
-          authorized_payment_id: string | null
-          breakdown: Json | null
-          calendar_sync_enabled: boolean | null
-          calendar_synced_at: string | null
-          cancellation_fee_cents: number | null
-          cancellation_policy_id: number | null
           cancellation_reason: string | null
           cancelled_at: string | null
           car_brand: string | null
+          car_city: string | null
           car_id: string | null
-          car_location_lat: number | null
-          car_location_lng: number | null
           car_model: string | null
+          car_province: string | null
           car_title: string | null
-          coverage_upgrade: string | null
+          car_year: number | null
+          completion_status: string | null
           created_at: string | null
           currency: string | null
-          days_count: number | null
-          delivery_distance_km: number | null
-          delivery_fee_cents: number | null
-          delivery_required: boolean | null
-          deposit_amount_cents: number | null
-          discounts_cents: number | null
-          distance_risk_tier: string | null
-          dropoff_location_lat: number | null
-          dropoff_location_lng: number | null
-          dynamic_price_snapshot: Json | null
+          daily_rate: number | null
+          deposit_status: string | null
+          dispute_status: string | null
           end_at: string | null
-          expires_at: string | null
-          fees_cents: number | null
-          google_calendar_event_id: string | null
-          guarantee_amount_cents: number | null
-          guarantee_type: string | null
-          has_dynamic_pricing: boolean | null
-          hold_authorization_id: string | null
-          hold_expires_at: string | null
           id: string | null
-          idempotency_key: string | null
           inspection_status: string | null
-          insurance_cents: number | null
-          mercadopago_split_id: string | null
-          nightly_rate_cents: number | null
-          owner_amount_paid: number | null
+          insurance_fee: number | null
+          main_photo_url: string | null
+          notes: string | null
           owner_confirmed_delivery: boolean | null
-          owner_payment_amount: number | null
-          paid_at: string | null
-          payment_id: string | null
-          payment_init_point: string | null
+          owner_fee: number | null
+          owner_id: string | null
           payment_mode: string | null
-          payment_preference_id: string | null
-          payment_provider:
-            | Database["public"]["Enums"]["payment_provider"]
-            | null
-          payment_split_completed: boolean | null
-          payment_split_validated_at: string | null
-          payment_status: Database["public"]["Enums"]["payment_status"] | null
-          payment_table_provider:
-            | Database["public"]["Enums"]["payment_provider"]
-            | null
-          payout_date: string | null
-          payout_error_message: string | null
-          payout_retry_count: number | null
-          payout_status:
-            | Database["public"]["Enums"]["payout_status_enum"]
-            | null
-          pickup_location_lat: number | null
-          pickup_location_lng: number | null
-          platform_fee: number | null
-          platform_fee_collected: number | null
-          price_lock_token: string | null
-          price_locked_until: string | null
-          provider_collector_id: string | null
-          provider_split_payment_id: string | null
-          reauthorization_count: number | null
+          payment_status: string | null
           renter_avatar: string | null
-          renter_confirmed_payment: boolean | null
           renter_id: string | null
           renter_name: string | null
-          requires_revalidation: boolean | null
           returned_at: string | null
-          risk_snapshot_booking_id: string | null
-          risk_snapshot_date: string | null
-          risk_snapshot_id: string | null
+          service_fee: number | null
           start_at: string | null
           status: Database["public"]["Enums"]["booking_status"] | null
-          subtotal_cents: number | null
+          subtotal: number | null
           total_amount: number | null
-          total_cents: number | null
-          total_price_ars: number | null
+          total_days: number | null
+          total_price: number | null
           updated_at: string | null
-          wallet_lock_id: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "bookings_authorized_payment_id_fkey"
-            columns: ["authorized_payment_id"]
-            isOneToOne: false
-            referencedRelation: "payment_intents"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "bookings_car_id_fkey"
             columns: ["car_id"]
@@ -24649,36 +9682,8 @@ export type Database = {
             foreignKeyName: "bookings_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "bookings_car_id_fkey"
@@ -24694,109 +9699,10 @@ export type Database = {
             referencedRelation: "v_instant_booking_cars"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "bookings_payment_id_fkey"
-            columns: ["payment_id"]
-            isOneToOne: false
-            referencedRelation: "payments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_risk_snapshot_booking_id_fkey"
-            columns: ["risk_snapshot_booking_id"]
-            isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "bookings_risk_snapshot_id_fkey"
-            columns: ["risk_snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "fk_bookings_risk_snapshot"
-            columns: ["risk_snapshot_booking_id"]
-            isOneToOne: false
-            referencedRelation: "booking_risk_snapshot"
-            referencedColumns: ["booking_id"]
-          },
         ]
       }
       owner_pending_approvals: {
         Row: {
-          approval_expires_at: string | null
           booking_created_at: string | null
           booking_id: string | null
           car_id: string | null
@@ -24805,19 +9711,13 @@ export type Database = {
           currency: string | null
           days_count: number | null
           end_at: string | null
-          hours_remaining: number | null
+          renter_avatar: string | null
           renter_id: string | null
+          renter_name: string | null
           start_at: string | null
           total_amount: number | null
         }
         Relationships: [
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "bookings_car_id_fkey"
             columns: ["car_id"]
@@ -24829,36 +9729,8 @@ export type Database = {
             foreignKeyName: "bookings_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "bookings_car_id_fkey"
@@ -24874,192 +9746,7 @@ export type Database = {
             referencedRelation: "v_instant_booking_cars"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
         ]
-      }
-      pending_payouts_critical: {
-        Row: {
-          booking_id: string | null
-          car_id: string | null
-          car_name: string | null
-          created_at: string | null
-          hours_pending: number | null
-          owner_email: string | null
-          owner_id: string | null
-          owner_name: string | null
-          payout_error_message: string | null
-          payout_retry_count: number | null
-          payout_status:
-            | Database["public"]["Enums"]["payout_status_enum"]
-            | null
-          total_amount: number | null
-        }
-        Relationships: []
-      }
-      profiles_decrypted: {
-        Row: {
-          avatar_url: string | null
-          created_at: string | null
-          email_verified: boolean | null
-          full_name: string | null
-          home_latitude: number | null
-          home_longitude: number | null
-          id: string | null
-          id_verified: boolean | null
-          is_admin: boolean | null
-          location_verified_at: string | null
-          phone: string | null
-          phone_verified: boolean | null
-          preferred_search_radius_km: number | null
-          rating_avg: number | null
-          rating_count: number | null
-          role: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email_verified?: boolean | null
-          full_name?: string | null
-          home_latitude?: number | null
-          home_longitude?: number | null
-          id?: string | null
-          id_verified?: boolean | null
-          is_admin?: boolean | null
-          location_verified_at?: string | null
-          phone?: never
-          phone_verified?: boolean | null
-          preferred_search_radius_km?: number | null
-          rating_avg?: number | null
-          rating_count?: number | null
-          role?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email_verified?: boolean | null
-          full_name?: string | null
-          home_latitude?: number | null
-          home_longitude?: number | null
-          id?: string | null
-          id_verified?: boolean | null
-          is_admin?: boolean | null
-          location_verified_at?: string | null
-          phone?: never
-          phone_verified?: boolean | null
-          preferred_search_radius_km?: number | null
-          rating_avg?: number | null
-          rating_count?: number | null
-          role?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      public_owner_info: {
-        Row: {
-          avatar_url: string | null
-          created_at: string | null
-          email_verified: boolean | null
-          full_name: string | null
-          id: string | null
-          is_verified: boolean | null
-          phone_verified: boolean | null
-          rating_avg: number | null
-          rating_count: number | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email_verified?: never
-          full_name?: string | null
-          id?: string | null
-          is_verified?: never
-          phone_verified?: never
-          rating_avg?: number | null
-          rating_count?: number | null
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email_verified?: never
-          full_name?: string | null
-          id?: string | null
-          is_verified?: never
-          phone_verified?: never
-          rating_avg?: number | null
-          rating_count?: number | null
-        }
-        Relationships: []
       }
       recently_published_campaigns: {
         Row: {
@@ -25088,15 +9775,6 @@ export type Database = {
           status?: string | null
           time_since_publish?: never
           title?: string | null
-        }
-        Relationships: []
-      }
-      referral_stats_by_user: {
-        Row: {
-          last_referral_at: string | null
-          referrals_count: number | null
-          rewards_sum_cents: number | null
-          user_id: string | null
         }
         Relationships: []
       }
@@ -25129,449 +9807,6 @@ export type Database = {
           title?: string | null
         }
         Relationships: []
-      }
-      user_profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string | null
-          email_verified: boolean | null
-          full_name: string | null
-          id: string | null
-          id_verified: boolean | null
-          is_admin: boolean | null
-          mercadopago_collector_id: string | null
-          mp_onboarding_completed: boolean | null
-          mp_onboarding_url: string | null
-          phone: string | null
-          phone_verified: boolean | null
-          role: string | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email_verified?: boolean | null
-          full_name?: string | null
-          id?: string | null
-          id_verified?: boolean | null
-          is_admin?: boolean | null
-          mercadopago_collector_id?: string | null
-          mp_onboarding_completed?: boolean | null
-          mp_onboarding_url?: string | null
-          phone?: string | null
-          phone_verified?: boolean | null
-          role?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email_verified?: boolean | null
-          full_name?: string | null
-          id?: string | null
-          id_verified?: boolean | null
-          is_admin?: boolean | null
-          mercadopago_collector_id?: string | null
-          mp_onboarding_completed?: boolean | null
-          mp_onboarding_url?: string | null
-          phone?: string | null
-          phone_verified?: boolean | null
-          role?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      v_active_return_protocols: {
-        Row: {
-          booking_end_at: string | null
-          booking_id: string | null
-          car_id: string | null
-          car_title: string | null
-          events_executed: number | null
-          events_pending: number | null
-          has_insurance_notification: boolean | null
-          has_police_report: boolean | null
-          last_event: string | null
-          license_plate: string | null
-          overdue_hours: number | null
-          owner_id: string | null
-          owner_name: string | null
-          renter_id: string | null
-          renter_name: string | null
-          return_protocol_started_at: string | null
-          return_status: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
-      }
-      v_active_vehicle_tracking: {
-        Row: {
-          battery_level: number | null
-          booking_id: string | null
-          brand: string | null
-          car_id: string | null
-          end_at: string | null
-          geofencing_enabled: boolean | null
-          last_update: string | null
-          latitude: number | null
-          longitude: number | null
-          model: string | null
-          owner_id: string | null
-          plate: string | null
-          renter_id: string | null
-          speed: number | null
-          start_at: string | null
-          tracking_enabled: boolean | null
-          unacknowledged_alerts: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_renter_profile_fkey"
-            columns: ["renter_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
       }
       v_advisory_locks_held: {
         Row: {
@@ -25632,12 +9867,14 @@ export type Database = {
       v_car_reviews: {
         Row: {
           booking_id: string | null
+          car_brand: string | null
           car_id: string | null
+          car_model: string | null
+          car_title: string | null
           comment: string | null
           created_at: string | null
           id: string | null
           is_car_review: boolean | null
-          is_renter_review: boolean | null
           is_visible: boolean | null
           rating: number | null
           review_type: string | null
@@ -25645,16 +9882,8 @@ export type Database = {
           reviewer_avatar: string | null
           reviewer_id: string | null
           reviewer_name: string | null
-          updated_at: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "bookings_car_id_fkey"
             columns: ["car_id"]
@@ -25666,36 +9895,8 @@ export type Database = {
             foreignKeyName: "bookings_car_id_fkey"
             columns: ["car_id"]
             isOneToOne: false
-            referencedRelation: "cars_multi_currency"
+            referencedRelation: "v_cars_with_guarantee"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "bookings_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
           },
           {
             foreignKeyName: "bookings_car_id_fkey"
@@ -25709,13 +9910,6 @@ export type Database = {
             columns: ["car_id"]
             isOneToOne: false
             referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "_schema_cache_refresh"
             referencedColumns: ["id"]
           },
           {
@@ -25746,123 +9940,44 @@ export type Database = {
             referencedRelation: "owner_pending_approvals"
             referencedColumns: ["booking_id"]
           },
-          {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["booking_id"]
-          },
-          {
-            foreignKeyName: "reviews_booking_id_fkey"
-            columns: ["booking_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_vehicle_tracking"
-            referencedColumns: ["booking_id"]
-          },
         ]
       }
-      v_car_sharing_status: {
+      v_cars_with_guarantee: {
         Row: {
-          annual_expense_estimate_cents: number | null
-          annual_limit_reached: boolean | null
-          block_reason: string | null
-          car_id: string | null
-          days_shared_this_month: number | null
-          earnings_limit_reached: boolean | null
-          is_blocked: boolean | null
-          max_days_allowed: number | null
-          owner_id: string | null
-          personal_use_days_this_month: number | null
-          sharing_mode: string | null
-          sharing_suspended_at: string | null
-          sharing_suspension_reason: string | null
+          fgo_cap_usd: number | null
+          hold_con_membresia_usd: number | null
+          hold_sin_membresia_usd: number | null
+          id: string | null
+          membership_coverage_usd: number | null
+          price_per_day: number | null
+          proteccion_total_con_membresia_usd: number | null
+          proteccion_total_sin_membresia_usd: number | null
+          tier: string | null
+          tier_name: string | null
           title: string | null
-          ytd_earnings_cents: number | null
+          value_usd: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
-        ]
+        Relationships: []
       }
       v_cars_with_main_photo: {
         Row: {
+          ai_condition_analysis: Json | null
+          ai_condition_analyzed_at: string | null
+          ai_condition_category: string | null
+          ai_condition_score: number | null
+          ai_recognition_at: string | null
+          ai_recognition_confidence: number | null
+          ai_recognition_validated: boolean | null
+          ai_recognized_brand: string | null
+          ai_recognized_model: string | null
+          allow_pets: boolean | null
+          allow_rideshare: boolean | null
+          allow_second_driver: boolean | null
+          allow_smoking: boolean | null
+          allowed_provinces: string[] | null
           auto_approval: boolean | null
+          availability_end_date: string | null
+          availability_start_date: string | null
           brand: string | null
           brand_id: string | null
           brand_text_backup: string | null
@@ -25871,273 +9986,97 @@ export type Database = {
           country: string | null
           created_at: string | null
           currency: string | null
-          deleted_at: string | null
-          delivery_options: Json | null
           deposit_amount: number | null
           deposit_required: boolean | null
           description: string | null
           doors: number | null
+          extra_km_price: number | null
           features: Json | null
-          fuel: string | null
-          fuel_type: string | null
+          fuel_policy: string | null
+          fuel_type: Database["public"]["Enums"]["fuel_type"] | null
+          has_telemetry: boolean | null
           id: string | null
+          instant_booking: boolean | null
+          instant_booking_enabled: boolean | null
+          instant_booking_min_score: number | null
+          instant_booking_require_verified: boolean | null
+          insurance_company: string | null
+          insurance_deductible_usd: number | null
+          insurance_expires_at: string | null
           insurance_included: boolean | null
+          insurance_policy_number: string | null
+          kill_switch_enabled: boolean | null
+          last_heartbeat: string | null
           location_city: string | null
           location_country: string | null
           location_lat: number | null
           location_lng: number | null
-          location_neighborhood: string | null
-          location_postal_code: string | null
           location_province: string | null
           location_state: string | null
           location_street: string | null
           location_street_number: string | null
           main_photo_url: string | null
+          max_anticipation_days: number | null
+          max_distance_km: number | null
           max_rental_days: number | null
           mileage: number | null
+          mileage_limit: number | null
           min_rental_days: number | null
           model: string | null
           model_id: string | null
           model_text_backup: string | null
           owner_id: string | null
-          payment_methods: Json | null
-          plate: string | null
+          owner_verified: boolean | null
+          photo_gallery: Json | null
+          photos_quality_checked: boolean | null
+          photos_quality_score: number | null
+          plates_auto_blurred: boolean | null
           price_per_day: number | null
           province: string | null
           rating_avg: number | null
-          rating_count: number | null
+          review_count: number | null
           seats: number | null
+          second_driver_cost: number | null
           status: Database["public"]["Enums"]["car_status"] | null
-          terms_and_conditions: string | null
+          telemetry_provider: string | null
           title: string | null
-          transmission: string | null
+          transmission: Database["public"]["Enums"]["transmission_type"] | null
           updated_at: string | null
+          uses_dynamic_pricing: boolean | null
           value_usd: number | null
-          vin: string | null
+          vehicle_tier: Database["public"]["Enums"]["vehicle_tier"] | null
           year: number | null
-        }
-        Insert: {
-          auto_approval?: boolean | null
-          brand?: string | null
-          brand_id?: string | null
-          brand_text_backup?: string | null
-          city?: string | null
-          color?: string | null
-          country?: string | null
-          created_at?: string | null
-          currency?: string | null
-          deleted_at?: string | null
-          delivery_options?: Json | null
-          deposit_amount?: number | null
-          deposit_required?: boolean | null
-          description?: string | null
-          doors?: number | null
-          features?: Json | null
-          fuel?: string | null
-          fuel_type?: string | null
-          id?: string | null
-          insurance_included?: boolean | null
-          location_city?: string | null
-          location_country?: string | null
-          location_lat?: number | null
-          location_lng?: number | null
-          location_neighborhood?: string | null
-          location_postal_code?: string | null
-          location_province?: string | null
-          location_state?: string | null
-          location_street?: string | null
-          location_street_number?: string | null
-          main_photo_url?: never
-          max_rental_days?: number | null
-          mileage?: number | null
-          min_rental_days?: number | null
-          model?: string | null
-          model_id?: string | null
-          model_text_backup?: string | null
-          owner_id?: string | null
-          payment_methods?: Json | null
-          plate?: string | null
-          price_per_day?: number | null
-          province?: string | null
-          rating_avg?: number | null
-          rating_count?: number | null
-          seats?: number | null
-          status?: Database["public"]["Enums"]["car_status"] | null
-          terms_and_conditions?: string | null
-          title?: string | null
-          transmission?: string | null
-          updated_at?: string | null
-          value_usd?: number | null
-          vin?: string | null
-          year?: number | null
-        }
-        Update: {
-          auto_approval?: boolean | null
-          brand?: string | null
-          brand_id?: string | null
-          brand_text_backup?: string | null
-          city?: string | null
-          color?: string | null
-          country?: string | null
-          created_at?: string | null
-          currency?: string | null
-          deleted_at?: string | null
-          delivery_options?: Json | null
-          deposit_amount?: number | null
-          deposit_required?: boolean | null
-          description?: string | null
-          doors?: number | null
-          features?: Json | null
-          fuel?: string | null
-          fuel_type?: string | null
-          id?: string | null
-          insurance_included?: boolean | null
-          location_city?: string | null
-          location_country?: string | null
-          location_lat?: number | null
-          location_lng?: number | null
-          location_neighborhood?: string | null
-          location_postal_code?: string | null
-          location_province?: string | null
-          location_state?: string | null
-          location_street?: string | null
-          location_street_number?: string | null
-          main_photo_url?: never
-          max_rental_days?: number | null
-          mileage?: number | null
-          min_rental_days?: number | null
-          model?: string | null
-          model_id?: string | null
-          model_text_backup?: string | null
-          owner_id?: string | null
-          payment_methods?: Json | null
-          plate?: string | null
-          price_per_day?: number | null
-          province?: string | null
-          rating_avg?: number | null
-          rating_count?: number | null
-          seats?: number | null
-          status?: Database["public"]["Enums"]["car_status"] | null
-          terms_and_conditions?: string | null
-          title?: string | null
-          transmission?: string | null
-          updated_at?: string | null
-          value_usd?: number | null
-          vin?: string | null
-          year?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
+            foreignKeyName: "cars_owner_id_profiles_fkey"
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "me_profile"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["owner_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
+            foreignKeyName: "cars_owner_id_profiles_fkey"
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles_decrypted"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "public_owner_info"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_identity_verification_status"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "cars_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "v_owner_community_status"
-            referencedColumns: ["owner_id"]
-          },
         ]
       }
-      v_contacts_followup_today: {
+      v_current_reward_pool: {
         Row: {
-          first_name: string | null
-          followup_reason: string | null
+          created_at: string | null
+          distributed_at: string | null
           id: string | null
-          last_inbound_message: string | null
-          last_name: string | null
-          messages_received: number | null
-          messages_sent: number | null
-          next_followup_at: string | null
-          phone: string | null
-          region: string | null
+          participating_owners: number | null
+          period_end: string | null
+          period_start: string | null
           status: string | null
-        }
-        Insert: {
-          first_name?: string | null
-          followup_reason?: string | null
-          id?: string | null
-          last_inbound_message?: never
-          last_name?: string | null
-          messages_received?: number | null
-          messages_sent?: number | null
-          next_followup_at?: string | null
-          phone?: string | null
-          region?: string | null
-          status?: string | null
-        }
-        Update: {
-          first_name?: string | null
-          followup_reason?: string | null
-          id?: string | null
-          last_inbound_message?: never
-          last_name?: string | null
-          messages_received?: number | null
-          messages_sent?: number | null
-          next_followup_at?: string | null
-          phone?: string | null
-          region?: string | null
-          status?: string | null
+          total_collected: number | null
+          total_contributions: number | null
+          total_distributed: number | null
+          verified_total: number | null
         }
         Relationships: []
       }
@@ -26182,54 +10121,33 @@ export type Database = {
       }
       v_fgo_status: {
         Row: {
-          alpha_percentage: number | null
-          capitalization_balance_cents: number | null
-          coverage_ratio: number | null
-          last_calculated_at: string | null
-          liquidity_balance_cents: number | null
-          loss_ratio: number | null
-          profitability_balance_cents: number | null
-          status: string | null
-          target_balance_cents: number | null
-          target_months_coverage: number | null
-          total_contributions_cents: number | null
-          total_fgo_balance_cents: number | null
-          total_siniestros_count: number | null
-          total_siniestros_paid_cents: number | null
+          approved_claims: number | null
+          balance: number | null
+          id: string | null
+          pending_claims: number | null
+          total_claims_paid: number | null
+          total_collected: number | null
+          total_paid_claims: number | null
           updated_at: string | null
         }
         Insert: {
-          alpha_percentage?: number | null
-          capitalization_balance_cents?: never
-          coverage_ratio?: number | null
-          last_calculated_at?: string | null
-          liquidity_balance_cents?: never
-          loss_ratio?: number | null
-          profitability_balance_cents?: never
-          status?: string | null
-          target_balance_cents?: number | null
-          target_months_coverage?: number | null
-          total_contributions_cents?: number | null
-          total_fgo_balance_cents?: never
-          total_siniestros_count?: number | null
-          total_siniestros_paid_cents?: number | null
+          approved_claims?: never
+          balance?: number | null
+          id?: string | null
+          pending_claims?: never
+          total_claims_paid?: number | null
+          total_collected?: number | null
+          total_paid_claims?: never
           updated_at?: string | null
         }
         Update: {
-          alpha_percentage?: number | null
-          capitalization_balance_cents?: never
-          coverage_ratio?: number | null
-          last_calculated_at?: string | null
-          liquidity_balance_cents?: never
-          loss_ratio?: number | null
-          profitability_balance_cents?: never
-          status?: string | null
-          target_balance_cents?: number | null
-          target_months_coverage?: number | null
-          total_contributions_cents?: number | null
-          total_fgo_balance_cents?: never
-          total_siniestros_count?: number | null
-          total_siniestros_paid_cents?: number | null
+          approved_claims?: never
+          balance?: number | null
+          id?: string | null
+          pending_claims?: never
+          total_claims_paid?: number | null
+          total_collected?: number | null
+          total_paid_claims?: never
           updated_at?: string | null
         }
         Relationships: []
@@ -26339,19 +10257,18 @@ export type Database = {
         }
         Relationships: []
       }
-      v_identity_verification_status: {
+      v_guarantee_tiers: {
         Row: {
-          document_ai_score: number | null
-          document_masked: string | null
-          document_verified_at: string | null
-          driver_license_ai_score: number | null
-          driver_license_verified_at: string | null
-          email: string | null
-          full_name: string | null
-          identity_country: string | null
-          identity_locked: boolean | null
-          identity_verified_at: string | null
-          user_id: string | null
+          fgo_cap_usd: number | null
+          hold_with_membership_usd: number | null
+          hold_without_membership_usd: number | null
+          max_vehicle_value_usd: number | null
+          membership_coverage_usd: number | null
+          membership_price_usd: number | null
+          min_vehicle_value_usd: number | null
+          tier: string | null
+          tier_name: string | null
+          total_protection_usd: number | null
         }
         Relationships: []
       }
@@ -26417,175 +10334,37 @@ export type Database = {
         }
         Relationships: []
       }
-      v_latest_market_prices: {
+      v_insurance_ready_metrics: {
         Row: {
-          available_amount: number | null
-          crypto_currency: string | null
-          detected_at: string | null
-          fiat_currency: string | null
-          id: string | null
-          max_order_limit: number | null
-          min_order_limit: number | null
-          order_type: string | null
-          payment_methods: string | null
-          price_per_unit: number | null
-          ranking_position: number | null
-          source_user_name: string | null
-        }
-        Relationships: []
-      }
-      v_market_spread: {
-        Row: {
-          best_buy_price: number | null
-          best_sell_price: number | null
-          fiat_currency: string | null
-          last_update: string | null
-          spread: number | null
-          spread_percentage: number | null
-        }
-        Relationships: []
-      }
-      v_owner_community_status: {
-        Row: {
-          email: string | null
-          full_name: string | null
-          joined_at: string | null
-          last_reward_cents: number | null
-          membership_status: string | null
-          months_in_community: number | null
-          owner_id: string | null
-          rating_avg: number | null
-          rating_count: number | null
-          tier: string | null
-          total_rewards_earned_cents: number | null
-        }
-        Relationships: []
-      }
-      v_owner_icp_dashboard: {
-        Row: {
-          availability_score: number | null
-          avg_rating: number | null
-          cancellations_by_owner: number | null
-          car_id: string | null
-          car_name: string | null
-          category_score: number | null
-          days_available: number | null
-          days_booked: number | null
-          days_in_month: number | null
-          demand_score: number | null
-          icp_score: number | null
-          month_pool_total: number | null
-          owner_id: string | null
-          payout_status: string | null
-          pool_payout_cents: number | null
-          pool_share_percent: number | null
-          quality_score: number | null
+          avg_booking_value: number | null
+          avg_claim_severity: number | null
+          claim_frequency_percent: number | null
+          fleet_size: number | null
+          loss_ratio_percent: number | null
+          snapshot_at: string | null
           total_bookings: number | null
-          total_cars_in_pool: number | null
-          year_month: string | null
+          total_claims: number | null
+          total_claims_paid: number | null
+          total_gmv: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_active_return_protocols"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_car_sharing_status"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_icp_monthly_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "v_instant_booking_cars"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      v_reward_pool_status: {
+      v_outreach_daily_summary: {
         Row: {
-          avg_reward_cents: number | null
-          cents_per_point: number | null
-          contributions_cents: number | null
-          period_month: number | null
-          period_year: number | null
+          date: string | null
+          failed: number | null
+          fb_comments: number | null
+          fb_dms: number | null
+          fb_posts: number | null
+          successful: number | null
+        }
+        Relationships: []
+      }
+      v_prospect_funnel: {
+        Row: {
+          count: number | null
+          percentage: number | null
           status: string | null
-          total_available_cents: number | null
-          total_distributed_cents: number | null
-          total_owners: number | null
-          total_points_in_period: number | null
-        }
-        Insert: {
-          avg_reward_cents?: never
-          cents_per_point?: number | null
-          contributions_cents?: number | null
-          period_month?: number | null
-          period_year?: number | null
-          status?: string | null
-          total_available_cents?: number | null
-          total_distributed_cents?: number | null
-          total_owners?: never
-          total_points_in_period?: number | null
-        }
-        Update: {
-          avg_reward_cents?: never
-          cents_per_point?: number | null
-          contributions_cents?: number | null
-          period_month?: number | null
-          period_year?: number | null
-          status?: string | null
-          total_available_cents?: number | null
-          total_distributed_cents?: number | null
-          total_owners?: never
-          total_points_in_period?: number | null
         }
         Relationships: []
       }
@@ -26642,31 +10421,11 @@ export type Database = {
           coverage_limit_cents: number | null
           coverage_limit_usd: number | null
           description: string | null
-          fgo_cap_cents: number | null
-          fgo_cap_usd: number | null
-          max_vehicle_value_usd: number | null
-          min_vehicle_value_usd: number | null
           name: string | null
-          preauth_hold_cents: number | null
-          preauth_hold_usd: number | null
-          preauth_with_subscription_cents: number | null
-          preauth_with_subscription_usd: number | null
           price_cents: number | null
           price_usd: number | null
           target_segment: string | null
           tier: Database["public"]["Enums"]["subscription_tier"] | null
-        }
-        Relationships: []
-      }
-      v_upcoming_birthdays: {
-        Row: {
-          birthday_date: string | null
-          first_name: string | null
-          id: string | null
-          last_name: string | null
-          next_birthday: string | null
-          phone: string | null
-          status: string | null
         }
         Relationships: []
       }
@@ -26676,7 +10435,7 @@ export type Database = {
           booking_id: string | null
           currency: string | null
           id: string | null
-          metadata: Json | null
+          metadata: string | null
           source_system: string | null
           status: string | null
           transaction_date: string | null
@@ -26684,211 +10443,96 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
-          amount_cents?: never
+          amount_cents?: number | null
           booking_id?: string | null
-          currency?: never
+          currency?: string | null
           id?: string | null
-          metadata?: never
+          metadata?: string | null
           source_system?: never
-          status?: never
+          status?: string | null
           transaction_date?: string | null
-          transaction_type?: never
+          transaction_type?: string | null
           user_id?: string | null
         }
         Update: {
-          amount_cents?: never
+          amount_cents?: number | null
           booking_id?: string | null
-          currency?: never
+          currency?: string | null
           id?: string | null
-          metadata?: never
+          metadata?: string | null
           source_system?: never
-          status?: never
+          status?: string | null
           transaction_date?: string | null
-          transaction_type?: never
+          transaction_type?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "wallet_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      v_wallet_locks_status: {
-        Row: {
-          amount_ars: number | null
-          booking_id: string | null
-          booking_status: Database["public"]["Enums"]["booking_status"] | null
-          created_at: string | null
-          days_until_expiration: number | null
-          expiration_status: string | null
-          id: string | null
-          lock_type: string | null
-          locked_until: string | null
-          status: string | null
-          updated_at: string | null
-          user_id: string | null
-          user_name: string | null
-        }
-        Relationships: []
-      }
-      v_wallet_transfers_summary: {
+      wallet_history: {
         Row: {
           amount: number | null
-          counterparty_user_id: string | null
           created_at: string | null
           currency: string | null
+          description: string | null
           id: string | null
-          metadata: Json | null
           reference_id: string | null
-          reference_type: string | null
-          status: string | null
           type: string | null
           user_id: string | null
         }
         Insert: {
           amount?: number | null
-          counterparty_user_id?: never
           created_at?: string | null
           currency?: string | null
+          description?: string | null
           id?: string | null
-          metadata?: Json | null
           reference_id?: string | null
-          reference_type?: string | null
-          status?: string | null
           type?: string | null
           user_id?: string | null
         }
         Update: {
           amount?: number | null
-          counterparty_user_id?: never
           created_at?: string | null
           currency?: string | null
+          description?: string | null
           id?: string | null
-          metadata?: Json | null
           reference_id?: string | null
-          reference_type?: string | null
-          status?: string | null
           type?: string | null
           user_id?: string | null
         }
-        Relationships: []
-      }
-      vw_accounting_balance_sheet: {
-        Row: {
-          account_type: string | null
-          balance: number | null
-          code: string | null
-          name: string | null
-          sub_type: string | null
-        }
-        Relationships: []
-      }
-      vw_accounting_income_statement: {
-        Row: {
-          account_type: string | null
-          balance: number | null
-          code: string | null
-          name: string | null
-          period: string | null
-          sub_type: string | null
-        }
-        Relationships: []
-      }
-      vw_wallet_reconciliation: {
-        Row: {
-          amount: number | null
-          severity: string | null
-          source: string | null
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "wallet_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
-      _postgis_deprecate: {
-        Args: { newname: string; oldname: string; version: string }
-        Returns: undefined
-      }
-      _postgis_index_extent: {
-        Args: { col: string; tbl: unknown }
-        Returns: unknown
-      }
-      _postgis_pgsql_version: { Args: never; Returns: string }
-      _postgis_scripts_pgsql_version: { Args: never; Returns: string }
-      _postgis_selectivity: {
-        Args: { att_name: string; geom: unknown; mode?: string; tbl: unknown }
-        Returns: number
-      }
-      _postgis_stats: {
-        Args: { ""?: string; att_name: string; tbl: unknown }
-        Returns: string
-      }
-      _st_3dintersects: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      _st_contains: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      _st_containsproperly: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      _st_coveredby:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      _st_covers:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      _st_crosses: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      _st_dwithin: {
-        Args: {
-          geog1: unknown
-          geog2: unknown
-          tolerance: number
-          use_spheroid?: boolean
-        }
-        Returns: boolean
-      }
-      _st_equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      _st_intersects: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      _st_linecrossingdirection: {
-        Args: { line1: unknown; line2: unknown }
-        Returns: number
-      }
-      _st_longestline: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      _st_maxdistance: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: number
-      }
-      _st_orderingequals: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      _st_overlaps: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      _st_sortablehash: { Args: { geom: unknown }; Returns: number }
-      _st_touches: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      _st_voronoi: {
-        Args: {
-          clip?: unknown
-          g1: unknown
-          return_polygons?: boolean
-          tolerance?: number
-        }
-        Returns: unknown
-      }
-      _st_within: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
       account_bonus_protector_sale: {
         Args: {
           p_addon_id: string
@@ -26934,148 +10578,94 @@ export type Database = {
         Returns: string
       }
       accounting_auto_audit: { Args: never; Returns: Json }
-      accounting_balance_sheet:
-        | {
-            Args: { p_date: string }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.accounting_balance_sheet(p_date => date), public.accounting_balance_sheet(p_date => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"[]
-          }
-        | {
-            Args: { p_date?: string }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.accounting_balance_sheet(p_date => date), public.accounting_balance_sheet(p_date => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"[]
-          }
+      accounting_balance_sheet: {
+        Args: { p_date?: string }
+        Returns: {
+          account_code: string
+          account_name: string
+          account_type: string
+          balance: number
+        }[]
+      }
       accounting_daily_closure: { Args: never; Returns: Json }
-      accounting_income_statement:
-        | {
-            Args: { p_end_date: string; p_start_date: string }
-            Returns: {
-              account_type: string
-              balance: number
-              code: string
-              name: string
-            }[]
-          }
-        | {
-            Args: { p_end_date: string; p_start_date: string }
-            Returns: {
-              account_code: string
-              account_name: string
-              account_type: string
-              amount: number
-            }[]
-          }
+      accounting_income_statement: {
+        Args: { p_end_date: string; p_start_date: string }
+        Returns: {
+          account_code: string
+          account_name: string
+          account_type: string
+          amount: number
+        }[]
+      }
       accounting_monthly_closure: { Args: never; Returns: Json }
       accounting_verify_wallet_liabilities: { Args: never; Returns: undefined }
-      accumulate_pool_contribution: {
-        Args: { p_amount_cents: number; p_booking_id: string }
-        Returns: undefined
-      }
       activate_insurance_coverage: {
         Args: { p_addon_ids?: string[]; p_booking_id: string }
-        Returns: string
-      }
-      add_bank_account_with_encryption: {
-        Args: {
-          p_account_holder_id?: string
-          p_account_holder_name?: string
-          p_account_number: string
-          p_account_type: string
-          p_alias: string
-          p_bank_code?: string
-          p_bank_name?: string
-          p_cbu: string
-        }
         Returns: string
       }
       add_subscriber_to_sequence: {
         Args: { p_sequence_slug: string; p_subscriber_id: string }
         Returns: Json
       }
-      add_to_waitlist: {
-        Args: { p_car_id: string; p_end_date: string; p_start_date: string }
-        Returns: {
-          car_id: string
-          created_at: string
-          end_date: string
-          expires_at: string
-          id: string
-          notified_at: string | null
-          start_date: string
-          status: string
-          updated_at: string
-          user_id: string
+      add_webhook_to_retry_queue: {
+        Args: {
+          p_error_details?: Json
+          p_error_message?: string
+          p_event_id: string
+          p_headers?: Json
+          p_mp_payment_id: string
+          p_payload: Json
+          p_webhook_type: string
         }
-        SetofOptions: {
-          from: "*"
-          to: "booking_waitlist"
-          isOneToOne: true
-          isSetofReturn: false
-        }
+        Returns: string
       }
-      addauth: { Args: { "": string }; Returns: boolean }
-      addgeometrycolumn:
-        | {
-            Args: {
-              catalog_name: string
-              column_name: string
-              new_dim: number
-              new_srid_in: number
-              new_type: string
-              schema_name: string
-              table_name: string
-              use_typmod?: boolean
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              column_name: string
-              new_dim: number
-              new_srid: number
-              new_type: string
-              schema_name: string
-              table_name: string
-              use_typmod?: boolean
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              column_name: string
-              new_dim: number
-              new_srid: number
-              new_type: string
-              table_name: string
-              use_typmod?: boolean
-            }
-            Returns: string
-          }
       adjust_alpha_dynamic: {
         Args: { p_bucket?: string; p_country_code?: string }
         Returns: Json
       }
-      admin_get_refund_requests: {
-        Args: { p_limit?: number; p_offset?: number; p_status?: string }
+      admin_approve_verification: {
+        Args: {
+          p_notes?: string
+          p_user_id: string
+          p_verification_level: number
+        }
+        Returns: Json
+      }
+      admin_flag_verification_suspicious: {
+        Args: { p_notes: string; p_user_id: string }
+        Returns: Json
+      }
+      admin_get_pending_verifications: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_status?: string
+          p_verification_type?: string
+        }
         Returns: {
-          admin_notes: string
-          approved_at: string
-          booking_id: string
-          booking_total: number
-          car_title: string
           created_at: string
-          currency: string
-          destination: string
-          id: string
-          processed_at: string
-          refund_amount: number
-          rejection_reason: string
-          status: string
-          user_email: string
+          current_level: number
+          document_ai_score: number
+          document_back_url: string
+          document_front_url: string
+          document_number: string
+          document_type: string
+          document_verified_at: string
+          email: string
+          extracted_birth_date: string
+          extracted_full_name: string
+          face_match_score: number
+          full_name: string
+          liveness_score: number
+          manual_review_decision: string
+          manual_review_notes: string
+          manual_review_required: boolean
+          manual_reviewed_at: string
+          manual_reviewed_by: string
+          selfie_url: string
+          selfie_verified_at: string
+          updated_at: string
           user_id: string
-          user_name: string
         }[]
       }
       admin_get_verification_stats: { Args: never; Returns: Json }
@@ -27083,8 +10673,16 @@ export type Database = {
         Args: { p_end_date?: string; p_start_date?: string }
         Returns: Json
       }
-      admin_unlock_identity: {
-        Args: { p_reason: string; p_user_id: string }
+      admin_reject_verification: {
+        Args: {
+          p_reason: string
+          p_user_id: string
+          p_verification_level: number
+        }
+        Returns: Json
+      }
+      admin_request_additional_documents: {
+        Args: { p_requested_docs: string; p_user_id: string }
         Returns: Json
       }
       admin_wallet_health_check: { Args: never; Returns: Json }
@@ -27092,66 +10690,22 @@ export type Database = {
         Args: { p_execution_id: string; p_notes?: string; p_skip?: boolean }
         Returns: Json
       }
-      apply_fuel_penalty: { Args: { p_booking_id: string }; Returns: Json }
-      apply_late_return_penalty: {
-        Args: { p_booking_id: string }
+      analyze_collusion_risk: {
+        Args: { p_owner_id: string; p_renter_id: string }
         Returns: Json
       }
       apply_referral_code: {
         Args: { p_code: string; p_referred_user_id: string; p_source?: string }
         Returns: string
       }
-      approve_booking: {
-        Args: { p_booking_id: string; p_owner_id?: string }
-        Returns: Json
-      }
       approve_booking_v2: { Args: { p_booking_id: string }; Returns: Json }
-      auto_process_expired_infractions: { Args: never; Returns: number }
       autoclose_tracking_if_returned: {
         Args: { p_session_id: string }
         Returns: undefined
       }
-      booking_confirm_and_release: {
-        Args: {
-          p_booking_id: string
-          p_confirming_user_id: string
-          p_damage_amount?: number
-          p_damage_description?: string
-          p_has_damages?: boolean
-        }
-        Returns: {
-          completion_status: string
-          funds_released: boolean
-          message: string
-          owner_confirmed: boolean
-          renter_confirmed: boolean
-          success: boolean
-          waiting_for: string
-        }[]
-      }
-      booking_confirm_owner: {
-        Args: {
-          p_booking_id: string
-          p_damage_description?: string
-          p_has_damages?: boolean
-        }
-        Returns: {
-          completion_status: string
-          message: string
-          success: boolean
-        }[]
-      }
       booking_force_start: {
         Args: { p_booking_id: string; p_owner_id: string }
         Returns: Json
-      }
-      booking_mark_as_returned: {
-        Args: { p_booking_id: string; p_returned_by: string }
-        Returns: {
-          completion_status: string
-          message: string
-          success: boolean
-        }[]
       }
       booking_v2_auto_complete_inspection: {
         Args: { p_booking_id: string; p_inspector_id: string }
@@ -27188,7 +10742,18 @@ export type Database = {
         }
         Returns: Json
       }
-      calculate_age: { Args: { birth_date: string }; Returns: number }
+      calc_hold_and_buydown: {
+        Args: {
+          p_membership_plan?: string
+          p_vehicle_tier: Database["public"]["Enums"]["vehicle_tier"]
+        }
+        Returns: {
+          base_hold_usd: number
+          buy_down_fgo_usd: number
+          discount_pct: number
+          hold_usd: number
+        }[]
+      }
       calculate_batch_dynamic_prices: {
         Args: {
           p_region_ids: string[]
@@ -27198,6 +10763,7 @@ export type Database = {
         }
         Returns: Json[]
       }
+      calculate_bonus_malus: { Args: { p_user_id: string }; Returns: Json }
       calculate_credit_risk_level: { Args: { score: number }; Returns: string }
       calculate_distance_based_pricing: {
         Args: { p_base_guarantee_usd?: number; p_distance_km: number }
@@ -27207,12 +10773,9 @@ export type Database = {
         Args: { p_lat1: number; p_lat2: number; p_lng1: number; p_lng2: number }
         Returns: number
       }
-      calculate_distance_meters: {
-        Args: { p_lat1: number; p_lat2: number; p_lng1: number; p_lng2: number }
-        Returns: number
-      }
       calculate_dynamic_price: {
         Args: {
+          p_car_id?: string
           p_region_id: string
           p_rental_hours: number
           p_rental_start: string
@@ -27220,16 +10783,7 @@ export type Database = {
         }
         Returns: Json
       }
-      calculate_engagement_score: {
-        Args: { p_contact_id: string }
-        Returns: number
-      }
-      calculate_ev_protocol_risk: {
-        Args: { p_protocol_id: string }
-        Returns: Json
-      }
       calculate_fgo_metrics: { Args: never; Returns: Json }
-      calculate_fuel_penalty: { Args: { p_booking_id: string }; Returns: Json }
       calculate_full_price: {
         Args: {
           p_car_id: string
@@ -27239,61 +10793,25 @@ export type Database = {
         }
         Returns: Json
       }
-      calculate_late_return_penalty: {
-        Args: { p_booking_id: string }
-        Returns: Json
-      }
-      calculate_monthly_community_rewards: {
-        Args: { p_month: number; p_owner_id: string; p_year: number }
+      calculate_guarantee_hold: {
+        Args: { p_has_membership?: boolean; p_vehicle_value_usd: number }
         Returns: {
-          amount_cents: number | null
-          approved_at: string | null
-          approved_by: string | null
-          availability_points: number | null
-          bonus_points: number | null
-          calculated_at: string | null
-          calculation_details: Json | null
-          created_at: string | null
-          currency: string | null
-          id: string
-          notes: string | null
-          owner_id: string
-          paid_at: string | null
-          participation_points: number | null
-          penalty_points: number | null
-          period_month: number
-          period_year: number
-          rating_points: number | null
-          referral_points: number | null
-          response_time_points: number | null
-          seniority_points: number | null
-          status: string | null
-          total_points: number | null
-          updated_at: string | null
-          wallet_transaction_id: string | null
-        }
-        SetofOptions: {
-          from: "*"
-          to: "community_rewards"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      calculate_monthly_icp: {
-        Args: { p_year_month: string }
-        Returns: {
-          cars_processed: number
-          pool_total_cents: number
-          total_icp: number
+          fgo_cap_usd: number
+          hold_amount_usd: number
+          membership_coverage_usd: number
+          tier: string
+          tier_name: string
+          total_protection_usd: number
         }[]
       }
       calculate_payment_split: {
-        Args: { p_platform_fee_percent?: number; p_total_amount: number }
+        Args: { p_total_amount_cents: number }
         Returns: {
-          owner_amount: number
-          platform_fee: number
-          platform_fee_percent: number
-          total_amount: number
+          fgo_cents: number
+          owner_direct_cents: number
+          platform_fee_cents: number
+          reward_pool_cents: number
+          total_cents: number
         }[]
       }
       calculate_pem: {
@@ -27328,13 +10846,6 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: number
       }
-      calculate_subscription_upgrade: {
-        Args: {
-          p_new_tier: Database["public"]["Enums"]["subscription_tier"]
-          p_user_id: string
-        }
-        Returns: Json
-      }
       calculate_suggested_daily_rate: {
         Args: { p_category_id: string; p_country?: string; p_value_usd: number }
         Returns: Json
@@ -27353,10 +10864,22 @@ export type Database = {
         }
         Returns: number
       }
-      calculate_user_bonus_malus: { Args: { p_user_id: string }; Returns: Json }
+      calculate_vehicle_base_price: {
+        Args: { p_car_id: string; p_region_id: string }
+        Returns: Json
+      }
       can_instant_book: {
         Args: { p_car_id: string; p_renter_id: string }
         Returns: Json
+      }
+      can_leave_review: {
+        Args: { p_booking_id: string; p_user_id?: string }
+        Returns: {
+          can_review: boolean
+          reason: string
+          reviews_remaining: number
+          reviews_today: number
+        }[]
       }
       can_persona_post: { Args: { p_persona_id: string }; Returns: boolean }
       can_publish_car: { Args: { p_user_id: string }; Returns: boolean }
@@ -27397,45 +10920,21 @@ export type Database = {
           success: boolean
         }[]
       }
-      capture_payment_authorization:
-        | { Args: { p_auth_id: string }; Returns: boolean }
-        | {
-            Args: { p_amount_cents: number; p_payment_id: string }
-            Returns: {
-              captured_amount_cents: number
-              captured_at: string
-              message: string
-              success: boolean
-            }[]
-          }
-      capture_preauth:
-        | { Args: { p_auth_id: string }; Returns: boolean }
-        | {
-            Args: { p_amount: number; p_intent_id: string }
-            Returns: undefined
-          }
-      charge_accident_deductible: {
-        Args: { p_accident_id: string; p_deductible_cents: number }
-        Returns: Json
-      }
-      check_and_update_usage_limits: {
-        Args: { p_car_id: string; p_days_to_add?: number }
-        Returns: Json
-      }
-      check_autorentar_credit_expiry: {
-        Args: { p_expiry_days?: number; p_user_id: string }
+      capture_payment_authorization: {
+        Args: { p_amount_cents: number; p_payment_id: string }
         Returns: {
-          expired_amount_cents: number
+          captured_amount_cents: number
+          captured_at: string
           message: string
           success: boolean
-          transaction_id: string
         }[]
       }
-      check_availability: {
-        Args: { p_car_id: string; p_end: string; p_start: string }
-        Returns: boolean
+      capture_preauth: {
+        Args: { p_amount: number; p_intent_id: string }
+        Returns: undefined
       }
-      check_car_availability: {
+      check_abandoned_bookings: { Args: never; Returns: undefined }
+      check_booking_overlap: {
         Args: { p_car_id: string; p_end_date: string; p_start_date: string }
         Returns: boolean
       }
@@ -27450,47 +10949,12 @@ export type Database = {
           suggested_deposit_multiplier: number
         }[]
       }
-      check_credit_renewal_eligibility: {
-        Args: { p_user_id: string }
-        Returns: Json
-      }
       check_device_connections: { Args: never; Returns: undefined }
-      check_idempotency: {
-        Args: {
-          p_entity_id?: string
-          p_key: string
-          p_operation_type: string
-          p_request_hash?: string
-          p_user_id?: string
-        }
-        Returns: {
-          existing_response: Json
-          existing_status: string
-          is_duplicate: boolean
-          key_id: string
-        }[]
-      }
       check_level_requirements: {
-        Args: { p_required_level: number }
+        Args: { p_required_level?: number }
         Returns: Json
       }
       check_mercadopago_connection: { Args: never; Returns: Json }
-      check_rate_limit: {
-        Args: {
-          p_endpoint?: string
-          p_identifier: string
-          p_identifier_type?: string
-          p_limit?: number
-          p_window_seconds?: number
-        }
-        Returns: {
-          allowed: boolean
-          current_count: number
-          limit_value: number
-          retry_after_seconds: number
-          window_reset_at: string
-        }[]
-      }
       check_snapshot_revalidation: {
         Args: { p_booking_id: string }
         Returns: {
@@ -27520,15 +10984,8 @@ export type Database = {
         Returns: boolean
       }
       cleanup_expired_ai_cache: { Args: never; Returns: undefined }
-      cleanup_expired_idempotency_keys: { Args: never; Returns: number }
-      cleanup_expired_otp_codes: { Args: never; Returns: undefined }
       cleanup_expired_passkey_challenges: { Args: never; Returns: undefined }
-      cleanup_expired_waitlist: {
-        Args: never
-        Returns: {
-          expired_count: number
-        }[]
-      }
+      cleanup_fipe_cache: { Args: never; Returns: number }
       cleanup_old_pending_deposits: {
         Args: never
         Returns: {
@@ -27537,57 +10994,13 @@ export type Database = {
         }[]
       }
       cleanup_old_performance_logs: { Args: never; Returns: number }
-      cleanup_rate_limit_tracking: { Args: never; Returns: number }
       close_accounting_period: {
         Args: { p_period: string }
         Returns: undefined
       }
-      complete_booking_and_process_payout: {
-        Args: { p_booking_id: string }
-        Returns: Json
-      }
-      complete_checkout: { Args: { p_booking_id: string }; Returns: Json }
-      complete_ev_incident_protocol: {
-        Args: { p_protocol_id: string }
-        Returns: Json
-      }
-      complete_ev_protocol_section: {
-        Args: { p_protocol_id: string; p_section_id: string }
-        Returns: Json
-      }
-      complete_idempotency: {
-        Args: {
-          p_key: string
-          p_response_body: Json
-          p_response_status: number
-          p_status: string
-        }
-        Returns: boolean
-      }
-      complete_payment_split: {
-        Args: {
-          p_mercadopago_payment_id: string
-          p_split_id: string
-          p_webhook_data?: Json
-        }
-        Returns: boolean
-      }
-      complete_pending_review_bookings: {
-        Args: never
-        Returns: {
-          booking_ids: string[]
-          completed_count: number
-          total_paid_to_owners: number
-          total_platform_fees: number
-        }[]
-      }
       complete_referral_milestone: {
         Args: { p_milestone: string; p_referred_user_id: string }
         Returns: boolean
-      }
-      compute_cancel_fee: {
-        Args: { p_booking_id: string; p_now?: string }
-        Returns: number
       }
       compute_fee_with_class: {
         Args: {
@@ -27605,19 +11018,7 @@ export type Database = {
         }
         Returns: number
       }
-      config_get_boolean:
-        | {
-            Args: { p_key: string }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.config_get_boolean(p_key => text), public.config_get_boolean(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
-          }
-        | {
-            Args: { p_key: string }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.config_get_boolean(p_key => text), public.config_get_boolean(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
-          }
+      config_get_boolean: { Args: { p_key: string }; Returns: boolean }
       config_get_json: { Args: { p_key: string }; Returns: Json }
       config_get_number: { Args: { p_key: string }; Returns: number }
       config_get_public: {
@@ -27630,19 +11031,7 @@ export type Database = {
           value: Json
         }[]
       }
-      config_get_string:
-        | {
-            Args: { p_key: string }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.config_get_string(p_key => text), public.config_get_string(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
-          }
-        | {
-            Args: { p_key: string }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.config_get_string(p_key => text), public.config_get_string(p_key => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
-          }
+      config_get_string: { Args: { p_key: string }; Returns: string }
       config_update: {
         Args: { p_key: string; p_value: Json }
         Returns: {
@@ -27676,14 +11065,20 @@ export type Database = {
         Returns: Json
       }
       consume_autorentar_credit_for_claim: {
-        Args: { p_claim_id: string; p_max_amount_cents?: number }
+        Args: {
+          p_booking_id: string
+          p_claim_amount_cents: number
+          p_claim_id?: string
+          p_user_id: string
+        }
         Returns: {
           autorentar_credit_used_cents: number
           message: string
           new_autorentar_credit_balance: number
-          remaining_claim_amount_cents: number
+          new_wallet_balance: number
+          remaining_claim_cents: number
           success: boolean
-          transaction_id: string
+          wallet_balance_used_cents: number
         }[]
       }
       consume_protection_credit_for_claim: {
@@ -27697,48 +11092,6 @@ export type Database = {
           remaining_claim_cents: number
           wr_used_cents: number
         }[]
-      }
-      create_audit_log: {
-        Args: {
-          p_action: string
-          p_actor_id?: string
-          p_actor_type?: string
-          p_changed_fields?: string[]
-          p_entity_id: string
-          p_entity_type: string
-          p_metadata?: Json
-          p_new_values?: Json
-          p_old_values?: Json
-          p_source?: string
-        }
-        Returns: string
-      }
-      create_custom_geofence: {
-        Args: {
-          p_booking_id: string
-          p_center_lat: number
-          p_center_lng: number
-          p_color?: string
-          p_description?: string
-          p_max_speed_kmh?: number
-          p_name: string
-          p_radius_meters: number
-          p_zone_type: string
-        }
-        Returns: string
-      }
-      create_default_geofence: {
-        Args: { p_booking_id: string }
-        Returns: undefined
-      }
-      create_ev_incident_protocol: {
-        Args: {
-          p_booking_id: string
-          p_claim_id?: string
-          p_device_info?: Json
-          p_location?: Json
-        }
-        Returns: string
       }
       create_evidence_package: {
         Args: { p_booking_id: string; p_purpose?: string }
@@ -27784,43 +11137,18 @@ export type Database = {
               success: boolean
             }[]
           }
-      create_onboarding_plan_with_steps: {
+      create_payment_authorization: {
         Args: {
-          p_plan_code: string
-          p_plan_version: string
-          p_role: string
-          p_steps: Json
+          p_amount_ars?: number
+          p_amount_usd?: number
+          p_booking_id?: string
+          p_description?: string
+          p_external_reference?: string
+          p_fx_rate?: number
           p_user_id: string
         }
-        Returns: string
+        Returns: Json
       }
-      create_onboarding_plan_with_steps_v1: {
-        Args: {
-          p_plan_code: string
-          p_role: string
-          p_steps: Json
-          p_user_id: string
-          p_version: string
-        }
-        Returns: string
-      }
-      create_payment_authorization:
-        | {
-            Args: { p_amount: number; p_currency: string; p_user_id: string }
-            Returns: string
-          }
-        | {
-            Args: {
-              p_amount_ars?: number
-              p_amount_usd?: number
-              p_booking_id?: string
-              p_description?: string
-              p_external_reference?: string
-              p_fx_rate?: number
-              p_user_id: string
-            }
-            Returns: Json
-          }
       create_review: {
         Args: {
           p_booking_id: string
@@ -27833,13 +11161,21 @@ export type Database = {
         }
         Returns: string
       }
-      create_signed_trace: {
+      create_review_v2: {
         Args: {
           p_booking_id: string
           p_car_id: string
-          p_event_data: Json
-          p_event_timestamp?: string
-          p_event_type: string
+          p_comment_private?: string
+          p_comment_public?: string
+          p_rating_accuracy: number
+          p_rating_checkin: number
+          p_rating_cleanliness: number
+          p_rating_communication: number
+          p_rating_location: number
+          p_rating_value: number
+          p_review_type: string
+          p_reviewee_id: string
+          p_reviewer_id: string
         }
         Returns: string
       }
@@ -27863,30 +11199,9 @@ export type Database = {
         }
         Returns: Json
       }
-      create_tracking_alert: {
-        Args: {
-          p_booking_id: string
-          p_category: string
-          p_geofence_id?: string
-          p_latitude?: number
-          p_longitude?: number
-          p_message?: string
-          p_metadata?: Json
-          p_severity: string
-          p_speed_kmh?: number
-          p_title: string
-        }
-        Returns: string
-      }
-      cron_calculate_all_rewards: { Args: never; Returns: number }
       cron_check_overdue_bookings: { Args: never; Returns: number }
-      cron_create_monthly_pool: { Args: never; Returns: boolean }
-      cron_distribute_rewards: { Args: never; Returns: number }
       cron_execute_scheduled_events: { Args: never; Returns: number }
-      cron_reset_consecutive_days: { Args: never; Returns: number }
-      cron_yearly_reset: { Args: never; Returns: number }
       decrypt_message: { Args: { ciphertext: string }; Returns: string }
-      decrypt_pii: { Args: { ciphertext: string }; Returns: string }
       deduct_from_subscription: {
         Args: {
           p_amount_cents: number
@@ -27898,79 +11213,21 @@ export type Database = {
         }
         Returns: Json
       }
-      disablelongtransactions: { Args: never; Returns: string }
       disconnect_mercadopago: { Args: never; Returns: Json }
-      dispute_traffic_infraction: {
-        Args: { p_infraction_id: string; p_reason: string; p_renter_id: string }
-        Returns: Json
-      }
-      distribute_monthly_pool: {
-        Args: { p_year_month: string }
+      distribute_monthly_rewards: {
+        Args: { p_pool_id: string }
         Returns: {
-          owners_paid: number
-          total_distributed_cents: number
-        }[]
-      }
-      distribute_reward_pool: {
-        Args: { p_month: number; p_year: number }
-        Returns: {
-          amount_cents: number
+          amount: number
           owner_id: string
+          share_percentage: number
         }[]
       }
-      dropgeometrycolumn:
-        | {
-            Args: {
-              catalog_name: string
-              column_name: string
-              schema_name: string
-              table_name: string
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              column_name: string
-              schema_name: string
-              table_name: string
-            }
-            Returns: string
-          }
-        | { Args: { column_name: string; table_name: string }; Returns: string }
-      dropgeometrytable:
-        | {
-            Args: {
-              catalog_name: string
-              schema_name: string
-              table_name: string
-            }
-            Returns: string
-          }
-        | { Args: { schema_name: string; table_name: string }; Returns: string }
-        | { Args: { table_name: string }; Returns: string }
       earth: { Args: never; Returns: number }
-      enablelongtransactions: { Args: never; Returns: string }
       encrypt_message: { Args: { plaintext: string }; Returns: string }
-      encrypt_pii: { Args: { plaintext: string }; Returns: string }
       end_location_tracking: {
         Args: { p_status?: string; p_tracking_id: string }
         Returns: boolean
       }
-      enforce_rate_limit: {
-        Args: {
-          p_endpoint?: string
-          p_identifier?: string
-          p_window_seconds?: number
-        }
-        Returns: {
-          allowed: boolean
-          current_count: number
-          limit_value: number
-          retry_after_seconds: number
-          window_reset_at: string
-        }[]
-      }
-      equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
       estimate_vehicle_value_usd: {
         Args: { p_brand: string; p_model: string; p_year: number }
         Returns: {
@@ -27984,22 +11241,17 @@ export type Database = {
         Args: { p_context?: Json; p_flag_name: string; p_user_id?: string }
         Returns: Json
       }
-      execute_protocol_event: { Args: { p_event_id: string }; Returns: Json }
-      expire_pending_approvals: {
-        Args: never
-        Returns: {
-          expired_bookings: string[]
-          expired_count: number
-        }[]
-      }
-      expire_pending_bookings: {
-        Args: never
-        Returns: {
-          expired_count: number
-        }[]
-      }
       expire_subscriptions: { Args: never; Returns: number }
-      expire_wallet_credits: { Args: never; Returns: Json }
+      extend_autorentar_credit_for_good_history: {
+        Args: { p_user_id: string }
+        Returns: {
+          expires_at: string
+          message: string
+          new_balance_cents: number
+          renewed: boolean
+          success: boolean
+        }[]
+      }
       extend_protection_credit_for_good_history: {
         Args: { p_user_id: string }
         Returns: {
@@ -28051,49 +11303,6 @@ export type Database = {
         }
         Returns: Json
       }
-      find_brazil_model_equivalent: {
-        Args: { p_brand: string; p_model_argentina: string }
-        Returns: {
-          confidence: string
-          model_brazil: string
-        }[]
-      }
-      find_nearby_bounties: {
-        Args: {
-          search_radius_meters?: number
-          user_lat: number
-          user_long: number
-        }
-        Returns: {
-          booking_id: string | null
-          car_id: string
-          created_at: string | null
-          created_by: string | null
-          currency: string | null
-          expires_at: string | null
-          id: string
-          radius_meters: number | null
-          reward_amount: number | null
-          status: Database["public"]["Enums"]["bounty_status"] | null
-          target_location: unknown
-        }[]
-        SetofOptions: {
-          from: "*"
-          to: "bounties"
-          isOneToOne: false
-          isSetofReturn: true
-        }
-      }
-      find_nearby_repair_shops: {
-        Args: {
-          p_brand?: string
-          p_ev_only?: boolean
-          p_latitude: number
-          p_limit?: number
-          p_longitude: number
-        }
-        Returns: Json
-      }
       fx_rate_needs_revalidation: {
         Args: {
           p_max_age_days?: number
@@ -28108,121 +11317,7 @@ export type Database = {
         }[]
       }
       generate_daily_content_batch: { Args: never; Returns: undefined }
-      generate_device_fingerprint: {
-        Args: { p_ip: unknown; p_user_agent: string }
-        Returns: string
-      }
-      generate_insurance_notification_content: {
-        Args: { p_booking_id: string }
-        Returns: string
-      }
-      generate_police_report_content: {
-        Args: { p_booking_id: string }
-        Returns: string
-      }
-      generate_post_incident_report: {
-        Args: { p_booking_id: string; p_include_appraisal?: boolean }
-        Returns: Json
-      }
       generate_referral_code: { Args: { p_user_id: string }; Returns: string }
-      geometry: { Args: { "": string }; Returns: unknown }
-      geometry_above: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_below: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_cmp: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: number
-      }
-      geometry_contained_3d: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_contains: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_contains_3d: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_distance_box: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: number
-      }
-      geometry_distance_centroid: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: number
-      }
-      geometry_eq: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_ge: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_gt: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_le: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_left: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_lt: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_overabove: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_overbelow: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_overlaps: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_overlaps_3d: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_overleft: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_overright: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_right: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_same: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_same_3d: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geometry_within: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      geomfromewkt: { Args: { "": string }; Returns: unknown }
       get_ab_testing_report: {
         Args: { p_content_type?: string }
         Returns: {
@@ -28247,6 +11342,15 @@ export type Database = {
           price_paid_usd: number
           protection_level: number
           purchase_date: string
+          remaining_protected_claims: number
+        }[]
+      }
+      get_active_calendar_token: {
+        Args: { user_uuid: string }
+        Returns: {
+          access_token: string
+          expires_at: string
+          refresh_token: string
         }[]
       }
       get_active_events: { Args: { p_country?: string }; Returns: Json }
@@ -28254,6 +11358,13 @@ export type Database = {
       get_active_subscription_for_user: {
         Args: { p_user_id: string }
         Returns: Json
+      }
+      get_active_tokens_for_user: {
+        Args: { p_user_id: string }
+        Returns: {
+          platform: string
+          token: string
+        }[]
       }
       get_active_tracking_for_booking: {
         Args: { p_booking_id: string }
@@ -28274,8 +11385,17 @@ export type Database = {
         }[]
       }
       get_admin_roles: {
-        Args: { check_user_id: string }
+        Args: { check_user_id?: string }
         Returns: Database["public"]["Enums"]["admin_role"][]
+      }
+      get_all_seo_urls: {
+        Args: never
+        Returns: {
+          changefreq: string
+          lastmod: string
+          priority: number
+          url_path: string
+        }[]
       }
       get_app_config: {
         Args: { p_environment?: string }
@@ -28332,25 +11452,6 @@ export type Database = {
         }[]
       }
       get_booking_distance: { Args: { p_booking_id: string }; Returns: number }
-      get_booking_geofences: { Args: { p_booking_id: string }; Returns: Json }
-      get_booking_payment_history: {
-        Args: { p_booking_id: string }
-        Returns: {
-          actor_type: string
-          amount_cents: number
-          created_at: string
-          currency: string
-          error_code: string
-          error_message: string
-          event_data: Json
-          event_id: string
-          event_type: string
-          new_status: string
-          payment_provider: string
-          previous_status: string
-          provider_transaction_id: string
-        }[]
-      }
       get_car_blocked_dates: {
         Args: { p_car_id: string; p_end_date?: string; p_start_date?: string }
         Returns: {
@@ -28368,155 +11469,25 @@ export type Database = {
           user_id: string
         }[]
       }
-      get_car_price_in_currency: {
-        Args: { p_car_id: string; p_currency?: string }
-        Returns: number
-      }
-      get_cars_availability_batch: {
-        Args: {
-          car_ids: string[]
-          check_end_date?: string
-          check_start_date?: string
-        }
+      get_car_stats: {
+        Args: { p_car_id: string }
         Returns: {
-          active_booking_end: string
-          active_booking_id: string
-          availability_status: string
-          available_today: boolean
-          available_tomorrow: boolean
+          cancellation_rate: number
+          cancelled_bookings: number
           car_id: string
-          is_available: boolean
-          next_available_date: string
-        }[]
-      }
-      get_cars_nearby: {
-        Args: {
-          p_lat: number
-          p_limit?: number
-          p_lng: number
-          p_radius_km?: number
-        }
-        Returns: {
-          ai_condition_analysis: Json | null
-          ai_condition_analyzed_at: string | null
-          ai_condition_category: string | null
-          ai_condition_score: number | null
-          ai_recognition_at: string | null
-          ai_recognition_confidence: number | null
-          ai_recognition_validated: boolean | null
-          ai_recognized_brand: string | null
-          ai_recognized_model: string | null
-          allow_pets: boolean | null
-          allow_rideshare: boolean | null
-          allow_second_driver: boolean | null
-          allow_smoking: boolean | null
-          allowed_provinces: string[] | null
-          annual_expense_estimate_cents: number | null
-          auto_approval: boolean | null
-          availability_end_date: string | null
-          availability_start_date: string | null
-          brand: string | null
-          brand_id: string | null
-          brand_text_backup: string | null
-          can_receive_payments: boolean | null
-          cancel_policy: Database["public"]["Enums"]["cancel_policy"]
-          category_id: string | null
-          city: string
-          color: string | null
-          country: string
-          created_at: string
-          currency: string
-          custom_daily_rate_pct: number | null
-          deleted_at: string | null
-          delivery_options: Json | null
-          deposit_amount: number | null
-          deposit_required: boolean | null
-          description: string | null
-          doors: number | null
-          earnings_limit_reached: boolean | null
-          estimated_daily_cost_cents: number | null
-          estimated_value_usd: number | null
-          extra_km_price: number | null
-          features: Json | null
-          fipe_code: string | null
-          fipe_last_sync: string | null
-          fuel: string | null
-          fuel_policy: string | null
-          fuel_price_per_liter_cents: number | null
-          fuel_tank_liters: number | null
-          fuel_type: string | null
-          id: string
-          instant_booking_enabled: boolean | null
-          instant_booking_min_score: number | null
-          instant_booking_require_verified: boolean | null
-          insurance_company: string | null
-          insurance_deductible_usd: number | null
-          insurance_expires_at: string | null
-          insurance_included: boolean | null
-          insurance_policy_number: string | null
-          last_personal_use_verified_at: string | null
-          location_city: string | null
-          location_country: string | null
-          location_geom: unknown
-          location_lat: number | null
-          location_lng: number | null
-          location_neighborhood: string | null
-          location_postal_code: string | null
-          location_province: string | null
-          location_state: string | null
-          location_street: string | null
-          location_street_number: string | null
-          max_anticipation_days: number | null
-          max_distance_km: number | null
-          max_rental_days: number | null
-          mileage: number | null
-          mileage_limit: number | null
-          min_rental_days: number | null
-          model: string | null
-          model_id: string | null
-          model_text_backup: string | null
-          organization_id: string | null
-          owner_id: string
-          payment_methods: Json | null
-          photos_quality_checked: boolean | null
-          photos_quality_score: number | null
-          plate: string | null
-          plates_auto_blurred: boolean | null
-          price_override: boolean | null
-          price_per_day: number
-          price_per_day_cents: number | null
-          province: string
-          rating_avg: number | null
-          rating_count: number | null
-          region_id: string | null
-          seats: number | null
-          second_driver_cost: number | null
-          security_deposit_usd: number | null
-          sharing_mode: string | null
-          sharing_suspended_at: string | null
-          sharing_suspension_reason: string | null
-          status: Database["public"]["Enums"]["car_status"]
-          terms_and_conditions: string | null
-          title: string
-          total_bookings: number | null
-          transmission: string | null
+          completed_bookings: number
+          last_review_at: string
+          rating_accuracy_avg: number
+          rating_avg: number
+          rating_checkin_avg: number
+          rating_cleanliness_avg: number
+          rating_communication_avg: number
+          rating_location_avg: number
+          rating_value_avg: number
+          reviews_count: number
+          total_bookings: number
           updated_at: string
-          uses_dynamic_pricing: boolean | null
-          value_ars: number | null
-          value_auto_sync_enabled: boolean | null
-          value_brl: number | null
-          value_usd: number | null
-          value_usd_source: string | null
-          vin: string | null
-          year: number | null
-          ytd_earnings_cents: number | null
         }[]
-        SetofOptions: {
-          from: "*"
-          to: "cars"
-          isOneToOne: false
-          isSetofReturn: true
-        }
       }
       get_cars_needing_quality_check: {
         Args: { limit_count?: number }
@@ -28535,41 +11506,28 @@ export type Database = {
           allow_second_driver: boolean | null
           allow_smoking: boolean | null
           allowed_provinces: string[] | null
-          annual_expense_estimate_cents: number | null
           auto_approval: boolean | null
           availability_end_date: string | null
           availability_start_date: string | null
           brand: string | null
           brand_id: string | null
           brand_text_backup: string | null
-          can_receive_payments: boolean | null
-          cancel_policy: Database["public"]["Enums"]["cancel_policy"]
-          category_id: string | null
-          city: string
+          city: string | null
           color: string | null
-          country: string
-          created_at: string
-          currency: string
-          custom_daily_rate_pct: number | null
-          deleted_at: string | null
-          delivery_options: Json | null
+          country: string | null
+          created_at: string | null
+          currency: string | null
           deposit_amount: number | null
           deposit_required: boolean | null
           description: string | null
           doors: number | null
-          earnings_limit_reached: boolean | null
-          estimated_daily_cost_cents: number | null
-          estimated_value_usd: number | null
           extra_km_price: number | null
           features: Json | null
-          fipe_code: string | null
-          fipe_last_sync: string | null
-          fuel: string | null
           fuel_policy: string | null
-          fuel_price_per_liter_cents: number | null
-          fuel_tank_liters: number | null
-          fuel_type: string | null
+          fuel_type: Database["public"]["Enums"]["fuel_type"] | null
+          has_telemetry: boolean | null
           id: string
+          instant_booking: boolean | null
           instant_booking_enabled: boolean | null
           instant_booking_min_score: number | null
           instant_booking_require_verified: boolean | null
@@ -28578,14 +11536,12 @@ export type Database = {
           insurance_expires_at: string | null
           insurance_included: boolean | null
           insurance_policy_number: string | null
-          last_personal_use_verified_at: string | null
+          kill_switch_enabled: boolean | null
+          last_heartbeat: string | null
           location_city: string | null
           location_country: string | null
-          location_geom: unknown
           location_lat: number | null
           location_lng: number | null
-          location_neighborhood: string | null
-          location_postal_code: string | null
           location_province: string | null
           location_state: string | null
           location_street: string | null
@@ -28599,41 +11555,25 @@ export type Database = {
           model: string | null
           model_id: string | null
           model_text_backup: string | null
-          organization_id: string | null
           owner_id: string
-          payment_methods: Json | null
           photos_quality_checked: boolean | null
           photos_quality_score: number | null
-          plate: string | null
           plates_auto_blurred: boolean | null
-          price_override: boolean | null
-          price_per_day: number
-          price_per_day_cents: number | null
-          province: string
+          price_per_day: number | null
+          province: string | null
           rating_avg: number | null
-          rating_count: number | null
-          region_id: string | null
+          review_count: number | null
           seats: number | null
           second_driver_cost: number | null
-          security_deposit_usd: number | null
-          sharing_mode: string | null
-          sharing_suspended_at: string | null
-          sharing_suspension_reason: string | null
-          status: Database["public"]["Enums"]["car_status"]
-          terms_and_conditions: string | null
-          title: string
-          total_bookings: number | null
-          transmission: string | null
-          updated_at: string
+          status: Database["public"]["Enums"]["car_status"] | null
+          telemetry_provider: string | null
+          title: string | null
+          transmission: Database["public"]["Enums"]["transmission_type"] | null
+          updated_at: string | null
           uses_dynamic_pricing: boolean | null
-          value_ars: number | null
-          value_auto_sync_enabled: boolean | null
-          value_brl: number | null
           value_usd: number | null
-          value_usd_source: string | null
-          vin: string | null
+          vehicle_tier: Database["public"]["Enums"]["vehicle_tier"] | null
           year: number | null
-          ytd_earnings_cents: number | null
         }[]
         SetofOptions: {
           from: "*"
@@ -28674,18 +11614,6 @@ export type Database = {
         }[]
       }
       get_claim_charge_summary: { Args: { p_claim_id: string }; Returns: Json }
-      get_claim_types_for_vehicle: {
-        Args: { p_is_ev?: boolean }
-        Returns: {
-          category: string
-          description: string
-          icon: string
-          label: string
-          requires_ev_data: boolean
-          severity_default: string
-          type_code: string
-        }[]
-      }
       get_claims_stats: { Args: never; Returns: Json }
       get_class_benefits: {
         Args: { p_class: number }
@@ -28738,17 +11666,6 @@ export type Database = {
         Args: { p_from_currency: string; p_to_currency: string }
         Returns: number
       }
-      get_damage_types_for_vehicle: {
-        Args: { p_is_ev?: boolean }
-        Returns: {
-          category: string
-          description: string
-          icon: string
-          label: string
-          requires_ev_inspection: boolean
-          type_code: string
-        }[]
-      }
       get_design_tokens: {
         Args: { p_country?: string; p_event?: string; p_time_of_day?: string }
         Returns: Json
@@ -28787,24 +11704,6 @@ export type Database = {
           total_trips: number
         }[]
       }
-      get_effective_daily_rate_pct: {
-        Args: { p_car_id: string }
-        Returns: number
-      }
-      get_effective_vehicle_value: {
-        Args: { p_car_id: string }
-        Returns: number
-      }
-      get_expiring_credits: {
-        Args: { p_days_ahead?: number }
-        Returns: {
-          amount: number
-          days_until_expiry: number
-          expires_at: string
-          transaction_id: string
-          user_id: string
-        }[]
-      }
       get_expiring_holds: {
         Args: { p_hours_ahead?: number }
         Returns: {
@@ -28814,38 +11713,11 @@ export type Database = {
           hours_until_expiry: number
         }[]
       }
-      get_expiring_locks: {
-        Args: { p_days_until_expiration?: number }
-        Returns: {
-          amount: number
-          booking_id: string
-          days_remaining: number
-          lock_id: string
-          locked_until: string
-          user_id: string
-        }[]
-      }
-      get_inspection_signed_url: {
-        Args: {
-          p_booking_id: string
-          p_expires_in?: number
-          p_file_path: string
-        }
-        Returns: string
+      get_insurance_metrics: {
+        Args: { p_from_date?: string; p_to_date?: string }
+        Returns: Json
       }
       get_marketing_dashboard: { Args: { p_days_back?: number }; Returns: Json }
-      get_marketplace_approved_owners: {
-        Args: never
-        Returns: {
-          approved_at: string
-          collector_id: string
-          email: string
-          full_name: string
-          total_bookings: number
-          total_earnings: number
-          user_id: string
-        }[]
-      }
       get_mp_onboarding_notifications: {
         Args: { p_user_id: string }
         Returns: {
@@ -28855,46 +11727,6 @@ export type Database = {
           notification_id: string
           published_at: string
         }[]
-      }
-      get_my_profile_decrypted: { Args: never; Returns: Json }
-      get_my_waitlist: {
-        Args: never
-        Returns: {
-          car_brand: string
-          car_id: string
-          car_model: string
-          created_at: string
-          end_date: string
-          id: string
-          notified_at: string
-          start_date: string
-          status: string
-        }[]
-      }
-      get_nearby_ev_dealerships: {
-        Args: {
-          p_brand: string
-          p_lat: number
-          p_limit?: number
-          p_lng: number
-          p_radius_km?: number
-        }
-        Returns: {
-          address: string
-          brand: string
-          city: string
-          distance_km: number
-          emergency_phone: string
-          has_emergency_service: boolean
-          id: string
-          name: string
-          phone: string
-          whatsapp: string
-        }[]
-      }
-      get_next_available_date: {
-        Args: { p_car_id: string; p_min_days?: number; p_start_date?: string }
-        Returns: string
       }
       get_next_content_schedule: {
         Args: { days_ahead?: number }
@@ -28918,37 +11750,12 @@ export type Database = {
           template_id: string
         }[]
       }
-      get_next_optimal_post_time: {
-        Args: { p_from_time?: string; p_platform: string }
-        Returns: string
-      }
       get_onboarding_status: { Args: never; Returns: Json }
+      get_or_create_current_pool: { Args: never; Returns: string }
       get_owner_penalties: { Args: { p_owner_id: string }; Returns: Json }
       get_owner_visibility_factor: {
         Args: { p_owner_id: string }
         Returns: number
-      }
-      get_payment_events_summary: {
-        Args: { p_end_date?: string; p_start_date?: string }
-        Returns: {
-          avg_processing_time_ms: number
-          error_count: number
-          event_count: number
-          event_type: string
-          total_amount_cents: number
-        }[]
-      }
-      get_payout_stats: {
-        Args: { p_from_date?: string; p_to_date?: string }
-        Returns: {
-          avg_payout_time_hours: number
-          completed_payouts: number
-          failed_payouts: number
-          pending_payouts: number
-          total_owner_payments: number
-          total_payouts: number
-          total_platform_fees: number
-        }[]
       }
       get_pending_marketing_posts: {
         Args: { max_posts?: number }
@@ -28996,6 +11803,17 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_pending_webhook_retries: {
+        Args: never
+        Returns: {
+          event_id: string
+          id: string
+          mp_payment_id: string
+          payload: Json
+          retry_count: number
+          webhook_type: string
+        }[]
+      }
       get_query_performance_stats: {
         Args: { p_hours?: number }
         Returns: {
@@ -29018,21 +11836,7 @@ export type Database = {
           max_time_ms: number
         }[]
       }
-      get_recommendation_metrics: { Args: { p_days?: number }; Returns: Json }
-      get_referral_stats_by_user: {
-        Args: { p_user_id?: string }
-        Returns: {
-          code: string
-          first_booking_count: number
-          first_car_count: number
-          pending_cents: number
-          registered_count: number
-          total_earned_cents: number
-          total_referrals: number
-          user_id: string
-          verified_count: number
-        }[]
-      }
+      get_referral_stats_by_user: { Args: never; Returns: Json }
       get_renter_analysis: {
         Args: { p_booking_id?: string; p_renter_id: string }
         Returns: Json
@@ -29046,6 +11850,7 @@ export type Database = {
           documents: Json
           driver_class: number
           driver_license_class: string
+          driver_license_country: string
           driver_license_expiry: string
           driver_license_points: number
           driver_license_professional: boolean
@@ -29083,16 +11888,6 @@ export type Database = {
         Args: { p_limit?: number; p_subscription_id?: string }
         Returns: Json
       }
-      get_system_health: {
-        Args: never
-        Returns: {
-          checked_at: string
-          component: string
-          details: Json
-          latency_ms: number
-          status: string
-        }[]
-      }
       get_telemetry_history: {
         Args: { p_limit?: number; p_user_id: string }
         Returns: {
@@ -29124,23 +11919,7 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: number
       }
-      get_user_conversations: {
-        Args: { user_id: string }
-        Returns: {
-          booking_id: string
-          car_brand: string
-          car_id: string
-          car_model: string
-          car_year: number
-          conversation_id: string
-          last_message: string
-          last_message_at: string
-          other_user_avatar: string
-          other_user_id: string
-          other_user_name: string
-          unread_count: number
-        }[]
-      }
+      get_user_club_benefits: { Args: { p_user_id?: string }; Returns: Json }
       get_user_credit_report: {
         Args: { p_user_id: string }
         Returns: {
@@ -29181,9 +11960,38 @@ export type Database = {
       }
       get_user_feature_flags: { Args: { p_user_id?: string }; Returns: Json }
       get_user_public_stats: { Args: { target_user_id: string }; Returns: Json }
-      get_user_rate_limit: {
-        Args: { p_endpoint?: string; p_user_id?: string }
-        Returns: number
+      get_user_risk_score: { Args: { p_user_id: string }; Returns: Json }
+      get_user_stats: {
+        Args: { p_user_id: string }
+        Returns: {
+          badges: Json
+          cancellation_count: number
+          cancellation_rate: number
+          is_super_host: boolean
+          is_top_host: boolean
+          is_verified_renter: boolean
+          last_review_received_at: string
+          owner_rating_accuracy_avg: number
+          owner_rating_avg: number
+          owner_rating_checkin_avg: number
+          owner_rating_cleanliness_avg: number
+          owner_rating_communication_avg: number
+          owner_rating_location_avg: number
+          owner_rating_value_avg: number
+          owner_response_rate: number
+          owner_response_time_hours: number
+          owner_reviews_count: number
+          renter_rating_accuracy_avg: number
+          renter_rating_avg: number
+          renter_rating_checkin_avg: number
+          renter_rating_cleanliness_avg: number
+          renter_rating_communication_avg: number
+          renter_reviews_count: number
+          total_bookings_as_owner: number
+          total_bookings_as_renter: number
+          updated_at: string
+          user_id: string
+        }[]
       }
       get_user_wallet_history: {
         Args: { p_limit?: number; p_offset?: number; p_user_id: string }
@@ -29199,31 +12007,22 @@ export type Database = {
           type: string
         }[]
       }
-      get_vehicle_latest_location: {
-        Args: { p_booking_id: string }
-        Returns: Json
-      }
-      get_vehicle_location_history: {
-        Args: { p_booking_id: string; p_limit?: number; p_offset?: number }
-        Returns: Json
-      }
-      get_verification_progress: { Args: never; Returns: Json }
-      get_waitlist_count: {
-        Args: { p_car_id: string; p_end_date: string; p_start_date: string }
+      get_vehicle_base_price_simple: {
+        Args: { p_car_id: string; p_region_id: string }
         Returns: number
       }
-      get_webhooks_for_retry: {
-        Args: { p_limit?: number }
-        Returns: {
-          event_id: string
-          headers: Json
-          id: string
-          payload: Json
-          retry_count: number
-          webhook_type: string
-        }[]
+      get_vehicle_tier: {
+        Args: { p_value_usd: number }
+        Returns: Database["public"]["Enums"]["vehicle_tier"]
       }
-      gettransactionid: { Args: never; Returns: unknown }
+      get_verification_progress: { Args: never; Returns: Json }
+      has_admin_role: {
+        Args: {
+          check_role: Database["public"]["Enums"]["admin_role"]
+          check_user_id?: string
+        }
+        Returns: boolean
+      }
       improve_driver_class_annual: {
         Args: never
         Returns: {
@@ -29231,14 +12030,6 @@ export type Database = {
           new_class: number
           old_class: number
           user_id: string
-        }[]
-      }
-      increment_face_verification_attempts: {
-        Args: { p_face_match_score?: number; p_user_id: string }
-        Returns: {
-          block_reason: string
-          is_now_blocked: boolean
-          new_attempts: number
         }[]
       }
       ingest_iot_data: {
@@ -29254,46 +12045,23 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: string
       }
-      insert_notification_secure: {
-        Args: { p_payload: Json; p_type: string; p_user_id: string }
-        Returns: undefined
-      }
-      is_admin:
-        | { Args: never; Returns: boolean }
-        | { Args: { check_user_id: string }; Returns: boolean }
-      is_at_least_18: { Args: { birth_date: string }; Returns: boolean }
-      is_car_available: {
-        Args: { p_car_id: string; p_end_date: string; p_start_date: string }
+      is_admin: { Args: { check_user_id?: string }; Returns: boolean }
+      is_google_calendar_connected: {
+        Args: { user_uuid: string }
         Returns: boolean
       }
-      is_car_owner: { Args: { p_car_id: string }; Returns: boolean }
-      is_kyc_blocked: {
-        Args: { p_user_id: string }
-        Returns: {
-          attempts: number
-          blocked: boolean
-          blocked_at: string
-          last_failed_at: string
-          reason: string
-        }[]
-      }
-      is_within_geofence: {
-        Args: {
-          p_center_lat: number
-          p_center_lng: number
-          p_lat: number
-          p_lng: number
-          p_radius_meters: number
-        }
+      is_in_cooldown: {
+        Args: { p_car_id?: string; p_owner_id: string }
         Returns: boolean
       }
       issue_autorentar_credit: {
-        Args: { p_amount_cents: number; p_reason?: string; p_user_id: string }
+        Args: { p_amount_cents?: number; p_user_id: string }
         Returns: {
+          credit_balance_cents: number
+          expires_at: string
+          issued_at: string
           message: string
-          new_balance_cents: number
           success: boolean
-          transaction_id: string
         }[]
       }
       issue_protection_credit: {
@@ -29331,7 +12099,7 @@ export type Database = {
         Args: {
           p_action: string
           p_details?: Json
-          p_ip_address?: string
+          p_ip_address?: unknown
           p_resource_id?: string
           p_resource_type: string
           p_user_agent?: string
@@ -29379,36 +12147,8 @@ export type Database = {
         Returns: string
       }
       log_token_expiration_alerts: { Args: never; Returns: undefined }
-      longtransactionsenabled: { Args: never; Returns: boolean }
-      maintenance_cleanup_draft_cars: {
-        Args: { p_days_old?: number; p_dry_run?: boolean }
-        Returns: Json
-      }
-      maintenance_cleanup_old_conversion_events: {
-        Args: { p_days_old?: number; p_dry_run?: boolean }
-        Returns: Json
-      }
-      maintenance_cleanup_old_notifications: {
-        Args: { p_days_old?: number; p_dry_run?: boolean }
-        Returns: Json
-      }
-      maintenance_cleanup_orphaned_car_photos: {
-        Args: { p_dry_run?: boolean }
-        Returns: Json
-      }
-      maintenance_get_data_health_report: { Args: never; Returns: Json }
-      maintenance_identify_test_accounts: {
-        Args: never
-        Returns: {
-          created_at: string
-          email: string
-          full_name: string
-          id: string
-          reason: string
-        }[]
-      }
-      maintenance_run_full_cleanup: {
-        Args: { p_dry_run?: boolean }
+      mark_car_as_non_fipe_validatable: {
+        Args: { p_car_id: string; p_reason?: string }
         Returns: Json
       }
       mark_conversation_as_read: {
@@ -29432,24 +12172,9 @@ export type Database = {
         }
         Returns: undefined
       }
-      mark_payout_failed: {
-        Args: { p_booking_id: string; p_error_message: string }
-        Returns: undefined
-      }
       measure_execution_time: {
         Args: { p_function_name: string; p_start_time: string }
         Returns: undefined
-      }
-      monitoring_check_database_metrics: { Args: never; Returns: undefined }
-      monitoring_create_alert: {
-        Args: {
-          p_alert_type: string
-          p_message: string
-          p_metadata?: Json
-          p_severity: string
-          p_title: string
-        }
-        Returns: string
       }
       move_to_marketing_dlq: {
         Args: { p_error: string; p_queue_id: string }
@@ -29469,103 +12194,7 @@ export type Database = {
         Args: { p_booking_id: string; p_owner_id: string; p_reason?: string }
         Returns: Json
       }
-      p2p_get_next_order: {
-        Args: {
-          p_lock_duration_seconds?: number
-          p_service_name: string
-          p_status?: string
-        }
-        Returns: {
-          amount_crypto: number | null
-          amount_fiat: number
-          binance_marked_paid_at: string | null
-          binance_released_at: string | null
-          completed_at: string | null
-          counterparty_id: string | null
-          counterparty_name: string | null
-          currency: string
-          detected_at: string | null
-          id: string
-          last_error: string | null
-          lock_expires_at: string | null
-          locked_by: string | null
-          max_retries: number | null
-          mp_transfer_id: string | null
-          mp_transfer_status: string | null
-          mp_transferred_at: string | null
-          order_number: string
-          order_type: string
-          payment_alias: string | null
-          payment_cvu: string | null
-          payment_holder: string | null
-          retry_count: number | null
-          status: string
-          updated_at: string | null
-        }[]
-        SetofOptions: {
-          from: "*"
-          to: "p2p_orders"
-          isOneToOne: false
-          isSetofReturn: true
-        }
-      }
-      pay_booking_extension: {
-        Args: { p_extension_id: string; p_renter_id: string }
-        Returns: Json
-      }
-      payout_community_rewards: {
-        Args: { p_month: number; p_year: number }
-        Returns: number
-      }
       populate_car_estimates: { Args: { p_car_id: string }; Returns: undefined }
-      populate_geometry_columns:
-        | { Args: { tbl_oid: unknown; use_typmod?: boolean }; Returns: number }
-        | { Args: { use_typmod?: boolean }; Returns: string }
-      postgis_constraint_dims: {
-        Args: { geomcolumn: string; geomschema: string; geomtable: string }
-        Returns: number
-      }
-      postgis_constraint_srid: {
-        Args: { geomcolumn: string; geomschema: string; geomtable: string }
-        Returns: number
-      }
-      postgis_constraint_type: {
-        Args: { geomcolumn: string; geomschema: string; geomtable: string }
-        Returns: string
-      }
-      postgis_extensions_upgrade: { Args: never; Returns: string }
-      postgis_full_version: { Args: never; Returns: string }
-      postgis_geos_version: { Args: never; Returns: string }
-      postgis_lib_build_date: { Args: never; Returns: string }
-      postgis_lib_revision: { Args: never; Returns: string }
-      postgis_lib_version: { Args: never; Returns: string }
-      postgis_libjson_version: { Args: never; Returns: string }
-      postgis_liblwgeom_version: { Args: never; Returns: string }
-      postgis_libprotobuf_version: { Args: never; Returns: string }
-      postgis_libxml_version: { Args: never; Returns: string }
-      postgis_proj_version: { Args: never; Returns: string }
-      postgis_scripts_build_date: { Args: never; Returns: string }
-      postgis_scripts_installed: { Args: never; Returns: string }
-      postgis_scripts_released: { Args: never; Returns: string }
-      postgis_svn_version: { Args: never; Returns: string }
-      postgis_type_name: {
-        Args: {
-          coord_dimension: number
-          geomname: string
-          use_new_name?: boolean
-        }
-        Returns: string
-      }
-      postgis_version: { Args: never; Returns: string }
-      postgis_wagyu_version: { Args: never; Returns: string }
-      prepare_booking_payment: {
-        Args: {
-          p_booking_id: string
-          p_provider: Database["public"]["Enums"]["payment_provider"]
-          p_use_split_payment?: boolean
-        }
-        Returns: Json
-      }
       preview_booking_pricing: {
         Args: {
           p_car_id: string
@@ -29591,177 +12220,29 @@ export type Database = {
           user_id: string
         }[]
       }
-      pricing_recalculate: {
-        Args: { p_booking_id: string }
-        Returns: {
-          actual_return_at: string | null
-          agreement_type: string | null
-          approval_expires_at: string | null
-          approval_status: string | null
-          approved_at: string | null
-          approved_by: string | null
-          authorized_payment_id: string | null
-          auto_release_at: string | null
-          breakdown: Json | null
-          calendar_sync_enabled: boolean | null
-          calendar_synced_at: string | null
-          cancellation_fee_cents: number | null
-          cancellation_policy_id: number | null
-          cancellation_reason: string | null
-          cancelled_at: string | null
-          cancelled_by: string | null
-          cancelled_by_role:
-            | Database["public"]["Enums"]["booking_cancelled_by_role"]
-            | null
-          car_id: string
-          comodato_agreement_id: string | null
-          completed_at: string | null
-          completion_status: string | null
-          coverage_snapshot: Json | null
-          coverage_upgrade: string | null
-          created_at: string
-          currency: string
-          daily_rate: number | null
-          damage_amount_cents: number | null
-          damage_description: string | null
-          days_count: number | null
-          delivery_distance_km: number | null
-          delivery_fee_cents: number | null
-          delivery_required: boolean | null
-          deposit_amount_cents: number | null
-          deposit_covered_by: string | null
-          deposit_lock_expires_at: string | null
-          deposit_status: string | null
-          discounts_cents: number | null
-          dispute_amount_cents: number | null
-          dispute_evidence: Json | null
-          dispute_evidence_urls: string[] | null
-          dispute_opened_at: string | null
-          dispute_reason: string | null
-          dispute_resolution: string | null
-          dispute_resolved_at: string | null
-          distance_risk_tier: string | null
-          dropoff_location_id: string | null
-          dropoff_location_lat: number | null
-          dropoff_location_lng: number | null
-          dynamic_price_snapshot: Json | null
-          end_at: string
-          expires_at: string | null
-          fees_cents: number | null
-          fgo_contribution_cents: number | null
-          fuel_level_checkin: number | null
-          fuel_level_checkout: number | null
-          fuel_penalty_cents: number | null
-          fuel_penalty_charged_at: string | null
-          funds_released_at: string | null
-          google_calendar_event_id: string | null
-          guarantee_amount_cents: number | null
-          guarantee_type: string | null
-          has_damages: boolean | null
-          has_dynamic_pricing: boolean | null
-          hold_authorization_id: string | null
-          hold_expires_at: string | null
-          id: string
-          idempotency_key: string | null
-          inspection_comment: string | null
-          inspection_evidence: Json | null
-          inspection_status: string | null
-          insurance_cents: number | null
-          insurance_fee: number | null
-          is_instant_booking: boolean | null
-          late_return_charged_at: string | null
-          late_return_hours: number | null
-          late_return_penalty_cents: number | null
-          mercadopago_split_id: string | null
-          metadata: Json | null
-          mp_security_deposit_order_id: string | null
-          nightly_rate_cents: number | null
-          notes: string | null
-          overdue_hours: number | null
-          owner_amount_paid: number | null
-          owner_confirmed_at: string | null
-          owner_confirmed_delivery: boolean | null
-          owner_fee: number | null
-          owner_id: string | null
-          owner_payment_amount: number | null
-          paid_at: string | null
-          payment_id: string | null
-          payment_init_point: string | null
-          payment_method: string | null
-          payment_mode: string | null
-          payment_preference_id: string | null
-          payment_provider:
-            | Database["public"]["Enums"]["payment_provider"]
-            | null
-          payment_split_completed: boolean | null
-          payment_split_validated_at: string | null
-          payout_date: string | null
-          payout_error_message: string | null
-          payout_retry_count: number | null
-          payout_status:
-            | Database["public"]["Enums"]["payout_status_enum"]
-            | null
-          pickup_location_id: string | null
-          pickup_location_lat: number | null
-          pickup_location_lng: number | null
-          platform_fee: number | null
-          platform_fee_collected: number | null
-          price_lock_token: string | null
-          price_locked_until: string | null
-          provider_collector_id: string | null
-          provider_split_payment_id: string | null
-          reauthorization_count: number | null
-          rejection_reason: string | null
-          rental_amount_cents: number | null
-          renter_confirmed_at: string | null
-          renter_confirmed_payment: boolean | null
-          renter_id: string
-          requires_revalidation: boolean | null
-          return_protocol_started_at: string | null
-          return_status: string | null
-          returned_at: string | null
-          reward_pool_contribution_cents: number | null
-          risk_snapshot_booking_id: string | null
-          risk_snapshot_date: string | null
-          risk_snapshot_id: string | null
-          service_fee: number | null
-          start_at: string
-          status: Database["public"]["Enums"]["booking_status"]
-          subscription_coverage_cents: number | null
-          subscription_id: string | null
-          subscription_tier_at_booking: string | null
-          subtotal: number | null
-          subtotal_cents: number | null
-          total_amount: number
-          total_cents: number | null
-          total_days: number | null
-          total_price: number | null
-          total_price_ars: number | null
-          updated_at: string
-          wallet_amount_cents: number | null
-          wallet_lock_id: string | null
-          wallet_status: string | null
-        }
-        SetofOptions: {
-          from: "*"
-          to: "bookings"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      process_booking_payout: { Args: { p_booking_id: string }; Returns: Json }
       process_booking_v2_timeouts: { Args: never; Returns: Json }
-      process_claim_charge: {
-        Args: {
-          p_booking_id: string
-          p_claim_id: string
-          p_damage_amount_cents: number
-          p_description?: string
-          p_performed_by?: string
-          p_renter_id: string
-        }
-        Returns: Json
-      }
+      process_claim_charge:
+        | {
+            Args: {
+              p_booking_id: string
+              p_claim_id: string
+              p_damage_amount_cents: number
+              p_description?: string
+              p_renter_id: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_booking_id: string
+              p_claim_id: string
+              p_damage_amount_cents: number
+              p_description?: string
+              p_performed_by?: string
+              p_renter_id: string
+            }
+            Returns: Json
+          }
       process_comodato_booking_payment: {
         Args: { p_booking_id: string }
         Returns: Json
@@ -29789,10 +12270,6 @@ export type Database = {
         Returns: Json
       }
       process_marketing_retries: { Args: never; Returns: undefined }
-      process_pending_payouts: {
-        Args: { p_batch_size?: number }
-        Returns: Json
-      }
       process_recovery_escalations: { Args: never; Returns: undefined }
       process_split_payment: {
         Args: { p_booking_id: string; p_total_amount: number }
@@ -29804,16 +12281,23 @@ export type Database = {
           split_payment_id: string
         }[]
       }
-      process_traffic_infraction: {
-        Args: { p_infraction_id: string }
+      process_subscription_expirations: { Args: never; Returns: undefined }
+      process_wallet_transaction: {
+        Args: {
+          p_amount_cents: number
+          p_category: string
+          p_description: string
+          p_idempotency_key?: string
+          p_reference_id?: string
+          p_type: string
+          p_user_id: string
+        }
         Returns: Json
       }
-      process_withdrawal:
-        | { Args: { p_request_id: string }; Returns: boolean }
-        | {
-            Args: { p_request_id: string; p_transfer_id: string }
-            Returns: Json
-          }
+      process_withdrawal: {
+        Args: { p_request_id: string; p_transfer_id: string }
+        Returns: Json
+      }
       publish_scheduled_campaigns: { Args: never; Returns: undefined }
       purchase_bonus_protector: {
         Args: { p_protection_level: number; p_user_id: string }
@@ -29837,33 +12321,20 @@ export type Database = {
         }
         Returns: string
       }
-      quote_booking:
-        | {
-            Args: {
-              p_car_id: string
-              p_end: string
-              p_promo?: string
-              p_start: string
-            }
-            Returns: {
-              discount: number
-              price_subtotal: number
-              service_fee: number
-              total: number
-            }[]
-          }
-        | {
-            Args: {
-              p_car_id: string
-              p_delivery_required?: boolean
-              p_end: string
-              p_promo_code?: string
-              p_start: string
-              p_user_lat?: number
-              p_user_lng?: number
-            }
-            Returns: Json
-          }
+      quote_booking: {
+        Args: {
+          p_car_id: string
+          p_end: string
+          p_promo?: string
+          p_start: string
+        }
+        Returns: {
+          discount: number
+          price_subtotal: number
+          service_fee: number
+          total: number
+        }[]
+      }
       recalculate_all_driver_scores: {
         Args: never
         Returns: {
@@ -29898,118 +12369,34 @@ export type Database = {
         }
         Returns: string
       }
-      record_fuel_level: {
-        Args: {
-          p_booking_id: string
-          p_fuel_level: number
-          p_is_checkout?: boolean
-          p_user_id: string
-        }
-        Returns: Json
-      }
-      record_health_check: {
-        Args: {
-          p_component: string
-          p_details?: Json
-          p_latency_ms?: number
-          p_status: string
-        }
-        Returns: string
-      }
-      record_rate_limit_request: {
-        Args: {
-          p_endpoint?: string
-          p_identifier: string
-          p_identifier_type?: string
-          p_window_seconds?: number
-        }
-        Returns: undefined
-      }
       record_telemetry: {
         Args: { p_booking_id: string; p_telemetry_data: Json }
         Returns: string
       }
-      record_vehicle_location: {
-        Args: {
-          p_accuracy?: number
-          p_altitude?: number
-          p_battery_level?: number
-          p_booking_id: string
-          p_heading?: number
-          p_is_charging?: boolean
-          p_latitude: number
-          p_longitude: number
-          p_network_type?: string
-          p_source?: string
-          p_speed?: number
-        }
-        Returns: Json
-      }
-      record_vehicle_location_v2: {
-        Args: {
-          p_accuracy?: number
-          p_altitude?: number
-          p_battery_level?: number
-          p_booking_id: string
-          p_device_id?: string
-          p_heading?: number
-          p_is_charging?: boolean
-          p_latitude: number
-          p_longitude: number
-          p_network_type?: string
-          p_source?: string
-          p_speed?: number
-        }
-        Returns: Json
-      }
       refresh_accounting_balances: { Args: never; Returns: undefined }
+      refresh_booking_stats_daily: { Args: never; Returns: undefined }
       refresh_marketing_metrics: { Args: never; Returns: undefined }
-      register_payment_split:
-        | {
-            Args: {
-              p_booking_id: string
-              p_currency?: string
-              p_mp_payment_id: string
-              p_total_amount_cents: number
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              p_booking_id: string
-              p_mercadopago_payment_id?: string
-              p_owner_amount: number
-              p_owner_collector_id: string
-              p_payment_id: string
-              p_platform_fee: number
-              p_total_amount: number
-            }
-            Returns: string
-          }
-      register_vehicle_return: {
+      register_comodato_payment: {
         Args: {
           p_booking_id: string
-          p_notes?: string
-          p_return_condition?: string
+          p_mercadopago_payment_id?: string
+          p_total_cents: number
         }
         Returns: Json
       }
-      reject_booking: {
-        Args: { p_booking_id: string; p_rejection_reason?: string }
-        Returns: Json
+      register_payment_split: {
+        Args: {
+          p_booking_id: string
+          p_currency?: string
+          p_mp_payment_id: string
+          p_total_amount_cents: number
+        }
+        Returns: string
       }
       release_advisory_lock: { Args: { p_lock_key: number }; Returns: boolean }
       release_advisory_lock_shared: {
         Args: { p_lock_key: number }
         Returns: boolean
-      }
-      release_expired_card_preauths: {
-        Args: never
-        Returns: {
-          intent_ids: string[]
-          released_count: number
-          total_amount_released: number
-        }[]
       }
       release_mp_preauth_order: {
         Args: { p_description: string; p_mp_order_id: string }
@@ -30020,59 +12407,7 @@ export type Database = {
           success: boolean
         }[]
       }
-      remove_from_waitlist: {
-        Args: { p_waitlist_id: string }
-        Returns: boolean
-      }
-      renew_user_credits: { Args: { p_user_id: string }; Returns: Json }
-      report_accident: {
-        Args: {
-          p_accident_date: string
-          p_booking_id: string
-          p_description: string
-          p_estimated_damage_cents?: number
-          p_evidence_urls?: string[]
-          p_location?: string
-          p_location_coords?: Json
-          p_police_report?: string
-          p_reporter_id: string
-        }
-        Returns: Json
-      }
-      report_owner_no_show: {
-        Args: { p_booking_id: string; p_renter_id: string }
-        Returns: Json
-      }
-      report_renter_no_show: {
-        Args: { p_booking_id: string; p_owner_id: string }
-        Returns: Json
-      }
-      report_traffic_infraction: {
-        Args: {
-          p_amount_cents: number
-          p_booking_id: string
-          p_description: string
-          p_evidence_urls?: string[]
-          p_infraction_date: string
-          p_owner_id: string
-          p_ticket_number?: string
-        }
-        Returns: Json
-      }
       request_booking:
-        | {
-            Args: {
-              p_car_id: string
-              p_end: string
-              p_payment_method?: string
-              p_renter_id: string
-              p_start: string
-            }
-            Returns: {
-              booking_id: string
-              status: string
-            }[]
-          }
         | {
             Args: {
               p_car_id: string
@@ -30090,30 +12425,22 @@ export type Database = {
         | {
             Args: {
               p_car_id: string
+              p_delivery_distance_km?: number
+              p_delivery_fee_cents?: number
               p_delivery_required?: boolean
+              p_distance_risk_tier?: string
+              p_driver_age?: number
               p_dropoff_lat?: number
               p_dropoff_lng?: number
-              p_dynamic_price_snapshot?: Json
               p_end: string
+              p_payment_method?: string
               p_pickup_lat?: number
               p_pickup_lng?: number
-              p_price_lock_token?: string
               p_start: string
-              p_use_dynamic_pricing?: boolean
+              p_total_price?: number
             }
-            Returns: {
-              booking_id: string
-              status: string
-            }[]
+            Returns: Json
           }
-      request_booking_extension: {
-        Args: {
-          p_additional_days: number
-          p_booking_id: string
-          p_renter_id: string
-        }
-        Returns: Json
-      }
       request_immobilizer_command: {
         Args: {
           p_booking_id?: string
@@ -30122,10 +12449,6 @@ export type Database = {
           p_reason: string
         }
         Returns: Json
-      }
-      reset_face_verification_attempts: {
-        Args: { p_admin_id: string; p_reason?: string; p_user_id: string }
-        Returns: boolean
       }
       reset_marketing_daily_counters: { Args: never; Returns: undefined }
       resolve_dispute: {
@@ -30139,30 +12462,20 @@ export type Database = {
         }
         Returns: Json
       }
-      resolve_dlq_item: {
-        Args: { p_id: string; p_notes?: string; p_resolved_by?: string }
-        Returns: boolean
+      retry_fipe_validation_batch: {
+        Args: { p_delay_seconds?: number; p_limit?: number }
+        Returns: {
+          brand: string
+          car_id: string
+          error_message: string
+          model: string
+          success: boolean
+          value_usd: number
+          year: number
+        }[]
       }
-      resolve_infraction_dispute: {
-        Args: {
-          p_admin_id: string
-          p_favor_renter: boolean
-          p_infraction_id: string
-          p_resolution_notes?: string
-        }
-        Returns: Json
-      }
-      resolve_payment_failure: {
-        Args: { p_payment_id: string }
-        Returns: boolean
-      }
-      respond_to_extension: {
-        Args: {
-          p_approve: boolean
-          p_extension_id: string
-          p_owner_id: string
-          p_reject_reason?: string
-        }
+      retry_fipe_validation_for_car: {
+        Args: { p_car_id: string }
         Returns: Json
       }
       rotate_encryption_key: { Args: never; Returns: string }
@@ -30213,587 +12526,18 @@ export type Database = {
       send_optimization_tips: { Args: never; Returns: undefined }
       send_pending_requests_reminder: { Args: never; Returns: undefined }
       send_renter_tips: { Args: never; Returns: undefined }
+      send_system_message: {
+        Args: { p_body: string; p_booking_id: string; p_recipient_id: string }
+        Returns: string
+      }
       set_primary_goal: { Args: { p_goal: string }; Returns: Json }
-      st_3dclosestpoint: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_3ddistance: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: number
-      }
-      st_3dintersects: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      st_3dlongestline: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_3dmakebox: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_3dmaxdistance: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: number
-      }
-      st_3dshortestline: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_addpoint: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_angle:
-        | { Args: { line1: unknown; line2: unknown }; Returns: number }
-        | {
-            Args: { pt1: unknown; pt2: unknown; pt3: unknown; pt4?: unknown }
-            Returns: number
-          }
-      st_area:
-        | { Args: { geog: unknown; use_spheroid?: boolean }; Returns: number }
-        | { Args: { "": string }; Returns: number }
-      st_asencodedpolyline: {
-        Args: { geom: unknown; nprecision?: number }
-        Returns: string
-      }
-      st_asewkt: { Args: { "": string }; Returns: string }
-      st_asgeojson:
-        | {
-            Args: { geog: unknown; maxdecimaldigits?: number; options?: number }
-            Returns: string
-          }
-        | {
-            Args: { geom: unknown; maxdecimaldigits?: number; options?: number }
-            Returns: string
-          }
-        | {
-            Args: {
-              geom_column?: string
-              maxdecimaldigits?: number
-              pretty_bool?: boolean
-              r: Record<string, unknown>
-            }
-            Returns: string
-          }
-        | { Args: { "": string }; Returns: string }
-      st_asgml:
-        | {
-            Args: {
-              geog: unknown
-              id?: string
-              maxdecimaldigits?: number
-              nprefix?: string
-              options?: number
-            }
-            Returns: string
-          }
-        | {
-            Args: { geom: unknown; maxdecimaldigits?: number; options?: number }
-            Returns: string
-          }
-        | { Args: { "": string }; Returns: string }
-        | {
-            Args: {
-              geog: unknown
-              id?: string
-              maxdecimaldigits?: number
-              nprefix?: string
-              options?: number
-              version: number
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              geom: unknown
-              id?: string
-              maxdecimaldigits?: number
-              nprefix?: string
-              options?: number
-              version: number
-            }
-            Returns: string
-          }
-      st_askml:
-        | {
-            Args: { geog: unknown; maxdecimaldigits?: number; nprefix?: string }
-            Returns: string
-          }
-        | {
-            Args: { geom: unknown; maxdecimaldigits?: number; nprefix?: string }
-            Returns: string
-          }
-        | { Args: { "": string }; Returns: string }
-      st_aslatlontext: {
-        Args: { geom: unknown; tmpl?: string }
-        Returns: string
-      }
-      st_asmarc21: { Args: { format?: string; geom: unknown }; Returns: string }
-      st_asmvtgeom: {
+      simulate_insurance_quote: {
         Args: {
-          bounds: unknown
-          buffer?: number
-          clip_geom?: boolean
-          extent?: number
-          geom: unknown
+          p_rental_days?: number
+          p_renter_reputation_score?: number
+          p_vehicle_value_usd: number
         }
-        Returns: unknown
-      }
-      st_assvg:
-        | {
-            Args: { geog: unknown; maxdecimaldigits?: number; rel?: number }
-            Returns: string
-          }
-        | {
-            Args: { geom: unknown; maxdecimaldigits?: number; rel?: number }
-            Returns: string
-          }
-        | { Args: { "": string }; Returns: string }
-      st_astext: { Args: { "": string }; Returns: string }
-      st_astwkb:
-        | {
-            Args: {
-              geom: unknown
-              prec?: number
-              prec_m?: number
-              prec_z?: number
-              with_boxes?: boolean
-              with_sizes?: boolean
-            }
-            Returns: string
-          }
-        | {
-            Args: {
-              geom: unknown[]
-              ids: number[]
-              prec?: number
-              prec_m?: number
-              prec_z?: number
-              with_boxes?: boolean
-              with_sizes?: boolean
-            }
-            Returns: string
-          }
-      st_asx3d: {
-        Args: { geom: unknown; maxdecimaldigits?: number; options?: number }
-        Returns: string
-      }
-      st_azimuth:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: number }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: number }
-      st_boundingdiagonal: {
-        Args: { fits?: boolean; geom: unknown }
-        Returns: unknown
-      }
-      st_buffer:
-        | {
-            Args: { geom: unknown; options?: string; radius: number }
-            Returns: unknown
-          }
-        | {
-            Args: { geom: unknown; quadsegs: number; radius: number }
-            Returns: unknown
-          }
-      st_centroid: { Args: { "": string }; Returns: unknown }
-      st_clipbybox2d: {
-        Args: { box: unknown; geom: unknown }
-        Returns: unknown
-      }
-      st_closestpoint: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_collect: { Args: { geom1: unknown; geom2: unknown }; Returns: unknown }
-      st_concavehull: {
-        Args: {
-          param_allow_holes?: boolean
-          param_geom: unknown
-          param_pctconvex: number
-        }
-        Returns: unknown
-      }
-      st_contains: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      st_containsproperly: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      st_coorddim: { Args: { geometry: unknown }; Returns: number }
-      st_coveredby:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      st_covers:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      st_crosses: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      st_curvetoline: {
-        Args: { flags?: number; geom: unknown; tol?: number; toltype?: number }
-        Returns: unknown
-      }
-      st_delaunaytriangles: {
-        Args: { flags?: number; g1: unknown; tolerance?: number }
-        Returns: unknown
-      }
-      st_difference: {
-        Args: { geom1: unknown; geom2: unknown; gridsize?: number }
-        Returns: unknown
-      }
-      st_disjoint: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      st_distance:
-        | {
-            Args: { geog1: unknown; geog2: unknown; use_spheroid?: boolean }
-            Returns: number
-          }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: number }
-      st_distancesphere:
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: number }
-        | {
-            Args: { geom1: unknown; geom2: unknown; radius: number }
-            Returns: number
-          }
-      st_distancespheroid: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: number
-      }
-      st_dwithin: {
-        Args: {
-          geog1: unknown
-          geog2: unknown
-          tolerance: number
-          use_spheroid?: boolean
-        }
-        Returns: boolean
-      }
-      st_equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      st_expand:
-        | { Args: { box: unknown; dx: number; dy: number }; Returns: unknown }
-        | {
-            Args: { box: unknown; dx: number; dy: number; dz?: number }
-            Returns: unknown
-          }
-        | {
-            Args: {
-              dm?: number
-              dx: number
-              dy: number
-              dz?: number
-              geom: unknown
-            }
-            Returns: unknown
-          }
-      st_force3d: { Args: { geom: unknown; zvalue?: number }; Returns: unknown }
-      st_force3dm: {
-        Args: { geom: unknown; mvalue?: number }
-        Returns: unknown
-      }
-      st_force3dz: {
-        Args: { geom: unknown; zvalue?: number }
-        Returns: unknown
-      }
-      st_force4d: {
-        Args: { geom: unknown; mvalue?: number; zvalue?: number }
-        Returns: unknown
-      }
-      st_generatepoints:
-        | { Args: { area: unknown; npoints: number }; Returns: unknown }
-        | {
-            Args: { area: unknown; npoints: number; seed: number }
-            Returns: unknown
-          }
-      st_geogfromtext: { Args: { "": string }; Returns: unknown }
-      st_geographyfromtext: { Args: { "": string }; Returns: unknown }
-      st_geohash:
-        | { Args: { geog: unknown; maxchars?: number }; Returns: string }
-        | { Args: { geom: unknown; maxchars?: number }; Returns: string }
-      st_geomcollfromtext: { Args: { "": string }; Returns: unknown }
-      st_geometricmedian: {
-        Args: {
-          fail_if_not_converged?: boolean
-          g: unknown
-          max_iter?: number
-          tolerance?: number
-        }
-        Returns: unknown
-      }
-      st_geometryfromtext: { Args: { "": string }; Returns: unknown }
-      st_geomfromewkt: { Args: { "": string }; Returns: unknown }
-      st_geomfromgeojson:
-        | { Args: { "": Json }; Returns: unknown }
-        | { Args: { "": Json }; Returns: unknown }
-        | { Args: { "": string }; Returns: unknown }
-      st_geomfromgml: { Args: { "": string }; Returns: unknown }
-      st_geomfromkml: { Args: { "": string }; Returns: unknown }
-      st_geomfrommarc21: { Args: { marc21xml: string }; Returns: unknown }
-      st_geomfromtext: { Args: { "": string }; Returns: unknown }
-      st_gmltosql: { Args: { "": string }; Returns: unknown }
-      st_hasarc: { Args: { geometry: unknown }; Returns: boolean }
-      st_hausdorffdistance: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: number
-      }
-      st_hexagon: {
-        Args: { cell_i: number; cell_j: number; origin?: unknown; size: number }
-        Returns: unknown
-      }
-      st_hexagongrid: {
-        Args: { bounds: unknown; size: number }
-        Returns: Record<string, unknown>[]
-      }
-      st_interpolatepoint: {
-        Args: { line: unknown; point: unknown }
-        Returns: number
-      }
-      st_intersection: {
-        Args: { geom1: unknown; geom2: unknown; gridsize?: number }
-        Returns: unknown
-      }
-      st_intersects:
-        | { Args: { geog1: unknown; geog2: unknown }; Returns: boolean }
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      st_isvaliddetail: {
-        Args: { flags?: number; geom: unknown }
-        Returns: Database["public"]["CompositeTypes"]["valid_detail"]
-        SetofOptions: {
-          from: "*"
-          to: "valid_detail"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      st_length:
-        | { Args: { geog: unknown; use_spheroid?: boolean }; Returns: number }
-        | { Args: { "": string }; Returns: number }
-      st_letters: { Args: { font?: Json; letters: string }; Returns: unknown }
-      st_linecrossingdirection: {
-        Args: { line1: unknown; line2: unknown }
-        Returns: number
-      }
-      st_linefromencodedpolyline: {
-        Args: { nprecision?: number; txtin: string }
-        Returns: unknown
-      }
-      st_linefromtext: { Args: { "": string }; Returns: unknown }
-      st_linelocatepoint: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: number
-      }
-      st_linetocurve: { Args: { geometry: unknown }; Returns: unknown }
-      st_locatealong: {
-        Args: { geometry: unknown; leftrightoffset?: number; measure: number }
-        Returns: unknown
-      }
-      st_locatebetween: {
-        Args: {
-          frommeasure: number
-          geometry: unknown
-          leftrightoffset?: number
-          tomeasure: number
-        }
-        Returns: unknown
-      }
-      st_locatebetweenelevations: {
-        Args: { fromelevation: number; geometry: unknown; toelevation: number }
-        Returns: unknown
-      }
-      st_longestline: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_makebox2d: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_makeline: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_makevalid: {
-        Args: { geom: unknown; params: string }
-        Returns: unknown
-      }
-      st_maxdistance: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: number
-      }
-      st_minimumboundingcircle: {
-        Args: { inputgeom: unknown; segs_per_quarter?: number }
-        Returns: unknown
-      }
-      st_mlinefromtext: { Args: { "": string }; Returns: unknown }
-      st_mpointfromtext: { Args: { "": string }; Returns: unknown }
-      st_mpolyfromtext: { Args: { "": string }; Returns: unknown }
-      st_multilinestringfromtext: { Args: { "": string }; Returns: unknown }
-      st_multipointfromtext: { Args: { "": string }; Returns: unknown }
-      st_multipolygonfromtext: { Args: { "": string }; Returns: unknown }
-      st_node: { Args: { g: unknown }; Returns: unknown }
-      st_normalize: { Args: { geom: unknown }; Returns: unknown }
-      st_offsetcurve: {
-        Args: { distance: number; line: unknown; params?: string }
-        Returns: unknown
-      }
-      st_orderingequals: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      st_overlaps: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: boolean
-      }
-      st_perimeter: {
-        Args: { geog: unknown; use_spheroid?: boolean }
-        Returns: number
-      }
-      st_pointfromtext: { Args: { "": string }; Returns: unknown }
-      st_pointm: {
-        Args: {
-          mcoordinate: number
-          srid?: number
-          xcoordinate: number
-          ycoordinate: number
-        }
-        Returns: unknown
-      }
-      st_pointz: {
-        Args: {
-          srid?: number
-          xcoordinate: number
-          ycoordinate: number
-          zcoordinate: number
-        }
-        Returns: unknown
-      }
-      st_pointzm: {
-        Args: {
-          mcoordinate: number
-          srid?: number
-          xcoordinate: number
-          ycoordinate: number
-          zcoordinate: number
-        }
-        Returns: unknown
-      }
-      st_polyfromtext: { Args: { "": string }; Returns: unknown }
-      st_polygonfromtext: { Args: { "": string }; Returns: unknown }
-      st_project: {
-        Args: { azimuth: number; distance: number; geog: unknown }
-        Returns: unknown
-      }
-      st_quantizecoordinates: {
-        Args: {
-          g: unknown
-          prec_m?: number
-          prec_x: number
-          prec_y?: number
-          prec_z?: number
-        }
-        Returns: unknown
-      }
-      st_reduceprecision: {
-        Args: { geom: unknown; gridsize: number }
-        Returns: unknown
-      }
-      st_relate: { Args: { geom1: unknown; geom2: unknown }; Returns: string }
-      st_removerepeatedpoints: {
-        Args: { geom: unknown; tolerance?: number }
-        Returns: unknown
-      }
-      st_segmentize: {
-        Args: { geog: unknown; max_segment_length: number }
-        Returns: unknown
-      }
-      st_setsrid:
-        | { Args: { geog: unknown; srid: number }; Returns: unknown }
-        | { Args: { geom: unknown; srid: number }; Returns: unknown }
-      st_sharedpaths: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_shortestline: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_simplifypolygonhull: {
-        Args: { geom: unknown; is_outer?: boolean; vertex_fraction: number }
-        Returns: unknown
-      }
-      st_split: { Args: { geom1: unknown; geom2: unknown }; Returns: unknown }
-      st_square: {
-        Args: { cell_i: number; cell_j: number; origin?: unknown; size: number }
-        Returns: unknown
-      }
-      st_squaregrid: {
-        Args: { bounds: unknown; size: number }
-        Returns: Record<string, unknown>[]
-      }
-      st_srid:
-        | { Args: { geog: unknown }; Returns: number }
-        | { Args: { geom: unknown }; Returns: number }
-      st_subdivide: {
-        Args: { geom: unknown; gridsize?: number; maxvertices?: number }
-        Returns: unknown[]
-      }
-      st_swapordinates: {
-        Args: { geom: unknown; ords: unknown }
-        Returns: unknown
-      }
-      st_symdifference: {
-        Args: { geom1: unknown; geom2: unknown; gridsize?: number }
-        Returns: unknown
-      }
-      st_symmetricdifference: {
-        Args: { geom1: unknown; geom2: unknown }
-        Returns: unknown
-      }
-      st_tileenvelope: {
-        Args: {
-          bounds?: unknown
-          margin?: number
-          x: number
-          y: number
-          zoom: number
-        }
-        Returns: unknown
-      }
-      st_touches: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      st_transform:
-        | {
-            Args: { from_proj: string; geom: unknown; to_proj: string }
-            Returns: unknown
-          }
-        | {
-            Args: { from_proj: string; geom: unknown; to_srid: number }
-            Returns: unknown
-          }
-        | { Args: { geom: unknown; to_proj: string }; Returns: unknown }
-      st_triangulatepolygon: { Args: { g1: unknown }; Returns: unknown }
-      st_union:
-        | { Args: { geom1: unknown; geom2: unknown }; Returns: unknown }
-        | {
-            Args: { geom1: unknown; geom2: unknown; gridsize: number }
-            Returns: unknown
-          }
-      st_voronoilines: {
-        Args: { extend_to?: unknown; g1: unknown; tolerance?: number }
-        Returns: unknown
-      }
-      st_voronoipolygons: {
-        Args: { extend_to?: unknown; g1: unknown; tolerance?: number }
-        Returns: unknown
-      }
-      st_within: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      st_wkbtosql: { Args: { wkb: string }; Returns: unknown }
-      st_wkttosql: { Args: { "": string }; Returns: unknown }
-      st_wrapx: {
-        Args: { geom: unknown; move: number; wrap: number }
-        Returns: unknown
+        Returns: Json
       }
       start_location_tracking: {
         Args: { p_booking_id: string; p_tracking_type: string }
@@ -30807,8 +12551,6 @@ export type Database = {
         }
         Returns: string
       }
-      start_return_protocol: { Args: { p_booking_id: string }; Returns: Json }
-      submit_claim: { Args: { p_claim_id: string }; Returns: Json }
       sync_binance_rates_direct: { Args: never; Returns: Json }
       sync_binance_rates_via_edge_function: { Args: never; Returns: undefined }
       track_bio_link_click: { Args: { link_id: string }; Returns: undefined }
@@ -30825,14 +12567,6 @@ export type Database = {
       track_hook_impression: {
         Args: { p_variant_id: string }
         Returns: undefined
-      }
-      track_payment_failure: {
-        Args: {
-          p_booking_id: string
-          p_failure_reason: string
-          p_payment_id: string
-        }
-        Returns: string
       }
       transfer_profit_to_equity: {
         Args: { p_period: string }
@@ -30854,37 +12588,7 @@ export type Database = {
           unlocked_count: number
         }[]
       }
-      unlockrows: { Args: { "": string }; Returns: number }
-      update_accident_status: {
-        Args: {
-          p_accident_id: string
-          p_admin_id: string
-          p_fault_percentage?: number
-          p_insurance_claim_id?: string
-          p_new_status: string
-          p_notes?: string
-          p_renter_at_fault?: boolean
-        }
-        Returns: Json
-      }
-      update_all_demand_snapshots: { Args: never; Returns: undefined }
       update_authority_metrics: { Args: never; Returns: undefined }
-      update_binance_rates: { Args: never; Returns: Json }
-      update_booking_payout: {
-        Args: {
-          p_booking_id: string
-          p_mp_split_id?: string
-          p_owner_amount: number
-          p_platform_fee: number
-          p_status?: Database["public"]["Enums"]["payout_status_enum"]
-        }
-        Returns: undefined
-      }
-      update_car_stats: { Args: { p_car_id: string }; Returns: undefined }
-      update_demand_snapshot: {
-        Args: { p_region_id: string }
-        Returns: undefined
-      }
       update_driver_class_on_event: {
         Args: {
           p_claim_with_fault: boolean
@@ -30900,25 +12604,6 @@ export type Database = {
       update_driver_risk_score: {
         Args: { p_user_id: string }
         Returns: undefined
-      }
-      update_ev_protocol_checklist: {
-        Args: {
-          p_answer: Json
-          p_item_id: string
-          p_protocol_id: string
-          p_section_id: string
-        }
-        Returns: Json
-      }
-      update_geofence: {
-        Args: {
-          p_geofence_id: string
-          p_is_active?: boolean
-          p_max_speed_kmh?: number
-          p_name?: string
-          p_radius_meters?: number
-        }
-        Returns: boolean
       }
       update_location: {
         Args: {
@@ -30958,27 +12643,22 @@ export type Database = {
         }
         Returns: Json
       }
-      update_profile_with_encryption: {
-        Args: { p_updates: Json; p_user_id: string }
-        Returns: Json
-      }
       update_user_cars_payment_status: {
         Args: { p_user_id: string }
-        Returns: undefined
+        Returns: number
       }
       update_user_stats_v2_for_booking: {
         Args: { p_booking_id: string }
         Returns: undefined
       }
-      updategeometrysrid: {
+      update_webhook_retry_attempt: {
         Args: {
-          catalogn_name: string
-          column_name: string
-          new_srid_in: number
-          schema_name: string
-          table_name: string
+          p_error_details?: Json
+          p_error_message?: string
+          p_queue_id: string
+          p_success: boolean
         }
-        Returns: string
+        Returns: undefined
       }
       upgrade_subscription_with_wallet: {
         Args: {
@@ -31001,11 +12681,6 @@ export type Database = {
       }
       user_can_receive_payments: {
         Args: { p_user_id: string }
-        Returns: boolean
-      }
-      user_can_review: { Args: { _booking: string }; Returns: boolean }
-      user_is_member_of_org: {
-        Args: { p_org_id: string; p_user_id: string }
         Returns: boolean
       }
       validate_and_confirm_split_payment: {
@@ -31040,32 +12715,6 @@ export type Database = {
         }
         Returns: Json
       }
-      validate_contract_clauses_accepted: {
-        Args: { p_clauses_accepted: Json }
-        Returns: boolean
-      }
-      validate_contract_clauses_ev: {
-        Args: { p_clauses: Json; p_is_ev_vehicle?: boolean }
-        Returns: {
-          is_valid: boolean
-          missing_clauses: string[]
-        }[]
-      }
-      validate_ev_claim_data: {
-        Args: { p_claim_type: string; p_ev_data: Json }
-        Returns: {
-          is_valid: boolean
-          validation_message: string
-        }[]
-      }
-      validate_mercadopago_oauth: {
-        Args: { p_code: string; p_user_id: string }
-        Returns: boolean
-      }
-      validate_subscription_for_vehicle: {
-        Args: { p_user_id: string; p_vehicle_value_usd: number }
-        Returns: Json
-      }
       verify_accounting_integrity: {
         Args: never
         Returns: {
@@ -31074,28 +12723,14 @@ export type Database = {
           test_name: string
         }[]
       }
-      verify_bank_account:
-        | { Args: { p_account_id: string }; Returns: boolean }
-        | {
-            Args: { p_account_number: string; p_user_id: string }
-            Returns: Json
-          }
-      verify_trace_chain: { Args: { p_booking_id: string }; Returns: Json }
-      wallet_charge_rental:
-        | {
-            Args: { p_amount: number; p_booking_id: string; p_user_id: string }
-            Returns: boolean
-          }
-        | {
-            Args: {
-              p_amount_cents: number
-              p_booking_id: string
-              p_meta?: Json
-              p_ref: string
-              p_user_id: string
-            }
-            Returns: Json
-          }
+      verify_bank_account: {
+        Args: { p_account_number: string; p_user_id: string }
+        Returns: Json
+      }
+      verify_phone_otp_code: {
+        Args: { p_code: string; p_phone: string }
+        Returns: Json
+      }
       wallet_charge_subscription: {
         Args: {
           p_amount_cents: number
@@ -31130,7 +12765,7 @@ export type Database = {
         }
         Returns: {
           debited_amount_usd: number
-          error: string
+          error_message: string
           remaining_balance_usd: number
           success: boolean
           transaction_id: string
@@ -31147,6 +12782,14 @@ export type Database = {
         }
         Returns: Json
       }
+      wallet_deposit: {
+        Args: {
+          p_amount_cents: number
+          p_description: string
+          p_ref_id?: string
+        }
+        Returns: Json
+      }
       wallet_deposit_funds_admin: {
         Args: {
           p_amount_cents: number
@@ -31160,76 +12803,47 @@ export type Database = {
           transaction_id: string
         }[]
       }
-      wallet_deposit_ledger:
-        | {
-            Args: { p_user_id: string }
-            Returns: {
-              amount: number
-              created_at: string
-              id: string
-              status: string
-            }[]
-          }
-        | {
-            Args: {
-              p_amount_cents: number
-              p_meta?: Json
-              p_provider?: string
-              p_ref: string
-              p_user_id: string
-            }
-            Returns: Json
-          }
-      wallet_get_autorentar_credit_info: {
+      wallet_deposit_ledger: {
+        Args: {
+          p_amount_cents: number
+          p_meta?: Json
+          p_provider?: string
+          p_ref: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
+      wallet_get_balance: {
         Args: { p_user_id?: string }
         Returns: {
-          autorentar_credit_balance_ars: number
-          autorentar_credit_balance_cents: number
-          days_since_activity: number
-          last_credit_activity: string
-          total_credit_breakage_cents: number
-          total_credit_consumed_cents: number
-          total_credit_issued_cents: number
+          available_balance: number
+          currency: string
+          locked_balance: number
+          total_balance: number
           user_id: string
         }[]
       }
-      wallet_get_balance:
-        | {
-            Args: never
-            Returns: {
-              autorentar_credit_balance: number
-              available_balance: number
-              cash_deposit_balance: number
-              currency: string
-              locked_balance: number
-              non_withdrawable_balance: number
-              protected_credit_balance: number
-              total_balance: number
-              transferable_balance: number
-              user_id: string
-              withdrawable_balance: number
-            }[]
-          }
-        | {
-            Args: { p_user_id: string }
-            Returns: {
-              autorentar_credit_balance: number
-              available_balance: number
-              cash_deposit_balance: number
-              currency: string
-              locked_balance: number
-              total_balance: number
-            }[]
-          }
-      wallet_initiate_deposit:
-        | {
-            Args: { p_amount: number; p_provider: string; p_user_id: string }
-            Returns: string
-          }
-        | {
-            Args: { p_amount: number; p_currency: string; p_user_id: string }
-            Returns: string
-          }
+      wallet_get_balance_with_lock: {
+        Args: never
+        Returns: {
+          autorentar_credit_balance: number
+          available_balance: number
+          cash_deposit_balance: number
+          locked_balance: number
+          protected_credit_balance: number
+          total_balance: number
+          transferable_balance: number
+          withdrawable_balance: number
+        }[]
+      }
+      wallet_hold_funds: {
+        Args: { p_amount_cents: number; p_booking_id: string }
+        Returns: Json
+      }
+      wallet_initiate_deposit: {
+        Args: { p_amount: number; p_provider?: string; p_user_id: string }
+        Returns: string
+      }
       wallet_lock_funds:
         | {
             Args: {
@@ -31249,25 +12863,6 @@ export type Database = {
             Args: { p_amount_cents: number; p_booking_id: string }
             Returns: string
           }
-        | {
-            Args: {
-              p_amount: number
-              p_reference_id: string
-              p_reference_type: string
-              p_user_id: string
-            }
-            Returns: string
-          }
-        | { Args: { p_amount: number; p_user_id: string }; Returns: boolean }
-      wallet_lock_funds_with_expiration: {
-        Args: {
-          p_amount_cents: number
-          p_booking_id: string
-          p_expires_in_days?: number
-          p_lock_type?: string
-        }
-        Returns: string
-      }
       wallet_lock_rental_and_deposit: {
         Args: {
           p_booking_id: string
@@ -31284,62 +12879,34 @@ export type Database = {
           total_locked: number
         }[]
       }
-      wallet_refund:
-        | {
-            Args: { p_reason: string; p_transaction_id: string }
-            Returns: boolean
-          }
-        | {
-            Args: {
-              p_amount_cents: number
-              p_meta?: Json
-              p_original_transaction_id: string
-              p_reason?: string
-              p_ref: string
-              p_user_id: string
-            }
-            Returns: Json
-          }
-      wallet_transfer: {
+      wallet_record_rental_payment: {
         Args: {
           p_amount_cents: number
-          p_from_user: string
+          p_booking_id: string
           p_meta?: Json
+          p_owner_id: string
           p_ref: string
-          p_to_user: string
         }
+        Returns: undefined
+      }
+      wallet_release_funds: {
+        Args: { p_amount_cents: number; p_booking_id: string }
         Returns: Json
       }
-      wallet_transfer_to_owner:
-        | { Args: { p_amount: number; p_booking_id: string }; Returns: boolean }
-        | {
-            Args: {
-              p_booking_id: string
-              p_meta?: Json
-              p_owner_id: string
-              p_platform_fee_cents: number
-              p_ref: string
-              p_rental_amount_cents: number
-              p_renter_id: string
-            }
-            Returns: Json
-          }
-      wallet_unlock_funds:
-        | { Args: { p_amount: number; p_user_id: string }; Returns: boolean }
-        | {
-            Args: { p_reference_id: string; p_user_id: string }
-            Returns: boolean
-          }
-      webhook_to_dlq: {
+      wallet_request_topup: {
         Args: {
-          p_error_code?: string
-          p_error_message?: string
-          p_event_id: string
-          p_headers?: Json
-          p_payload: Json
-          p_webhook_type: string
+          p_amount_needed_usd: number
+          p_booking_id: string
+          p_claim_id: string
+          p_description?: string
         }
-        Returns: string
+        Returns: {
+          amount_requested_usd: number
+          error_message: string
+          request_id: string
+          status: string
+          success: boolean
+        }[]
       }
       whatsapp_debounce_check: {
         Args: { p_phone: string; p_timestamp: number }
@@ -31351,47 +12918,26 @@ export type Database = {
       }
     }
     Enums: {
-      accident_status:
-        | "reported"
-        | "under_review"
-        | "insurance_filed"
-        | "resolved"
-        | "closed"
       admin_role: "super_admin" | "operations" | "support" | "finance"
-      alert_category:
-        | "geofence_exit"
-        | "geofence_enter"
-        | "speed_exceeded"
-        | "late_return"
-        | "connection_lost"
-        | "battery_low"
-        | "device_tamper"
-      booking_cancelled_by_role: "renter" | "owner" | "system" | "admin"
       booking_status:
-        | "pending_payment"
         | "pending"
-        | "pending_approval"
         | "confirmed"
         | "in_progress"
-        | "pending_review"
-        | "disputed"
         | "completed"
         | "cancelled"
-        | "no_show"
-        | "expired"
-        | "cancelled_renter"
         | "cancelled_owner"
-        | "cancelled_system"
-        | "rejected"
-        | "resolved"
-        | "pending_dispute_resolution"
+        | "cancelled_renter"
+        | "pending_return"
+        | "dispute"
         | "payment_validation_failed"
         | "returned"
         | "inspected_good"
         | "damage_reported"
-      bounty_status: "ACTIVE" | "PAUSED" | "CLAIMED" | "EXPIRED" | "CANCELLED"
+        | "disputed"
+        | "pending_payment"
+        | "pending_approval"
       cancel_policy: "flex" | "moderate" | "strict"
-      car_status: "draft" | "pending" | "active" | "suspended" | "deleted"
+      car_status: "draft" | "active" | "paused" | "deleted"
       claim_status:
         | "draft"
         | "submitted"
@@ -31423,12 +12969,7 @@ export type Database = {
         | "vehicle_registration"
         | "vehicle_insurance"
         | "criminal_record"
-      infraction_status:
-        | "pending"
-        | "accepted"
-        | "disputed"
-        | "charged"
-        | "dismissed"
+      fuel_type: "nafta" | "gasoil" | "gnc" | "electrico" | "hibrido"
       kyc_status: "not_started" | "pending" | "verified" | "rejected"
       notification_type:
         | "new_booking_for_owner"
@@ -31439,34 +12980,11 @@ export type Database = {
         | "payout_successful"
         | "inspection_reminder"
         | "generic_announcement"
-        | "mp_onboarding_required"
-        | "booking_reminder_24h"
-        | "booking_reminder_2h"
-        | "document_expiry_license"
-        | "owner_inactive_reminder"
-        | "optimization_tip"
-        | "booking_ended_review"
-        | "monthly_report"
-        | "welcome"
-        | "verification_approved"
-        | "verification_rejected"
-        | "nearby_cars"
-        | "car_views_milestone"
-        | "car_recommendation"
-        | "renter_tip"
-        | "price_drop_alert"
-        | "favorite_car_available"
+        | "protector_expiring_soon"
+        | "protector_expiring_tomorrow"
+        | "protector_expired"
         | "pending_requests_reminder"
       onboarding_status: "incomplete" | "complete" | "skipped"
-      op_priority: "NORMAL" | "HIGH" | "CRITICAL"
-      op_status:
-        | "PENDING_DISPATCH"
-        | "EN_ROUTE"
-        | "ON_SITE"
-        | "SECURED"
-        | "HANDOVER_POLICE"
-        | "COMPLETED"
-        | "FAILED"
       payment_event_type:
         | "payment_initiated"
         | "payment_processing"
@@ -31505,12 +13023,6 @@ export type Database = {
         | "rejected"
         | "refunded"
         | "cancelled"
-      payout_status_enum:
-        | "pending"
-        | "processing"
-        | "completed"
-        | "failed"
-        | "manual_review"
       recovery_status:
         | "normal"
         | "grace_period"
@@ -31520,36 +13032,21 @@ export type Database = {
         | "recovery_active"
         | "recovered"
         | "claim_filed"
-      security_device_type:
-        | "AIRTAG"
-        | "SMARTTAG"
-        | "GPS_HARDWIRED"
-        | "OBD_KILLSWITCH"
-        | "LOJACK"
       subscription_status:
         | "active"
         | "inactive"
         | "depleted"
         | "expired"
         | "cancelled"
-        | "upgraded"
-      subscription_tier: "club_standard" | "club_black" | "club_luxury"
-      ticket_category:
-        | "booking_issue"
-        | "payment_issue"
-        | "vehicle_issue"
-        | "account_issue"
-        | "verification_issue"
-        | "technical_issue"
-        | "suggestion"
-        | "other"
-      ticket_status:
-        | "open"
-        | "in_progress"
-        | "waiting_user"
-        | "resolved"
-        | "closed"
-      ticket_urgency: "low" | "medium" | "high" | "critical"
+      subscription_tier: "club_standard" | "club_black"
+      transmission_type: "manual" | "automatico"
+      vehicle_tier:
+        | "starter"
+        | "economy"
+        | "standard"
+        | "silver"
+        | "premium"
+        | "luxury"
       wallet_tx_status: "pending" | "completed" | "failed" | "cancelled"
       wallet_tx_type:
         | "deposit"
@@ -31562,15 +13059,7 @@ export type Database = {
         | "transfer_out"
     }
     CompositeTypes: {
-      geometry_dump: {
-        path: number[] | null
-        geom: unknown
-      }
-      valid_detail: {
-        valid: boolean | null
-        reason: string | null
-        location: unknown
-      }
+      [_ in never]: never
     }
   }
 }
@@ -31695,50 +13184,27 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      accident_status: [
-        "reported",
-        "under_review",
-        "insurance_filed",
-        "resolved",
-        "closed",
-      ],
       admin_role: ["super_admin", "operations", "support", "finance"],
-      alert_category: [
-        "geofence_exit",
-        "geofence_enter",
-        "speed_exceeded",
-        "late_return",
-        "connection_lost",
-        "battery_low",
-        "device_tamper",
-      ],
-      booking_cancelled_by_role: ["renter", "owner", "system", "admin"],
       booking_status: [
-        "pending_payment",
         "pending",
-        "pending_approval",
         "confirmed",
         "in_progress",
-        "pending_review",
-        "disputed",
         "completed",
         "cancelled",
-        "no_show",
-        "expired",
-        "cancelled_renter",
         "cancelled_owner",
-        "cancelled_system",
-        "rejected",
-        "resolved",
-        "pending_dispute_resolution",
+        "cancelled_renter",
+        "pending_return",
+        "dispute",
         "payment_validation_failed",
         "returned",
         "inspected_good",
         "damage_reported",
+        "disputed",
+        "pending_payment",
+        "pending_approval",
       ],
-      bounty_status: ["ACTIVE", "PAUSED", "CLAIMED", "EXPIRED", "CANCELLED"],
       cancel_policy: ["flex", "moderate", "strict"],
-      car_status: ["draft", "pending", "active", "suspended", "deleted"],
+      car_status: ["draft", "active", "paused", "deleted"],
       claim_status: [
         "draft",
         "submitted",
@@ -31773,13 +13239,7 @@ export const Constants = {
         "vehicle_insurance",
         "criminal_record",
       ],
-      infraction_status: [
-        "pending",
-        "accepted",
-        "disputed",
-        "charged",
-        "dismissed",
-      ],
+      fuel_type: ["nafta", "gasoil", "gnc", "electrico", "hibrido"],
       kyc_status: ["not_started", "pending", "verified", "rejected"],
       notification_type: [
         "new_booking_for_owner",
@@ -31790,36 +13250,12 @@ export const Constants = {
         "payout_successful",
         "inspection_reminder",
         "generic_announcement",
-        "mp_onboarding_required",
-        "booking_reminder_24h",
-        "booking_reminder_2h",
-        "document_expiry_license",
-        "owner_inactive_reminder",
-        "optimization_tip",
-        "booking_ended_review",
-        "monthly_report",
-        "welcome",
-        "verification_approved",
-        "verification_rejected",
-        "nearby_cars",
-        "car_views_milestone",
-        "car_recommendation",
-        "renter_tip",
-        "price_drop_alert",
-        "favorite_car_available",
+        "protector_expiring_soon",
+        "protector_expiring_tomorrow",
+        "protector_expired",
         "pending_requests_reminder",
       ],
       onboarding_status: ["incomplete", "complete", "skipped"],
-      op_priority: ["NORMAL", "HIGH", "CRITICAL"],
-      op_status: [
-        "PENDING_DISPATCH",
-        "EN_ROUTE",
-        "ON_SITE",
-        "SECURED",
-        "HANDOVER_POLICE",
-        "COMPLETED",
-        "FAILED",
-      ],
       payment_event_type: [
         "payment_initiated",
         "payment_processing",
@@ -31860,13 +13296,6 @@ export const Constants = {
         "refunded",
         "cancelled",
       ],
-      payout_status_enum: [
-        "pending",
-        "processing",
-        "completed",
-        "failed",
-        "manual_review",
-      ],
       recovery_status: [
         "normal",
         "grace_period",
@@ -31877,40 +13306,23 @@ export const Constants = {
         "recovered",
         "claim_filed",
       ],
-      security_device_type: [
-        "AIRTAG",
-        "SMARTTAG",
-        "GPS_HARDWIRED",
-        "OBD_KILLSWITCH",
-        "LOJACK",
-      ],
       subscription_status: [
         "active",
         "inactive",
         "depleted",
         "expired",
         "cancelled",
-        "upgraded",
       ],
-      subscription_tier: ["club_standard", "club_black", "club_luxury"],
-      ticket_category: [
-        "booking_issue",
-        "payment_issue",
-        "vehicle_issue",
-        "account_issue",
-        "verification_issue",
-        "technical_issue",
-        "suggestion",
-        "other",
+      subscription_tier: ["club_standard", "club_black"],
+      transmission_type: ["manual", "automatico"],
+      vehicle_tier: [
+        "starter",
+        "economy",
+        "standard",
+        "silver",
+        "premium",
+        "luxury",
       ],
-      ticket_status: [
-        "open",
-        "in_progress",
-        "waiting_user",
-        "resolved",
-        "closed",
-      ],
-      ticket_urgency: ["low", "medium", "high", "critical"],
       wallet_tx_status: ["pending", "completed", "failed", "cancelled"],
       wallet_tx_type: [
         "deposit",
@@ -31925,42 +13337,3 @@ export const Constants = {
     },
   },
 } as const
-
-// ============================================================================
-// CUSTOM ENUMS (kept for backward compatibility)
-// ============================================================================
-
-export type UserRole = 'renter' | 'owner' | 'admin' | 'both'
-export type AdminRole = Database['public']['Enums']['admin_role']
-export type BookingStatus = Database['public']['Enums']['booking_status']
-export type CancelPolicy = Database['public']['Enums']['cancel_policy']
-export type CarStatus = Database['public']['Enums']['car_status']
-export type ClaimStatus = Database['public']['Enums']['claim_status']
-export type DamageType = Database['public']['Enums']['damage_type']
-export type DisputeKind = Database['public']['Enums']['dispute_kind']
-export type DisputeStatus = Database['public']['Enums']['dispute_status']
-export type DocumentKind = Database['public']['Enums']['document_kind']
-export type FuelType = 'nafta' | 'gasoil' | 'flex' | 'hibrido' | 'electrico' | 'diesel'
-export type KycStatus = Database['public']['Enums']['kyc_status']
-export type PaymentProvider = Database['public']['Enums']['payment_provider']
-export type PaymentStatus = Database['public']['Enums']['payment_status']
-export type SubscriptionStatus = Database['public']['Enums']['subscription_status']
-export type SubscriptionTier = Database['public']['Enums']['subscription_tier']
-export type TicketCategory = Database['public']['Enums']['ticket_category']
-export type TicketStatus = Database['public']['Enums']['ticket_status']
-export type TicketUrgency = Database['public']['Enums']['ticket_urgency']
-export type Transmission = 'manual' | 'automatic' | 'automatico'
-
-// ============================================================================
-// COMMON TYPES
-// ============================================================================
-
-/** Location data (coordinates + address) */
-export interface LocationData {
-  lat?: number
-  lng?: number
-  address?: string
-  city?: string
-  country?: string
-  [key: string]: unknown
-}

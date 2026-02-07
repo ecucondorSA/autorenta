@@ -1,0 +1,13 @@
+
+> autorentar@2.19.3 dev:web /home/edu/autorenta
+> ./tools/run.sh dev:web
+
+
+[0;34m╔══════════════════════════════════════════════════════════╗[0m
+[0;34m║[0m  🌐 Starting Web App Only
+[0;34m╚══════════════════════════════════════════════════════════╝[0m
+
+
+> autorentar-web@3.37.0 start /home/edu/autorenta/apps/web
+> node scripts/env/start-with-env.mjs > app_start.log 2>&1
+

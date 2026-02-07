@@ -32,7 +32,7 @@ jobs:
           echo "Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
 
           RESPONSE=$(curl -s -w "\n%{http_code}" \
-            -X POST "${SUPABASE_URL}/functions/v1/sync-fipe-prices" \
+            -X POST "${SUPABASE_URL}/functions/v1/sync-fipe-values" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}")
 
