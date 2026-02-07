@@ -38,65 +38,67 @@ permissions:
 
 jobs:
   generate-and-post:
-    name: Generate & Publish Content
+    name: Post to ${{ matrix.platform }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
-
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [instagram, facebook]
+        # Allow running for single platform via input if needed, but default is matrix
+        # Note: GitHub Actions inputs are not directly usable in matrix definition
+        # So we run for both, and skip in step if input doesn't match?
+        # Better: The workflow_dispatch input 'platform' can override.
+        # But for 'auto' (cron), we want both.
+    
     steps:
-      - name: Determine Content Type & Platform
+      - name: Determine Content Type & Platform Config
         id: config
         run: |
           # Get day of week (1=Monday, 7=Sunday)
           DOW=$(date +%u)
 
-          # Schedule (Updated 2026-01-29):
-          # TikTok/Twitter SUSPENDED since 2026-01-22
-          # Only Instagram and Facebook are active
-          #
-          # Mon: Tips on Instagram
-          # Tue: Car spotlight on Facebook
-          # Wed: Promo on Instagram
-          # Thu: Community on Facebook
-          # Fri: Promo on Instagram
-          # Sat: Car spotlight on Facebook
-          # Sun: Community on Instagram
-
+          # Determine Content Type based on Day (Same schedule for both platforms)
           if [ "${{ inputs.content_type }}" != "auto" ] && [ -n "${{ inputs.content_type }}" ]; then
             CONTENT_TYPE="${{ inputs.content_type }}"
           else
             case $DOW in
-              1) CONTENT_TYPE="tip" ;;
-              2) CONTENT_TYPE="car_spotlight" ;;
-              3) CONTENT_TYPE="promo" ;;
-              4) CONTENT_TYPE="community" ;;
-              5) CONTENT_TYPE="promo" ;;
-              6) CONTENT_TYPE="car_spotlight" ;;
-              7) CONTENT_TYPE="community" ;;
+              1) CONTENT_TYPE="tip" ;;           # Monday
+              2) CONTENT_TYPE="car_spotlight" ;; # Tuesday
+              3) CONTENT_TYPE="promo" ;;         # Wednesday
+              4) CONTENT_TYPE="community" ;;     # Thursday
+              5) CONTENT_TYPE="promo" ;;         # Friday
+              6) CONTENT_TYPE="car_spotlight" ;; # Saturday
+              7) CONTENT_TYPE="community" ;;     # Sunday
               *) CONTENT_TYPE="tip" ;;
             esac
           fi
 
-          if [ "${{ inputs.platform }}" != "auto" ] && [ -n "${{ inputs.platform }}" ]; then
-            PLATFORM="${{ inputs.platform }}"
-          else
-            # Alternate between Instagram (odd days) and Facebook (even days)
-            case $DOW in
-              1|3|5|7) PLATFORM="instagram" ;;
-              2|4|6)   PLATFORM="facebook" ;;
-              *)       PLATFORM="instagram" ;;
-            esac
+          # Platform from Matrix
+          PLATFORM="${{ matrix.platform }}"
+          
+          # Check if we should skip this matrix job based on inputs
+          # If input.platform is set and NOT 'auto', and doesn't match current matrix, we skip
+          SHOULD_RUN="true"
+          INPUT_PLATFORM="${{ inputs.platform }}"
+          if [ -n "$INPUT_PLATFORM" ] && [ "$INPUT_PLATFORM" != "auto" ] && [ "$INPUT_PLATFORM" != "$PLATFORM" ]; then
+            SHOULD_RUN="false"
+            echo "Skipping ${{ matrix.platform }} because input requested $INPUT_PLATFORM"
           fi
 
           echo "content_type=$CONTENT_TYPE" >> $GITHUB_OUTPUT
           echo "platform=$PLATFORM" >> $GITHUB_OUTPUT
           echo "dry_run=${{ inputs.dry_run || 'false' }}" >> $GITHUB_OUTPUT
+          echo "should_run=$SHOULD_RUN" >> $GITHUB_OUTPUT
 
           echo "📅 Day of week: $DOW"
           echo "📝 Content type: $CONTENT_TYPE"
           echo "📱 Platform: $PLATFORM"
+          echo "🏃 Should run: $SHOULD_RUN"
 
       - name: Generate Marketing Content
         id: generate
+        if: steps.config.outputs.should_run == 'true'
         uses: actions/github-script@v7
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -165,7 +167,7 @@ jobs:
 
       - name: Publish to Social Media
         id: publish
-        if: steps.config.outputs.dry_run != 'true'
+        if: steps.config.outputs.should_run == 'true' && steps.config.outputs.dry_run != 'true'
         uses: actions/github-script@v7
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -229,7 +231,7 @@ jobs:
             return result;
 
       - name: Create Summary Issue
-        if: always()
+        if: always() && steps.config.outputs.should_run == 'true'
         uses: actions/github-script@v7
         with:
           script: |
