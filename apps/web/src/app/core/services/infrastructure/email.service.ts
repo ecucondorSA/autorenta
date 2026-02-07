@@ -43,10 +43,20 @@ export class EmailService {
   ): Promise<{ success: boolean; error?: string }> {
     try {
       const { data: result, error } = await this.supabase.functions.invoke(
-        'send-booking-confirmation-email',
-        {
-          body: data,
-        },
+      'communications-service/email/send',
+      {
+        to: booking.renter.email,
+        subject: `Reserva confirmada: ${booking.car.brand} ${booking.car.model}`,
+        templateId: 'booking_confirmed',
+        data: {
+          booking_id: booking.id,
+          car_brand: booking.car.brand,
+          car_model: booking.car.model,
+          start_date: booking.start_date,
+          end_date: booking.end_date,
+          renter_name: booking.renter.full_name
+        }
+      }
       );
 
       if (error) {

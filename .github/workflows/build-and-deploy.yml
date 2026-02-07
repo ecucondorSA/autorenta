@@ -135,6 +135,8 @@ jobs:
           supabase functions deploy create-subscription-wallet
           supabase functions deploy process-payment-queue
           supabase functions deploy release-expired-deposits
+          supabase functions deploy ai-vision-service
+          supabase functions deploy email-service
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}

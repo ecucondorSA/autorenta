@@ -181,23 +181,25 @@ serve(async (req) => {
       try {
         switch (channel) {
           case 'push': {
-            // Call send-push-notification function
-            const pushTitle = template ? renderTemplate(template.push_title, enrichedVariables) : template_code;
-            const pushBody = template ? renderTemplate(template.push_body, enrichedVariables) : JSON.stringify(variables);
-
-            const pushResponse = await fetch(`${supabaseUrl}/functions/v1/send-push-notification`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${supabaseKey}`,
-              },
-              body: JSON.stringify({
-                user_id,
-                title: pushTitle,
-                body: pushBody,
-                data: { template_code, ...variables },
-              }),
-            });
+    // Call communications-service (Push)
+    console.log(`[MultiChannel] Calling Push Service for user ${payload.user_id}`);
+    
+    const pushResponse = await fetch(`${supabaseUrl}/functions/v1/communications-service/push/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+      },
+      body: JSON.stringify({
+        userId: payload.user_id,
+        title: payload.title,
+        body: payload.message,
+        data: {
+          ...payload.data,
+          template_code: payload.template_code
+        }
+      }),
+    });
 
             const pushResult = await pushResponse.json();
             results.push({
