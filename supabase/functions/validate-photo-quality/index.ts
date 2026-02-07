@@ -291,20 +291,33 @@ async function analyzePhotoQuality(
 // ============================================================================
 
 serve(async (req: Request) => {
-  const corsHeaders = getCorsHeaders(req);
+  // ✅ CRITICAL: Always get CORS headers first, even if everything else fails
+  let corsHeaders: HeadersInit;
+  try {
+    corsHeaders = getCorsHeaders(req);
+  } catch {
+    // Fallback CORS headers if getCorsHeaders fails
+    corsHeaders = {
+      'Access-Control-Allow-Origin': 'https://autorentar.com',
+      'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    };
+  }
 
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  if (req.method !== 'POST') {
-    return new Response(
-      JSON.stringify({ error: 'Method not allowed' }),
-      { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
-  }
-
+  // Wrap everything in try-catch to guarantee CORS headers on error
   try {
+    if (req.method !== 'POST') {
+      return new Response(
+        JSON.stringify({ error: 'Method not allowed' }),
+        { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     if (!GEMINI_API_KEY) {
       console.error('[validate-photo-quality] GEMINI_API_KEY not configured');
       return new Response(
@@ -352,6 +365,7 @@ serve(async (req: Request) => {
   } catch (error) {
     console.error('[validate-photo-quality] Error:', error);
 
+    // ✅ ALWAYS return CORS headers, even on error
     return new Response(
       JSON.stringify({
         success: false,
@@ -361,3 +375,4 @@ serve(async (req: Request) => {
     );
   }
 });
+
