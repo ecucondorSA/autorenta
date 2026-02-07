@@ -34,7 +34,7 @@ export class BookingNotificationsService {
         .single();
 
       if (bookingError || !bookingData) {
-        console.error('Error fetching booking data for notification:', bookingError);
+        this.logger.error('Error fetching booking data for notification', 'BookingNotifications', bookingError);
         return;
       }
 
@@ -177,7 +177,7 @@ export class BookingNotificationsService {
           break;
       }
     } catch (error) {
-      console.error('Error creating status change notification:', error);
+      this.logger.error('Error creating status change notification', 'BookingNotifications', error);
       // No lanzar error para no bloquear el flujo principal
     }
   }
@@ -198,7 +198,7 @@ export class BookingNotificationsService {
         .single();
 
       if (error || !bookingData) {
-        console.error('Error fetching booking data:', error);
+        this.logger.error('Error fetching booking data', 'BookingNotifications', error);
         return;
       }
 
@@ -249,7 +249,7 @@ export class BookingNotificationsService {
         },
       });
     } catch (error) {
-      console.error('Error creating action required notification:', error);
+      this.logger.error('Error creating action required notification', 'BookingNotifications', error);
     }
   }
 
@@ -390,7 +390,7 @@ export class BookingNotificationsService {
         });
       }
     } catch (error) {
-      console.error('Error creating inspection notification:', error);
+      this.logger.error('Error creating inspection notification', 'BookingNotifications', error);
     }
   }
 
@@ -423,7 +423,7 @@ export class BookingNotificationsService {
         },
       });
     } catch (error) {
-      console.error('Error creating review notification:', error);
+      this.logger.error('Error creating review notification', 'BookingNotifications', error);
     }
   }
 
@@ -442,7 +442,7 @@ export class BookingNotificationsService {
     // `undefined` into the DB and satisfies callers that may have
     // optional user ids on the booking model.
     if (!data.user_id) {
-      console.warn('Skipping notification creation: missing user_id', data);
+      this.logger.warn('Skipping notification creation: missing user_id', 'BookingNotifications', data);
       return;
     }
 
@@ -456,7 +456,7 @@ export class BookingNotificationsService {
     });
 
     if (error) {
-      console.error('Error creating notification:', error);
+      this.logger.error('Error creating notification', 'BookingNotifications', error);
       throw new Error(`Failed to create notification: ${getErrorMessage(error)}`);
     }
   }

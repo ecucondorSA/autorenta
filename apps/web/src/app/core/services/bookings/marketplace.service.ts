@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { SupabaseClient } from '@supabase/supabase-js';
 
@@ -36,6 +37,7 @@ type WindowWithEnv = Window & {
   providedIn: 'root',
 })
 export class MarketplaceService {
+  private readonly logger = inject(LoggerService);
   private supabase: SupabaseClient;
 
   constructor() {
@@ -301,7 +303,7 @@ export class MarketplaceService {
 
       return data?.onboarding_url || null;
     } catch (error) {
-      console.error('Error initiating onboarding:', error);
+      this.logger.error('Error initiating onboarding', 'MarketplaceService', error);
       return null;
     }
   }

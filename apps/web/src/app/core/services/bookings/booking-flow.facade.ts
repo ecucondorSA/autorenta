@@ -3,6 +3,7 @@ import { BookingFlowStore, BookingWizardStep } from '@core/stores/booking-flow.s
 import { CurrencyService } from '@core/services/payments/currency.service';
 import { BookingWizardData, BookingPrice } from '@core/models/booking-wizard.model';
 import { CarsService } from '@core/services/cars/cars.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Car } from '@core/models';
 import { differenceInCalendarDays } from 'date-fns';
 
@@ -10,6 +11,7 @@ import { differenceInCalendarDays } from 'date-fns';
   providedIn: 'root',
 })
 export class BookingFlowFacade {
+  private readonly logger = inject(LoggerService);
   private readonly store = inject(BookingFlowStore);
   private readonly currencyService = inject(CurrencyService);
   private readonly carsService = inject(CarsService);
@@ -46,7 +48,7 @@ export class BookingFlowFacade {
         // If car has a region_id, we might want to trigger dynamic pricing fetch here too
       }
     } catch (error) {
-      console.error('Error loading car for booking:', error);
+      this.logger.error('Error loading car for booking', 'BookingFlowFacade', error);
     }
   }
 
