@@ -36,7 +36,7 @@
                     <div>
                         <label class="block text-xs font-bold text-text-muted uppercase mb-2">Marca</label>
                         <app-fipe-autocomplete [placeholder]="'Ej: Toyota, Ford, BMW...'" [options]="brands()"
-                            [isLoading]="isLoadingBrands()" [selectedValue]="selectedBrand()"
+                            [isLoading]="isLoadingBrands()" [selectedValue]="selectedBrand()" [minChars]="0"
                             (optionSelected)="onBrandSelected($event)"></app-fipe-autocomplete>
                     </div>
 
@@ -46,7 +46,7 @@
                         <app-fipe-autocomplete
                             [placeholder]="selectedBrand() ? 'Ej: Corolla, Focus...' : 'Primero selecciona una marca'"
                             [options]="models()" [isLoading]="isLoadingModels()" [disabled]="!selectedBrand()"
-                            [selectedValue]="selectedModel()"
+                            [selectedValue]="selectedModel()" [minChars]="0"
                             (optionSelected)="onModelSelected($event)"></app-fipe-autocomplete>
                     </div>
 

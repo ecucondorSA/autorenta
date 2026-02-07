@@ -183,24 +183,27 @@ export class FipeAutocompleteComponent implements OnChanges {
     const query = this.searchQuery().trim().toLowerCase();
     const currentOptions = this._options();
 
-    this.logger.debug('Computing filter', {
-      query,
-      optionsCount: currentOptions?.length ?? 0,
-    });
+    // If query is empty and minChars is 0, show all options (limit to 50)
+    if (query.length === 0 && this.minChars === 0) {
+      return currentOptions.slice(0, 50);
+    }
 
     if (query.length < this.minChars) {
       return [];
     }
 
-    // Filter options that contain the search query
     return currentOptions
-      .filter((option: FipeAutocompleteOption) => option.name.toLowerCase().includes(query))
-      .slice(0, 50); // Limit to 50 results for performance
+      .filter((option) => option.name.toLowerCase().includes(query))
+      .slice(0, 50);
   });
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: import('@angular/core').SimpleChanges): void {
+    if (changes['options']) {
+      this._options.set(this.options || []);
+    }
+
     // Sync searchQuery with selectedValue when it changes from parent
-    if (this.selectedValue) {
+    if (changes['selectedValue'] && this.selectedValue) {
       this.searchQuery.set(this.selectedValue.name);
     }
   }
@@ -208,19 +211,12 @@ export class FipeAutocompleteComponent implements OnChanges {
   onSearchChange(query: string): void {
     this.searchQuery.set(query);
     this.searchQueryChanged.emit(query);
-
-    if (query.length >= this.minChars) {
-      this.showDropdown.set(true);
-    } else {
-      this.showDropdown.set(false);
-    }
+    this.showDropdown.set(true);
   }
 
   onFocus(): void {
     this.isFocused.set(true);
-    if (this.searchQuery().length >= this.minChars) {
-      this.showDropdown.set(true);
-    }
+    this.showDropdown.set(true);
   }
 
   onBlur(): void {
