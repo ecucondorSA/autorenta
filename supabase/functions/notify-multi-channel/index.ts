@@ -215,30 +215,35 @@ serve(async (req) => {
               break;
             }
 
-            // Determine which email function to call based on template
-            const emailFunctionMap: Record<string, string> = {
-              booking_confirmed: 'send-booking-confirmation-email',
-              booking_cancelled: 'send-booking-cancellation-email',
-              return_reminder: 'send-booking-reminder-email',
-              // Add more mappings as needed
+            // Map template codes to email-service templates
+            const emailTemplateMap: Record<string, string> = {
+              booking_created: 'booking-confirmation',
+              booking_confirmed: 'booking-confirmation',
+              booking_cancelled: 'booking-cancellation',
+              booking_rejected: 'booking-cancellation',
+              return_reminder: 'booking-reminder',
+              booking_started: 'booking-reminder',
+              payment_completed: 'deposit-confirmation',
+              transfer_completed: 'refund-confirmation',
+              dispute_opened: 'generic',
+              dispute_resolved: 'generic',
+              payment_failed: 'generic',
             };
 
-            const emailFunction = emailFunctionMap[template_code] || 'send-marketing-email';
-            const subject = template ? renderTemplate(template.subject, enrichedVariables) : template_code;
-            const body = template ? renderTemplate(template.body, enrichedVariables) : JSON.stringify(variables);
+            const emailTemplate = emailTemplateMap[template_code] || 'marketing';
 
-            const emailResponse = await fetch(`${supabaseUrl}/functions/v1/${emailFunction}`, {
+            // Use consolidated email-service
+            const emailResponse = await fetch(`${supabaseUrl}/functions/v1/email-service`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${supabaseKey}`,
               },
               body: JSON.stringify({
+                template: emailTemplate,
                 to: recipientEmail,
-                subject,
-                body,
-                template_code,
-                variables: enrichedVariables,
+                recipientName,
+                data: enrichedVariables,
               }),
             });
 
