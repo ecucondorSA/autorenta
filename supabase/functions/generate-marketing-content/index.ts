@@ -241,45 +241,60 @@ serve(async (req) => {
       }
 
       // Generate text (with A/B testing support)
-      const textContent = await generateTextContent({
-        content_type,
-        platform,
-        carData,
-        theme,
-        language,
-        supabase,
-      });
-
-      // Generate image
-      let imageContent: { url?: string; base64?: string } | undefined;
-      let imageUploadError: string | undefined;
-      let imageDebug: string | undefined;
+      // Run text and image generation in PARALLEL to avoid timeout
       const canGenerateImage = generate_image && platform !== 'tiktok';
-      if (canGenerateImage) {
-        console.log('[generate-marketing-content] generate_image=true, calling generateMarketingImage...');
-        console.log('[generate-marketing-content] GEMINI_API_KEY exists:', !!GEMINI_API_KEY);
-        const imageResult = await generateMarketingImage(carData, content_type);
-        imageContent = imageResult?.content;
-        imageDebug = imageResult?.debug;
 
-        // Upload image if saving to DB and we have base64
-        if (save_to_db && imageContent?.base64) {
-          const uploadResult = await uploadMarketingImageToStorage({
-            base64: imageContent.base64,
-            bucket: MARKETING_MEDIA_BUCKET,
-            contentType: 'image/png',
-            prefix: 'marketing/images',
-          });
+      console.log('[generate-marketing-content] Starting parallel generation...');
+      const startTime = Date.now();
 
-          if (uploadResult?.publicUrl) {
-            imageContent.url = uploadResult.publicUrl;
-            // Optional: Clear base64 to save bandwidth in response if URL is available
-            // imageContent.base64 = undefined;
-          } else {
-            imageUploadError = uploadResult?.error || 'Unknown storage error';
-            console.error('[generate-marketing-content] Image upload failed:', imageUploadError);
-          }
+      const [textContent, imageResult] = await Promise.all([
+        generateTextContent({
+          content_type,
+          platform,
+          carData,
+          theme,
+          language,
+          supabase,
+        }),
+        canGenerateImage
+          ? generateMarketingImage(carData, content_type)
+          : Promise.resolve(undefined)
+      ]);
+
+      console.log(`[generate-marketing-content] Parallel generation took ${Date.now() - startTime}ms`);
+
+      // Process image result
+      let imageContent: { url?: string; base64?: string } | undefined = imageResult?.content;
+      let imageUploadError: string | undefined;
+      let imageDebug: string | undefined = imageResult?.debug;
+
+      // Upload image if saving to DB and we have base64
+      if (save_to_db && imageContent?.base64) {
+        console.log('[generate-marketing-content] Starting image upload...');
+        console.log('[generate-marketing-content] SUPABASE_URL:', SUPABASE_URL ? 'SET' : 'EMPTY');
+        console.log('[generate-marketing-content] SUPABASE_SERVICE_KEY:', SUPABASE_SERVICE_KEY ? 'SET' : 'EMPTY');
+        console.log('[generate-marketing-content] Bucket:', MARKETING_MEDIA_BUCKET);
+        console.log('[generate-marketing-content] Base64 length:', imageContent.base64.length);
+
+        const uploadResult = await uploadMarketingImageToStorage({
+          base64: imageContent.base64,
+          bucket: MARKETING_MEDIA_BUCKET,
+          contentType: 'image/png',
+          prefix: 'marketing/images',
+        });
+
+        console.log('[generate-marketing-content] Upload result:', JSON.stringify(uploadResult));
+
+        if (uploadResult?.publicUrl) {
+          imageContent.url = uploadResult.publicUrl;
+          // Optional: Clear base64 to save bandwidth in response if URL is available
+          // imageContent.base64 = undefined;
+        } else {
+          imageUploadError = uploadResult?.error || 'Unknown storage error';
+          console.error('[generate-marketing-content] Image upload failed:', imageUploadError);
         }
+      } else {
+        console.log('[generate-marketing-content] Skipping upload - save_to_db:', save_to_db, 'has base64:', !!imageContent?.base64);
       }
 
       const resultItem: GeneratedContent = {
@@ -969,8 +984,27 @@ async function uploadMarketingImageToStorage(params: {
   prefix: string;
 }): Promise<{ publicUrl?: string; path?: string; error?: string } | undefined> {
   try {
-    const { base64, bucket, contentType, prefix } = params;
-    const extension = contentType.split('/')[1] || 'png';
+    const { base64, bucket, prefix } = params;
+
+    // Detect image format from base64 signature
+    let detectedContentType = params.contentType;
+    let extension = 'png';
+    if (base64.startsWith('/9j/')) {
+      detectedContentType = 'image/jpeg';
+      extension = 'jpg';
+    } else if (base64.startsWith('iVBOR')) {
+      detectedContentType = 'image/png';
+      extension = 'png';
+    } else if (base64.startsWith('R0lGOD')) {
+      detectedContentType = 'image/gif';
+      extension = 'gif';
+    } else if (base64.startsWith('UklGR')) {
+      detectedContentType = 'image/webp';
+      extension = 'webp';
+    }
+
+    console.log('[uploadMarketingImageToStorage] Detected format:', detectedContentType, extension);
+
     const uniqueId = typeof crypto !== 'undefined' && 'randomUUID' in crypto
       ? crypto.randomUUID()
       : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -983,23 +1017,28 @@ async function uploadMarketingImageToStorage(params: {
     }
 
     const uploadUrl = `${SUPABASE_URL}/storage/v1/object/${bucket}/${filePath}`;
+    console.log('[uploadMarketingImageToStorage] Uploading to:', uploadUrl);
+
     const uploadResponse = await fetch(uploadUrl, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-        'Content-Type': contentType,
+        'Content-Type': detectedContentType,
       },
       body: bytes,
     });
 
     if (!uploadResponse.ok) {
       const errorText = await uploadResponse.text();
+      console.error('[uploadMarketingImageToStorage] Upload failed:', uploadResponse.status, errorText);
       return { error: `Storage upload failed (${uploadResponse.status}): ${errorText}` };
     }
 
     const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${filePath}`;
+    console.log('[uploadMarketingImageToStorage] Success! URL:', publicUrl);
     return { publicUrl, path: filePath };
   } catch (error) {
+    console.error('[uploadMarketingImageToStorage] Exception:', error);
     return { error: error instanceof Error ? error.message : 'Unknown storage error' };
   }
 }
