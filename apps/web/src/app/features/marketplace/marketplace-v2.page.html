@@ -196,80 +196,86 @@
         }
       </div>
 
-      <!-- DESKTOP: Grid View -->
-      <div class="hidden sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      <!-- DESKTOP: Grid View (Robust Auto-Fill) -->
+      <div class="hidden sm:grid gap-6 w-full"
+           [style.grid-template-columns]="'repeat(auto-fill, minmax(300px, 1fr))'">
+        
         <!-- CAR CARD LOOP -->
         @for (car of visibleCars(); track trackByCarId(i, car); let i = $index) {
-        <div class="h-full">
+        <div class="h-full w-full opacity-0 animate-fade-in-up" [style.animation-delay]="i * 50 + 'ms'" style="animation-fill-mode: forwards;">
           <app-car-card
             [car]="car"
             [distance]="undefined"
             [showOwnerActions]="false"
+            class="h-full block"
           ></app-car-card>
         </div>
         }
 
         <!-- Loading skeleton -->
         @if (loading()) {
-        <div class="col-span-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           @for (_ of [].constructor(8); track _) {
           <div
-            class="bg-surface-raised rounded-3xl overflow-hidden border border-border-default shadow-sm h-full flex flex-col animate-pulse">
-            <div class="aspect-[4/3] bg-surface-secondary/50"></div>
+            class="bg-zinc-900/50 rounded-3xl overflow-hidden border border-zinc-800 shadow-sm h-full flex flex-col animate-pulse">
+            <div class="aspect-[4/3] bg-zinc-800"></div>
             <div class="p-5 space-y-4 flex-1">
               <div class="flex justify-between items-start">
                 <div class="space-y-2 w-2/3">
-                  <div class="h-6 bg-surface-secondary rounded w-3/4"></div>
-                  <div class="h-4 bg-surface-secondary/50 rounded w-1/2"></div>
+                  <div class="h-6 bg-zinc-800 rounded w-3/4"></div>
+                  <div class="h-4 bg-zinc-800/50 rounded w-1/2"></div>
                 </div>
-                <div class="h-8 w-12 bg-surface-secondary/50 rounded-lg"></div>
+                <div class="h-8 w-12 bg-zinc-800 rounded-lg"></div>
               </div>
-              <div class="pt-2 border-t border-border-default/30 flex justify-between">
-                <div class="h-4 w-16 bg-surface-secondary/50 rounded"></div>
-                <div class="h-4 w-16 bg-surface-secondary/50 rounded"></div>
-                <div class="h-4 w-16 bg-surface-secondary/50 rounded"></div>
+              <div class="pt-4 mt-auto border-t border-zinc-800/50 flex justify-between">
+                <div class="h-4 w-16 bg-zinc-800 rounded"></div>
+                <div class="h-10 w-32 bg-zinc-800 rounded-xl"></div>
               </div>
             </div>
           </div>
           }
-        </div>
         }
 
         <!-- Empty state -->
         @if (!loading() && !error() && visibleCars().length === 0) {
-        <div class="col-span-full empty-state-card py-16 text-center">
+        <div class="col-span-full empty-state-card py-24 text-center">
           <div
-            class="w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden shadow-lg border-4 border-surface-raised relative">
+            class="w-48 h-48 mx-auto mb-8 rounded-full overflow-hidden shadow-2xl border-4 border-zinc-800 relative group">
+            <div class="absolute inset-0 bg-indigo-500/20 group-hover:bg-indigo-500/0 transition-colors duration-500"></div>
             <img src="/assets/images/ui/empty-search-street.webp" alt="Calle vacía"
-              class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
+              class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700"
               width="192" height="192" />
           </div>
-          <h3 class="font-display text-2xl font-bold text-text-primary mb-3 font-satoshi">
-            No encontramos autos por aquí
+          <h3 class="text-3xl font-black text-text-primary mb-4 font-satoshi tracking-tight">
+            No hay autos en esta zona... todavía.
           </h3>
-          <p class="text-text-secondary mb-8 max-w-md mx-auto">
-            Intenta cambiar los filtros o buscar en otra ubicación más concurrida.
+          <p class="text-text-secondary mb-10 max-w-md mx-auto text-lg">
+            Intenta ampliar tu búsqueda o sé el primero en publicar un auto aquí.
           </p>
-          <button (click)="clearQuickFilters()" class="btn-outline-light px-8 py-3 rounded-xl">
-            Limpiar filtros
-          </button>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button (click)="clearQuickFilters()" class="px-8 py-3 rounded-xl border-2 border-zinc-200 hover:border-zinc-900 font-bold transition-all text-text-primary">
+              Limpiar filtros
+            </button>
+            <button routerLink="/ganar" class="px-8 py-3 rounded-xl bg-cta-default hover:bg-cta-hover text-cta-text font-bold transition-all shadow-lg shadow-cta-default/20">
+              Publicar mi auto
+            </button>
+          </div>
         </div>
         }
 
         <!-- Error state -->
         @if (!loading() && error()) {
-        <div class="col-span-full empty-state-card border-error-border/20 py-16">
-          <div class="w-24 h-24 bg-error-bg rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg class="w-12 h-12 text-error-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        <div class="col-span-full py-24 text-center">
+          <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h3 class="font-display text-2xl font-bold text-text-primary mb-3 font-satoshi">
-            Algo salió mal
+          <h3 class="text-2xl font-bold text-text-primary mb-2 font-satoshi">
+            Error de conexión
           </h3>
           <p class="text-text-secondary mb-8">{{ error() }}</p>
-          <button (click)="loadCars()" class="btn-primary-glow px-8 py-3 rounded-xl">
+          <button (click)="loadCars()" class="px-8 py-3 bg-zinc-900 text-white rounded-xl font-bold hover:bg-black transition-colors">
             Reintentar
           </button>
         </div>
