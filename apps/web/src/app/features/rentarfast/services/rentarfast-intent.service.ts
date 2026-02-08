@@ -110,7 +110,8 @@ export class RentarfastIntentService {
             role: profile.role,
             city: profile.city ?? null,
             country: profile.country ?? null,
-            kyc: profile.kyc,
+            // NOTE: `profiles.kyc` does not exist. Keep a compatible string for the AI agent.
+            kyc: profile.id_verified ? 'verified' : 'not_started',
             can_publish_cars: profile.can_publish_cars,
             can_book_cars: profile.can_book_cars,
           }
@@ -498,7 +499,7 @@ export class RentarfastIntentService {
     try {
       const profile = await this.profileStore.loadProfile();
       const role = profile?.role ?? 'renter';
-      const kyc = profile?.kyc ?? 'not_started';
+      const identityStatus = profile?.id_verified ? 'verificada' : 'pendiente';
       const permissions = [
         profile?.can_publish_cars ? 'puede publicar autos' : 'no puede publicar autos',
         profile?.can_book_cars ? 'puede reservar autos' : 'no puede reservar autos',
@@ -508,7 +509,7 @@ export class RentarfastIntentService {
         `Estás logueado como ${profile?.full_name ?? 'Usuario'} (${auth.email ?? 'sin email'}).`,
         `ID de usuario: ${auth.id}`,
         `Rol: ${role}.`,
-        `Verificación (KYC): ${kyc}.`,
+        `Verificación de identidad: ${identityStatus}.`,
         `Permisos: ${permissions.join(', ')}.`,
       ].join(' ');
 

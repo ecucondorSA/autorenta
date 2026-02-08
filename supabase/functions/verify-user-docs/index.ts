@@ -92,7 +92,9 @@ serve(async (req) => {
 
   const { data: profile, error: profileError } = await adminClient
     .from('profiles')
-    .select('id, full_name, role, id_verified, kyc')
+    // NOTE: `profiles.kyc` does NOT exist in production schema.
+    // Identity level 2 is tracked via `profiles.id_verified`.
+    .select('id, full_name, role, id_verified')
     .eq('id', userId)
     .single();
 
@@ -176,7 +178,6 @@ serve(async (req) => {
 
   const driverResult = results.find((result) => result.role === 'driver');
   if (driverResult) {
-    profileUpdates.id_verified = driverResult.status === 'VERIFICADO';
     const licenseDocs = ['driver_license', 'license_front', 'license_back']
       .map((kind) => docByKind[kind])
       .filter(Boolean) as DocumentRecord[];
@@ -199,13 +200,6 @@ serve(async (req) => {
 
   const ownerResult = results.find((result) => result.role === 'owner');
   if (ownerResult) {
-    profileUpdates.kyc =
-      ownerResult.status === 'VERIFICADO'
-        ? 'verified'
-        : ownerResult.status === 'RECHAZADO'
-        ? 'rejected'
-        : 'pending';
-
     const ownerDocumentKinds: Record<string, string[]> = {
       dni: ['gov_id_front', 'gov_id_back'],
       cedula_auto: ['vehicle_registration'],
@@ -228,6 +222,11 @@ serve(async (req) => {
         });
     });
   }
+
+  // Keep `id_verified` as our single Level 2 identity gate.
+  // If any evaluated role is verified, mark the user as verified. Never auto-unverify here.
+  const anyRoleVerified = results.some((result) => result.status === 'VERIFICADO');
+  profileUpdates.id_verified = profile.id_verified === true || anyRoleVerified;
 
   if (Object.keys(profileUpdates).length > 0) {
     updates.push(adminClient.from('profiles').update(profileUpdates).eq('id', userId));

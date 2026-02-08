@@ -124,7 +124,7 @@ export const verifiedEmailGuard: CanMatchFn = async () => {
 };
 
 /**
- * KYCGuard - Protege rutas que requieren KYC verificado
+ * KYCGuard - Protege rutas que requieren identidad verificada (Level 2)
  * (ej: recibir pagos como owner)
  *
  * Uso en rutas:
@@ -140,13 +140,15 @@ export const kycGuard: CanMatchFn = async () => {
   const profileService = inject(ProfileService);
   const router = inject(Router);
 
-  try {
+ try {
     const profile = await profileService.getMe();
 
-    if (profile.kyc !== 'verified') {
+    // NOTE: `profiles.kyc` does not exist in production.
+    // For now, treat Level 2 identity verification (`id_verified`) as the payout gate.
+    if (!profile.id_verified) {
       // Redirigir a perfil tab de verificación
       return router.createUrlTree(['/profile'], {
-        queryParams: { tab: 'verification', kyc: 'required' },
+        queryParams: { tab: 'verification', id: 'required' },
       });
     }
 

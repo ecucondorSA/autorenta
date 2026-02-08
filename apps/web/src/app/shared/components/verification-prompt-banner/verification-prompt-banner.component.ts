@@ -375,6 +375,10 @@ export class VerificationPromptBannerComponent implements OnInit {
 
     // Load user profile
     await this.loadProfile();
+
+    // Load verification signals (non-blocking) so we can show the right banner state.
+    void this.verificationService.loadDocuments();
+    void this.verificationService.loadStatuses();
   }
 
   private async loadProfile(): Promise<void> {
@@ -387,6 +391,28 @@ export class VerificationPromptBannerComponent implements OnInit {
   }
 
   /**
+   * Derive a coarse verification state.
+   * NOTE: `profiles.kyc` does not exist in production schema.
+   */
+  private readonly verificationState = computed(() => {
+    const profile = this.profile();
+    if (!profile) return 'not_started' as const;
+
+    if (profile.id_verified) return 'verified' as const;
+
+    const statuses = this.verificationService.statuses();
+    if (statuses.some((s) => s.status === 'RECHAZADO')) return 'rejected' as const;
+    if (statuses.some((s) => s.status === 'PENDIENTE')) return 'pending' as const;
+
+    const docs = this.verificationService.documents();
+    if (docs.some((d) => d.status === 'rejected')) return 'rejected' as const;
+    if (docs.some((d) => d.status === 'pending' || d.status === 'verified')) return 'pending' as const;
+    if (docs.length > 0) return 'pending' as const;
+
+    return 'not_started' as const;
+  });
+
+  /**
    * Calcula si el banner debe mostrarse
    */
   readonly shouldShow = computed(() => {
@@ -395,49 +421,44 @@ export class VerificationPromptBannerComponent implements OnInit {
 
     if (!profile || dismissed) return false;
 
-    // Mostrar si el usuario no está verificado
-    const kyc = profile.kyc;
-    return kyc === 'not_started' || kyc === 'pending' || kyc === 'rejected';
+    // Show if the user is not Level 2 verified
+    return this.verificationState() !== 'verified';
   });
 
   /**
    * Calcula el progreso de verificación (0-100)
    */
   readonly verificationProgress = computed(() => {
-    const profile = this.profile();
-    if (!profile) return 0;
-
-    const kyc = profile.kyc;
-
-    if (kyc === 'verified') return 100;
-    if (kyc === 'pending') return 50;
-    if (kyc === 'not_started') return 0;
-    if (kyc === 'rejected') return 25; // Rechazado, necesita resubir
-
-    return 0;
+    switch (this.verificationState()) {
+      case 'verified':
+        return 100;
+      case 'pending':
+        return 50;
+      case 'rejected':
+        return 25;
+      default:
+        return 0;
+    }
   });
 
   /**
    * Determina si es el mensaje de bienvenida (primera vez)
    */
   readonly isWelcome = computed(() => {
-    const profile = this.profile();
-    return profile?.kyc === 'not_started';
+    return this.verificationState() === 'not_started';
   });
 
   /**
    * Título del banner según el estado
    */
   readonly title = computed(() => {
-    const kyc = this.profile()?.kyc;
-
-    switch (kyc) {
+    switch (this.verificationState()) {
       case 'not_started':
-        return '👋 ¡Bienvenido a AutoRenta! Verificá tu identidad para comenzar';
+        return 'Verificá tu identidad para comenzar';
       case 'pending':
-        return '⏳ Verificación en proceso';
+        return 'Verificación en proceso';
       case 'rejected':
-        return '⚠️ Verificación rechazada - Se requiere acción';
+        return 'Necesitamos que revises tus documentos';
       default:
         return 'Verificación pendiente';
     }
@@ -447,15 +468,13 @@ export class VerificationPromptBannerComponent implements OnInit {
    * Descripción del banner según el estado
    */
   readonly description = computed(() => {
-    const kyc = this.profile()?.kyc;
-
-    switch (kyc) {
+    switch (this.verificationState()) {
       case 'not_started':
-        return 'Verificá tu identidad en solo 5 minutos para publicar autos, reservar vehículos y acceder a todas las funciones de la plataforma.';
+        return 'Completá tu verificación para publicar autos, reservar vehículos y acceder a todas las funciones.';
       case 'pending':
-        return 'Estamos revisando tu documentación. Este proceso suele tomar entre 24 y 48 horas. Te notificaremos por email cuando esté lista.';
+        return 'Estamos revisando tu documentación. Te notificaremos cuando esté lista.';
       case 'rejected':
-        return 'Tu verificación fue rechazada. Por favor revisá los comentarios y volvé a subir la documentación correcta.';
+        return 'Tu verificación fue rechazada. Revisá los comentarios y volvé a subir la documentación correcta.';
       default:
         return 'Completá el proceso de verificación para acceder a todas las funcionalidades.';
     }
@@ -465,15 +484,13 @@ export class VerificationPromptBannerComponent implements OnInit {
    * Texto del botón CTA
    */
   readonly ctaButtonText = computed(() => {
-    const kyc = this.profile()?.kyc;
-
-    switch (kyc) {
+    switch (this.verificationState()) {
       case 'not_started':
         return 'Verificar ahora';
       case 'pending':
         return 'Ver estado';
       case 'rejected':
-        return 'Corregir documentos';
+        return 'Revisar documentos';
       default:
         return 'Ir a verificación';
     }

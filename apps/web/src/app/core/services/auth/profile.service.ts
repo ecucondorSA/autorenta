@@ -228,13 +228,17 @@ export class ProfileService {
   }
 
   async getMe(): Promise<UserProfile> {
-    const { data, error } = await this.supabase.from('me_profile').select('*').single();
+    const profile = await this.getCurrentProfile();
+    if (!profile) throw new Error('Usuario no autenticado');
 
-    if (error) {
-      throw error;
-    }
+    const role = (profile['role'] as string) ?? 'renter';
 
-    return data as UserProfile;
+    // Keep backwards-compat: some code expects these derived flags on the profile object.
+    return {
+      ...profile,
+      can_publish_cars: role === 'owner' || role === 'both',
+      can_book_cars: role === 'renter' || role === 'both',
+    } as UserProfile;
   }
 
   async safeUpdateProfile(updates: UpdateProfileData): Promise<UserProfile> {
