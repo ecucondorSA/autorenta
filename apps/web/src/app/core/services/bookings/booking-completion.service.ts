@@ -234,7 +234,7 @@ export class BookingCompletionService {
     // Actualizar la reserva para reflejar los cargos pendientes de disputa
     // CORRECTO: usar nombres de columnas reales de BD
     await onUpdateBooking(booking.id, {
-      status: 'pending_dispute_resolution', // Nuevo estado
+      status: 'dispute', // DB enum: 'dispute' (not 'pending_dispute_resolution')
       dispute_open_at: new Date().toISOString(),
       damage_amount_cents: inspectionData.damageAmountCents, // BD: damage_amount_cents
       damage_description: inspectionData.damageDescription, // BD: damage_description

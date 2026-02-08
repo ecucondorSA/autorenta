@@ -100,7 +100,7 @@ serve(async (req) => {
       );
     }
 
-    // Verificar autorización (debe ser admin o service role)
+    // Verificar autorización (debe ser admin)
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(
@@ -112,8 +112,47 @@ serve(async (req) => {
       );
     }
 
-    // Crear cliente de Supabase
+    // Crear cliente de Supabase con service key para operaciones
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+    // Crear cliente con token del usuario para verificar auth
+    const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') || SUPABASE_SERVICE_KEY;
+    const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    // Verificar que el usuario está autenticado y es admin
+    const { data: { user }, error: authError } = await userClient.auth.getUser();
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid or expired token' }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Verificar que es admin
+    const { data: adminUser, error: adminError } = await supabase
+      .from('admin_users')
+      .select('id, is_active')
+      .eq('user_id', user.id)
+      .eq('is_active', true)
+      .single();
+
+    if (adminError || !adminUser) {
+      console.error(`[mercadopago-money-out] Unauthorized access attempt by user ${user.id}`);
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: admin access required' }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    console.log(`[mercadopago-money-out] Admin ${user.id} processing withdrawal ${withdrawal_request_id}`);
 
     // Obtener la solicitud de retiro
     const { data: withdrawalRequest, error: wrError } = await supabase

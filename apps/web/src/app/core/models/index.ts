@@ -7,7 +7,8 @@ import type { BookingDepositStatus } from './wallet.model';
 // These match the database enums and are defined here for TypeScript
 // ============================================================================
 export type PaymentProvider = 'mercadopago' | 'stripe' | 'paypal' | 'wallet' | 'manual';
-export type PaymentStatus = 'pending' | 'authorized' | 'captured' | 'failed' | 'refunded' | 'cancelled' | 'approved' | 'rejected';
+// Must match DB enum: public.payment_status (pending, processing, approved, rejected, refunded, cancelled)
+export type PaymentStatus = 'pending' | 'processing' | 'approved' | 'rejected' | 'refunded' | 'cancelled';
 export type Transmission = 'manual' | 'automatic';
 export type UserRole = 'renter' | 'owner' | 'both';
 export type FuelType = 'gasoline' | 'diesel' | 'electric' | 'electrico' | 'hybrid' | 'gnc' | 'flex';
