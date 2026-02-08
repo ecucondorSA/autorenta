@@ -37,7 +37,7 @@ echo $ANTHROPIC_MODEL
 
 Agregar a `~/.bashrc`:
 ```bash
-export ANTHROPIC_MODEL="claude-opus-4-5-20251101"
+export ANTHROPIC_MODEL="claude-opus-4-6-20260208"
 ```
 
 O para Sonnet (default):
@@ -57,7 +57,7 @@ Durante la sesión:
 ### Opción 3: Flag al Iniciar
 
 ```bash
-claude --model claude-opus-4-5-20251101
+claude --model claude-opus-4-6-20260208
 claude --model claude-sonnet-4-5-20250929
 ```
 
@@ -66,21 +66,21 @@ claude --model claude-sonnet-4-5-20250929
 | Modelo | Alias | Descripción |
 |--------|-------|-------------|
 | **Sonnet 4.5** | `sonnet`, `default` | ✅ **Por defecto** - Mejor para tareas diarias |
-| Opus 4.5 | `opus` | Más capaz para trabajo complejo |
+| Opus 4.6 | `opus` | Más capaz para trabajo complejo |
 | Haiku 4.5 | `haiku` | Más rápido para respuestas rápidas |
 
 ## ⚠️ Nota sobre Opus
 
-- Opus 4.5 requiere **habilitación y compra de uso extra** en planes Pro
+- Opus 4.6 requiere **habilitación y compra de uso extra** en planes Pro
 - Si no tienes acceso a Opus, Claude Code usará Sonnet automáticamente
 
-## 🔧 Configurar Opus 4.5 como Default
+## 🔧 Configurar Opus 4.6 como Default
 
-Si quieres que Opus 4.5 sea tu modelo por defecto:
+Si quieres que Opus 4.6 sea tu modelo por defecto:
 
 ```bash
 # Agregar a ~/.bashrc
-echo 'export ANTHROPIC_MODEL="claude-opus-4-5-20251101"' >> ~/.bashrc
+echo 'export ANTHROPIC_MODEL="claude-opus-4-6-20260208"' >> ~/.bashrc
 
 # Cargar
 source ~/.bashrc
@@ -98,5 +98,5 @@ Para ver qué modelo está usando:
 
 # O iniciar y ver el banner
 claude
-# Debería mostrar: "Opus 4.5" o "Sonnet 4.5"
+# Debería mostrar: "Opus 4.6" o "Sonnet 4.5"
 ```

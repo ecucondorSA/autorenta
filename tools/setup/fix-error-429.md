@@ -50,7 +50,7 @@ Si estás haciendo muchas solicitudes:
 
 ### 5. Cambiar de Modelo (Temporal)
 
-Si Opus 4.5 está sobrecargado:
+Si Opus 4.6 está sobrecargado:
 
 ```bash
 # En Claude Code, usa:

@@ -100,7 +100,7 @@ claude
 Deberías ver:
 ```
 Claude Code v2.1.19
-Opus 4.5 · API Usage Billing  ← Esto es NORMAL con suscripción
+Opus 4.6 · API Usage Billing  ← Esto es NORMAL con suscripción
 ```
 
 **"API Usage Billing" NO significa que estés usando API key**, significa que tu uso se factura según tu plan de suscripción.
