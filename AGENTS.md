@@ -225,6 +225,29 @@ Deliverables:
 - Confirm tables/views referenced in services exist (and are in the right schema).
 - Confirm visibility rules are enforced in DB (RLS/policies) and reflected in UI (filters/overlays).
 
+### Platform Hardening Rules (10/10)
+
+- Contracts are explicit at boundaries (DB <-> RPC <-> Edge <-> UI):
+  - For every RPC/Edge touched, document: name, args, auth context, return type, and error codes.
+  - Never guess columns or payload shapes; regenerate DB types (`pnpm types:db:gen`) before refactors.
+- Money is stored and computed in integer minor units:
+  - DB stores integer cents (or equivalent minor units); UI formats for display only. Never store floats.
+  - Always carry currency with the amount across boundaries (DB, RPC, Edge, UI).
+- Time is always `timestamptz` in DB + ISO strings in code:
+  - Never store local times; UI converts for display only.
+- Status/state machines are canonical and enforced:
+  - If a table has `status`, define allowed transitions and enforce them in DB.
+  - UI mirrors the rules with disabled states/overlays and queries include every visible status.
+- RLS visibility is a testable contract:
+  - For public listings, define the visibility matrix (anon/auth/owner/admin) and verify with SQL.
+  - If something "disappears", check RLS and query filters before touching UI.
+- View/function changes must be migration-safe:
+  - Views: use DROP+CREATE when changing output columns; re-apply GRANTs.
+  - RPCs: schema-qualified names, stable signatures, no duplicate overloads unless intentional.
+- Deploy definition of done for DB changes:
+  - Migrations must run in production; never "baseline" or mark as applied unless explicitly requested.
+  - After deploy, validate with a production query that proves the new behavior.
+
 ### Cars: Status + Verification Policy (2026-02-08)
 - `public.cars.status` uses enum `public.car_status`: `draft`, `pending`, `active`, `paused`, `deleted`.
 - Marketplace visibility (public): `status IN ('active','pending')`.

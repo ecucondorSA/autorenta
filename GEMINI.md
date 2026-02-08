@@ -134,6 +134,29 @@ Entregables:
 - Checklist de verificación (SQL prod + tests + evidencia visual)
 ```
 
+### Reglas Senior 10/10 (Hardening)
+
+- Los contratos en los límites son explícitos (DB <-> RPC <-> Edge <-> UI):
+  - Para cada RPC/Edge tocada, documentar: nombre, args, contexto auth, tipo de retorno y códigos de error.
+  - Nunca asumir columnas o shapes; regenerar tipos (`pnpm types:db:gen`) antes de refactors.
+- Dinero: almacenar y calcular en enteros (minor units) en DB:
+  - DB guarda centavos (o equivalente); UI solo formatea. Prohibido floats.
+  - Siempre incluir moneda al cruzar límites (DB, RPC, Edge, UI).
+- Fechas: DB `timestamptz` + ISO strings en código:
+  - Nunca guardar hora local; UI convierte solo para display.
+- Estados: state machine canónica y enforced:
+  - Si hay `status`, definir transiciones permitidas y enforcearlas en DB.
+  - UI refleja (disabled/overlay) y las queries incluyen todos los estados visibles.
+- RLS es un contrato testeable:
+  - Para listados públicos, definir matriz de visibilidad (anon/auth/owner/admin) y validarla con SQL.
+  - Si algo "desaparece", revisar RLS y filtros antes de tocar UI.
+- Views/RPCs deben ser migration-safe:
+  - Views: si cambian columnas, usar DROP+CREATE y re-aplicar GRANTs.
+  - RPCs: nombres con schema (`public.fn`), firmas estables; evitar overloads duplicados sin intención.
+- DoD de deploy para cambios DB:
+  - Las migraciones deben correr en prod; nunca "baseline" salvo pedido explícito.
+  - Post-deploy: 1 query en prod que pruebe el comportamiento nuevo.
+
 ### Autos: Estados + Verificación (2026-02-08)
 - `public.cars.status` usa enum `public.car_status`: `draft`, `pending`, `active`, `paused`, `deleted`.
 - Visibilidad Marketplace (público): `active` + `pending`.
