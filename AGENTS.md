@@ -185,6 +185,12 @@ const { data } = await supabase.rpc('get_user_bookings', { user_id });
 - Business-critical rules MUST be enforced in the DB (trigger/constraint/RLS) and mirrored in UI for clarity (not the other way around).
 - Always validate the real DB schema before coding against it (generated DB types or `information_schema`).
   - Example: production `profiles` has NO `kyc` column; document KYC lives in `user_documents.status` (`kyc_status` enum).
+- **Auth context (Edge Functions) is part of DB enforcement:**
+  - `auth.uid()` is only set when the request includes a **user JWT** (forwarded `Authorization` header).
+  - Calling an RPC that checks `auth.uid()` with a **service role** client usually fails (`auth.uid()` becomes NULL).
+  - Pattern: in Edge Functions, use 2 clients:
+    - service role for privileged reads/writes
+    - anon key + forwarded `Authorization` for user-scoped RPCs.
 - When changing a `status` semantics, ship it as a single atomic change:
   - DB enum + migration
   - RLS policies (visibility)
@@ -204,6 +210,7 @@ Rule: split the analysis into 2 planes and validate both:
 Pre-checks (mandatory):
 - Confirm the real production schema (generated DB types or information_schema). Do NOT assume columns.
 - List invariants (business rules) and identify legacy data that violates them (SQL checks).
+- Confirm caller auth context for each RPC (user JWT vs service role, and whether the function uses `auth.uid()`).
 
 Deliverables:
 - Hypotheses per plane + concrete validation steps (SQL commands, app routes to test).

@@ -108,6 +108,32 @@ const { data } = await supabase.rpc('get_user_bookings', { user_id });
   - Ejemplo: producción **NO** tiene `profiles.kyc`; el estado KYC vive en `user_documents.status` (`kyc_status` enum).
 - **Datos legacy:** cuando cambies semántica/constraints (ej: `status`), asumir que hay registros viejos fuera de regla y preparar query + backfill.
 
+### Regla Crítica: Contexto de Auth (service_role vs user JWT)
+- `auth.uid()` solo existe si la request trae un **JWT de usuario** (header `Authorization`).
+- Si una RPC valida permisos con `auth.uid()`, llamarla con **service role** sin reenviar `Authorization` suele fallar (`auth.uid()` queda NULL).
+- Patrón recomendado en Edge Functions: 2 clientes Supabase
+  - service role para lecturas/escrituras privilegiadas
+  - anon key + `Authorization` forwardeado para RPCs user-scoped.
+
+### Plantilla de Prompt Senior (Hardening + Dos Planos)
+```text
+Contexto: AutoRenta. Necesito debug/implementación de [BUG/FEATURE] con hardening de producción.
+
+Regla: separar y validar los 2 planos:
+1) UI/Client gating: guards, filtros, disabled/overlay, queries, routing.
+2) DB enforcement: enums, triggers/constraints, RLS, RPCs, PostgREST schema cache.
+
+Pre-checks (obligatorio):
+- Confirmar schema real en producción (DB types o information_schema). No asumir columnas.
+- Confirmar contexto auth de cada RPC (user JWT vs service role, y si la función usa auth.uid()).
+- Buscar datos legacy fuera de regla (SQL) y definir backfill si aplica.
+
+Entregables:
+- Root cause por plano (UI vs DB)
+- Fix mínimo (DB primero si es regla crítica) + espejo en UI
+- Checklist de verificación (SQL prod + tests + evidencia visual)
+```
+
 ### Autos: Estados + Verificación (2026-02-08)
 - `public.cars.status` usa enum `public.car_status`: `draft`, `pending`, `active`, `paused`, `deleted`.
 - Visibilidad Marketplace (público): `active` + `pending`.
