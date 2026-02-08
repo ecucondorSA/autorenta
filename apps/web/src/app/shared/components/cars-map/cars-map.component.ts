@@ -3103,7 +3103,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   /**
    * Maneja el toggle de capas del mapa
    */
-  onLayerToggle(event: any): void {
+  onLayerToggle(event: { layerId: string; visible: boolean } | null | undefined): void {
     if (!event || typeof event.layerId !== 'string') {
       console.warn('[CarsMap] Invalid layer toggle event:', event);
       return;

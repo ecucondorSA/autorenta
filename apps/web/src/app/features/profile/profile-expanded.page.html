@@ -332,10 +332,10 @@
       <!-- ═══════════════════════════════════════════════════════════
            CUENTA
            ═══════════════════════════════════════════════════════════ -->
-      <div class="mb-4">
-        <h2 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 px-1">Cuenta</h2>
-        <div
-          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default">
+	      <div class="mb-4">
+	        <h2 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 px-1">Cuenta</h2>
+	        <div
+	          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default">
           <a routerLink="/profile/verification"
             class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
             <div class="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
@@ -374,26 +374,44 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
           </a>
-          <a routerLink="/profile/contact"
-            class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
-            <div class="h-10 w-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-              <svg class="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <div class="flex-1">
-              <span class="text-sm font-medium text-text-primary">Contacto</span>
-              <p class="text-xs text-text-secondary">Email, teléfono</p>
-            </div>
-            <svg class="h-5 w-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-          <a routerLink="/profile/security"
-            class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
-            <div class="h-10 w-10 rounded-xl bg-red-500/10 flex items-center justify-center">
-              <svg class="h-5 w-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+	          <a routerLink="/profile/contact"
+	            class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
+	            <div class="h-10 w-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
+	              <svg class="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+	                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+	                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+	              </svg>
+	            </div>
+	            <div class="flex-1">
+	              <span class="text-sm font-medium text-text-primary">Contacto</span>
+	              <p class="text-xs text-text-secondary">Email, teléfono</p>
+	            </div>
+	            <svg class="h-5 w-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+	              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+	            </svg>
+	          </a>
+	          <a routerLink="/profile/location-settings"
+	            class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
+	            <div class="h-10 w-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
+	              <svg class="h-5 w-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+	                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+	                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+	                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+	                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+	              </svg>
+	            </div>
+	            <div class="flex-1">
+	              <span class="text-sm font-medium text-text-primary">Mi Dirección</span>
+	              <p class="text-xs text-text-secondary">Ciudad y zona de referencia</p>
+	            </div>
+	            <svg class="h-5 w-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+	              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+	            </svg>
+	          </a>
+	          <a routerLink="/profile/security"
+	            class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
+	            <div class="h-10 w-10 rounded-xl bg-red-500/10 flex items-center justify-center">
+	              <svg class="h-5 w-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
@@ -415,7 +433,7 @@
               </svg>
             </div>
             <div class="flex-1">
-              <span class="text-sm font-bold text-red-600">Security Center</span>
+              <span class="text-sm font-bold text-red-600">Centro de Seguridad</span>
               <p class="text-xs text-text-secondary">SOS, Mesh y protección</p>
             </div>
             <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -465,10 +483,10 @@
       <!-- ═══════════════════════════════════════════════════════════
            HERRAMIENTAS
            ═══════════════════════════════════════════════════════════ -->
-      <div class="mb-4">
-        <h2 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 px-1">Herramientas</h2>
-        <div
-          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default">
+	      <div class="mb-4">
+	        <h2 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 px-1">Herramientas</h2>
+	        <div
+	          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default">
           <a routerLink="/rentarfast"
             class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
             <div
@@ -486,8 +504,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
           </a>
-          <a routerLink="/profile/mercadopago-connect"
-            class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
+	          <a routerLink="/profile/mercadopago-connect"
+	            class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
             <div class="h-10 w-10 rounded-xl bg-sky-500/10 flex items-center justify-center">
               <svg class="h-5 w-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -501,27 +519,9 @@
             <svg class="h-5 w-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-          </a>
-          <a routerLink="/profile/location-settings"
-            class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
-            <div class="h-10 w-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
-              <svg class="h-5 w-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <div class="flex-1">
-              <span class="text-sm font-medium text-text-primary">Ubicación</span>
-              <p class="text-xs text-text-secondary">Configuración de geolocalización</p>
-            </div>
-            <svg class="h-5 w-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
-      </div>
+	          </a>
+	        </div>
+	      </div>
 
       <!-- ═══════════════════════════════════════════════════════════
            AYUDA
@@ -545,7 +545,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
           </a>
-          <a routerLink="/support" class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
+          <a routerLink="/profile/contact" class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors">
             <div class="h-10 w-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
               <svg class="h-5 w-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
