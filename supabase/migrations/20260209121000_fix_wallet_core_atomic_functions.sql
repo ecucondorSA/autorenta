@@ -814,7 +814,9 @@ GRANT EXECUTE ON FUNCTION public.wallet_deposit_funds_admin(UUID, BIGINT, TEXT, 
 -- ============================================================================
 -- 8) View: v_wallet_history (make metadata JSON for UI, keep user scoping)
 -- ============================================================================
-CREATE OR REPLACE VIEW public.v_wallet_history AS
+DROP VIEW IF EXISTS public.v_wallet_history;
+
+CREATE VIEW public.v_wallet_history AS
 SELECT
   wt.id,
   wt.user_id,
@@ -844,3 +846,5 @@ SELECT
   NULL::timestamptz AS ledger_created_at
 FROM public.wallet_transactions wt
 WHERE wt.user_id = auth.uid();
+
+GRANT SELECT ON public.v_wallet_history TO anon, authenticated;
