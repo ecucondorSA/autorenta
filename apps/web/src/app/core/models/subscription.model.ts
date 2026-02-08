@@ -18,7 +18,8 @@ import type { Database } from '@core/types/database.types';
 // database.types.ts doesn't export enums properly
 // ============================================================================
 export type SubscriptionTier = 'club_standard' | 'club_black' | 'club_luxury';
-export type SubscriptionStatus = 'active' | 'inactive' | 'depleted' | 'expired' | 'cancelled' | 'upgraded';
+// Must match DB enum: public.subscription_status (active, inactive, depleted, expired, cancelled)
+export type SubscriptionStatus = 'active' | 'inactive' | 'depleted' | 'expired' | 'cancelled';
 
 // ============================================================================
 // Database Types (from Supabase - only Row/Insert/Update matter)
@@ -446,7 +447,6 @@ export const SUBSCRIPTION_STATUS_LABELS: Record<SubscriptionStatus, string> = {
   depleted: 'Saldo agotado',
   expired: 'Expirada',
   cancelled: 'Cancelada',
-  upgraded: 'Actualizada',
 };
 
 export const SUBSCRIPTION_USAGE_REASON_LABELS: Record<SubscriptionUsageReason, string> = {
