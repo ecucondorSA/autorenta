@@ -63,25 +63,6 @@ jobs:
         env:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
-      - name: Baseline Local Migrations (mark as applied)
-        run: |
-          # Mark ALL local migrations as applied to establish baseline
-          # This prevents re-applying migrations when schema already exists
-          echo "📋 Establishing migration baseline..."
-          for file in supabase/migrations/*.sql; do
-            filename=$(basename "$file")
-            # Extract timestamp (first 14 digits before underscore)
-            timestamp=$(echo "$filename" | grep -oE '^[0-9]+' | head -1)
-            if [ -n "$timestamp" ] && [ ${#timestamp} -ge 8 ]; then
-              echo "  ✓ Marking $timestamp as applied"
-              supabase migration repair --status applied "$timestamp" 2>/dev/null || true
-            fi
-          done
-          echo "✅ Baseline established"
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-
       - name: Repair Migration History (orphaned migrations)
         run: |
           # Mark old migrations with incomplete timestamps as reverted
