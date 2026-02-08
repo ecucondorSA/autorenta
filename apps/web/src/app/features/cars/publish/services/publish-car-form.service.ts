@@ -1,7 +1,6 @@
 import { Injectable, inject, signal, computed, type Signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CarsService } from '@core/services/cars/cars.service';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { APP_CONSTANTS } from '@core/config/constants';
 import { CarBrand, CarModel, VehicleCategory } from '../../../../core/models';
 
@@ -18,7 +17,6 @@ import { CarBrand, CarModel, VehicleCategory } from '../../../../core/models';
 export class PublishCarFormService {
   private readonly fb = inject(FormBuilder);
   private readonly carsService = inject(CarsService);
-  private readonly supabase = injectSupabase();
 
   private readonly minYear = 1980;
   private readonly maxYear = new Date().getFullYear(); // ✅ Changed: removed +1 to avoid future years
