@@ -235,6 +235,12 @@ Entregables:
 - Verificación: queries, unit tests/E2E y evidencia visual (Patchright Streaming).
 ```
 
+### Checklist de Drift (Producción vs Código)
+- Enum `status` consistente con DB (ej: `database.types.ts` vs `pg_enum`).
+- RPCs usados existen en DB (ej: `supabase.rpc('public.fn')` vs `pg_proc`).
+- Tablas/views referenciadas existen y están en el schema correcto.
+- Reglas críticas enforce en DB (RLS/triggers/constraints) y reflejadas en UI (filters/overlays).
+
 ---
 
 ## 12. Protocolo Anti-Regresiones (CRÍTICO)

@@ -193,6 +193,31 @@ const { data } = await supabase.rpc('get_user_bookings', { user_id });
   - One verification query in production that proves the behavior
   - Include a legacy-data check (SQL) for rows created before the change and a backfill plan if needed.
 
+### Senior Prompt Template (Debug + Hardening)
+```text
+Context: AutoRenta. Analyze [BUG/FEATURE] at senior level. Goal: fix root cause without whack-a-mole.
+
+Rule: split the analysis into 2 planes and validate both:
+1) UI/Client gating: guards, filters, disabled/overlay states, service queries, routing, feature flags.
+2) DB enforcement: enum values, triggers/constraints, RLS policies, RPCs, PostgREST schema cache.
+
+Pre-checks (mandatory):
+- Confirm the real production schema (generated DB types or information_schema). Do NOT assume columns.
+- List invariants (business rules) and identify legacy data that violates them (SQL checks).
+
+Deliverables:
+- Hypotheses per plane + concrete validation steps (SQL commands, app routes to test).
+- Confirmed root cause.
+- Minimal fix (DB first if it's business-critical) + UI mirror for clarity.
+- Verification checklist (prod SQL, unit/E2E, visual evidence).
+```
+
+### Drift Detection Checklist (Production vs Code)
+- Confirm `status` enums match DB (`database.types.ts` vs `pg_enum`).
+- Confirm every RPC used in code exists in DB (`supabase.rpc('public.fn')` vs `pg_proc`).
+- Confirm tables/views referenced in services exist (and are in the right schema).
+- Confirm visibility rules are enforced in DB (RLS/policies) and reflected in UI (filters/overlays).
+
 ### Cars: Status + Verification Policy (2026-02-08)
 - `public.cars.status` uses enum `public.car_status`: `draft`, `pending`, `active`, `paused`, `deleted`.
 - Marketplace visibility (public): `status IN ('active','pending')`.
