@@ -141,7 +141,7 @@ export class BrowseCarsPage {
       locationLabel: car.location_city || 'Ubicación desconocida',
       photoGallery: car.photos?.map((p) => p.url) || car.car_photos?.map((p) => p.url) || [],
       description: car.description || '',
-      availabilityStatus: 'available',
+      availabilityStatus: car.status === 'active' ? 'available' : 'unavailable',
       transmission: car.transmission,
       seats: car.seats,
       fuelType: car.fuel_type,
@@ -208,8 +208,37 @@ export class BrowseCarsPage {
         lng: location?.lng,
       });
 
-      this.logger.debug('RPC results', { count: results.length });
-      this.store.setCars(results as unknown as Car[]);
+      // Also fetch "visible but not bookable" cars (pending verification) so they appear greyed out.
+      // We keep the RPC for "available" cars (distance/scoring + availability) and merge pending cars client-side.
+      let pendingCars: Car[] = [];
+      if (location?.lat != null && location?.lng != null) {
+        const radiusKm = 30;
+        const deltaLat = radiusKm / 111;
+        const deltaLng = radiusKm / (111 * Math.max(0.2, Math.cos((location.lat * Math.PI) / 180)));
+
+        const marketplaceCars = await this.carsService.listMarketplaceCars({
+          bounds: {
+            north: location.lat + deltaLat,
+            south: location.lat - deltaLat,
+            east: location.lng + deltaLng,
+            west: location.lng - deltaLng,
+          },
+        });
+
+        pendingCars = marketplaceCars.filter((c) => c.status === 'pending');
+      }
+
+      const availableCars = results as unknown as Car[];
+      const availableIds = new Set(availableCars.map((c) => c.id));
+      const merged = [...availableCars, ...pendingCars.filter((c) => !availableIds.has(c.id))];
+
+      this.logger.debug('Cars loaded (available + pending)', {
+        available: availableCars.length,
+        pending: pendingCars.length,
+        merged: merged.length,
+      });
+
+      this.store.setCars(merged);
     } catch (e) {
       this.logger.error('Error loading cars', e);
       this.store.setLoading(false);

@@ -510,6 +510,9 @@ importers:
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
+      eruda:
+        specifier: ^3.4.3
+        version: 3.4.3
       eslint:
         specifier: ^9.39.1
         version: 9.39.2(jiti@1.21.7)
@@ -7679,6 +7682,9 @@ packages:
 
   error-stack-parser-es@1.0.5:
     resolution: {integrity: sha512-5qucVt2XcuGMcEGgWI7i+yZpmpByQ8J1lHhcL7PwqCwu9FPP3VUXzT4ltHe5i2z9dePwEHcDVOAfSnHsOlCXRA==}
+
+  eruda@3.4.3:
+    resolution: {integrity: sha512-J2TsF4dXSspOXev5bJ6mljv0dRrxj21wklrDzbvPmYaEmVoC+2psylyRi70nUPFh1mTQfIBsSusUtAMZtUN+/w==}
 
   es-abstract@1.24.1:
     resolution: {integrity: sha512-zHXBLhP+QehSSbsS9Pt23Gg964240DPd6QCf8WpkqEXxQ7fhdZzYsocOr5u7apWonsS5EjZDmTF+/slGMyasvw==}
@@ -19818,7 +19824,7 @@ snapshots:
       std-env: 3.10.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@24.10.10)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@26.1.0(bufferutil@4.1.0))(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
+      vitest: 3.2.4(@types/node@20.19.30)(@vitest/ui@3.2.4)(jiti@1.21.7)(jsdom@26.1.0(bufferutil@4.1.0))(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -19875,7 +19881,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@24.10.10)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@26.1.0(bufferutil@4.1.0))(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
+      vitest: 3.2.4(@types/node@20.19.30)(@vitest/ui@3.2.4)(jiti@1.21.7)(jsdom@26.1.0(bufferutil@4.1.0))(less@4.4.0)(sass@1.90.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.2)
 
   '@vitest/utils@3.2.4':
     dependencies:
@@ -21707,6 +21713,8 @@ snapshots:
       is-arrayish: 0.2.1
 
   error-stack-parser-es@1.0.5: {}
+
+  eruda@3.4.3: {}
 
   es-abstract@1.24.1:
     dependencies:
