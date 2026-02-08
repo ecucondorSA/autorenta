@@ -9,9 +9,12 @@ import { CarMapLocation } from '@core/services/cars/car-locations.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="relative group cursor-pointer transition-all duration-300 transform h-full preserve-3d"
+      class="relative group transition-all duration-300 transform h-full preserve-3d"
       [class.scale-105]="isSelected"
       [class.z-30]="isSelected"
+      [class.cursor-pointer]="!isDisabled"
+      [class.cursor-not-allowed]="isDisabled"
+      [class.opacity-80]="isDisabled"
       [style.transform]="cardTransform"
       (click)="onClick($event)"
       (touchstart)="onTouchStart($event)"
@@ -36,10 +39,20 @@ import { CarMapLocation } from '@core/services/cars/car-locations.service';
                 class="absolute inset-0 w-full h-full object-cover transition-all duration-500"
                 [class.opacity-0]="!imageLoaded"
                 [class.scale-105]="!imageLoaded"
+                [class.grayscale]="isDisabled"
+                [class.opacity-70]="isDisabled"
                 [style.transform]="imageLoaded ? 'scale(1.1) translate(' + parallaxX + 'px, ' + parallaxY + 'px)' : ''"
                 (load)="onImageLoad()"
                 loading="lazy"
                 [alt]="car.title || 'Auto'" />
+
+           @if (isDisabled) {
+             <div class="absolute inset-0 bg-black/35 flex items-center justify-center">
+               <span class="text-[9px] font-black uppercase tracking-wide text-white bg-black/70 px-2 py-1 rounded-md border border-white/10">
+                 En verificación
+               </span>
+             </div>
+           }
         </div>
 
         <!-- Info -->
@@ -71,8 +84,17 @@ import { CarMapLocation } from '@core/services/cars/car-locations.service';
               {{ car.pricePerDay | number:'1.0-0' }}
             </span>
             
-            <button class="bg-white text-black text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all duration-200 hover:bg-zinc-200 active:scale-95 whitespace-nowrap">
-              Ver Info
+            <button
+              class="text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all duration-200 active:scale-95 whitespace-nowrap"
+              [class.bg-white]="!isDisabled"
+              [class.text-black]="!isDisabled"
+              [class.hover:bg-zinc-200]="!isDisabled"
+              [class.bg-zinc-700]="isDisabled"
+              [class.text-zinc-200]="isDisabled"
+              [class.cursor-not-allowed]="isDisabled"
+              [attr.aria-disabled]="isDisabled ? 'true' : null"
+            >
+              {{ isDisabled ? 'En verificación' : 'Ver Info' }}
             </button>
           </div>
         </div>
@@ -107,6 +129,10 @@ export class CarMiniCardComponent {
   private wasSwiped = false;
   private readonly TOUCH_MOVE_THRESHOLD = 5;
 
+  get isDisabled(): boolean {
+    return this.car?.ownerVerified === false;
+  }
+
   onTouchStart(event: TouchEvent) {
     this.touchStartX = event.touches[0].clientX;
     this.touchStartY = event.touches[0].clientY;
@@ -130,6 +156,11 @@ export class CarMiniCardComponent {
   }
 
   onClick(event: MouseEvent) {
+    if (this.isDisabled) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
     // Don't emit click if this was triggered by a touch that moved (swipe)
     if (this.wasSwiped) {
       event.preventDefault();

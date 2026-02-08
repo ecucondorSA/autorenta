@@ -127,7 +127,9 @@ export class BrowseCarsPage {
     // Use filteredCars so map updates with search query
     const list = this.store.filteredCars();
     this.logger.debug('Transforming cars for map', { count: list.length });
-    return list.map((car) => ({
+    return list.map((car) => {
+      const ownerVerified = car.status !== 'pending' && car.owner?.id_verified !== false;
+      return {
       carId: car.id,
       lat: Number(car.location_lat) || 0,
       lng: Number(car.location_lng) || 0,
@@ -142,10 +144,13 @@ export class BrowseCarsPage {
       photoGallery: car.photos?.map((p) => p.url) || car.car_photos?.map((p) => p.url) || [],
       description: car.description || '',
       availabilityStatus: car.status === 'active' ? 'available' : 'unavailable',
+      instantBooking: car.auto_approval === true,
       transmission: car.transmission,
       seats: car.seats,
       fuelType: car.fuel_type,
-    }));
+      ownerVerified,
+    };
+    });
   });
 
   /** Format car title: Brand + Model (1st word only) + Year. Example: "Fiat Toro 2016" */

@@ -514,7 +514,9 @@ export class AdminService {
   // ============================================================================
 
   /**
-   * Approve a car listing
+   * Approve a car listing.
+   * Note: DB trigger enforces that owner must have id_verified=true for status='active'.
+   * If owner is not verified, this will fail with VERIFICATION_REQUIRED error.
    */
   async approveCar(carId: string): Promise<void> {
     // Check permission
@@ -525,7 +527,17 @@ export class AdminService {
 
     const { error } = await this.supabase.from('cars').update({ status: 'active' }).eq('id', carId);
 
-    if (error) throw error;
+    if (error) {
+      // Handle DB trigger violation: active requires owner id_verified
+      if (error.code === '23514' || error.message?.includes('id_verified')) {
+        const verificationError = new Error(
+          'No se puede activar: el propietario no ha completado la verificación de identidad.',
+        );
+        (verificationError as Error & { code: string }).code = 'VERIFICATION_REQUIRED';
+        throw verificationError;
+      }
+      throw error;
+    }
 
     // Log action
     await this.logAction({

@@ -1,5 +1,11 @@
 @if (car) {
-<div class="relative group cursor-pointer" [class.z-50]="isSelected" [class.z-10]="!isSelected">
+<div
+  class="relative group"
+  [class.cursor-pointer]="isOwnerVerified"
+  [class.cursor-not-allowed]="!isOwnerVerified"
+  [class.z-50]="isSelected"
+  [class.z-10]="!isSelected"
+>
 
   <!-- Radioactive Pulse Effect -->
   @if (isSelected) {

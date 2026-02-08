@@ -73,6 +73,15 @@ import { SoundService } from '@core/services/ui/sound.service';
             </p>
           }
 
+          @if (car.ownerVerified === false) {
+            <div class="mt-6 rounded-2xl bg-zinc-900/60 border border-white/10 p-4">
+              <p class="text-white font-bold text-sm">Vehiculo en verificacion</p>
+              <p class="text-zinc-300 text-sm mt-1">
+                Este vehiculo es visible, pero no se puede reservar hasta que el propietario complete su verificacion de identidad.
+              </p>
+            </div>
+          }
+
           <!-- Final Action -->
           <div class="mt-8 flex items-center justify-between gap-4 border-t border-white/5 pt-6">
              <div class="text-white">
@@ -83,7 +92,8 @@ import { SoundService } from '@core/services/ui/sound.service';
              </div>
              
              <button (click)="onConfirm()"
-                     class="flex-1 bg-white text-black font-black text-lg py-4 rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl hover:bg-zinc-200">
+                     [disabled]="car.ownerVerified === false"
+                     class="flex-1 bg-white text-black font-black text-lg py-4 rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-white disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:bg-zinc-700">
                 Continuar
              </button>
           </div>

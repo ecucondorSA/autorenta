@@ -94,19 +94,30 @@ export class CarCarouselComponent {
   navigateCarousel(direction: -1 | 1) {
     if (this.loading || this.cars.length === 0) return;
 
-    const currentIndex = this.cars.findIndex(c => c.carId === this.selectedCarId);
-    let newIndex = currentIndex + direction;
+    let currentIndex = this.cars.findIndex(c => c.carId === this.selectedCarId);
+    if (currentIndex < 0) currentIndex = 0;
 
-    // Wrap around
-    if (newIndex < 0) newIndex = this.cars.length - 1;
-    if (newIndex >= this.cars.length) newIndex = 0;
+    // Skip cars that are visible but not selectable (owner verification pending)
+    let newIndex = currentIndex;
+    let nextCar: CarMapLocation | null = null;
 
-    const newCar = this.cars[newIndex];
-    if (newCar) {
-      this.sound.play('tick');
-      this.store.setActiveCar(newCar.carId, 'carousel');
-      this.scrollToCard(newCar.carId);
+    for (let i = 0; i < this.cars.length; i++) {
+      newIndex += direction;
+      if (newIndex < 0) newIndex = this.cars.length - 1;
+      if (newIndex >= this.cars.length) newIndex = 0;
+
+      const candidate = this.cars[newIndex];
+      if (candidate && candidate.ownerVerified !== false) {
+        nextCar = candidate;
+        break;
+      }
     }
+
+    if (!nextCar) return;
+
+    this.sound.play('tick');
+    this.store.setActiveCar(nextCar.carId, 'carousel');
+    this.scrollToCard(nextCar.carId);
   }
 
   constructor() {

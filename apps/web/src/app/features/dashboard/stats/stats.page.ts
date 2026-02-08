@@ -34,7 +34,7 @@ export class StatsPage implements OnInit {
   readonly totalCars = computed(() => this.stats()?.cars.total ?? 0);
   readonly activeCars = computed(() => this.stats()?.cars.active ?? 0);
   readonly pendingCars = computed(() => this.stats()?.cars.pending ?? 0);
-  readonly suspendedCars = computed(() => this.stats()?.cars.suspended ?? 0);
+  readonly pausedCars = computed(() => this.stats()?.cars.paused ?? 0);
 
   readonly upcomingBookings = computed(() => this.stats()?.bookings.upcoming ?? 0);
   readonly activeBookings = computed(() => this.stats()?.bookings.active ?? 0);

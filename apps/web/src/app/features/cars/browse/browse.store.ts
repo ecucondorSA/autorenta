@@ -72,6 +72,8 @@ export class BrowseStore {
   readonly activeCarMapLocation = computed<CarMapLocation | null>(() => {
     const car = this.activeCar();
     if (!car) return null;
+
+    const ownerVerified = car.status !== 'pending' && car.owner?.id_verified !== false;
     
     return {
       carId: car.id,
@@ -88,6 +90,8 @@ export class BrowseStore {
       photoGallery: car.photos?.map((p) => p.url) || car.car_photos?.map((p) => p.url) || [],
       description: car.description || '',
       availabilityStatus: car.status === 'active' ? 'available' : 'unavailable',
+      instantBooking: car.auto_approval === true,
+      ownerVerified,
     };
   });
 

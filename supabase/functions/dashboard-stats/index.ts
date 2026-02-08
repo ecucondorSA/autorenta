@@ -22,7 +22,7 @@ interface DashboardStats {
     total: number;
     active: number;
     pending: number;
-    suspended: number;
+    paused: number;
   };
   bookings: {
     upcoming: number;
@@ -145,7 +145,7 @@ serve(async (req) => {
       total: cars.length,
       active: cars.filter((c) => c.status === 'active').length,
       pending: cars.filter((c) => c.status === 'pending').length,
-      suspended: cars.filter((c) => c.status === 'suspended').length,
+      paused: cars.filter((c) => c.status === 'paused').length,
     };
 
     // Process bookings data

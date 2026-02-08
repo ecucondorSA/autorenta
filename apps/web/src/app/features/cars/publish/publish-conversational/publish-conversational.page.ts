@@ -598,9 +598,7 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
       const progress = await this.verificationState.refreshProgress(true);
       const canActivate =
         !!progress?.requirements?.level_2?.completed;
-      if (!canActivate) {
-        (formData as Record<string, unknown>)['status'] = 'pending';
-      }
+      (formData as Record<string, unknown>)['status'] = canActivate ? 'active' : 'pending';
 
       const car = await this.carsService.createCar(formData);
 

@@ -176,7 +176,8 @@ import { MoneyPipe } from '../../pipes/money.pipe';
             <button
               type="button"
               (click)="handleQuickBook($event)"
-              class="w-full py-3 px-4 rounded-lg bg-cta-default hover:bg-cta-default text-cta-text text-sm font-semibold transition-colors duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+              [disabled]="!canQuickBook()"
+              class="w-full py-3 px-4 rounded-lg bg-cta-default hover:bg-cta-default text-cta-text text-sm font-semibold transition-colors duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:hover:bg-zinc-700 disabled:hover:shadow-sm"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -186,7 +187,7 @@ import { MoneyPipe } from '../../pipes/money.pipe';
                   d="M13 10V3L4 14h7v7l9-11h-7z"
                 />
               </svg>
-              <span>Alquilar ahora</span>
+              <span>{{ canQuickBook() ? 'Alquilar ahora' : 'En verificación' }}</span>
             </button>
             <!-- Secondary CTA: View Details -->
             <button
@@ -271,6 +272,8 @@ export class EnhancedMapTooltipComponent implements OnInit, OnChanges {
     return !!(this.car?.photoUrl && this.car?.instantBooking);
   });
 
+  readonly canQuickBook = computed(() => this.car?.ownerVerified !== false);
+
   readonly hasReviews = computed(() => {
     return this.reviewCount() > 0;
   });
@@ -330,6 +333,7 @@ export class EnhancedMapTooltipComponent implements OnInit, OnChanges {
 
   handleQuickBook(event: Event): void {
     event.stopPropagation();
+    if (!this.canQuickBook()) return;
     if (this.car?.carId) {
       this.quickBook.emit(this.car.carId);
     }

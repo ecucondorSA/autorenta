@@ -26,12 +26,13 @@ export interface WalletStats {
 
 /**
  * Car count statistics by status (for dashboard)
+ * Note: 'paused' matches DB enum public.car_status
  */
 export interface DashboardCarStats {
   total: number;
   active: number;
   pending: number;
-  suspended: number;
+  paused: number;
 }
 
 /**

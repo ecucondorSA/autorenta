@@ -335,7 +335,11 @@ export class CarsService {
 
     const { data, error } = await query;
     if (error) throw error;
-    return (data ?? []) as Car[];
+    return (data ?? []).map((car: CarWithPhotosRaw) => ({
+      ...car,
+      photos: car.car_photos || [],
+      owner: Array.isArray(car.owner) ? car.owner[0] : car.owner,
+    })) as Car[];
   }
 
   /**

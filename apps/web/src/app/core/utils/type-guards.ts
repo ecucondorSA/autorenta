@@ -72,7 +72,7 @@ export interface CarGuard {
   model: string;
   year: number;
   license_plate: string;
-  status: 'draft' | 'pending' | 'active' | 'suspended';
+  status: 'draft' | 'pending' | 'active' | 'paused' | 'deleted';
   location?: CarLocation;
   photos?: Array<{ id: string; url: string }>;
   created_at: string;
@@ -87,7 +87,7 @@ export function isCar(obj: unknown): obj is CarGuard {
     isString(obj['model']) &&
     isNumber(obj['year']) &&
     isString(obj['license_plate']) &&
-    ['draft', 'pending', 'active', 'suspended'].includes(obj['status'] as string) &&
+    ['draft', 'pending', 'active', 'paused', 'deleted'].includes(obj['status'] as string) &&
     isString(obj['created_at'])
   );
 }

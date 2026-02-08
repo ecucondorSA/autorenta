@@ -1801,6 +1801,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     // Handle click - emit with native event for isTrusted validation
     markerElement.addEventListener('click', (event: MouseEvent) => {
+      // Visible-but-not-selectable cars (pending owner verification) should not open details/booking.
+      if (car.ownerVerified === false) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
       this.carSelected.emit(car['carId']);
       this.carClickedWithEvent.emit({ carId: car['carId'], event });
       this.selectedCar.set(car);
