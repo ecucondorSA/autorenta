@@ -1,1 +1,22 @@
+#!/bin/bash
+# Pre-commit hook: Run before every commit
+
+set -e  # Exit on first error
+
+# 1. Lint and guardrails
+echo "🔍 Running lint and guardrails..."
 pnpm run lint && pnpm run guardrails
+
+# 2. Enum sync validation
+echo ""
+echo "🔍 Validating enum sync..."
+if ! bun scripts/maintenance/validate-enum-sync.ts; then
+  echo ""
+  echo "❌ Enum validation failed!"
+  echo "Fix the mismatches before committing."
+  echo ""
+  echo "Quick check: pnpm types:db:gen && git diff apps/web/src/app/core/types/database.types.ts"
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed"
