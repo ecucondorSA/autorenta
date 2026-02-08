@@ -30,6 +30,12 @@ export interface AvailabilityRange {
   to: string;
 }
 
+export interface AvailabilityConflictInfo {
+  hasPendingActive: boolean;
+  pendingMinutesLeft: number | null;
+  hasConfirmed: boolean;
+}
+
 export interface CarWithAvailability extends Car {
   isAvailableForDates: boolean;
   nextAvailableDate: string | null;
@@ -38,6 +44,51 @@ export interface CarWithAvailability extends Car {
 @Injectable({ providedIn: 'root' })
 export class CarAvailabilityService {
   private readonly supabase = injectSupabase();
+
+  async getAvailabilityConflictInfo(
+    carId: string,
+    startDateIso: string,
+    endDateIso: string,
+  ): Promise<AvailabilityConflictInfo> {
+    try {
+      const { data } = await this.supabase
+        .from('bookings')
+        .select('status, expires_at')
+        .eq('car_id', carId)
+        .in('status', ['pending', 'pending_payment', 'confirmed', 'in_progress'])
+        .lt('start_at', endDateIso)
+        .gt('end_at', startDateIso);
+
+      const rows = (data ?? []) as Array<{ status: string; expires_at: string | null }>;
+      const nowMs = Date.now();
+
+      const pendingRows = rows.filter((r) => r.status === 'pending' || r.status === 'pending_payment');
+      const confirmedRows = rows.filter((r) => r.status === 'confirmed' || r.status === 'in_progress');
+
+      const activePending = pendingRows.filter((r) => {
+        if (!r.expires_at) return true;
+        return new Date(r.expires_at).getTime() > nowMs;
+      });
+
+      let pendingMinutesLeft: number | null = null;
+      const pendingExpiries = activePending
+        .map((r) => (r.expires_at ? new Date(r.expires_at).getTime() : null))
+        .filter((t): t is number => typeof t === 'number' && t > nowMs);
+
+      if (pendingExpiries.length) {
+        const earliest = Math.min(...pendingExpiries);
+        pendingMinutesLeft = Math.max(1, Math.ceil((earliest - nowMs) / (1000 * 60)));
+      }
+
+      return {
+        hasPendingActive: activePending.length > 0,
+        pendingMinutesLeft,
+        hasConfirmed: confirmedRows.length > 0,
+      };
+    } catch {
+      return { hasPendingActive: false, pendingMinutesLeft: null, hasConfirmed: false };
+    }
+  }
 
   async getBlackouts(carId: string): Promise<CarBlackout[]> {
     // car_blackouts table no longer exists; use car_blocked_dates as source

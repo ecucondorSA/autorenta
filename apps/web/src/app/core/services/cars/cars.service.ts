@@ -194,6 +194,30 @@ export class CarsService {
     return photoData as CarPhoto;
   }
 
+  getCarImagePublicUrl(
+    storedPath: string,
+    options?: {
+      transform?: {
+        width?: number;
+        height?: number;
+        quality?: number;
+        format?: 'origin' | 'webp' | 'avif';
+      };
+    },
+  ): string | null {
+    const rawPath = storedPath.trim();
+    if (!rawPath) return null;
+
+    // Defensive: strip bucket prefix if it was accidentally included.
+    const normalizedPath = rawPath.replace(/^car-images\//, '').replace(/^\/+/, '');
+
+    const { data } = this.supabase.storage.from('car-images').getPublicUrl(normalizedPath, {
+      transform: options?.transform,
+    });
+
+    return data?.publicUrl ?? null;
+  }
+
   async getCarPhotos(carId: string): Promise<CarPhoto[]> {
     // P0 EGRESS OPTIMIZATION: Select only required fields instead of *
     const { data, error } = await this.supabase

@@ -22,6 +22,7 @@ import { catchError, map, switchMap, takeUntil, throttleTime } from 'rxjs/operat
 // Services
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { CarPricingService } from '@core/services/cars/car-pricing.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
@@ -29,7 +30,6 @@ import { FxService } from '@core/services/payments/fx.service';
 import { LocationService } from '@core/services/geo/location.service';
 import { MetaService } from '@core/services/ui/meta.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
@@ -143,12 +143,12 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   public readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
+  private readonly carAvailabilityService = inject(CarAvailabilityService);
   private readonly reviewsService = inject(ReviewsService);
   private readonly bookingsService = inject(BookingsService);
   private readonly walletService = inject(WalletService);
   private readonly metaService = inject(MetaService);
   private readonly fxService = inject(FxService);
-  private readonly supabase = injectSupabase();
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -212,8 +212,6 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   readonly dynamicPrice = signal<number | null>(null);
   readonly priceLoading = signal(false);
   readonly hourlyRateLoading = signal(false);
-
-  readonly isCarOwner = signal<boolean>(false);
 
   // Risk calculation for guarantee display
   readonly riskCalculation = signal<RiskCalculation | null>(null);
@@ -411,8 +409,6 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Verifica si el usuario actual es el propietario del auto
    */
-  readonly isOwner = computed(() => this.isCarOwner());
-
   readonly walletBalance = toSignal(this.walletService.getBalance(), {
     initialValue: null,
   });
@@ -485,18 +481,15 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
     const rawPath = (photo.stored_path ?? '').trim();
     if (!rawPath) return null;
 
-    // Defensive: strip bucket prefix if it was accidentally included
-    const normalizedPath = rawPath.replace(/^car-images\//, '').replace(/^\/+/, '');
-
     // ✅ OPTIMIZATION: Request transformed image to save bandwidth (Risk #1)
-    const { data } = this.supabase.storage.from('car-images').getPublicUrl(normalizedPath, {
+    const publicUrl = this.carsService.getCarImagePublicUrl(rawPath, {
       transform: {
         width: 1200, // HD Quality but resized from potential 4K originals
         quality: 80,
         format: 'origin', // Keep format or use 'webp' if supported across all targets
       },
     });
-    return data?.publicUrl ?? null;
+    return publicUrl ?? null;
   }
 
   /**
@@ -576,6 +569,8 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
     }
     return car.owner_id === currentUserId;
   });
+
+  readonly isCarOwner = computed(() => this.isCurrentUserOwner());
 
   readonly canContactOwner = computed(
     () => this.authService.isAuthenticated() && !this.isCurrentUserOwner(),
@@ -807,9 +802,6 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
         }
         // ✅ NEW: Inicializar ubicación y calcular distancia
         void this.initializeUserLocationAndDistance(state.car);
-
-        // ✅ NEW: Check if current user is the owner
-        void this.checkOwnership(state.car.owner_id);
 
         // 🎯 TikTok Events: Track ViewContent
         void this.tiktokEvents.trackViewContent({
@@ -1292,7 +1284,11 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
         try {
           const isAvailable = await this.carsService.isCarAvailable(car.id, startDate, endDate);
           if (!isAvailable) {
-            const conflictInfo = await this.getAvailabilityConflictInfo(car.id, startDate, endDate);
+            const conflictInfo = await this.carAvailabilityService.getAvailabilityConflictInfo(
+              car.id,
+              startDate,
+              endDate,
+            );
 
             // Track: Booking failed due to availability
             this.analytics.trackEvent('booking_failed', {
@@ -1425,59 +1421,6 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private async getAvailabilityConflictInfo(
-    carId: string,
-    startDate: string,
-    endDate: string,
-  ): Promise<{
-    hasPendingActive: boolean;
-    pendingMinutesLeft: number | null;
-    hasConfirmed: boolean;
-  }> {
-    try {
-      const { data } = await this.supabase
-        .from('bookings')
-        .select('status, expires_at')
-        .eq('car_id', carId)
-        .in('status', ['pending', 'pending_payment', 'confirmed', 'in_progress'])
-        .lt('start_at', endDate)
-        .gt('end_at', startDate);
-
-      const rows = (data ?? []) as Array<{ status: string; expires_at: string | null }>;
-      const nowMs = Date.now();
-
-      const pendingRows = rows.filter(
-        (r) => r.status === 'pending' || r.status === 'pending_payment',
-      );
-      const confirmedRows = rows.filter(
-        (r) => r.status === 'confirmed' || r.status === 'in_progress',
-      );
-
-      const activePending = pendingRows.filter((r) => {
-        if (!r.expires_at) return true;
-        return new Date(r.expires_at).getTime() > nowMs;
-      });
-
-      let pendingMinutesLeft: number | null = null;
-      const pendingExpiries = activePending
-        .map((r) => (r.expires_at ? new Date(r.expires_at).getTime() : null))
-        .filter((t): t is number => typeof t === 'number' && t > nowMs);
-
-      if (pendingExpiries.length) {
-        const earliest = Math.min(...pendingExpiries);
-        pendingMinutesLeft = Math.max(1, Math.ceil((earliest - nowMs) / (1000 * 60)));
-      }
-
-      return {
-        hasPendingActive: activePending.length > 0,
-        pendingMinutesLeft,
-        hasConfirmed: confirmedRows.length > 0,
-      };
-    } catch {
-      return { hasPendingActive: false, pendingMinutesLeft: null, hasConfirmed: false };
-    }
-  }
-
   /**
    * ✅ NEW: Handle location form cancellation
    */
@@ -1541,19 +1484,6 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       this.blockedDates.set(Array.from(blocked));
     } catch (error) {
       console.error('Error in loadBlockedDates:', error);
-    }
-  }
-
-  /**
-   * Check if the current user is the owner of the car
-   */
-  private async checkOwnership(ownerId: string): Promise<void> {
-    try {
-      const { data } = await this.supabase.auth.getSession();
-      this.isCarOwner.set(data.session?.user?.id === ownerId);
-    } catch (error) {
-      console.error('Error checking ownership:', error);
-      this.isCarOwner.set(false);
     }
   }
 

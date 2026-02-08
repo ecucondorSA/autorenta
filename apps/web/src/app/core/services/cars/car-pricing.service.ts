@@ -1,11 +1,18 @@
 import { Injectable, inject } from '@angular/core';
 import type { Car } from '@core/models';
 import { AuthService } from '@core/services/auth/auth.service';
-import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
+import { DynamicPricingService, type DynamicPricingResponse } from '@core/services/payments/dynamic-pricing.service';
 import { CurrencyService } from '@core/services/payments/currency.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { CoalescingRequestBatcher } from '@core/utils/coalescing-request-batcher';
+import {
+  calculateFallbackHourlyRateUsd,
+  normalizeToHourIso,
+  toUsdDollarFirst,
+} from '@core/utils/car-pricing.utils';
 
 const ANON_USER_ID = '00000000-0000-0000-0000-000000000000';
+const QUICK_QUOTE_CACHE_TTL_MS = 15000;
 
 export interface CarDailyPriceUsdQuote {
   priceUsd: number;
@@ -28,12 +35,27 @@ export class CarPricingService {
   private readonly currencyService = inject(CurrencyService);
   private readonly logger = inject(LoggerService).createChildLogger('CarPricingService');
 
+  private readonly dynamicQuoteBatcher = new CoalescingRequestBatcher<
+    { userId: string; rentalStartIso: string; rentalHours: number },
+    string,
+    DynamicPricingResponse
+  >(
+    async (ctx, regionIds) =>
+      this.dynamicPricingService.calculateBatchPricesRPC(
+        regionIds,
+        ctx.userId,
+        ctx.rentalStartIso,
+        ctx.rentalHours,
+      ),
+    { cacheTtlMs: QUICK_QUOTE_CACHE_TTL_MS },
+  );
+
   /**
    * Convert a static car daily price to USD using the last known Binance rate.
    * Returns null if conversion is not possible yet (rates not loaded).
    */
   getStaticDailyPriceUsd(car: Pick<Car, 'price_per_day' | 'currency'>): number | null {
-    return this.toUsd(car.price_per_day, car.currency);
+    return toUsdDollarFirst(car.price_per_day, car.currency, this.currencyService.exchangeRates());
   }
 
   /**
@@ -49,21 +71,30 @@ export class CarPricingService {
     const rentalStart = options?.rentalStart ?? new Date();
     const rentalHours = options?.rentalHours ?? 24;
 
-    const userId = this.authService.getCachedUserIdSync() ?? ANON_USER_ID;
+    const userId = (await this.authService.getCachedUserId()) ?? ANON_USER_ID;
+    const rentalStartIso = normalizeToHourIso(rentalStart);
+    const contextId = `${userId}|${rentalStartIso}|${rentalHours}`;
 
     try {
-      const response = await this.dynamicPricingService.calculatePriceRPC(
+      const response = await this.dynamicQuoteBatcher.request(
+        { id: contextId, ctx: { userId, rentalStartIso, rentalHours } },
         car.region_id,
-        userId,
-        rentalStart.toISOString(),
-        rentalHours,
       );
+      if (!response) return null;
 
       const total = response.total_price;
       if (!Number.isFinite(total) || total <= 0) return null;
 
-      const currency = (response.currency || car.currency || 'USD').toUpperCase();
-      const priceUsd = this.toUsd(total, currency);
+      // Prefer server-provided USD quote when available.
+      let priceUsd: number | null =
+        typeof response.price_in_usd === 'number' && Number.isFinite(response.price_in_usd)
+          ? response.price_in_usd
+          : null;
+
+      if (priceUsd === null) {
+        const currency = response.currency || car.currency || 'USD';
+        priceUsd = toUsdDollarFirst(total, currency, this.currencyService.exchangeRates());
+      }
       if (priceUsd === null) return null;
 
       const badge = this.dynamicPricingService.getSurgeBadge(response);
@@ -86,25 +117,6 @@ export class CarPricingService {
    * Fallback hourly pricing heuristic used when express quote fails.
    */
   calculateFallbackHourlyRateUsd(pricePerDayUsd: number): number {
-    if (!Number.isFinite(pricePerDayUsd) || pricePerDayUsd <= 0) return 0;
-    return (pricePerDayUsd * 0.75) / 24;
-  }
-
-  private toUsd(amount: number, currency: string | null | undefined): number | null {
-    if (!Number.isFinite(amount) || amount <= 0) return null;
-
-    const normalized = (currency || 'USD').toUpperCase();
-    if (normalized === 'USD') return amount;
-
-    // Dollar-first: show ARS prices as USD using raw Binance rate (no margin).
-    if (normalized === 'ARS') {
-      const rates = this.currencyService.exchangeRates();
-      const binanceRate = rates?.binance;
-      if (!binanceRate || !Number.isFinite(binanceRate) || binanceRate <= 0) return null;
-      return amount / binanceRate;
-    }
-
-    // Unknown currency: treat as already normalized to USD to avoid hiding prices.
-    return amount;
+    return calculateFallbackHourlyRateUsd(pricePerDayUsd);
   }
 }
