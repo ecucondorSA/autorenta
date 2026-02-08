@@ -122,7 +122,7 @@
     <!-- Menu Content -->
     <div class="drawer-content">
       <!-- Menu Sections -->
-      @for (section of menuSections; track trackBySection($index, section)) {
+      @for (section of menuSections(); track trackBySection($index, section)) {
         <div class="drawer-section">
           <p class="drawer-section__title" [class]="section.color">
             {{ section.title }}
@@ -136,19 +136,17 @@
             >
               <div
                 class="drawer-item__icon"
-                [class]="
-                  section.iconBgColor + ' ' + section.iconTextColor + ' group-hover:opacity-80'
-                "
+                [class]="item.iconBgColor + ' ' + item.iconTextColor + ' ' + item.iconBgHover"
               >
                 <app-menu-icon [name]="item.icon" [size]="20" />
               </div>
               <span class="drawer-item__label">{{ item.label }}</span>
-              @if (item.badge) {
+              @if (item.badgeText) {
                 <span
                   class="drawer-item__badge"
-                  [class.drawer-item__badge--new]="item.badge === 'NEW'"
+                  [class.drawer-item__badge--new]="item.badgeKind === 'new'"
                 >
-                  {{ item.badge }}
+                  {{ item.badgeText }}
                 </span>
               }
               <app-menu-icon name="chevron-right" [size]="18" cssClass="drawer-item__chevron" />

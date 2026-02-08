@@ -43,6 +43,11 @@ import { NotificationsService } from '@core/services/infrastructure/user-notific
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { SplashScreenService } from '@core/services/ui/splash-screen.service';
 import { routeAnimations } from '@core/animations/route-animations'; // Importar animaciones
+import {
+  PROFILE_NAV_TONE_CLASSES,
+  ResolvedProfileNavSection,
+  resolveProfileNavSections,
+} from '@core/ui/navigation/profile-menu';
 import { GuidedTourService } from './core/guided-tour';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { SeoFooterComponent } from './core/components/seo-footer/seo-footer.component';
@@ -305,6 +310,13 @@ export class AppComponent implements OnInit {
   readonly isRegisterPage = signal(false); // Ocultar botón "Registrar" en registro
   readonly isPanicMode = signal(false);
   readonly pendingApprovalCount = signal(0); // Contador de solicitudes pendientes para propietarios
+  readonly profileNavToneClasses = PROFILE_NAV_TONE_CLASSES;
+  readonly profileNavSections = computed<ResolvedProfileNavSection[]>(() =>
+    resolveProfileNavSections({
+      pendingApprovalCount: this.pendingApprovalCount(),
+      unreadNotificationsCount: this.unreadNotificationsCount(),
+    }),
+  );
 
   /** SOS button only visible during active trips (in_progress bookings) */
   readonly hasActiveTrip = computed(() =>

@@ -17,22 +17,32 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { UserProfile } from '@core/services/auth/profile.service';
 import { GamificationService } from '@core/services/gamification/gamification.service';
+import {
+  PROFILE_NAV_TONE_CLASSES,
+  ProfileNavTone,
+  resolveProfileNavSections,
+} from '@core/ui/navigation/profile-menu';
 import { MenuIconComponent } from '../menu-icon/menu-icon.component';
 import { VerifiedBadgeComponent } from '../verified-badge/verified-badge.component';
 
-interface MenuItem {
+interface MenuItemVm {
+  id: string;
   label: string;
   route: string;
   icon: string;
-  badge?: string;
-}
-
-interface MenuSection {
-  title: string;
-  color: string;
   iconBgColor: string;
   iconTextColor: string;
-  items: MenuItem[];
+  iconBgHover: string;
+  badgeText?: string;
+  badgeKind?: 'new' | 'count';
+}
+
+interface MenuSectionVm {
+  id: string;
+  title: string;
+  tone: ProfileNavTone;
+  color: string;
+  items: MenuItemVm[];
 }
 
 @Component({
@@ -61,6 +71,8 @@ export class MobileMenuDrawerComponent implements OnDestroy {
   }
 
   @Input() userProfile: UserProfile | null = null;
+  @Input() pendingApprovalCount: number = 0;
+  @Input() unreadNotificationsCount: number = 0;
 
   @Output() closeDrawer = new EventEmitter<void>();
 
@@ -107,70 +119,31 @@ export class MobileMenuDrawerComponent implements OnDestroy {
     };
   });
 
-  // Menu sections - Simplified to 3 sections (industry standard: Airbnb, Uber use 3-4)
-  readonly menuSections: MenuSection[] = [
-    {
-      title: 'Mis Actividades',
-      color: 'text-blue-600',
-      iconBgColor: 'bg-blue-500/10',
-      iconTextColor: 'text-blue-600',
-      items: [
-        { label: 'Mis Reservas', route: '/bookings', icon: 'calendar' },
-        { label: 'Favoritos', route: '/favorites', icon: 'heart' },
-      ],
-    },
-    {
-      title: 'Comunicación',
-      color: 'text-violet-600',
-      iconBgColor: 'bg-violet-500/10',
-      iconTextColor: 'text-violet-600',
-      items: [
-        { label: 'Mensajes', route: '/messages', icon: 'message' },
-        { label: 'Notificaciones', route: '/notifications', icon: 'bell' },
-      ],
-    },
-    {
-      title: 'Mis autos',
-      color: 'text-emerald-600',
-      iconBgColor: 'bg-emerald-500/10',
-      iconTextColor: 'text-emerald-600',
-      items: [
-        { label: 'Mis Autos', route: '/cars/my', icon: 'archive' },
-        { label: 'Solicitudes Pendientes', route: '/bookings/owner', icon: 'document' },
-        { label: 'Calendario', route: '/bookings/calendar', icon: 'calendar-days' },
-      ],
-    },
-    {
-      title: 'Finanzas',
-      color: 'text-emerald-600',
-      iconBgColor: 'bg-emerald-500/10',
-      iconTextColor: 'text-emerald-600',
-      items: [{ label: 'Finanzas', route: '/finanzas', icon: 'wallet' }],
-    },
-    {
-      title: 'Configuración',
-      color: 'text-gray-500',
-      iconBgColor: 'bg-gray-500/10',
-      iconTextColor: 'text-gray-600',
-      items: [
-        { label: 'Editar Perfil', route: '/profile', icon: 'user' },
-        { label: 'Seguridad', route: '/profile/security', icon: 'shield' },
-        { label: 'Centro de Seguridad', route: '/dashboard/security', icon: 'shield' },
-        { label: 'Preferencias', route: '/profile/preferences', icon: 'settings' },
-        { label: 'Conductor', route: '/profile/driver-profile', icon: 'user-circle' },
-      ],
-    },
-    {
-      title: 'Ayuda',
-      color: 'text-amber-600',
-      iconBgColor: 'bg-amber-500/10',
-      iconTextColor: 'text-amber-600',
-      items: [
-        { label: 'Centro de Ayuda', route: '/help', icon: 'help' },
-        { label: 'Contactar Soporte', route: '/profile/contact', icon: 'phone' },
-      ],
-    },
-  ];
+  readonly menuSections = computed<MenuSectionVm[]>(() =>
+    resolveProfileNavSections({
+      pendingApprovalCount: this.pendingApprovalCount,
+      unreadNotificationsCount: this.unreadNotificationsCount,
+    }).map((section) => ({
+      id: section.id,
+      title: section.title,
+      tone: section.tone,
+      color: PROFILE_NAV_TONE_CLASSES[section.tone].heading,
+      items: section.items.map((item) => {
+        const toneClasses = PROFILE_NAV_TONE_CLASSES[item.resolvedTone];
+        return {
+          id: item.id,
+          label: item.label,
+          route: item.route,
+          icon: item.mobileIcon,
+          iconBgColor: toneClasses.iconBg,
+          iconTextColor: toneClasses.iconText,
+          iconBgHover: toneClasses.iconBgHover,
+          badgeText: item.badgeText,
+          badgeKind: item.badgeKind,
+        };
+      }),
+    })),
+  );
 
   private touchStartY = 0;
   private isDragging = false;
@@ -294,12 +267,12 @@ export class MobileMenuDrawerComponent implements OnDestroy {
     }
   }
 
-  trackBySection(index: number, section: MenuSection): string {
-    return section.title;
+  trackBySection(index: number, section: MenuSectionVm): string {
+    return section.id;
   }
 
-  trackByItem(index: number, item: MenuItem): string {
-    return item.route;
+  trackByItem(index: number, item: MenuItemVm): string {
+    return item.id;
   }
 
   // Pro Level: Get user initials for avatar
