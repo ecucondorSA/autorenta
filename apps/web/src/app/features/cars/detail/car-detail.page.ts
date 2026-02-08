@@ -23,8 +23,8 @@ import { catchError, map, switchMap, takeUntil, throttleTime } from 'rxjs/operat
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
+import { CarPricingService } from '@core/services/cars/car-pricing.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
-import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
 import { FxService } from '@core/services/payments/fx.service';
 import { LocationService } from '@core/services/geo/location.service';
 import { MetaService } from '@core/services/ui/meta.service';
@@ -153,7 +153,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   readonly authService = inject(AuthService);
-  readonly pricingService = inject(DynamicPricingService);
+  private readonly carPricing = inject(CarPricingService);
   readonly urgentRentalService = inject(UrgentRentalService);
   private readonly analytics = inject(AnalyticsService);
   private readonly distanceCalculator = inject(DistanceCalculatorService);
@@ -607,9 +607,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       return null;
     }
 
-    // 75% del precio diario / 24 horas
-    const hourlyRate = (pricePerDay * 0.75) / 24;
-    return hourlyRate;
+    return this.carPricing.calculateFallbackHourlyRateUsd(pricePerDay);
   });
 
   /**
@@ -947,25 +945,9 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
 
     this.priceLoading.set(true);
     try {
-      const {
-        data: { user },
-      } = await this.supabase.auth.getUser();
-      const userId = user?.id || '00000000-0000-0000-0000-000000000000';
-
-      // Cargar precio diario (24 horas)
-      const { data, error } = await this.supabase.rpc('calculate_dynamic_price', {
-        p_region_id: car.region_id,
-        p_user_id: userId,
-        p_rental_start: new Date().toISOString(),
-        p_rental_hours: 24,
-      });
-
-      if (error) {
-        return;
-      }
-
-      if (data && data.total_price) {
-        this.dynamicPrice.set(data.total_price);
+      const quote = await this.carPricing.getDynamicDailyPriceUsd(car, { rentalHours: 24 });
+      if (quote) {
+        this.dynamicPrice.set(quote.priceUsd);
       }
 
       // ✅ FIX: Cargar precio por hora para modo express (5 horas mínimo)
@@ -980,7 +962,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
           // Fallback: calcular desde precio diario
           const pricePerDay = this.displayPrice();
           if (pricePerDay > 0) {
-            const fallbackHourly = (pricePerDay * 0.75) / 24;
+            const fallbackHourly = this.carPricing.calculateFallbackHourlyRateUsd(pricePerDay);
             this.dynamicHourlyRate.set(fallbackHourly);
           }
         } finally {
@@ -995,13 +977,18 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * ✅ FIX: Precio a mostrar en USD (precio base del auto)
-   * NOTE: Dynamic pricing temporarily disabled during USD migration
+   * Daily price shown in UI (USD, dollar-first).
+   * Uses dynamic pricing quote when available, otherwise converts static price to USD.
    */
   readonly displayPrice = computed(() => {
+    const dynamicUsd = this.dynamicPrice();
+    if (dynamicUsd !== null) return dynamicUsd;
+
     const car = this.car();
-    const price = car?.price_per_day ?? 0;
-    return Number.isFinite(price) ? price : 0;
+    if (!car) return 0;
+
+    const staticUsd = this.carPricing.getStaticDailyPriceUsd(car);
+    return staticUsd ?? 0;
   });
 
   readonly hasValidPrice = computed(() => {
@@ -1049,7 +1036,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
         // Fallback: calcular desde precio diario si está disponible
         const pricePerDay = this.displayPrice();
         if (pricePerDay > 0) {
-          const fallbackHourly = (pricePerDay * 0.75) / 24;
+          const fallbackHourly = this.carPricing.calculateFallbackHourlyRateUsd(pricePerDay);
           this.dynamicHourlyRate.set(fallbackHourly);
           this.logger.debug(`💰 [CarDetail] Using fallback hourly rate: $${fallbackHourly}/hora`);
         }

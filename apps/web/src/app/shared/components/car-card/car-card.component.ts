@@ -14,13 +14,11 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { RealtimePricingService } from '@core/services/payments/realtime-pricing.service';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
-import { CurrencyService } from '@core/services/payments/currency.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { CarPricingService } from '@core/services/cars/car-pricing.service';
 import { Car } from '../../../core/models';
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
 
@@ -34,11 +32,9 @@ import { getCarImageUrl } from '../../utils/car-placeholder.util';
 export class CarCardComponent implements OnInit, OnDestroy {
   private readonly logger = inject(LoggerService);
   private readonly cdr = inject(ChangeDetectorRef);
-  private readonly pricingService = inject(DynamicPricingService);
+  private readonly carPricing = inject(CarPricingService);
   private readonly realtimePricing = inject(RealtimePricingService);
   private readonly urgentRentalService = inject(UrgentRentalService);
-  protected readonly currencyService = inject(CurrencyService); // Exposed to template
-  private readonly supabase = injectSupabase();
 
   protected readonly Math = Math;
 
@@ -71,27 +67,14 @@ export class CarCardComponent implements OnInit, OnDestroy {
   readonly priceSurgeIcon = signal<string>('');
 
   readonly displayPrice = computed(() => {
-    const dynamic = this.dynamicPrice();
+    const dynamicUsd = this.dynamicPrice();
+    if (dynamicUsd !== null) return dynamicUsd;
+
     const car = this._car();
-    const rawPrice = dynamic !== null ? dynamic : (car?.price_per_day ?? 0);
+    if (!car) return 0;
 
-    // Dollar First Strategy: Normalize to USD
-    if (car?.currency === 'ARS') {
-      const rates = this.currencyService.exchangeRates();
-      // Fallback to a safe default if rates are not loaded yet to avoid 0/Infinity issues
-      // ideally we should show a loader, but for now we fallback or wait
-      const rate = rates ? rates.binance : undefined;
-
-      if (rate && rate > 0) {
-        return rawPrice / rate;
-      } else {
-        // If we don't have a rate yet, we might return null or the raw price (risky)
-        // or return 0 to trigger "Consultar precio"
-        return 0;
-      }
-    }
-
-    return rawPrice;
+    const staticUsd = this.carPricing.getStaticDailyPriceUsd(car);
+    return staticUsd ?? 0;
   });
 
   readonly hasValidPrice = computed(() => {
@@ -400,41 +383,10 @@ export class CarCardComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
 
     try {
-      const {
-        data: { user },
-      } = await this.supabase.auth.getUser();
-      const userId = user?.id || '00000000-0000-0000-0000-000000000000';
-
-      this.logger.debug('🔍 [CarCard] Calling calculate_dynamic_price RPC with:', {
-        regionId: car.region_id,
-        userId,
-      });
-
-      const { data, error } = await this.supabase.rpc('calculate_dynamic_price', {
-        p_region_id: car.region_id,
-        p_user_id: userId,
-        p_rental_start: new Date().toISOString(),
-        p_rental_hours: 24,
-      });
-
-      if (error) {
-        console.error('❌ [CarCard] RPC error:', error);
-        throw error;
-      }
-
-      this.logger.debug('✅ [CarCard] RPC response:', data);
-
-      if (data && data.total_price) {
-        const dynamicPricePerDay = data.total_price;
-        this.dynamicPrice.set(dynamicPricePerDay);
-        this.logger.debug(
-          `💰 [CarCard] Dynamic price set: $${dynamicPricePerDay} (was $${car.price_per_day})`,
-        );
-
-        if (data.surge_active || dynamicPricePerDay > car.price_per_day * 1.2) {
-          this.priceSurgeIcon.set('🔥');
-        }
-
+      const quote = await this.carPricing.getDynamicDailyPriceUsd(car, { rentalHours: 24 });
+      if (quote) {
+        this.dynamicPrice.set(quote.priceUsd);
+        this.priceSurgeIcon.set(quote.surgeIcon);
         this.cdr.detectChanges();
       }
     } catch (_error) {
