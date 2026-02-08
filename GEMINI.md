@@ -104,6 +104,9 @@ const { data } = await supabase.rpc('get_user_bookings', { user_id });
 - **Plano DB enforcement:** lo que la DB realmente permite o bloquea (enum values, triggers/constraints, RLS policies).
 - Si un bug parece "guardó pero no se ve" o "desapareció", asumir **RLS y filtros** primero.
 - Las reglas críticas de negocio deben ser **enforced en DB** y reflejadas en UI (no al revés).
+- **Validación de schema (obligatorio):** antes de codear, confirmar columnas reales (generated DB types o `information_schema`).
+  - Ejemplo: producción **NO** tiene `profiles.kyc`; el estado KYC vive en `user_documents.status` (`kyc_status` enum).
+- **Datos legacy:** cuando cambies semántica/constraints (ej: `status`), asumir que hay registros viejos fuera de regla y preparar query + backfill.
 
 ### Autos: Estados + Verificación (2026-02-08)
 - `public.cars.status` usa enum `public.car_status`: `draft`, `pending`, `active`, `paused`, `deleted`.
@@ -220,6 +223,10 @@ Contexto: AutoRenta. Necesito que analices [BUG/FEATURE] con enfoque senior y si
 Regla: separá el análisis en 2 planos:
 1) UI/Client gating: guards, filters, overlays/disabled, queries en services, estados en UI.
 2) DB enforcement: enum values, triggers/constraints, RLS policies, RPCs.
+
+Pre-check (obligatorio):
+- Confirmar el schema real (generated DB types o `information_schema`). No asumir columnas.
+- Listar invariantes y detectar datos legacy que las violan (SQL).
 
 Entregables:
 - Hipótesis por plano + cómo validarlas (comandos/SQL concretos).

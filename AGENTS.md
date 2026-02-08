@@ -183,12 +183,15 @@ const { data } = await supabase.rpc('get_user_bookings', { user_id });
   - DB enforcement: what the database truly allows (enum values, triggers, constraints, RLS policies).
 - If a bug looks like "it saved but I can't see it" or "it disappeared", assume RLS and/or query filters first.
 - Business-critical rules MUST be enforced in the DB (trigger/constraint/RLS) and mirrored in UI for clarity (not the other way around).
+- Always validate the real DB schema before coding against it (generated DB types or `information_schema`).
+  - Example: production `profiles` has NO `kyc` column; document KYC lives in `user_documents.status` (`kyc_status` enum).
 - When changing a `status` semantics, ship it as a single atomic change:
   - DB enum + migration
   - RLS policies (visibility)
   - Queries/filters in services
   - UI rendering (disabled/overlay)
   - One verification query in production that proves the behavior
+  - Include a legacy-data check (SQL) for rows created before the change and a backfill plan if needed.
 
 ### Cars: Status + Verification Policy (2026-02-08)
 - `public.cars.status` uses enum `public.car_status`: `draft`, `pending`, `active`, `paused`, `deleted`.
@@ -285,7 +288,7 @@ Only modify if user explicitly requests. Never add MercadoPago SDK.
 From `.cursorrules` and `.github/copilot-instructions.md`:
 
 - Access Supabase only via `core/services/*.service.ts`
-- Import types from `supabase.types.generated.ts`
+- DB types source of truth: `apps/web/src/app/core/types/database.types.ts` (regenerate with `pnpm types:db:gen`)
 - Never use service-role keys in frontend
 - File uploads < 2MB
 - Use Signals over BehaviorSubject for state
@@ -313,6 +316,9 @@ Non-negotiables:
 - Check BOTH planes:
   - UI gating (guards, filters, disabled state, overlays)
   - DB enforcement (enum values, triggers, constraints, RLS policies)
+- Pre-check:
+  - Confirm real DB schema (generated DB types or `information_schema`). Do not assume columns.
+  - List invariants and find legacy rows that violate them (SQL).
 - If the behavior is business-critical, enforce it in DB and mirror it in UI.
 - Provide:
   - Root cause summary split by plane (UI vs DB)
