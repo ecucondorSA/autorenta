@@ -62,6 +62,12 @@ export interface SpecialEvent {
   active: boolean;
 }
 
+type PricingUpdateCallbacks = {
+  onExchangeRateUpdate?: () => void;
+  onDemandUpdate?: (regionId: string) => void;
+  onEventUpdate?: () => void;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -73,6 +79,9 @@ export class RealtimePricingService implements OnDestroy {
   private exchangeRatesChannel: RealtimeChannel | null = null;
   private demandChannel: RealtimeChannel | null = null;
   private eventsChannel: RealtimeChannel | null = null;
+
+  private readonly sharedSubscribers = new Set<PricingUpdateCallbacks>();
+  private sharedSubscriptionsActive = false;
 
   // Signals para estado reactivo
   readonly latestExchangeRate = signal<ExchangeRateUpdate | null>(null);
@@ -218,21 +227,105 @@ export class RealtimePricingService implements OnDestroy {
    * 🔴 Suscribirse a TODO (exchange rates + demand + events)
    * Un solo método para activar todas las subscriptions
    */
-  subscribeToAllPricingUpdates(callbacks?: {
-    onExchangeRateUpdate?: () => void;
-    onDemandUpdate?: (regionId: string) => void;
-    onEventUpdate?: () => void;
-  }): () => void {
-    const unsubExchange = this.subscribeToExchangeRates(callbacks?.onExchangeRateUpdate);
-    const unsubDemand = this.subscribeToDemandSnapshots(callbacks?.onDemandUpdate);
-    const unsubEvents = this.subscribeToSpecialEvents(callbacks?.onEventUpdate);
+  subscribeToAllPricingUpdates(callbacks?: PricingUpdateCallbacks): () => void {
+    const subscriber = callbacks ?? {};
+    this.sharedSubscribers.add(subscriber);
 
-    // Return combined unsubscribe
+    if (!this.sharedSubscriptionsActive) {
+      this.sharedSubscriptionsActive = true;
+      this.startSharedSubscriptions();
+    }
+
     return () => {
-      unsubExchange();
-      unsubDemand();
-      unsubEvents();
+      this.sharedSubscribers.delete(subscriber);
+      if (this.sharedSubscribers.size === 0) {
+        this.cleanup();
+        this.sharedSubscriptionsActive = false;
+      }
     };
+  }
+
+  private startSharedSubscriptions(): void {
+    if (!this.exchangeRatesChannel) {
+      this.exchangeRatesChannel = this.supabase
+        .channel('exchange_rates_changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'exchange_rates',
+            filter: 'is_active=eq.true',
+          },
+          (payload: RealtimePostgresChangesPayload<ExchangeRateUpdate>) => {
+            if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+              this.latestExchangeRate.set(payload.new as ExchangeRateUpdate);
+              for (const sub of this.sharedSubscribers) {
+                sub.onExchangeRateUpdate?.();
+              }
+            }
+          },
+        )
+        .subscribe((status) => {
+          this.connectionStatus.set(status);
+          this.isConnected.set(status === 'SUBSCRIBED');
+        });
+
+      void this.loadInitialExchangeRate();
+    }
+
+    if (!this.demandChannel) {
+      this.demandChannel = this.supabase
+        .channel('demand_snapshots_changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'pricing_demand_snapshots',
+          },
+          (payload: RealtimePostgresChangesPayload<DemandSnapshot>) => {
+            if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+              const snapshot = payload.new as DemandSnapshot;
+              this.demandByRegion.update((map) => {
+                const newMap = new Map(map);
+                newMap.set(snapshot.region_id, snapshot);
+                return newMap;
+              });
+
+              for (const sub of this.sharedSubscribers) {
+                sub.onDemandUpdate?.(snapshot.region_id);
+              }
+            }
+          },
+        )
+        .subscribe();
+
+      void this.loadInitialDemandSnapshots();
+    }
+
+    if (!this.eventsChannel) {
+      this.eventsChannel = this.supabase
+        .channel('special_events_changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'pricing_special_events',
+            filter: 'active=eq.true',
+          },
+          (_payload: RealtimePostgresChangesPayload<SpecialEvent>) => {
+            void this.loadActiveEvents();
+            for (const sub of this.sharedSubscribers) {
+              sub.onEventUpdate?.();
+            }
+          },
+        )
+        .subscribe();
+
+      void this.loadActiveEvents();
+    }
   }
 
   /**
