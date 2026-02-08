@@ -21,6 +21,7 @@
 - **Design:** EVITAR Wizards paso a paso y Modales intrusivos. Preferir navegación fluida y Bottom Sheets.
 - **Unit Tests:** 127 tests fallando (tech debt conocido, no bloquea CI). Tests compilan correctamente.
 - **Supabase:** Proyecto activo `aceacpaockyxgogxsfyc`. Proyecto anterior `pisqjmoklivzpwufhscx` deprecado por quota exceeded.
+- **Autos (2026-02-08):** `pending` depende SOLO de verificación nivel 2 (`profiles.id_verified`). Marketplace muestra `active` + `pending`. La DB bloquea `active` sin `id_verified` (trigger). UI: `pending` visible con overlay gris y no reservable/no clickeable.
 
 ### Modelo de Negocio: Comodato 15-70-15
 Distribución de pagos de reservas:
@@ -110,6 +111,27 @@ const { data } = await supabase.rpc('get_user_bookings', { user_id });
 - **Idempotencia:** Usar `IF NOT EXISTS` para CREATE, verificar existencia antes de DROP.
 - **RLS:** Toda tabla nueva debe tener políticas RLS definidas.
 
+### Regla de Oro: Dos Planos (UI vs DB)
+- **Plano UI/Client gating:** lo que el frontend permite, filtra, deshabilita u oculta (guards, filters, overlays, queries).
+- **Plano DB enforcement:** lo que la DB realmente permite o bloquea (enum values, triggers/constraints, RLS policies).
+- Si un bug parece "guardó pero no se ve" o "desapareció", asumir **RLS y filtros** primero.
+- Las reglas críticas de negocio deben ser **enforced en DB** y reflejadas en UI (no al revés).
+
+### Autos: Estados + Verificación (2026-02-08)
+- `public.cars.status` usa enum `public.car_status`: `draft`, `pending`, `active`, `paused`, `deleted`.
+- Visibilidad Marketplace (público): `active` + `pending`.
+- `pending` se usa SOLO si el owner no tiene verificación nivel 2: `profiles.id_verified = false` (email/teléfono NO forman parte de esta regla).
+- `active` requiere `profiles.id_verified = true` y está enforced en DB con trigger.
+- UI: `pending` debe ser visible para todos, pero no clickeable/reservable (overlay gris).
+- Migraciones clave:
+  - `supabase/migrations/20260208043450_add_pending_status_and_marketplace_policies.sql`
+  - `supabase/migrations/20260208050301_enforce_active_requires_id_verified.sql`
+- Frontend touchpoints:
+  - Publish: `apps/web/src/app/features/cars/publish/publish-car-v2.page.ts`
+  - Publish: `apps/web/src/app/features/cars/publish/publish-conversational/publish-conversational.page.ts`
+  - Marketplace list: `apps/web/src/app/core/services/cars/cars.service.ts`
+  - Card gating: `apps/web/src/app/shared/components/car-card/car-card.component.ts`
+
 ---
 
 ## 6. Manejo de Errores
@@ -155,6 +177,9 @@ try {
 ---
 
 ## 7.1 E2E Testing con AI (Claude in Chrome + Stagehand)
+
+> Nota: En AutoRenta, el browser interactivo se realiza via MCP `patchright-streaming` (Gemini en navegador).
+> Por default NO es headless; headless solo si el usuario lo pide explícitamente. Mantener sesión persistente (no reset/cerrar) salvo pedido.
 
 ### Flujo de Trabajo Obligatorio
 
@@ -667,6 +692,22 @@ pkill -f "pnpm.*build"
 - **Acción Directa:** Ejecutar tareas simples y bien definidas inmediatamente.
 - **Confirmación:** Cambios complejos (refactors, migraciones de BD) requieren un plan y aprobación del usuario.
 - **CERO DEUDA TÉCNICA (NO FLOJERA):** No existe "lo optimizo después". El código se escribe **perfecto y optimizado HOY**. Si ves algo mal, arréglalo AHORA. Prohibido dejar `TODO` para "el futuro" en lógica crítica.
+- **Dos planos (UI vs DB):** Ante bugs de datos, separar y validar UI gating vs DB enforcement (RLS/triggers/constraints). Si es regla crítica, enforce en DB y reflejar en UI.
+
+### Prompt Senior (Debug/Hardening)
+```text
+Contexto: AutoRenta. Necesito que analices [BUG/FEATURE] con enfoque senior y sin whack-a-mole.
+
+Regla: separá el análisis en 2 planos:
+1) UI/Client gating: guards, filters, overlays/disabled, queries en services, estados en UI.
+2) DB enforcement: enum values, triggers/constraints, RLS policies, RPCs.
+
+Entregables:
+- Hipótesis por plano + cómo validarlas (comandos/SQL concretos).
+- Causa raíz confirmada.
+- Fix mínimo (DB primero si es regla de negocio), con migración si aplica.
+- Verificación: queries, unit tests/E2E y evidencia visual (Patchright Streaming).
+```
 
 ---
 

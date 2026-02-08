@@ -177,6 +177,36 @@ const { data } = await supabase.rpc('get_user_bookings', { user_id });
 - Logging must include context (function + request scope).
 - Logs are viewed in the Supabase Dashboard, not via CLI.
 
+### Two-Plane Debugging (UI vs DB) (Critical)
+- There are always two planes:
+  - UI/Client gating: what the UI allows, filters, disables, or hides (guards, filters, disabled states).
+  - DB enforcement: what the database truly allows (enum values, triggers, constraints, RLS policies).
+- If a bug looks like "it saved but I can't see it" or "it disappeared", assume RLS and/or query filters first.
+- Business-critical rules MUST be enforced in the DB (trigger/constraint/RLS) and mirrored in UI for clarity (not the other way around).
+- When changing a `status` semantics, ship it as a single atomic change:
+  - DB enum + migration
+  - RLS policies (visibility)
+  - Queries/filters in services
+  - UI rendering (disabled/overlay)
+  - One verification query in production that proves the behavior
+
+### Cars: Status + Verification Policy (2026-02-08)
+- `public.cars.status` uses enum `public.car_status`: `draft`, `pending`, `active`, `paused`, `deleted`.
+- Marketplace visibility (public): `status IN ('active','pending')`.
+- `pending` is used when the owner lacks identity verification level 2:
+  - Rule: `profiles.id_verified = false` => car must not be `active`.
+  - Email/phone are NOT part of the gating rule unless explicitly requested.
+- `active` requires `profiles.id_verified = true` and is enforced in DB via trigger.
+- UI requirement: `pending` cars are visible to everyone, but not bookable/clickable (grey overlay).
+- Key migrations:
+  - `supabase/migrations/20260208043450_add_pending_status_and_marketplace_policies.sql`
+  - `supabase/migrations/20260208050301_enforce_active_requires_id_verified.sql`
+- Key frontend touchpoints:
+  - Publish: `apps/web/src/app/features/cars/publish/publish-car-v2.page.ts`
+  - Publish: `apps/web/src/app/features/cars/publish/publish-conversational/publish-conversational.page.ts`
+  - Marketplace list: `apps/web/src/app/core/services/cars/cars.service.ts`
+  - Card gating: `apps/web/src/app/shared/components/car-card/car-card.component.ts`
+
 ---
 
 ## 8. Frozen Code (DO NOT MODIFY)
@@ -236,6 +266,8 @@ Only modify if user explicitly requests. Never add MercadoPago SDK.
 - New E2E flows: validate manually first, then automate.
 - Prefer reliable, repeatable steps over brittle UI selectors.
 - For anti-bot targets, use Patchright Streaming with persistent profile at `/home/edu/.patchright-profile`.
+- Default is headed (NOT headless). Use headless only when the user explicitly requests it.
+- Keep the browser session persistent: do not reset/close unless explicitly requested.
 
 ---
 
@@ -258,3 +290,33 @@ From `.cursorrules` and `.github/copilot-instructions.md`:
 - File uploads < 2MB
 - Use Signals over BehaviorSubject for state
 - All components must be standalone with explicit imports
+
+---
+
+## 16. Senior Prompt Template (Hardening + Two Planes)
+
+```text
+Context: AutoRenta. I need you to debug/implement [FEATURE/BUG] with production-grade hardening.
+
+Goal:
+- [what should happen]
+
+Repro steps:
+1) ...
+2) ...
+
+Expected vs Actual:
+- Expected: ...
+- Actual: ...
+
+Non-negotiables:
+- Check BOTH planes:
+  - UI gating (guards, filters, disabled state, overlays)
+  - DB enforcement (enum values, triggers, constraints, RLS policies)
+- If the behavior is business-critical, enforce it in DB and mirror it in UI.
+- Provide:
+  - Root cause summary split by plane (UI vs DB)
+  - Minimal fix plan (max 1 domain)
+  - Code/migration changes
+  - Verification steps (queries/tests/screenshots)
+```
