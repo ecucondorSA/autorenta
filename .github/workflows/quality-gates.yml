@@ -1,0 +1,281 @@
+name: Quality Gates
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 9 * * 1' # Weekly on Mondays at 9 AM
+
+jobs:
+  # ============================================================================
+  # Job 1: Enum Sync Validation
+  # ============================================================================
+  enum-sync:
+    name: Validate Enum Sync
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run enum validation
+        run: bun scripts/maintenance/validate-enum-sync.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+  # ============================================================================
+  # Job 2: RLS Coverage Audit (only on migration changes)
+  # ============================================================================
+  rls-audit:
+    name: RLS Coverage Audit
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.files.*.filename, 'supabase/migrations/') || github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run RLS audit
+        run: bun scripts/maintenance/audit-rls-coverage.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        continue-on-error: true # Allow to fail (warning mode for now)
+
+      - name: Comment on PR (if failed)
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '⚠️ **RLS Coverage Audit Failed**\n\nSome tables or buckets are missing RLS policies.\n\nSee workflow logs for details. Refer to `AGENTS-2.md` section 19.1 for policy templates.'
+            })
+
+  # ============================================================================
+  # Job 3: Database Types Sync Check
+  # ============================================================================
+  db-types-sync:
+    name: Database Types Sync
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Generate fresh types
+        run: |
+          supabase gen types typescript --project-id ${{ secrets.SUPABASE_PROJECT_ID }} > /tmp/fresh-types.ts
+        continue-on-error: true
+
+      - name: Compare with committed types
+        run: |
+          if [ ! -f /tmp/fresh-types.ts ]; then
+            echo "⚠️ Could not generate fresh types (skipping)"
+            exit 0
+          fi
+
+          if ! diff apps/web/src/app/core/types/database.types.ts /tmp/fresh-types.ts > /tmp/type-diff.txt 2>&1; then
+            echo "⚠️ Database types are out of sync!"
+            echo ""
+            echo "Differences (first 30 lines):"
+            head -30 /tmp/type-diff.txt
+            echo ""
+            echo "Run: pnpm types:db:gen"
+            exit 0  # Warning mode only
+          fi
+          echo "✅ Database types are in sync"
+
+  # ============================================================================
+  # Job 4: Edge Function Security Audit
+  # ============================================================================
+  edge-function-security:
+    name: Edge Function Security Audit
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.files.*.filename, 'supabase/functions/')) ||
+      github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for auth in Edge Functions
+        run: |
+          echo "Checking Edge Functions for proper authentication..."
+
+          # Find all index.ts files in functions/
+          FUNCTIONS=$(find supabase/functions -name "index.ts" -type f)
+
+          MISSING_AUTH=()
+
+          for func in $FUNCTIONS; do
+            # Skip frozen functions (MercadoPago, process-payment-queue)
+            if echo "$func" | grep -qE "mercadopago|process-payment-queue"; then
+              continue
+            fi
+
+            # Skip webhook functions (they use signature validation)
+            if echo "$func" | grep -q "webhook"; then
+              continue
+            fi
+
+            # Check if function has requireAuth() or getUser() call
+            if ! grep -q "requireAuth\|\.auth\.getUser()" "$func"; then
+              MISSING_AUTH+=("$func")
+            fi
+          done
+
+          if [ ${#MISSING_AUTH[@]} -gt 0 ]; then
+            echo "⚠️ Edge Functions possibly missing authentication:"
+            printf '%s\n' "${MISSING_AUTH[@]}"
+            echo ""
+            echo "Add requireAuth() call at the start of these functions."
+            echo "See AGENTS-2.md section 18.1"
+            exit 0  # Warning mode only
+          fi
+
+          echo "✅ All Edge Functions appear to have authentication"
+
+  # ============================================================================
+  # Job 5: Hardcoded Secrets Check
+  # ============================================================================
+  secrets-check:
+    name: Check for Hardcoded Secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Scan for secrets
+        run: |
+          echo "Scanning for hardcoded secrets..."
+
+          # Use custom grep patterns
+          if grep -rE "sk_live_|APP_USR_|pk\.[a-zA-Z0-9]{40}|AIza[a-zA-Z0-9_-]{35}" \
+             apps/web/src supabase/functions \
+             --exclude-dir=node_modules \
+             --exclude-dir=.git \
+             --exclude-dir=dist \
+             --exclude-dir=.angular \
+             --exclude="*.log" \
+             --exclude="*.md" \
+             | grep -v "EXAMPLE\|TODO\|PLACEHOLDER\|@example"; then
+            echo ""
+            echo "❌ CRITICAL: Hardcoded secrets found!"
+            echo "Move secrets to environment variables."
+            exit 1
+          fi
+
+          echo "✅ No hardcoded secrets found"
+
+  # ============================================================================
+  # Job 6: Lint & Build (basic quality gate)
+  # ============================================================================
+  lint-and-build:
+    name: Lint & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run lint
+        run: pnpm lint
+
+      - name: Build project
+        run: pnpm build:web
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+
+  # ============================================================================
+  # Job 7: Summary Report
+  # ============================================================================
+  summary:
+    name: Quality Gates Summary
+    runs-on: ubuntu-latest
+    needs: [enum-sync, rls-audit, db-types-sync, edge-function-security, secrets-check, lint-and-build]
+    if: always() && github.event_name == 'pull_request'
+
+    steps:
+      - name: Generate summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const jobs = [
+              { name: 'Enum Sync', status: '${{ needs.enum-sync.result }}' },
+              { name: 'RLS Audit', status: '${{ needs.rls-audit.result }}' },
+              { name: 'DB Types Sync', status: '${{ needs.db-types-sync.result }}' },
+              { name: 'Edge Function Security', status: '${{ needs.edge-function-security.result }}' },
+              { name: 'Secrets Check', status: '${{ needs.secrets-check.result }}' },
+              { name: 'Lint & Build', status: '${{ needs.lint-and-build.result }}' }
+            ];
+
+            const passed = jobs.filter(j => j.status === 'success').length;
+            const failed = jobs.filter(j => j.status === 'failure').length;
+            const skipped = jobs.filter(j => j.status === 'skipped').length;
+
+            const emoji = failed > 0 ? '❌' : '✅';
+
+            const summary = `## ${emoji} Quality Gates Summary
+
+            **Results:** ${passed} passed, ${failed} failed, ${skipped} skipped
+
+            | Check | Status |
+            |-------|--------|
+            ${jobs.map(j => `| ${j.name} | ${j.status === 'success' ? '✅' : j.status === 'failure' ? '❌' : '⏭️'} ${j.status} |`).join('\n')}
+
+            ${failed > 0 ? '\n⚠️ Some quality gates failed. See workflow logs for details.' : '\n✅ All quality gates passed!'}
+
+            ---
+            *Automated quality gates from AGENTS-2.md*
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });

@@ -18,10 +18,8 @@ export type CarStatus = 'draft' | 'active' | 'paused' | 'deleted' | 'pending';
 export type BookingStatus =
   | 'pending'
   | 'pending_payment'
-  | 'pending_deposit'
   | 'pending_owner_approval'
   | 'pending_approval'
-  | 'pending_review'
   | 'confirmed'
   | 'in_progress'
   | 'pending_return'
@@ -29,18 +27,24 @@ export type BookingStatus =
   | 'inspected_good'
   | 'damage_reported'
   | 'completed'
-  | 'resolved'
   | 'cancelled'
   | 'cancelled_renter'
   | 'cancelled_owner'
-  | 'cancelled_system'
-  | 'rejected'
-  | 'no_show'
   | 'payment_validation_failed'
-  | 'expired'
   | 'dispute'
   | 'disputed'
   | 'pending_dispute_resolution';
+
+// UI-only derived statuses (NOT stored in DB `booking_status`)
+export type BookingUiStatus =
+  | BookingStatus
+  | 'pending_deposit'
+  | 'pending_review'
+  | 'resolved'
+  | 'cancelled_system'
+  | 'rejected'
+  | 'no_show'
+  | 'expired';
 export type DocumentKind =
   | 'gov_id_front'
   | 'gov_id_back'
