@@ -79,6 +79,7 @@ interface EnvDefaults {
   googleCalendarApiKey?: string;
   googleCalendarClientId?: string;
   googleGeolocationApiKey?: string;
+  googleMapsApiKey?: string; // Google Maps JavaScript API (for map fallback)
   enableTikTok?: boolean;
   enableFacebook?: boolean;
   tiktok?: TikTokConfig;
@@ -197,6 +198,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     'NG_APP_GOOGLE_GEOLOCATION_API_KEY',
     defaults.googleGeolocationApiKey,
   ),
+  googleMapsApiKey: resolve('NG_APP_GOOGLE_MAPS_API_KEY', defaults.googleMapsApiKey),
   enableTikTok: defaults.enableTikTok ?? false,
   enableFacebook: defaults.enableFacebook ?? false,
   tiktok: {
