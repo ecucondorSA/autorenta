@@ -594,11 +594,9 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
       this.publishingStep.set('creating');
       this.publishingMessage.set('Creando publicación...');
 
-      // Publishing policy: if verification is incomplete, publish as pending.
+      // Publishing policy: if documents/identity verification (level 2) is incomplete, publish as pending.
       const progress = await this.verificationState.refreshProgress(true);
       const canActivate =
-        !!progress?.requirements?.level_1?.email_verified &&
-        !!progress?.requirements?.level_1?.phone_verified &&
         !!progress?.requirements?.level_2?.completed;
       if (!canActivate) {
         (formData as Record<string, unknown>)['status'] = 'pending';

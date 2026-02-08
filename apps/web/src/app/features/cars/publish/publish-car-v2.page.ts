@@ -1384,12 +1384,10 @@ export class PublishCarV2Page implements OnInit {
       }
 
       // Publishing policy:
-      // - If the owner is fully verified (email + phone + documents), publish as active.
-      // - Otherwise publish as pending: visible but not selectable/bookable until verification is completed.
+      // - If the owner has identity/documents verification completed (level 2), publish as active.
+      // - Otherwise publish as pending: visible but not selectable/bookable until documents are completed.
       const progress = await this.verificationState.refreshProgress(true);
       const canActivate =
-        !!progress?.requirements?.level_1?.email_verified &&
-        !!progress?.requirements?.level_1?.phone_verified &&
         !!progress?.requirements?.level_2?.completed;
 
       carData['status'] = canActivate ? 'active' : 'pending';

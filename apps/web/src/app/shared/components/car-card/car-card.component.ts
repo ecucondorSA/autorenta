@@ -287,11 +287,9 @@ export class CarCardComponent implements OnInit, OnDestroy {
   readonly isOwnerVerified = computed(() => {
     const car = this._car();
     if (!car?.owner) return true; // Default to verified if no owner data (avoid false grey)
-    return (
-      car.owner.email_verified === true &&
-      car.owner.phone_verified === true &&
-      car.owner.id_verified === true
-    );
+    // Product policy: "pending" is only about missing identity/documents (level 2).
+    // Email/phone may be incomplete but should not block publication visibility.
+    return car.owner.id_verified === true;
   });
 
   readonly isCarActive = computed(() => {

@@ -94,7 +94,7 @@ import { BrowseStore } from './browse.store';
 })
 export class BrowseCarsPage {
   @ViewChild(CarsMapComponent) carsMap!: CarsMapComponent;
-  
+
   private carsService = inject(CarsService);
   private locationService = inject(LocationService);
   private readonly logger = inject(LoggerService).createChildLogger('BrowseCarsPage');
@@ -246,7 +246,7 @@ export class BrowseCarsPage {
       this.isFetching = false;
     }
   }
-  
+
   async locateUser() {
     this.isLocating.set(true);
     try {
@@ -254,7 +254,7 @@ export class BrowseCarsPage {
       if (location) {
         this.lastLocation = location;
         this.lastLocationAt = Date.now();
-        
+
         // 1. Center Map
         if (this.carsMap) {
           this.carsMap.flyTo({ lat: location.lat, lng: location.lng }, 14);
@@ -334,8 +334,8 @@ export class BrowseCarsPage {
       typeof carId === 'string'
         ? carId
         : (carId as { detail?: { carId?: string }; carId?: string })?.detail?.carId ??
-          (carId as { detail?: { carId?: string }; carId?: string })?.carId ??
-          String(carId);
+        (carId as { detail?: { carId?: string }; carId?: string })?.carId ??
+        String(carId);
     this.logger.debug('Marker click (legacy)', { id });
     this.store.setActiveCar(id, 'map');
     const element = document.getElementById('car-' + id);
