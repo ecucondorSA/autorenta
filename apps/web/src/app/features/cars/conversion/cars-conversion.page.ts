@@ -31,7 +31,7 @@ export class CarsConversionPage implements OnInit {
 
   private async loadFeaturedCars(): Promise<void> {
     try {
-      const cars = await this.carsService.listActiveCars({});
+      const cars = await this.carsService.listMarketplaceCars({});
       // Ordenar por rating y tomar los 6 mejores
       const sorted = cars
         .filter(

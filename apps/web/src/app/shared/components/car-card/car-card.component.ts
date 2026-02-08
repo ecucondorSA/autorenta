@@ -289,9 +289,32 @@ export class CarCardComponent implements OnInit, OnDestroy {
     if (!car?.owner) return true; // Default to verified if no owner data (avoid false grey)
     return (
       car.owner.email_verified === true &&
+      car.owner.phone_verified === true &&
       car.owner.id_verified === true
     );
   });
+
+  readonly isCarActive = computed(() => {
+    const car = this._car();
+    // If status is missing in older payloads, assume active.
+    return !car?.status || car.status === 'active';
+  });
+
+  // "Selectable" means: renters can open and act on it (book/flow).
+  // Owners may still need to access/edit pending cars, so navigation is handled separately.
+  readonly isSelectableForRenter = computed(() => this.isCarActive() && this.isOwnerVerified());
+
+  readonly navigationEnabled = computed(() => {
+    // Owner views should remain navigable even if the car is pending verification.
+    if (this._showOwnerActions()) return true;
+    return this.isSelectableForRenter();
+  });
+
+  onCardClick(event: MouseEvent): void {
+    if (this.navigationEnabled()) return;
+    event.preventDefault();
+    event.stopPropagation();
+  }
 
   readonly hasInstantBooking = computed(() => {
     const car = this._car();

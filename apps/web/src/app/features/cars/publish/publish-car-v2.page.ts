@@ -18,6 +18,7 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { PricingService } from '@core/services/payments/pricing.service';
+import { VerificationStateService } from '@core/services/verification/verification-state.service';
 import { VehicleDocumentsService } from '@core/services/verification/vehicle-documents.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -155,6 +156,7 @@ export class PublishCarV2Page implements OnInit {
   private readonly documentsService = inject(VehicleDocumentsService);
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
   private readonly authService = inject(AuthService);
+  private readonly verificationState = inject(VerificationStateService);
   private readonly supabase = inject(SupabaseClientService).getClient();
   private readonly destroyRef = inject(DestroyRef);
 
@@ -1381,7 +1383,16 @@ export class PublishCarV2Page implements OnInit {
         delete carData['location_lng'];
       }
 
-      carData['status'] = 'active' as const; // Car is active inmediatamente y aparecerá en el mapa
+      // Publishing policy:
+      // - If the owner is fully verified (email + phone + documents), publish as active.
+      // - Otherwise publish as pending: visible but not selectable/bookable until verification is completed.
+      const progress = await this.verificationState.refreshProgress(true);
+      const canActivate =
+        !!progress?.requirements?.level_1?.email_verified &&
+        !!progress?.requirements?.level_1?.phone_verified &&
+        !!progress?.requirements?.level_2?.completed;
+
+      carData['status'] = canActivate ? 'active' : 'pending';
 
       this.logger.debug('🚗 Final car data to submit:', {
         ...carData,
@@ -1390,6 +1401,14 @@ export class PublishCarV2Page implements OnInit {
       });
 
       await this.performSubmission(carData);
+
+      if (!canActivate) {
+        this.notificationManager.info(
+          'Publicacion en verificacion',
+          'Tu auto se publico, pero estara limitado hasta completar tu verificacion.',
+          8000,
+        );
+      }
     } catch (error) {
       this.handleSubmissionError(error);
     } finally {

@@ -288,6 +288,55 @@ export class CarsService {
   }
 
   /**
+   * Marketplace listing: include cars that are visible but not yet bookable.
+   *
+   * Rationale:
+   * - Owners can publish while completing verification.
+   * - Renters see these cars with a disabled overlay until the owner finishes verification.
+   *
+   * Keep listActiveCars() strict to avoid changing behavior in other parts of the app.
+   */
+  async listMarketplaceCars(filters: CarFilters): Promise<Car[]> {
+    let query = this.supabase
+      .from('cars')
+      .select(
+        `
+        *,
+        car_photos(*),
+        owner:profiles!cars_owner_id_profiles_fkey(
+          id,
+          full_name,
+          avatar_url,
+          rating_avg,
+          rating_count,
+          created_at,
+          email_verified,
+          phone_verified,
+          id_verified
+        )
+      `,
+      )
+      .in('status', ['active', 'pending'])
+      .order('created_at', { ascending: false });
+
+    if (filters['city']) {
+      query = query.ilike('location_city', `%${filters['city']}%`);
+    }
+
+    if (filters.bounds) {
+      query = query
+        .lte('location_lat', filters.bounds.north)
+        .gte('location_lat', filters.bounds.south)
+        .lte('location_lng', filters.bounds.east)
+        .gte('location_lng', filters.bounds.west);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return (data ?? []) as Car[];
+  }
+
+  /**
    * 🚀 SCALABILITY: Paginated car listing with server-side count
    * Supports 10,000+ cars with efficient offset/limit pagination
    */

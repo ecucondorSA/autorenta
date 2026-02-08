@@ -208,7 +208,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   async loadCars() {
     this.loading.set(true);
     try {
-      const items = await this.carsService.listActiveCars({});
+      const items = await this.carsService.listMarketplaceCars({});
       this.cars.set(items);
     } finally {
       this.loading.set(false);

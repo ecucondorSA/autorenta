@@ -16,6 +16,7 @@ import { FormGroup } from '@angular/forms';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { VehiclePosition } from '@core/services/ai/photo-quality.service';
+import { VerificationStateService } from '@core/services/verification/verification-state.service';
 
 // Shared components
 import { PhotoWithAI, VehicleAutoDetect, PhotoPosition } from '@shared/components/photo-upload-ai/photo-upload-ai.component';
@@ -272,6 +273,7 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
   private readonly carsService = inject(CarsService);
   private readonly notifications = inject(NotificationManagerService);
   private readonly router = inject(Router);
+  private readonly verificationState = inject(VerificationStateService);
 
   // State
   readonly isSubmitting = signal(false);
@@ -592,6 +594,16 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
       this.publishingStep.set('creating');
       this.publishingMessage.set('Creando publicación...');
 
+      // Publishing policy: if verification is incomplete, publish as pending.
+      const progress = await this.verificationState.refreshProgress(true);
+      const canActivate =
+        !!progress?.requirements?.level_1?.email_verified &&
+        !!progress?.requirements?.level_1?.phone_verified &&
+        !!progress?.requirements?.level_2?.completed;
+      if (!canActivate) {
+        (formData as Record<string, unknown>)['status'] = 'pending';
+      }
+
       const car = await this.carsService.createCar(formData);
 
       if (!car?.id) {
@@ -623,7 +635,9 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
       // Success notification
       this.notifications.show({
         title: '¡Auto publicado!',
-        message: 'Tu auto ya está visible en el marketplace',
+        message: canActivate
+          ? 'Tu auto ya está visible en el marketplace'
+          : 'Tu auto se publico, pero estara limitado hasta completar tu verificacion',
         type: 'success',
         duration: 5000,
       });
