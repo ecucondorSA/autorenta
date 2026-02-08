@@ -86,6 +86,8 @@ constructor(private authService: AuthService) {}
 - All Supabase access goes through `apps/web/src/app/core/services/*.service.ts`.
 - Keep domain logic in services; pages orchestrate; components present.
 - Typed RPC calls: `supabase.rpc<T>()` and use explicit schema (`public.fn_name`).
+- **Forbidden (UI leak):** Do not import `injectSupabase()` or call `supabase.*` from `features/` or `shared/`. Exceptions: `core/services/infrastructure/*`, domain services, and test/dev scripts.
+- **Money logic lives in services:** UI components only format and render amounts; they do not compute pricing, fees, discounts, or call dynamic pricing RPCs directly.
 
 ### Project Structure
 ```
@@ -176,6 +178,14 @@ const { data } = await supabase.rpc('get_user_bookings', { user_id });
 - Never hardcode secrets; use `Deno.env.get(...)`.
 - Logging must include context (function + request scope).
 - Logs are viewed in the Supabase Dashboard, not via CLI.
+
+### Production DB Access (CLI)
+- The direct DB host (`db.<project_ref>.supabase.co`) may timeout in some environments (IPv6). Prefer the pooler for `psql`.
+- Template:
+```bash
+PGPASSWORD="$DB_PASSWORD" psql "postgresql://postgres.<project_ref>@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&connect_timeout=5"
+```
+- Never paste credentials in chat or commit them to git.
 
 ### Two-Plane Debugging (UI vs DB) (Critical)
 - There are always two planes:

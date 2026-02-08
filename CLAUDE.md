@@ -81,6 +81,7 @@ Configuración en:
 | **Subscriptions sin unsubscribe** | Memory leaks. Usar `takeUntilDestroyed()` o `async` pipe. |
 | **Hardcoded strings** | Usar constantes o i18n. |
 | **Términos técnicos en UI** | No mostrar "FIPE", "Binance", "API", "RPC", etc. Usar lenguaje amigable: "valor de mercado", "precio sugerido". |
+| **Supabase directo en UI** | Prohibido llamar `supabase.*` o importar `injectSupabase()` desde `features/` o `shared/`. Usar services/facades para evitar drift UI vs DB, endurecer reglas y testear. |
 | **`.toPromise()` en RxJS** | Deprecated en RxJS 7+. Usar `firstValueFrom()` de 'rxjs'. |
 
 ---
@@ -91,6 +92,12 @@ Configuración en:
 - **Project ID:** `aceacpaockyxgogxsfyc`
 - **URL:** `https://aceacpaockyxgogxsfyc.supabase.co`
 - **Proyecto anterior (DEPRECADO):** `pisqjmoklivzpwufhscx` - No usar, quota exceeded.
+
+### Acceso DB (CLI - Producción)
+- El host directo (`db.<project_ref>.supabase.co`) puede dar timeout por IPv6. Preferir el pooler para `psql`.
+```bash
+PGPASSWORD="$DB_PASSWORD" psql "postgresql://postgres.<project_ref>@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&connect_timeout=5"
+```
 
 ### RPC & Queries
 ```typescript
