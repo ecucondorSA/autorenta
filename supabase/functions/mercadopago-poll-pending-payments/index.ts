@@ -31,10 +31,7 @@ interface PollResult {
 }
 
 serve(async (req: Request) => {
-  const corsHeaders = {
-    ...corsHeaders,
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  };
+  const corsHeaders = getCorsHeaders(req);
 
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });

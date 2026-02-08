@@ -560,3 +560,287 @@ $$;
 
 GRANT EXECUTE ON FUNCTION public.wallet_unlock_funds(UUID, TEXT) TO authenticated;
 
+-- ============================================================================
+-- 6) Deposits: wallet_initiate_deposit + wallet_confirm_deposit_admin
+--
+-- Fixes production drift:
+-- - wallet_initiate_deposit was violating wallet_transactions constraints:
+--   - reference_type invalid (and reference_type set without reference_id)
+-- - wallet_confirm_deposit_admin referenced missing columns and did not update user_wallets cents balances.
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION public.wallet_initiate_deposit(
+  p_user_id UUID,
+  p_amount BIGINT,
+  p_provider TEXT DEFAULT 'mercadopago'::text
+)
+RETURNS UUID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO 'public', 'auth', 'extensions'
+AS $$
+DECLARE
+  v_tx_id UUID;
+BEGIN
+  -- Enforce that normal users can only create deposits for themselves.
+  -- Service role (Edge Functions) may create deposits for any user.
+  IF auth.role() IS DISTINCT FROM 'service_role' THEN
+    IF auth.uid() IS NULL THEN
+      RAISE EXCEPTION 'Usuario no autenticado';
+    END IF;
+    IF auth.uid() <> p_user_id THEN
+      RAISE EXCEPTION 'UNAUTHORIZED';
+    END IF;
+  END IF;
+
+  IF p_amount IS NULL OR p_amount <= 0 THEN
+    RAISE EXCEPTION 'Amount must be positive';
+  END IF;
+
+  IF NOT EXISTS (SELECT 1 FROM auth.users WHERE id = p_user_id) THEN
+    RAISE EXCEPTION 'User not found';
+  END IF;
+
+  INSERT INTO public.wallet_transactions (
+    user_id,
+    type,
+    status,
+    amount,
+    currency,
+    provider,
+    description,
+    category,
+    is_withdrawable,
+    created_at,
+    updated_at
+  ) VALUES (
+    p_user_id,
+    'deposit',
+    'pending',
+    p_amount::NUMERIC, -- cents
+    'USD',
+    COALESCE(NULLIF(LOWER(TRIM(p_provider)), ''), 'mercadopago'),
+    'Depósito vía ' || COALESCE(NULLIF(p_provider, ''), 'mercadopago'),
+    'deposit',
+    FALSE,
+    NOW(),
+    NOW()
+  )
+  RETURNING id INTO v_tx_id;
+
+  RETURN v_tx_id;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.wallet_initiate_deposit(UUID, BIGINT, TEXT) TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.wallet_confirm_deposit_admin(
+  p_user_id UUID,
+  p_transaction_id UUID,
+  p_provider_transaction_id TEXT,
+  p_provider_metadata JSONB DEFAULT '{}'::jsonb
+)
+RETURNS TABLE (
+  success BOOLEAN,
+  message TEXT,
+  new_available_balance NUMERIC,
+  new_withdrawable_balance NUMERIC,
+  new_total_balance NUMERIC
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO 'public', 'auth', 'extensions'
+AS $$
+DECLARE
+  v_transaction RECORD;
+  v_existing_provider_tx_id TEXT;
+  v_amount_cents BIGINT;
+  v_old_balance BIGINT;
+  v_old_available BIGINT;
+  v_old_locked BIGINT;
+  v_new_balance BIGINT;
+  v_new_available BIGINT;
+BEGIN
+  -- Allow privileged backend calls (service_role). Otherwise require admin.
+  IF auth.role() IS DISTINCT FROM 'service_role' THEN
+    IF auth.uid() IS NULL THEN
+      RETURN QUERY SELECT FALSE, 'Usuario no autenticado', NULL::NUMERIC, NULL::NUMERIC, NULL::NUMERIC;
+      RETURN;
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin') THEN
+      RETURN QUERY SELECT FALSE, 'Solo administradores pueden confirmar depósitos', NULL::NUMERIC, NULL::NUMERIC, NULL::NUMERIC;
+      RETURN;
+    END IF;
+  END IF;
+
+  -- Provider transaction id must be unique for completed deposits
+  IF p_provider_transaction_id IS NOT NULL AND p_provider_transaction_id <> '' THEN
+    SELECT provider_transaction_id INTO v_existing_provider_tx_id
+    FROM public.wallet_transactions
+    WHERE provider_transaction_id = p_provider_transaction_id
+      AND status = 'completed'
+    LIMIT 1;
+
+    IF v_existing_provider_tx_id IS NOT NULL THEN
+      RETURN QUERY SELECT FALSE, FORMAT('Payment ID %s ya fue procesado', p_provider_transaction_id), NULL::NUMERIC, NULL::NUMERIC, NULL::NUMERIC;
+      RETURN;
+    END IF;
+  END IF;
+
+  -- Lock transaction row to avoid double confirmation
+  SELECT * INTO v_transaction
+  FROM public.wallet_transactions
+  WHERE id = p_transaction_id
+    AND user_id = p_user_id
+    AND type = 'deposit'
+    AND status = 'pending'
+  FOR UPDATE;
+
+  IF NOT FOUND THEN
+    RETURN QUERY SELECT FALSE, 'Transacción no encontrada o ya procesada', NULL::NUMERIC, NULL::NUMERIC, NULL::NUMERIC;
+    RETURN;
+  END IF;
+
+  v_amount_cents := COALESCE(v_transaction.amount::BIGINT, 0);
+  IF v_amount_cents <= 0 THEN
+    RETURN QUERY SELECT FALSE, 'Monto inválido', NULL::NUMERIC, NULL::NUMERIC, NULL::NUMERIC;
+    RETURN;
+  END IF;
+
+  -- Ensure wallet exists and lock it
+  INSERT INTO public.user_wallets (user_id, currency)
+  VALUES (p_user_id, COALESCE(v_transaction.currency, 'USD'))
+  ON CONFLICT (user_id) DO NOTHING;
+
+  SELECT balance_cents, available_balance_cents, locked_balance_cents
+  INTO v_old_balance, v_old_available, v_old_locked
+  FROM public.user_wallets
+  WHERE user_id = p_user_id
+  FOR UPDATE;
+
+  v_new_balance := COALESCE(v_old_balance, 0) + v_amount_cents;
+  v_new_available := COALESCE(v_old_available, 0) + v_amount_cents;
+
+  UPDATE public.user_wallets
+  SET balance_cents = v_new_balance,
+      available_balance_cents = v_new_available,
+      updated_at = NOW()
+  WHERE user_id = p_user_id;
+
+  UPDATE public.wallet_transactions
+  SET
+    status = 'completed',
+    provider_transaction_id = p_provider_transaction_id,
+    provider_metadata = COALESCE(provider_metadata, '{}'::jsonb)
+      || COALESCE(p_provider_metadata, '{}'::jsonb)
+      || jsonb_build_object('confirmed_at', NOW(), 'confirmed_by', auth.uid()),
+    completed_at = NOW(),
+    updated_at = NOW(),
+    balance_after_cents = v_new_balance
+  WHERE id = p_transaction_id;
+
+  RETURN QUERY SELECT
+    TRUE,
+    FORMAT('Depósito confirmado: %s', (v_amount_cents / 100.0)::NUMERIC),
+    (v_new_available / 100.0)::NUMERIC,
+    (v_new_available / 100.0)::NUMERIC,
+    ((v_new_available + COALESCE(v_old_locked, 0)) / 100.0)::NUMERIC;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.wallet_confirm_deposit_admin(UUID, UUID, TEXT, JSONB) TO authenticated;
+
+-- ============================================================================
+-- 7) Admin Deposits: wallet_deposit_funds_admin (replace broken wallet_ledger logic)
+-- ============================================================================
+CREATE OR REPLACE FUNCTION public.wallet_deposit_funds_admin(
+  p_user_id UUID,
+  p_amount_cents BIGINT,
+  p_description TEXT,
+  p_reference_id TEXT DEFAULT NULL
+)
+RETURNS TABLE (
+  success BOOLEAN,
+  transaction_id UUID,
+  error_message TEXT
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO 'public', 'auth', 'extensions'
+AS $$
+DECLARE
+  v_result JSONB;
+  v_reference_uuid UUID;
+BEGIN
+  -- Allow privileged backend calls (service_role). Otherwise require admin.
+  IF auth.role() IS DISTINCT FROM 'service_role' THEN
+    IF auth.uid() IS NULL OR NOT EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin') THEN
+      RETURN QUERY SELECT FALSE, NULL::UUID, 'Solo administradores pueden depositar fondos';
+      RETURN;
+    END IF;
+  END IF;
+
+  IF p_amount_cents IS NULL OR p_amount_cents <= 0 THEN
+    RETURN QUERY SELECT FALSE, NULL::UUID, 'El monto debe ser positivo';
+    RETURN;
+  END IF;
+
+  -- Best-effort parse reference_id to UUID
+  BEGIN
+    v_reference_uuid := NULLIF(p_reference_id, '')::UUID;
+  EXCEPTION WHEN OTHERS THEN
+    v_reference_uuid := NULL;
+  END;
+
+  v_result := public.process_wallet_transaction(
+    p_user_id,
+    p_amount_cents,
+    'deposit',
+    'admin_deposit',
+    COALESCE(p_description, 'Depósito admin'),
+    v_reference_uuid,
+    COALESCE(NULLIF(p_reference_id, ''), 'admin_deposit:' || p_user_id::TEXT || ':' || NOW()::TEXT)
+  );
+
+  RETURN QUERY SELECT TRUE, (v_result->>'transaction_id')::UUID, NULL::TEXT;
+EXCEPTION WHEN OTHERS THEN
+  RETURN QUERY SELECT FALSE, NULL::UUID, SQLERRM::TEXT;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.wallet_deposit_funds_admin(UUID, BIGINT, TEXT, TEXT) TO authenticated;
+
+-- ============================================================================
+-- 8) View: v_wallet_history (make metadata JSON for UI, keep user scoping)
+-- ============================================================================
+CREATE OR REPLACE VIEW public.v_wallet_history AS
+SELECT
+  wt.id,
+  wt.user_id,
+  wt.created_at AS transaction_date,
+  wt.type AS transaction_type,
+  wt.status,
+  wt.amount::BIGINT AS amount_cents,
+  wt.currency,
+  jsonb_build_object(
+    'description', wt.description,
+    'reference_type', wt.reference_type,
+    'reference_id', wt.reference_id,
+    'provider', wt.provider,
+    'provider_transaction_id', wt.provider_transaction_id,
+    'provider_metadata', wt.provider_metadata,
+    'admin_notes', wt.admin_notes,
+    'is_withdrawable', wt.is_withdrawable,
+    'category', wt.category,
+    'balance_after_cents', wt.balance_after_cents
+  ) AS metadata,
+  CASE WHEN wt.reference_type = 'booking' THEN wt.reference_id ELSE NULL END AS booking_id,
+  'legacy'::text AS source_system,
+  wt.id AS legacy_transaction_id,
+  NULL::uuid AS ledger_entry_id,
+  NULL::text AS ledger_ref,
+  wt.completed_at AS legacy_completed_at,
+  NULL::timestamptz AS ledger_created_at
+FROM public.wallet_transactions wt
+WHERE wt.user_id = auth.uid();

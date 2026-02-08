@@ -10,6 +10,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 // Rate limiting: max 10 transferencias por hora por usuario
@@ -20,7 +21,7 @@ interface TransferRequest {
   to_user_id: string;
   amount_cents: number;
   description?: string;
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
 }
 
 
@@ -54,14 +55,27 @@ serve(async (req) => {
       );
     }
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_SERVICE_ROLE_KEY) {
+      return new Response(
+        JSON.stringify({ error: 'Server misconfigured' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Use service role only for privileged reads (auth verification, recipient lookup, rate limit).
+    const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+    // Use user JWT context for RPCs that enforce auth.uid() inside Postgres.
+    const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: { headers: { Authorization: authHeader } },
+    });
 
     // Verificar el token del usuario
     const token = authHeader.replace('Bearer ', '');
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser(token);
+    } = await supabaseAdmin.auth.getUser(token);
 
     if (authError || !user) {
       return new Response(
@@ -73,7 +87,7 @@ serve(async (req) => {
     // 2. VALIDAR PAYLOAD
     const body: TransferRequest = await req.json();
 
-    if (!body.to_user_id || !body.amount_cents) {
+    if (!body.to_user_id || body.amount_cents == null) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields: to_user_id, amount_cents' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -103,18 +117,29 @@ serve(async (req) => {
     }
 
     // 3. IDEMPOTENCY KEY
-    const idempotencyKey = req.headers.get('Idempotency-Key') || `transfer-${user.id}-${Date.now()}`;
+    const idempotencyKey =
+      req.headers.get('Idempotency-Key') ||
+      `transfer-${user.id}-${body.to_user_id}-${body.amount_cents}-${Date.now()}`;
 
     // 4. RATE LIMITING
-    const rateLimitKey = `rate_limit:transfer:${user.id}`;
-    const { data: rateLimitData } = await supabase
-      .from('wallet_ledger')
+    const since = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString();
+    const { count: transferCount, error: rateLimitError } = await supabaseAdmin
+      .from('wallet_transactions')
       .select('id', { count: 'exact', head: true })
       .eq('user_id', user.id)
-      .eq('kind', 'transfer_out')
-      .gte('ts', new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString());
+      .eq('category', 'transfer_out')
+      .eq('status', 'completed')
+      .gte('created_at', since);
 
-    if (rateLimitData && rateLimitData.length >= RATE_LIMIT_MAX) {
+    if (rateLimitError) {
+      console.error('Rate limit query error:', rateLimitError);
+      return new Response(
+        JSON.stringify({ error: 'Rate limit check failed' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if ((transferCount ?? 0) >= RATE_LIMIT_MAX) {
       return new Response(
         JSON.stringify({
           error: 'Rate limit exceeded',
@@ -126,7 +151,7 @@ serve(async (req) => {
     }
 
     // 5. VALIDAR QUE EL DESTINATARIO EXISTE
-    const { data: toUser, error: toUserError } = await supabase
+    const { data: toUser, error: toUserError } = await supabaseAdmin
       .from('profiles')
       .select('id, full_name')
       .eq('id', body.to_user_id)
@@ -140,7 +165,7 @@ serve(async (req) => {
     }
 
     // 6. EJECUTAR TRANSFERENCIA VÍA RPC
-    const { data: result, error: transferError } = await supabase.rpc('wallet_transfer', {
+    const { data: result, error: transferError } = await supabaseUser.rpc('wallet_transfer', {
       p_from_user: user.id,
       p_to_user: body.to_user_id,
       p_amount_cents: body.amount_cents,
@@ -157,7 +182,10 @@ serve(async (req) => {
       console.error('Transfer error:', transferError);
 
       // Detectar tipo de error
-      if (transferError.message?.includes('Insufficient balance')) {
+      if (
+        transferError.message?.includes('Insufficient balance') ||
+        transferError.message?.includes('Insufficient funds')
+      ) {
         return new Response(
           JSON.stringify({
             error: 'Insufficient balance',
@@ -173,6 +201,19 @@ serve(async (req) => {
           message: transferError.message || 'Unknown error occurred',
         }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // RPC returns a JSON object even on business errors (success=false).
+    if (!result || result.success !== true) {
+      const errCode = (result && typeof result.error === 'string' ? result.error : 'TRANSFER_FAILED') as string;
+      const message =
+        result && typeof result.message === 'string' ? result.message : 'Transfer failed';
+
+      const status = errCode === 'UNAUTHORIZED' ? 403 : 400;
+      return new Response(
+        JSON.stringify({ error: errCode, message }),
+        { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -193,7 +234,7 @@ serve(async (req) => {
         idempotency_key: idempotencyKey,
       }),
       {
-        status: result.status === 'duplicate' ? 200 : 201,
+        status: 201,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
