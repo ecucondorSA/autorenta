@@ -85,7 +85,7 @@ class GoogleMapInstance implements IMapInstance {
     this.map.addListener(googleEvent, handler);
   }
 
-  off(event: string, handler: (e: unknown) => void): void {
+  off(_event: string, _handler: (e: unknown) => void): void {
     // Google Maps doesn't support removing specific handlers easily
     // This is a limitation - would need to track listeners manually
     console.warn('[GoogleMapsProvider] off() not fully supported, use clearInstanceListeners');

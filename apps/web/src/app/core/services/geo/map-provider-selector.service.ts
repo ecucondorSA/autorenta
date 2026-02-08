@@ -5,10 +5,10 @@
  */
 
 import { Injectable, inject } from '@angular/core';
+import { LoggerService } from '../infrastructure/logger.service';
+import { GoogleMapsProviderService } from './google-maps-provider.service';
 import type { IMapProvider, MapProviderType } from './map-provider.interface';
 import { MapboxProviderService } from './mapbox-provider.service';
-import { GoogleMapsProviderService } from './google-maps-provider.service';
-import { LoggerService } from '../infrastructure/logger.service';
 
 export interface MapProviderSelectionResult {
   provider: IMapProvider;

@@ -24,12 +24,13 @@ type MapboxGL = typeof import('mapbox-gl').default;
 type MapboxMap = import('mapbox-gl').Map;
 type MapboxMarker = import('mapbox-gl').Marker;
 type MapboxPopup = import('mapbox-gl').Popup;
+type MapboxMapWithLib = MapboxMap & { _mapboxgl?: MapboxGL };
 
 /**
  * Wrapper around mapboxgl.Map to implement IMapInstance
  */
 class MapboxMapInstance implements IMapInstance {
-  constructor(private map: MapboxMap) {}
+  constructor(private map: MapboxMapWithLib) {}
 
   setCenter(coords: MapCoordinates): void {
     this.map.setCenter([coords.lng, coords.lat]);
@@ -76,15 +77,24 @@ class MapboxMapInstance implements IMapInstance {
   }
 
   on(event: string, handler: (e: unknown) => void): void {
-    this.map.on(event as any, handler as any);
+    const eventTarget = this.map as unknown as {
+      on: (event: string, handler: (e: unknown) => void) => void;
+    };
+    eventTarget.on(event, handler);
   }
 
   off(event: string, handler: (e: unknown) => void): void {
-    this.map.off(event as any, handler as any);
+    const eventTarget = this.map as unknown as {
+      off: (event: string, handler: (e: unknown) => void) => void;
+    };
+    eventTarget.off(event, handler);
   }
 
   addMarker(coords: MapCoordinates, options?: MapMarkerOptions): IMapMarker {
-    const mapboxgl = (this.map as any)._mapboxgl; // Access mapboxgl instance
+    const mapboxgl = this.map._mapboxgl;
+    if (!mapboxgl) {
+      throw new Error('Mapbox GL instance missing on map');
+    }
     const marker = new mapboxgl.Marker(options)
       .setLngLat([coords.lng, coords.lat])
       .addTo(this.map);
@@ -93,11 +103,17 @@ class MapboxMapInstance implements IMapInstance {
   }
 
   addSource(id: string, data: unknown): void {
-    this.map.addSource(id, data as any);
+    const map = this.map as unknown as {
+      addSource: (id: string, data: unknown) => void;
+    };
+    map.addSource(id, data);
   }
 
   addLayer(config: unknown): void {
-    this.map.addLayer(config as any);
+    const map = this.map as unknown as {
+      addLayer: (config: unknown) => void;
+    };
+    map.addLayer(config);
   }
 
   removeLayer(id: string): void {
@@ -113,7 +129,10 @@ class MapboxMapInstance implements IMapInstance {
   }
 
   addNavigationControl(): void {
-    const mapboxgl = (this.map as any)._mapboxgl;
+    const mapboxgl = this.map._mapboxgl;
+    if (!mapboxgl) {
+      throw new Error('Mapbox GL instance missing on map');
+    }
     this.map.addControl(new mapboxgl.NavigationControl(), 'top-right');
   }
 
@@ -263,9 +282,10 @@ export class MapboxProviderService implements IMapProvider {
     });
 
     // Store mapboxgl reference for later use
-    (map as any)._mapboxgl = this.mapboxgl;
+    const mapWithLib = map as MapboxMapWithLib;
+    mapWithLib._mapboxgl = this.mapboxgl;
 
-    return new MapboxMapInstance(map);
+    return new MapboxMapInstance(mapWithLib);
   }
 
   /**
