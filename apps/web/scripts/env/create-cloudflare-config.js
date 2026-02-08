@@ -29,6 +29,14 @@ const redirectsContent = `# Cloudflare Pages - SPA Routing
 /android  https://play.google.com/apps/test/app.autorentar/70    302
 /descarga https://play.google.com/apps/test/app.autorentar/70    302
 
+# Prevent SPA fallback from serving HTML for missing static assets.
+# If a hashed JS/CSS chunk is missing (stale SW/cache), rewriting it to /index.html (200)
+# triggers "Failed to load module script" MIME errors and can break critical flows like publishing.
+/*.js     /offline.html 404
+/*.css    /offline.html 404
+/*.map    /offline.html 404
+/assets/* /offline.html 404
+
 # Rutas específicas de la aplicación
 /auth/* /index.html 200
 /cars/* /index.html 200
@@ -43,8 +51,9 @@ const redirectsContent = `# Cloudflare Pages - SPA Routing
 /notifications/* /index.html 200
 /mp-callback /index.html 200
 
-# Fallback para todas las demás rutas (excepto archivos estáticos)
-# Cloudflare Pages automáticamente excluye archivos estáticos (.js, .css, .png, etc.)
+# Fallback para todas las demás rutas.
+# Nota: Cloudflare Pages sirve archivos estáticos existentes antes de aplicar redirects,
+# pero los archivos estáticos faltantes pueden caer en este fallback (de ahí las reglas 404 arriba).
 /*  /index.html  200
 `;
 

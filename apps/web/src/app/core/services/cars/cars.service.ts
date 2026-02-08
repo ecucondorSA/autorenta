@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Car, CarFilters, CarPhoto } from '@core/models';
+import { AuthService } from '@core/services/auth/auth.service';
 import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
@@ -18,6 +19,7 @@ type CarWithPhotosRaw = Record<string, unknown> & {
 export class CarsService {
   private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
+  private readonly authService = inject(AuthService);
   private readonly carAvailabilityService = inject(CarAvailabilityService);
   private readonly defaultValuationConfig = {
     averageRentalDays: 300,
@@ -37,7 +39,10 @@ export class CarsService {
   }
 
   async createCar(input: Partial<Car>): Promise<Car> {
-    const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
+    // Avoid calling supabase.auth.getUser() here:
+    // it performs a network request and can fail/rate-limit (429), which breaks publishing
+    // even when a valid session is already loaded in memory.
+    const userId = await this.authService.getCachedUserId();
     if (!userId) {
       throw new Error('Usuario no autenticado');
     }
@@ -148,7 +153,7 @@ export class CarsService {
   }
 
   async uploadPhoto(file: File, carId: string, position = 0): Promise<CarPhoto> {
-    const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
+    const userId = await this.authService.getCachedUserId();
     if (!userId) throw new Error('Usuario no autenticado');
 
     const optimizedFile = await optimizeImage(file, {

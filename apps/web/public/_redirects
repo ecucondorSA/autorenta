@@ -7,6 +7,14 @@
 /android  https://play.google.com/apps/test/app.autorentar/70    302
 /descarga https://play.google.com/apps/test/app.autorentar/70    302
 
+# Prevent SPA fallback from serving HTML for missing static assets.
+# When a hashed JS/CSS chunk is missing (stale SW/cache), Cloudflare would otherwise
+# rewrite it to /index.html (200) which triggers "Failed to load module script" MIME errors.
+/*.js     /offline.html   404
+/*.css    /offline.html   404
+/*.map    /offline.html   404
+/assets/* /offline.html   404
+
 # Redirect all requests to index.html for Angular SPA routing
 # IMPORTANTE: Esto permite que Angular maneje todas las rutas, incluyendo /auth/callback
 /*    /index.html   200

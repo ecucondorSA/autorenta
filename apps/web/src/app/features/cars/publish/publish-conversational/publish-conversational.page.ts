@@ -636,6 +636,12 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
       this.publishingMessage.set(errorMessage);
 
       this.notifications.error('Error al publicar', errorMessage);
+
+      // Session expired or not available: send user back to login and keep return URL.
+      // (AuthGuard should normally prevent this, but publish is a critical action.)
+      if (error instanceof Error && error.message.toLowerCase().includes('usuario no autenticado')) {
+        await this.router.navigate(['/auth/login'], { queryParams: { returnUrl: '/cars/publish' } });
+      }
     } finally {
       this.isSubmitting.set(false);
     }
@@ -666,6 +672,11 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
       // RLS/Permission errors
       if (msg.includes('row-level security') || msg.includes('permission denied')) {
         return 'No tenés permisos para publicar. Verificá tu cuenta.';
+      }
+
+      // Auth errors
+      if (msg.toLowerCase().includes('usuario no autenticado') || msg.toLowerCase().includes('not authenticated')) {
+        return 'Tu sesión expiró. Iniciá sesión de nuevo para publicar.';
       }
 
       return msg;
