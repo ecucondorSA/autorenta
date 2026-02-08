@@ -127,6 +127,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     return cars.slice(start, start + this.itemsPerPage);
   });
 
+  readonly isSingleResult = computed(() => this.visibleCars().length === 1);
+
   // Track function for @for
   trackByCarId = (index: number, car: Car) => car.id;
 

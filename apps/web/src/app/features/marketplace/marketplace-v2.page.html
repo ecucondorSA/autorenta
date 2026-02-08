@@ -122,12 +122,13 @@
 <div class="separator-fade"></div>
 
 <!-- CARS LISTING SECTION (Marketplace) -->
-<section id="catalog" class="py-8 sm:py-12 lg:py-24 bg-surface-base">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+<section id="catalog" class="py-8 sm:py-12 lg:py-16 bg-surface-base">
+  <div class="max-w-7xl 2xl:max-w-[90rem] mx-auto px-6 lg:px-12">
     <!-- Section Header -->
     <div
-      class="flex flex-col lg:flex-row lg:items-end justify-between mb-6 gap-6 sticky top-[72px] z-30 bg-surface-base/95 backdrop-blur-md py-4 -mx-6 px-6 lg:-mx-12 lg:px-12 border-b border-border-default/50 transition-all duration-300">
-      <div class="flex items-center gap-4 overflow-x-auto pb-1 scrollbar-hide w-full lg:w-auto">
+      class="flex flex-col lg:flex-row lg:items-end justify-between mb-4 gap-4 sticky top-[72px] z-30 bg-surface-base/95 backdrop-blur-md py-4 -mx-6 px-6 lg:-mx-12 lg:px-12 border-b border-border-default/50 transition-all duration-300">
+      <div class="w-full">
+        <div class="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-hide w-full lg:w-auto">
         @for (cat of categories; track cat.id) {
         <button (click)="selectCategory(cat.id)" [class.bg-text-primary]="selectedCategory() === cat.id"
           [class.text-surface-base]="selectedCategory() === cat.id"
@@ -138,9 +139,23 @@
           {{ cat.label }}
         </button>
         }
+        </div>
+
+        <div class="mt-2 text-sm text-text-secondary font-medium">
+          @if (!loading() && !error()) {
+          <span class="text-text-primary font-black">{{ totalCarsCount() }}</span>
+          <span class="ml-1">autos disponibles</span>
+          }
+          @if (loading()) {
+          <span>Cargando autos...</span>
+          }
+          @if (error()) {
+          <span>Revisá tu conexión</span>
+          }
+        </div>
       </div>
 
-      <div class="flex items-center gap-4 hidden lg:flex">
+      <div class="hidden sm:flex items-center gap-3">
         <!-- Sort Dropdown -->
         <div class="relative">
           <label for="sort-order" class="sr-only">Ordenar autos por</label>
@@ -157,9 +172,7 @@
     </div>
 
     <!-- Main Grid (Full Width) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-      <!-- LEFT PANEL: Car Cards (now full width) -->
-      <div class="space-y-6 lg:col-span-12">
+    <div class="space-y-6">
         <!-- MOBILE: Tinder-Style Horizontal Scroll -->
         <div
           class="sm:hidden flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-6 px-6 scrollbar-hide h-[calc(100vh-16rem)]"
@@ -189,92 +202,141 @@
         }
       </div>
 
-      <!-- DESKTOP: Grid View (Robust Auto-Fill) -->
-      <div class="hidden sm:grid gap-6 w-full items-start"
-        [style.grid-template-columns]="'repeat(auto-fill, minmax(280px, 1fr))'">
+      <!-- DESKTOP/TABLET: Grid + Context Panel (prevents "one tiny card in a sea of white") -->
+      <div class="hidden sm:flex w-full flex-col lg:flex-row gap-8 items-start">
+        <!-- Cards Grid -->
+        <div class="w-full lg:flex-1 min-w-0">
+          <div class="grid gap-6 w-full items-start justify-items-start content-start"
+            [style.grid-template-columns]="'repeat(auto-fill, minmax(280px, 1fr))'">
 
-        <!-- CAR CARD LOOP -->
-        @for (car of visibleCars(); track trackByCarId(i, car); let i = $index) {
-        <div class="h-full w-full max-w-[380px] justify-self-start opacity-0 animate-fade-in-up"
-          [style.animation-delay]="i * 50 + 'ms'"
-          style="animation-fill-mode: forwards;">
-          <app-car-card [car]="car" [distance]="undefined" [showOwnerActions]="false"
-            class="h-full block"></app-car-card>
-        </div>
-        }
+            <!-- CAR CARD LOOP -->
+            @for (car of visibleCars(); track trackByCarId(i, car); let i = $index) {
+            <div class="h-full w-full opacity-0 animate-fade-in-up"
+              [ngClass]="isSingleResult() ? 'sm:col-span-full sm:justify-self-center sm:max-w-[560px]' : 'max-w-none'"
+              [style.animation-delay]="i * 50 + 'ms'" style="animation-fill-mode: forwards;">
+              <app-car-card [car]="car" [distance]="undefined" [showOwnerActions]="false"
+                class="h-full block"></app-car-card>
+            </div>
+            }
 
-        <!-- Loading skeleton -->
-        @if (loading()) {
-        @for (_ of [].constructor(8); track _) {
-        <div
-          class="bg-zinc-900/50 rounded-3xl overflow-hidden border border-zinc-800 shadow-sm h-full flex flex-col animate-pulse">
-          <div class="aspect-[4/3] bg-zinc-800"></div>
-          <div class="p-5 space-y-4 flex-1">
-            <div class="flex justify-between items-start">
-              <div class="space-y-2 w-2/3">
-                <div class="h-6 bg-zinc-800 rounded w-3/4"></div>
-                <div class="h-4 bg-zinc-800/50 rounded w-1/2"></div>
+            <!-- Loading skeleton -->
+            @if (loading()) {
+            @for (_ of [].constructor(8); track _) {
+            <div
+              class="bg-zinc-900/50 rounded-3xl overflow-hidden border border-zinc-800 shadow-sm h-full flex flex-col animate-pulse">
+              <div class="aspect-[4/3] bg-zinc-800"></div>
+              <div class="p-5 space-y-4 flex-1">
+                <div class="flex justify-between items-start">
+                  <div class="space-y-2 w-2/3">
+                    <div class="h-6 bg-zinc-800 rounded w-3/4"></div>
+                    <div class="h-4 bg-zinc-800/50 rounded w-1/2"></div>
+                  </div>
+                  <div class="h-8 w-12 bg-zinc-800 rounded-lg"></div>
+                </div>
+                <div class="pt-4 mt-auto border-t border-zinc-800/50 flex justify-between">
+                  <div class="h-4 w-16 bg-zinc-800 rounded"></div>
+                  <div class="h-10 w-32 bg-zinc-800 rounded-xl"></div>
+                </div>
               </div>
-              <div class="h-8 w-12 bg-zinc-800 rounded-lg"></div>
             </div>
-            <div class="pt-4 mt-auto border-t border-zinc-800/50 flex justify-between">
-              <div class="h-4 w-16 bg-zinc-800 rounded"></div>
-              <div class="h-10 w-32 bg-zinc-800 rounded-xl"></div>
-            </div>
-          </div>
-        </div>
-        }
-        }
+            }
+            }
 
-        <!-- Empty state -->
-        @if (!loading() && !error() && visibleCars().length === 0) {
-        <div class="col-span-full empty-state-card py-24 text-center">
-          <div
-            class="w-48 h-48 mx-auto mb-8 rounded-full overflow-hidden shadow-2xl border-4 border-zinc-800 relative group">
-            <div class="absolute inset-0 bg-indigo-500/20 group-hover:bg-indigo-500/0 transition-colors duration-500">
+            <!-- Empty state -->
+            @if (!loading() && !error() && visibleCars().length === 0) {
+            <div class="col-span-full empty-state-card py-24 text-center">
+              <div
+                class="w-48 h-48 mx-auto mb-8 rounded-full overflow-hidden shadow-2xl border-4 border-zinc-800 relative group">
+                <div
+                  class="absolute inset-0 bg-indigo-500/20 group-hover:bg-indigo-500/0 transition-colors duration-500">
+                </div>
+                <img src="/assets/images/ui/empty-search-street.webp" alt="Calle vacía"
+                  class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700"
+                  width="192" height="192" />
+              </div>
+              <h3 class="text-3xl font-black text-text-primary mb-4 font-satoshi tracking-tight">
+                No hay autos en esta zona... todavía.
+              </h3>
+              <p class="text-text-secondary mb-10 max-w-md mx-auto text-lg">
+                Intenta ampliar tu búsqueda o sé el primero en publicar un auto aquí.
+              </p>
+              <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button (click)="clearQuickFilters()"
+                  class="px-8 py-3 rounded-xl border-2 border-zinc-200 hover:border-zinc-900 font-bold transition-all text-text-primary min-h-[44px]">
+                  Limpiar filtros
+                </button>
+                <button routerLink="/ganar"
+                  class="px-8 py-3 rounded-xl bg-cta-default hover:bg-cta-hover text-cta-text font-bold transition-all shadow-lg shadow-cta-default/20 min-h-[44px]">
+                  Publicar mi auto
+                </button>
+              </div>
             </div>
-            <img src="/assets/images/ui/empty-search-street.webp" alt="Calle vacía"
-              class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700"
-              width="192" height="192" />
-          </div>
-          <h3 class="text-3xl font-black text-text-primary mb-4 font-satoshi tracking-tight">
-            No hay autos en esta zona... todavía.
-          </h3>
-          <p class="text-text-secondary mb-10 max-w-md mx-auto text-lg">
-            Intenta ampliar tu búsqueda o sé el primero en publicar un auto aquí.
-          </p>
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button (click)="clearQuickFilters()"
-              class="px-8 py-3 rounded-xl border-2 border-zinc-200 hover:border-zinc-900 font-bold transition-all text-text-primary">
-              Limpiar filtros
-            </button>
-            <button routerLink="/ganar"
-              class="px-8 py-3 rounded-xl bg-cta-default hover:bg-cta-hover text-cta-text font-bold transition-all shadow-lg shadow-cta-default/20">
-              Publicar mi auto
-            </button>
-          </div>
-        </div>
-        }
+            }
 
-        <!-- Error state -->
-        @if (!loading() && error()) {
-        <div class="col-span-full py-24 text-center">
-          <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500">
-            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+            <!-- Error state -->
+            @if (!loading() && error()) {
+            <div class="col-span-full py-24 text-center">
+              <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-text-primary mb-2 font-satoshi">
+                Error de conexión
+              </h3>
+              <p class="text-text-secondary mb-8">{{ error() }}</p>
+              <button (click)="loadCars()"
+                class="px-8 py-3 bg-zinc-900 text-white rounded-xl font-bold hover:bg-black transition-colors min-h-[44px]">
+                Reintentar
+              </button>
+            </div>
+            }
           </div>
-          <h3 class="text-2xl font-bold text-text-primary mb-2 font-satoshi">
-            Error de conexión
-          </h3>
-          <p class="text-text-secondary mb-8">{{ error() }}</p>
-          <button (click)="loadCars()"
-            class="px-8 py-3 bg-zinc-900 text-white rounded-xl font-bold hover:bg-black transition-colors">
-            Reintentar
-          </button>
         </div>
-        }
+
+        <!-- Context Panel -->
+        <aside class="hidden lg:block w-full lg:w-[360px] shrink-0">
+          <div class="sticky top-[132px] space-y-4">
+            @if (!loading() && !error() && visibleCars().length > 0 && filteredCars().length < 6) {
+            <div class="rounded-2xl border border-border-default/60 bg-surface-raised p-5 shadow-sm">
+              <p class="text-xs font-bold uppercase tracking-wider text-text-muted mb-2">Sugerencias</p>
+              <h3 class="text-lg font-black text-text-primary font-satoshi leading-tight">
+                Pocos resultados en tu zona
+              </h3>
+              <p class="text-sm text-text-secondary mt-2 leading-relaxed">
+                Probá ampliar la búsqueda o ver todos los autos disponibles.
+              </p>
+              <div class="mt-4 grid grid-cols-1 gap-2">
+                <button type="button" (click)="onLogoClick()"
+                  class="w-full min-h-[44px] rounded-xl bg-cta-default hover:bg-cta-hover text-cta-text font-bold transition-colors">
+                  Cambiar búsqueda
+                </button>
+                <button type="button" (click)="clearQuickFilters()"
+                  class="w-full min-h-[44px] rounded-xl border border-border-default hover:bg-surface-hover font-bold text-text-primary transition-colors">
+                  Ver todos
+                </button>
+              </div>
+            </div>
+            }
+
+            <div class="rounded-2xl border border-border-default/60 bg-surface-raised p-5 shadow-sm">
+              <p class="text-xs font-bold uppercase tracking-wider text-text-muted mb-2">Para dueños</p>
+              <h3 class="text-lg font-black text-text-primary font-satoshi leading-tight">
+                Tu auto puede ayudarte a cubrir gastos
+              </h3>
+              <p class="text-sm text-text-secondary mt-2 leading-relaxed">
+                Publicarlo toma pocos minutos y vos elegís cuándo está disponible.
+              </p>
+              <div class="mt-4">
+                <a routerLink="/ganar"
+                  class="inline-flex w-full items-center justify-center min-h-[44px] rounded-xl bg-black text-white font-bold hover:bg-zinc-900 transition-colors">
+                  Publicar mi auto
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
 
       <!-- Pagination Controls (Desktop Only) -->
@@ -312,11 +374,7 @@
         <span class="text-sm text-text-secondary ml-1">autos disponibles en tu zona</span>
       </div> -->
     </div>
-    <!-- This closes Space-y-6 container -->
   </div>
-  <!-- This closes Main Grid -->
-  </div>
-  <!-- This closes max-w-7xl -->
 </section>
 
 <!-- STRATEGIC PARTNERS - TITANIUM EDITION (ULTRA-PREMIUM) -->
