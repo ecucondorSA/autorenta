@@ -208,6 +208,27 @@ export class BrowseCarsPage {
         endDate: searchTo
       });
 
+      // Fallback: if we can't resolve user location (permissions denied, device limitations),
+      // still show cars. We keep semantics: active cars should be "available" for the date range,
+      // pending cars are visible but not bookable (greyed out).
+      if (location?.lat == null || location?.lng == null) {
+        const availableCars = await this.carsService.listActiveCars({ from: searchFrom, to: searchTo });
+        const marketplaceCars = await this.carsService.listMarketplaceCars({});
+        const pendingCars = marketplaceCars.filter((c) => c.status === 'pending');
+
+        const availableIds = new Set(availableCars.map((c) => c.id));
+        const merged = [...availableCars, ...pendingCars.filter((c) => !availableIds.has(c.id))];
+
+        this.logger.warn('Location unavailable. Cars loaded without distance (available + pending).', {
+          available: availableCars.length,
+          pending: pendingCars.length,
+          merged: merged.length,
+        });
+
+        this.store.setCars(merged);
+        return;
+      }
+
       const results = await this.carsService.getAvailableCarsWithDistance(searchFrom, searchTo, {
         lat: location?.lat,
         lng: location?.lng,

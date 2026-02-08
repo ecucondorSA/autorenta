@@ -212,7 +212,7 @@
             <!-- CAR CARD LOOP -->
             @for (car of visibleCars(); track trackByCarId(i, car); let i = $index) {
             <div class="h-full w-full opacity-0 animate-fade-in-up"
-              [ngClass]="isSingleResult() ? 'sm:col-span-full sm:justify-self-center sm:max-w-[560px]' : 'max-w-none'"
+              [ngClass]="isSingleResult() ? 'sm:col-span-full sm:justify-self-center sm:max-w-[720px] md:max-w-[860px] lg:max-w-[640px]' : 'max-w-none'"
               [style.animation-delay]="i * 50 + 'ms'" style="animation-fill-mode: forwards;">
               <app-car-card [car]="car" [distance]="undefined" [showOwnerActions]="false"
                 class="h-full block"></app-car-card>
@@ -296,8 +296,8 @@
         </div>
 
         <!-- Context Panel -->
-        <aside class="hidden lg:block w-full lg:w-[360px] shrink-0">
-          <div class="sticky top-[132px] space-y-4">
+        <aside class="w-full lg:w-[360px] shrink-0">
+          <div class="space-y-4 lg:sticky lg:top-[132px]">
             @if (!loading() && !error() && visibleCars().length > 0 && filteredCars().length < 6) {
             <div class="rounded-2xl border border-border-default/60 bg-surface-raised p-5 shadow-sm">
               <p class="text-xs font-bold uppercase tracking-wider text-text-muted mb-2">Sugerencias</p>

@@ -82,9 +82,16 @@ const PROFILE_NAV_BASE_SECTIONS: ProfileNavSection[] = [
     tone: 'blue',
     items: [
       {
+        id: 'trips',
+        label: 'Viajes',
+        route: '/bookings',
+        desktopIcon: 'car',
+        mobileIcon: 'calendar-days',
+      },
+      {
         id: 'my_bookings',
         label: 'Mis Reservas',
-        route: '/bookings',
+        route: '/bookings/list',
         desktopIcon: 'calendar',
         mobileIcon: 'calendar',
       },
@@ -98,30 +105,8 @@ const PROFILE_NAV_BASE_SECTIONS: ProfileNavSection[] = [
     ],
   },
   {
-    id: 'communication',
-    title: 'Comunicación',
-    tone: 'violet',
-    items: [
-      {
-        id: 'messages',
-        label: 'Mensajes',
-        route: '/messages',
-        desktopIcon: 'message',
-        mobileIcon: 'message',
-      },
-      {
-        id: 'notifications',
-        label: 'Notificaciones',
-        route: '/notifications',
-        desktopIcon: 'bell',
-        mobileIcon: 'bell',
-        badge: { kind: 'count', source: 'unread_notifications' },
-      },
-    ],
-  },
-  {
     id: 'cars',
-    title: 'Mis autos',
+    title: 'Mis Autos',
     tone: 'emerald',
     items: [
       {
@@ -150,6 +135,28 @@ const PROFILE_NAV_BASE_SECTIONS: ProfileNavSection[] = [
     ],
   },
   {
+    id: 'communication',
+    title: 'Comunicación',
+    tone: 'violet',
+    items: [
+      {
+        id: 'messages',
+        label: 'Mensajes',
+        route: '/messages',
+        desktopIcon: 'message',
+        mobileIcon: 'message',
+      },
+      {
+        id: 'notifications',
+        label: 'Notificaciones',
+        route: '/notifications',
+        desktopIcon: 'bell',
+        mobileIcon: 'bell',
+        badge: { kind: 'count', source: 'unread_notifications' },
+      },
+    ],
+  },
+  {
     id: 'finance',
     title: 'Finanzas',
     tone: 'emerald',
@@ -165,7 +172,7 @@ const PROFILE_NAV_BASE_SECTIONS: ProfileNavSection[] = [
   },
   {
     id: 'settings',
-    title: 'Configuración',
+    title: 'Cuenta',
     tone: 'gray',
     items: [
       {
@@ -174,6 +181,27 @@ const PROFILE_NAV_BASE_SECTIONS: ProfileNavSection[] = [
         route: '/profile',
         desktopIcon: 'user',
         mobileIcon: 'user',
+      },
+      {
+        id: 'address',
+        label: 'Mi Dirección',
+        route: '/profile/location-settings',
+        desktopIcon: 'map-pin',
+        mobileIcon: 'location',
+      },
+      {
+        id: 'preferences',
+        label: 'Preferencias',
+        route: '/profile/preferences',
+        desktopIcon: 'settings',
+        mobileIcon: 'settings',
+      },
+      {
+        id: 'driver',
+        label: 'Conductor',
+        route: '/profile/driver-profile',
+        desktopIcon: 'document',
+        mobileIcon: 'document',
       },
       {
         id: 'security',
@@ -189,20 +217,6 @@ const PROFILE_NAV_BASE_SECTIONS: ProfileNavSection[] = [
         desktopIcon: 'shield',
         mobileIcon: 'shield',
         tone: 'red',
-      },
-      {
-        id: 'preferences',
-        label: 'Preferencias',
-        route: '/profile/preferences',
-        desktopIcon: 'settings',
-        mobileIcon: 'settings',
-      },
-      {
-        id: 'driver',
-        label: 'Conductor',
-        route: '/profile/driver-profile',
-        desktopIcon: 'document',
-        mobileIcon: 'document',
       },
     ],
   },
@@ -272,4 +286,3 @@ export function resolveProfileNavSections(params: {
     }),
   }));
 }
-
