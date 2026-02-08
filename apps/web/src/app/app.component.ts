@@ -505,6 +505,21 @@ export class AppComponent implements OnInit {
 
     this.hideFooter.set(Boolean(findInChain('hideFooter')));
 
+    // Many pages render their own header; respect route metadata to avoid duplicated headers.
+    this.hideHeader.set(Boolean(findInChain('hideHeader')));
+
+    // Support legacy `hideNav` while standardizing on `hideMobileNav`.
+    const hideMobileNavValue = findInChain('hideMobileNav');
+    const hideNavValue = findInChain('hideNav');
+    const shouldHideMobileNav =
+      hideMobileNavValue !== undefined
+        ? Boolean(hideMobileNavValue)
+        : hideNavValue !== undefined
+          ? Boolean(hideNavValue)
+          : false;
+    this.hideMobileNav.set(shouldHideMobileNav);
+    this.mobileBottomNavPortal.setHidden(this.hideMobileNav());
+
     // Detectar si estamos en el homepage para header transparente
     const currentUrl = this.router.url.split('?')[0]; // Ignorar query params
     
