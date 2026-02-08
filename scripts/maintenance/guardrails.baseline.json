@@ -106,7 +106,15 @@
       "wallet_lock_funds",
       "wallet_lock_rental_and_deposit",
       "wallet_transfer",
-      "wallet_initiate_deposit"
+      "wallet_initiate_deposit",
+      "approve_booking_v2",
+      "process_wallet_transaction",
+      "reject_booking",
+      "wallet_deposit_funds_admin",
+      "wallet_get_balance_with_lock",
+      "wallet_hold_funds",
+      "wallet_release_funds",
+      "wallet_unlock_funds"
     ]
   }
 }
