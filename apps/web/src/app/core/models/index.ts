@@ -12,7 +12,8 @@ export type Transmission = 'manual' | 'automatic';
 export type UserRole = 'renter' | 'owner' | 'both';
 export type FuelType = 'gasoline' | 'diesel' | 'electric' | 'electrico' | 'hybrid' | 'gnc' | 'flex';
 export type CancelPolicy = 'flexible' | 'moderate' | 'strict';
-export type CarStatus = 'active' | 'inactive' | 'pending' | 'suspended' | 'draft';
+// Must match DB enum: public.car_status (draft, active, paused, deleted, pending)
+export type CarStatus = 'draft' | 'active' | 'paused' | 'deleted' | 'pending';
 export type BookingStatus =
   | 'pending'
   | 'pending_payment'

@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
+import { ToastService } from '@core/services/ui/toast.service';
 import { BonusProgress } from '@core/models/organization.model';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
@@ -28,6 +29,7 @@ export class MyCarsPage {
   private readonly orgService = inject(OrganizationService);
   private readonly bookingsService = inject(BookingsService);
   private readonly authService = inject(AuthService);
+  private readonly toastService = inject(ToastService);
   private readonly modalCtrl = inject(ModalController);
   private readonly router = inject(Router);
 
@@ -121,15 +123,34 @@ export class MyCarsPage {
   }
 
   async onToggleAvailability(carId: string, currentStatus: string): Promise<void> {
+    const status = currentStatus as CarStatus;
+
+    // Pending cars can't be toggled - owner must complete verification first
+    if (status === 'pending') {
+      this.toastService.error(
+        'Verificación pendiente',
+        'Completá la verificación de identidad para activar tu vehículo.',
+      );
+      await this.router.navigate(['/verification']);
+      return;
+    }
+
     this.loading.set(true);
     try {
-      const newStatus: CarStatus = currentStatus === 'active' ? 'suspended' : 'active';
+      // Toggle between active <-> paused (DB enum uses 'paused', not 'suspended')
+      const newStatus: CarStatus = status === 'active' ? 'paused' : 'active';
       await this.carsService.updateCarStatus(carId, newStatus);
       this.cars.update((cars) =>
         cars.map((car) => (car.id === carId ? { ...car, status: newStatus } : car)),
       );
-    } catch {
-      // Handle error
+    } catch (error) {
+      const err = error as Error & { code?: string };
+      if (err.code === 'VERIFICATION_REQUIRED') {
+        this.toastService.error('Verificación requerida', err.message);
+        await this.router.navigate(['/verification']);
+      } else {
+        this.toastService.error('Error', 'No pudimos actualizar el estado del vehículo.');
+      }
     } finally {
       this.loading.set(false);
     }

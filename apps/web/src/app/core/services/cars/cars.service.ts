@@ -103,7 +103,9 @@ export class CarsService {
       province: province || 'Buenos Aires', // Default si está vacío
       country: country || 'AR',
       owner_id: userId,
-      status: input['status'] || 'active', // Default to active if not specified
+      // SAFETY: Default to 'draft' to prevent publishing unverified cars as active.
+      // The publish flow explicitly sets 'active' or 'pending' based on verification state.
+      status: input['status'] || 'draft',
       created_at: new Date().toISOString(),
     };
 
@@ -514,9 +516,15 @@ export class CarsService {
   }
 
   /**
-   * ✅ NUEVO: Actualizar solo el status del auto
+   * Update car status with proper typing and error handling.
+   *
+   * @throws Error with code 'VERIFICATION_REQUIRED' if trying to set 'active'
+   *         on a car whose owner is not id_verified (DB trigger blocks it).
    */
-  async updateCarStatus(carId: string, status: string): Promise<void> {
+  async updateCarStatus(
+    carId: string,
+    status: 'draft' | 'active' | 'paused' | 'deleted' | 'pending',
+  ): Promise<void> {
     const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
     if (!userId) throw new Error('Usuario no autenticado');
 
@@ -526,7 +534,18 @@ export class CarsService {
       .eq('id', carId)
       .eq('owner_id', userId);
 
-    if (error) throw error;
+    if (error) {
+      // Handle DB trigger violation: active requires id_verified
+      // PostgreSQL error code 23514 = check_violation (trigger RAISE)
+      if (error.code === '23514' || error.message?.includes('id_verified')) {
+        const verificationError = new Error(
+          'Para activar tu vehículo, primero completá la verificación de identidad.',
+        );
+        (verificationError as Error & { code: string }).code = 'VERIFICATION_REQUIRED';
+        throw verificationError;
+      }
+      throw error;
+    }
   }
 
   async updateCar(carId: string, input: Partial<Car>): Promise<Car> {
