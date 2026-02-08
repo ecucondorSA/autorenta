@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { LocationService } from '@core/services/geo/location.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
 
@@ -39,6 +40,7 @@ export interface UrgentRentalQuote {
   providedIn: 'root',
 })
 export class UrgentRentalService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly pricingService = inject(DynamicPricingService);
   private readonly bookingsService = inject(BookingsService);
@@ -171,7 +173,7 @@ export class UrgentRentalService {
         eta,
       };
     } catch (_error) {
-      console.error('Error checking immediate availability:', _error);
+      this.logger.error('Error checking immediate availability', 'UrgentRentalService', _error);
       return {
         available: false,
         reason: 'Error al verificar disponibilidad',
@@ -219,7 +221,7 @@ export class UrgentRentalService {
         currency: pricing.currency,
       };
     } catch (_error) {
-      console.error('Error calculating urgent quote:', _error);
+      this.logger.error('Error calculating urgent quote', 'UrgentRentalService', _error);
       throw new Error('No se pudo calcular el precio');
     }
   }
@@ -254,7 +256,7 @@ export class UrgentRentalService {
         bookingId: result.booking.id,
       };
     } catch (_error) {
-      console.error('Error creating urgent booking:', _error);
+      this.logger.error('Error creating urgent booking', 'UrgentRentalService', _error);
       return {
         success: false,
         error: _error instanceof Error ? _error.message : 'Error al crear la reserva',

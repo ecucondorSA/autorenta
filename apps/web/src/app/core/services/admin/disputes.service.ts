@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 export type DisputeKind = 'damage' | 'no_show' | 'late_return' | 'other';
 export type DisputeStatus = 'open' | 'in_review' | 'resolved' | 'rejected';
@@ -58,6 +59,7 @@ export interface DisputeEvidence {
 })
 export class DisputesService {
   private readonly supabase = injectSupabase();
+  private readonly logger = inject(LoggerService);
 
   async listAllForAdmin(): Promise<Dispute[]> {
     const { data, error } = await this.supabase
@@ -365,7 +367,7 @@ export class DisputesService {
       .eq('dispute_id', disputeId);
 
     if (error) {
-      console.error('Error fetching evidence:', error);
+      this.logger.error('Error fetching evidence:', error);
       return [];
     }
     return (data as DisputeEvidence[]) || [];

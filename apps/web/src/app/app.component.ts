@@ -398,8 +398,8 @@ export class AppComponent implements OnInit {
         void StatusBar.setOverlaysWebView({ overlay: true });
         void StatusBar.setBackgroundColor({ color: '#00000000' }); // Transparent
         void StatusBar.setStyle({ style: Style.Dark }); // Dark icons on light background
-      } catch (e) {
-        this.logger.warn('StatusBar not available', e);
+      } catch (error: unknown) {
+        this.logger.warn('StatusBar not available', error);
       }
     }
 

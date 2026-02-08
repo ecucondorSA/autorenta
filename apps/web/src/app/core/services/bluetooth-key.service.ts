@@ -180,8 +180,8 @@ export class BluetoothKeyService {
       const value = await characteristic.readValue();
       const level = value.getUint8(0);
       this.batteryLevel.set(level);
-    } catch (e) {
-      console.warn('Could not read battery level', e);
+    } catch (error: unknown) {
+      console.warn('Could not read battery level', error);
     }
   }
 }

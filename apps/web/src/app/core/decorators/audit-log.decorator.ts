@@ -75,8 +75,8 @@ export function AuditLog(action: string, resourceType: string, options: AuditLog
 
       try {
         result = await originalMethod.apply(this, args);
-      } catch (e) {
-        error = e;
+      } catch (caughtError: unknown) {
+        error = caughtError;
         // Re-throw after logging
       }
 

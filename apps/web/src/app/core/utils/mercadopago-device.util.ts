@@ -46,9 +46,9 @@ export function getOrCreateDeviceId(): string {
   // Guardar en localStorage para persistencia
   try {
     localStorage.setItem(STORAGE_KEY, deviceId);
-  } catch (e) {
+  } catch (error: unknown) {
     // Si localStorage no está disponible (modo privado, etc.), usar solo en memoria
-    console.warn('No se pudo guardar device_id en localStorage:', e);
+    console.warn('No se pudo guardar device_id en localStorage:', error);
   }
 
   return deviceId;

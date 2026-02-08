@@ -29,14 +29,14 @@ export async function insertMessage(supabase: SupabaseClient, input: unknown) {
         await queueOffline({ kind: 'message', payload: clean });
         return { kind: 'queued-offline', reason: error.code };
       }
-      console.error('Error inserting message:', error);
+      logger.error('Error inserting message', 'MessagesRepo', error);
       throw error;
     }
     return { kind: 'ok', data };
   } catch (error: unknown) {
     // This will catch Zod errors
     if (error instanceof z.ZodError) {
-      console.error('Validation error:', error.errors);
+      logger.error('Validation error', 'MessagesRepo', error.errors);
       return { kind: 'validation-error', errors: error.errors };
     }
     throw error;

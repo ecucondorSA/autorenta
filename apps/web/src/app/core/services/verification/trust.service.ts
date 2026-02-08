@@ -84,8 +84,8 @@ export class TrustService {
            
            // TODO: Call verifyFinancialSolvency here if we want to update background_checks table
            // await this.verifyFinancialSolvency(profile.cuit);
-         } catch (e) {
-           console.warn('BCRA check failed silently', e);
+         } catch (error: unknown) {
+           console.warn('BCRA check failed silently', error);
          }
       }
 

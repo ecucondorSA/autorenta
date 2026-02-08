@@ -119,8 +119,8 @@ export class IncidentDetectorService {
         longitude: position.coords.longitude,
         speed: position.coords.speed || 0,
       };
-    } catch (e) {
-      console.warn('Could not get location during incident', e);
+    } catch (error: unknown) {
+      console.warn('Could not get location during incident', error);
     }
 
     // Create incident report

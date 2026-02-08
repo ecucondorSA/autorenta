@@ -228,7 +228,7 @@ export class BookingExtensionService {
       .order('requested_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching pending extension requests:', error);
+      this.logger.error('Error fetching pending extension requests', 'BookingExtensionService', error);
       throw error;
     }
     return (data || []) as BookingExtensionRequest[];

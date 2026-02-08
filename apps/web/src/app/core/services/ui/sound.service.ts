@@ -26,8 +26,8 @@ export class SoundService {
         this.masterGain.gain.value = 0.3; // System volume
         this.masterGain.connect(this.audioCtx.destination);
       }
-    } catch (e) {
-      console.warn('Web Audio API not supported', e);
+    } catch (error: unknown) {
+      console.warn('Web Audio API not supported', error);
     }
   }
 

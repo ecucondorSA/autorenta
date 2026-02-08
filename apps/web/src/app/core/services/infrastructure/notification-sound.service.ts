@@ -17,8 +17,8 @@ export class NotificationSoundService {
     if (typeof window !== 'undefined' && 'AudioContext' in window) {
       try {
         this.audioContext = new AudioContext();
-      } catch (e) {
-        console.warn('AudioContext not available:', e);
+      } catch (error: unknown) {
+        console.warn('AudioContext not available:', error);
       }
     }
 

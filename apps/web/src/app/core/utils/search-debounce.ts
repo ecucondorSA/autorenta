@@ -57,7 +57,8 @@ export function createDebouncedSearch(debounceMs = 300): DebouncedSearch {
  *   .subscribe(query => this.performSearch(query));
  * ```
  */
-export function debounceSearch(ms = 300) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (source: any) => source.pipe(debounceTime(ms), distinctUntilChanged());
+import { Observable } from 'rxjs';
+
+export function debounceSearch<T = string>(ms = 300) {
+  return (source: Observable<T>) => source.pipe(debounceTime(ms), distinctUntilChanged());
 }

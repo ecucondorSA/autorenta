@@ -208,7 +208,7 @@ export class VerificationService implements OnDestroy {
 
     // SECURITY FIX #2: Rollback - eliminar archivo si el registro en DB falla
     if (upsertError) {
-      console.error('Error creating document record, rolling back file upload:', upsertError);
+      this.logger.error('Error creating document record, rolling back file upload:', upsertError);
 
       // Intentar eliminar el archivo subido para mantener consistencia
       try {
@@ -216,7 +216,7 @@ export class VerificationService implements OnDestroy {
         this.logger.debug('Rollback successful: file removed from storage');
       } catch (rollbackError) {
         // Log pero no fallar - el archivo huérfano se puede limpiar después
-        console.error('Rollback failed: could not remove uploaded file:', rollbackError);
+        this.logger.error('Rollback failed: could not remove uploaded file:', rollbackError);
       }
 
       throw new Error(
@@ -250,21 +250,18 @@ export class VerificationService implements OnDestroy {
 
       if (error) throw error;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const normalized: UserVerificationStatus[] = (data ?? []).map((row: any) => ({
-        user_id: row.user_id as string,
-        role: (row.role ?? 'driver') as VerificationRole,
-        status: (row.status ?? 'PENDIENTE') as UserVerificationStatus['status'],
-        missing_docs: Array.isArray(row.missing_docs)
-          ? (row.missing_docs as string[])
-          : row.missing_docs
-            ? (Object.values(row.missing_docs) as string[])
-            : [],
-        notes: row.notes ?? undefined,
-        metadata: (row.metadata ?? undefined) as Record<string, unknown> | undefined,
-        created_at: row.created_at ?? undefined,
-        updated_at: row.updated_at ?? undefined,
-      }));
+      const normalized: UserVerificationStatus[] = (data ?? []).map(
+        (row: Database['public']['Tables']['user_verifications']['Row']) => ({
+          user_id: row.user_id,
+          role: (row.role ?? 'driver') as VerificationRole,
+          status: (row.status ?? 'PENDIENTE') as UserVerificationStatus['status'],
+          missing_docs: row.missing_docs ?? [],
+          notes: row.notes ?? undefined,
+          metadata: (row.metadata as Record<string, unknown> | undefined) ?? undefined,
+          created_at: row.created_at ?? undefined,
+          updated_at: row.updated_at ?? undefined,
+        }),
+      );
 
       this.statuses.set(normalized);
       return normalized;
@@ -467,25 +464,25 @@ export class VerificationService implements OnDestroy {
         });
 
         if (error) {
-          console.error('[VerifyDocument] Edge Function Error:', error);
+          this.logger.error('[VerifyDocument] Edge Function Error:', error);
 
           // Read response body if available
           if (error instanceof Error && 'context' in error) {
             const context = (error as { context: unknown }).context;
-            console.error('[VerifyDocument] Error Context:', context);
+            this.logger.error('[VerifyDocument] Error Context:', context);
 
             if (context instanceof Response && !context.bodyUsed) {
               try {
                 const responseText = await context.clone().text();
-                console.error('[VerifyDocument] Response Body:', responseText);
+                this.logger.error('[VerifyDocument] Response Body:', responseText);
                 try {
                   const jsonBody = JSON.parse(responseText);
-                  console.error('[VerifyDocument] Parsed Error:', jsonBody);
+                  this.logger.error('[VerifyDocument] Parsed Error:', jsonBody);
                 } catch {
                   // Not JSON, already logged as text
                 }
-              } catch (e) {
-                console.error('[VerifyDocument] Could not read response body:', e);
+              } catch (error: unknown) {
+                this.logger.error('[VerifyDocument] Could not read response body:', error);
               }
             }
           }
@@ -559,8 +556,8 @@ export class VerificationService implements OnDestroy {
         maxWidthOrHeight: 1920,
       });
       this.logger.info(`Document compressed: ${(file.size / 1024).toFixed(0)}KB -> ${(processedFile.size / 1024).toFixed(0)}KB`);
-    } catch (e) {
-      this.logger.warn('Compression failed, proceeding with original', e);
+    } catch (error: unknown) {
+      this.logger.warn('Compression failed, proceeding with original', error);
     }
 
     // Determinar tipo de documento y lado
