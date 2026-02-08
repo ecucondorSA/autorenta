@@ -7,12 +7,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Ajusta paths relativos desde la raíz del repo
-const repoRoot = path.resolve(__dirname, '..');
-const supabaseTypesPath = path.join(repoRoot, 'apps/web/src/types/supabase.types.ts');
+const repoRoot = path.resolve(__dirname, '../..');
+const supabaseTypesPath = path.join(repoRoot, 'apps/web/src/app/core/types/database.types.ts');
 const appPath = path.join(repoRoot, 'apps/web/src/app');
 
 if (!fs.existsSync(supabaseTypesPath)) {
-  console.error('No se encontró supabase.types.ts en', supabaseTypesPath);
+  console.error('No se encontró database.types.ts en', supabaseTypesPath);
   process.exit(1);
 }
 

@@ -4334,6 +4334,36 @@ export type Database = {
           },
         ]
       }
+      marketing_generation_jobs: {
+        Row: {
+          created_at: string | null
+          error: string | null
+          id: string
+          request_payload: Json
+          result: Json | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error?: string | null
+          id?: string
+          request_payload: Json
+          result?: Json | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error?: string | null
+          id?: string
+          request_payload?: Json
+          result?: Json | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       marketing_hook_variants: {
         Row: {
           content_type: string
@@ -10694,6 +10724,7 @@ export type Database = {
         Args: { p_owner_id: string; p_renter_id: string }
         Returns: Json
       }
+      app_is_admin: { Args: never; Returns: boolean }
       apply_referral_code: {
         Args: { p_code: string; p_referred_user_id: string; p_source?: string }
         Returns: string
@@ -12054,6 +12085,7 @@ export type Database = {
         Args: { p_car_id?: string; p_owner_id: string }
         Returns: boolean
       }
+      is_verified_owner: { Args: never; Returns: boolean }
       issue_autorentar_credit: {
         Args: { p_amount_cents?: number; p_user_id: string }
         Returns: {
@@ -12423,6 +12455,59 @@ export type Database = {
             }[]
           }
         | {
+            Args: { p_car_id: string; p_end: string; p_start: string }
+            Returns: {
+              auto_release_at: string | null
+              cancellation_reason: string | null
+              cancelled_at: string | null
+              cancelled_by: string | null
+              car_id: string
+              completed_at: string | null
+              coverage_snapshot: Json | null
+              created_at: string | null
+              currency: string | null
+              daily_rate: number | null
+              deposit_amount_cents: number | null
+              dispute_evidence: Json | null
+              dispute_reason: string | null
+              dispute_resolved_at: string | null
+              dropoff_location_id: string | null
+              end_at: string
+              funds_released_at: string | null
+              id: string
+              inspection_comment: string | null
+              inspection_evidence: Json | null
+              inspection_status: string | null
+              insurance_fee: number | null
+              is_instant_booking: boolean | null
+              notes: string | null
+              owner_confirmed_delivery: boolean | null
+              owner_fee: number | null
+              owner_id: string
+              payment_mode: string | null
+              pickup_location_id: string | null
+              renter_confirmed_payment: boolean | null
+              renter_id: string
+              returned_at: string | null
+              service_fee: number | null
+              start_at: string
+              status: Database["public"]["Enums"]["booking_status"] | null
+              subscription_tier_at_booking: string | null
+              subtotal: number | null
+              total_days: number | null
+              total_price: number | null
+              updated_at: string | null
+              wallet_lock_id: string | null
+              wallet_status: string | null
+            }
+            SetofOptions: {
+              from: "*"
+              to: "bookings"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+        | {
             Args: {
               p_car_id: string
               p_delivery_distance_km?: number
@@ -12731,6 +12816,16 @@ export type Database = {
         Args: { p_code: string; p_phone: string }
         Returns: Json
       }
+      wallet_charge_rental: {
+        Args: {
+          p_amount_cents: number
+          p_booking_id: string
+          p_meta?: Json
+          p_ref: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
       wallet_charge_subscription: {
         Args: {
           p_amount_cents: number
@@ -12908,6 +13003,16 @@ export type Database = {
           success: boolean
         }[]
       }
+      wallet_transfer: {
+        Args: {
+          p_amount_cents: number
+          p_from_user: string
+          p_meta?: Json
+          p_ref: string
+          p_to_user: string
+        }
+        Returns: Json
+      }
       whatsapp_debounce_check: {
         Args: { p_phone: string; p_timestamp: number }
         Returns: boolean
@@ -12937,7 +13042,7 @@ export type Database = {
         | "pending_payment"
         | "pending_approval"
       cancel_policy: "flex" | "moderate" | "strict"
-      car_status: "draft" | "active" | "paused" | "deleted"
+      car_status: "draft" | "active" | "paused" | "deleted" | "pending"
       claim_status:
         | "draft"
         | "submitted"
@@ -13204,7 +13309,7 @@ export const Constants = {
         "pending_approval",
       ],
       cancel_policy: ["flex", "moderate", "strict"],
-      car_status: ["draft", "active", "paused", "deleted"],
+      car_status: ["draft", "active", "paused", "deleted", "pending"],
       claim_status: [
         "draft",
         "submitted",

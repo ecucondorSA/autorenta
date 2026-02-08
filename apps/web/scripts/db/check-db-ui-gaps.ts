@@ -3,7 +3,7 @@
  * Quick checker to find Supabase tables that have no string literal references in the web app code.
  *
  * How it works:
- * 1. Parses apps/web/src/types/supabase.types.ts to collect table names.
+ * 1. Parses apps/web/src/app/core/types/database.types.ts to collect table names.
  * 2. For each table, runs `rg` over apps/web/src looking for `'table_name'` or "table_name".
  * 3. Prints a summary and the list of tables with zero hits (UI gaps).
  *
@@ -19,8 +19,8 @@ import { fileURLToPath } from 'url';
 // __dirname is not available in ESM; recreate it for this script
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
-const ROOT = resolve(__dirname, '..');
-const SUPABASE_TYPES = resolve(ROOT, 'src/types/supabase.types.ts');
+const ROOT = resolve(__dirname, '../..'); // apps/web
+const DB_TYPES = resolve(ROOT, 'src/app/core/types/database.types.ts');
 const CODE_GLOB = 'src/**';
 
 function fail(msg: string): never {
@@ -29,12 +29,12 @@ function fail(msg: string): never {
 }
 
 function collectTables(): string[] {
-  const file = readFileSync(SUPABASE_TYPES, 'utf8');
+  const file = readFileSync(DB_TYPES, 'utf8');
   const tablesPart = file.split('Tables:')[1];
-  if (!tablesPart) fail('Could not find "Tables:" section in supabase.types.ts');
+  if (!tablesPart) fail('Could not find "Tables:" section in database.types.ts');
 
   const names = [...tablesPart.matchAll(/\n\s*([a-zA-Z0-9_]+):\s*{\s*Row:/g)].map((m) => m[1]);
-  if (!names.length) fail('No tables parsed from supabase.types.ts');
+  if (!names.length) fail('No tables parsed from database.types.ts');
   return names;
 }
 

@@ -16,6 +16,7 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { ToastService } from '@core/services/ui/toast.service';
+import type { Database } from '@core/types/database.types';
 
 // Components
 import { ButtonComponent } from '../../../shared/components/button/button.component';
@@ -24,8 +25,6 @@ import { LoadingStateComponent } from '../../../shared/components/loading-state/
 // Pipes
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 
-// Types
-import type { Database } from '../../../../types/supabase.types';
 type Booking = Database['public']['Views']['my_bookings']['Row'];
 type Car = Database['public']['Tables']['cars']['Row'];
 

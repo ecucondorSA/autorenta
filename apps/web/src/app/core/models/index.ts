@@ -62,12 +62,9 @@ export type {
   BankAccountDB,
   BookingDB,
   CarDB,
-  PaymentAuthorizationDB,
   PaymentDB,
   ProfileDB,
   ReviewDB,
-  WalletBalanceDB,
-  WalletLedgerDB,
   WalletTransactionDB,
 } from '../types/supabase-types';
 
@@ -244,7 +241,6 @@ export interface UserProfile {
   default_currency?: string; // Backward compatibility
 
   // Estados
-  kyc: KycStatus;
   onboarding: OnboardingStatus;
 
   // Términos y marketing
