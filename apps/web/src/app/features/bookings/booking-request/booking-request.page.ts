@@ -15,6 +15,7 @@ import { Subject, firstValueFrom } from 'rxjs';
 // Services
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { BookingWalletService } from '@core/services/bookings/booking-wallet.service';
 import { FxService } from '@core/services/payments/fx.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
@@ -91,6 +92,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   private fxService = inject(FxService);
   readonly authService = inject(AuthService);
   private bookingsService = inject(BookingsService);
+  private bookingWalletService = inject(BookingWalletService);
   private messagesService = inject(MessagesService);
   private walletService = inject(WalletService);
   private paymentAuthorizationService = inject(PaymentAuthorizationService);
@@ -621,39 +623,22 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     this.lockingWallet.set(true);
 
     try {
-      const { data: lockWithExpiration, error: lockWithExpirationError } =
-        await this.supabaseClient.rpc('wallet_lock_funds_with_expiration', {
-          p_booking_id: bookingId,
-          p_amount_cents: amountCents,
-          p_lock_type: 'security_deposit_lock',
-          p_expires_in_days: 90,
-        });
+      const lockResult = await this.bookingWalletService.lockWalletFundsForBooking({
+        bookingId,
+        amountCents,
+        lockType: 'security_deposit_lock',
+        expiresInDays: 90,
+      });
 
-      if (!lockWithExpirationError && lockWithExpiration) {
-        this.walletLockId.set(lockWithExpiration as string);
-        this.fxRateLocked.set(true);
-        this.stopPolling();
-        await this.walletService.fetchBalance(true).catch(() => {});
-        return lockWithExpiration as string;
+      if (!lockResult.ok || !lockResult.lockId) {
+        throw new Error(lockResult.error ?? 'No se pudo bloquear la garantía en wallet.');
       }
 
-      const { data: lockId, error: lockError } = await this.supabaseClient.rpc(
-        'wallet_lock_funds',
-        {
-          p_booking_id: bookingId,
-          p_amount_cents: amountCents,
-        },
-      );
-
-      if (lockError || !lockId) {
-        throw lockError || new Error('No se pudo bloquear la garantía en wallet.');
-      }
-
-      this.walletLockId.set(lockId as string);
+      this.walletLockId.set(lockResult.lockId);
       this.fxRateLocked.set(true);
       this.stopPolling();
       await this.walletService.fetchBalance(true).catch(() => {});
-      return lockId as string;
+      return lockResult.lockId;
     } finally {
       this.lockingWallet.set(false);
     }

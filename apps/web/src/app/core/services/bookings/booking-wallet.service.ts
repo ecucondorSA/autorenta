@@ -24,6 +24,58 @@ export class BookingWalletService {
   private readonly paymentsService = inject(PaymentsService); // NEW: Inject PaymentsService
 
   /**
+   * Locks wallet funds for a booking (in cents).
+   *
+   * Notes:
+   * - Tries `wallet_lock_funds_with_expiration` first (may be restricted to service_role in some envs),
+   *   then falls back to `wallet_lock_funds`.
+   * - Returns the created lock transaction id (UUID).
+   */
+  async lockWalletFundsForBooking(params: {
+    bookingId: string;
+    amountCents: number;
+    lockType?: string;
+    expiresInDays?: number;
+  }): Promise<{ ok: boolean; lockId?: string; error?: string }> {
+    const amountCents = Math.round(params.amountCents);
+    if (!params.bookingId) return { ok: false, error: 'bookingId is required' };
+    if (!Number.isFinite(amountCents) || amountCents <= 0) {
+      return { ok: false, error: 'amountCents must be > 0' };
+    }
+
+    const lockType = params.lockType ?? 'security_deposit_lock';
+    const expiresInDays = params.expiresInDays ?? 90;
+
+    // Prefer the expiration-aware function when available in the current auth context.
+    const { data: lockWithExpiration, error: lockWithExpirationError } =
+      await this.supabase.rpc('wallet_lock_funds_with_expiration', {
+        p_booking_id: params.bookingId,
+        p_amount_cents: amountCents,
+        p_lock_type: lockType,
+        p_expires_in_days: expiresInDays,
+      });
+
+    if (!lockWithExpirationError && typeof lockWithExpiration === 'string' && lockWithExpiration) {
+      return { ok: true, lockId: lockWithExpiration };
+    }
+
+    const { data: lockId, error: lockError } = await this.supabase.rpc('wallet_lock_funds', {
+      p_booking_id: params.bookingId,
+      p_amount_cents: amountCents,
+    });
+
+    if (lockError || typeof lockId !== 'string' || !lockId) {
+      const errMsg =
+        lockError?.message ||
+        lockWithExpirationError?.message ||
+        'No se pudo bloquear la garantía en wallet.';
+      return { ok: false, error: errMsg };
+    }
+
+    return { ok: true, lockId };
+  }
+
+  /**
    * Charge rental from user's wallet using the new ledger system
    * This is called when a booking is completed and the owner wants to charge the renter
    */
@@ -134,40 +186,24 @@ export class BookingWalletService {
 
       // 1. Si es con Wallet: Usar lógica existente de bloqueo de fondos
       if (paymentMethod === 'wallet') {
-        // Check if user has sufficient available balance
-        const { data: wallet, error: walletError } = await this.supabase
-          .from('user_wallets')
-          .select('available_balance')
-          .eq('user_id', booking.user_id)
-          .single();
+        const lockResult = await this.lockWalletFundsForBooking({
+          bookingId: booking.id,
+          amountCents: depositAmountCents,
+          lockType: 'security_deposit_lock',
+          expiresInDays: 90,
+        });
 
-        if (walletError) {
-          return { ok: false, error: 'Error checking wallet balance' };
-        }
-
-        if (wallet.available_balance < depositAmountCents) {
+        if (!lockResult.ok || !lockResult.lockId) {
+          const msg = lockResult.error ?? 'No se pudo bloquear la garantía en wallet.';
           return {
             ok: false,
-            error: `Saldo insuficiente. Disponible: ${wallet.available_balance / 100}, Requerido: ${depositAmountCents / 100}`,
+            error: msg.includes('Insufficient funds') ? 'Saldo insuficiente en la billetera.' : msg,
           };
         }
 
-        const lockResult = await firstValueFrom(
-          this.walletService.lockFunds(
-            booking.id,
-            depositAmountCents,
-            description || `Garantía bloqueada - Reserva ${booking.id.substring(0, 8)}`,
-          ),
-        );
+        await this.walletService.fetchBalance(true).catch(() => {});
 
-        if (!lockResult.success) {
-          return { ok: false, error: lockResult.message };
-        }
-
-        return {
-          ok: true,
-          transaction_id: lockResult.transaction_id ?? undefined,
-        };
+        return { ok: true, transaction_id: lockResult.lockId };
       }
 
       // 2. Si es con Tarjeta: Crear pre-autorización de MercadoPago
