@@ -743,6 +743,7 @@ class PatchrightStreamingMCP {
 
     // ========== Live Monitor WebSocket ==========
     this.wsServer = null;
+    this.monitorHttpServer = null;
     this.wsClients = new Set();
     this.monitorPort = parseInt(process.env.MONITOR_PORT || '8765');
     this.lastScreenshot = null;
@@ -780,9 +781,39 @@ class PatchrightStreamingMCP {
 
   async _startMonitorServer() {
     try {
+      const http = await import('http');
       const { WebSocketServer } = await import('ws');
 
-      this.wsServer = new WebSocketServer({ port: this.monitorPort });
+      // Create an HTTP server so we can attach an error handler BEFORE bind/listen.
+      // Without this, a port conflict (EADDRINUSE) can crash the entire MCP server,
+      // which surfaces as "Transport closed" in the client.
+      this.monitorHttpServer = http.createServer();
+
+      this.monitorHttpServer.on('error', (err) => {
+        console.error(`[Monitor] HTTP server error: ${err?.message || String(err)}`);
+      });
+
+      this.monitorHttpServer.listen(this.monitorPort, () => {
+        try {
+          const addr = this.monitorHttpServer?.address?.();
+          const port = typeof addr === 'object' && addr ? addr.port : this.monitorPort;
+          console.error(`[Monitor] WebSocket server started on ws://localhost:${port}`);
+        } catch {
+          console.error(`[Monitor] WebSocket server started on ws://localhost:${this.monitorPort}`);
+        }
+      });
+
+      this.wsServer = new WebSocketServer({ server: this.monitorHttpServer });
+
+      // If the port is already in use, ws emits an 'error' event. Without a handler,
+      // Node treats it as an uncaught exception and the MCP server exits (Transport closed).
+      this.wsServer.on('error', (err) => {
+        console.error(`[Monitor] WebSocket server error: ${err?.message || String(err)}`);
+        try {
+          this.wsServer?.close();
+        } catch {}
+        this.wsServer = null;
+      });
 
       this.wsServer.on('connection', (ws) => {
         console.error(`[Monitor] Client connected (total: ${this.wsServer.clients.size})`);
@@ -810,8 +841,6 @@ class PatchrightStreamingMCP {
           } catch (e) {}
         });
       });
-
-      console.error(`[Monitor] WebSocket server started on ws://localhost:${this.monitorPort}`);
     } catch (e) {
       console.error(`[Monitor] Failed to start WebSocket server: ${e.message}`);
     }
