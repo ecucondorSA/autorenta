@@ -1,4 +1,5 @@
 import { imageUrlToBase64 } from "../utils/image.ts";
+import { requireAuth } from "../utils/auth.ts";
 
 // ============================================================================ 
 // TYPES
@@ -240,6 +241,9 @@ async function analyzePhotoQuality(
 
 export async function validateQualityHandler(req: Request): Promise<Response> {
   try {
+    // Require authentication
+    await requireAuth(req);
+
     if (!GEMINI_API_KEY) {
       return new Response(
         JSON.stringify({ error: 'Servicio de análisis no configurado' }),

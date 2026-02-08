@@ -299,7 +299,8 @@ export class BookingCheckoutPage implements OnInit {
     }
 
     // Validar que el booking está en estado pendiente de pago
-    if (bookingData.status !== 'pending') {
+    const payableStatuses = new Set(['pending_payment', 'pending']);
+    if (!payableStatuses.has(bookingData.status)) {
       throw new Error(`Este booking está en estado "${bookingData.status}" y no se puede pagar`);
     }
 

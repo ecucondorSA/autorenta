@@ -1,6 +1,7 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.4';
 import { imageUrlToBase64 } from "../utils/image.ts";
+import { requireAuth } from "../utils/auth.ts";
 
 // ============================================================================
 // TYPES
@@ -340,6 +341,9 @@ async function recognizeVehicle(
 
 export async function recognizeVehicleHandler(req: Request): Promise<Response> {
   try {
+    // Require authentication
+    await requireAuth(req);
+
     if (!GEMINI_API_KEY) {
       return new Response(
         JSON.stringify({ error: 'Servicio de análisis no configurado' }),

@@ -729,23 +729,16 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         this.bookingId.set(bookingId);
       }
 
-      // Map coverage upgrade for DB
-      const upgrade = this.coverageUpgrade();
-      const dbUpgrade =
-        upgrade === 'premium50' ? 'premium' : upgrade === 'zero' ? 'zero_franchise' : 'standard';
-
       if (mode === 'card') {
+        const depositAmountCents = Math.max(0, Math.round((authorization?.amountArs ?? 0) * 100));
         const { error: updateError } = await this.supabaseClient
           .from('bookings')
           .update({
             status: 'pending',
             payment_mode: 'card',
-            guarantee_type: 'hold',
-            guarantee_amount_cents: Math.round((authorization?.amountArs ?? 0) * 100),
             currency: 'ARS',
-            authorized_payment_id: authorization?.authorizedPaymentId ?? null,
+            deposit_amount_cents: depositAmountCents > 0 ? depositAmountCents : null,
             wallet_lock_id: null,
-            coverage_upgrade: dbUpgrade,
           })
           .eq('id', bookingId);
 
@@ -763,12 +756,9 @@ export class BookingRequestPage implements OnInit, OnDestroy {
           .update({
             status: 'pending',
             payment_mode: 'wallet',
-            guarantee_type: 'security_credit',
-            guarantee_amount_cents: guaranteeAmountCents,
             currency: 'USD',
+            deposit_amount_cents: guaranteeAmountCents > 0 ? guaranteeAmountCents : null,
             wallet_lock_id: walletLockId,
-            authorized_payment_id: null,
-            coverage_upgrade: dbUpgrade,
           })
           .eq('id', bookingId);
 

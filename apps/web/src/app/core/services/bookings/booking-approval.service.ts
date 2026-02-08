@@ -79,7 +79,7 @@ export class BookingApprovalService {
     try {
       const { data, error } = await this.supabase.rpc('reject_booking', {
         p_booking_id: bookingId,
-        p_rejection_reason: reason,
+        p_reason: reason,
       });
 
       if (error) {

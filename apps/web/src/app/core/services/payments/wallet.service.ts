@@ -54,6 +54,8 @@ export class WalletService {
 
   readonly pendingDepositsCount = signal(0);
 
+  private walletChannel: RealtimeChannel | null = null;
+
   // 🚀 PERF: Request deduplication to prevent multiple parallel fetches
   // Before: 8 components calling fetchBalance() = 8 API requests
   // After: 8 components calling fetchBalance() = 1 API request (shared promise)
@@ -531,20 +533,74 @@ export class WalletService {
     const user = session?.user;
     if (!user) throw new Error('No autenticado');
 
-    return this.supabase
+    // Cleanup any previous channel to avoid duplicate callbacks
+    if (this.walletChannel) {
+      await this.supabase.removeChannel(this.walletChannel);
+      this.walletChannel = null;
+    }
+
+    const normalizeTransaction = (row: Record<string, unknown>): WalletTransaction => {
+      const rawAmount = row['amount'];
+      const amountNum =
+        typeof rawAmount === 'number' ? rawAmount : typeof rawAmount === 'string' ? Number(rawAmount) : 0;
+      const amountCents = Number.isFinite(amountNum) ? Math.round(amountNum) : 0;
+
+      const referenceType = typeof row['reference_type'] === 'string' ? row['reference_type'] : undefined;
+      const referenceId = typeof row['reference_id'] === 'string' ? row['reference_id'] : undefined;
+
+      return {
+        id: String(row['id'] ?? ''),
+        user_id: String(row['user_id'] ?? user.id),
+        transaction_date: String(row['created_at'] ?? row['completed_at'] ?? new Date().toISOString()),
+        transaction_type: String(row['type'] ?? ''),
+        status: String(row['status'] ?? ''),
+        amount_cents: amountCents,
+        currency: String(row['currency'] ?? 'USD'),
+        metadata: {
+          description: typeof row['description'] === 'string' ? row['description'] : undefined,
+          reference_type: referenceType,
+          reference_id: referenceId,
+          provider: typeof row['provider'] === 'string' ? row['provider'] : undefined,
+          provider_transaction_id:
+            typeof row['provider_transaction_id'] === 'string' ? row['provider_transaction_id'] : undefined,
+          provider_metadata:
+            row['provider_metadata'] && typeof row['provider_metadata'] === 'object'
+              ? (row['provider_metadata'] as Record<string, unknown>)
+              : undefined,
+          admin_notes: typeof row['admin_notes'] === 'string' ? row['admin_notes'] : undefined,
+          is_withdrawable: typeof row['is_withdrawable'] === 'boolean' ? row['is_withdrawable'] : undefined,
+          category: typeof row['category'] === 'string' ? row['category'] : undefined,
+          balance_after_cents: row['balance_after_cents'],
+        },
+        booking_id: referenceType === 'booking' ? referenceId : undefined,
+        source_system: 'legacy',
+        legacy_transaction_id: String(row['id'] ?? ''),
+      };
+    };
+
+    this.walletChannel = this.supabase
       .channel(`wallet:${user.id}`)
       .on(
         'postgres_changes',
         {
-          event: 'INSERT',
+          event: '*',
           schema: 'public',
-          table: 'wallet_ledger',
+          table: 'wallet_transactions',
           filter: `user_id=eq.${user.id}`,
         },
         async (payload) => {
-          onTransaction(payload.new as WalletTransaction);
+          const tx = payload.new as unknown as Record<string, unknown>;
+          const type = String(tx['type'] ?? '');
+          const status = String(tx['status'] ?? '');
+          const prev = payload.old as unknown as Record<string, unknown> | null;
+          const prevStatus = prev ? String(prev['status'] ?? '') : '';
+
+          // Only notify the "deposit confirmed" callback for completed deposits.
+          if (type === 'deposit' && status === 'completed' && prevStatus !== 'completed') {
+            onTransaction(normalizeTransaction(tx));
+          }
           try {
-            const balance = await this.fetchBalance();
+            const balance = await this.fetchBalance(true);
             onBalanceChange(balance);
           } catch (error) {
             this.logger.warn(
@@ -559,14 +615,14 @@ export class WalletService {
           console.debug('[Wallet] Realtime subscription active');
         }
       });
+
+    return this.walletChannel;
   }
 
   async unsubscribeFromWalletChanges(): Promise<void> {
-    const userId = this.authService.getCachedUserIdSync();
-    if (!userId) return;
-    await this.supabase.removeChannel(
-      this.supabase.channel(`wallet:${userId}`),
-    );
+    if (!this.walletChannel) return;
+    await this.supabase.removeChannel(this.walletChannel);
+    this.walletChannel = null;
   }
 
   // ============================================================================
@@ -580,14 +636,38 @@ export class WalletService {
   }> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase.rpc('wallet_poll_pending_payments');
-      if (error) throw error;
-      this.fetchBalance().catch(() => { });
-      this.fetchTransactions().catch(() => { });
-      return (data ?? { success: false, confirmed: 0, message: 'No data returned' }) as {
-        success: boolean;
-        confirmed: number;
-        message: string;
+      // Polling MercadoPago is done via Edge Function (service role) because it requires external API calls.
+      const response = await this.supabase.functions.invoke('mercadopago-poll-pending-payments', {
+        body: {},
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message ?? 'Error al consultar pagos pendientes');
+      }
+
+      const data = (response.data ?? {}) as Record<string, unknown>;
+      const summary = (data['summary'] ?? null) as Record<string, unknown> | null;
+      const confirmedRaw = summary?.['confirmed'];
+      const confirmed =
+        typeof confirmedRaw === 'number'
+          ? confirmedRaw
+          : typeof confirmedRaw === 'string'
+            ? Number(confirmedRaw)
+            : 0;
+
+      const message =
+        typeof data['message'] === 'string'
+          ? String(data['message'])
+          : `Confirmados: ${Number.isFinite(confirmed) ? confirmed : 0}`;
+
+      this.invalidateCache();
+      this.fetchBalance(true).catch(() => {});
+      this.fetchTransactions().catch(() => {});
+
+      return {
+        success: data['success'] === true,
+        confirmed: Number.isFinite(confirmed) ? confirmed : 0,
+        message,
       };
     } catch (err) {
       this.handleError(err, 'Error al consultar pagos pendientes');
@@ -599,14 +679,14 @@ export class WalletService {
 
   async refreshPendingDepositsCount(): Promise<void> {
     try {
-      const { data, error } = await this.supabase
+      const { error, count } = await this.supabase
         .from('wallet_transactions')
         .select('id', { count: 'exact', head: true })
         .eq('status', 'pending')
         .eq('type', 'deposit');
 
       if (error) throw error;
-      this.pendingDepositsCount.set(data?.length ?? 0);
+      this.pendingDepositsCount.set(count ?? 0);
     } catch (err: unknown) {
       this.logger['error']('Error al obtener depósitos pendientes', String(err));
     }

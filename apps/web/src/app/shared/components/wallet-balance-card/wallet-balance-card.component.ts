@@ -439,7 +439,15 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
    * Muestra un toast de confirmación cuando un depósito es confirmado vía realtime
    */
   private showDepositConfirmedToast(transaction: Record<string, unknown>): void {
-    const amount = typeof transaction['amount'] === 'number' ? transaction['amount'] : 0;
+    // Realtime comes from `public.wallet_transactions`, where `amount` is stored in cents (numeric).
+    const rawAmount = transaction['amount_cents'] ?? transaction['amount'];
+    const amountCents =
+      typeof rawAmount === 'number'
+        ? rawAmount
+        : typeof rawAmount === 'string'
+          ? Number(rawAmount)
+          : 0;
+    const amount = Number.isFinite(amountCents) ? amountCents / 100 : 0;
     const currency = (transaction['currency'] as string) || 'USD';
 
     // Format amount

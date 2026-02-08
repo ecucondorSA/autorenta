@@ -211,15 +211,13 @@ export class BookingValidationService {
     endDate: string,
   ): Promise<boolean> {
     try {
-      const now = new Date().toISOString();
       const { data: pendingBookings } = await this.supabase
         .from('bookings')
-        .select('id, status, expires_at')
+        .select('id, status')
         .eq('car_id', carId)
         .in('status', ['pending', 'pending_payment'])
         .lt('start_at', endDate) // ✅ FIX: start_at < endDate (overlap correcto)
         .gt('end_at', startDate) // ✅ FIX: end_at > startDate (overlap correcto)
-        .or(`expires_at.is.null,expires_at.gt.${now}`); // ✅ FIX: Only active (non-expired) bookings
 
       return pendingBookings ? pendingBookings.length > 0 : false;
     } catch {
