@@ -401,113 +401,124 @@
                       <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
                     </a>
                     <div class="my-2 mx-3 border-t border-border-subtle"></div>
-                    <!-- SECCIÓN: CONFIGURACIÓN -->
-                    <div class="px-4 py-2">
-                      <p class="text-xs font-bold uppercase tracking-wider text-gray-500">
-                        Configuración
-                      </p>
-                    </div>
-                    <a
-                      routerLink="/profile"
-                      (click)="closeProfileMenu()"
-                      class="menu-item group"
+	                    <!-- SECCIÓN: CONFIGURACIÓN -->
+	                    <div class="px-4 py-2">
+	                      <p class="text-xs font-bold uppercase tracking-wider text-gray-500">
+	                        Configuración
+	                      </p>
+	                    </div>
+	                    <div class="px-4 pt-3 pb-1">
+	                      <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+	                        Cuenta
+	                      </p>
+	                    </div>
+	                    <a
+	                      routerLink="/profile"
+	                      (click)="closeProfileMenu()"
+	                      class="menu-item group"
                       role="menuitem"
                     >
                       <div
                         class="menu-icon bg-gray-500/10 text-gray-600 group-hover:bg-gray-500/20"
                       >
                         <app-icon name="user" [size]="18" />
-                      </div>
-                      <span class="flex-1">Editar Perfil</span>
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <a
-                      routerLink="/profile/location-settings"
-                      (click)="closeProfileMenu()"
-                      class="menu-item group"
-                      role="menuitem"
-                    >
-                      <div
-                        class="menu-icon bg-gray-500/10 text-gray-600 group-hover:bg-gray-500/20"
-                      >
-                        <app-icon name="location" [size]="18" />
-                      </div>
-                      <span class="flex-1">Mi Dirección</span>
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <a
-                      routerLink="/profile/security"
-                      (click)="closeProfileMenu()"
-                      class="menu-item group"
-                      role="menuitem"
-                    >
-                      <div
-                        class="menu-icon bg-gray-500/10 text-gray-600 group-hover:bg-gray-500/20"
-                      >
-                        <app-icon name="shield" [size]="18" />
-                      </div>
-                      <span class="flex-1">Seguridad</span>
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <a
-                      routerLink="/dashboard/security"
-                      (click)="closeProfileMenu()"
-                      class="menu-item group"
-                      role="menuitem"
-                    >
-                      <div
-                        class="menu-icon bg-red-500/10 text-red-600 group-hover:bg-red-500/20"
-                      >
-                        <app-icon name="radar" [size]="18" />
-                      </div>
-                      <span class="flex-1">Security Center</span>
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <a
-                      routerLink="/profile/preferences"
-                      (click)="closeProfileMenu()"
-                      class="menu-item group"
-                      role="menuitem"
-                    >
-                      <div
-                        class="menu-icon bg-gray-500/10 text-gray-600 group-hover:bg-gray-500/20"
-                      >
-                        <app-icon name="settings" [size]="18" />
-                      </div>
-                      <span class="flex-1">Preferencias</span>
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <a
-                      routerLink="/profile/driver-profile"
-                      (click)="closeProfileMenu()"
-                      class="menu-item group"
-                      role="menuitem"
-                    >
-                      <div
-                        class="menu-icon bg-gray-500/10 text-gray-600 group-hover:bg-gray-500/20"
-                      >
-                        <svg
-                          class="h-[18px] w-[18px]"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                          />
-                        </svg>
-                      </div>
-                      <span class="flex-1">Conductor</span>
-                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-                    </a>
-                    <div class="my-2 mx-3 border-t border-border-subtle"></div>
-                    <!-- SECCIÓN: AYUDA -->
-                    <div class="px-4 py-2">
-                      <p
-                        class="text-xs font-bold uppercase tracking-wider text-amber-600 font-friendly"
+	                      </div>
+	                      <span class="flex-1">Editar Perfil</span>
+	                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+	                    </a>
+	                    <a
+	                      routerLink="/profile/preferences"
+	                      (click)="closeProfileMenu()"
+	                      class="menu-item group"
+	                      role="menuitem"
+	                    >
+	                      <div
+	                        class="menu-icon bg-gray-500/10 text-gray-600 group-hover:bg-gray-500/20"
+	                      >
+	                        <app-icon name="settings" [size]="18" />
+	                      </div>
+	                      <span class="flex-1">Preferencias</span>
+	                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+	                    </a>
+	                    <a
+	                      routerLink="/profile/driver-profile"
+	                      (click)="closeProfileMenu()"
+	                      class="menu-item group"
+	                      role="menuitem"
+	                    >
+	                      <div
+	                        class="menu-icon bg-gray-500/10 text-gray-600 group-hover:bg-gray-500/20"
+	                      >
+	                        <svg
+	                          class="h-[18px] w-[18px]"
+	                          fill="none"
+	                          stroke="currentColor"
+	                          viewBox="0 0 24 24"
+	                        >
+	                          <path
+	                            stroke-linecap="round"
+	                            stroke-linejoin="round"
+	                            stroke-width="2"
+	                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+	                          />
+	                        </svg>
+	                      </div>
+	                      <span class="flex-1">Conductor</span>
+	                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+	                    </a>
+	                    <a
+	                      routerLink="/profile/location-settings"
+	                      (click)="closeProfileMenu()"
+	                      class="menu-item group"
+	                      role="menuitem"
+	                    >
+	                      <div
+	                        class="menu-icon bg-gray-500/10 text-gray-600 group-hover:bg-gray-500/20"
+	                      >
+	                        <app-icon name="location" [size]="18" />
+	                      </div>
+	                      <span class="flex-1">Mi Dirección</span>
+	                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+	                    </a>
+	                    <div class="my-2 mx-3 border-t border-border-subtle"></div>
+	                    <div class="px-4 pt-2 pb-1">
+	                      <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+	                        Seguridad
+	                      </p>
+	                    </div>
+	                    <a
+	                      routerLink="/profile/security"
+	                      (click)="closeProfileMenu()"
+	                      class="menu-item group"
+	                      role="menuitem"
+	                    >
+	                      <div
+	                        class="menu-icon bg-gray-500/10 text-gray-600 group-hover:bg-gray-500/20"
+	                      >
+	                        <app-icon name="shield" [size]="18" />
+	                      </div>
+	                      <span class="flex-1">Seguridad</span>
+	                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+	                    </a>
+	                    <a
+	                      routerLink="/dashboard/security"
+	                      (click)="closeProfileMenu()"
+	                      class="menu-item group"
+	                      role="menuitem"
+	                    >
+	                      <div
+	                        class="menu-icon bg-red-500/10 text-red-600 group-hover:bg-red-500/20"
+	                      >
+	                        <app-icon name="radar" [size]="18" />
+	                      </div>
+	                      <span class="flex-1">Centro de Seguridad</span>
+	                      <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+	                    </a>
+	                    <div class="my-2 mx-3 border-t border-border-subtle"></div>
+	                    <!-- SECCIÓN: AYUDA -->
+	                    <div class="px-4 py-2">
+	                      <p
+	                        class="text-xs font-bold uppercase tracking-wider text-amber-600 font-friendly"
                       >
                         Ayuda
                       </p>
