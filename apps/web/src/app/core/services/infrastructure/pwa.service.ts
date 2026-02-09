@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, Optional, signal, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
-import { SwUpdate, UnrecoverableStateEvent, VersionReadyEvent } from '@angular/service-worker';
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
@@ -131,20 +131,6 @@ export class PwaService implements OnDestroy {
         this.autoActivateTimeout = setTimeout(() => this.activateUpdate(), 8000);
       });
 
-    // Listen for installation failures (e.g., stale chunks returning HTML)
-    this.swUpdate.versionUpdates
-      .pipe(filter((evt) => evt.type === 'VERSION_INSTALLATION_FAILED'))
-      .subscribe((evt) => {
-        console.error('[PwaService] SW version installation failed:', evt);
-        this.nuclearSwRecovery();
-      });
-
-    // Listen for unrecoverable state (broken manifest, corrupted cache)
-    this.swUpdate.unrecoverable.subscribe((event: UnrecoverableStateEvent) => {
-      console.error('[PwaService] SW entered unrecoverable state:', event.reason);
-      this.nuclearSwRecovery();
-    });
-
     // Check immediately on app start (after 5s stability delay)
     setTimeout(() => this.swUpdate?.checkForUpdate(), 5000);
 
@@ -155,33 +141,6 @@ export class PwaService implements OnDestroy {
       },
       2 * 60 * 1000,
     );
-  }
-
-  /**
-   * Nuclear recovery: wipe all SW caches, unregister the SW, and hard-reload.
-   * Used when the SW enters an unrecoverable state (stale manifest, corrupted cache,
-   * or chunk files replaced by HTML from SPA fallback).
-   */
-  private async nuclearSwRecovery(): Promise<void> {
-    try {
-      // 1. Delete all Cache Storage entries (ngsw caches + any others)
-      if ('caches' in window) {
-        const cacheNames = await caches.keys();
-        await Promise.all(cacheNames.map((name) => caches.delete(name)));
-      }
-
-      // 2. Unregister all service workers
-      if ('serviceWorker' in navigator) {
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(registrations.map((reg) => reg.unregister()));
-      }
-
-      // 3. Hard reload to get a clean start
-      document.location.reload();
-    } catch (err) {
-      console.error('[PwaService] Nuclear recovery failed, forcing reload:', err);
-      document.location.reload();
-    }
   }
 
   /**

@@ -145,10 +145,7 @@ import { BookingsListComponent } from './components/bookings-list.component';
           <!-- BOOKINGS LIST -->
           <app-bookings-list
             [bookings]="sortedBookings()"
-            [filters]="filters()"
-            [currentFilter]="filter()"
             [role]="role()"
-            (filterChange)="setFilter($event)"
           ></app-bookings-list>
         }
       </main>

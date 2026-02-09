@@ -5,20 +5,13 @@ import {
   OnInit,
   OnDestroy,
   computed,
-  inject,
   signal,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TranslateModule } from '@ngx-translate/core';
-import { IonicModule } from '@ionic/angular';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BookingRealtimeService } from '@core/services/bookings/booking-realtime.service';
-import {
-  BookingUiService,
-  BookingUiState,
-  BookingCardAction,
-} from '@core/services/bookings/booking-ui.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { ToastService } from '@core/services/ui/toast.service';
 // UI 2026 Directives
@@ -28,64 +21,32 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { formatDateRange } from '../../../shared/utils/date.utils';
 import {
-  BookingActionCardComponent,
-  BookingActionCardData,
-} from '../../../shared/components/booking-action-card/booking-action-card.component';
-import { BookingStatusBadgeComponent } from '../../../shared/components/booking-status-badge/booking-status-badge.component';
-import { TripProgressBarComponent } from '../../../shared/components/trip-progress-bar/trip-progress-bar.component';
-import {
+  STATUS_CONFIG,
+  DEFAULT_STATUS_CONFIG,
   BookingStatusFilter,
   BookingSection,
   STATUS_FILTERS,
   INITIAL_SECTIONS,
+  StatusConfig
 } from './my-bookings.config';
-
-/** A booking enriched with precomputed UI state for the template. */
-interface InboxBooking {
-  booking: Booking;
-  ui: BookingUiState;
-  cardData: BookingActionCardData;
-}
-
-/** A section rendered in the inbox. */
-interface InboxSection {
-  id: string;
-  title: string;
-  icon: string;
-  expanded: boolean;
-  variant: 'full' | 'compact';
-  items: InboxBooking[];
-  count: number;
-}
 
 @Component({
   standalone: true,
   selector: 'app-my-bookings-page',
   imports: [
     CommonModule,
-    IonicModule,
     MoneyPipe,
     RouterLink,
     ScrollingModule,
     TranslateModule,
     IconComponent,
     PressScaleDirective,
-    BookingActionCardComponent,
-    BookingStatusBadgeComponent,
-    TripProgressBarComponent,
   ],
   templateUrl: './my-bookings.page.html',
   styleUrl: './my-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyBookingsPage implements OnInit, OnDestroy {
-  private readonly bookingsService = inject(BookingsService);
-  private readonly bookingUiService = inject(BookingUiService);
-  private readonly router = inject(Router);
-  private readonly toastService = inject(ToastService);
-  private readonly bookingRealtimeService = inject(BookingRealtimeService);
-  private readonly authService = inject(AuthService);
-
   readonly bookings = signal<Booking[]>([]);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -98,96 +59,85 @@ export class MyBookingsPage implements OnInit, OnDestroy {
   // Filtros disponibles
   readonly statusFilters = STATUS_FILTERS;
 
-  // ─── Computed: Enriched Inbox Bookings ────────────────────────────────────
-
-  private readonly enrichedBookings = computed<InboxBooking[]>(() => {
+  // Computed: Bookings grouped by section
+  readonly bookingsBySection = computed(() => {
     const allBookings = this.bookings();
-    return allBookings.map(booking => {
-      const ui = this.bookingUiService.getUiState(booking);
-      const cardData = this.toCardData(booking, ui);
-      return { booking, ui, cardData };
-    });
-  });
-
-  // ─── Computed: Inbox Sections ─────────────────────────────────────────────
-
-  readonly inboxSections = computed<InboxSection[]>(() => {
-    const enriched = this.enrichedBookings();
     const filter = this.statusFilter();
-    const sectionDefs = this.sections();
+    const sectionList = this.sections();
 
     // Pre-create buckets
-    const sectionBuckets = new Map<string, InboxBooking[]>();
-    for (const section of sectionDefs) {
+    const sectionBuckets = new Map<string, Booking[]>();
+    for (const section of sectionList) {
       sectionBuckets.set(section.id, []);
     }
 
-    // Single pass assignment
-    for (const item of enriched) {
-      const effectiveStatus = this.bookingUiService.getEffectiveStatus(item.booking);
+    // Single pass
+    for (const booking of allBookings) {
+      const effectiveStatus = this.getEffectiveStatus(booking);
 
       // Filter logic
       if (filter !== 'all' && effectiveStatus !== filter) continue;
 
       // Assign to section
-      for (const section of sectionDefs) {
+      for (const section of sectionList) {
         if (section.statuses.includes(effectiveStatus)) {
-          sectionBuckets.get(section.id)!.push(item);
+          sectionBuckets.get(section.id)!.push(booking);
           break;
         }
       }
     }
 
-    // Sort: urgent items first within each section
-    const priorityOrder = { urgent: 0, active: 1, info: 2, neutral: 3 };
-    for (const [, items] of sectionBuckets) {
-      items.sort((a, b) => priorityOrder[a.ui.priority] - priorityOrder[b.ui.priority]);
-    }
-
-    return sectionDefs.map(section => {
-      const items = sectionBuckets.get(section.id) ?? [];
-      const sectionVariant: 'full' | 'compact' = section.id === 'history' ? 'compact' : 'full';
+    // Build result
+    return sectionList.map((section) => {
+      const bookings = sectionBuckets.get(section.id) ?? [];
       return {
         ...section,
-        variant: sectionVariant,
-        items,
-        count: items.length,
+        bookings,
+        count: bookings.length,
       };
     });
   });
 
-  // ─── Computed: Dashboard Stats ────────────────────────────────────────────
-
+  // Computed: Count stats
   readonly statusCounts = computed(() => {
     const bookings = this.bookings();
     const counts: Record<string, number> = { all: bookings.length };
-
-    STATUS_FILTERS.forEach(f => { if (f !== 'all') counts[f] = 0; });
-    counts['expired'] = 0;
+    
+    // Initialize specific counts
+    STATUS_FILTERS.forEach(f => { if(f !== 'all') counts[f] = 0; });
+    counts['expired'] = 0; // Add expired as it's a derived status
 
     for (const booking of bookings) {
-      const status = this.bookingUiService.getEffectiveStatus(booking);
+      const status = this.getEffectiveStatus(booking);
       if (counts[status] !== undefined) {
         counts[status]++;
       } else {
-        counts[status] = 1;
+         // Fallback initialization
+         counts[status] = 1;
       }
     }
+
     return counts;
   });
 
+  // Computed: Dashboard Summary
   readonly dashboardStats = computed(() => {
     const counts = this.statusCounts();
     return {
-      actionRequired: (counts['pending'] || 0) + (counts['pending_review'] || 0)
-        + (counts['pending_return'] || 0) + (counts['damage_reported'] || 0),
+      actionRequired: (counts['pending'] || 0) + (counts['pending_review'] || 0),
       active: (counts['confirmed'] || 0) + (counts['in_progress'] || 0),
       history: (counts['completed'] || 0) + (counts['cancelled'] || 0) + (counts['expired'] || 0),
       total: counts['all'] || 0,
     };
   });
 
-  // ─── Lifecycle ────────────────────────────────────────────────────────────
+  constructor(
+    private readonly bookingsService: BookingsService,
+    private readonly router: Router,
+    private readonly toastService: ToastService,
+    private readonly bookingRealtimeService: BookingRealtimeService,
+    private readonly authService: AuthService,
+  ) {}
 
   ngOnInit(): void {
     void this.loadBookings();
@@ -223,26 +173,88 @@ export class MyBookingsPage implements OnInit, OnDestroy {
     }
   }
 
-  // ─── Template Helpers ─────────────────────────────────────────────────────
-
   rangeLabel(booking: Booking): string {
     return formatDateRange(booking.start_at, booking.end_at);
   }
 
-  getFilterLabel(filter: BookingStatusFilter): string {
-    const labelMap: Record<string, string> = {
-      all: 'Todas',
-      pending: 'Pendientes',
-      confirmed: 'Confirmadas',
-      in_progress: 'En Curso',
-      completed: 'Completadas',
-      cancelled: 'Canceladas',
-      pending_review: 'En Revisión',
-    };
-    return labelMap[filter] ?? filter;
+  getEffectiveStatus(booking: Booking): string {
+    if ((booking.status === 'pending_payment' || booking.status === 'pending') && this.isStartDatePassed(booking)) {
+      return 'expired';
+    }
+    if (booking.status === 'pending_payment') {
+      return 'pending';
+    }
+    return booking.status;
   }
 
-  // ─── Actions ──────────────────────────────────────────────────────────────
+  isStartDatePassed(booking: Booking): boolean {
+    if (!booking.start_at) return false;
+    const startDate = new Date(booking.start_at);
+    const now = new Date();
+    return startDate < now;
+  }
+
+  private getStatusConfig(booking: Booking): StatusConfig {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    return STATUS_CONFIG[effectiveStatus] ?? DEFAULT_STATUS_CONFIG;
+  }
+
+  // --- Helper Methods exposed to Template ---
+
+  statusLabel(booking: Booking): string {
+    return this.getStatusConfig(booking).label;
+  }
+
+  statusLabelShort(booking: Booking): string {
+    return this.getStatusConfig(booking).labelShort;
+  }
+  
+  statusIcon(booking: Booking): string {
+    return this.getStatusConfig(booking).icon;
+  }
+
+  statusBadgeCompactClass(booking: Booking): string {
+    return this.getStatusConfig(booking).badgeCompactClass;
+  }
+  
+  statusBorderClass(booking: Booking): string {
+    return this.getStatusConfig(booking).borderClass;
+  }
+  
+  statusIconBgClass(booking: Booking): string {
+    return this.getStatusConfig(booking).iconBgClass;
+  }
+
+  getFilterLabel(filter: BookingStatusFilter): string {
+    if (filter === 'all') return 'Todas';
+    return STATUS_CONFIG[filter]?.filterLabel ?? filter;
+  }
+
+  // --- Logic Checks ---
+
+  isWalletBooking(booking: Booking): boolean {
+    return booking.payment_mode === 'wallet';
+  }
+
+  canCompletePay(booking: Booking): boolean {
+    if (this.isWalletBooking(booking)) return false;
+    const pendingStatus = booking.status === 'pending' || booking.status === 'pending_payment';
+    return pendingStatus && !this.isStartDatePassed(booking);
+  }
+
+  isPendingApproval(booking: Booking): boolean {
+    return (
+      booking.status === 'pending' &&
+      this.isWalletBooking(booking) &&
+      !this.isStartDatePassed(booking)
+    );
+  }
+
+  isPendingReview(booking: Booking): boolean {
+    return booking.status === 'pending_review';
+  }
+
+  // --- Actions ---
 
   setStatusFilter(filter: BookingStatusFilter): void {
     this.statusFilter.set(filter);
@@ -250,7 +262,7 @@ export class MyBookingsPage implements OnInit, OnDestroy {
 
   toggleSection(sectionId: string): void {
     const currentSections = this.sections();
-    const updatedSections = currentSections.map(section =>
+    const updatedSections = currentSections.map((section) =>
       section.id === sectionId ? { ...section, expanded: !section.expanded } : section,
     );
     this.sections.set(updatedSections);
@@ -258,7 +270,7 @@ export class MyBookingsPage implements OnInit, OnDestroy {
 
   focusSection(sectionId: string): void {
     this.statusFilter.set('all');
-    const updatedSections = this.sections().map(section => ({
+    const updatedSections = this.sections().map((section) => ({
       ...section,
       expanded: section.id === sectionId,
     }));
@@ -267,39 +279,6 @@ export class MyBookingsPage implements OnInit, OnDestroy {
 
   expandAllSections(): void {
     const currentSections = this.sections();
-    this.sections.set(currentSections.map(s => ({ ...s, expanded: true })));
-  }
-
-  onCardClick(bookingId: string): void {
-    void this.router.navigate(['/bookings', bookingId]);
-  }
-
-  onActionClick(action: BookingCardAction): void {
-    void this.router.navigate([action.route]);
-  }
-
-  // ─── Private ──────────────────────────────────────────────────────────────
-
-  private toCardData(booking: Booking, ui: BookingUiState): BookingActionCardData {
-    const amount = booking.total_amount ?? 0;
-    return {
-      id: booking.id,
-      ui,
-      carImage: booking.main_photo_url ?? booking.car_image ?? null,
-      carTitle: booking.car_title ?? [booking.car_brand, booking.car_model, booking.car_year].filter(Boolean).join(' '),
-      dateRange: formatDateRange(booking.start_at, booking.end_at),
-      totalDisplay: this.formatMoney(amount),
-      counterpartyName: booking.owner_name,
-      counterpartyAvatar: booking.owner_avatar,
-    };
-  }
-
-  private formatMoney(amount: number): string {
-    return new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'ARS',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
+    this.sections.set(currentSections.map((s) => ({ ...s, expanded: true })));
   }
 }
