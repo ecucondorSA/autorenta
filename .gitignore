@@ -203,3 +203,6 @@ tools/whatsapp-outreach/*.png
 mcp-server/dist/
 nanobanana-output/
 tools/evolution-api/
+tools/whatsapp-context/extractor/
+tools/whatsapp-context/gdrive-backup/
+tools/whatsapp-context/wa-crypt-tools/
