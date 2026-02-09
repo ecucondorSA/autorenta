@@ -298,6 +298,14 @@ export class AuthService implements OnDestroy {
       this.logger.debug('refreshSession failed', 'AuthService', { message: error.message });
       // ✅ FIX: Clear stale session if refresh fails (token expired)
       await this.clearStaleSession();
+
+      // ✅ P0.5 FIX: If refresh fails on a protected route, redirect to login
+      if (this.isOnProtectedRoute()) {
+        this.logger.warn('Refresh failed on protected route, redirecting to login', 'AuthService');
+        void this.router.navigate(['/auth/login'], {
+          queryParams: { returnUrl: this.router.url },
+        });
+      }
       return null;
     }
     if (data.session) {
@@ -305,6 +313,52 @@ export class AuthService implements OnDestroy {
       this.state.set({ session: data.session, loading: false });
     }
     return data.session;
+  }
+
+  /**
+   * Route prefixes that require authentication.
+   * If session expires on any of these, redirect to login.
+   * Source of truth: app.routes.ts — every route WITH canMatch: [AuthGuard]
+   */
+  private readonly PROTECTED_ROUTE_PREFIXES = [
+    '/profile',
+    '/bookings',
+    '/reviews',
+    '/admin',
+    '/referrals',
+    '/protections',
+    '/verification',
+    '/contact-verification',
+    '/finanzas',
+    '/wallet',
+    '/dashboard',
+    '/scout',
+    '/calendar-demo',
+    '/payouts',
+    '/messages',
+    '/notifications',
+    '/cars/publish',
+    '/cars/my',
+    '/cars/bulk-blocking',
+  ];
+
+  /** Dynamic protected route patterns (e.g. /cars/:id/availability) */
+  private readonly PROTECTED_ROUTE_PATTERNS = [
+    /^\/cars\/[^/]+\/availability/,
+    /^\/cars\/[^/]+\/documents/,
+  ];
+
+  /**
+   * Check if the current URL is a protected route that requires auth.
+   */
+  private isOnProtectedRoute(): boolean {
+    const currentUrl = this.router.url || '/';
+    // Check static protected prefixes
+    if (this.PROTECTED_ROUTE_PREFIXES.some((prefix) => currentUrl.startsWith(prefix))) {
+      return true;
+    }
+    // Check dynamic protected patterns
+    return this.PROTECTED_ROUTE_PATTERNS.some((pattern) => pattern.test(currentUrl));
   }
 
   private listenToAuthChanges(): void {
@@ -325,6 +379,21 @@ export class AuthService implements OnDestroy {
           // P0.3 FIX: Clear promise to force fresh load on next navigation
           this.restoreSessionPromise = null;
           this.sessionResolvedAt = 0;
+
+          // ✅ P0.5 FIX: Redirect to login if user is on a protected route
+          // This prevents the broken-page state when session expires mid-navigation.
+          // Supabase SDK calls use fetch() directly (not Angular HttpClient),
+          // so the auth-refresh interceptor never fires for them.
+          if (this.isOnProtectedRoute()) {
+            this.logger.warn(
+              'Session expired on protected route, redirecting to login',
+              'AuthService',
+              { url: this.router.url },
+            );
+            void this.router.navigate(['/auth/login'], {
+              queryParams: { returnUrl: this.router.url },
+            });
+          }
         }
 
         // ✅ Apply pending referral code after successful sign-in

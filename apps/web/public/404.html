@@ -4,6 +4,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Página no encontrada - Autorentar</title>
+  <script>
+    // SPA Fallback: If Cloudflare Pages serves 404.html for a known SPA route
+    // (e.g. _redirects not deployed, edge cache stale, or rule limit hit),
+    // redirect to "/" preserving the hash fragment. Angular will handle the rest:
+    //  - OAuth tokens in hash → handleOAuthCallbackRedirect() navigates to /auth/callback
+    //  - Other SPA paths → restored from sessionStorage in AppComponent.ngOnInit()
+    (function () {
+      var path = location.pathname;
+      var hash = location.hash;
+      var search = location.search;
+
+      // Known SPA route prefixes (mirrors _redirects)
+      var spaRoutes = [
+        '/auth', '/oauth', '/cars', '/bookings', '/reviews', '/wallet',
+        '/dashboard', '/profile', '/scout', '/messages', '/notifications',
+        '/admin', '/ref', '/users', '/verification', '/contact-verification',
+        '/alquiler', '/error', '/onboarding', '/become-renter', '/ganar',
+        '/referrals', '/favorites', '/mp-callback', '/protections',
+        '/finanzas', '/payouts', '/support', '/panic', '/rentarfast',
+        '/terminos', '/terms', '/privacy', '/delete-account',
+        '/politica-seguros', '/help', '/aircover', '/safety',
+        '/cancellation', '/community', '/rent-your-car', '/owner-resources',
+        '/resources', '/newsroom', '/about', '/careers', '/investors',
+        '/sitemap', '/company-data', '/calendar-demo', '/beacon-test'
+      ];
+
+      var isSpaRoute = spaRoutes.some(function (r) {
+        return path === r || path.startsWith(r + '/');
+      });
+
+      if (isSpaRoute) {
+        // Store the original path+query so Angular can restore navigation for non-OAuth routes.
+        // OAuth callbacks (hash contains access_token) are handled automatically by
+        // handleOAuthCallbackRedirect() without needing sessionStorage.
+        if (path !== '/') {
+          try { sessionStorage.setItem('spa-redirect', path + search); } catch (e) { /* quota */ }
+        }
+        // Redirect to root, preserving hash (critical for OAuth #access_token=...)
+        location.replace('/' + hash);
+        // Stop rendering the 404 UI
+        return;
+      }
+    })();
+  </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {

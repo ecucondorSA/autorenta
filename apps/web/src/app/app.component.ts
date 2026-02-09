@@ -733,8 +733,13 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Detecta tokens de OAuth en el hash de la URL y redirige a /auth/callback si es necesario
-   * Esto maneja el caso donde Supabase redirige a la raíz (/) en lugar de /auth/callback
+   * Detecta tokens de OAuth en el hash de la URL y redirige a /auth/callback si es necesario.
+   * Esto maneja el caso donde Supabase redirige a la raíz (/) en lugar de /auth/callback.
+   *
+   * También restaura rutas SPA que fueron redirigidas desde 404.html.
+   * Cuando Cloudflare Pages sirve 404.html para una ruta SPA (ej. /cars/123, /bookings/456),
+   * 404.html guarda la ruta original en sessionStorage y redirige a /.
+   * Este método detecta esa situación y navega a la ruta original.
    */
   private handleOAuthCallbackRedirect(): void {
     if (!this.isBrowser) {
@@ -758,6 +763,21 @@ export class AppComponent implements OnInit {
         fragment: hash.substring(1), // Remover el '#' del hash
         replaceUrl: true, // Reemplazar en el historial para evitar loops
       });
+      return;
+    }
+
+    // Restaurar ruta SPA guardada por 404.html (para rutas sin tokens OAuth)
+    if (isRoot && !hasOAuthTokens) {
+      try {
+        const spaRedirect = sessionStorage.getItem('spa-redirect');
+        if (spaRedirect) {
+          sessionStorage.removeItem('spa-redirect');
+          this.logger.debug('Restoring SPA redirect from 404.html fallback', { path: spaRedirect });
+          void this.router.navigateByUrl(spaRedirect, { replaceUrl: true });
+        }
+      } catch {
+        // sessionStorage unavailable (private browsing, etc.) — ignore
+      }
     }
   }
 }

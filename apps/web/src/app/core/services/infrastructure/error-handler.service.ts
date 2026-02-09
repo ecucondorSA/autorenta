@@ -11,18 +11,37 @@ import { environment } from '@environment';
  * These pages don't require authentication to view, so we shouldn't
  * show "Tu sesión expiró" errors when browsing without login
  */
-const PUBLIC_ROUTES = [
-  '/cars', // Car listings
-  '/cars/', // Car detail (with ID)
-  '/marketplace', // Marketplace
-  '/how-it-works', // How it works
-  '/about', // About page
-  '/contact', // Contact
-  '/faq', // FAQ
-  '/terms', // Terms
-  '/privacy', // Privacy
-  '/auth', // Auth pages
-  '/', // Home
+/**
+ * Route prefixes that require authentication.
+ * Auth errors on these routes trigger redirect to login.
+ * Source of truth: app.routes.ts — every route WITH canMatch: [AuthGuard]
+ */
+const PROTECTED_ROUTE_PREFIXES = [
+  '/profile',
+  '/bookings',
+  '/reviews',
+  '/admin',
+  '/referrals',
+  '/protections',
+  '/verification',
+  '/contact-verification',
+  '/finanzas',
+  '/wallet',
+  '/dashboard',
+  '/scout',
+  '/calendar-demo',
+  '/payouts',
+  '/messages',
+  '/notifications',
+  '/cars/publish',
+  '/cars/my',
+  '/cars/bulk-blocking',
+];
+
+/** Dynamic protected route patterns (e.g. /cars/:id/availability) */
+const PROTECTED_ROUTE_PATTERNS = [
+  /^\/cars\/[^/]+\/availability/,
+  /^\/cars\/[^/]+\/documents/,
 ];
 
 /**
@@ -54,16 +73,21 @@ export class ErrorHandlerService {
   private readonly router = inject(Router);
 
   /**
+   * ✅ FIX: Check if current route is protected (requires auth)
+   */
+  private isProtectedRoute(): boolean {
+    const currentUrl = this.router.url || '/';
+    if (PROTECTED_ROUTE_PREFIXES.some((prefix) => currentUrl.startsWith(prefix))) {
+      return true;
+    }
+    return PROTECTED_ROUTE_PATTERNS.some((pattern) => pattern.test(currentUrl));
+  }
+
+  /**
    * ✅ FIX: Check if current route is public (no auth required)
    */
   private isPublicRoute(): boolean {
-    const currentUrl = this.router.url || '/';
-    return PUBLIC_ROUTES.some((route) => {
-      if (route === '/') {
-        return currentUrl === '/';
-      }
-      return currentUrl.startsWith(route);
-    });
+    return !this.isProtectedRoute();
   }
 
   /**
@@ -239,9 +263,18 @@ export class ErrorHandlerService {
     }
 
     // ✅ FIX: Treat unauthenticated errors as expected (avoid Sentry noise)
+    // P0.5 FIX: On protected routes, redirect to login instead of just showing a toast.
+    // This covers Supabase SDK calls (fetch-based) that bypass Angular interceptors.
     if (this.isUnauthenticatedError(error)) {
-      if (!this.isPublicRoute() && showToUser) {
-        this.toast.warning('Sesión requerida', 'Por favor inicia sesión para continuar.');
+      if (!this.isPublicRoute()) {
+        this.logger.warn('Auth error on protected route — redirecting to login', 'ErrorHandlerService', {
+          context,
+          route: this.router.url,
+        });
+        // Navigate to login with returnUrl so user can resume after re-authentication
+        void this.router.navigate(['/auth/login'], {
+          queryParams: { returnUrl: this.router.url },
+        });
       }
 
       this.logger.info('Unauthenticated access blocked', 'ErrorHandlerService', {
