@@ -243,6 +243,82 @@ try {
 > Nota: En AutoRenta, el browser interactivo se realiza via MCP `patchright-streaming` (Gemini en navegador).
 > Por default NO es headless; headless solo si el usuario lo pide explícitamente. Mantener sesión persistente (no reset/cerrar) salvo pedido.
 
+### Claude in Chrome — Setup & Capacidades
+
+**Qué es:** Extensión oficial de Anthropic que permite a Claude Code controlar Chrome directamente via MCP tools (`mcp__claude-in-chrome__*`).
+
+**Setup requerido:**
+1. Instalar extensión Claude in Chrome desde chrome.ai
+2. Estar logueado en **claude.ai** con la misma cuenta que Claude Code
+3. Completar el **onboarding de riesgos** (aceptar términos) — sin esto la extensión no conecta
+4. Si es primera vez, reiniciar Chrome después de instalar
+
+**Capacidades:**
+- Navegar a URLs (`navigate`)
+- Ejecutar JavaScript en contexto de página (`javascript_tool`)
+- Leer contenido de página (`read_page`, `get_page_text`)
+- Interactuar con formularios (`form_input`, `find`, `computer`)
+- Tomar screenshots y grabar GIFs (`upload_image`, `gif_creator`)
+- Leer consola y network (`read_console_messages`, `read_network_requests`)
+- Gestionar tabs (`tabs_context_mcp`, `tabs_create_mcp`)
+
+**Riesgos documentados (Anthropic):**
+- Sitios maliciosos pueden ocultar instrucciones (prompt injection) que engañen a la IA
+- Revisar siempre antes de acciones sensibles (financieras, datos personales)
+- Comenzar con sitios de confianza
+- Reportar comportamiento inesperado
+
+**Cuándo usar Claude in Chrome vs Patchright:**
+
+| Escenario | Herramienta |
+|-----------|-------------|
+| Verificación visual rápida (post-deploy) | Claude in Chrome |
+| Debug interactivo con el usuario mirando | Claude in Chrome |
+| Sitios con anti-bot (Facebook, MercadoPago) | Patchright Streaming |
+| Tests automatizados para CI | Stagehand |
+| Sesiones que necesitan cookies/login persistente | Patchright Streaming |
+
+### Shortcuts de Claude in Chrome (AutoRenta)
+
+Shortcuts configurados en la extensión para tareas recurrentes. **URL base:** `https://autorentar.com`
+
+| Shortcut | Comenzar desde | Propósito |
+|----------|---------------|-----------|
+| `post-deploy-check` | `/bookings` | Navegar a /bookings, /marketplace, /profile. Screenshot + verificar layouts y errores visibles. |
+| `smoke-test-booking` | `/marketplace` | Verificar flujo: marketplace → auto disponible → detalle con foto/precio/botón. NO reservar. |
+| `check-wallet` | `/wallet` | Verificar balance (no NaN), historial de transacciones, formato de moneda correcto. |
+| `console-error-scan` | `/bookings` | Recorrer páginas principales, leer console errors + HTTP 4xx/5xx. Reporte consolidado por página. |
+
+**Reglas para shortcuts:**
+- Nunca ejecutar acciones destructivas (reservar, pagar, eliminar) desde shortcuts
+- Siempre tomar screenshots como evidencia
+- Reportar resumen al finalizar
+
+**Features avanzadas de Claude in Chrome:**
+- **Scheduled Tasks:** Programar shortcuts con el ícono de reloj (⏰). Recomendado: `console-error-scan` diario, `post-deploy-check` después de cada deploy.
+- **Record Workflow:** Grabar pasos manuales y Claude aprende a repetirlos. Usar para flujos complejos en vez de escribir prompts largos.
+- **Ask Before Acting:** Claude crea plan → usuario aprueba → ejecuta independientemente. Ideal para smoke tests largos.
+- **Multi-tab:** Arrastrar tabs al grupo de Claude para que interactúe con varios simultáneamente (ej: comparar marketplace vs bookings).
+- **Model Selection (Max/Team/Enterprise):** Haiku 4.5 para checks rápidos, Sonnet 4.5 para flujos multi-step, Opus 4.5 para debugging complejo. Pro solo tiene Haiku 4.5.
+- **Claude Code Integration:** Flujo oficial: `pnpm build:web` en terminal → verificar en Chrome → debug con console logs desde la extensión.
+
+### Sugerencias Proactivas — Cuándo Ofrecer Claude in Chrome
+
+Claude Code DEBE sugerir usar el navegador Chrome en estos escenarios:
+
+| Situación | Sugerencia |
+|-----------|-----------|
+| Después de `git push` a `main` | "¿Querés que verifique el deploy en Chrome? (`post-deploy-check`)" |
+| Después de modificar componentes UI (templates, CSS, Tailwind) | "¿Verificamos visualmente en el browser cómo quedó?" |
+| Cuando un build pasa pero hay dudas sobre layout/responsive | "Puedo tomar screenshots en Chrome para comparar antes/después" |
+| Después de tocar bookings, wallet o marketplace | "¿Corremos un smoke test en Chrome para validar el flujo?" |
+| Cuando el usuario reporta un bug visual | "¿Puedo abrir Chrome para reproducirlo y leer los console errors?" |
+| Debugging de errores de red/API | "Puedo navegar en Chrome y leer los network requests para diagnosticar" |
+| Comparar diseño con Figma/mockup | "Subí el mockup y puedo compararlo side-by-side con la página real en Chrome" |
+| Después de cambios en Edge Functions o RPCs | "¿Verificamos en Chrome que las llamadas de red devuelven lo esperado?" |
+
+**Regla:** Solo sugerir, nunca ejecutar sin aprobación del usuario. Indicar el shortcut relevante si existe.
+
 ### Flujo de Trabajo Obligatorio
 
 **REGLA:** Para todo test E2E nuevo, seguir este flujo de 2 fases:
