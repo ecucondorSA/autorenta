@@ -682,7 +682,7 @@ export class BookingFlowService {
       },
     };
 
-    const baseInfo = statusMap[status] || {
+    const baseInfo = statusMap[status as BookingUiStatus] || {
       label: status,
       color: 'medium',
       icon: 'help-circle',

@@ -1,4 +1,4 @@
-import type { Booking, BookingUiStatus } from '@core/models';
+import type { Booking, BookingStatus, BookingUiStatus } from '@core/models';
 
 /**
  * BookingFlowHelpers
@@ -225,7 +225,7 @@ export function getTimeRemaining(targetDate: Date | string): {
 /**
  * Obtiene el estado visual de un booking para UI
  */
-export function getBookingStatusDisplay(status: BookingStatus): {
+export function getBookingStatusDisplay(status: BookingStatus | BookingUiStatus): {
   label: string;
   color: 'primary' | 'success' | 'warning' | 'danger' | 'medium';
   icon: string;
@@ -393,9 +393,9 @@ export function getBookingStatusDisplay(status: BookingStatus): {
   };
 
   return (
-    statusMap[status] || {
+    statusMap[status as BookingUiStatus] || {
       label: status,
-      color: 'medium',
+      color: 'medium' as const,
       icon: '❓',
       description: '',
     }

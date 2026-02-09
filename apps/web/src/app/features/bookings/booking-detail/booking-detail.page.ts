@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Booking, BookingExtensionRequest, BookingStatus, TrafficInfraction } from '@core/models';
+import { Booking, BookingExtensionRequest, BookingStatus, BookingUiStatus, TrafficInfraction } from '@core/models';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { CLAIM_STATUS_LABELS, InsuranceClaim } from '@core/models/insurance.model';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -131,7 +131,7 @@ interface FlowAlert {
   action?: { label: string; route: string };
 }
 
-type FlowStatus = BookingStatus | 'renter_checkin';
+type FlowStatus = BookingUiStatus | 'renter_checkin';
 
 const TERMINAL_STATUSES = new Set<BookingStatus>([
   'cancelled',

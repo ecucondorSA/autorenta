@@ -201,7 +201,7 @@ export class CarsService {
         width?: number;
         height?: number;
         quality?: number;
-        format?: 'origin' | 'webp' | 'avif';
+        format?: 'origin';
       };
     },
   ): string | null {

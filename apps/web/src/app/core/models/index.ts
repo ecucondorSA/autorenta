@@ -1,5 +1,6 @@
 import type { Car } from './car.model';
 import type { BookingDepositStatus } from './wallet.model';
+import type { BookingUiStatus } from './booking-status.model';
 
 // ============================================================================
 // Locally defined enum types
@@ -15,37 +16,10 @@ export type FuelType = 'gasoline' | 'diesel' | 'electric' | 'electrico' | 'hybri
 export type CancelPolicy = 'flexible' | 'moderate' | 'strict';
 // Must match DB enum: public.car_status (draft, active, paused, deleted, pending)
 export type CarStatus = 'draft' | 'active' | 'paused' | 'deleted' | 'pending';
-// Must match DB enum: public.booking_status
-export type BookingStatus =
-  | 'pending'
-  | 'pending_payment'
-  | 'pending_approval'
-  | 'confirmed'
-  | 'in_progress'
-  | 'pending_return'
-  | 'returned'
-  | 'inspected_good'
-  | 'damage_reported'
-  | 'completed'
-  | 'cancelled'
-  | 'cancelled_renter'
-  | 'cancelled_owner'
-  | 'cancelled_system'
-  | 'payment_validation_failed'
-  | 'dispute'
-  | 'disputed'
-  | 'pending_dispute_resolution'
-  | 'pending_review'
-  | 'resolved'
-  | 'rejected'
-  | 'no_show'
-  | 'expired';
 
-// UI-only derived statuses (NOT stored in DB `booking_status`)
-export type BookingUiStatus =
-  | BookingStatus
-  | 'pending_owner_approval' // legacy UI alias (use `pending_approval` in DB)
-  | 'pending_deposit';
+// Export Booking Statuses (Extracted to avoid circular deps)
+export * from './booking-status.model';
+
 export type DocumentKind =
   | 'gov_id_front'
   | 'gov_id_back'
@@ -96,6 +70,8 @@ export type {
   WalletRequestWithdrawalResponse,
   WalletTransactionFilters,
   WalletUnlockFundsResponse,
+  WalletReferenceType,
+  WalletPaymentProvider,
   WithdrawalFilters,
   WithdrawalLoadingState,
   WithdrawalRequest,

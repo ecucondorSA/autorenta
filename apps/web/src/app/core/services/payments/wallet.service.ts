@@ -12,6 +12,8 @@ import type {
   WalletHistoryEntry as WalletTransaction,
   WalletTransactionFilters,
   WalletUnlockFundsResponse,
+  WalletReferenceType,
+  WalletPaymentProvider,
 } from '@core/models';
 import {
   WALLET_STALE_TIME_MS,
@@ -558,9 +560,9 @@ export class WalletService {
         currency: String(row['currency'] ?? 'USD'),
         metadata: {
           description: typeof row['description'] === 'string' ? row['description'] : undefined,
-          reference_type: referenceType,
+          reference_type: referenceType as WalletReferenceType | undefined,
           reference_id: referenceId,
-          provider: typeof row['provider'] === 'string' ? row['provider'] : undefined,
+          provider: typeof row['provider'] === 'string' ? row['provider'] as WalletPaymentProvider : undefined,
           provider_transaction_id:
             typeof row['provider_transaction_id'] === 'string' ? row['provider_transaction_id'] : undefined,
           provider_metadata:

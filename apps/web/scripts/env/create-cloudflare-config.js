@@ -31,8 +31,8 @@ const redirectsContent = `# Cloudflare Pages - SPA Routing
 
 # Fix broken relative asset loads when entering the SPA from a nested route.
 #
-# Cloudflare can emit `Link: <chunk-XYZ.js>; rel=modulepreload` headers based on the HTML.
-# When the browser resolves that relative URL under `/cars/publish`, it requests `/cars/chunk-XYZ.js`.
+# Cloudflare can emit \`Link: <chunk-XYZ.js>; rel=modulepreload\` headers based on the HTML.
+# When the browser resolves that relative URL under \`/cars/publish\`, it requests \`/cars/chunk-XYZ.js\`.
 # Those files only exist at the site root, so without this redirect Cloudflare would serve the SPA
 # fallback HTML (text/html) and Chrome will throw strict MIME errors for module scripts.
 #

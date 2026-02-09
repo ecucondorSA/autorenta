@@ -33,11 +33,15 @@ export class MapProviderSelectorService {
   ): Promise<MapProviderSelectionResult> {
     // If specific provider forced, try it first
     if (forceProvider === 'google') {
-      return this.tryGoogleMaps('forced by configuration');
+      const result = await this.tryGoogleMaps('forced by configuration');
+      if (result) return result;
+      throw new Error('Google Maps provider forced but not available');
     }
 
     if (forceProvider === 'mapbox') {
-      return this.tryMapbox('forced by configuration');
+      const result = await this.tryMapbox('forced by configuration');
+      if (result) return result;
+      throw new Error('Mapbox provider forced but not available');
     }
 
     // Auto-selection: try Mapbox first (premium experience)

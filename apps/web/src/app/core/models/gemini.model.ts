@@ -12,7 +12,8 @@
  * @since 2025-12-17
  */
 
-import type { BookingStatus, CancelPolicy } from '@core/models';
+import type { CancelPolicy } from '@core/models';
+import type { BookingStatus, BookingUiStatus } from './booking-status.model';
 
 // ============================================
 // CHAT SUGGESTIONS

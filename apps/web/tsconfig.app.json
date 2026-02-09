@@ -6,7 +6,8 @@
     "outDir": "./out-tsc/app",
     "tsBuildInfoFile": "../../node_modules/.cache/web-app.tsbuildinfo",
     "types": [
-      "node"
+      "node",
+      "google.maps"
     ]
   },
   "include": [
