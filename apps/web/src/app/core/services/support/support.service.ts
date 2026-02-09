@@ -3,7 +3,7 @@ import { injectSupabase } from '@core/services/infrastructure/supabase-client.se
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
-import { SupportTicket, CreateTicketData } from '../models/support.models';
+import { SupportTicket, CreateTicketData } from '@core/models/support.model';
 
 interface SupportState {
   tickets: SupportTicket[];

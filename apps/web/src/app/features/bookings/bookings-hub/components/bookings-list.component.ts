@@ -1,15 +1,11 @@
-import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { formatDateRange } from '@shared/utils/date.utils';
 import { Booking } from '@core/models';
+import { BookingUiService, BookingColorScheme } from '@core/services/bookings/booking-ui.service';
 import { FilterItem, BookingRole, BookingFilter } from '../bookings-hub.types';
-import {
-  getBookingDetailLink,
-  getBookingStatusLabel,
-  getStatusDotColor,
-} from '../bookings-hub.utils';
 
 @Component({
   selector: 'app-bookings-list',
@@ -100,6 +96,8 @@ import {
   `,
 })
 export class BookingsListComponent {
+  private readonly bookingUi = inject(BookingUiService);
+
   bookings = input.required<Booking[]>();
   filters = input.required<FilterItem[]>();
   currentFilter = input.required<BookingFilter>();
@@ -113,7 +111,9 @@ export class BookingsListComponent {
   }
 
   detailLink(booking: Booking): string[] {
-    return getBookingDetailLink(booking, this.role());
+    return this.role() === 'owner'
+      ? ['/bookings/owner', booking.id]
+      : ['/bookings', booking.id];
   }
 
   rangeLabel(booking: Booking): string {
@@ -121,10 +121,22 @@ export class BookingsListComponent {
   }
 
   statusLabel(booking: Booking): string {
-    return getBookingStatusLabel(booking, this.role());
+    return this.bookingUi.getUiState(booking, this.role()).labelShort;
   }
 
   dotColor(booking: Booking): string {
-    return getStatusDotColor(booking);
+    const color = this.bookingUi.getUiState(booking, this.role()).color;
+    return this.colorToDotClass(color);
+  }
+
+  private colorToDotClass(color: BookingColorScheme): string {
+    switch (color) {
+      case 'amber': return 'bg-amber-400';
+      case 'red': return 'bg-red-400';
+      case 'blue': return 'bg-blue-400';
+      case 'green': return 'bg-emerald-400';
+      case 'purple': return 'bg-purple-400';
+      default: return 'bg-slate-400';
+    }
   }
 }

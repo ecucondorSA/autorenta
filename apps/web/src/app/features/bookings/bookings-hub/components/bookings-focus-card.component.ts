@@ -1,11 +1,11 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { Booking } from '@core/models';
+import { BookingUiService, BookingColorScheme } from '@core/services/bookings/booking-ui.service';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { formatDateRange } from '@shared/utils/date.utils';
 import { FocusCard, BookingRole } from '../bookings-hub.types';
-import { getBookingStatusTone } from '../bookings-hub.utils';
 
 @Component({
   selector: 'app-bookings-focus-card',
@@ -47,6 +47,8 @@ import { getBookingStatusTone } from '../bookings-hub.utils';
   `,
 })
 export class BookingsFocusCardComponent {
+  private readonly bookingUi = inject(BookingUiService);
+
   card = input.required<FocusCard>();
   role = input.required<BookingRole>();
 
@@ -55,23 +57,34 @@ export class BookingsFocusCardComponent {
   }
 
   cardClass(booking: Booking): string {
-    const tone = getBookingStatusTone(booking);
-    switch (tone) {
-      case 'warning': return 'bg-amber-50 border-amber-200';
-      case 'danger': return 'bg-red-50 border-red-200';
-      case 'info': return 'bg-blue-50 border-blue-200';
-      case 'success': return 'bg-emerald-50 border-emerald-200';
+    const color = this.bookingUi.getUiState(booking, this.role()).color;
+    return this.colorToCardClass(color);
+  }
+
+  dotClass(booking: Booking): string {
+    const ui = this.bookingUi.getUiState(booking, this.role());
+    const pulse = ui.priority === 'urgent' ? ' animate-pulse' : '';
+    return this.colorToDotClass(ui.color) + pulse;
+  }
+
+  private colorToCardClass(color: BookingColorScheme): string {
+    switch (color) {
+      case 'amber': return 'bg-amber-50 border-amber-200';
+      case 'red': return 'bg-red-50 border-red-200';
+      case 'blue': return 'bg-blue-50 border-blue-200';
+      case 'green': return 'bg-emerald-50 border-emerald-200';
+      case 'purple': return 'bg-purple-50 border-purple-200';
       default: return 'bg-slate-50 border-slate-200';
     }
   }
 
-  dotClass(booking: Booking): string {
-    const tone = getBookingStatusTone(booking);
-    switch (tone) {
-      case 'warning': return 'bg-amber-500 animate-pulse';
-      case 'danger': return 'bg-red-500 animate-pulse';
-      case 'info': return 'bg-blue-500';
-      case 'success': return 'bg-emerald-500';
+  private colorToDotClass(color: BookingColorScheme): string {
+    switch (color) {
+      case 'amber': return 'bg-amber-500';
+      case 'red': return 'bg-red-500';
+      case 'blue': return 'bg-blue-500';
+      case 'green': return 'bg-emerald-500';
+      case 'purple': return 'bg-purple-500';
       default: return 'bg-slate-400';
     }
   }

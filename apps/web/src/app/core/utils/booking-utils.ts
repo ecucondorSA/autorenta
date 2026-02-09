@@ -19,8 +19,6 @@
  * ```
  */
 
-import type { BookingUiStatus } from '@core/models';
-
 // ==================== PAYMENT LABELS ====================
 
 /**
@@ -60,86 +58,6 @@ export function getPaymentMethodLabel(method: string | null | undefined): string
 export function getPaymentPlanLabel(plan: string | null | undefined): string {
   if (!plan) return 'No especificado';
   return PAYMENT_PLAN_LABELS[plan] ?? plan;
-}
-
-// ==================== STATUS LABELS ====================
-
-/**
- * Booking status display labels (Spanish)
- */
-export const BOOKING_STATUS_LABELS: Record<BookingUiStatus, string> = {
-  pending: 'Pendiente',
-  pending_payment: 'Pendiente de pago',
-  pending_deposit: 'Pendiente de depósito',
-  pending_owner_approval: 'Pendiente de aprobación',
-  pending_approval: 'Pendiente de aprobación',
-  confirmed: 'Confirmada',
-  in_progress: 'En progreso',
-  pending_review: 'Pendiente de revisión',
-  pending_return: 'Devolución pendiente',
-  completed: 'Completada',
-  cancelled: 'Cancelada',
-  cancelled_owner: 'Cancelada por propietario',
-  cancelled_renter: 'Cancelada por arrendatario',
-  cancelled_system: 'Cancelada por sistema',
-  disputed: 'En disputa',
-  dispute: 'En disputa',
-  resolved: 'Resuelta',
-  expired: 'Expirada',
-  rejected: 'Rechazada',
-  no_show: 'No se presentó',
-  pending_dispute_resolution: 'Resolución de disputa pendiente',
-  payment_validation_failed: 'Validación de pago fallida',
-  returned: 'Devuelto',
-  inspected_good: 'Inspeccionado OK',
-  damage_reported: 'Daño reportado',
-};
-
-/**
- * Booking status colors (Ionic color names)
- */
-export const BOOKING_STATUS_COLORS: Record<BookingUiStatus, string> = {
-  pending: 'warning',
-  pending_payment: 'warning',
-  pending_deposit: 'warning',
-  pending_owner_approval: 'warning',
-  pending_approval: 'warning',
-  confirmed: 'success',
-  in_progress: 'primary',
-  pending_review: 'warning',
-  pending_return: 'warning',
-  completed: 'success',
-  cancelled: 'danger',
-  cancelled_owner: 'danger',
-  cancelled_renter: 'danger',
-  cancelled_system: 'danger',
-  disputed: 'danger',
-  dispute: 'danger',
-  resolved: 'tertiary',
-  expired: 'medium',
-  rejected: 'danger',
-  no_show: 'danger',
-  pending_dispute_resolution: 'warning',
-  payment_validation_failed: 'danger',
-  returned: 'success',
-  inspected_good: 'success',
-  damage_reported: 'danger',
-};
-
-/**
- * Get display label for booking status
- */
-export function getBookingStatusLabel(status: BookingUiStatus | string | null | undefined): string {
-  if (!status) return 'Desconocido';
-  return BOOKING_STATUS_LABELS[status as BookingUiStatus] ?? status;
-}
-
-/**
- * Get color for booking status (Ionic color name)
- */
-export function getBookingStatusColor(status: BookingUiStatus | string | null | undefined): string {
-  if (!status) return 'medium';
-  return BOOKING_STATUS_COLORS[status as BookingUiStatus] ?? 'medium';
 }
 
 // ==================== DISTANCE TIER LABELS ====================

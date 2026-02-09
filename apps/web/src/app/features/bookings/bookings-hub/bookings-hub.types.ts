@@ -1,6 +1,7 @@
 import type { Booking } from '@core/models';
+import type { BookingRole } from '@core/services/bookings/booking-ui.service';
 
-export type BookingRole = 'renter' | 'owner';
+export type { BookingRole };
 export type BookingFilter =
   | 'all'
   | 'action'

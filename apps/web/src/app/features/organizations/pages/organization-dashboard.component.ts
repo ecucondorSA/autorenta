@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Importar FormsModule
 import { RouterModule } from '@angular/router';
-import { OrganizationService, OrganizationMembership } from '../services/organization.service';
+import { OrganizationService, OrganizationMembership } from '@core/services/organizations/organization.service';
 
 @Component({
   selector: 'app-organization-dashboard',

@@ -14,6 +14,7 @@ export * from '@core/services/bookings/instant-booking.service';
 export * from '@core/services/bookings/booking-notifications.service';
 export * from '@core/services/bookings/booking-ops.service';
 export * from '@core/services/bookings/booking-owner-penalty.service';
+export * from '@core/services/bookings/booking-ui.service';
 export * from '@core/services/bookings/booking-utils.service';
 export * from '@core/services/bookings/booking-validation.service';
 export * from '@core/services/bookings/booking-wallet.service';

@@ -920,3 +920,9 @@ export * from './participation.model';
 
 // Export Credit Report models (Nosis/Veraz integration)
 export * from './credit-report.model';
+
+// Export Support models
+export * from './support.model';
+
+// Export Bounty/Scout models
+export * from './bounty.model';

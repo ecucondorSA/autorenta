@@ -4,14 +4,14 @@ import { IonicModule } from '@ionic/angular';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ToastService } from '@core/services/ui/toast.service';
-import { SupportService } from './services/support.service';
+import { SupportService } from '@core/services/support/support.service';
 import {
   TICKET_CATEGORIES,
   TICKET_URGENCY_LEVELS,
   TICKET_STATUS_MAP,
   CreateTicketData,
   TicketUrgencyOption,
-} from './models/support.models';
+} from '@core/models/support.model';
 
 type TabType = 'form' | 'tickets';
 

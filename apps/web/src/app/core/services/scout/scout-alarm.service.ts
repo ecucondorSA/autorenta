@@ -2,8 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { ModalController } from '@ionic/angular/standalone';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { MissionAlertModalComponent } from '../components/mission-alert-modal/mission-alert-modal.component';
-import { Bounty } from './scout.service';
+import { MissionAlertModalComponent } from '@features/scout/components/mission-alert-modal/mission-alert-modal.component';
+import { Bounty } from '@core/models/bounty.model';
 
 @Injectable({
   providedIn: 'root'

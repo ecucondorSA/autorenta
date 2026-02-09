@@ -5,15 +5,7 @@ import { LiveTrackingMapComponent } from '@shared/components/live-tracking-map/l
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { locateOutline, scanOutline, alertCircle, closeOutline } from 'ionicons/icons';
-
-interface Bounty {
-  id: string;
-  lat: number;
-  lng: number;
-  reward: number;
-  carModel: string;
-  lastSeen: string;
-}
+import { BountyMapItem } from '@core/models/bounty.model';
 
 @Component({
   selector: 'app-scout-map',
@@ -30,7 +22,7 @@ interface Bounty {
 })
 export class ScoutMapPage {
   // Simulamos datos de "Autos Perdidos" para el Hackathon
-  bounties = signal<Bounty[]>([
+  bounties = signal<BountyMapItem[]>([
     {
       id: 'bounty-1',
       lat: -34.6037, // Buenos Aires Obelisco area
@@ -49,13 +41,13 @@ export class ScoutMapPage {
     }
   ]);
 
-  selectedBounty = signal<Bounty | null>(null);
+  selectedBounty = signal<BountyMapItem | null>(null);
 
   constructor() {
     addIcons({ locateOutline, scanOutline, alertCircle, closeOutline });
   }
 
-  selectBounty(bounty: Bounty) {
+  selectBounty(bounty: BountyMapItem) {
     this.selectedBounty.set(bounty);
   }
 

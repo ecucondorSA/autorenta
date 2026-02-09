@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
-import { ScoutService, Bounty } from '../../services/scout.service';
+import { ScoutService, Bounty } from '@core/services/scout/scout.service';
 
 @Component({
   selector: 'app-mission-detail',

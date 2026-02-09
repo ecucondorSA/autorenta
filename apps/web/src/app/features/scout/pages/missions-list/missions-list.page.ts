@@ -1,8 +1,8 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { ScoutService, Bounty } from '../../services/scout.service';
-import { ScoutAlarmService } from '../../services/scout-alarm.service';
+import { ScoutService, Bounty } from '@core/services/scout/scout.service';
+import { ScoutAlarmService } from '@core/services/scout/scout-alarm.service';
 
 @Component({
   selector: 'app-missions-list',

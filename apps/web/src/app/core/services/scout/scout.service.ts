@@ -1,25 +1,10 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { Bounty } from '@core/models/bounty.model';
 import { ScoutAlarmService } from './scout-alarm.service';
 
-export interface Bounty {
-  id: string;
-  car_id: string;
-  reward_amount: number;
-  reward_currency: string;
-  status: 'OPEN' | 'claimed' | 'verified';
-  cars?: {
-    brand: string;
-    model: string;
-    color: string;
-    license_plate: string;
-    photos: string[];
-    year?: number;
-  };
-  lat: number;
-  lng: number;
-}
+export type { Bounty };
 
 @Injectable({
   providedIn: 'root'

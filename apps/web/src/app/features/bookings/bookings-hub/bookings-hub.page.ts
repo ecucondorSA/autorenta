@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
+import { BookingUiService } from '@core/services/bookings/booking-ui.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import type { Booking } from '@core/models';
 import { BookingsStore } from '@core/stores/bookings.store';
@@ -28,7 +29,6 @@ import { BookingsFocusCardComponent } from './components/bookings-focus-card.com
 import { BookingsInsightsComponent } from './components/bookings-insights.component';
 import { BookingsQuickActionsComponent } from './components/bookings-quick-actions.component';
 import { BookingsListComponent } from './components/bookings-list.component';
-import { getBookingDetailLink, getBookingStatusChipClass, getBookingStatusLabel } from './bookings-hub.utils';
 
 
 @Component({
@@ -163,6 +163,7 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   private readonly store = inject(BookingsStore);
   private readonly authService = inject(AuthService);
   private readonly bookingsService = inject(BookingsService);
+  private readonly bookingUi = inject(BookingUiService);
 
   readonly loading = this.store.loadingList;
   readonly role = signal<BookingRole>('renter');
@@ -264,11 +265,14 @@ export class BookingsHubPage implements OnInit, OnDestroy {
       };
     }
 
-    const badge = getBookingStatusLabel(focus, this.role());
+    const ui = this.bookingUi.getUiState(focus, this.role());
     const actionLabel = this.primaryActionLabel(focus);
+    const detailLink = this.role() === 'owner'
+      ? ['/bookings/owner', focus.id]
+      : ['/bookings', focus.id];
     const actionLink = actionLabel
       ? this.primaryActionLink(focus)
-      : getBookingDetailLink(focus, this.role());
+      : detailLink;
 
     return {
       title: focus.car_title || 'Reserva',
@@ -276,11 +280,11 @@ export class BookingsHubPage implements OnInit, OnDestroy {
         this.role() === 'owner'
           ? 'Tenes una reserva para revisar.'
           : 'Tu proxima accion esta lista.',
-      badge,
+      badge: ui.labelShort,
       actionLabel: actionLabel ?? 'Ver detalle',
       actionLink,
       actionQuery: actionLabel ? this.primaryActionQuery(focus) : null,
-      toneClass: getBookingStatusChipClass(focus),
+      toneClass: ui.badgeClass,
       icon: 'flash-outline',
       booking: focus,
     };
@@ -384,7 +388,7 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     if (this.role() === 'owner') {
       if (booking.status === 'pending') return ['/bookings/pending-approval'];
       if (booking.status === 'pending_review') return ['/bookings/pending-review'];
-      return getBookingDetailLink(booking, this.role());
+      return ['/bookings/owner', booking.id];
     }
     return ['/bookings/request'];
   }

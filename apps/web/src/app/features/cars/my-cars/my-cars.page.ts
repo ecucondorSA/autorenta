@@ -6,16 +6,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
-import { ToastService } from '@core/services/ui/toast.service';
-import { BonusProgress } from '@core/models/organization.model';
-import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
-import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
-
-import { Car, CarStatus } from '../../../core/models';
 import {
   OrganizationService,
   OrganizationMembership,
-} from '../../organizations/services/organization.service';
+} from '@core/services/organizations/organization.service';
+import { ToastService } from '@core/services/ui/toast.service';
+import { BonusProgress } from '@core/models/organization.model';
+import { Car, CarStatus } from '../../../core/models';
+import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
+import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
 
 @Component({
   standalone: true,
