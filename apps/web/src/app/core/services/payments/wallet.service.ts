@@ -128,6 +128,19 @@ export class WalletService {
   /**
    * Internal method that performs the actual API call
    */
+  private readonly DEFAULT_BALANCE: WalletBalance = {
+    user_id: '',
+    available_balance: 0,
+    locked_balance: 0,
+    total_balance: 0,
+    withdrawable_balance: 0,
+    transferable_balance: 0,
+    autorentar_credit_balance: 0,
+    cash_deposit_balance: 0,
+    protected_credit_balance: 0,
+    currency: 'USD',
+  };
+
   private async doFetchBalance(): Promise<WalletBalance> {
     this.loading.set(true);
     this['error'].set(null);
@@ -135,12 +148,18 @@ export class WalletService {
     try {
       // Use AuthService.ensureSession() to properly wait for session
       const session = await this.authService.ensureSession();
-      if (!session?.user) throw new Error('Usuario no autenticado');
+      if (!session?.user) {
+        // Not authenticated — return default zero balance silently
+        this.balance.set(this.DEFAULT_BALANCE);
+        return this.DEFAULT_BALANCE;
+      }
 
       const { data, error } = await this.supabase.rpc('wallet_get_balance');
       if (error) throw error;
       if (!data || !Array.isArray(data) || data.length === 0) {
-        throw new Error('No se pudo obtener el balance');
+        // Empty result (e.g. function returned no rows) — use defaults
+        this.balance.set(this.DEFAULT_BALANCE);
+        return this.DEFAULT_BALANCE;
       }
 
       const rawBalance = data[0] as Record<string, unknown>;
