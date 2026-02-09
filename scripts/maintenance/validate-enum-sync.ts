@@ -59,25 +59,25 @@ const CRITICAL_ENUMS: EnumCheck[] = [
     tsType: 'CarStatus',
     dbEnum: 'car_status',
     file: 'apps/web/src/app/core/models/index.ts',
-    linePattern: /export type CarStatus\s*=\s*([^;]+);/,
+    linePattern: /export type CarStatus\s*=\s*([^;]+);/s,
   },
   {
     tsType: 'BookingStatus',
     dbEnum: 'booking_status',
     file: 'apps/web/src/app/core/models/index.ts',
-    linePattern: /export type BookingStatus\s*=\s*([^;]+);/,
+    linePattern: /export type BookingStatus\s*=\s*([^;]+);/s,
   },
   {
     tsType: 'PaymentStatus',
     dbEnum: 'payment_status',
     file: 'apps/web/src/app/core/models/index.ts',
-    linePattern: /export type PaymentStatus\s*=\s*([^;]+);/,
+    linePattern: /export type PaymentStatus\s*=\s*([^;]+);/s,
   },
   {
     tsType: 'SubscriptionStatus',
     dbEnum: 'subscription_status',
     file: 'apps/web/src/app/core/models/subscription.model.ts',
-    linePattern: /export type SubscriptionStatus\s*=\s*([^;]+);/,
+    linePattern: /export type SubscriptionStatus\s*=\s*([^;]+);/s,
   },
 ];
 
@@ -91,16 +91,14 @@ const CRITICAL_ENUMS: EnumCheck[] = [
 async function getDbEnumValues(enumName: string): Promise<Set<string>> {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  const { data, error } = await supabase.rpc('get_enum_values', { enum_name: enumName });
+  const { data, error } = await supabase.schema('public').rpc('get_enum_values', { enum_name: enumName });
 
   if (error) {
-    console.error(`❌ Failed to get enum values for ${enumName}:`, error.message);
-    process.exit(1);
+    throw new Error(`Failed to get enum values for ${enumName}: ${error.message}`);
   }
 
   if (!data || data.length === 0) {
-    console.error(`❌ Enum ${enumName} not found in database`);
-    process.exit(1);
+    throw new Error(`Enum ${enumName} not found in database`);
   }
 
   return new Set(data.map((row: EnumRow) => row.enumlabel));
@@ -112,20 +110,12 @@ async function getDbEnumValues(enumName: string): Promise<Set<string>> {
 function getTsTypeValues(filePath: string, pattern: RegExp): Set<string> {
   const fullPath = resolve(process.cwd(), filePath);
 
-  let content: string;
-  try {
-    content = readFileSync(fullPath, 'utf-8');
-  } catch (error: any) {
-    console.error(`❌ Failed to read file ${filePath}:`, error.message);
-    process.exit(1);
-  }
+  const content = readFileSync(fullPath, 'utf-8');
 
   const match = content.match(pattern);
 
   if (!match) {
-    console.error(`❌ Pattern not found in ${filePath}`);
-    console.error(`   Looking for pattern: ${pattern}`);
-    process.exit(1);
+    throw new Error(`Pattern not found in ${filePath}. Looking for: ${pattern}`);
   }
 
   // Extract union type values: 'draft' | 'active' | 'paused'

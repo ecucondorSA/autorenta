@@ -71,11 +71,16 @@ interface CoverageReport {
 async function getCoverageSummary(): Promise<CoverageReport | null> {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  const { data, error } = await supabase.rpc('get_rls_coverage_report');
+  const { data, error } = await supabase.schema('public').rpc('get_rls_coverage_report');
 
   if (error) {
     console.error('Failed to get coverage summary:', error.message);
-    return null;
+    process.exit(1);
+  }
+
+  if (!data) {
+    console.error('Failed to get coverage summary: RPC returned no data');
+    process.exit(1);
   }
 
   return data as CoverageReport;
@@ -84,11 +89,16 @@ async function getCoverageSummary(): Promise<CoverageReport | null> {
 async function getTablesWithoutRLS(): Promise<UnprotectedTable[]> {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  const { data, error } = await supabase.rpc('get_tables_without_rls');
+  const { data, error } = await supabase.schema('public').rpc('get_tables_without_rls');
 
   if (error) {
     console.error('Failed to get tables without RLS:', error.message);
-    return [];
+    process.exit(1);
+  }
+
+  if (!data) {
+    console.error('Failed to get tables without RLS: RPC returned no data');
+    process.exit(1);
   }
 
   return data as UnprotectedTable[];
@@ -97,11 +107,16 @@ async function getTablesWithoutRLS(): Promise<UnprotectedTable[]> {
 async function getTablesMissingPolicies(): Promise<UnprotectedTable[]> {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  const { data, error } = await supabase.rpc('get_tables_missing_policies');
+  const { data, error } = await supabase.schema('public').rpc('get_tables_missing_policies');
 
   if (error) {
     console.error('Failed to get tables missing policies:', error.message);
-    return [];
+    process.exit(1);
+  }
+
+  if (!data) {
+    console.error('Failed to get tables missing policies: RPC returned no data');
+    process.exit(1);
   }
 
   return data as UnprotectedTable[];
@@ -110,11 +125,16 @@ async function getTablesMissingPolicies(): Promise<UnprotectedTable[]> {
 async function getBucketsWithoutPolicies(): Promise<UnprotectedBucket[]> {
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  const { data, error } = await supabase.rpc('get_buckets_without_policies');
+  const { data, error } = await supabase.schema('public').rpc('get_buckets_without_policies');
 
   if (error) {
     console.error('Failed to get buckets without policies:', error.message);
-    return [];
+    process.exit(1);
+  }
+
+  if (!data) {
+    console.error('Failed to get buckets without policies: RPC returned no data');
+    process.exit(1);
   }
 
   return data as UnprotectedBucket[];
