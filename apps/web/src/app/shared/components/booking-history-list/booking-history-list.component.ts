@@ -92,7 +92,7 @@ import type { Booking } from '../../../core/models';
           </div>
           <p class="text-sm text-text-secondary">No tienes viajes registrados</p>
           <a
-            routerLink="/marketplace"
+            routerLink="/cars/list"
             class="text-xs text-cta-default hover:underline mt-2 inline-block"
           >
             Explorar autos disponibles

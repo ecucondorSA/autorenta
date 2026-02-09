@@ -326,7 +326,7 @@ async function testSessionPersistenceUnderStress(ctx: TestContext): Promise<void
     '/bookings',
     '/profile',
     '/wallet',
-    '/marketplace',
+    '/cars/list',
   ];
 
   const navigationResults: Array<{ page: string; success: boolean; sessionValid: boolean }> = [];

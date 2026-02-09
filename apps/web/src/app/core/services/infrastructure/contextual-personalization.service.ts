@@ -183,7 +183,7 @@ export class ContextualPersonalizationService implements OnDestroy {
           title: '¡Día perfecto para pasear!',
           subtitle: 'Mira nuestros convertibles y SUVs',
           icon: 'car-sport',
-          action: '/marketplace?type=convertible,suv',
+          action: '/cars/list?type=convertible,suv',
           priority: 1,
         });
       }
@@ -194,7 +194,7 @@ export class ContextualPersonalizationService implements OnDestroy {
           title: 'Clima lluvioso',
           subtitle: 'Vehículos con tracción 4x4 recomendados',
           icon: 'rainy',
-          action: '/marketplace?features=4x4',
+          action: '/cars/list?features=4x4',
           priority: 2,
         });
       }

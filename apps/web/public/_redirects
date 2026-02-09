@@ -8,6 +8,10 @@
 #
 # 404.html handles all unknown routes with a real 404 status.
 
+# Legacy route redirects
+/marketplace    /cars/list    301
+/marketplace/*  /cars/list    301
+
 # App download redirects
 /app      https://play.google.com/apps/test/app.autorentar/70    302
 /android  https://play.google.com/apps/test/app.autorentar/70    302

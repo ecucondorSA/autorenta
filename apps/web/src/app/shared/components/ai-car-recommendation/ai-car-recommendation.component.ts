@@ -364,7 +364,7 @@ export class AiCarRecommendationComponent implements OnInit {
     if (filters?.minYear) queryParams['minYear'] = String(filters.minYear);
     if (filters?.maxPricePerDay) queryParams['maxPrice'] = String(filters.maxPricePerDay);
 
-    this.router.navigate(['/marketplace'], { queryParams });
+    this.router.navigate(['/cars/list'], { queryParams });
   }
 
   private calculateDays(startAt: string, endAt: string): number {

@@ -118,7 +118,7 @@ import { BookingsOperationalDashboardComponent } from './components/bookings-ope
                 Explora autos disponibles y reserva tu proximo viaje.
               </p>
               <a
-                routerLink="/marketplace"
+                routerLink="/cars/list"
                 class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
               >
                 <ion-icon name="search-outline"></ion-icon>
@@ -340,7 +340,7 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     }
 
     return [
-      { id: 'explore', label: 'Explorar', icon: 'search-outline', link: '/marketplace' },
+      { id: 'explore', label: 'Explorar', icon: 'search-outline', link: '/cars/list' },
       { id: 'messages', label: 'Mensajes', icon: 'chatbubble-ellipses-outline', link: '/messages', badge: totalUnread },
     ];
   });

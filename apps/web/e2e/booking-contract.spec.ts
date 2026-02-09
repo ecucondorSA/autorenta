@@ -23,12 +23,12 @@ test.describe('Booking Contract Acceptance', () => {
     await page.fill('input[type="email"]', 'test-renter@autorenta.com');
     await page.fill('input[type="password"]', 'TestPassword123!');
     await page.click('button[type="submit"]');
-    await page.waitForURL('/marketplace', { timeout: 10000 });
+    await page.waitForURL('/cars/list', { timeout: 10000 });
   });
 
   test('should require contract acceptance before payment', async ({ page }) => {
     // 1. Navigate to a car detail page
-    await page.goto('/marketplace');
+    await page.goto('/cars/list');
     await page.waitForSelector('app-car-card', { timeout: 10000 });
 
     // Click first available car
@@ -237,7 +237,7 @@ test.describe('Booking Contract Acceptance', () => {
     // This test verifies legal compliance metadata is stored
 
     // 1. Navigate to payment page (same as first test)
-    await page.goto('/marketplace');
+    await page.goto('/cars/list');
     await page.waitForSelector('app-car-card', { timeout: 10000 });
     const firstCar = page.locator('app-car-card').first();
     await firstCar.click();

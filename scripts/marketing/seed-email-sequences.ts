@@ -270,7 +270,7 @@ const WELCOME_RENTER_STEPS: SequenceStep[] = [
             <li>Recoge el auto y disfruta tu viaje</li>
           </ol>
           <p style="text-align: center; margin: 30px 0;">
-            <a href="https://autorentar.com/marketplace" style="display: inline-block; padding: 14px 32px; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Explorar autos</a>
+            <a href="https://autorentar.com/cars/list" style="display: inline-block; padding: 14px 32px; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Explorar autos</a>
           </p>
         </td></tr>
         <tr><td style="padding: 20px 40px; background-color: #f9fafb; text-align: center;">
@@ -353,7 +353,7 @@ const WELCOME_RENTER_STEPS: SequenceStep[] = [
             </div>
           </div>
           <p style="text-align: center;">
-            <a href="https://autorentar.com/marketplace" style="display: inline-block; padding: 14px 32px; background-color: #8b5cf6; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Buscar autos</a>
+            <a href="https://autorentar.com/cars/list" style="display: inline-block; padding: 14px 32px; background-color: #8b5cf6; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Buscar autos</a>
           </p>
         </td></tr>
         <tr><td style="padding: 20px 40px; background-color: #f9fafb; text-align: center;">
@@ -433,7 +433,7 @@ const REENGAGEMENT_STEPS: SequenceStep[] = [
           </div>
           <p style="color: #4b5563; font-size: 14px; text-align: center;">Válido por 7 días</p>
           <p style="text-align: center;">
-            <a href="https://autorentar.com/marketplace?promo=VUELVE10" style="display: inline-block; padding: 14px 32px; background-color: #f59e0b; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Usar mi descuento</a>
+            <a href="https://autorentar.com/cars/list?promo=VUELVE10" style="display: inline-block; padding: 14px 32px; background-color: #f59e0b; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Usar mi descuento</a>
           </p>
         </td></tr>
         <tr><td style="padding: 20px 40px; background-color: #f9fafb; text-align: center;">

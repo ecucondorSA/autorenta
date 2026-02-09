@@ -267,7 +267,7 @@ function verificationApprovedTemplate(d: Record<string, unknown>): string {
     </tr>
     <tr>
       <td style="padding: 20px 40px;" align="center">
-        <a href="${appBaseUrl}/marketplace" style="display: inline-block; padding: 14px 32px; background-color: #10b981; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Explorar Autos</a>
+        <a href="${appBaseUrl}/cars/list" style="display: inline-block; padding: 14px 32px; background-color: #10b981; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Explorar Autos</a>
       </td>
     </tr>
   `);

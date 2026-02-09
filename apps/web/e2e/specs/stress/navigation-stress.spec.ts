@@ -38,7 +38,7 @@ const ROUTES = [
   '/cars/list',
   '/auth/login',
   '/auth/register',
-  '/marketplace',
+  '/cars/list',
   '/cars/car-1001',
   '/cars/car-1002',
   '/cars/car-1003',

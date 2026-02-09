@@ -55,7 +55,7 @@ import { MyBookingsPage } from '../../../my-bookings/my-bookings.page';
             </div>
           </div>
           <a
-            routerLink="/marketplace"
+            routerLink="/cars/list"
             class="mt-4 w-full btn-primary flex items-center justify-center gap-2 py-3 rounded-xl font-medium"
             appPressScale
           >

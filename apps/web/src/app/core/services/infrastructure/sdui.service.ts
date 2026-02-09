@@ -195,7 +195,7 @@ export class SDUIService {
               subtitle: 'Miles de autos te esperan en tu ciudad',
               backgroundImage: '/assets/images/hero-bg.jpg',
               ctaText: 'Buscar autos',
-              ctaLink: '/marketplace',
+              ctaLink: '/cars/list',
             },
           },
           {

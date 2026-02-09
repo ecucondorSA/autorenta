@@ -409,7 +409,7 @@ interface Milestone {
 
         <div class="flex flex-col sm:flex-row justify-center gap-4">
           <a
-            routerLink="/marketplace"
+            routerLink="/cars/list"
             class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#00d95f] text-gray-900 rounded-full font-bold text-lg hover:bg-[#00bf54] transition-colors"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

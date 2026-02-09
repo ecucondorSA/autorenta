@@ -190,7 +190,7 @@ export class OnboardingService {
         this.router.navigate(['/cars/publish']);
         break;
       case 'rent':
-        this.router.navigate(['/marketplace']);
+        this.router.navigate(['/cars/list']);
         break;
       case 'both':
         // Fall back to the marketplace landing where both experiences converge

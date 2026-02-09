@@ -54,7 +54,7 @@ import { BookingsListComponent } from './bookings-list.component';
       </div>
 
       <!-- 2. TRIP SLOT / FLEET SLOT -->
-      <div class="relative group cursor-pointer" [routerLink]="role() === 'owner' ? '/cars/publish' : '/marketplace'">
+      <div class="relative group cursor-pointer" [routerLink]="role() === 'owner' ? '/cars/publish' : '/cars/list'">
         <!-- Tech borders -->
         <div class="absolute inset-0 rounded-3xl border-2 border-dashed border-slate-200 group-hover:border-slate-300 transition-colors"></div>
         
