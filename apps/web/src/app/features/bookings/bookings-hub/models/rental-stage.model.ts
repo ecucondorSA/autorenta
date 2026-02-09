@@ -15,6 +15,8 @@ export interface RentalStage {
   shortLabel: string;
   icon: string;
   description: string;
+  /** Richer action-oriented text shown in detailed/expanded stepper mode */
+  detailedDescription: string;
   status: RentalStageStatus;
 }
 
@@ -88,6 +90,7 @@ export function buildRentalStages(bookingStatus: string): RentalStage[] {
       shortLabel: 'Pre',
       icon: 'document-text-outline',
       description: 'Pago y confirmación',
+      detailedDescription: 'Confirmar pago y esperar aprobación',
     },
     {
       id: 'checkin',
@@ -95,6 +98,7 @@ export function buildRentalStages(bookingStatus: string): RentalStage[] {
       shortLabel: 'Check-in',
       icon: 'log-in-outline',
       description: 'Retiro del vehículo',
+      detailedDescription: 'Inspeccionar, firmar y retirar el auto',
     },
     {
       id: 'en-viaje',
@@ -102,6 +106,7 @@ export function buildRentalStages(bookingStatus: string): RentalStage[] {
       shortLabel: 'Viaje',
       icon: 'car-sport-outline',
       description: 'Viaje en curso',
+      detailedDescription: 'Disfrutá tu viaje con tranquilidad',
     },
     {
       id: 'checkout',
@@ -109,6 +114,7 @@ export function buildRentalStages(bookingStatus: string): RentalStage[] {
       shortLabel: 'Check-out',
       icon: 'log-out-outline',
       description: 'Devolución e inspección',
+      detailedDescription: 'Devolver el auto y documentar estado',
     },
     {
       id: 'post-checkout',
@@ -116,6 +122,7 @@ export function buildRentalStages(bookingStatus: string): RentalStage[] {
       shortLabel: 'Fin',
       icon: 'checkmark-circle-outline',
       description: 'Finalización y reseña',
+      detailedDescription: 'Fondos liberados, dejá tu reseña',
     },
   ];
 

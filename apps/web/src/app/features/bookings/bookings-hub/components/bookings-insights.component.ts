@@ -10,11 +10,11 @@ import { InsightItem } from '../bookings-hub.types';
   template: `
     <div class="flex gap-3">
       @for (item of items(); track item.id) {
-        <div class="flex-1 bg-white rounded-xl p-3 border border-slate-100">
+        <div class="flex-1 bg-white rounded-2xl p-3.5 border border-slate-100/80 shadow-sm">
           @if (item.type === 'money') {
-            <p class="text-xl font-bold text-slate-900 tabular-nums">{{ +item.value | money }}</p>
+            <p class="text-xl font-bold text-slate-900 font-mono tabular-nums">{{ +item.value | money }}</p>
           } @else {
-            <p class="text-2xl font-bold text-slate-900 tabular-nums">{{ item.value }}</p>
+            <p class="text-2xl font-bold text-slate-900 font-mono tabular-nums">{{ item.value }}</p>
           }
           <p class="text-xs text-slate-500 mt-0.5">{{ item.label }}</p>
         </div>

@@ -46,6 +46,7 @@ import { BookingsQuickActionsComponent } from './components/bookings-quick-actio
 import { BookingsListComponent } from './components/bookings-list.component';
 import { BookingsOperationalDashboardComponent } from './components/bookings-operational-dashboard.component';
 import { ActiveRentalCardComponent } from './components/active-rental-card.component';
+import { BookingContextService } from './services/booking-context.service';
 
 @Component({
   standalone: true,
@@ -63,7 +64,7 @@ import { ActiveRentalCardComponent } from './components/active-rental-card.compo
     ActiveRentalCardComponent,
   ],
   template: `
-    <div class="min-h-screen bg-slate-50 pb-24">
+    <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white pb-24">
       <!-- HEADER -->
       <app-bookings-header [role]="role()" (roleChange)="setRole($event)"></app-bookings-header>
 
@@ -134,24 +135,33 @@ import { ActiveRentalCardComponent } from './components/active-rental-card.compo
 
         <!-- CONTENT: OPERATIONAL COMMAND CENTER -->
         @else {
-          <!-- ACTIVE RENTAL DASHBOARD (Smart Widget) -->
-          @if (activeRentals().length > 0) {
+          @if (showAssetDashboard()) {
+            <!-- ═══ ASSET DASHBOARD MODE: Dominant card + compressed actions ═══ -->
             <app-active-rental-card
               [bookings]="activeRentals()"
               [role]="role()"
+              [contextMode]="contextMode()"
+              [expanded]="true"
             ></app-active-rental-card>
+
+            <!-- Quick actions remain accessible -->
+            <app-bookings-quick-actions [actions]="quickActions()"></app-bookings-quick-actions>
+          } @else {
+            <!-- ═══ STANDARD HUB MODE ═══ -->
+            @if (activeRentals().length > 0) {
+              <app-active-rental-card
+                [bookings]="activeRentals()"
+                [role]="role()"
+              ></app-active-rental-card>
+            }
+
+            @if (focusCard().booking && !isActiveBooking(focusCard().booking)) {
+              <app-bookings-focus-card [card]="focusCard()" [role]="role()"></app-bookings-focus-card>
+            }
+
+            <app-bookings-insights [items]="insightItems()"></app-bookings-insights>
+            <app-bookings-quick-actions [actions]="quickActions()"></app-bookings-quick-actions>
           }
-
-          <!-- FOCUS CARD (highest priority non-active action) -->
-          @if (focusCard().booking && !isActiveBooking(focusCard().booking)) {
-            <app-bookings-focus-card [card]="focusCard()" [role]="role()"></app-bookings-focus-card>
-          }
-
-          <!-- STATS / FINANCIAL PULSE -->
-          <app-bookings-insights [items]="insightItems()"></app-bookings-insights>
-
-          <!-- QUICK ACTIONS -->
-          <app-bookings-quick-actions [actions]="quickActions()"></app-bookings-quick-actions>
 
           <!-- OPERATIONAL DASHBOARD (owner mode) -->
           @if (role() === 'owner') {
@@ -199,6 +209,7 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   private readonly bookingsService = inject(BookingsService);
   private readonly bookingUi = inject(BookingUiService);
   private readonly unreadMessages = inject(UnreadMessagesService);
+  private readonly bookingContext = inject(BookingContextService);
 
   readonly loading = this.store.loadingList;
   readonly role = signal<BookingRole>('renter');
@@ -212,6 +223,21 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   readonly currentBookings = computed(() =>
     this.role() === 'owner' ? this.ownerBookings() : this.myBookings(),
   );
+
+  // ─── Context-Driven Asset Dashboard ─────────────────────────────
+
+  readonly contextMode = this.bookingContext.mode;
+
+  /**
+   * Show the expanded "Asset Dashboard" when:
+   * - Role is renter (owners manage fleets, not single trips)
+   * - Context mode indicates an active or imminent trip
+   */
+  readonly showAssetDashboard = computed(() => {
+    if (this.role() !== 'renter') return false;
+    const mode = this.contextMode();
+    return mode === 'active-trip' || mode === 'pre-trip';
+  });
 
   constructor() {
     addIcons({

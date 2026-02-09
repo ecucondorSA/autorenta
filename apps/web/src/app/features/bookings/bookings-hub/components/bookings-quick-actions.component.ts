@@ -14,7 +14,7 @@ import { BookingQuickAction } from '../bookings-hub.types';
         <a
           [routerLink]="action.link"
           [queryParams]="action.query"
-          class="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-100 rounded-xl text-sm font-medium text-slate-700 whitespace-nowrap active:scale-95 transition-transform"
+          class="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-100/80 rounded-2xl shadow-sm hover:shadow-md text-sm font-medium text-slate-700 whitespace-nowrap active:scale-95 transition-all"
         >
           <ion-icon [name]="action.icon" class="text-slate-400"></ion-icon>
           {{ action.label }}

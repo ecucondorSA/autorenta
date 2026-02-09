@@ -10,9 +10,9 @@ import {
 import { IonIcon } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import type { Booking } from '@core/models';
-import { BookingUiService } from '@core/services/bookings/booking-ui.service';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { formatDateRange } from '@shared/utils/date.utils';
+import { environment } from '@environment';
 import { addIcons } from 'ionicons';
 import {
   chevronForwardOutline,
@@ -22,6 +22,7 @@ import {
   keyOutline,
   carSportOutline,
   navigateOutline,
+  mapOutline,
 } from 'ionicons/icons';
 import { buildRentalStages, getStageActionHint } from '../models/rental-stage.model';
 import type { BookingRole } from '../bookings-hub.types';
@@ -33,10 +34,10 @@ import { BookingContextualActionsComponent } from './booking-contextual-actions.
  *
  * Displays the dominant card for the user's most important active rental.
  * Features:
- * - Car photo + title hero
- * - Visual 5-stage stepper
+ * - Car photo + title hero (taller in expanded/asset mode)
+ * - Visual 5-stage stepper (detailed mode when expanded)
  * - Countdown to next event (pickup/return)
- * - Micro-data: location minimap placeholder, security PIN
+ * - Micro-data: mini-map (Google Static Maps), security PIN
  * - Contextual action buttons based on current stage
  * - Carousel navigation when multiple active rentals exist
  */
@@ -53,10 +54,16 @@ import { BookingContextualActionsComponent } from './booking-contextual-actions.
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden transition-all"
+      class="bg-white rounded-3xl overflow-hidden transition-all"
+      [class]="isAssetMode()
+        ? 'border border-slate-100/80 shadow-lg shadow-slate-200/50'
+        : 'border border-slate-100 shadow-sm'"
     >
       <!-- HERO: Car Photo + Overlay -->
-      <div class="relative h-44 bg-slate-100 overflow-hidden">
+      <div
+        class="relative bg-slate-100 overflow-hidden"
+        [class]="isAssetMode() ? 'h-56' : 'h-44'"
+      >
         @if (currentBooking().main_photo_url) {
           <img
             [src]="currentBooking().main_photo_url"
@@ -123,7 +130,11 @@ import { BookingContextualActionsComponent } from './booking-contextual-actions.
         </p>
 
         <!-- STEPPER -->
-        <app-booking-stepper [stages]="stages()" [compact]="true"></app-booking-stepper>
+        <app-booking-stepper
+          [stages]="stages()"
+          [compact]="!isAssetMode()"
+          [detailed]="isAssetMode()"
+        ></app-booking-stepper>
 
         <!-- Stage action hint -->
         <div class="text-center">
@@ -141,21 +152,42 @@ import { BookingContextualActionsComponent } from './booking-contextual-actions.
                   countdownLabel()
                 }}</span>
               </div>
-              <p class="text-sm font-bold text-slate-900 tabular-nums font-mono">
+              <p
+                class="font-bold text-slate-900 tabular-nums font-mono"
+                [class]="isAssetMode() ? 'text-lg tracking-wide' : 'text-sm'"
+              >
                 {{ countdownDisplay() }}
               </p>
             </div>
           }
 
-          <!-- Location mini -->
-          <div class="flex-1 bg-slate-50 rounded-xl p-3 border border-slate-100">
-            <div class="flex items-center gap-1.5 mb-1">
-              <ion-icon name="location-outline" class="text-sm text-slate-400"></ion-icon>
-              <span class="text-[10px] font-bold text-slate-400 uppercase">Ubicación</span>
-            </div>
-            <p class="text-sm font-medium text-slate-700 truncate">
-              {{ locationLabel() }}
-            </p>
+          <!-- Location mini-map or text -->
+          <div
+            class="flex-1 bg-slate-50 rounded-xl overflow-hidden border border-slate-100"
+          >
+            @if (isAssetMode() && miniMapUrl()) {
+              <a [href]="mapsDeepLink()" target="_blank" rel="noopener" class="block relative">
+                <img
+                  [src]="miniMapUrl()"
+                  alt="Ubicacion del vehiculo"
+                  class="w-full h-[72px] object-cover"
+                  loading="lazy"
+                />
+                <div class="absolute bottom-0 left-0 right-0 px-2.5 py-1 bg-gradient-to-t from-black/50 to-transparent">
+                  <p class="text-[10px] font-medium text-white truncate">{{ locationLabel() }}</p>
+                </div>
+              </a>
+            } @else {
+              <div class="p-3">
+                <div class="flex items-center gap-1.5 mb-1">
+                  <ion-icon name="location-outline" class="text-sm text-slate-400"></ion-icon>
+                  <span class="text-[10px] font-bold text-slate-400 uppercase">Ubicacion</span>
+                </div>
+                <p class="text-sm font-medium text-slate-700 truncate">
+                  {{ locationLabel() }}
+                </p>
+              </div>
+            }
           </div>
 
           <!-- PIN (only for in_progress / confirmed) -->
@@ -182,11 +214,14 @@ import { BookingContextualActionsComponent } from './booking-contextual-actions.
   `,
 })
 export class ActiveRentalCardComponent {
-  private readonly bookingUi = inject(BookingUiService);
   private readonly destroyRef = inject(DestroyRef);
 
   bookings = input.required<Booking[]>();
   role = input.required<BookingRole>();
+  /** Context mode from BookingContextService (null = standard card) */
+  contextMode = input<string | null>(null);
+  /** When true, renders in expanded "Asset Dashboard" mode */
+  expanded = input<boolean>(false);
 
   readonly selectedIndex = signal(0);
 
@@ -199,12 +234,19 @@ export class ActiveRentalCardComponent {
       keyOutline,
       carSportOutline,
       navigateOutline,
+      mapOutline,
     });
 
     // Update countdown every second
     const interval = setInterval(() => this.tickCountdown(), 1000);
     this.destroyRef.onDestroy(() => clearInterval(interval));
   }
+
+  // ─── Asset Mode ──────────────────────────────────────────────────
+
+  readonly isAssetMode = computed(() => this.expanded());
+
+  // ─── Carousel ────────────────────────────────────────────────────
 
   readonly currentIndex = computed(() => {
     const total = this.bookings().length;
@@ -295,14 +337,58 @@ export class ActiveRentalCardComponent {
     return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   });
 
+  // ─── Location & Mini-Map ─────────────────────────────────────────
+
   readonly locationLabel = computed(() => {
     const b = this.currentBooking();
     if (!b) return 'Sin ubicación';
-    // Use pickup location text if available, or coords
+    // Prefer human-readable city/province
+    const city = (b as Record<string, unknown>)['car_city'] as string | undefined;
+    const province = (b as Record<string, unknown>)['car_province'] as string | undefined;
+    if (city && province) return `${city}, ${province}`;
+    // Fallback to coords
     if (b.pickup_location_lat && b.pickup_location_lng) {
       return `${b.pickup_location_lat.toFixed(3)}°, ${b.pickup_location_lng.toFixed(3)}°`;
     }
     return 'Sin ubicación';
+  });
+
+  readonly miniMapUrl = computed(() => {
+    const b = this.currentBooking();
+    if (!b) return null;
+    const apiKey = environment.googleMapsApiKey ?? '';
+
+    // Use exact coords if available
+    if (b.pickup_location_lat && b.pickup_location_lng) {
+      const lat = b.pickup_location_lat;
+      const lng = b.pickup_location_lng;
+      return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=14&size=400x160&scale=2&maptype=roadmap&markers=color:red%7C${lat},${lng}&key=${apiKey}`;
+    }
+
+    // Fallback to city-level geocoding
+    const city = (b as Record<string, unknown>)['car_city'] as string | undefined;
+    const province = (b as Record<string, unknown>)['car_province'] as string | undefined;
+    if (city && province) {
+      const location = encodeURIComponent(`${city}, ${province}, Argentina`);
+      return `https://maps.googleapis.com/maps/api/staticmap?center=${location}&zoom=14&size=400x160&scale=2&maptype=roadmap&markers=color:red%7C${location}&key=${apiKey}`;
+    }
+
+    return null;
+  });
+
+  readonly mapsDeepLink = computed(() => {
+    const b = this.currentBooking();
+    if (!b) return '#';
+    if (b.pickup_location_lat && b.pickup_location_lng) {
+      return `https://www.google.com/maps/search/?api=1&query=${b.pickup_location_lat},${b.pickup_location_lng}`;
+    }
+    const city = (b as Record<string, unknown>)['car_city'] as string | undefined;
+    const province = (b as Record<string, unknown>)['car_province'] as string | undefined;
+    if (city && province) {
+      const loc = encodeURIComponent(`${city}, ${province}, Argentina`);
+      return `https://www.google.com/maps/search/?api=1&query=${loc}`;
+    }
+    return '#';
   });
 
   readonly showPin = computed(() => {
