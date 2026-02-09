@@ -79,10 +79,9 @@ jobs:
       - name: Verify each RPC exists
         if: steps.check-secrets.outputs.skip != 'true'
         run: |
-          echo "🔗 Connecting to database..."
+          echo "🔗 Connecting to database via pooler..."
 
-          DB_HOST="db.${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co"
-          DB_URL="postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@${DB_HOST}:5432/postgres"
+          DB_URL="postgresql://postgres.${{ secrets.SUPABASE_PROJECT_ID }}:${{ secrets.SUPABASE_DB_PASSWORD }}@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&connect_timeout=10"
 
           RPC_LIST="${{ needs.extract-rpcs.outputs.rpc_list }}"
 
@@ -149,8 +148,7 @@ jobs:
       - name: Compare local vs remote migrations
         if: steps.check-secrets.outputs.skip != 'true'
         run: |
-          DB_HOST="db.${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co"
-          DB_URL="postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@${DB_HOST}:5432/postgres"
+          DB_URL="postgresql://postgres.${{ secrets.SUPABASE_PROJECT_ID }}:${{ secrets.SUPABASE_DB_PASSWORD }}@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&connect_timeout=10"
 
           echo "📂 Local migrations:"
           LOCAL_MIGRATIONS=$(ls -1 supabase/migrations/*.sql 2>/dev/null | xargs -I {} basename {} | sort)
