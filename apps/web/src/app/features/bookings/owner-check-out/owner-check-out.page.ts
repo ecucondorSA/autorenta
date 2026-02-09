@@ -19,7 +19,7 @@ import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { IonicModule } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
-import { Booking, BookingStatus } from '../../../core/models';
+import { Booking, BookingUiStatus } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 import { VideoInspectionAIComponent } from '../../../shared/components/video-inspection-ai/video-inspection-ai.component';
 import { VideoInspectionLiveComponent } from '../../../shared/components/video-inspection-live/video-inspection-live.component';
@@ -134,7 +134,7 @@ export class OwnerCheckOutPage implements OnInit {
       }
 
       // Validar estado
-      const validStatuses: BookingStatus[] = ['in_progress', 'returned'];
+      const validStatuses: BookingUiStatus[] = ['in_progress', 'returned'];
       if (!validStatuses.includes(booking.status)) {
         this.toastService.error(
           'Error',

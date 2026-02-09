@@ -39,7 +39,7 @@ export interface AiBookingContext {
   /** ID del booking */
   bookingId: string;
   /** Estado actual del booking */
-  status: BookingStatus;
+  status: BookingUiStatus;
   /** Fecha de inicio del alquiler */
   startDate: string;
   /** Fecha de fin del alquiler */

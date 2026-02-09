@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Route, Router, UrlSegment } from '@angular/router';
-import type { BookingStatus } from '@core/models';
+import type { BookingUiStatus } from '@core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingFlowService } from '@core/services/bookings/booking-flow.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
@@ -21,7 +21,7 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
  * ```
  */
 export function bookingStatusGuard(
-  allowedStatuses: BookingStatus[],
+  allowedStatuses: BookingUiStatus[],
   options?: {
     requireOwner?: boolean;
     requireRenter?: boolean;
