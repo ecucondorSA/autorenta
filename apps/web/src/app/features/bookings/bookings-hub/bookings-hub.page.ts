@@ -20,6 +20,7 @@ import {
   searchOutline,
   addOutline,
   alertCircleOutline,
+  keyOutline,
 } from 'ionicons/icons';
 
 import { IonIcon } from '@ionic/angular/standalone';
@@ -45,41 +46,72 @@ import { BookingsListComponent } from './components/bookings-list.component';
     BookingsListComponent,
   ],
   template: `
-    <div class="min-h-screen bg-slate-50 pb-24">
+    <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white pb-24">
       <!-- HEADER -->
       <app-bookings-header
         [role]="role()"
         (roleChange)="setRole($event)"
       ></app-bookings-header>
 
-      <main class="px-4 pt-5 space-y-5 max-w-2xl mx-auto">
+      <main class="px-4 pt-6 space-y-6 max-w-2xl mx-auto">
 
         <!-- LOADING STATE -->
         @if (loading()) {
-          <div class="space-y-4 animate-pulse">
-            <div class="h-28 bg-white rounded-2xl"></div>
-            <div class="flex gap-3">
-              <div class="h-16 flex-1 bg-white rounded-xl"></div>
-              <div class="h-16 flex-1 bg-white rounded-xl"></div>
-              <div class="h-16 flex-1 bg-white rounded-xl"></div>
+          <div class="space-y-5 animate-pulse">
+            <!-- Focus card skeleton -->
+            <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+              <div class="h-1 bg-gradient-to-r from-slate-200 to-slate-100"></div>
+              <div class="p-5 space-y-3">
+                <div class="flex justify-between">
+                  <div class="h-5 w-24 bg-slate-100 rounded-lg"></div>
+                  <div class="h-6 w-20 bg-slate-100 rounded-lg"></div>
+                </div>
+                <div class="h-5 w-48 bg-slate-100 rounded-lg"></div>
+                <div class="h-4 w-32 bg-slate-50 rounded-lg"></div>
+              </div>
             </div>
+            <!-- Insights skeleton -->
+            <div class="grid grid-cols-3 gap-3">
+              @for (i of [1, 2, 3]; track i) {
+                <div class="bg-white rounded-xl border border-slate-100 p-4 space-y-2">
+                  <div class="h-3 w-12 bg-slate-100 rounded"></div>
+                  <div class="h-7 w-8 bg-slate-100 rounded-lg"></div>
+                </div>
+              }
+            </div>
+            <!-- Cards skeleton -->
             @for (i of [1, 2, 3]; track i) {
-              <div class="h-24 bg-white rounded-2xl"></div>
+              <div class="flex items-center gap-3.5 bg-white rounded-2xl p-3 border border-slate-100">
+                <div class="w-[72px] h-[72px] rounded-xl bg-slate-100"></div>
+                <div class="flex-1 space-y-2.5">
+                  <div class="flex justify-between">
+                    <div class="h-4 w-28 bg-slate-100 rounded"></div>
+                    <div class="h-4 w-16 bg-slate-100 rounded"></div>
+                  </div>
+                  <div class="h-3 w-24 bg-slate-50 rounded"></div>
+                  <div class="h-5 w-20 bg-slate-50 rounded-md"></div>
+                </div>
+              </div>
             }
           </div>
         }
 
         <!-- ERROR STATE -->
         @else if (hasError()) {
-          <div class="flex flex-col items-center justify-center py-20 text-center">
-            <div class="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mb-4">
-              <ion-icon name="alert-circle-outline" class="text-3xl text-red-400"></ion-icon>
+          <div class="flex flex-col items-center justify-center py-24 text-center">
+            <div class="w-20 h-20 rounded-2xl bg-red-50 flex items-center justify-center mb-5
+                        ring-8 ring-red-50/50">
+              <ion-icon name="alert-circle-outline" class="text-4xl text-red-400"></ion-icon>
             </div>
-            <h3 class="text-lg font-bold text-slate-900">No pudimos cargar tus reservas</h3>
-            <p class="text-sm text-slate-500 mt-1 max-w-xs">Verifica tu conexion e intenta nuevamente.</p>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-2">No pudimos cargar tus reservas</h3>
+            <p class="text-sm text-slate-400 max-w-xs leading-relaxed">
+              Verifica tu conexion a internet e intenta nuevamente.
+            </p>
             <button
               (click)="retry()"
-              class="mt-5 px-5 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+              class="mt-6 px-6 py-3 bg-slate-900 text-white text-sm font-bold rounded-xl
+                     shadow-lg shadow-slate-900/20 hover:shadow-xl
+                     active:scale-95 transition-all duration-200"
             >
               Reintentar
             </button>
@@ -88,34 +120,52 @@ import { BookingsListComponent } from './components/bookings-list.component';
 
         <!-- EMPTY STATE -->
         @else if (currentBookings().length === 0) {
-          <div class="flex flex-col items-center justify-center py-16 text-center">
-            <div class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mb-5">
-              <ion-icon name="car-sport-outline" class="text-4xl text-slate-300"></ion-icon>
+          <div class="flex flex-col items-center justify-center py-20 text-center">
+            <!-- Decorative circles -->
+            <div class="relative mb-8">
+              <div class="absolute -inset-4 rounded-full bg-indigo-50/50 animate-pulse"></div>
+              <div class="absolute -inset-2 rounded-full bg-indigo-50/80"></div>
+              <div class="relative w-24 h-24 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-50
+                          flex items-center justify-center shadow-inner">
+                @if (role() === 'owner') {
+                  <ion-icon name="key-outline" class="text-5xl text-slate-300"></ion-icon>
+                } @else {
+                  <ion-icon name="car-sport-outline" class="text-5xl text-slate-300"></ion-icon>
+                }
+              </div>
             </div>
-            <h3 class="text-xl font-bold text-slate-900">
-              {{ role() === 'owner' ? 'Sin reservas de tus autos' : 'Aun no tenes reservas' }}
+
+            <h3 class="text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">
+              {{ role() === 'owner' ? 'Sin reservas aun' : 'Empeza tu viaje' }}
             </h3>
-            <p class="text-sm text-slate-500 mt-2 max-w-xs mx-auto">
+            <p class="text-sm text-slate-400 max-w-[260px] mx-auto leading-relaxed mb-8">
               {{ role() === 'owner'
-                ? 'Cuando alguien reserve tus autos, los veras aca.'
-                : 'Explora autos disponibles y reserva tu proximo viaje.' }}
+                ? 'Cuando alguien reserve tus autos, aparecera todo aca.'
+                : 'Explora autos increibles y reserva tu proximo viaje.' }}
             </p>
+
             @if (role() === 'renter') {
               <a
                 routerLink="/marketplace"
-                class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+                class="inline-flex items-center gap-2.5 px-7 py-3.5 bg-gradient-to-r from-slate-900 to-slate-800
+                       text-white text-sm font-bold rounded-xl shadow-lg shadow-slate-900/25
+                       hover:shadow-xl active:scale-95 transition-all duration-200"
               >
-                <ion-icon name="search-outline"></ion-icon>
+                <ion-icon name="search-outline" class="text-lg"></ion-icon>
                 Explorar autos
               </a>
+              <p class="mt-4 text-xs text-slate-300">Mas de 500 autos disponibles</p>
             } @else {
               <a
                 routerLink="/cars/publish"
-                class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+                class="inline-flex items-center gap-2.5 px-7 py-3.5 bg-gradient-to-r from-slate-900 to-slate-800
+                       text-white text-sm font-bold rounded-xl shadow-lg shadow-slate-900/25
+                       hover:shadow-xl active:scale-95 transition-all duration-200"
               >
-                <ion-icon name="add-outline"></ion-icon>
-                Publicar auto
+                <ion-icon name="add-outline" class="text-lg"></ion-icon>
+                Publicar mi auto
               </a>
+              <p class="mt-4 text-xs text-slate-300">Comenza a generar ingresos hoy</p>
             }
           </div>
         }
@@ -141,6 +191,14 @@ import { BookingsListComponent } from './components/bookings-list.component';
           <app-bookings-quick-actions
             [actions]="quickActions()"
           ></app-bookings-quick-actions>
+
+          <!-- SECTION HEADER -->
+          <div class="flex items-center justify-between pt-1">
+            <h2 class="text-base font-extrabold text-slate-900 tracking-tight">Reservas</h2>
+            <span class="text-xs font-medium text-slate-400">
+              {{ sortedBookings().length }} {{ sortedBookings().length === 1 ? 'reserva' : 'reservas' }}
+            </span>
+          </div>
 
           <!-- BOOKINGS LIST -->
           <app-bookings-list
@@ -184,6 +242,7 @@ export class BookingsHubPage implements OnInit, OnDestroy {
       searchOutline,
       addOutline,
       alertCircleOutline,
+      keyOutline,
     });
   }
 

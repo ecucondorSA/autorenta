@@ -18,30 +18,45 @@ import { FocusCard, BookingRole } from '../bookings-hub.types';
         [routerLink]="card().actionLink"
         [queryParams]="card().actionQuery"
         [class]="cardClass(b)"
-        class="block rounded-2xl p-4 border transition-all active:scale-[0.98]"
+        class="relative block rounded-2xl overflow-hidden border-2 transition-all active:scale-[0.97] hover:shadow-lg"
       >
-        <div class="flex items-start justify-between gap-3 mb-3">
-          <span class="inline-flex items-center gap-1.5 text-xs font-semibold">
-            <span [class]="dotClass(b)" class="w-2 h-2 rounded-full"></span>
-            {{ card().badge }}
-          </span>
-          <span class="text-lg font-bold text-slate-900 font-mono tabular-nums">
-            {{ b.total_amount | money }}
-          </span>
-        </div>
+        <!-- Gradient accent strip -->
+        <div [class]="accentStripClass(b)" class="h-1"></div>
 
-        <h3 class="text-base font-bold text-slate-900 mb-1">{{ card().title }}</h3>
-        <p class="text-sm text-slate-500 mb-3">{{ rangeLabel(b) }}</p>
-
-        @if (card().actionLabel) {
-          <div class="flex items-center justify-between">
-            <span class="text-sm text-slate-500">{{ card().subtitle }}</span>
-            <span class="text-sm font-semibold text-slate-900 flex items-center gap-1">
-              {{ card().actionLabel }}
-              <ion-icon name="chevron-forward-outline" class="text-xs"></ion-icon>
+        <div class="p-5">
+          <!-- Top row: badge + amount -->
+          <div class="flex items-start justify-between gap-3 mb-4">
+            <span [class]="badgeClass(b)"
+                  class="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-lg">
+              <span [class]="dotClass(b)" class="w-2 h-2 rounded-full flex-shrink-0"></span>
+              {{ card().badge }}
             </span>
+            <div class="text-right">
+              <span class="text-xl font-extrabold text-slate-900 font-mono tabular-nums">
+                {{ b.total_amount | money }}
+              </span>
+            </div>
           </div>
-        }
+
+          <!-- Title + date -->
+          <h3 class="text-base font-bold text-slate-900 mb-1 leading-snug">{{ card().title }}</h3>
+          <div class="flex items-center gap-1.5 text-sm text-slate-500 mb-4">
+            <ion-icon name="calendar-outline" class="text-slate-400 text-xs"></ion-icon>
+            {{ rangeLabel(b) }}
+          </div>
+
+          <!-- CTA row -->
+          @if (card().actionLabel) {
+            <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+              <span class="text-sm text-slate-500">{{ card().subtitle }}</span>
+              <span [class]="ctaClass(b)"
+                    class="inline-flex items-center gap-1.5 text-sm font-bold px-3 py-1.5 rounded-lg transition-colors">
+                {{ card().actionLabel }}
+                <ion-icon name="arrow-forward" class="text-sm"></ion-icon>
+              </span>
+            </div>
+          }
+        </div>
       </a>
     }
   `,
@@ -67,14 +82,29 @@ export class BookingsFocusCardComponent {
     return this.colorToDotClass(ui.color) + pulse;
   }
 
+  badgeClass(booking: Booking): string {
+    const color = this.bookingUi.getUiState(booking, this.role()).color;
+    return this.colorToBadgeBg(color);
+  }
+
+  accentStripClass(booking: Booking): string {
+    const color = this.bookingUi.getUiState(booking, this.role()).color;
+    return this.colorToGradient(color);
+  }
+
+  ctaClass(booking: Booking): string {
+    const color = this.bookingUi.getUiState(booking, this.role()).color;
+    return this.colorToCtaClass(color);
+  }
+
   private colorToCardClass(color: BookingColorScheme): string {
     switch (color) {
-      case 'amber': return 'bg-amber-50 border-amber-200';
-      case 'red': return 'bg-red-50 border-red-200';
-      case 'blue': return 'bg-blue-50 border-blue-200';
-      case 'green': return 'bg-emerald-50 border-emerald-200';
-      case 'purple': return 'bg-purple-50 border-purple-200';
-      default: return 'bg-slate-50 border-slate-200';
+      case 'amber': return 'bg-amber-50/80 border-amber-200/60';
+      case 'red': return 'bg-red-50/80 border-red-200/60';
+      case 'blue': return 'bg-blue-50/80 border-blue-200/60';
+      case 'green': return 'bg-emerald-50/80 border-emerald-200/60';
+      case 'purple': return 'bg-purple-50/80 border-purple-200/60';
+      default: return 'bg-slate-50/80 border-slate-200/60';
     }
   }
 
@@ -86,6 +116,39 @@ export class BookingsFocusCardComponent {
       case 'green': return 'bg-emerald-500';
       case 'purple': return 'bg-purple-500';
       default: return 'bg-slate-400';
+    }
+  }
+
+  private colorToBadgeBg(color: BookingColorScheme): string {
+    switch (color) {
+      case 'amber': return 'bg-amber-100 text-amber-800';
+      case 'red': return 'bg-red-100 text-red-800';
+      case 'blue': return 'bg-blue-100 text-blue-800';
+      case 'green': return 'bg-emerald-100 text-emerald-800';
+      case 'purple': return 'bg-purple-100 text-purple-800';
+      default: return 'bg-slate-100 text-slate-700';
+    }
+  }
+
+  private colorToGradient(color: BookingColorScheme): string {
+    switch (color) {
+      case 'amber': return 'bg-gradient-to-r from-amber-400 to-orange-400';
+      case 'red': return 'bg-gradient-to-r from-red-400 to-rose-500';
+      case 'blue': return 'bg-gradient-to-r from-blue-400 to-indigo-500';
+      case 'green': return 'bg-gradient-to-r from-emerald-400 to-teal-500';
+      case 'purple': return 'bg-gradient-to-r from-purple-400 to-violet-500';
+      default: return 'bg-gradient-to-r from-slate-300 to-slate-400';
+    }
+  }
+
+  private colorToCtaClass(color: BookingColorScheme): string {
+    switch (color) {
+      case 'amber': return 'bg-amber-600 text-white hover:bg-amber-700';
+      case 'red': return 'bg-red-600 text-white hover:bg-red-700';
+      case 'blue': return 'bg-blue-600 text-white hover:bg-blue-700';
+      case 'green': return 'bg-emerald-600 text-white hover:bg-emerald-700';
+      case 'purple': return 'bg-purple-600 text-white hover:bg-purple-700';
+      default: return 'bg-slate-700 text-white hover:bg-slate-800';
     }
   }
 }
