@@ -181,3 +181,23 @@ gha-creds-*.json
 .agent/
 .codex/
 CODEX.md
+
+# Debug screenshots & temp images
+*.screenshot*.png
+device_screenshot*.png
+security_alert.png
+next_steps.png
+tg_token_extraction.png
+authority_*.png
+apps/web/image.png
+apps/web/src/app/features/test_real.png
+
+# Tool debug artifacts
+tools/stagehand-poc/*.png
+tools/stagehand-poc/logs/
+tools/sora/*.png
+tools/marketing-automation/*.png
+tools/whatsapp-outreach/*.png
+
+# MCP server build
+mcp-server/dist/
