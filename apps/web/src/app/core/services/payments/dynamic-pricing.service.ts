@@ -270,19 +270,25 @@ export class DynamicPricingService {
       factor: number;
     }>
   > {
-    const { data, error } = await this.supabase
-      .from('pricing_special_events')
-      .select('id, name, start_date, end_date, factor')
-      .eq('region_id', regionId)
-      .eq('active', true)
-      .lte('start_date', endDate.toISOString())
-      .gte('end_date', startDate.toISOString());
+    try {
+      const { data, error } = await this.supabase
+        .from('pricing_special_events')
+        .select('id, name, start_date, end_date, factor')
+        .eq('region_id', regionId)
+        .eq('active', true)
+        .lte('start_date', endDate.toISOString())
+        .gte('end_date', startDate.toISOString());
 
-    if (error) {
+      if (error) {
+        // Table may not exist in current DB — expected, not an app error
+        return [];
+      }
+
+      return data;
+    } catch {
+      // Network/table-not-found errors are non-critical for pricing
       return [];
     }
-
-    return data;
   }
 
   /**

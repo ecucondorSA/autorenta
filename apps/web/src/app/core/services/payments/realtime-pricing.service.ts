@@ -412,12 +412,15 @@ export class RealtimePricingService implements OnDestroy {
         .lte('start_date', now)
         .gte('end_date', now);
 
-      if (error) throw error;
+      if (error) {
+        // Table may not exist — expected, non-critical
+        return;
+      }
       if (data) {
         this.activeEvents.set(data as SpecialEvent[]);
       }
     } catch {
-      // Silently ignore active events errors
+      // Network/table-not-found errors are non-critical
     }
   }
 

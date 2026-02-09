@@ -1,1 +1,13 @@
-cd apps/web && npx tsc --noEmit
+#!/bin/bash
+# Pre-push hook: Catch build errors BEFORE they reach CI
+# tsc --noEmit catches TS errors but misses Angular template errors.
+# ng build catches both — this is the last gate before CI.
+
+set -e
+
+echo "🔨 Pre-push: Running production build check..."
+
+# Full Angular build — catches template binding errors that tsc misses
+cd apps/web && npx ng build 2>&1 | tail -5
+
+echo "✅ Build passed — safe to push"

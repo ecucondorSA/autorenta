@@ -1,86 +1,114 @@
-import { Component, ChangeDetectionStrategy, input, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
-import { DateFormatPipe } from '@shared/pipes/date-format.pipe';
+import { formatDateRange } from '@shared/utils/date.utils';
 import { Booking } from '@core/models';
-import { BookingUiService, BookingColorScheme, BookingRole } from '@core/services/bookings/booking-ui.service';
+import { BookingUiService, BookingColorScheme } from '@core/services/bookings/booking-ui.service';
+import { FilterItem, BookingRole, BookingFilter } from '../bookings-hub.types';
 
 @Component({
   selector: 'app-bookings-list',
   standalone: true,
-  imports: [RouterLink, IonIcon, MoneyPipe, DateFormatPipe],
+  imports: [RouterLink, IonIcon, MoneyPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="space-y-3">
+    <section class="space-y-4">
+      <!-- FILTER PILLS -->
+      <div class="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-1">
+        @for (f of filters(); track f.id) {
+          <button
+            (click)="onFilterChange(f.id)"
+            [class]="currentFilter() === f.id
+              ? 'px-4 py-2 rounded-full text-sm font-semibold bg-slate-900 text-white transition-all whitespace-nowrap'
+              : 'px-4 py-2 rounded-full text-sm font-medium bg-white text-slate-600 border border-slate-200 transition-all whitespace-nowrap'"
+          >
+            {{ f.label }}
+            @if (f.count > 0) {
+              <span class="ml-1 text-xs opacity-70">{{ f.count }}</span>
+            }
+          </button>
+        }
+      </div>
+
+      <!-- BOOKING CARDS -->
       @if (bookings().length === 0) {
-        <!-- Empty State for filtered results -->
-        <div class="py-12 flex flex-col items-center text-center animate-in fade-in duration-300">
-          <div class="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center mb-3">
-            <ion-icon name="search-outline" class="text-2xl text-slate-300"></ion-icon>
-          </div>
-          <p class="text-sm font-semibold text-slate-500">No encontramos reservas</p>
-          <p class="text-xs text-slate-400">Intenta con otro filtro.</p>
+        <div class="py-12 flex flex-col items-center text-center">
+          <p class="text-sm text-slate-400">Sin resultados para este filtro</p>
+          <button
+            (click)="onFilterChange('all')"
+            class="mt-3 text-sm font-semibold text-slate-900 underline underline-offset-4"
+          >
+            Ver todas
+          </button>
         </div>
       } @else {
-        <!-- Booking Cards -->
-        @for (booking of bookings(); track booking.id) {
-          <a
-            [routerLink]="detailLink(booking)"
-            class="group flex items-center gap-3.5 bg-white rounded-2xl p-3 border border-slate-100
-                   shadow-sm hover:shadow-md hover:border-slate-200
-                   active:scale-[0.98] transition-all duration-200 animate-in slide-in-from-bottom-2"
-          >
-            <!-- Thumbnail -->
-            <div class="w-[72px] h-[72px] rounded-xl bg-slate-50 overflow-hidden flex-shrink-0 ring-1 ring-slate-100 relative">
-              <img
-                [src]="booking.main_photo_url || '/assets/images/car-placeholder.png'"
-                [alt]="booking.car_title || 'Auto'"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                loading="lazy"
-              />
-              <!-- Status Dot Overlay -->
-              <div class="absolute bottom-1 right-1 w-2.5 h-2.5 rounded-full border-2 border-white"
-                   [class]="dotColor(booking)"></div>
-            </div>
-
-            <!-- Info -->
-            <div class="flex-1 min-w-0">
-              <div class="flex items-start justify-between gap-2 mb-1">
-                <h3 class="text-sm font-bold text-slate-900 truncate leading-tight">
-                  {{ booking.car_brand }} {{ booking.car_model }}
-                </h3>
-                <span class="text-xs font-extrabold text-slate-900 font-mono bg-slate-50 px-1.5 py-0.5 rounded-md">
-                  {{ booking.total_amount | money: booking.currency }}
-                </span>
+        <div class="space-y-3">
+          @for (booking of bookings(); track booking.id) {
+            <a
+              [routerLink]="detailLink(booking)"
+              class="flex items-center gap-4 bg-white rounded-2xl p-3 border border-slate-100 active:scale-[0.98] transition-all"
+            >
+              <!-- Thumbnail -->
+              <div class="w-20 h-20 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0">
+                @if (booking.main_photo_url) {
+                  <img
+                    [src]="booking.main_photo_url"
+                    [alt]="booking.car_title || 'Auto'"
+                    class="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                } @else {
+                  <div class="w-full h-full flex items-center justify-center">
+                    <ion-icon name="car-sport-outline" class="text-2xl text-slate-300"></ion-icon>
+                  </div>
+                }
               </div>
 
-              <div class="flex items-center gap-1.5 text-xs text-slate-400 mb-2">
-                <ion-icon name="calendar-outline" class="text-[10px]"></ion-icon>
-                <span>{{ booking.start_at | dateFormat:'short' }} - {{ booking.end_at | dateFormat:'short' }}</span>
-              </div>
+              <!-- Info -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2 mb-1">
+                  <h3 class="text-sm font-bold text-slate-900 truncate">
+                    {{ booking.car_title || 'Auto' }}
+                  </h3>
+                  <span class="text-sm font-bold text-slate-900 font-mono tabular-nums flex-shrink-0">
+                    {{ booking.total_amount | money }}
+                  </span>
+                </div>
 
-              <div class="flex items-center justify-between">
-                <!-- Status Badge -->
-                <span [class]="statusBadgeClass(booking)"
-                      class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md">
-                  {{ statusLabel(booking) }}
-                </span>
-                
-                <ion-icon name="chevron-forward" class="text-slate-300 text-xs"></ion-icon>
+                <p class="text-xs text-slate-500 mb-2">
+                  {{ rangeLabel(booking) }}
+                </p>
+
+                <div class="flex items-center justify-between">
+                  <span class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600">
+                    <span [class]="dotColor(booking)" class="w-1.5 h-1.5 rounded-full flex-shrink-0"></span>
+                    {{ statusLabel(booking) }}
+                  </span>
+                  <ion-icon name="chevron-forward-outline" class="text-slate-300 text-sm"></ion-icon>
+                </div>
               </div>
-            </div>
-          </a>
-        }
+            </a>
+          }
+        </div>
       }
-    </div>
+    </section>
   `,
 })
 export class BookingsListComponent {
   private readonly bookingUi = inject(BookingUiService);
 
   bookings = input.required<Booking[]>();
+  filters = input<FilterItem[]>([]);
+  currentFilter = input<BookingFilter>('all');
   role = input.required<BookingRole>();
+  filterChange = output<BookingFilter>();
+
+  onFilterChange(filter: BookingFilter): void {
+    if (this.currentFilter() !== filter) {
+      this.filterChange.emit(filter);
+    }
+  }
 
   detailLink(booking: Booking): string[] {
     return this.role() === 'owner'
@@ -88,13 +116,12 @@ export class BookingsListComponent {
       : ['/bookings', booking.id];
   }
 
-  statusLabel(booking: Booking): string {
-    return this.bookingUi.getUiState(booking, this.role()).labelShort;
+  rangeLabel(booking: Booking): string {
+    return formatDateRange(booking.start_at, booking.end_at);
   }
 
-  statusBadgeClass(booking: Booking): string {
-    const color = this.bookingUi.getUiState(booking, this.role()).color;
-    return this.colorToBadgeClass(color);
+  statusLabel(booking: Booking): string {
+    return this.bookingUi.getUiState(booking, this.role()).labelShort;
   }
 
   dotColor(booking: Booking): string {
@@ -102,24 +129,13 @@ export class BookingsListComponent {
     return this.colorToDotClass(color);
   }
 
-  private colorToBadgeClass(color: BookingColorScheme): string {
-    switch (color) {
-      case 'amber': return 'bg-amber-50 text-amber-700';
-      case 'red': return 'bg-red-50 text-red-700';
-      case 'blue': return 'bg-blue-50 text-blue-700';
-      case 'green': return 'bg-emerald-50 text-emerald-700';
-      case 'purple': return 'bg-purple-50 text-purple-700';
-      default: return 'bg-slate-50 text-slate-600';
-    }
-  }
-
   private colorToDotClass(color: BookingColorScheme): string {
     switch (color) {
-      case 'amber': return 'bg-amber-500';
-      case 'red': return 'bg-red-500';
-      case 'blue': return 'bg-blue-500';
-      case 'green': return 'bg-emerald-500';
-      case 'purple': return 'bg-purple-500';
+      case 'amber': return 'bg-amber-400';
+      case 'red': return 'bg-red-400';
+      case 'blue': return 'bg-blue-400';
+      case 'green': return 'bg-emerald-400';
+      case 'purple': return 'bg-purple-400';
       default: return 'bg-slate-400';
     }
   }

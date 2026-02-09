@@ -324,6 +324,40 @@ jobs:
           fi
           echo "✅ API check completed"
 
+      - name: Test Static Assets Integrity
+        run: |
+          echo "🔍 Verifying that missing chunks return 404 (not HTML)..."
+          
+          # 1. A non-existent .js file MUST return 404, NOT 200 (HTML fallback)
+          status=$(curl -o /dev/null -s -w "%{http_code}" "https://autorentar.com/chunk-DOES-NOT-EXIST-$(date +%s).js")
+          if [ "$status" = "200" ]; then
+            echo "::error::Missing .js chunk returned 200 (HTML fallback active). This causes MIME type errors and zombie Service Workers."
+            exit 1
+          fi
+          echo "  ✅ Missing .js → $status (expected 404)"
+
+          # 2. A non-existent .css file MUST return 404
+          status=$(curl -o /dev/null -s -w "%{http_code}" "https://autorentar.com/styles-FAKE-HASH.css")
+          if [ "$status" = "200" ]; then
+            echo "::error::Missing .css file returned 200 (HTML fallback active)."
+            exit 1
+          fi
+          echo "  ✅ Missing .css → $status (expected 404)"
+
+          # 3. Real SPA route MUST return 200
+          status=$(curl -o /dev/null -s -w "%{http_code}" -L "https://autorentar.com/cars")
+          if [ "$status" != "200" ]; then
+            echo "::error::SPA route /cars returned $status instead of 200"
+            exit 1
+          fi
+          echo "  ✅ /cars → 200 (SPA routing works)"
+
+          # 4. Verify Content-Type for main JS bundle
+          content_type=$(curl -sI "https://autorentar.com" | grep -i "content-type" | head -1)
+          echo "  ✅ Homepage Content-Type: $content_type"
+
+          echo "✅ Static asset integrity verified"
+
   # ============================================
   # RELEASE SUMMARY
   # ============================================

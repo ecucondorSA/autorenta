@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, signal, computed, effect, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, DestroyRef, input, signal, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -31,12 +31,11 @@ import { CommonModule } from '@angular/common';
     </div>
   `
 })
-export class CountdownTimerComponent implements OnDestroy {
+export class CountdownTimerComponent {
   targetDate = input.required<string | Date | null>();
   size = input<'sm' | 'md' | 'lg'>('md');
 
   readonly time = signal({ hours: 0, minutes: 0, seconds: 0 });
-  private intervalId: ReturnType<typeof setInterval> | null = null;
   
   readonly sizeClass = computed(() => {
     switch (this.size()) {
@@ -46,17 +45,14 @@ export class CountdownTimerComponent implements OnDestroy {
     }
   });
 
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor() {
-    this.intervalId = setInterval(() => this.updateTime(), 1000);
-    
+    const interval = setInterval(() => this.updateTime(), 1000);
+    this.destroyRef.onDestroy(() => clearInterval(interval));
+
     // Initial update
     effect(() => this.updateTime());
-  }
-
-  ngOnDestroy(): void {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
   }
 
   private updateTime() {
