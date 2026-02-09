@@ -53,6 +53,20 @@ export class ProfileService {
   private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
 
+  /**
+   * Get the authenticated user or throw a user-friendly error.
+   * The error message intentionally avoids the 'no autenticado' pattern
+   * so it surfaces as a toast instead of triggering the auth redirect loop.
+   */
+  private async requireUser(): Promise<{ id: string; email?: string }> {
+    const { data: { user } } = await this.supabase.auth.getUser();
+    if (!user) {
+      this.logger.warn('requireUser() — sesión expirada', 'ProfileService');
+      throw new Error('Tu sesión expiró. Por favor, iniciá sesión nuevamente.');
+    }
+    return user;
+  }
+
   async getCurrentProfile(): Promise<UserProfile | null> {
     const {
       data: { user },
@@ -103,13 +117,7 @@ export class ProfileService {
   }
 
   async updateProfile(updates: UpdateProfileData): Promise<UserProfile> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('Usuario no autenticado');
-    }
+    const user = await this.requireUser();
 
     const payload: Record<string, unknown> = { ...updates };
 
@@ -134,13 +142,7 @@ export class ProfileService {
   }
 
   async uploadAvatar(file: File): Promise<string> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('Usuario no autenticado');
-    }
+    const user = await this.requireUser();
 
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
@@ -230,7 +232,7 @@ export class ProfileService {
 
   async getMe(): Promise<UserProfile> {
     const profile = await this.getCurrentProfile();
-    if (!profile) throw new Error('Usuario no autenticado');
+    if (!profile) throw new Error('Tu sesión expiró. Por favor, iniciá sesión nuevamente.');
 
     const role = (profile['role'] as string) ?? 'renter';
 
@@ -255,13 +257,7 @@ export class ProfileService {
   }
 
   async uploadDocument(file: File, kind: DocumentKind): Promise<UserDocument> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('Usuario no autenticado');
-    }
+    const user = await this.requireUser();
 
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
     if (!allowedTypes.includes(file.type)) {
@@ -319,13 +315,7 @@ export class ProfileService {
   }
 
   async getMyDocuments(): Promise<UserDocument[]> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('Usuario no autenticado');
-    }
+    const user = await this.requireUser();
 
     const { data, error } = await this.supabase
       .from('user_documents')
@@ -399,13 +389,7 @@ export class ProfileService {
   }
 
   async completeOnboarding(): Promise<void> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('Usuario no autenticado');
-    }
+    const user = await this.requireUser();
 
     const { error } = await this.supabase
       .from('profiles')
@@ -419,13 +403,7 @@ export class ProfileService {
   }
 
   async acceptTOS(): Promise<void> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('Usuario no autenticado');
-    }
+    const user = await this.requireUser();
 
     const { error } = await this.supabase
       .from('profiles')
@@ -438,13 +416,7 @@ export class ProfileService {
   }
 
   async getAuditLog(): Promise<ProfileAudit[]> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('Usuario no autenticado');
-    }
+    const user = await this.requireUser();
 
     const { data, error } = await this.supabase
       .from('profile_audit_log')
@@ -461,13 +433,7 @@ export class ProfileService {
   }
 
   async requestDataExport(): Promise<void> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('Usuario no autenticado');
-    }
+    const user = await this.requireUser();
 
     await this.supabase.functions.invoke('export-user-data', {
       body: { user_id: user['id'] },
@@ -475,13 +441,7 @@ export class ProfileService {
   }
 
   async requestAccountDeletion(reason?: string): Promise<void> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-
-    if (!user) {
-      throw new Error('Usuario no autenticado');
-    }
+    const user = await this.requireUser();
 
     const { error } = await this.supabase.from('account_deletion_requests').insert({
       user_id: user['id'],
