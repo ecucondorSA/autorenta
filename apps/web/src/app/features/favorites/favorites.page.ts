@@ -66,7 +66,7 @@ interface CarWithOwner {
       <!-- Empty State -->
       @else if (favoriteCars().length === 0) {
         <div class="empty-state">
-          <div class="empty-icon">❤️</div>
+          <img src="/assets/images/illustrations/empty-favorites.png" alt="Sin favoritos" class="w-48 h-auto mx-auto mb-4" />
           <h2>Aún no tienes favoritos</h2>
           <p>Guarda autos que te interesen para encontrarlos fácilmente después</p>
           <button (click)="goToMarketplace()" class="cta-button">Explorar autos</button>

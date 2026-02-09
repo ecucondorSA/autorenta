@@ -12,6 +12,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingUiService } from '@core/services/bookings/booking-ui.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { UnreadMessagesService } from '@core/services/bookings/unread-messages.service';
 import type { Booking } from '@core/models';
 import { BookingsStore } from '@core/stores/bookings.store';
 import { addIcons } from 'ionicons';
@@ -89,9 +90,7 @@ import { BookingsListComponent } from './components/bookings-list.component';
         <!-- EMPTY STATE -->
         @else if (currentBookings().length === 0) {
           <div class="flex flex-col items-center justify-center py-16 text-center">
-            <div class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mb-5">
-              <ion-icon name="car-sport-outline" class="text-4xl text-slate-300"></ion-icon>
-            </div>
+            <img src="/assets/images/illustrations/empty-bookings.png" alt="Sin reservas" class="w-48 h-auto mb-5 mx-auto" />
             <h3 class="text-xl font-bold text-slate-900">
               {{ role() === 'owner' ? 'Sin reservas de tus autos' : 'Aun no tenes reservas' }}
             </h3>
@@ -161,6 +160,7 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly bookingsService = inject(BookingsService);
   private readonly bookingUi = inject(BookingUiService);
+  private readonly unreadMessages = inject(UnreadMessagesService);
 
   readonly loading = this.store.loadingList;
   readonly role = signal<BookingRole>('renter');
@@ -188,34 +188,29 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     const bookings = this.currentBookings();
     const isOwner = this.role() === 'owner';
 
+    if (isOwner) {
+      const activeBookings = bookings.filter((b) => this.isActive(b));
+      const activeRevenue = activeBookings.reduce((sum, b) => sum + (b.total_amount || 0), 0);
+      const pendingCount = bookings.filter((b) => this.isPendingOwnerApproval(b)).length;
+      const activeDeposits = bookings.filter((b) =>
+        b.deposit_status === 'held' || b.deposit_status === 'locked',
+      ).length;
+
+      return [
+        { id: 'revenue', label: 'Ingresos activos', value: activeRevenue, type: 'money' as const, icon: 'cash-outline' },
+        { id: 'pending', label: 'Por aprobar', value: pendingCount, type: 'count' as const, icon: 'hourglass-outline' },
+        { id: 'deposits', label: 'Garantias activas', value: activeDeposits, type: 'count' as const, icon: 'shield-checkmark-outline' },
+      ];
+    }
+
     const activeCount = bookings.filter((b) => this.isActive(b)).length;
-    const pendingCount = bookings.filter((b) =>
-      isOwner ? this.isPendingOwnerApproval(b) : this.isPendingRenter(b),
-    ).length;
+    const pendingCount = bookings.filter((b) => this.isPendingRenter(b)).length;
     const historyCount = bookings.filter((b) => this.isHistory(b)).length;
 
     return [
-      {
-        id: 'active',
-        label: 'Activas',
-        value: activeCount,
-        type: 'count',
-        icon: 'rocket-outline',
-      },
-      {
-        id: 'pending',
-        label: isOwner ? 'Por aprobar' : 'Pendientes',
-        value: pendingCount,
-        type: 'count',
-        icon: 'hourglass-outline',
-      },
-      {
-        id: 'history',
-        label: 'Historial',
-        value: historyCount,
-        type: 'count',
-        icon: 'receipt-outline',
-      },
+      { id: 'active', label: 'Activas', value: activeCount, type: 'count' as const, icon: 'rocket-outline' },
+      { id: 'pending', label: 'Pendientes', value: pendingCount, type: 'count' as const, icon: 'hourglass-outline' },
+      { id: 'history', label: 'Historial', value: historyCount, type: 'count' as const, icon: 'receipt-outline' },
     ];
   });
 
@@ -288,6 +283,8 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   });
 
   readonly quickActions = computed<BookingQuickAction[]>(() => {
+    const totalUnread = this.unreadMessages.totalUnreadCount();
+
     if (this.role() === 'owner') {
       return [
         { id: 'publish', label: 'Publicar', icon: 'add-outline', link: '/cars/publish' },
@@ -298,13 +295,13 @@ export class BookingsHubPage implements OnInit, OnDestroy {
           link: '/bookings/pending-approval',
           badge: this.pendingApprovals() ?? 0,
         },
-        { id: 'messages', label: 'Mensajes', icon: 'chatbubble-ellipses-outline', link: '/messages' },
+        { id: 'messages', label: 'Mensajes', icon: 'chatbubble-ellipses-outline', link: '/messages', badge: totalUnread },
       ];
     }
 
     return [
       { id: 'explore', label: 'Explorar', icon: 'search-outline', link: '/marketplace' },
-      { id: 'messages', label: 'Mensajes', icon: 'chatbubble-ellipses-outline', link: '/messages' },
+      { id: 'messages', label: 'Mensajes', icon: 'chatbubble-ellipses-outline', link: '/messages', badge: totalUnread },
     ];
   });
 

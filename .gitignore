@@ -201,3 +201,4 @@ tools/whatsapp-outreach/*.png
 
 # MCP server build
 mcp-server/dist/
+nanobanana-output/

@@ -1,5 +1,5 @@
 import type { Booking } from '@core/models';
-import type { BookingRole } from '@core/services/bookings/booking-ui.service';
+import type { BookingRole, BookingUiState } from '@core/services/bookings/booking-ui.service';
 
 export type { BookingRole };
 export type BookingFilter =
@@ -10,6 +10,22 @@ export type BookingFilter =
   | 'history'
   | 'approvals'
   | 'review';
+
+// Operational phase grouping for hub command center
+export type OperationalPhase =
+  | 'urgent'     // needs action NOW (payment expiring, approval needed)
+  | 'today'      // checkin/checkout happening today
+  | 'active'     // trips in progress
+  | 'awaiting'   // waiting on other party
+  | 'upcoming'   // confirmed, start_at > 24h away
+  | 'history';   // terminal states
+
+export interface OperationalGroup {
+  phase: OperationalPhase;
+  label: string;
+  icon: string;
+  bookings: Booking[];
+}
 
 export interface FilterItem {
   id: BookingFilter;

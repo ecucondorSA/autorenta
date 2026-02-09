@@ -51,7 +51,7 @@
         "/home/edu/autorenta/tools/gemini-suite-mcp/dist/index.js"
       ],
       "env": {
-        "GEMINI_API_KEY": "AIzaSyCJIdveA5iCElCbfkBC9gXv24VktHRjftU"
+        "GEMINI_API_KEY": "AIzaSyANoH8hRTL2v1xwj1YyjDO0aik7f8CiPPo"
       },
       "description": "Gemini AI Suite - Code Review, Test Generation, UI Analysis, Code Comparison powered by Gemini 2.5 Pro"
     },

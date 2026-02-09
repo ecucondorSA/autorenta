@@ -114,11 +114,11 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
   });
 
   readonly vehicleTypeOptions = [
-    { id: 'sedan', label: 'Sedán' },
-    { id: 'suv', label: 'SUV' },
-    { id: 'hatchback', label: 'Hatchback' },
-    { id: 'pickup', label: 'Pick-up' },
-    { id: 'van', label: 'Van' },
+    { id: 'sedan', label: 'Sedán', icon: '/assets/images/categories/sedan.png' },
+    { id: 'suv', label: 'SUV', icon: '/assets/images/categories/suv.png' },
+    { id: 'hatchback', label: 'Hatchback', icon: '/assets/images/categories/hatchback.png' },
+    { id: 'pickup', label: 'Pick-up', icon: '/assets/images/categories/pickup.png' },
+    { id: 'van', label: 'Van', icon: '/assets/images/categories/van.png' },
   ];
 
   readonly transmissionOptions = [
