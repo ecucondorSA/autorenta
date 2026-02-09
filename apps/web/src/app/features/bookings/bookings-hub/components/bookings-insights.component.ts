@@ -12,7 +12,7 @@ import { InsightItem } from '../bookings-hub.types';
       @for (item of items(); track item.id) {
         <div class="flex-1 bg-white rounded-xl p-3 border border-slate-100">
           @if (item.type === 'money') {
-            <p class="text-xl font-bold text-slate-900 tabular-nums">{{ item.value | money }}</p>
+            <p class="text-xl font-bold text-slate-900 tabular-nums">{{ +item.value | money }}</p>
           } @else {
             <p class="text-2xl font-bold text-slate-900 tabular-nums">{{ item.value }}</p>
           }

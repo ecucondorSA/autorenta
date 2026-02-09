@@ -21,16 +21,30 @@ import {
   searchOutline,
   addOutline,
   alertCircleOutline,
+  flashOutline,
+  todayOutline,
+  hourglassOutline,
+  calendarOutline,
+  timeOutline,
 } from 'ionicons/icons';
 
 import { IonIcon } from '@ionic/angular/standalone';
-import { BookingRole, BookingFilter, FilterItem, FocusCard, InsightItem, BookingQuickAction } from './bookings-hub.types';
+import {
+  BookingRole,
+  BookingFilter,
+  FilterItem,
+  FocusCard,
+  InsightItem,
+  BookingQuickAction,
+  OperationalPhase,
+  OperationalGroup,
+} from './bookings-hub.types';
 import { BookingsHeaderComponent } from './components/bookings-header.component';
 import { BookingsFocusCardComponent } from './components/bookings-focus-card.component';
 import { BookingsInsightsComponent } from './components/bookings-insights.component';
 import { BookingsQuickActionsComponent } from './components/bookings-quick-actions.component';
 import { BookingsListComponent } from './components/bookings-list.component';
-
+import { BookingsOperationalDashboardComponent } from './components/bookings-operational-dashboard.component';
 
 @Component({
   standalone: true,
@@ -44,6 +58,7 @@ import { BookingsListComponent } from './components/bookings-list.component';
     BookingsInsightsComponent,
     BookingsQuickActionsComponent,
     BookingsListComponent,
+    BookingsOperationalDashboardComponent,
   ],
   template: `
     <div class="min-h-screen bg-slate-50 pb-24">
@@ -89,17 +104,19 @@ import { BookingsListComponent } from './components/bookings-list.component';
 
         <!-- EMPTY STATE -->
         @else if (currentBookings().length === 0) {
-          <div class="flex flex-col items-center justify-center py-16 text-center">
-            <img src="/assets/images/illustrations/empty-bookings.png" alt="Sin reservas" class="w-48 h-auto mb-5 mx-auto" />
-            <h3 class="text-xl font-bold text-slate-900">
-              {{ role() === 'owner' ? 'Sin reservas de tus autos' : 'Aun no tenes reservas' }}
-            </h3>
-            <p class="text-sm text-slate-500 mt-2 max-w-xs mx-auto">
-              {{ role() === 'owner'
-                ? 'Cuando alguien reserve tus autos, los veras aca.'
-                : 'Explora autos disponibles y reserva tu proximo viaje.' }}
-            </p>
-            @if (role() === 'renter') {
+          <!-- Owner empty: show operational dashboard -->
+          @if (role() === 'owner') {
+            <app-bookings-operational-dashboard
+              [role]="role()"
+              [historyBookings]="[]"
+            ></app-bookings-operational-dashboard>
+          } @else {
+            <div class="flex flex-col items-center justify-center py-16 text-center">
+              <img src="/assets/images/illustrations/empty-bookings.png" alt="Sin reservas" class="w-48 h-auto mb-5 mx-auto" />
+              <h3 class="text-xl font-bold text-slate-900">Aun no tenes reservas</h3>
+              <p class="text-sm text-slate-500 mt-2 max-w-xs mx-auto">
+                Explora autos disponibles y reserva tu proximo viaje.
+              </p>
               <a
                 routerLink="/marketplace"
                 class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
@@ -107,21 +124,13 @@ import { BookingsListComponent } from './components/bookings-list.component';
                 <ion-icon name="search-outline"></ion-icon>
                 Explorar autos
               </a>
-            } @else {
-              <a
-                routerLink="/cars/publish"
-                class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
-              >
-                <ion-icon name="add-outline"></ion-icon>
-                Publicar auto
-              </a>
-            }
-          </div>
+            </div>
+          }
         }
 
-        <!-- CONTENT -->
+        <!-- CONTENT: OPERATIONAL COMMAND CENTER -->
         @else {
-          <!-- FOCUS CARD (only if there's an action needed) -->
+          <!-- FOCUS CARD (highest priority action) -->
           @if (focusCard().booking) {
             <app-bookings-focus-card
               [card]="focusCard()"
@@ -129,23 +138,41 @@ import { BookingsListComponent } from './components/bookings-list.component';
             ></app-bookings-focus-card>
           }
 
-          <!-- STATS -->
-          @if (currentBookings().length > 0) {
-            <app-bookings-insights
-              [items]="insightItems()"
-            ></app-bookings-insights>
-          }
+          <!-- STATS / FINANCIAL PULSE -->
+          <app-bookings-insights
+            [items]="insightItems()"
+          ></app-bookings-insights>
 
           <!-- QUICK ACTIONS -->
           <app-bookings-quick-actions
             [actions]="quickActions()"
           ></app-bookings-quick-actions>
 
-          <!-- BOOKINGS LIST -->
-          <app-bookings-list
-            [bookings]="sortedBookings()"
-            [role]="role()"
-          ></app-bookings-list>
+          <!-- OPERATIONAL DASHBOARD (owner mode) -->
+          @if (role() === 'owner') {
+            <app-bookings-operational-dashboard
+              [role]="role()"
+              [historyBookings]="historyBookings()"
+            ></app-bookings-operational-dashboard>
+          }
+
+          <!-- GROUPED BOOKINGS BY OPERATIONAL PHASE -->
+          @for (group of operationalGroups(); track group.phase) {
+            <section class="space-y-3">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider px-1 flex items-center gap-2">
+                <ion-icon [name]="group.icon" class="text-sm"></ion-icon>
+                {{ group.label }}
+                <span class="text-slate-300">({{ group.bookings.length }})</span>
+              </h3>
+              <app-bookings-list
+                [bookings]="group.bookings"
+                [role]="role()"
+                [filters]="group.phase === 'history' ? filters() : []"
+                [currentFilter]="filter()"
+                (filterChange)="setFilter($event)"
+              ></app-bookings-list>
+            </section>
+          }
         }
       </main>
     </div>
@@ -181,8 +208,15 @@ export class BookingsHubPage implements OnInit, OnDestroy {
       searchOutline,
       addOutline,
       alertCircleOutline,
+      flashOutline,
+      todayOutline,
+      hourglassOutline,
+      calendarOutline,
+      timeOutline,
     });
   }
+
+  // ─── Financial Pulse (Insights) ───────────────────────────────────
 
   readonly insightItems = computed<InsightItem[]>(() => {
     const bookings = this.currentBookings();
@@ -193,7 +227,7 @@ export class BookingsHubPage implements OnInit, OnDestroy {
       const activeRevenue = activeBookings.reduce((sum, b) => sum + (b.total_amount || 0), 0);
       const pendingCount = bookings.filter((b) => this.isPendingOwnerApproval(b)).length;
       const activeDeposits = bookings.filter((b) =>
-        b.deposit_status === 'held' || b.deposit_status === 'locked',
+        b.deposit_status === 'locked',
       ).length;
 
       return [
@@ -213,6 +247,8 @@ export class BookingsHubPage implements OnInit, OnDestroy {
       { id: 'history', label: 'Historial', value: historyCount, type: 'count' as const, icon: 'receipt-outline' },
     ];
   });
+
+  // ─── Filters ──────────────────────────────────────────────────────
 
   readonly filters = computed<FilterItem[]>(() => {
     const bookings = this.currentBookings();
@@ -239,6 +275,8 @@ export class BookingsHubPage implements OnInit, OnDestroy {
       },
     ];
   });
+
+  // ─── Focus Card ───────────────────────────────────────────────────
 
   readonly focusCard = computed<FocusCard>(() => {
     const bookings = this.currentBookings();
@@ -282,6 +320,8 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     };
   });
 
+  // ─── Quick Actions ────────────────────────────────────────────────
+
   readonly quickActions = computed<BookingQuickAction[]>(() => {
     const totalUnread = this.unreadMessages.totalUnreadCount();
 
@@ -305,6 +345,8 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     ];
   });
 
+  // ─── Operational Grouping ─────────────────────────────────────────
+
   readonly filteredBookings = computed(() => {
     const bookings = this.currentBookings();
     const f = this.filter();
@@ -319,10 +361,52 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     });
   });
 
+  readonly operationalGroups = computed<OperationalGroup[]>(() => {
+    const bookings = this.filteredBookings();
+    const now = Date.now();
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    const groups = new Map<OperationalPhase, Booking[]>();
+
+    for (const b of bookings) {
+      const phase = this.classifyPhase(b, now, todayStart.getTime(), todayEnd.getTime());
+      if (!groups.has(phase)) groups.set(phase, []);
+      groups.get(phase)!.push(b);
+    }
+
+    // Sort within each group by priority
+    for (const [, list] of groups) {
+      list.sort((a, b) => this.bookingPriority(a) - this.bookingPriority(b));
+    }
+
+    const phaseOrder: { phase: OperationalPhase; label: string; icon: string }[] = [
+      { phase: 'urgent', label: 'Requiere accion', icon: 'flash-outline' },
+      { phase: 'today', label: 'Hoy', icon: 'today-outline' },
+      { phase: 'active', label: 'Viajes activos', icon: 'car-sport-outline' },
+      { phase: 'awaiting', label: 'Esperando respuesta', icon: 'hourglass-outline' },
+      { phase: 'upcoming', label: 'Proximas', icon: 'calendar-outline' },
+      { phase: 'history', label: 'Historial', icon: 'time-outline' },
+    ];
+
+    return phaseOrder
+      .filter((g) => groups.has(g.phase))
+      .map((g) => ({ ...g, bookings: groups.get(g.phase)! }));
+  });
+
+  readonly historyBookings = computed(() =>
+    this.currentBookings().filter((b) => this.isHistory(b)),
+  );
+
+  // Keep sortedBookings for backward compat (used nowhere now but safe)
   readonly sortedBookings = computed(() => {
     const bookings = this.filteredBookings();
     return [...bookings].sort((a, b) => this.bookingPriority(a) - this.bookingPriority(b));
   });
+
+  // ─── Lifecycle ────────────────────────────────────────────────────
 
   async ngOnInit(): Promise<void> {
     try {
@@ -368,6 +452,113 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     }
   }
 
+  // ─── Countdown Targets (public for template/child access) ────────
+
+  getCountdownTarget(booking: Booking): string | null {
+    switch (booking.status) {
+      case 'pending':
+      case 'pending_payment':
+        return booking.expires_at ?? null;
+      case 'confirmed':
+        return booking.start_at ?? null;
+      case 'in_progress':
+        return booking.end_at ?? null;
+      case 'pending_return':
+        return booking.auto_release_at ?? null;
+      default:
+        return null;
+    }
+  }
+
+  getCountdownLabel(booking: Booking): string | null {
+    switch (booking.status) {
+      case 'pending':
+      case 'pending_payment':
+        return 'Vence en';
+      case 'confirmed':
+        return 'Retiro en';
+      case 'in_progress':
+        return 'Devolver en';
+      case 'pending_return':
+        return 'Inspeccion en';
+      default:
+        return null;
+    }
+  }
+
+  getUnreadCount(bookingId: string): number {
+    const conversations = this.unreadMessages.unreadConversations();
+    const match = conversations.find(
+      (c) => c.type === 'booking' && c.conversationId === bookingId,
+    );
+    return match?.unreadCount ?? 0;
+  }
+
+  // ─── Phase Classification ─────────────────────────────────────────
+
+  private classifyPhase(
+    booking: Booking,
+    now: number,
+    todayStart: number,
+    todayEnd: number,
+  ): OperationalPhase {
+    const isOwner = this.role() === 'owner';
+
+    // Terminal states → history
+    if (this.isHistory(booking)) return 'history';
+
+    // Urgent: needs immediate action
+    const ui = this.bookingUi.getUiState(booking, this.role());
+    if (ui.priority === 'urgent') return 'urgent';
+
+    // Payment expiring soon (< 6h)
+    if (
+      (booking.status === 'pending' || booking.status === 'pending_payment') &&
+      booking.expires_at
+    ) {
+      const expiresIn = new Date(booking.expires_at).getTime() - now;
+      if (expiresIn > 0 && expiresIn < 6 * 60 * 60 * 1000) return 'urgent';
+    }
+
+    // Today: checkin or checkout happening today
+    const startAt = booking.start_at ? new Date(booking.start_at).getTime() : 0;
+    const endAt = booking.end_at ? new Date(booking.end_at).getTime() : 0;
+
+    if (booking.status === 'confirmed' && startAt >= todayStart && startAt <= todayEnd) {
+      return 'today';
+    }
+    if (booking.status === 'in_progress' && endAt >= todayStart && endAt <= todayEnd) {
+      return 'today';
+    }
+
+    // Active trips
+    if (booking.status === 'in_progress') return 'active';
+
+    // Awaiting: waiting on the other party
+    if (booking.status === 'pending_return' || booking.status === 'pending_review') {
+      return 'awaiting';
+    }
+    if (isOwner && booking.status === 'pending_owner_approval') return 'urgent';
+    if (!isOwner && booking.status === 'pending_owner_approval') return 'awaiting';
+
+    // Upcoming: confirmed, not today
+    if (booking.status === 'confirmed') return 'upcoming';
+
+    // Pending payment/approval
+    if (booking.status === 'pending' || booking.status === 'pending_payment') {
+      return isOwner ? 'awaiting' : 'urgent';
+    }
+
+    // Dispute states
+    if (['dispute', 'disputed', 'pending_dispute_resolution'].includes(booking.status)) {
+      return 'urgent';
+    }
+
+    return 'awaiting';
+  }
+
+  // ─── Private Helpers ──────────────────────────────────────────────
+
   private primaryActionLabel(booking: Booking): string | null {
     if (this.role() === 'owner') {
       if (booking.status === 'pending' && booking.payment_mode) return 'Revisar solicitud';
@@ -411,7 +602,6 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     if (bookings.length === 0) return null;
     const actionable = [...bookings].sort((a, b) => this.bookingPriority(a) - this.bookingPriority(b));
     const top = actionable[0];
-    // Only show focus if there's an actual action
     if (top && this.bookingPriority(top) < 4) return top;
     return null;
   }
