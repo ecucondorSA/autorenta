@@ -19,7 +19,7 @@
  * ```
  */
 
-import type { BookingStatus } from '@core/models';
+import type { BookingUiStatus } from '@core/models';
 
 // ==================== PAYMENT LABELS ====================
 
@@ -67,7 +67,7 @@ export function getPaymentPlanLabel(plan: string | null | undefined): string {
 /**
  * Booking status display labels (Spanish)
  */
-export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
+export const BOOKING_STATUS_LABELS: Record<BookingUiStatus, string> = {
   pending: 'Pendiente',
   pending_payment: 'Pendiente de pago',
   pending_deposit: 'Pendiente de depósito',
@@ -98,7 +98,7 @@ export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
 /**
  * Booking status colors (Ionic color names)
  */
-export const BOOKING_STATUS_COLORS: Record<BookingStatus, string> = {
+export const BOOKING_STATUS_COLORS: Record<BookingUiStatus, string> = {
   pending: 'warning',
   pending_payment: 'warning',
   pending_deposit: 'warning',
@@ -129,17 +129,17 @@ export const BOOKING_STATUS_COLORS: Record<BookingStatus, string> = {
 /**
  * Get display label for booking status
  */
-export function getBookingStatusLabel(status: BookingStatus | string | null | undefined): string {
+export function getBookingStatusLabel(status: BookingUiStatus | string | null | undefined): string {
   if (!status) return 'Desconocido';
-  return BOOKING_STATUS_LABELS[status as BookingStatus] ?? status;
+  return BOOKING_STATUS_LABELS[status as BookingUiStatus] ?? status;
 }
 
 /**
  * Get color for booking status (Ionic color name)
  */
-export function getBookingStatusColor(status: BookingStatus | string | null | undefined): string {
+export function getBookingStatusColor(status: BookingUiStatus | string | null | undefined): string {
   if (!status) return 'medium';
-  return BOOKING_STATUS_COLORS[status as BookingStatus] ?? 'medium';
+  return BOOKING_STATUS_COLORS[status as BookingUiStatus] ?? 'medium';
 }
 
 // ==================== DISTANCE TIER LABELS ====================

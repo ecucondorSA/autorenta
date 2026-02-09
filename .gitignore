@@ -10,7 +10,7 @@ node_modules
 /apps/web/out-tsc
 /out-tsc
 
-# Cloudflare Workers build artifacts (may contain secrets)
+# Cloudflare Workers build artifacts
 functions/workers/*/dist
 functions/workers/*/.wrangler
 
@@ -21,10 +21,10 @@ functions/workers/*/.wrangler
 apps/web/public/env.json
 apps/web/public/env.js
 
-# MCP configuration (may contain secrets)
+# MCP configuration
 .mcp.json
 
-# Supabase temp files (anywhere in the project)
+# Supabase temp files
 **/.temp/
 **/supabase/.temp/
 
@@ -33,79 +33,77 @@ apps/web/public/env.js
 .idea
 .vscode/*
 !.vscode/extensions.json
-# ONNX models (too large for GitHub)
-apps/web/src/assets/models/*.onnx
-test-results/
-e2e/artifacts/
 
-# Patchright/Playwright (workspace-specific)
+# Patchright/Playwright
 apps/web/e2e/reports/
 apps/web/e2e/test-results/
 apps/web/e2e/.browser-profile/
 apps/web/e2e/auth/
+test-results/
+playwright-report/
 
-# Package manager lockfiles (pnpm workspace uses pnpm-lock.yaml)
+# Package manager lockfiles
 **/package-lock.json
+bun.lock
 
-# Temporary files and archives
-*.log
-*.png
-!apps/web/android/app/src/main/res/**/splash.png
-!apps/web/android/app/src/main/res/drawable*/ic_launcher*.png
-!apps/web/android/app/src/main/res/mipmap*/ic_launcher*.png
-!apps/web/src/assets/images/design-assets/*.png
-*.backup
+# Android Build Artifacts (CRITICAL)
+apps/web/android/.gradle/
+apps/web/android/app/build/
+apps/web/android/capacitor-cordova-android-plugins/build/
+apps/web/android/app/src/main/assets/public/
+apps/web/android/keystore/
+*.apk
+*.aab
+
+# WhatsApp Context & Extractor Data (SENSITIVE/LARGE)
+tools/whatsapp-context/wa-crypt-tools/venv/
+tools/whatsapp-context/wa-market-analyzer/output/
+tools/whatsapp-context/extractor/bin/
+tools/whatsapp-context/extractor/log/
+tools/whatsapp-context/*.db*
+tools/whatsapp-context/*.crypt*
+tools/whatsapp-context/*.tar*
+tools/whatsapp-context/key
+tools/whatsapp-context/wa_backup_key.txt
+
+# Large Binary Files & Dumps
+*.tar
 *.tar.gz
+*.zip
+*.7z
+*.rar
+*.pma
+*.db
+*.sqlite
+*.so
+*.dll
+*.exe
+*.bin
+*.iso
+*.img
+apps/web/src/app/features/dump_analysis/
+dump_analysis/
+
+# Marketing Demos & Heavy Assets (>50MB total ignored)
+marketing/demos/*.mp4
+marketing/demos/*.gif
+marketing/demos/*.webm
+apps/video-studio/out/
+downloaded_video.mp4
+
+# Temporary files and logs
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
 scripts/temp/
 database/temp/
 docs/archived/logs/
 docs/archived/screenshots/
 .migration-backups/
-
-# Database backups (may contain sensitive data)
-logs/
-logs/**
-**/logs/db-backups/**
-
-# Temporary root-level files
-/test-*.sh
-/test-*.js
-/test-*.py
-/test-*.mjs
-/verify-*.sh
-/verify-*.js
-/check-*.js
-/check-*.mjs
-/check-*.ts
-/debug-*.js
-/debug-*.mjs
-/debug-*.html
-/apply-*.sh
-/apply-*.mjs
-/deploy-*.sh
-/capture-*.ts
-/capture-*.py
-/fix-*.ts
-/update-*.ts
-/inspect-*.ts
-/trigger-*.sh
-/monitor-*.sh
-/setup-*.sh
-/find-*.ts
-/find-*.sh
-/confirm-*.sh
-/confirm-*.mjs
-/create-test-*.mjs
-/execute-*.js
-/view-*.js
-/watch-*.sh
-/reinject-*.sh
-/sql-*.sh
-/investigate-*.sh
-/comprehensive-*.sh
-/plan-*.sh
-/generate*.sh
-/generar*.sh
+debug-artifacts/
+.wrangler/
 
 # Temporary root-level output files
 /screenshot-*.png
@@ -119,7 +117,6 @@ logs/**
 /generated-*.html
 /interior-*.html
 /debug-*.png
-/gemini-*.log
 /gemini-*.txt
 /lint-output.txt
 /typecheck-output.log
@@ -130,111 +127,57 @@ logs/**
 /playwright-execution.log
 /real-payment-*.log
 /webhook-test-*.log
+device_logs.txt
+device_verification_logs.txt
+device_webview_debug.txt
+server_log.txt
+server_direct.log
+server_debug.log
+server_retry.log
+server_nohup.log
+server_final.log
+server_wrapper.log
+server_session.log
+dev_server.log
+apps/web/dev_server.log
+apps/web/app_start.log
 
-# Temporary root-level directories
-/test-results-*/
-/claude-autorenta/
-/console_logs_backup_*.tar.gz
+# Runtime & Process files
+*.pid
+server_direct.pid
 
-# Session summaries (should be in docs/archived/)
-/*_SUMMARY*.txt
-/RESUMEN_*.txt
-/FINAL_*.txt
-/MOBILE_*.txt
-/BOOKING_*.txt
-/REVIEWS_*.txt
-/DECISION_*.txt
-/PHASE*.sh
-/review.txt
+# Caché dinámica y datos temporales
+latest_posts.json
+phish_analysis.html
+tools/sora/chrome_cookies.db
+Cookies
+Cookies-journal
 
-# TOON Format (Token-Oriented Object Notation)
-# Generated .toon files should be regenerated with tools/toon-convert.mjs
-# Exception: Keep these for version control
-**/*.toon
-!.claude/config.toon
-!docs/REFERENCE_DATA.toon
+# Notas temporales y scratchpads
+2026-*-plan.txt
+query_gemini_edu.js
+APPLY_*.sql
+MARK_MIGRATIONS_APPLIED.sql
 
-# Limpieza automática - temporal/debug files
-debug-artifacts/
-playwright-report/
-.wrangler/
-*.log
-*_output*.txt
-apps/web/tools/binance-p2p-mcp/
-
-# Local MercadoPago MCP tooling (configs/daemons)
-apps/web/tools/mercadopago-mcp/
-
-# MercadoPago P2P automation: ignore local runtime artifacts and secrets
+# Local MCP tooling
 apps/web/tools/mercadopago-mcp/**/node_modules/
 apps/web/tools/mercadopago-mcp/**/venv/
-apps/web/tools/mercadopago-mcp/**/__pycache__/
 apps/web/tools/mercadopago-mcp/**/.env*
-apps/web/tools/mercadopago-mcp/**/p2p_config*.json
-apps/web/tools/mercadopago-mcp/**/p2p_daemon*.py
 apps/web/tools/mercadopago-mcp/**/*.log
-apps/web/tools/mercadopago-mcp/**/screenshots/
-apps/web/tools/mercadopago-mcp/**/reports/
-
-# P2P automation (includes Produbanco browser automation): ignore local runtime state
 apps/web/tools/p2p-automation/**/node_modules/
 apps/web/tools/p2p-automation/**/venv/
-apps/web/tools/p2p-automation/**/__pycache__/
 apps/web/tools/p2p-automation/**/.env*
 apps/web/tools/p2p-automation/**/*.log
-apps/web/tools/p2p-automation/**/data/
-apps/web/tools/p2p-automation/**/tmp/
-apps/web/tools/p2p-automation/**/screenshots/
-
-# Large analysis files
-tripwip_base.zip
-tripwip_base_extracted/
 
 # Private Documentation
 SUPABASE_ACCESS.md
-
-# MCP Configuration (contains secrets - API keys, access tokens)
 mcp_config.json
 mcp_config.*.json
-
-# Development environment files that may contain secrets
 *.local.json
 **/config.local.json
-
-# Build outputs (all dist folders)
-**/dist/
-*.tsbuildinfo
-.turbo/
-
-# Temporary folders
-**/tmp/
-**/hdri_temp/
-
-# IDE specific
+gha-creds-*.json
+.gemini/
 .cursor/
 .agent/
 .codex/
 CODEX.md
-
-# Pitch decks (don't belong in repo)
-*.pptx
-deck-assets/
-
-# Android signing keys - NEVER commit
-apps/web/android/keystore/
-
-.gemini/
-gha-creds-*.json
-
-# Security: Never commit app data dumps
-dump_analysis/
-**/dump_analysis/
-*.pma
-Cookies
-Cookies-journal
-
-# WhatsApp sensitive/large files
-tools/whatsapp-context/key
-tools/whatsapp-context/msgstore.db.crypt14
-tools/whatsapp-context/wa_backup_key.txt
-tools/whatsapp-context/*.db*

@@ -79,7 +79,6 @@ export class CarCardComponent implements OnDestroy {
   @Input()
   set distance(value: string | undefined) {
     this._distance.set(value);
-    this.cdr.markForCheck();
   }
 
   get distance(): string | undefined {

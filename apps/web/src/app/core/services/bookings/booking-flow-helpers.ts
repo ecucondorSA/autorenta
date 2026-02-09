@@ -1,4 +1,4 @@
-import type { Booking, BookingStatus } from '@core/models';
+import type { Booking, BookingUiStatus } from '@core/models';
 
 /**
  * BookingFlowHelpers
@@ -11,10 +11,10 @@ import type { Booking, BookingStatus } from '@core/models';
  * Valida si una transición de estado es permitida
  */
 export function isValidStatusTransition(
-  from: BookingStatus,
-  to: BookingStatus,
+  from: BookingUiStatus,
+  to: BookingUiStatus,
 ): { valid: boolean; reason?: string } {
-  const validTransitions: Record<BookingStatus, BookingStatus[]> = {
+  const validTransitions: Record<BookingUiStatus, BookingUiStatus[]> = {
     pending: [
       'confirmed',
       'cancelled',
@@ -162,7 +162,7 @@ export function canPerformCheckOut(booking: Booking): {
   reason?: string;
 } {
   // Estados donde el viaje podría estar activo (check-in hecho pero no check-out)
-  const activeStates: BookingStatus[] = ['in_progress', 'confirmed', 'pending_review', 'completed'];
+  const activeStates: BookingUiStatus[] = ['in_progress', 'confirmed', 'pending_review', 'completed'];
 
   if (!activeStates.includes(booking.status)) {
     return {
@@ -232,7 +232,7 @@ export function getBookingStatusDisplay(status: BookingStatus): {
   description: string;
 } {
   const statusMap: Record<
-    BookingStatus,
+    BookingUiStatus,
     {
       label: string;
       color: 'primary' | 'success' | 'warning' | 'danger' | 'medium';
@@ -464,7 +464,7 @@ export function getBookingFlowProgress(booking: Booking): {
   totalSteps: number;
   stepLabel: string;
 } {
-  const steps: Array<{ status: BookingStatus; label: string }> = [
+  const steps: Array<{ status: BookingUiStatus; label: string }> = [
     { status: 'pending', label: 'Solicitud Enviada' },
     { status: 'confirmed', label: 'Confirmada' },
     { status: 'in_progress', label: 'En Curso' },

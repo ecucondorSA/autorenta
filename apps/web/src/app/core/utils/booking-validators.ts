@@ -31,7 +31,7 @@ export interface ValidationResult<T = unknown> {
 // ==================== VALID STATUS VALUES ====================
 
 /**
- * All valid booking statuses (must match database ENUM)
+ * All valid booking statuses (must match DB enum: public.booking_status)
  */
 export const VALID_BOOKING_STATUSES: readonly BookingStatus[] = [
   'pending',
@@ -39,18 +39,23 @@ export const VALID_BOOKING_STATUSES: readonly BookingStatus[] = [
   'pending_approval',
   'confirmed',
   'in_progress',
-  'pending_review',
+  'pending_return',
+  'returned',
+  'inspected_good',
+  'damage_reported',
   'completed',
   'cancelled',
   'cancelled_owner',
   'cancelled_renter',
-  'cancelled_system',
+  'dispute',
   'disputed',
+  'pending_dispute_resolution',
+  'pending_review',
   'resolved',
-  'expired',
+  'cancelled_system',
   'rejected',
   'no_show',
-  'pending_dispute_resolution',
+  'expired',
   'payment_validation_failed',
 ] as const;
 

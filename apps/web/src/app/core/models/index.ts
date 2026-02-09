@@ -15,10 +15,10 @@ export type FuelType = 'gasoline' | 'diesel' | 'electric' | 'electrico' | 'hybri
 export type CancelPolicy = 'flexible' | 'moderate' | 'strict';
 // Must match DB enum: public.car_status (draft, active, paused, deleted, pending)
 export type CarStatus = 'draft' | 'active' | 'paused' | 'deleted' | 'pending';
+// Must match DB enum: public.booking_status
 export type BookingStatus =
   | 'pending'
   | 'pending_payment'
-  | 'pending_owner_approval'
   | 'pending_approval'
   | 'confirmed'
   | 'in_progress'
@@ -32,12 +32,13 @@ export type BookingStatus =
   | 'cancelled_owner'
   | 'payment_validation_failed'
   | 'dispute'
-  | 'disputed'
-  | 'pending_dispute_resolution';
+  | 'disputed';
 
 // UI-only derived statuses (NOT stored in DB `booking_status`)
 export type BookingUiStatus =
   | BookingStatus
+  | 'pending_owner_approval' // legacy UI alias (use `pending_approval` in DB)
+  | 'pending_dispute_resolution' // legacy UI alias (maps to `disputed` in DB)
   | 'pending_deposit'
   | 'pending_review'
   | 'resolved'
@@ -356,7 +357,7 @@ export interface Booking {
   owner_id?: string; // Car owner ID
   start_at: string;
   end_at: string;
-  status: BookingStatus;
+  status: BookingUiStatus;
   total_amount: number;
   currency: string;
   created_at: string;

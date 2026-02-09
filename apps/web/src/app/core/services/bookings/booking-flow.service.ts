@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import type { Booking, BookingStatus } from '@core/models';
+import type { Booking, BookingStatus, BookingUiStatus } from '@core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
 import { isValidStatusTransition } from '@core/services/bookings/booking-flow-helpers';
@@ -529,7 +529,7 @@ export class BookingFlowService {
    */
   getBookingStatusInfo(booking: Booking): BookingStatusInfo {
     const status = booking.status;
-    const statusMap: Record<BookingStatus, BookingStatusInfo> = {
+    const statusMap: Record<BookingUiStatus, BookingStatusInfo> = {
       pending: {
         label: 'Pendiente',
         color: 'warning',
@@ -718,7 +718,7 @@ export class BookingFlowService {
    */
   validateStatusTransition(
     booking: Booking,
-    target: BookingStatus,
+    target: BookingUiStatus,
   ): { valid: boolean; error?: string } {
     const result = isValidStatusTransition(booking.status, target);
     return { valid: result.valid, error: result.reason };
