@@ -191,7 +191,8 @@ export class ProfileStore {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'No pudimos cargar tu perfil.';
       this.error.set(errorMessage);
-      throw err;
+      // Don't re-throw: callers should check profile() signal for null
+      return null;
     } finally {
       this.loading.set(false);
     }

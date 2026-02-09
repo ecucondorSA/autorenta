@@ -59,7 +59,8 @@ export class ProfileService {
     } = await this.supabase.auth.getUser();
 
     if (!user) {
-      throw new Error('Usuario no autenticado - getUser() retornó null');
+      this.logger.warn('getUser() retornó null — sesión expirada o no autenticado', 'ProfileService');
+      return null;
     }
 
     const { data, error } = await this.supabase

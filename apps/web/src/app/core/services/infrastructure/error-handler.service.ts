@@ -69,6 +69,9 @@ export class ErrorHandlerService {
   private readonly toast = inject(NotificationManagerService);
   private readonly router = inject(Router);
 
+  /** Timestamp of last auth redirect — prevents infinite redirect loops */
+  private lastAuthRedirectMs = 0;
+
   /**
    * ✅ FIX: Check if current route is protected (requires auth)
    */
@@ -264,18 +267,28 @@ export class ErrorHandlerService {
     // This covers Supabase SDK calls (fetch-based) that bypass Angular interceptors.
     if (this.isUnauthenticatedError(error)) {
       if (!this.isPublicRoute()) {
-        this.logger.warn(
-          'Auth error on protected route — redirecting to login',
-          'ErrorHandlerService',
-          {
-            context,
-            route: this.router.url,
-          },
-        );
-        // Navigate to login with returnUrl so user can resume after re-authentication
-        void this.router.navigate(['/auth/login'], {
-          queryParams: { returnUrl: this.router.url },
-        });
+        const now = Date.now();
+        const cooldownMs = 5_000; // 5 s between auth redirects
+        if (now - this.lastAuthRedirectMs > cooldownMs) {
+          this.lastAuthRedirectMs = now;
+          this.logger.warn(
+            'Auth error on protected route — redirecting to login',
+            'ErrorHandlerService',
+            {
+              context,
+              route: this.router.url,
+            },
+          );
+          void this.router.navigate(['/auth/login'], {
+            queryParams: { returnUrl: this.router.url },
+          });
+        } else {
+          this.logger.debug(
+            'Auth redirect suppressed (cooldown active)',
+            'ErrorHandlerService',
+            { route: this.router.url },
+          );
+        }
       }
 
       this.logger.info('Unauthenticated access blocked', 'ErrorHandlerService', {
