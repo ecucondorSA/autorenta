@@ -18,10 +18,14 @@ import type {
   MapProviderOptions,
 } from './map-provider.interface';
 
-// Google Maps types (loaded dynamically)
-type GoogleMap = google.maps.Map;
-type GoogleMarker = google.maps.marker.AdvancedMarkerElement;
-type GoogleInfoWindow = google.maps.InfoWindow;
+// Google Maps types - declared globally since loaded dynamically at runtime
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare const google: any;
+
+// Lightweight type aliases for internal use
+type GoogleMap = any;
+type GoogleMarker = any;
+type GoogleInfoWindow = any;
 
 /**
  * Wrapper around google.maps.Map to implement IMapInstance
@@ -252,9 +256,9 @@ export class GoogleMapsProviderService implements IMapProvider {
       throw new Error('Google Maps failed to load');
     }
 
-    const { Map } = (await google.maps.importLibrary('maps')) as google.maps.MapsLibrary;
+    const { Map } = (await google.maps.importLibrary('maps')) as { Map: any };
 
-    const mapOptions: google.maps.MapOptions = {
+    const mapOptions: Record<string, unknown> = {
       center: { lat: options.center.lat, lng: options.center.lng },
       zoom: options.zoom,
       mapId: options.style || 'DEMO_MAP_ID', // Use style as mapId
@@ -268,7 +272,7 @@ export class GoogleMapsProviderService implements IMapProvider {
     // Add bounds restriction if provided
     if (options.maxBounds) {
       const [sw, ne] = options.maxBounds;
-      mapOptions.restriction = {
+      mapOptions['restriction'] = {
         latLngBounds: {
           north: ne.lat,
           south: sw.lat,
