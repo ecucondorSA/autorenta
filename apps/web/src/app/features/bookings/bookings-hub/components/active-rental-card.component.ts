@@ -24,7 +24,16 @@ import {
   navigateOutline,
   mapOutline,
 } from 'ionicons/icons';
-import { buildRentalStages, getStageActionHint } from '../models/rental-stage.model';
+import {
+  buildRentalStages,
+  getStageActionHint,
+  getCountdownLabel,
+  getCountdownTarget,
+  formatCountdown,
+  getLocationLabel,
+  getSecurityPin,
+  shouldShowPin,
+} from '../models/rental-stage.model';
 import type { BookingRole } from '../bookings-hub.types';
 import { BookingStepperComponent } from './booking-stepper.component';
 import { BookingContextualActionsComponent } from './booking-contextual-actions.component';
@@ -280,61 +289,19 @@ export class ActiveRentalCardComponent {
   private readonly countdownTick = signal(0);
 
   readonly countdownLabel = computed(() => {
-    this.countdownTick(); // reactive dependency
+    this.countdownTick();
     const b = this.currentBooking();
     if (!b) return null;
-    switch (b.status) {
-      case 'pending':
-      case 'pending_payment':
-        return 'Vence en';
-      case 'confirmed':
-        return 'Retiro en';
-      case 'in_progress':
-        return 'Devolver en';
-      case 'pending_return':
-        return 'Inspección en';
-      default:
-        return null;
-    }
+    return getCountdownLabel(b.status);
   });
 
   readonly countdownDisplay = computed(() => {
-    this.countdownTick(); // reactive dependency
+    this.countdownTick();
     const b = this.currentBooking();
     if (!b) return '--:--:--';
-
-    let target: string | null = null;
-    switch (b.status) {
-      case 'pending':
-      case 'pending_payment':
-        target = b.expires_at ?? null;
-        break;
-      case 'confirmed':
-        target = b.start_at ?? null;
-        break;
-      case 'in_progress':
-        target = b.end_at ?? null;
-        break;
-      case 'pending_return':
-        target = ((b as Record<string, unknown>)['auto_release_at'] as string) ?? null;
-        break;
-    }
-
+    const target = getCountdownTarget(b as unknown as Record<string, unknown>);
     if (!target) return '--:--:--';
-
-    const diff = new Date(target).getTime() - Date.now();
-    if (diff <= 0) return '00:00:00';
-
-    const h = Math.floor(diff / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-
-    if (h > 48) {
-      const days = Math.floor(h / 24);
-      return `${days}d ${h % 24}h`;
-    }
-
-    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    return formatCountdown(target);
   });
 
   // ─── Location & Mini-Map ─────────────────────────────────────────
@@ -342,15 +309,7 @@ export class ActiveRentalCardComponent {
   readonly locationLabel = computed(() => {
     const b = this.currentBooking();
     if (!b) return 'Sin ubicación';
-    // Prefer human-readable city/province
-    const city = (b as Record<string, unknown>)['car_city'] as string | undefined;
-    const province = (b as Record<string, unknown>)['car_province'] as string | undefined;
-    if (city && province) return `${city}, ${province}`;
-    // Fallback to coords
-    if (b.pickup_location_lat && b.pickup_location_lng) {
-      return `${b.pickup_location_lat.toFixed(3)}°, ${b.pickup_location_lng.toFixed(3)}°`;
-    }
-    return 'Sin ubicación';
+    return getLocationLabel(b as unknown as Record<string, unknown>);
   });
 
   readonly miniMapUrl = computed(() => {
@@ -391,17 +350,12 @@ export class ActiveRentalCardComponent {
     return '#';
   });
 
-  readonly showPin = computed(() => {
-    const status = this.currentBooking()?.status;
-    return status === 'confirmed' || status === 'in_progress';
-  });
+  readonly showPin = computed(() => shouldShowPin(this.currentBooking()?.status ?? ''));
 
   readonly securityPin = computed(() => {
     const b = this.currentBooking();
     if (!b) return '----';
-    // Generate deterministic PIN from booking ID
-    const hash = b.id.replace(/[^0-9]/g, '').slice(0, 4);
-    return hash.padStart(4, '0');
+    return getSecurityPin(b.id);
   });
 
   // ─── Navigation ───────────────────────────────────────────────────

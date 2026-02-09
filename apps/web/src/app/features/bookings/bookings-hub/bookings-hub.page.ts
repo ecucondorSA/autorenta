@@ -26,6 +26,11 @@ import {
   hourglassOutline,
   calendarOutline,
   timeOutline,
+  locationOutline,
+  keyOutline,
+  shieldCheckmarkOutline,
+  closeCircleOutline,
+  chatbubbleEllipsesOutline,
 } from 'ionicons/icons';
 
 import { IonIcon } from '@ionic/angular/standalone';
@@ -39,6 +44,17 @@ import {
   OperationalPhase,
   OperationalGroup,
 } from './bookings-hub.types';
+import {
+  buildRentalStages,
+  getStatusBadge,
+  getStageActionHint,
+  getCountdownLabel,
+  getCountdownTarget,
+  formatCountdown,
+  getLocationLabel,
+  getSecurityPin,
+  shouldShowPin,
+} from './models/rental-stage.model';
 import { BookingsHeaderComponent } from './components/bookings-header.component';
 import { BookingsFocusCardComponent } from './components/bookings-focus-card.component';
 import { BookingsInsightsComponent } from './components/bookings-insights.component';
@@ -46,6 +62,8 @@ import { BookingsQuickActionsComponent } from './components/bookings-quick-actio
 import { BookingsListComponent } from './components/bookings-list.component';
 import { BookingsOperationalDashboardComponent } from './components/bookings-operational-dashboard.component';
 import { ActiveRentalCardComponent } from './components/active-rental-card.component';
+import { BookingStepperComponent } from './components/booking-stepper.component';
+import { BookingContextualActionsComponent } from './components/booking-contextual-actions.component';
 import { BookingContextService } from './services/booking-context.service';
 
 @Component({
@@ -62,11 +80,18 @@ import { BookingContextService } from './services/booking-context.service';
     BookingsListComponent,
     BookingsOperationalDashboardComponent,
     ActiveRentalCardComponent,
+    BookingStepperComponent,
+    BookingContextualActionsComponent,
   ],
   template: `
     <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white pb-24">
       <!-- HEADER -->
-      <app-bookings-header [role]="role()" (roleChange)="setRole($event)"></app-bookings-header>
+      <app-bookings-header
+        [role]="role()"
+        [contextTitle]="showAssetDashboard() ? 'Gestión de Renta Activa' : null"
+        [statusBadge]="assetStatusBadge()"
+        (roleChange)="setRole($event)"
+      ></app-bookings-header>
 
       <main class="px-4 pt-5 space-y-5 max-w-2xl mx-auto">
         <!-- LOADING STATE -->
@@ -112,39 +137,130 @@ import { BookingContextService } from './services/booking-context.service';
               [historyBookings]="[]"
             ></app-bookings-operational-dashboard>
           } @else {
-            <div class="flex flex-col items-center justify-center py-16 text-center">
-              <img
-                src="/assets/images/illustrations/empty-bookings.png"
-                alt="Sin reservas"
-                class="w-48 h-auto mb-5 mx-auto"
-              />
-              <h3 class="text-xl font-bold text-slate-900">Aun no tenes reservas</h3>
-              <p class="text-sm text-slate-500 mt-2 max-w-xs mx-auto">
-                Explora autos disponibles y reserva tu proximo viaje.
-              </p>
+            <!-- ═══ PROFESSIONAL EMPTY STATE ═══ -->
+            <div class="space-y-6 py-6">
+              <!-- Hero message -->
+              <div class="text-center space-y-2">
+                <div class="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+                  <ion-icon name="car-sport-outline" class="text-3xl text-emerald-500"></ion-icon>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">Empezá tu primera renta</h3>
+                <p class="text-sm text-slate-500 max-w-xs mx-auto">
+                  Reservá un auto y seguí cada etapa de tu viaje desde acá.
+                </p>
+              </div>
+
+              <!-- Stepper preview (all locked) -->
+              <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4 text-center">
+                  Así vas a gestionar tu renta
+                </p>
+                <app-booking-stepper
+                  [stages]="emptyStages()"
+                  [detailed]="true"
+                ></app-booking-stepper>
+              </div>
+
+              <!-- CTA -->
               <a
                 routerLink="/cars/list"
-                class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
+                class="flex items-center justify-center gap-2 w-full py-4 bg-emerald-500 text-white text-base font-semibold rounded-2xl active:scale-[0.98] transition-transform shadow-lg shadow-emerald-200/50"
               >
-                <ion-icon name="search-outline"></ion-icon>
+                <ion-icon name="search-outline" class="text-lg"></ion-icon>
                 Explorar autos
               </a>
+
+              <!-- Trust badges -->
+              <div class="flex gap-3">
+                <div class="flex-1 flex items-center gap-2 bg-white rounded-xl p-3 border border-slate-100">
+                  <ion-icon name="shield-checkmark-outline" class="text-emerald-500 text-lg"></ion-icon>
+                  <span class="text-xs font-medium text-slate-600">100% Asegurado</span>
+                </div>
+                <div class="flex-1 flex items-center gap-2 bg-white rounded-xl p-3 border border-slate-100">
+                  <ion-icon name="close-circle-outline" class="text-emerald-500 text-lg"></ion-icon>
+                  <span class="text-xs font-medium text-slate-600">Cancelación gratis</span>
+                </div>
+                <div class="flex-1 flex items-center gap-2 bg-white rounded-xl p-3 border border-slate-100">
+                  <ion-icon name="chatbubble-ellipses-outline" class="text-emerald-500 text-lg"></ion-icon>
+                  <span class="text-xs font-medium text-slate-600">Soporte 24/7</span>
+                </div>
+              </div>
             </div>
           }
         }
 
         <!-- CONTENT: OPERATIONAL COMMAND CENTER -->
         @else {
-          @if (showAssetDashboard()) {
-            <!-- ═══ ASSET DASHBOARD MODE: Dominant card + compressed actions ═══ -->
-            <app-active-rental-card
-              [bookings]="activeRentals()"
-              [role]="role()"
-              [contextMode]="contextMode()"
-              [expanded]="true"
-            ></app-active-rental-card>
+          @if (showAssetDashboard() && assetBooking()) {
+            <!-- ═══ ASSET MANAGEMENT MODE (mockup layout) ═══ -->
 
-            <!-- Quick actions remain accessible -->
+            <!-- STEPPER: Standalone, prominent -->
+            <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+              <app-booking-stepper
+                [stages]="assetStages()"
+                [detailed]="true"
+              ></app-booking-stepper>
+            </div>
+
+            <!-- PRÓXIMO PASO -->
+            <div class="space-y-3">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1">
+                Próximo paso
+              </p>
+              <app-booking-contextual-actions
+                [booking]="assetBooking()!"
+                [role]="role()"
+              ></app-booking-contextual-actions>
+            </div>
+
+            <!-- DETALLES RÁPIDOS -->
+            <div class="space-y-3">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1">
+                Detalles rápidos
+              </p>
+              <div class="flex gap-2">
+                <!-- Countdown -->
+                @if (assetCountdownLabel()) {
+                  <div class="flex-1 bg-white rounded-2xl p-3.5 border border-slate-100 shadow-sm">
+                    <div class="flex items-center gap-1.5 mb-1.5">
+                      <ion-icon name="time-outline" class="text-sm text-slate-400"></ion-icon>
+                      <span class="text-[10px] font-bold text-slate-400 uppercase">
+                        {{ assetCountdownLabel() }}
+                      </span>
+                    </div>
+                    <p class="text-lg font-bold text-slate-900 tabular-nums font-mono tracking-wide">
+                      {{ assetCountdownDisplay() }}
+                    </p>
+                  </div>
+                }
+
+                <!-- Location -->
+                <div class="flex-1 bg-white rounded-2xl p-3.5 border border-slate-100 shadow-sm">
+                  <div class="flex items-center gap-1.5 mb-1.5">
+                    <ion-icon name="location-outline" class="text-sm text-slate-400"></ion-icon>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Ubicación</span>
+                  </div>
+                  <p class="text-sm font-medium text-slate-700 truncate">
+                    {{ assetLocationLabel() }}
+                  </p>
+                </div>
+
+                <!-- PIN -->
+                @if (assetShowPin()) {
+                  <div class="bg-white rounded-2xl p-3.5 border border-slate-100 shadow-sm min-w-[80px]">
+                    <div class="flex items-center gap-1.5 mb-1.5">
+                      <ion-icon name="key-outline" class="text-sm text-slate-400"></ion-icon>
+                      <span class="text-[10px] font-bold text-slate-400 uppercase">PIN</span>
+                    </div>
+                    <p class="text-sm font-bold text-slate-900 tracking-widest font-mono">
+                      {{ assetSecurityPin() }}
+                    </p>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Quick actions -->
             <app-bookings-quick-actions [actions]="quickActions()"></app-bookings-quick-actions>
           } @else {
             <!-- ═══ STANDARD HUB MODE ═══ -->
@@ -239,6 +355,67 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     return mode === 'active-trip' || mode === 'pre-trip';
   });
 
+  /** The primary booking for asset management mode */
+  readonly assetBooking = computed(() => {
+    const rentals = this.activeRentals();
+    return rentals.length > 0 ? rentals[0] : null;
+  });
+
+  readonly assetStages = computed(() =>
+    buildRentalStages(this.assetBooking()?.status ?? 'pending'),
+  );
+
+  readonly assetStatusBadge = computed(() => {
+    const b = this.assetBooking();
+    if (!this.showAssetDashboard() || !b) return null;
+    return getStatusBadge(b.status);
+  });
+
+  readonly assetActionHint = computed(() => {
+    const b = this.assetBooking();
+    if (!b) return '';
+    const role = this.role() === 'unknown' ? 'renter' : this.role();
+    return getStageActionHint(b.status, role as 'renter' | 'owner');
+  });
+
+  // ─── Asset Micro-Data (countdown, location, PIN) ────────────────
+
+  private readonly countdownTick = signal(0);
+  private countdownInterval: ReturnType<typeof setInterval> | null = null;
+
+  readonly assetCountdownLabel = computed(() => {
+    this.countdownTick();
+    const b = this.assetBooking();
+    if (!b) return null;
+    return getCountdownLabel(b.status);
+  });
+
+  readonly assetCountdownDisplay = computed(() => {
+    this.countdownTick();
+    const b = this.assetBooking();
+    if (!b) return '--:--:--';
+    const target = getCountdownTarget(b as unknown as Record<string, unknown>);
+    if (!target) return '--:--:--';
+    return formatCountdown(target);
+  });
+
+  readonly assetLocationLabel = computed(() => {
+    const b = this.assetBooking();
+    if (!b) return 'Sin ubicación';
+    return getLocationLabel(b as unknown as Record<string, unknown>);
+  });
+
+  readonly assetShowPin = computed(() => shouldShowPin(this.assetBooking()?.status ?? ''));
+
+  readonly assetSecurityPin = computed(() => {
+    const b = this.assetBooking();
+    if (!b) return '----';
+    return getSecurityPin(b.id);
+  });
+
+  /** Empty stepper preview (all stages locked) */
+  readonly emptyStages = computed(() => buildRentalStages(''));
+
   constructor() {
     addIcons({
       carSportOutline,
@@ -250,6 +427,11 @@ export class BookingsHubPage implements OnInit, OnDestroy {
       hourglassOutline,
       calendarOutline,
       timeOutline,
+      locationOutline,
+      keyOutline,
+      shieldCheckmarkOutline,
+      closeCircleOutline,
+      chatbubbleEllipsesOutline,
     });
   }
 
@@ -517,6 +699,9 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   // ─── Lifecycle ────────────────────────────────────────────────────
 
   async ngOnInit(): Promise<void> {
+    // Countdown tick for asset dashboard mode
+    this.countdownInterval = setInterval(() => this.countdownTick.update((v) => v + 1), 1000);
+
     try {
       await Promise.all([this.store.loadMyBookings(), this.store.loadOwnerBookings()]);
     } catch {
@@ -537,6 +722,7 @@ export class BookingsHubPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.store.unsubscribeAll();
+    if (this.countdownInterval) clearInterval(this.countdownInterval);
   }
 
   setRole(role: BookingRole): void {

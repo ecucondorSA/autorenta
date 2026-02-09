@@ -141,6 +141,106 @@ export function buildRentalStages(bookingStatus: string): RentalStage[] {
 /**
  * Get a human-readable action hint for the current stage.
  */
+// ─── Status Badge ──────────────────────────────────────────────────
+
+export interface StatusBadge {
+  label: string;
+  color: string;
+}
+
+export function getStatusBadge(status: string): StatusBadge {
+  switch (status) {
+    case 'pending':
+    case 'pending_payment':
+      return { label: 'Pendiente', color: 'bg-amber-100 text-amber-700' };
+    case 'pending_owner_approval':
+      return { label: 'Esperando Aprobación', color: 'bg-amber-100 text-amber-700' };
+    case 'confirmed':
+      return { label: 'Confirmado', color: 'bg-blue-100 text-blue-700' };
+    case 'in_progress':
+      return { label: 'En Curso', color: 'bg-emerald-100 text-emerald-700' };
+    case 'pending_return':
+    case 'pending_review':
+      return { label: 'Devolución', color: 'bg-purple-100 text-purple-700' };
+    case 'completed':
+      return { label: 'Completado', color: 'bg-slate-100 text-slate-700' };
+    default:
+      return { label: 'Activo', color: 'bg-slate-100 text-slate-700' };
+  }
+}
+
+// ─── Micro-Data Helpers (countdown, location, PIN) ─────────────────
+
+export function getCountdownLabel(status: string): string | null {
+  switch (status) {
+    case 'pending':
+    case 'pending_payment':
+      return 'Vence en';
+    case 'confirmed':
+      return 'Retiro en';
+    case 'in_progress':
+      return 'Devolver en';
+    case 'pending_return':
+      return 'Inspección en';
+    default:
+      return null;
+  }
+}
+
+export function getCountdownTarget(booking: Record<string, unknown>): string | null {
+  const status = (booking['status'] as string) ?? '';
+  switch (status) {
+    case 'pending':
+    case 'pending_payment':
+      return (booking['expires_at'] as string) ?? null;
+    case 'confirmed':
+      return (booking['start_at'] as string) ?? null;
+    case 'in_progress':
+      return (booking['end_at'] as string) ?? null;
+    case 'pending_return':
+      return (booking['auto_release_at'] as string) ?? null;
+    default:
+      return null;
+  }
+}
+
+export function formatCountdown(targetDate: string): string {
+  const diff = new Date(targetDate).getTime() - Date.now();
+  if (diff <= 0) return '00:00:00';
+
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+
+  if (h > 48) {
+    const days = Math.floor(h / 24);
+    return `${days}d ${h % 24}h`;
+  }
+
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+export function getLocationLabel(booking: Record<string, unknown>): string {
+  const city = booking['car_city'] as string | undefined;
+  const province = booking['car_province'] as string | undefined;
+  if (city && province) return `${city}, ${province}`;
+  const lat = booking['pickup_location_lat'] as number | undefined;
+  const lng = booking['pickup_location_lng'] as number | undefined;
+  if (lat && lng) return `${lat.toFixed(3)}°, ${lng.toFixed(3)}°`;
+  return 'Sin ubicación';
+}
+
+export function getSecurityPin(bookingId: string): string {
+  const hash = bookingId.replace(/[^0-9]/g, '').slice(0, 4);
+  return hash.padStart(4, '0');
+}
+
+export function shouldShowPin(status: string): boolean {
+  return status === 'confirmed' || status === 'in_progress';
+}
+
+// ─── Stage Action Hint ─────────────────────────────────────────────
+
 export function getStageActionHint(bookingStatus: string, role: 'renter' | 'owner'): string {
   switch (bookingStatus) {
     case 'pending':
