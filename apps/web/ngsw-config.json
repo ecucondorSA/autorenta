@@ -2,9 +2,9 @@
   "$schema": "./node_modules/@angular/service-worker/config/schema.json",
   "index": "/index.html",
   "appData": {
-    "version": "2.1.0",
+    "version": "2.2.0",
     "name": "Autorentar PWA",
-    "description": "Progressive Web App with advanced caching strategies"
+    "description": "Progressive Web App — fixed Supabase project ID and RPC caching"
   },
   "assetGroups": [
     {
@@ -78,12 +78,24 @@
   ],
   "dataGroups": [
     {
+      "name": "api-supabase-rpc",
+      "urls": [
+        "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/rpc/*"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 20,
+        "maxAge": "1m",
+        "timeout": "10s"
+      }
+    },
+    {
       "name": "api-supabase-fresh",
       "urls": [
-        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/bookings*",
-        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/payments*",
-        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/wallet_transactions*",
-        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/user_wallets*"
+        "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/bookings*",
+        "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/payments*",
+        "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/wallet_transactions*",
+        "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/user_wallets*"
       ],
       "cacheConfig": {
         "strategy": "freshness",
@@ -95,9 +107,9 @@
     {
       "name": "api-supabase-performance",
       "urls": [
-        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/cars*",
-        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/car_photos*",
-        "https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/profiles*"
+        "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/cars*",
+        "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/car_photos*",
+        "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/profiles*"
       ],
       "cacheConfig": {
         "strategy": "performance",
@@ -148,10 +160,8 @@
     "!/**/*__*",
     "!/**/*__*/**",
     "!/env.js",
-    "!https://pisqjmoklivzpwufhscx.supabase.co/**",
-    "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/wallet_*",
-    "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/payment_*",
-    "!https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/rpc/booking_*",
+    "!https://aceacpaockyxgogxsfyc.supabase.co/**",
+    "!https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/rpc/**",
     "!https://api.mapbox.com/**",
     "!https://events.mapbox.com/**",
     "!https://connect.facebook.net/**",
