@@ -40,7 +40,7 @@ export class MetaService {
     keywords: 'alquiler autos, rent a car, argentina, uruguay, autorentar',
     author: 'AutoRenta',
     ogType: 'website',
-    ogImage: 'https://autorentar.com/assets/images/autorentar-logo.png',
+    ogImage: 'https://autorentar.com/assets/og-image.jpg',
     twitterCard: 'summary_large_image',
   };
 
@@ -309,7 +309,7 @@ export class MetaService {
       name: car.title,
       description: car.description,
       image:
-        car.main_photo_url || 'https://autorentar.com/assets/images/autorentar-logo.png',
+        car.main_photo_url || 'https://autorentar.com/assets/og-image.jpg',
       brand: {
         '@type': 'Brand',
         name: car.brand || 'AutoRenta',

@@ -92,7 +92,7 @@ export class AssetPreloaderService {
    * Preload critical images using link preload
    */
   private preloadCriticalImages(): Promise<void> {
-    const criticalImages = ['/assets/images/autorentar-logo.png'];
+    const criticalImages = ['/assets/images/autorentar-logo.png', '/assets/og-image.jpg'];
 
     const promises = criticalImages.map((src) => {
       return new Promise<void>((resolve) => {

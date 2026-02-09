@@ -30,8 +30,8 @@ export class SeoSchemaService {
       '@type': 'Organization',
       name: 'Autorentar',
       alternateName: 'Autorentar Alquiler entre Personas',
-      url: 'https://autorentar.com.ar',
-      logo: 'https://autorentar.com.ar/assets/logo/logo.svg',
+      url: 'https://autorentar.com',
+      logo: 'https://autorentar.com/assets/images/autorentar-logo.png',
       description:
         'Plataforma de alquiler de autos peer-to-peer en Argentina. Conectamos propietarios con conductores verificados.',
       foundingDate: '2024',
@@ -68,10 +68,10 @@ export class SeoSchemaService {
       name: 'Autorentar',
       description:
         'Alquiler de autos entre personas en Argentina. Autos verificados, pagos seguros con MercadoPago, seguro incluido.',
-      url: 'https://autorentar.com.ar',
+      url: 'https://autorentar.com',
       telephone: '+54-9-11-1234-5678',
       priceRange: '$$ - $$$',
-      image: 'https://autorentar.com.ar/assets/og-image.jpg',
+      image: 'https://autorentar.com/assets/og-image.jpg',
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'Buenos Aires',
@@ -185,7 +185,7 @@ export class SeoSchemaService {
           .toISOString()
           .split('T')[0],
         availability: 'https://schema.org/InStock',
-        url: `https://autorentar.com.ar/cars/${car.id}`,
+        url: `https://autorentar.com/cars/${car.id}`,
         seller: {
           '@type': 'Organization',
           name: 'Autorentar',
@@ -228,12 +228,12 @@ export class SeoSchemaService {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: 'Autorentar',
-      url: 'https://autorentar.com.ar',
+      url: 'https://autorentar.com',
       potentialAction: {
         '@type': 'SearchAction',
         target: {
           '@type': 'EntryPoint',
-          urlTemplate: 'https://autorentar.com.ar/cars/list?q={search_term_string}',
+          urlTemplate: 'https://autorentar.com/cars/list?q={search_term_string}',
         },
         'query-input': 'required name=search_term_string',
       },
@@ -286,8 +286,8 @@ export class SeoSchemaService {
     this.setWebSiteSchema();
     this.setFAQSchema(faqs);
     this.setBreadcrumbSchema([
-      { name: 'Inicio', url: 'https://autorentar.com.ar' },
-      { name: 'Alquiler de Autos', url: 'https://autorentar.com.ar/cars' },
+      { name: 'Inicio', url: 'https://autorentar.com' },
+      { name: 'Alquiler de Autos', url: 'https://autorentar.com/cars' },
     ]);
   }
 }

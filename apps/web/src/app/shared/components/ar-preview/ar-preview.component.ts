@@ -111,7 +111,7 @@ import '@google/model-viewer';
 })
 export class ARPreviewComponent {
   @Input() carTitle = '';
-  @Input() modelUrl = '/assets/3d-models/generic-car.glb'; // Default placeholder
+  @Input() modelUrl = ''; // Set via input when 3D model is available
   @Input() posterUrl = '/assets/images/car-placeholder.svg';
 
   @Output() previewClosed = new EventEmitter<void>();

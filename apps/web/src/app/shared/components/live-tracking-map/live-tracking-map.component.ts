@@ -65,7 +65,7 @@ interface MarkerData {
           @for (session of trackingSessions; track session) {
             <div class="tracking-user">
               <img
-                [src]="session.user_photo || 'assets/default-avatar.png'"
+                [src]="session.user_photo || '/assets/images/default-avatar.png'"
                 [alt]="session.user_name"
                 class="user-avatar"
               />
