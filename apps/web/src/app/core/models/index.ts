@@ -30,22 +30,22 @@ export type BookingStatus =
   | 'cancelled'
   | 'cancelled_renter'
   | 'cancelled_owner'
+  | 'cancelled_system'
   | 'payment_validation_failed'
   | 'dispute'
-  | 'disputed';
+  | 'disputed'
+  | 'pending_dispute_resolution'
+  | 'pending_review'
+  | 'resolved'
+  | 'rejected'
+  | 'no_show'
+  | 'expired';
 
 // UI-only derived statuses (NOT stored in DB `booking_status`)
 export type BookingUiStatus =
   | BookingStatus
   | 'pending_owner_approval' // legacy UI alias (use `pending_approval` in DB)
-  | 'pending_dispute_resolution' // legacy UI alias (maps to `disputed` in DB)
-  | 'pending_deposit'
-  | 'pending_review'
-  | 'resolved'
-  | 'cancelled_system'
-  | 'rejected'
-  | 'no_show'
-  | 'expired';
+  | 'pending_deposit';
 export type DocumentKind =
   | 'gov_id_front'
   | 'gov_id_back'
