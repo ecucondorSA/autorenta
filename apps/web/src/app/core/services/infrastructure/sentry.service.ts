@@ -338,6 +338,10 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
       // Common benign errors
       'Loading chunk',
       'ChunkLoadError',
+      // Noisy infra/hosting errors (usually caused by SPA fallback serving HTML for JS)
+      'Failed to load module script',
+      'Expected a JavaScript-or-Wasm module script',
+      'Strict MIME type checking is enforced for module scripts',
       'Script error',
       'style is not done loading',
     ],

@@ -13,6 +13,8 @@ import { Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 
 // Core services
+import { isPermissionError, isSupabaseError } from '@core/errors';
+import { AuthService } from '@core/services/auth/auth.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { VehiclePosition } from '@core/services/ai/photo-quality.service';
@@ -271,6 +273,7 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
   readonly photoService = inject(PublishCarPhotoService);
   private readonly locationService = inject(PublishCarLocationService);
   private readonly carsService = inject(CarsService);
+  private readonly authService = inject(AuthService);
   private readonly notifications = inject(NotificationManagerService);
   private readonly router = inject(Router);
   private readonly verificationState = inject(VerificationStateService);
@@ -579,6 +582,12 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
     this.publishingMessage.set('Validando información...');
 
     try {
+      // Auth-first: don't attempt any write if we don't have a valid session.
+      const session = await this.authService.ensureSession();
+      if (!session?.user?.id) {
+        throw new Error('Usuario no autenticado');
+      }
+
       // Step 1: Prepare and validate form data
       const formData = this.formService.getFormData();
 
@@ -649,7 +658,19 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
 
       // Session expired or not available: send user back to login and keep return URL.
       // (AuthGuard should normally prevent this, but publish is a critical action.)
-      if (error instanceof Error && error.message.toLowerCase().includes('usuario no autenticado')) {
+      const errMsg =
+        error instanceof Error
+          ? error.message
+          : isSupabaseError(error)
+            ? String(error.message || '')
+            : '';
+
+      if (
+        errMsg.toLowerCase().includes('usuario no autenticado') ||
+        errMsg.toLowerCase().includes('not authenticated') ||
+        errMsg.toLowerCase().includes('jwt') ||
+        (isSupabaseError(error) && isPermissionError(error))
+      ) {
         await this.router.navigate(['/auth/login'], { queryParams: { returnUrl: '/cars/publish' } });
       }
     } finally {
@@ -661,6 +682,27 @@ export class PublishConversationalPage implements OnInit, OnDestroy {
    * Parse publish errors for user-friendly messages
    */
   private parsePublishError(error: unknown): string {
+    // Supabase/PostgREST errors are often plain objects (not `Error` instances).
+    // Normalize them first to avoid showing a generic "Error inesperado".
+    if (isSupabaseError(error) && !(error instanceof Error)) {
+      const msg = String(error.message || '');
+      const lower = msg.toLowerCase();
+
+      if (msg.includes('PGRST204') || lower.includes('schema cache')) {
+        return 'Error de sincronización. Por favor recargá la página e intentá de nuevo.';
+      }
+
+      if (isPermissionError(error) || lower.includes('unauthorized') || lower.includes('jwt')) {
+        return 'Tu sesión expiró o no tenés permisos para publicar. Iniciá sesión de nuevo.';
+      }
+
+      if (lower.includes('failed to fetch') || lower.includes('network') || lower.includes('fetch')) {
+        return 'Error de conexión. Verificá tu internet e intentá de nuevo.';
+      }
+
+      return msg || 'Error inesperado. Por favor intentá de nuevo.';
+    }
+
     if (error instanceof Error) {
       const msg = error.message;
 

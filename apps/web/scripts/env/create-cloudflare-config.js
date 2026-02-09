@@ -29,13 +29,24 @@ const redirectsContent = `# Cloudflare Pages - SPA Routing
 /android  https://play.google.com/apps/test/app.autorentar/70    302
 /descarga https://play.google.com/apps/test/app.autorentar/70    302
 
-# Prevent SPA fallback from serving HTML for missing static assets.
-# If a hashed JS/CSS chunk is missing (stale SW/cache), rewriting it to /index.html (200)
-# triggers "Failed to load module script" MIME errors and can break critical flows like publishing.
-/*.js     /offline.html 404
-/*.css    /offline.html 404
-/*.map    /offline.html 404
-/assets/* /offline.html 404
+# Fix broken relative asset loads when entering the SPA from a nested route.
+#
+# Cloudflare can emit `Link: <chunk-XYZ.js>; rel=modulepreload` headers based on the HTML.
+# When the browser resolves that relative URL under `/cars/publish`, it requests `/cars/chunk-XYZ.js`.
+# Those files only exist at the site root, so without this redirect Cloudflare would serve the SPA
+# fallback HTML (text/html) and Chrome will throw strict MIME errors for module scripts.
+#
+# NOTE: Cloudflare redirects support only 301/302/303/307/308 and 200 rewrites.
+# We keep this as a redirect to the canonical root asset.
+/:section/chunk-* /chunk-:splat 302
+/:section/main-* /main-:splat 302
+/:section/polyfills-* /polyfills-:splat 302
+/:section/styles-* /styles-:splat 302
+
+/:a/:b/chunk-* /chunk-:splat 302
+/:a/:b/main-* /main-:splat 302
+/:a/:b/polyfills-* /polyfills-:splat 302
+/:a/:b/styles-* /styles-:splat 302
 
 # Rutas específicas de la aplicación
 /auth/* /index.html 200
