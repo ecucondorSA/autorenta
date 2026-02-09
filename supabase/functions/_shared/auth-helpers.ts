@@ -95,7 +95,6 @@ export async function requireAuth(req: Request): Promise<AuthResult> {
       JSON.stringify({
         error: 'Invalid or expired token',
         code: 'AUTH_INVALID',
-        details: error?.message || 'User not found',
       }),
       {
         status: 401,
@@ -124,14 +123,25 @@ export async function requireAuth(req: Request): Promise<AuthResult> {
  * ```
  */
 export async function requireAdmin(userId: string, supabase: SupabaseClient): Promise<void> {
-  const { data: adminUser, error } = await supabase
-    .from('admin_users')
-    .select('user_id, role, is_active')
-    .eq('user_id', userId)
-    .eq('is_active', true)
-    .single();
+  const { data: isAdmin, error } = await supabase.schema('public').rpc<boolean>('is_admin', {
+    check_user_id: userId,
+  });
 
-  if (error || !adminUser) {
+  if (error) {
+    console.error(`[auth-helpers] Admin check failed for user ${userId}:`, error);
+    throw new Response(
+      JSON.stringify({
+        error: 'Could not verify admin access',
+        code: 'ADMIN_CHECK_FAILED',
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  if (!isAdmin) {
     console.warn(`[auth-helpers] User ${userId} attempted admin operation without role`);
     throw new Response(
       JSON.stringify({
@@ -145,7 +155,7 @@ export async function requireAdmin(userId: string, supabase: SupabaseClient): Pr
     );
   }
 
-  console.log(`[auth-helpers] Admin user verified: ${adminUser.role}`);
+  console.log(`[auth-helpers] Admin user verified: ${userId}`);
 }
 
 /**
@@ -183,14 +193,11 @@ export async function requireOwnership(
 ): Promise<void> {
   // Check if user is admin (admins bypass ownership checks)
   try {
-    const { data: adminUser } = await supabase
-      .from('admin_users')
-      .select('user_id')
-      .eq('user_id', userId)
-      .eq('is_active', true)
-      .single();
+    const { data: isAdmin, error } = await supabase.schema('public').rpc<boolean>('is_admin', {
+      check_user_id: userId,
+    });
 
-    if (adminUser) {
+    if (!error && isAdmin) {
       console.log(`[auth-helpers] Admin ${userId} bypassing ownership check for ${tableName}/${resourceId}`);
       return; // Admins can access any resource
     }
