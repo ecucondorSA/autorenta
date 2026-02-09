@@ -2,9 +2,9 @@
   "$schema": "./node_modules/@angular/service-worker/config/schema.json",
   "index": "/index.html",
   "appData": {
-    "version": "2.2.0",
+    "version": "2.3.0",
     "name": "Autorentar PWA",
-    "description": "Progressive Web App — fixed Supabase project ID and RPC caching"
+    "description": "PWA — removed SPA URLs from assetGroups to prevent RPC interception"
   },
   "assetGroups": [
     {
@@ -23,13 +23,7 @@
           "/*.js",
           "!/env.js"
         ],
-        "urls": [
-          "/cars",
-          "/cars/compare",
-          "/wallet",
-          "/bookings",
-          "/profile"
-        ]
+        "urls": []
       }
     },
     {
@@ -78,20 +72,9 @@
   ],
   "dataGroups": [
     {
-      "name": "api-supabase-rpc",
-      "urls": [
-        "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/rpc/*"
-      ],
-      "cacheConfig": {
-        "strategy": "freshness",
-        "maxSize": 20,
-        "maxAge": "1m",
-        "timeout": "10s"
-      }
-    },
-    {
       "name": "api-supabase-fresh",
       "urls": [
+        "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/rpc/*",
         "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/bookings*",
         "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/payments*",
         "https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/wallet_transactions*",
@@ -161,7 +144,6 @@
     "!/**/*__*/**",
     "!/env.js",
     "!https://aceacpaockyxgogxsfyc.supabase.co/**",
-    "!https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/rpc/**",
     "!https://api.mapbox.com/**",
     "!https://events.mapbox.com/**",
     "!https://connect.facebook.net/**",

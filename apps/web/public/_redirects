@@ -1,37 +1,35 @@
-# Cloudflare Pages - _redirects
+# Cloudflare Pages - _redirects (Single source of truth)
 # https://developers.cloudflare.com/pages/platform/redirects
-# Este archivo se copia automáticamente al build y se sobrescribe por create-cloudflare-config.js
+#
+# IMPORTANT: NO catch-all `/* /index.html 200` allowed here.
+# Missing static assets (.js, .css, .png) MUST return 404, not index.html.
+# Otherwise the Service Worker receives HTML instead of JS and enters
+# an unrecoverable zombie state (MIME type text/html errors).
+#
+# 404.html handles all unknown routes with a real 404 status.
 
-# App download redirects (short URLs for social media)
+# App download redirects
 /app      https://play.google.com/apps/test/app.autorentar/70    302
 /android  https://play.google.com/apps/test/app.autorentar/70    302
 /descarga https://play.google.com/apps/test/app.autorentar/70    302
 
-# Fix broken relative asset loads when entering the SPA from a nested route.
-#
-# Cloudflare can emit `Link: <chunk-XYZ.js>; rel=modulepreload` headers based on the HTML.
-# When the browser resolves that relative URL under `/cars/publish`, it requests `/cars/chunk-XYZ.js`.
-# Those files only exist at the site root, so without this redirect Cloudflare would serve the SPA
-# fallback HTML (text/html) and Chrome will throw strict MIME errors for module scripts.
-#
-# NOTE: Cloudflare redirects support only 301/302/303/307/308 and 200 rewrites.
-# We keep this as a redirect to the canonical root asset.
-/:section/chunk-* /chunk-:splat 302
-/:section/main-* /main-:splat 302
+# Fix relative asset loads from nested SPA routes.
+# Browser resolves `/cars/chunk-XYZ.js` instead of `/chunk-XYZ.js`.
+/:section/chunk-*     /chunk-:splat     302
+/:section/main-*      /main-:splat      302
 /:section/polyfills-* /polyfills-:splat 302
-/:section/styles-* /styles-:splat 302
+/:section/styles-*    /styles-:splat    302
+/:a/:b/chunk-*        /chunk-:splat     302
+/:a/:b/main-*         /main-:splat      302
+/:a/:b/polyfills-*    /polyfills-:splat 302
+/:a/:b/styles-*       /styles-:splat    302
 
-/:a/:b/chunk-* /chunk-:splat 302
-/:a/:b/main-* /main-:splat 302
-/:a/:b/polyfills-* /polyfills-:splat 302
-/:a/:b/styles-* /styles-:splat 302
+# ──────────────────────────────────────────────────
+# SPA routes — explicit patterns from app.routes.ts
+# NOTE: /path/* does NOT match /path alone in Cloudflare.
+# ──────────────────────────────────────────────────
 
-# SPA route fallbacks — explicit patterns instead of catch-all.
-# WHY: A catch-all `/* /index.html 200` returns HTML (200) for missing .js chunks,
-# which turns the Service Worker into a zombie. With explicit routes, missing static
-# assets correctly get a 404 from Cloudflare Pages, breaking the stale-SW loop.
-
-# Core app routes
+# Core pages (no children)
 /rentarfast       /index.html   200
 /onboarding       /index.html   200
 /become-renter    /index.html   200
@@ -48,13 +46,14 @@
 /beacon-test      /index.html   200
 
 # Auth & identity
-/auth/*           /index.html   200
-/oauth/*          /index.html   200
-/verification/*   /index.html   200
-/contact-verification/* /index.html 200
+/auth/*                 /index.html   200
+/oauth/*                /index.html   200
+/verification           /index.html   200
+/verification/*         /index.html   200
+/contact-verification   /index.html   200
+/contact-verification/* /index.html   200
 
-# Domain features (nested routes)
-# NOTE: /path/* matches /path/foo but NOT /path alone. Both are needed.
+# Domain features (root + nested)
 /cars              /index.html   200
 /cars/*            /index.html   200
 /bookings          /index.html   200
@@ -99,6 +98,8 @@
 /sitemap          /index.html   200
 /company-data     /index.html   200
 
-# SEO & error pages
+# SEO landing pages
 /alquiler/*       /index.html   200
+
+# Error pages
 /error/*          /index.html   200
