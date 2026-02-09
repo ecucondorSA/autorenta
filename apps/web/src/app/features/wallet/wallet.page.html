@@ -1,21 +1,39 @@
 <div class="wallet-page min-h-screen bg-surface-base pb-20 sm:pb-0 pt-[env(safe-area-inset-top)]">
   <!-- Compact Header for full-bleed mode -->
-  <header class="sticky top-0 z-40 bg-surface-base/95 backdrop-blur-sm border-b border-border-default/50">
+  <header
+    class="sticky top-0 z-40 bg-surface-base/95 backdrop-blur-sm border-b border-border-default/50"
+  >
     <div class="flex items-center justify-between px-4 py-2">
       <a routerLink="/" class="flex items-center">
         <img src="/assets/images/autorentar-logo.svg" alt="AutoRentar" class="h-7" />
       </a>
       <div class="flex items-center gap-2">
-        <a routerLink="/notifications" class="p-2 rounded-full hover:bg-surface-secondary" aria-label="Notificaciones">
-          <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+        <a
+          routerLink="/notifications"
+          class="p-2 rounded-full hover:bg-surface-secondary"
+          aria-label="Notificaciones"
+        >
+          <svg
+            class="w-5 h-5 text-text-secondary"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+            />
           </svg>
         </a>
       </div>
     </div>
   </header>
 
-  <div class="container-page px-3 sm:px-4 md:px-container space-y-6 sm:space-y-8 md:space-y-10 pt-0 pb-4 sm:py-6">
+  <div
+    class="container-page px-3 sm:px-4 md:px-container space-y-6 sm:space-y-8 md:space-y-10 pt-0 pb-4 sm:py-6"
+  >
     <!-- Error Alert -->
     @if (walletError(); as error) {
       <div
@@ -74,11 +92,15 @@
                   stroke-linejoin="round"
                 />
               </svg>
-              <p class="text-[10px] sm:text-xs uppercase tracking-widest text-text-secondary font-semibold">
+              <p
+                class="text-[10px] sm:text-xs uppercase tracking-widest text-text-secondary font-semibold"
+              >
                 Saldo Cash
               </p>
             </div>
-            <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-text-primary">Tu Billetera</h2>
+            <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-text-primary">
+              Tu Billetera
+            </h2>
           </div>
         </div>
         <!-- Action buttons - full width on mobile -->
@@ -114,7 +136,9 @@
           class="col-span-2 sm:col-span-1 glass-card-elevated bg-gradient-to-br from-cta-default/20 to-cta-default/5 rounded-2xl p-4 sm:p-5 ring-2 ring-cta-default/30"
           data-tour-step="wallet-balance"
         >
-          <p class="text-xs uppercase tracking-wider text-text-primary font-bold mb-1 sm:mb-2 opacity-80">
+          <p
+            class="text-xs uppercase tracking-wider text-text-primary font-bold mb-1 sm:mb-2 opacity-80"
+          >
             Disponible
           </p>
           <p class="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-primary tabular-nums">
@@ -129,10 +153,14 @@
           class="glass-card bg-gradient-to-br from-surface-secondary to-surface-base rounded-2xl p-4 sm:p-5 border border-border-default"
         >
           <div class="flex items-center justify-between mb-1 sm:mb-2">
-            <p class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-bold opacity-80">
+            <p
+              class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-bold opacity-80"
+            >
               Protegido
             </p>
-            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-raised border border-border-default flex items-center justify-center">
+            <div
+              class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-raised border border-border-default flex items-center justify-center"
+            >
               <app-icon name="lock" [size]="10" cssClass="text-text-secondary sm:hidden" />
               <app-icon name="lock" [size]="12" cssClass="text-text-secondary hidden sm:block" />
             </div>
@@ -140,7 +168,9 @@
           <p class="text-lg sm:text-xl lg:text-2xl font-bold text-text-primary tabular-nums">
             ${{ protectedCreditBalance() | number: '1.2-2' }}
           </p>
-          <div class="mt-2 sm:mt-3 w-full bg-surface-raised border border-border-default rounded-full h-1.5 sm:h-2 overflow-hidden">
+          <div
+            class="mt-2 sm:mt-3 w-full bg-surface-raised border border-border-default rounded-full h-1.5 sm:h-2 overflow-hidden"
+          >
             <div
               class="bg-text-secondary/30 h-full rounded-full transition-all duration-500"
               [style.width.%]="protectedCreditProgress()"
@@ -149,18 +179,26 @@
         </div>
 
         <!-- Transferible -->
-        <div
-          appHoverLift
-          [liftAmount]="4"
-          class="glass-card rounded-2xl p-4 sm:p-5"
-        >
+        <div appHoverLift [liftAmount]="4" class="glass-card rounded-2xl p-4 sm:p-5">
           <div class="flex items-center justify-between mb-1 sm:mb-2">
-            <p class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-semibold">
+            <p
+              class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-semibold"
+            >
               Transferible
             </p>
-            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-secondary flex items-center justify-center">
-              <app-icon name="arrow-right-left" [size]="10" cssClass="text-text-secondary sm:hidden" />
-              <app-icon name="arrow-right-left" [size]="12" cssClass="text-text-secondary hidden sm:block" />
+            <div
+              class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-secondary flex items-center justify-center"
+            >
+              <app-icon
+                name="arrow-right-left"
+                [size]="10"
+                cssClass="text-text-secondary sm:hidden"
+              />
+              <app-icon
+                name="arrow-right-left"
+                [size]="12"
+                cssClass="text-text-secondary hidden sm:block"
+              />
             </div>
           </div>
           <p class="text-lg sm:text-xl lg:text-2xl font-bold text-text-primary tabular-nums">
@@ -169,23 +207,29 @@
         </div>
 
         <!-- Retirable -->
-        <div
-          appHoverLift
-          [liftAmount]="4"
-          class="glass-card rounded-2xl p-4 sm:p-5"
-        >
+        <div appHoverLift [liftAmount]="4" class="glass-card rounded-2xl p-4 sm:p-5">
           <div class="flex items-center justify-between mb-1 sm:mb-2">
-            <p class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-semibold">
+            <p
+              class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-semibold"
+            >
               Retirable
             </p>
-            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-secondary flex items-center justify-center">
+            <div
+              class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-surface-secondary flex items-center justify-center"
+            >
               <app-icon name="arrow-up" [size]="10" cssClass="text-text-secondary sm:hidden" />
-              <app-icon name="arrow-up" [size]="12" cssClass="text-text-secondary hidden sm:block" />
+              <app-icon
+                name="arrow-up"
+                [size]="12"
+                cssClass="text-text-secondary hidden sm:block"
+              />
             </div>
           </div>
-          <p class="text-lg sm:text-xl lg:text-2xl font-bold tabular-nums"
-             [class.text-text-primary]="withdrawableBalance() >= 0"
-             [class.text-text-tertiary]="withdrawableBalance() < 0">
+          <p
+            class="text-lg sm:text-xl lg:text-2xl font-bold tabular-nums"
+            [class.text-text-primary]="withdrawableBalance() >= 0"
+            [class.text-text-tertiary]="withdrawableBalance() < 0"
+          >
             @if (withdrawableBalance() >= 0) {
               ${{ withdrawableBalance() | number: '1.2-2' }}
             } @else {
@@ -262,16 +306,13 @@
         </div>
 
         <!-- Tabs -->
-        <div
-          class="flex gap-1 p-1 glass rounded-xl overflow-x-auto"
-        >
+        <div class="flex gap-1 p-1 glass rounded-xl overflow-x-auto">
           <button
             type="button"
             (click)="setActiveTab('transactions')"
             appPressScale
             [ngClass]="{
-              'bg-cta-default text-cta-text shadow-sm':
-                activeTab() === 'transactions',
+              'bg-cta-default text-cta-text shadow-sm': activeTab() === 'transactions',
               'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
                 activeTab() !== 'transactions',
             }"
@@ -285,8 +326,7 @@
             (click)="setActiveTab('transfers')"
             appPressScale
             [ngClass]="{
-              'bg-cta-default text-cta-text shadow-sm':
-                activeTab() === 'transfers',
+              'bg-cta-default text-cta-text shadow-sm': activeTab() === 'transfers',
               'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
                 activeTab() !== 'transfers',
             }"
@@ -300,8 +340,7 @@
             (click)="setActiveTab('withdrawals')"
             appPressScale
             [ngClass]="{
-              'bg-cta-default text-cta-text shadow-sm':
-                activeTab() === 'withdrawals',
+              'bg-cta-default text-cta-text shadow-sm': activeTab() === 'withdrawals',
               'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
                 activeTab() !== 'withdrawals',
             }"

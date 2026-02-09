@@ -82,8 +82,7 @@ export class CoalescingRequestBatcher<C, K extends string, V> {
     this.inflightByRequestId.set(requestId, promise);
 
     const batch =
-      this.pendingByContextId.get(context.id) ??
-      this.createPendingBatch(context.id, context.ctx);
+      this.pendingByContextId.get(context.id) ?? this.createPendingBatch(context.id, context.ctx);
 
     batch.keys.add(key);
     batch.resolveByKey.set(key, resolveFn!);
@@ -148,4 +147,3 @@ export class CoalescingRequestBatcher<C, K extends string, V> {
     return `${contextId}|${key}`;
   }
 }
-

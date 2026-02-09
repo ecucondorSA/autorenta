@@ -27,7 +27,7 @@ import {
   BookingSection,
   STATUS_FILTERS,
   INITIAL_SECTIONS,
-  StatusConfig
+  StatusConfig,
 } from './my-bookings.config';
 
 @Component({
@@ -102,9 +102,11 @@ export class MyBookingsPage implements OnInit, OnDestroy {
   readonly statusCounts = computed(() => {
     const bookings = this.bookings();
     const counts: Record<string, number> = { all: bookings.length };
-    
+
     // Initialize specific counts
-    STATUS_FILTERS.forEach(f => { if(f !== 'all') counts[f] = 0; });
+    STATUS_FILTERS.forEach((f) => {
+      if (f !== 'all') counts[f] = 0;
+    });
     counts['expired'] = 0; // Add expired as it's a derived status
 
     for (const booking of bookings) {
@@ -112,8 +114,8 @@ export class MyBookingsPage implements OnInit, OnDestroy {
       if (counts[status] !== undefined) {
         counts[status]++;
       } else {
-         // Fallback initialization
-         counts[status] = 1;
+        // Fallback initialization
+        counts[status] = 1;
       }
     }
 
@@ -178,7 +180,10 @@ export class MyBookingsPage implements OnInit, OnDestroy {
   }
 
   getEffectiveStatus(booking: Booking): string {
-    if ((booking.status === 'pending_payment' || booking.status === 'pending') && this.isStartDatePassed(booking)) {
+    if (
+      (booking.status === 'pending_payment' || booking.status === 'pending') &&
+      this.isStartDatePassed(booking)
+    ) {
       return 'expired';
     }
     if (booking.status === 'pending_payment') {
@@ -208,7 +213,7 @@ export class MyBookingsPage implements OnInit, OnDestroy {
   statusLabelShort(booking: Booking): string {
     return this.getStatusConfig(booking).labelShort;
   }
-  
+
   statusIcon(booking: Booking): string {
     return this.getStatusConfig(booking).icon;
   }
@@ -216,11 +221,11 @@ export class MyBookingsPage implements OnInit, OnDestroy {
   statusBadgeCompactClass(booking: Booking): string {
     return this.getStatusConfig(booking).badgeCompactClass;
   }
-  
+
   statusBorderClass(booking: Booking): string {
     return this.getStatusConfig(booking).borderClass;
   }
-  
+
   statusIconBgClass(booking: Booking): string {
     return this.getStatusConfig(booking).iconBgClass;
   }

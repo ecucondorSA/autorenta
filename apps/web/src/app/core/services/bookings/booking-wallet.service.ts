@@ -47,13 +47,15 @@ export class BookingWalletService {
     const expiresInDays = params.expiresInDays ?? 90;
 
     // Prefer the expiration-aware function when available in the current auth context.
-    const { data: lockWithExpiration, error: lockWithExpirationError } =
-      await this.supabase.rpc('wallet_lock_funds_with_expiration', {
+    const { data: lockWithExpiration, error: lockWithExpirationError } = await this.supabase.rpc(
+      'wallet_lock_funds_with_expiration',
+      {
         p_booking_id: params.bookingId,
         p_amount_cents: amountCents,
         p_lock_type: lockType,
         p_expires_in_days: expiresInDays,
-      });
+      },
+    );
 
     if (!lockWithExpirationError && typeof lockWithExpiration === 'string' && lockWithExpiration) {
       return { ok: true, lockId: lockWithExpiration };

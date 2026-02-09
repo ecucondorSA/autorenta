@@ -77,9 +77,7 @@
               <div class="flex justify-between">
                 <span>Monto Total:</span>
                 <span class="font-semibold">
-                  {{
-                    (booking()!.total_amount ?? 0) | money
-                  }}
+                  {{ booking()!.total_amount ?? 0 | money }}
                 </span>
               </div>
             </div>

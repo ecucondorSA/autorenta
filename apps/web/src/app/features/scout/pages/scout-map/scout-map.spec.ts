@@ -8,9 +8,8 @@ describe('ScoutMapPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ScoutMapPage]
-    })
-    .compileComponents();
+      imports: [ScoutMapPage],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ScoutMapPage);
     component = fixture.componentInstance;

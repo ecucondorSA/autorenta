@@ -19,7 +19,9 @@ import { BookingQuickAction } from '../bookings-hub.types';
           <ion-icon [name]="action.icon" class="text-slate-400"></ion-icon>
           {{ action.label }}
           @if (action.badge && action.badge > 0) {
-            <span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md min-w-[18px] text-center">
+            <span
+              class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md min-w-[18px] text-center"
+            >
               {{ action.badge }}
             </span>
           }

@@ -83,13 +83,7 @@ export function isValidStatusTransition(
       'cancelled_owner',
       'cancelled_system',
     ],
-    pending_return: [
-      'returned',
-      'completed',
-      'inspected_good',
-      'damage_reported',
-      'disputed',
-    ],
+    pending_return: ['returned', 'completed', 'inspected_good', 'damage_reported', 'disputed'],
     dispute: ['disputed', 'resolved', 'completed'],
     disputed: ['resolved', 'cancelled_system'],
     resolved: ['completed'], // Resolved leads to completed
@@ -162,7 +156,12 @@ export function canPerformCheckOut(booking: Booking): {
   reason?: string;
 } {
   // Estados donde el viaje podría estar activo (check-in hecho pero no check-out)
-  const activeStates: BookingUiStatus[] = ['in_progress', 'confirmed', 'pending_review', 'completed'];
+  const activeStates: BookingUiStatus[] = [
+    'in_progress',
+    'confirmed',
+    'pending_review',
+    'completed',
+  ];
 
   if (!activeStates.includes(booking.status)) {
     return {
@@ -506,9 +505,9 @@ export function formatOwnerEarnings(totalAmount: number): {
   };
 } {
   // Modelo Comodato: Owner no recibe pago directo, gana rewards de comunidad
-  const PLATFORM_SPLIT = 0.15;      // 15% plataforma
-  const REWARD_POOL_SPLIT = 0.70;   // 70% pool de rewards (comunidad)
-  const FGO_SPLIT = 0.15;           // 15% fondo de protección (sin franquicia)
+  const PLATFORM_SPLIT = 0.15; // 15% plataforma
+  const REWARD_POOL_SPLIT = 0.7; // 70% pool de rewards (comunidad)
+  const FGO_SPLIT = 0.15; // 15% fondo de protección (sin franquicia)
 
   const platformFee = totalAmount * PLATFORM_SPLIT;
   const rewardPoolAmount = totalAmount * REWARD_POOL_SPLIT;

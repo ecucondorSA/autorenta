@@ -68,8 +68,11 @@ describe('MercadoPagoPaymentService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, MercadoPagoPaymentService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },],
+      providers: [
+        ...testProviders,
+        MercadoPagoPaymentService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(MercadoPagoPaymentService);
 
@@ -349,8 +352,11 @@ describe('MercadoPagoPaymentService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [...testProviders, MercadoPagoPaymentService,
-          { provide: SupabaseClientService, useValue: noSessionSupabaseService },],
+        providers: [
+          ...testProviders,
+          MercadoPagoPaymentService,
+          { provide: SupabaseClientService, useValue: noSessionSupabaseService },
+        ],
       });
 
       const unauthService = TestBed.inject(MercadoPagoPaymentService);

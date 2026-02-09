@@ -58,16 +58,16 @@ export class CarsConversionPage implements OnInit {
 
   onSmartSearch(event: { location: { lat: number; lng: number } | null; dates: DateRange }): void {
     const queryParams: Record<string, string | number> = {};
-    
+
     if (event.location) {
       queryParams['lat'] = event.location.lat;
       queryParams['lng'] = event.location.lng;
     }
-    
+
     if (event.dates.from) {
       queryParams['from'] = String(event.dates.from);
     }
-    
+
     if (event.dates.to) {
       queryParams['to'] = String(event.dates.to);
     }

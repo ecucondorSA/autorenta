@@ -95,9 +95,7 @@ class MapboxMapInstance implements IMapInstance {
     if (!mapboxgl) {
       throw new Error('Mapbox GL instance missing on map');
     }
-    const marker = new mapboxgl.Marker(options)
-      .setLngLat([coords.lng, coords.lat])
-      .addTo(this.map);
+    const marker = new mapboxgl.Marker(options).setLngLat([coords.lng, coords.lat]).addTo(this.map);
 
     return new MapboxMapMarker(marker);
   }
@@ -336,8 +334,7 @@ export class MapboxProviderService implements IMapProvider {
   private hasWebGL(): boolean {
     try {
       const canvas = document.createElement('canvas');
-      const gl =
-        canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       return !!gl;
     } catch {
       return false;

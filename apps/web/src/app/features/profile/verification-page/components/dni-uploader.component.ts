@@ -247,7 +247,11 @@ const MAX_UPLOAD_BYTES = 50 * 1024 * 1024; // 50MB (handled by service compressi
               class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative"
             >
               @if (backPreview()) {
-                <img [src]="backPreview()" class="w-full h-full object-cover" alt="Vista previa del dorso del documento" />
+                <img
+                  [src]="backPreview()"
+                  class="w-full h-full object-cover"
+                  alt="Vista previa del dorso del documento"
+                />
                 <div class="absolute inset-0 bg-black/10"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
                   <div

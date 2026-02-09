@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { calculateFallbackHourlyRateUsd, normalizeToHourIso, toUsdDollarFirst } from './car-pricing.utils';
+import {
+  calculateFallbackHourlyRateUsd,
+  normalizeToHourIso,
+  toUsdDollarFirst,
+} from './car-pricing.utils';
 
 describe('car pricing utils', () => {
   describe('toUsdDollarFirst', () => {
@@ -47,4 +51,3 @@ describe('car pricing utils', () => {
     });
   });
 });
-

@@ -47,7 +47,12 @@ interface CarWithOwner {
         <div class="header-content">
           <button (click)="goBack()" class="back-button" aria-label="Volver">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </button>
           <h1 class="header-title">Mis Favoritos</h1>
@@ -66,7 +71,11 @@ interface CarWithOwner {
       <!-- Empty State -->
       @else if (favoriteCars().length === 0) {
         <div class="empty-state">
-          <img src="/assets/images/illustrations/empty-favorites.png" alt="Sin favoritos" class="w-48 h-auto mx-auto mb-4" />
+          <img
+            src="/assets/images/illustrations/empty-favorites.png"
+            alt="Sin favoritos"
+            class="w-48 h-auto mx-auto mb-4"
+          />
           <h2>Aún no tienes favoritos</h2>
           <p>Guarda autos que te interesen para encontrarlos fácilmente después</p>
           <button (click)="goToMarketplace()" class="cta-button">Explorar autos</button>
@@ -120,7 +129,11 @@ interface CarWithOwner {
                 @if (car.profiles) {
                   <div class="car-owner">
                     @if (car.profiles.avatar_url) {
-                      <img [src]="car.profiles.avatar_url" class="owner-avatar" [alt]="'Foto de ' + car.profiles.full_name" />
+                      <img
+                        [src]="car.profiles.avatar_url"
+                        class="owner-avatar"
+                        [alt]="'Foto de ' + car.profiles.full_name"
+                      />
                     }
                     <span class="owner-name">{{ car.profiles.full_name }}</span>
                     @if (car.profiles.is_superhost) {

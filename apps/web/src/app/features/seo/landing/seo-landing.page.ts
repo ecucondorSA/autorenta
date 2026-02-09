@@ -1,10 +1,5 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MetaService } from '@core/services/ui/meta.service';
 import { CarCardComponent } from '@shared/components/car-card/car-card.component';
@@ -17,12 +12,14 @@ import { Car } from '@core/models';
   imports: [CommonModule, RouterLink, NgOptimizedImage, CarCardComponent],
   template: `
     <!-- 🟢 HERO SECTION -->
-    <header class="relative min-h-[50vh] flex items-center justify-center overflow-hidden bg-black text-white">
+    <header
+      class="relative min-h-[50vh] flex items-center justify-center overflow-hidden bg-black text-white"
+    >
       <!-- Background Image (Contextual) -->
       <div class="absolute inset-0 z-0">
         @if (pageData(); as data) {
-          <img 
-            [ngSrc]="getHeroImage(data)" 
+          <img
+            [ngSrc]="getHeroImage(data)"
             alt="Alquiler de autos"
             fill
             priority
@@ -46,7 +43,9 @@ import { Car } from '@core/models';
           <nav class="flex justify-center items-center gap-2 text-sm text-gray-400 mb-8">
             @for (crumb of data.breadcrumbs; track crumb.label; let last = $last) {
               @if (crumb.url) {
-                <a [routerLink]="crumb.url" class="hover:text-white transition-colors">{{ crumb.label }}</a>
+                <a [routerLink]="crumb.url" class="hover:text-white transition-colors">{{
+                  crumb.label
+                }}</a>
               } @else {
                 <span class="text-white font-bold">{{ crumb.label }}</span>
               }
@@ -57,9 +56,13 @@ import { Car } from '@core/models';
           </nav>
 
           <!-- CTA / Search (Fake) -->
-          <div class="bg-white/10 backdrop-blur-md p-2 rounded-full inline-flex items-center gap-2 max-w-md w-full border border-white/20">
+          <div
+            class="bg-white/10 backdrop-blur-md p-2 rounded-full inline-flex items-center gap-2 max-w-md w-full border border-white/20"
+          >
             <span class="pl-4 text-gray-300 text-sm flex-1 text-left">Fechas flexibles</span>
-            <button class="bg-white text-black px-6 py-2.5 rounded-full font-bold hover:bg-gray-100 transition-colors">
+            <button
+              class="bg-white text-black px-6 py-2.5 rounded-full font-bold hover:bg-gray-100 transition-colors"
+            >
               Buscar
             </button>
           </div>
@@ -120,10 +123,14 @@ import { Car } from '@core/models';
     <section class="bg-white py-16">
       <div class="container mx-auto px-4 max-w-3xl prose lg:prose-xl">
         @if (pageData(); as data) {
-          <h2>¿Por qué alquilar un {{ data.type === 'brand' ? data.h1.replace('Alquiler de ', '') : 'auto' }} en AutoRenta?</h2>
+          <h2>
+            ¿Por qué alquilar un
+            {{ data.type === 'brand' ? data.h1.replace('Alquiler de ', '') : 'auto' }} en AutoRenta?
+          </h2>
           <p>
-            Si estás buscando <strong>{{ data.h1 }}</strong>, llegaste al lugar correcto. 
-            En AutoRenta conectamos a dueños verificados con conductores como vos.
+            Si estás buscando <strong>{{ data.h1 }}</strong
+            >, llegaste al lugar correcto. En AutoRenta conectamos a dueños verificados con
+            conductores como vos.
           </p>
           <ul>
             <li>Sin trámites burocráticos.</li>
@@ -134,16 +141,18 @@ import { Car } from '@core/models';
       </div>
     </section>
   `,
-  styles: [`
-    :host {
-      display: block;
-    }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeoLandingPageComponent {
   private readonly metaService = inject(MetaService);
-  
+
   // Input from Router Resolve
   readonly pageData = input<SeoPageData | null>(null);
 
@@ -173,7 +182,7 @@ export class SeoLandingPageComponent {
       rating_avg: 5.0,
       rating_count: 1,
       status: 'active',
-      photos: [{ url: seoCar.image_url }]
+      photos: [{ url: seoCar.image_url }],
     } as unknown as Car;
   }
 }

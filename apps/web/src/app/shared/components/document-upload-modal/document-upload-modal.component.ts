@@ -127,7 +127,11 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
                   (click)="frontInput.click()"
                 >
                   @if (frontPreview()) {
-                    <img [src]="frontPreview()" class="w-full h-full object-cover" alt="Vista previa del frente del documento" />
+                    <img
+                      [src]="frontPreview()"
+                      class="w-full h-full object-cover"
+                      alt="Vista previa del frente del documento"
+                    />
                   } @else {
                     <div class="text-center p-4">
                       <span class="text-3xl">📷</span>
@@ -160,7 +164,11 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
                   (click)="backInput.click()"
                 >
                   @if (backPreview()) {
-                    <img [src]="backPreview()" class="w-full h-full object-cover" alt="Vista previa del dorso del documento" />
+                    <img
+                      [src]="backPreview()"
+                      class="w-full h-full object-cover"
+                      alt="Vista previa del dorso del documento"
+                    />
                   } @else {
                     <div class="text-center p-4">
                       <span class="text-3xl">📷</span>
@@ -193,7 +201,11 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
                 (click)="singleInput.click()"
               >
                 @if (singlePreview()) {
-                  <img [src]="singlePreview()" class="w-full h-full object-cover" alt="Vista previa del documento" />
+                  <img
+                    [src]="singlePreview()"
+                    class="w-full h-full object-cover"
+                    alt="Vista previa del documento"
+                  />
                 } @else {
                   <div class="text-center p-8">
                     <span class="text-5xl">📷</span>

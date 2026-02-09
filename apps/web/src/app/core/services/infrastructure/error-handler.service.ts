@@ -39,10 +39,7 @@ const PROTECTED_ROUTE_PREFIXES = [
 ];
 
 /** Dynamic protected route patterns (e.g. /cars/:id/availability) */
-const PROTECTED_ROUTE_PATTERNS = [
-  /^\/cars\/[^/]+\/availability/,
-  /^\/cars\/[^/]+\/documents/,
-];
+const PROTECTED_ROUTE_PATTERNS = [/^\/cars\/[^/]+\/availability/, /^\/cars\/[^/]+\/documents/];
 
 /**
  * ErrorHandlerService: Centralized error handling
@@ -160,7 +157,7 @@ export class ErrorHandlerService {
       'cannot add initializers', // Decorator timing issue
     ];
 
-    return benignPatterns.some(pattern => errorMessage.includes(pattern));
+    return benignPatterns.some((pattern) => errorMessage.includes(pattern));
   }
 
   /**
@@ -267,10 +264,14 @@ export class ErrorHandlerService {
     // This covers Supabase SDK calls (fetch-based) that bypass Angular interceptors.
     if (this.isUnauthenticatedError(error)) {
       if (!this.isPublicRoute()) {
-        this.logger.warn('Auth error on protected route — redirecting to login', 'ErrorHandlerService', {
-          context,
-          route: this.router.url,
-        });
+        this.logger.warn(
+          'Auth error on protected route — redirecting to login',
+          'ErrorHandlerService',
+          {
+            context,
+            route: this.router.url,
+          },
+        );
         // Navigate to login with returnUrl so user can resume after re-authentication
         void this.router.navigate(['/auth/login'], {
           queryParams: { returnUrl: this.router.url },

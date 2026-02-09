@@ -14,7 +14,7 @@ export interface SubscriptionPolicy {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SubscriptionPolicyService {
   private readonly supabaseService = injectSupabase();
@@ -31,22 +31,20 @@ export class SubscriptionPolicyService {
       return of(this.policiesCache());
     }
 
-    return from(
-      this.supabaseService.from('subscription_policies').select('*')
-    ).pipe(
+    return from(this.supabaseService.from('subscription_policies').select('*')).pipe(
       map(({ data, error }) => {
         if (error) throw error;
 
         const map = new Map<string, SubscriptionPolicy>();
         // Safe cast
         const rows = (data || []) as unknown as SubscriptionPolicy[];
-        rows.forEach(row => map.set(row.tier_id, row));
+        rows.forEach((row) => map.set(row.tier_id, row));
 
         this.policiesCache.set(map);
         this.initialized = true;
         return map;
       }),
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
@@ -66,9 +64,8 @@ export class SubscriptionPolicyService {
   async checkEligibility(
     userId: string,
     policy: SubscriptionPolicy,
-    carHasTelemetry: boolean
+    carHasTelemetry: boolean,
   ): Promise<{ eligible: boolean; reason?: string }> {
-
     // 1. Telemetry Check (The "Smart Car" Gate)
     if (policy.telemetry_required && !carHasTelemetry) {
       return { eligible: false, reason: 'El vehículo no cuenta con telemetría certificada.' };
@@ -84,17 +81,23 @@ export class SubscriptionPolicyService {
 
       if (!stats) {
         // No stats yet = New User
-        return { eligible: false, reason: `Requiere ${policy.min_clean_trips_required} viajes completados sin incidentes.` };
+        return {
+          eligible: false,
+          reason: `Requiere ${policy.min_clean_trips_required} viajes completados sin incidentes.`,
+        };
       }
 
       if (stats.strikes_count > 0) {
-        return { eligible: false, reason: 'Beneficio suspendido por incidente previo ("Strike One").' };
+        return {
+          eligible: false,
+          reason: 'Beneficio suspendido por incidente previo ("Strike One").',
+        };
       }
 
       if ((stats.clean_trips_count || 0) < policy.min_clean_trips_required) {
         return {
           eligible: false,
-          reason: `Faltan ${policy.min_clean_trips_required - (stats.clean_trips_count || 0)} viajes para desbloquear beneficio.`
+          reason: `Faltan ${policy.min_clean_trips_required - (stats.clean_trips_count || 0)} viajes para desbloquear beneficio.`,
         };
       }
     }

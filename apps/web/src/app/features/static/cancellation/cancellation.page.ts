@@ -9,7 +9,10 @@ import { RouterLink } from '@angular/router';
   imports: [CommonModule, RouterLink],
   template: `
     <div class="static-page">
-      <section class="static-hero" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);">
+      <section
+        class="static-hero"
+        style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);"
+      >
         <h1>📅 Opciones de Cancelación</h1>
         <p>Flexibilidad para cambiar tus planes cuando lo necesites</p>
       </section>
@@ -17,15 +20,18 @@ import { RouterLink } from '@angular/router';
       <div class="static-content">
         <h2>Políticas de Cancelación</h2>
         <p>
-          Cada propietario puede establecer su propia política de cancelación.
-          Antes de reservar, revisa la política específica del vehículo.
+          Cada propietario puede establecer su propia política de cancelación. Antes de reservar,
+          revisa la política específica del vehículo.
         </p>
 
         <h2>Tipos de Políticas</h2>
         <div class="card-grid">
           <div class="info-card">
             <h3>🟢 Flexible</h3>
-            <p>Cancelación gratuita hasta 24 horas antes del inicio. Reembolso del 50% si cancelas después.</p>
+            <p>
+              Cancelación gratuita hasta 24 horas antes del inicio. Reembolso del 50% si cancelas
+              después.
+            </p>
           </div>
           <div class="info-card">
             <h3>🟡 Moderada</h3>
@@ -47,8 +53,8 @@ import { RouterLink } from '@angular/router';
 
         <h2>Cancelaciones por el Propietario</h2>
         <p>
-          Si el propietario cancela tu reserva, recibirás un reembolso completo
-          y te ayudaremos a encontrar un vehículo alternativo similar.
+          Si el propietario cancela tu reserva, recibirás un reembolso completo y te ayudaremos a
+          encontrar un vehículo alternativo similar.
         </p>
 
         <div class="cta-section">

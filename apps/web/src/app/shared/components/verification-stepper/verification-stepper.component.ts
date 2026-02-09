@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -37,7 +32,11 @@ export interface VerificationStep {
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="flex items-center justify-between" role="group" aria-label="Progreso de verificación">
+    <div
+      class="flex items-center justify-between"
+      role="group"
+      aria-label="Progreso de verificación"
+    >
       @for (step of steps(); track step.id; let i = $index; let last = $last) {
         <div class="flex items-center gap-2">
           <!-- Step Circle -->
@@ -49,7 +48,11 @@ export interface VerificationStep {
             @switch (step.status) {
               @case ('completed') {
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
                 </svg>
                 <span class="sr-only">Completado:</span>
               }
@@ -90,11 +93,11 @@ export class VerificationStepperComponent {
   /** Current step index (0-based) */
   readonly currentStepIndex = computed(() => {
     const stepsArray = this.steps();
-    const inProgressIndex = stepsArray.findIndex(s => s.status === 'in_progress');
+    const inProgressIndex = stepsArray.findIndex((s) => s.status === 'in_progress');
     if (inProgressIndex >= 0) return inProgressIndex;
 
     // If no in_progress, return first pending
-    const pendingIndex = stepsArray.findIndex(s => s.status === 'pending');
+    const pendingIndex = stepsArray.findIndex((s) => s.status === 'pending');
     if (pendingIndex >= 0) return pendingIndex;
 
     // All completed

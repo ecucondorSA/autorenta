@@ -112,8 +112,7 @@ export class SentryErrorHandler implements ErrorHandler {
       obj['code'], // Supabase code as fallback
     ];
 
-    let message =
-      messageCandidates.find((m) => typeof m === 'string' && m.trim().length > 0) || '';
+    let message = messageCandidates.find((m) => typeof m === 'string' && m.trim().length > 0) || '';
 
     // If no message found, try to stringify the object
     if (!message) {
@@ -177,7 +176,6 @@ export async function initSentry(): Promise<void> {
  * Internal function to initialize Sentry with configuration
  */
 async function initializeSentry(Sentry: SentryModule): Promise<void> {
-
   const options = {
     dsn: environment.sentryDsn,
     environment: environment.sentryEnvironment,
@@ -250,7 +248,14 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
         if (event.request.url) {
           try {
             const url = new URL(event.request.url);
-            const sensitiveParams = ['token', 'key', 'password', 'secret', 'apikey', 'access_token'];
+            const sensitiveParams = [
+              'token',
+              'key',
+              'password',
+              'secret',
+              'apikey',
+              'access_token',
+            ];
             let changed = false;
 
             sensitiveParams.forEach((param) => {
@@ -368,5 +373,4 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
 
   // Por ahora, solo inicializamos la parte web debido a conflictos de tipos con Sentry Capacitor
   Sentry.init(options);
-
 }

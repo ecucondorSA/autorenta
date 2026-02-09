@@ -387,7 +387,9 @@ export class PricingService {
       if (response.ok) {
         const result = await response.json();
         if (result.success && result.data) {
-          this.logger.debug(`[PricingService] Got ${result.data.length} brands from Edge Function (cached)`);
+          this.logger.debug(
+            `[PricingService] Got ${result.data.length} brands from Edge Function (cached)`,
+          );
           return result.data;
         }
       }
@@ -427,13 +429,17 @@ export class PricingService {
       if (response.ok) {
         const result = await response.json();
         if (result.success && result.data) {
-          this.logger.debug(`[PricingService] Got ${result.data.length} models for brand ${brandCode}`);
+          this.logger.debug(
+            `[PricingService] Got ${result.data.length} models for brand ${brandCode}`,
+          );
           return result.data;
         }
       }
 
       // Fallback to direct API (may hit rate limit)
-      this.logger.warn(`[PricingService] Edge Function failed for brand ${brandCode}, falling back to direct FIPE API`);
+      this.logger.warn(
+        `[PricingService] Edge Function failed for brand ${brandCode}, falling back to direct FIPE API`,
+      );
       const directResponse = await fetch(
         `https://parallelum.com.br/fipe/api/v2/cars/brands/${brandCode}/models`,
       );
@@ -502,7 +508,7 @@ export class PricingService {
    * Helper to add delay between API calls
    */
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   /**
@@ -543,7 +549,7 @@ export class PricingService {
         if (!response.ok) return false;
 
         const years: Array<{ code: string; name: string }> = await response.json();
-        const yearCodes = years.map(y => y.code);
+        const yearCodes = years.map((y) => y.code);
 
         // ✅ FIX: Cache the result
         this.modelYearsCache.set(cacheKey, yearCodes);
@@ -559,7 +565,10 @@ export class PricingService {
     }
 
     if (lastError) {
-      this.logger.warn(`[PricingService] checkModelYearAvailability failed after ${maxRetries} attempts`, lastError);
+      this.logger.warn(
+        `[PricingService] checkModelYearAvailability failed after ${maxRetries} attempts`,
+        lastError,
+      );
     }
     return false;
   }

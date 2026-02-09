@@ -36,11 +36,15 @@ type PermissionStatus = 'unknown' | 'granted' | 'denied';
           class="fixed top-6 left-6 right-6 md:left-auto md:right-6 z-[100] max-w-sm rounded-2xl border border-emerald-400/40 bg-emerald-500/20 backdrop-blur-xl p-4 shadow-[0_20px_60px_rgba(16,185,129,0.3)] animate-in slide-in-from-top duration-500"
         >
           <div class="flex items-center gap-4">
-            <div class="h-10 w-10 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-lg">
+            <div
+              class="h-10 w-10 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-lg"
+            >
               <i class="fas fa-trophy text-lg"></i>
             </div>
             <div class="flex-1">
-              <p class="text-sm font-black text-white uppercase tracking-wider">¡Vehículo Localizado!</p>
+              <p class="text-sm font-black text-white uppercase tracking-wider">
+                ¡Vehículo Localizado!
+              </p>
               <p class="text-xs text-emerald-100/80">Has ganado +50 Puntos de Reputación.</p>
             </div>
             <button (click)="rewardVisible.set(false)" class="text-emerald-200/50 hover:text-white">
@@ -48,7 +52,9 @@ type PermissionStatus = 'unknown' | 'granted' | 'denied';
             </button>
           </div>
           @if (lastReward()) {
-            <div class="mt-3 pt-3 border-t border-emerald-400/20 flex justify-between items-center text-[10px] text-emerald-100/60 uppercase tracking-widest">
+            <div
+              class="mt-3 pt-3 border-t border-emerald-400/20 flex justify-between items-center text-[10px] text-emerald-100/60 uppercase tracking-widest"
+            >
               <span>Tipo: {{ formatBeaconType(lastReward()!.message.type) }}</span>
               <span>RSSI: {{ lastReward()!.rssi }} dBm</span>
             </div>
@@ -61,46 +67,84 @@ type PermissionStatus = 'unknown' | 'granted' | 'denied';
         <div class="lg:col-span-1 space-y-6">
           <div class="flex items-start justify-between gap-4">
             <div>
-              <h1 class="text-2xl font-black tracking-tighter text-slate-100 flex items-center gap-3">
-                <span class="inline-flex h-3 w-3 rounded-full bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.8)]" [class.animate-pulse]="isAnyEmergencyActive()"></span>
+              <h1
+                class="text-2xl font-black tracking-tighter text-slate-100 flex items-center gap-3"
+              >
+                <span
+                  class="inline-flex h-3 w-3 rounded-full bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.8)]"
+                  [class.animate-pulse]="isAnyEmergencyActive()"
+                ></span>
                 SECURITY CENTER
               </h1>
-              <p class="text-[10px] text-slate-500 uppercase tracking-[0.3em] mt-1">Defensa Activa 2.0</p>
+              <p class="text-[10px] text-slate-500 uppercase tracking-[0.3em] mt-1">
+                Defensa Activa 2.0
+              </p>
             </div>
             <div class="flex flex-col items-end gap-2">
-              <span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-[9px] rounded border border-emerald-500/30 uppercase tracking-[0.2em] font-bold">Encrypted</span>
+              <span
+                class="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-[9px] rounded border border-emerald-500/30 uppercase tracking-[0.2em] font-bold"
+                >Encrypted</span
+              >
             </div>
           </div>
 
           <!-- DEVICES STATUS -->
           <div class="bg-slate-900/40 rounded-3xl p-5 border border-white/5 backdrop-blur-sm">
-            <h3 class="text-[10px] font-bold text-slate-500 mb-5 uppercase tracking-[0.3em]">Monitoreo de Activos</h3>
+            <h3 class="text-[10px] font-bold text-slate-500 mb-5 uppercase tracking-[0.3em]">
+              Monitoreo de Activos
+            </h3>
             <div class="space-y-4">
               @for (device of security.devices(); track device.id) {
-                <div class="flex items-center justify-between p-3.5 bg-white/[0.03] rounded-2xl border border-white/5 group hover:bg-white/[0.05] transition-colors">
+                <div
+                  class="flex items-center justify-between p-3.5 bg-white/[0.03] rounded-2xl border border-white/5 group hover:bg-white/[0.05] transition-colors"
+                >
                   <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center transition-all"
-                      [ngClass]="device.is_active ? 'bg-cyan-500/20 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.2)]' : 'bg-slate-800 text-slate-500'">
-                      <i class="fas" [class.fa-satellite-dish]="device.device_type === 'AIRTAG'" [class.fa-mobile-alt]="device.device_type !== 'AIRTAG'"></i>
+                    <div
+                      class="w-10 h-10 rounded-2xl flex items-center justify-center transition-all"
+                      [ngClass]="
+                        device.is_active
+                          ? 'bg-cyan-500/20 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.2)]'
+                          : 'bg-slate-800 text-slate-500'
+                      "
+                    >
+                      <i
+                        class="fas"
+                        [class.fa-satellite-dish]="device.device_type === 'AIRTAG'"
+                        [class.fa-mobile-alt]="device.device_type !== 'AIRTAG'"
+                      ></i>
                     </div>
                     <div>
                       <p class="font-bold text-sm text-slate-200">{{ device.device_type }}</p>
-                      <p class="text-[10px] text-slate-500 uppercase tracking-widest">{{ device.last_ping | date: 'shortTime' }} · {{ device.is_active ? 'Online' : 'Offline' }}</p>
+                      <p class="text-[10px] text-slate-500 uppercase tracking-widest">
+                        {{ device.last_ping | date: 'shortTime' }} ·
+                        {{ device.is_active ? 'Online' : 'Offline' }}
+                      </p>
                     </div>
                   </div>
                   <div class="text-right">
-                    <p class="text-[10px] font-black" [ngClass]="getBatteryColor(device.battery_level)">
+                    <p
+                      class="text-[10px] font-black"
+                      [ngClass]="getBatteryColor(device.battery_level)"
+                    >
                       {{ device.battery_level }}%
                     </p>
                     <div class="flex gap-0.5 mt-1 justify-end">
-                       <div class="h-1 w-3 rounded-full" [ngClass]="device.is_active ? 'bg-emerald-500' : 'bg-slate-700'"></div>
-                       <div class="h-1 w-3 rounded-full" [ngClass]="device.is_active ? 'bg-emerald-500/40' : 'bg-slate-700'"></div>
+                      <div
+                        class="h-1 w-3 rounded-full"
+                        [ngClass]="device.is_active ? 'bg-emerald-500' : 'bg-slate-700'"
+                      ></div>
+                      <div
+                        class="h-1 w-3 rounded-full"
+                        [ngClass]="device.is_active ? 'bg-emerald-500/40' : 'bg-slate-700'"
+                      ></div>
                     </div>
                   </div>
                 </div>
               } @empty {
                 <div class="text-center py-8 border-2 border-dashed border-white/5 rounded-3xl">
-                  <p class="text-xs text-slate-600 uppercase tracking-widest">No hay dispositivos vinculados</p>
+                  <p class="text-xs text-slate-600 uppercase tracking-widest">
+                    No hay dispositivos vinculados
+                  </p>
                 </div>
               }
             </div>
@@ -108,130 +152,180 @@ type PermissionStatus = 'unknown' | 'granted' | 'denied';
 
           <!-- MESH STATS QUICK VIEW -->
           <div class="grid grid-cols-2 gap-4">
-             <div class="bg-slate-900/40 p-4 rounded-3xl border border-white/5 text-center">
-                <p class="text-[9px] uppercase tracking-widest text-slate-500 mb-1">Hallazgos</p>
-                <p class="text-xl font-black text-cyan-400">{{ contributionCount() }}</p>
-             </div>
-             <div class="bg-slate-900/40 p-4 rounded-3xl border border-white/5 text-center">
-                <p class="text-[9px] uppercase tracking-widest text-slate-500 mb-1">Nivel Scout</p>
-                <p class="text-xl font-black text-emerald-400">{{ scoutLevel() }}</p>
-             </div>
+            <div class="bg-slate-900/40 p-4 rounded-3xl border border-white/5 text-center">
+              <p class="text-[9px] uppercase tracking-widest text-slate-500 mb-1">Hallazgos</p>
+              <p class="text-xl font-black text-cyan-400">{{ contributionCount() }}</p>
+            </div>
+            <div class="bg-slate-900/40 p-4 rounded-3xl border border-white/5 text-center">
+              <p class="text-[9px] uppercase tracking-widest text-slate-500 mb-1">Nivel Scout</p>
+              <p class="text-xl font-black text-emerald-400">{{ scoutLevel() }}</p>
+            </div>
           </div>
         </div>
 
         <!-- COLUMNA DERECHA: MAPA TÁCTICO CON RADAR -->
-        <div class="lg:col-span-2 relative bg-slate-950 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl min-h-[500px]">
+        <div
+          class="lg:col-span-2 relative bg-slate-950 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl min-h-[500px]"
+        >
           <!-- RADAR ANIMATION OVERLAY -->
           @if (isScanning()) {
             <div class="absolute inset-0 pointer-events-none z-10 overflow-hidden">
-               <div class="radar-beam"></div>
-               <div class="radar-circle circle-1"></div>
-               <div class="radar-circle circle-2"></div>
-               <div class="radar-circle circle-3"></div>
+              <div class="radar-beam"></div>
+              <div class="radar-circle circle-1"></div>
+              <div class="radar-circle circle-2"></div>
+              <div class="radar-circle circle-3"></div>
             </div>
           }
 
           <div class="absolute top-6 left-6 z-20 flex items-center gap-3">
-            <div class="px-3 py-1.5 bg-slate-950/80 backdrop-blur rounded-full border border-white/10 flex items-center gap-2">
-               <span class="flex h-1.5 w-1.5 rounded-full bg-cyan-400" [class.animate-ping]="isScanning()"></span>
-               <span class="text-[10px] font-bold uppercase tracking-widest text-slate-300">
-                  {{ isScanning() ? 'Escudo Activo: Escaneando...' : 'Radar en Standby' }}
-               </span>
+            <div
+              class="px-3 py-1.5 bg-slate-950/80 backdrop-blur rounded-full border border-white/10 flex items-center gap-2"
+            >
+              <span
+                class="flex h-1.5 w-1.5 rounded-full bg-cyan-400"
+                [class.animate-ping]="isScanning()"
+              ></span>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-slate-300">
+                {{ isScanning() ? 'Escudo Activo: Escaneando...' : 'Radar en Standby' }}
+              </span>
             </div>
           </div>
 
           <!-- MAPA (Placeholder con Grid Táctico) -->
           <div class="absolute inset-0 tactical-grid flex items-center justify-center opacity-40">
-             <div class="text-center space-y-4">
-                <i class="fas fa-satellite-dish text-6xl text-cyan-500/20"></i>
-                <div class="space-y-1">
-                   <p class="text-[10px] font-mono text-cyan-500/40 uppercase tracking-[0.5em]">Tactical Feed 01-A</p>
-                   <p class="text-[10px] font-mono text-slate-700 uppercase">Awaiting GPS Lock...</p>
-                </div>
-             </div>
+            <div class="text-center space-y-4">
+              <i class="fas fa-satellite-dish text-6xl text-cyan-500/20"></i>
+              <div class="space-y-1">
+                <p class="text-[10px] font-mono text-cyan-500/40 uppercase tracking-[0.5em]">
+                  Tactical Feed 01-A
+                </p>
+                <p class="text-[10px] font-mono text-slate-700 uppercase">Awaiting GPS Lock...</p>
+              </div>
+            </div>
           </div>
 
           <!-- BOTONES TÁCTICOS -->
           <div class="absolute bottom-8 right-8 z-30 flex flex-col gap-4">
-             <a routerLink="/beacon-test" class="w-14 h-14 bg-cyan-600/80 backdrop-blur text-white rounded-2xl border border-cyan-400/30 shadow-2xl flex items-center justify-center hover:bg-cyan-700 transition-all hover:scale-110 active:scale-95">
-                <i class="fas fa-broadcast-tower text-xl"></i>
-             </a>
-             <button class="w-14 h-14 bg-slate-900/80 backdrop-blur text-white rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center hover:bg-slate-800 transition-all hover:scale-110 active:scale-95">
-                <i class="fas fa-crosshairs text-xl"></i>
-             </button>
-             <a routerLink="/panic" class="w-14 h-14 bg-red-600 text-white rounded-2xl shadow-[0_0_30px_rgba(220,38,38,0.4)] flex items-center justify-center hover:bg-red-700 transition-all hover:scale-110 active:scale-95 animate-pulse">
-                <i class="fas fa-bolt text-xl"></i>
-             </a>
+            <a
+              routerLink="/beacon-test"
+              class="w-14 h-14 bg-cyan-600/80 backdrop-blur text-white rounded-2xl border border-cyan-400/30 shadow-2xl flex items-center justify-center hover:bg-cyan-700 transition-all hover:scale-110 active:scale-95"
+            >
+              <i class="fas fa-broadcast-tower text-xl"></i>
+            </a>
+            <button
+              class="w-14 h-14 bg-slate-900/80 backdrop-blur text-white rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center hover:bg-slate-800 transition-all hover:scale-110 active:scale-95"
+            >
+              <i class="fas fa-crosshairs text-xl"></i>
+            </button>
+            <a
+              routerLink="/panic"
+              class="w-14 h-14 bg-red-600 text-white rounded-2xl shadow-[0_0_30px_rgba(220,38,38,0.4)] flex items-center justify-center hover:bg-red-700 transition-all hover:scale-110 active:scale-95 animate-pulse"
+            >
+              <i class="fas fa-bolt text-xl"></i>
+            </a>
           </div>
         </div>
 
         <!-- SECCIÓN INFERIOR: CONTROLES MESH -->
         <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          
           <!-- SOS CARD -->
-          <div class="group relative overflow-hidden rounded-[2rem] border border-red-500/30 bg-gradient-to-br from-red-950/40 to-slate-950 p-8">
-            <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-red-500/10 blur-3xl group-hover:bg-red-500/20 transition-all"></div>
-            <p class="text-[10px] font-black uppercase tracking-[0.4em] text-red-400">Emergencia Critica</p>
+          <div
+            class="group relative overflow-hidden rounded-[2rem] border border-red-500/30 bg-gradient-to-br from-red-950/40 to-slate-950 p-8"
+          >
+            <div
+              class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-red-500/10 blur-3xl group-hover:bg-red-500/20 transition-all"
+            ></div>
+            <p class="text-[10px] font-black uppercase tracking-[0.4em] text-red-400">
+              Emergencia Critica
+            </p>
             <h3 class="text-2xl font-black text-white mt-2">Protocolo SOS</h3>
             <p class="text-xs text-red-100/50 mt-4 leading-relaxed">
-               Si estás en peligro o han robado tu vehículo, activa el modo pánico. Emitiremos una señal cifrada que será captada por cualquier usuario cercano.
+              Si estás en peligro o han robado tu vehículo, activa el modo pánico. Emitiremos una
+              señal cifrada que será captada por cualquier usuario cercano.
             </p>
             <div class="mt-8">
-               <a routerLink="/panic" class="block w-full py-4 bg-red-600 hover:bg-red-700 text-white text-center rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] shadow-lg shadow-red-950/50 transition-all">
-                  Iniciar SOS Global
-               </a>
+              <a
+                routerLink="/panic"
+                class="block w-full py-4 bg-red-600 hover:bg-red-700 text-white text-center rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] shadow-lg shadow-red-950/50 transition-all"
+              >
+                Iniciar SOS Global
+              </a>
             </div>
           </div>
 
           <!-- SCOUT/MESH CONTROL -->
           <div class="rounded-[2rem] border border-white/5 bg-slate-900/40 p-8 backdrop-blur-sm">
             <div class="flex items-start justify-between mb-6">
-               <div>
-                  <p class="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400">AutoRenta Mesh</p>
-                  <h3 class="text-2xl font-black text-white mt-2">Escudo Comunitario</h3>
-               </div>
-               <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" class="sr-only peer" [checked]="meshOptIn()" (change)="toggleMeshParticipation($event)">
-                  <div class="w-14 h-8 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"></div>
-               </label>
+              <div>
+                <p class="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400">
+                  AutoRenta Mesh
+                </p>
+                <h3 class="text-2xl font-black text-white mt-2">Escudo Comunitario</h3>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  class="sr-only peer"
+                  [checked]="meshOptIn()"
+                  (change)="toggleMeshParticipation($event)"
+                />
+                <div
+                  class="w-14 h-8 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"
+                ></div>
+              </label>
             </div>
 
             <p class="text-xs text-slate-400 leading-relaxed mb-6">
-               Al activar el escudo, tu teléfono buscará señales de emergencia de otros usuarios. Si encuentras una, la reportarás de forma anónima y ganarás reputación.
+              Al activar el escudo, tu teléfono buscará señales de emergencia de otros usuarios. Si
+              encuentras una, la reportarás de forma anónima y ganarás reputación.
             </p>
 
             <div class="space-y-3">
-               <div class="flex items-center justify-between p-4 bg-white/[0.03] rounded-2xl border border-white/5">
-                  <div class="flex items-center gap-3">
-                     <i class="fas fa-location-arrow text-cyan-400 text-sm"></i>
-                     <span class="text-xs font-bold text-slate-300">Ubicación</span>
-                  </div>
-                  <span class="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full" [ngClass]="permissionClass(locationPermission())">
-                     {{ permissionLabel(locationPermission()) }}
-                  </span>
-               </div>
-               @if (locationPermission() === 'denied') {
-                  <p class="text-[10px] text-amber-400/80 px-2">
-                     ⚠️ Requiere permiso "Permitir siempre" en los ajustes del sistema.
-                  </p>
-               }
+              <div
+                class="flex items-center justify-between p-4 bg-white/[0.03] rounded-2xl border border-white/5"
+              >
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-location-arrow text-cyan-400 text-sm"></i>
+                  <span class="text-xs font-bold text-slate-300">Ubicación</span>
+                </div>
+                <span
+                  class="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full"
+                  [ngClass]="permissionClass(locationPermission())"
+                >
+                  {{ permissionLabel(locationPermission()) }}
+                </span>
+              </div>
+              @if (locationPermission() === 'denied') {
+                <p class="text-[10px] text-amber-400/80 px-2">
+                  ⚠️ Requiere permiso "Permitir siempre" en los ajustes del sistema.
+                </p>
+              }
             </div>
           </div>
 
           <!-- RECENT ACTIVITY -->
           <div class="rounded-[2rem] border border-white/5 bg-slate-900/40 p-8">
-            <h3 class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-6">Actividad de Red</h3>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-6">
+              Actividad de Red
+            </h3>
             <div class="space-y-4">
               @for (beacon of recentDetections(); track beacon.deviceId) {
-                <div class="flex items-center justify-between p-4 bg-white/[0.02] rounded-2xl border border-white/5 border-l-2 border-l-emerald-500">
+                <div
+                  class="flex items-center justify-between p-4 bg-white/[0.02] rounded-2xl border border-white/5 border-l-2 border-l-emerald-500"
+                >
                   <div>
                     <p class="text-xs font-black text-slate-200 uppercase tracking-tighter">
                       {{ formatBeaconType(beacon.message.type) }} DETECTADO
                     </p>
-                    <p class="text-[9px] text-slate-500 mt-1">Hash: {{ beacon.message.bookingIdHash | slice:0:8 }} · RSSI: {{ beacon.rssi }}</p>
+                    <p class="text-[9px] text-slate-500 mt-1">
+                      Hash: {{ beacon.message.bookingIdHash | slice: 0 : 8 }} · RSSI:
+                      {{ beacon.rssi }}
+                    </p>
                   </div>
                   <div class="text-right">
-                    <p class="text-[10px] font-mono text-slate-400">{{ beacon.detectedAt | date: 'HH:mm:ss' }}</p>
+                    <p class="text-[10px] font-mono text-slate-400">
+                      {{ beacon.detectedAt | date: 'HH:mm:ss' }}
+                    </p>
                     <p class="text-[9px] text-emerald-500 font-bold">+50 PTS</p>
                   </div>
                 </div>
@@ -243,7 +337,6 @@ type PermissionStatus = 'unknown' | 'granted' | 'denied';
               }
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -251,7 +344,7 @@ type PermissionStatus = 'unknown' | 'granted' | 'denied';
   styles: [
     `
       .tactical-grid {
-        background-image: 
+        background-image:
           linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
           linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
         background-size: 30px 30px;
@@ -263,7 +356,12 @@ type PermissionStatus = 'unknown' | 'granted' | 'denied';
         left: 50%;
         width: 1000px;
         height: 1000px;
-        background: conic-gradient(from 0deg, rgba(34, 211, 238, 0.2), transparent 45deg, transparent);
+        background: conic-gradient(
+          from 0deg,
+          rgba(34, 211, 238, 0.2),
+          transparent 45deg,
+          transparent
+        );
         transform: translate(-50%, -50%);
         animation: rotate-radar 4s linear infinite;
         z-index: 5;
@@ -279,18 +377,37 @@ type PermissionStatus = 'unknown' | 'granted' | 'denied';
         z-index: 4;
       }
 
-      .circle-1 { width: 200px; height: 200px; }
-      .circle-2 { width: 400px; height: 400px; }
-      .circle-3 { width: 600px; height: 600px; }
+      .circle-1 {
+        width: 200px;
+        height: 200px;
+      }
+      .circle-2 {
+        width: 400px;
+        height: 400px;
+      }
+      .circle-3 {
+        width: 600px;
+        height: 600px;
+      }
 
       @keyframes rotate-radar {
-        from { transform: translate(-50%, -50%) rotate(0deg); }
-        to { transform: translate(-50%, -50%) rotate(360deg); }
+        from {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
       }
 
       @keyframes slide-in-from-top {
-        from { transform: translateY(-100%); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
+        from {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
       }
     `,
   ],
@@ -373,7 +490,7 @@ export class SecurityDashboardPage implements OnInit {
   }
 
   isAnyEmergencyActive(): boolean {
-    return this.security.activeAlerts().some(a => a.severity === 'CRITICAL');
+    return this.security.activeAlerts().some((a) => a.severity === 'CRITICAL');
   }
 
   getBatteryColor(level: number): string {
@@ -384,17 +501,23 @@ export class SecurityDashboardPage implements OnInit {
 
   permissionLabel(status: PermissionStatus): string {
     switch (status) {
-      case 'granted': return 'Active';
-      case 'denied': return 'Blocked';
-      default: return 'Action Required';
+      case 'granted':
+        return 'Active';
+      case 'denied':
+        return 'Blocked';
+      default:
+        return 'Action Required';
     }
   }
 
   permissionClass(status: PermissionStatus): string {
     switch (status) {
-      case 'granted': return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-      case 'denied': return 'bg-red-500/10 text-red-400 border border-red-500/20';
-      default: return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
+      case 'granted':
+        return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+      case 'denied':
+        return 'bg-red-500/10 text-red-400 border border-red-500/20';
+      default:
+        return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
     }
   }
 
@@ -462,7 +585,9 @@ export class SecurityDashboardPage implements OnInit {
       const result = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
       this.updateLocationStatus(result.state);
       result.onchange = () => this.updateLocationStatus(result.state);
-    } catch { /* Silent */ }
+    } catch {
+      /* Silent */
+    }
   }
 
   private updateLocationStatus(state: PermissionState): void {

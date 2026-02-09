@@ -41,13 +41,17 @@ export interface FlowActionEvent {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="bg-surface-primary rounded-2xl border border-border-subtle shadow-lg overflow-hidden">
+    <div
+      class="bg-surface-primary rounded-2xl border border-border-subtle shadow-lg overflow-hidden"
+    >
       <!-- Header con estado actual -->
       <div class="px-4 py-3 bg-surface-secondary border-b border-border-subtle">
         <div class="flex items-center justify-between">
           <span class="text-sm font-medium text-text-secondary">Estado del viaje</span>
           @if (flowInfo().isYourTurn) {
-            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-cta-default text-cta-text">
+            <span
+              class="px-2 py-0.5 text-xs font-semibold rounded-full bg-cta-default text-cta-text"
+            >
               Tu turno
             </span>
           }
@@ -72,7 +76,13 @@ export interface FlowActionEvent {
                 [class.text-text-tertiary]="step > flowInfo().step"
               >
                 @if (step < flowInfo().step) {
-                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                  <svg
+                    class="w-3.5 h-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 } @else {
@@ -110,8 +120,18 @@ export interface FlowActionEvent {
         @if (flowInfo().damageInfo?.hasDamages) {
           <div class="mb-4 p-3 rounded-lg bg-warning-bg border border-warning-strong/20">
             <div class="flex items-start gap-2">
-              <svg class="w-5 h-5 text-warning-strong flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <svg
+                class="w-5 h-5 text-warning-strong flex-shrink-0 mt-0.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
               <div>
                 <p class="text-sm font-medium text-warning-strong">
@@ -156,7 +176,12 @@ export interface FlowActionEvent {
         @if (countdownDisplay()) {
           <div class="mt-3 flex items-center justify-center gap-2 text-xs text-text-tertiary">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <span>Auto-liberación en: {{ countdownDisplay() }}</span>
           </div>
@@ -171,11 +196,13 @@ export interface FlowActionEvent {
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: block;
-    }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class BookingFlowCardComponent implements OnInit, OnDestroy {
   private readonly stateService = inject(BookingBilateralStateService);

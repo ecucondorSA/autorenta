@@ -574,9 +574,9 @@ export class RequestPayoutModalComponent {
       const amount = this.form.value.amount || 0;
 
       await firstValueFrom(
-        this.payoutService.requestPayout(this.userId, amount).pipe(
-          takeUntilDestroyed(this.destroyRef)
-        )
+        this.payoutService
+          .requestPayout(this.userId, amount)
+          .pipe(takeUntilDestroyed(this.destroyRef)),
       );
 
       this.payoutRequested.emit();

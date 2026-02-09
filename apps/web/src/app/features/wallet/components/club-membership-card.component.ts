@@ -10,10 +10,7 @@ import {
 } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
-import {
-  SUBSCRIPTION_STATUS_LABELS,
-  type SubscriptionTier,
-} from '@core/models/subscription.model';
+import { SUBSCRIPTION_STATUS_LABELS, type SubscriptionTier } from '@core/models/subscription.model';
 
 @Component({
   selector: 'app-club-membership-card',
@@ -37,7 +34,9 @@ import {
         class="rounded-2xl border border-cta-default/30 bg-gradient-to-br from-cta-default/5 to-surface-raised p-6 space-y-4 shadow-sm"
       >
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-cta-default/10 flex items-center justify-center border border-cta-default/20">
+          <div
+            class="w-12 h-12 rounded-full bg-cta-default/10 flex items-center justify-center border border-cta-default/20"
+          >
             <ion-icon name="shield-checkmark" class="text-2xl text-cta-default"></ion-icon>
           </div>
           <div>
@@ -112,17 +111,14 @@ import {
         <!-- Balance Progress -->
         <div class="relative space-y-2">
           <div class="flex items-baseline justify-between">
-            <span class="text-3xl font-bold text-white">
-              {{ discountPct() * 100 }}% OFF
-            </span>
-            <span class="text-sm text-white/70">
-              En garantías de vehículos
-            </span>
+            <span class="text-3xl font-bold text-white"> {{ discountPct() * 100 }}% OFF </span>
+            <span class="text-sm text-white/70"> En garantías de vehículos </span>
           </div>
 
           <!-- Description -->
           <p class="text-xs text-white/80 font-medium">
-            Tu plan te permite alquilar autos hasta nivel <strong>{{ maxTierName() }}</strong> con beneficio.
+            Tu plan te permite alquilar autos hasta nivel <strong>{{ maxTierName() }}</strong> con
+            beneficio.
           </p>
         </div>
 

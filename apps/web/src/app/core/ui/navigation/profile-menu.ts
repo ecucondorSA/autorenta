@@ -260,14 +260,20 @@ export function resolveProfileNavSections(params: {
 }): ResolvedProfileNavSection[] {
   const { pendingApprovalCount, unreadNotificationsCount } = params;
 
-  const resolveBadge = (badge: ProfileNavBadge | undefined): { text: string; kind: 'new' | 'count' } | null => {
+  const resolveBadge = (
+    badge: ProfileNavBadge | undefined,
+  ): { text: string; kind: 'new' | 'count' } | null => {
     if (!badge) return null;
     if (badge.kind === 'new') return { text: badge.text, kind: 'new' };
     if (badge.source === 'pending_approvals') {
-      return pendingApprovalCount > 0 ? { text: String(pendingApprovalCount), kind: 'count' } : null;
+      return pendingApprovalCount > 0
+        ? { text: String(pendingApprovalCount), kind: 'count' }
+        : null;
     }
     if (badge.source === 'unread_notifications') {
-      return unreadNotificationsCount > 0 ? { text: String(unreadNotificationsCount), kind: 'count' } : null;
+      return unreadNotificationsCount > 0
+        ? { text: String(unreadNotificationsCount), kind: 'count' }
+        : null;
     }
     return null;
   };

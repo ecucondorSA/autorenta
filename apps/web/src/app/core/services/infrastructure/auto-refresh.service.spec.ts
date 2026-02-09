@@ -56,8 +56,11 @@ describe('AutoRefreshService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, AutoRefreshService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },],
+      providers: [
+        ...testProviders,
+        AutoRefreshService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(AutoRefreshService);
   });

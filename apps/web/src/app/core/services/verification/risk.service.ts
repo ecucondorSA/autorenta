@@ -79,9 +79,7 @@ export class RiskService {
       },
     };
 
-    return from(
-      this.supabase.from('booking_risk_snapshots').insert(dbRow).select().single(),
-    ).pipe(
+    return from(this.supabase.from('booking_risk_snapshots').insert(dbRow).select().single()).pipe(
       map(({ data, error }) => {
         if (error) throw error;
         // Explicit cast to known DB shape to avoid 'any'

@@ -56,8 +56,11 @@ describe('BookingApprovalService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, BookingApprovalService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },],
+      providers: [
+        ...testProviders,
+        BookingApprovalService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(BookingApprovalService);
   });

@@ -56,8 +56,11 @@ describe('MercadoPagoBookingGatewayService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, MercadoPagoBookingGatewayService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },],
+      providers: [
+        ...testProviders,
+        MercadoPagoBookingGatewayService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(MercadoPagoBookingGatewayService);
   });

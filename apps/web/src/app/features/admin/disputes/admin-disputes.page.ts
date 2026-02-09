@@ -42,7 +42,9 @@ export class AdminDisputesPage implements OnInit {
 
   // Timeline & Evidence
   readonly timeline = signal<TimelineEntry[]>([]);
-  readonly evidence = signal<{ url: string; note?: string; type: string; created_at?: string }[]>([]);
+  readonly evidence = signal<{ url: string; note?: string; type: string; created_at?: string }[]>(
+    [],
+  );
 
   readonly filters = signal({
     status: '',
@@ -61,13 +63,12 @@ export class AdminDisputesPage implements OnInit {
 
       const filter = this.filters();
       if (filter.status) {
-        data = data.filter(d => d.status === filter.status);
+        data = data.filter((d) => d.status === filter.status);
       }
       if (filter.searchTerm) {
         const term = filter.searchTerm.toLowerCase();
-        data = data.filter(d =>
-          d.booking_id.toLowerCase().includes(term) ||
-          d.id.toLowerCase().includes(term)
+        data = data.filter(
+          (d) => d.booking_id.toLowerCase().includes(term) || d.id.toLowerCase().includes(term),
         );
       }
 
@@ -83,7 +84,9 @@ export class AdminDisputesPage implements OnInit {
   async openDetailModal(dispute: Dispute): Promise<void> {
     this.selectedDispute.set(dispute);
     this.resolutionNotes.set(dispute.internal_notes || '');
-    this.finalChargeAmount.set(dispute.penalty_amount_cents ? dispute.penalty_amount_cents / 100 : 0);
+    this.finalChargeAmount.set(
+      dispute.penalty_amount_cents ? dispute.penalty_amount_cents / 100 : 0,
+    );
     this.resolutionFavor.set((dispute.resolution_favor as 'owner' | 'renter' | 'split') || 'owner');
 
     // Load full details for timeline and evidence
@@ -119,10 +122,11 @@ export class AdminDisputesPage implements OnInit {
 
     this.loading.set(true);
     try {
-      const penaltyCents = this.finalChargeAmount() > 0 ? Math.round(this.finalChargeAmount() * 100) : 0;
+      const penaltyCents =
+        this.finalChargeAmount() > 0 ? Math.round(this.finalChargeAmount() * 100) : 0;
       const favor = this.resolutionFavor(); // 'owner' | 'renter' | 'split'
 
-      // Map UI 'split' to backend understandable resolution if needed, 
+      // Map UI 'split' to backend understandable resolution if needed,
       // or ensure backend handles 'split' (which resolveDisputeRpc does)
       // The RPC signature expects: resolution: 'favor_renter' | 'favor_owner' | 'split' | 'rejected';
 
@@ -136,7 +140,7 @@ export class AdminDisputesPage implements OnInit {
         disputeId: dispute.id,
         resolution: backendResolution,
         resolutionAmountCents: penaltyCents,
-        resolutionNotes: this.resolutionNotes()
+        resolutionNotes: this.resolutionNotes(),
       });
 
       if (!result.success) {
@@ -175,35 +179,43 @@ export class AdminDisputesPage implements OnInit {
 
   getStatusColor(status: string): string {
     switch (status) {
-      case 'open': return 'warning';
-      case 'in_review': return 'primary';
-      case 'resolved': return 'success';
-      case 'rejected': return 'medium';
-      default: return 'medium';
+      case 'open':
+        return 'warning';
+      case 'in_review':
+        return 'primary';
+      case 'resolved':
+        return 'success';
+      case 'rejected':
+        return 'medium';
+      default:
+        return 'medium';
     }
   }
 
   formatDate(dateStr?: string | null): string {
     if (!dateStr) return '-';
     return new Date(dateStr).toLocaleDateString('es-AR', {
-      day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   }
 
   getKindLabel(kind?: string): string {
     if (!kind) return 'General';
     const map: Record<string, string> = {
-      'damage': 'Daños',
-      'cleanliness': 'Limpieza',
-      'late_return': 'Devolución tardía',
-      'fuel_missing': 'Combustible faltante',
-      'other': 'Otro'
+      damage: 'Daños',
+      cleanliness: 'Limpieza',
+      late_return: 'Devolución tardía',
+      fuel_missing: 'Combustible faltante',
+      other: 'Otro',
     };
     return map[kind] || kind;
   }
 
   getStatusCount(status: string): number {
-    return this.disputes().filter(d => d.status === status).length;
+    return this.disputes().filter((d) => d.status === status).length;
   }
 
   isImage(path: string): boolean {

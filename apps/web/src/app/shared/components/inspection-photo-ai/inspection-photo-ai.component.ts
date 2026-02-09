@@ -12,7 +12,10 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PhotoQualityService } from '@core/services/ai/photo-quality.service';
-import { CosmeticConditionService, CosmeticIssue } from '@core/services/ai/cosmetic-condition.service';
+import {
+  CosmeticConditionService,
+  CosmeticIssue,
+} from '@core/services/ai/cosmetic-condition.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { IconComponent } from '../icon/icon.component';
@@ -194,8 +197,8 @@ const INSPECTION_POSITIONS: PositionConfig[] = [
       <div class="header">
         <h3 class="title">Fotos de inspección</h3>
         <p class="subtitle">
-          Sube fotos de todas las posiciones requeridas.
-          La IA analizará calidad y detectará daños automáticamente.
+          Sube fotos de todas las posiciones requeridas. La IA analizará calidad y detectará daños
+          automáticamente.
         </p>
       </div>
 
@@ -355,194 +358,196 @@ const INSPECTION_POSITIONS: PositionConfig[] = [
       }
     </div>
   `,
-  styles: [`
-    .inspection-photo-ai {
-      @apply flex flex-col gap-4 p-4;
-    }
+  styles: [
+    `
+      .inspection-photo-ai {
+        @apply flex flex-col gap-4 p-4;
+      }
 
-    .header {
-      @apply text-center mb-2;
-    }
+      .header {
+        @apply text-center mb-2;
+      }
 
-    .title {
-      @apply text-lg font-semibold text-gray-900;
-    }
+      .title {
+        @apply text-lg font-semibold text-gray-900;
+      }
 
-    .subtitle {
-      @apply text-sm text-gray-500 mt-1;
-    }
+      .subtitle {
+        @apply text-sm text-gray-500 mt-1;
+      }
 
-    .progress-section {
-      @apply flex items-center gap-3;
-    }
+      .progress-section {
+        @apply flex items-center gap-3;
+      }
 
-    .progress-bar {
-      @apply flex-1 h-2 bg-gray-200 rounded-full overflow-hidden;
-    }
+      .progress-bar {
+        @apply flex-1 h-2 bg-gray-200 rounded-full overflow-hidden;
+      }
 
-    .progress-fill {
-      @apply h-full bg-cta-default transition-all duration-300;
-    }
+      .progress-fill {
+        @apply h-full bg-cta-default transition-all duration-300;
+      }
 
-    .progress-fill.complete {
-      @apply bg-success-500;
-    }
+      .progress-fill.complete {
+        @apply bg-success-500;
+      }
 
-    .progress-text {
-      @apply text-sm text-gray-600 whitespace-nowrap;
-    }
+      .progress-text {
+        @apply text-sm text-gray-600 whitespace-nowrap;
+      }
 
-    .damages-summary {
-      @apply bg-warning-50 border border-warning-200 rounded-lg p-3;
-    }
+      .damages-summary {
+        @apply bg-warning-50 border border-warning-200 rounded-lg p-3;
+      }
 
-    .damages-header {
-      @apply flex items-center gap-2 text-warning-700 font-medium mb-2;
-    }
+      .damages-header {
+        @apply flex items-center gap-2 text-warning-700 font-medium mb-2;
+      }
 
-    .damages-list {
-      @apply flex flex-wrap gap-2;
-    }
+      .damages-list {
+        @apply flex flex-wrap gap-2;
+      }
 
-    .damage-tag {
-      @apply px-2 py-1 rounded text-xs font-medium;
-    }
+      .damage-tag {
+        @apply px-2 py-1 rounded text-xs font-medium;
+      }
 
-    .damage-tag.severity-minor {
-      @apply bg-gray-100 text-gray-700;
-    }
+      .damage-tag.severity-minor {
+        @apply bg-gray-100 text-gray-700;
+      }
 
-    .damage-tag.severity-moderate {
-      @apply bg-warning-100 text-warning-700;
-    }
+      .damage-tag.severity-moderate {
+        @apply bg-warning-100 text-warning-700;
+      }
 
-    .damage-tag.severity-severe {
-      @apply bg-error-100 text-error-700;
-    }
+      .damage-tag.severity-severe {
+        @apply bg-error-100 text-error-700;
+      }
 
-    .damage-more {
-      @apply text-xs text-gray-500;
-    }
+      .damage-more {
+        @apply text-xs text-gray-500;
+      }
 
-    .positions-grid {
-      @apply grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3;
-    }
+      .positions-grid {
+        @apply grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3;
+      }
 
-    .position-card {
-      @apply relative aspect-[4/3] rounded-lg border-2 border-dashed border-gray-300
+      .position-card {
+        @apply relative aspect-[4/3] rounded-lg border-2 border-dashed border-gray-300
              bg-gray-50 cursor-pointer transition-all overflow-hidden;
-    }
+      }
 
-    .position-card:hover {
-      @apply border-cta-default bg-cta-default/10;
-    }
+      .position-card:hover {
+        @apply border-cta-default bg-cta-default/10;
+      }
 
-    .position-card.filled {
-      @apply border-solid border-gray-200 bg-white;
-    }
+      .position-card.filled {
+        @apply border-solid border-gray-200 bg-white;
+      }
 
-    .position-card.required {
-      @apply border-cta-default/60;
-    }
+      .position-card.required {
+        @apply border-cta-default/60;
+      }
 
-    .position-card.validating {
-      @apply border-cta-default;
-    }
+      .position-card.validating {
+        @apply border-cta-default;
+      }
 
-    .position-card.invalid {
-      @apply border-error-400 bg-error-50;
-    }
+      .position-card.invalid {
+        @apply border-error-400 bg-error-50;
+      }
 
-    .photo-preview {
-      @apply w-full h-full relative;
-    }
+      .photo-preview {
+        @apply w-full h-full relative;
+      }
 
-    .photo-preview img {
-      @apply w-full h-full object-cover;
-    }
+      .photo-preview img {
+        @apply w-full h-full object-cover;
+      }
 
-    .validation-overlay {
-      @apply absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white;
-    }
+      .validation-overlay {
+        @apply absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white;
+      }
 
-    .spinner {
-      @apply w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mb-2;
-    }
+      .spinner {
+        @apply w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mb-2;
+      }
 
-    .spinner-sm {
-      @apply w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2;
-    }
+      .spinner-sm {
+        @apply w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2;
+      }
 
-    .quality-badge {
-      @apply absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-bold text-white;
-    }
+      .quality-badge {
+        @apply absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-bold text-white;
+      }
 
-    .quality-badge.good {
-      @apply bg-success-500;
-    }
+      .quality-badge.good {
+        @apply bg-success-500;
+      }
 
-    .quality-badge.medium {
-      @apply bg-warning-500;
-    }
+      .quality-badge.medium {
+        @apply bg-warning-500;
+      }
 
-    .quality-badge.low {
-      @apply bg-error-500;
-    }
+      .quality-badge.low {
+        @apply bg-error-500;
+      }
 
-    .damage-indicator {
-      @apply absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded
+      .damage-indicator {
+        @apply absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded
              bg-warning-500 text-white text-xs font-bold;
-    }
+      }
 
-    .remove-btn {
-      @apply absolute bottom-2 right-2 p-1.5 rounded-full bg-black/50 text-white
+      .remove-btn {
+        @apply absolute bottom-2 right-2 p-1.5 rounded-full bg-black/50 text-white
              hover:bg-black/70 transition-colors;
-    }
+      }
 
-    .reading-badge {
-      @apply absolute bottom-2 left-2 flex items-center gap-1 px-2 py-1 rounded
+      .reading-badge {
+        @apply absolute bottom-2 left-2 flex items-center gap-1 px-2 py-1 rounded
              bg-black/70 text-white text-xs font-medium;
-    }
+      }
 
-    .empty-state {
-      @apply w-full h-full flex flex-col items-center justify-center gap-1 text-gray-400;
-    }
+      .empty-state {
+        @apply w-full h-full flex flex-col items-center justify-center gap-1 text-gray-400;
+      }
 
-    .position-label {
-      @apply text-xs font-medium text-center;
-    }
+      .position-label {
+        @apply text-xs font-medium text-center;
+      }
 
-    .required-badge {
-      @apply text-[10px] text-cta-default font-medium;
-    }
+      .required-badge {
+        @apply text-[10px] text-cta-default font-medium;
+      }
 
-    .actions {
-      @apply flex justify-center pt-4;
-    }
+      .actions {
+        @apply flex justify-center pt-4;
+      }
 
-    .btn-primary {
-      @apply flex items-center justify-center px-6 py-3 rounded-lg
+      .btn-primary {
+        @apply flex items-center justify-center px-6 py-3 rounded-lg
              bg-cta-default text-white font-medium
              hover:bg-cta-hover disabled:opacity-50 disabled:cursor-not-allowed
              transition-colors;
-    }
+      }
 
-    .issues-section {
-      @apply mt-4 p-3 bg-error-50 rounded-lg;
-    }
+      .issues-section {
+        @apply mt-4 p-3 bg-error-50 rounded-lg;
+      }
 
-    .issues-section h4 {
-      @apply text-sm font-medium text-error-700 mb-2;
-    }
+      .issues-section h4 {
+        @apply text-sm font-medium text-error-700 mb-2;
+      }
 
-    .issues-section ul {
-      @apply list-disc list-inside text-sm text-error-600 space-y-1;
-    }
+      .issues-section ul {
+        @apply list-disc list-inside text-sm text-error-600 space-y-1;
+      }
 
-    .hidden {
-      @apply sr-only;
-    }
-  `],
+      .hidden {
+        @apply sr-only;
+      }
+    `,
+  ],
 })
 export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
   // ============================================================================
@@ -607,9 +612,7 @@ export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
   /** All positions to display (required first, then optional) */
   readonly displayPositions = computed(() => {
     const required = this.requiredPositionConfigs();
-    const optional = INSPECTION_POSITIONS.filter(
-      (p) => !this.requiredPositions.includes(p.id),
-    );
+    const optional = INSPECTION_POSITIONS.filter((p) => !this.requiredPositions.includes(p.id));
     return [...required, ...optional];
   });
 
@@ -632,11 +635,7 @@ export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
     const allValid = this.photos().every(
       (p) => p.validationStatus === 'valid' || p.validationStatus === 'pending',
     );
-    return (
-      completed.length >= this.requiredPositions.length &&
-      allValid &&
-      !this.isValidating()
-    );
+    return completed.length >= this.requiredPositions.length && allValid && !this.isValidating();
   });
 
   /** Whether any photo is being validated */
@@ -668,9 +667,7 @@ export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
 
   /** Estimated odometer from OCR */
   readonly estimatedOdometer = computed(() => {
-    const odometerPhoto = this.photos().find(
-      (p) => p.position === 'odometer' && p.odometerReading,
-    );
+    const odometerPhoto = this.photos().find((p) => p.position === 'odometer' && p.odometerReading);
     return odometerPhoto?.odometerReading;
   });
 
@@ -689,10 +686,7 @@ export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
   private fileInputRef?: HTMLInputElement;
 
   ngOnInit(): void {
-    this.logger.debug(
-      '[InspectionPhotoAI] Initialized with positions:',
-      this.requiredPositions,
-    );
+    this.logger.debug('[InspectionPhotoAI] Initialized with positions:', this.requiredPositions);
   }
 
   ngOnDestroy(): void {
@@ -814,7 +808,10 @@ export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
       // Run damage detection if enabled
       if (this.enableDamageDetection && positionConfig?.detectDamages) {
         // Map inspection position to vehicle area
-        const areaMap: Record<string, 'front' | 'rear' | 'left' | 'right' | 'interior' | 'dashboard' | 'trunk'> = {
+        const areaMap: Record<
+          string,
+          'front' | 'rear' | 'left' | 'right' | 'interior' | 'dashboard' | 'trunk'
+        > = {
           front: 'front',
           rear: 'rear',
           left_side: 'left',
@@ -857,7 +854,7 @@ export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
             ...updated[idx],
             validationStatus: qualityResult.quality.is_acceptable ? 'valid' : 'invalid',
             qualityScore: qualityResult.quality.score,
-            issues: qualityResult.quality.issues.map(i => i.description),
+            issues: qualityResult.quality.issues.map((i) => i.description),
             damages,
             odometerReading,
             fuelLevel,

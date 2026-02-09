@@ -406,7 +406,8 @@ export class VerificationPromptBannerComponent implements OnInit {
 
     const docs = this.verificationService.documents();
     if (docs.some((d) => d.status === 'rejected')) return 'rejected' as const;
-    if (docs.some((d) => d.status === 'pending' || d.status === 'verified')) return 'pending' as const;
+    if (docs.some((d) => d.status === 'pending' || d.status === 'verified'))
+      return 'pending' as const;
     if (docs.length > 0) return 'pending' as const;
 
     return 'not_started' as const;

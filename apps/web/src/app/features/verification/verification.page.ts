@@ -1,5 +1,12 @@
-
-import { Component, OnInit, inject, computed, signal, effect, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  computed,
+  signal,
+  effect,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { VerificationService } from '@core/services/verification/verification.service';
@@ -105,23 +112,26 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
   imports: [CommonModule, RouterLink, SelfieCaptureComponent, LicenseCaptureComponent],
   template: `
     <div class="verification-page bg-surface-base min-h-screen transition-colors duration-300">
-
       @if (showSelfieCapture()) {
         <app-selfie-capture
           (cancelled)="showSelfieCapture.set(false)"
-          (completed)="onSelfieCaptured($event)">
+          (completed)="onSelfieCaptured($event)"
+        >
         </app-selfie-capture>
       }
 
       @if (showLicenseCapture()) {
         <app-license-capture
           (cancelled)="showLicenseCapture.set(false)"
-          (completed)="onLicenseCaptured($event)">
+          (completed)="onLicenseCaptured($event)"
+        >
         </app-license-capture>
       }
 
       <!-- Header Section -->
-      <section class="relative overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white">
+      <section
+        class="relative overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white"
+      >
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <p class="text-xs uppercase tracking-[0.3em] text-white/70 mb-3">Centro de seguridad</p>
           <div class="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
@@ -132,13 +142,17 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
                 cargados. Avanza en pocos pasos y publica más rápido.
               </p>
               <div class="flex flex-wrap gap-3">
-                <a href="#verification-docs"
-                   class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-semibold text-primary-700 shadow hover:bg-primary-50 transition-colors">
+                <a
+                  href="#verification-docs"
+                  class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-semibold text-primary-700 shadow hover:bg-primary-50 transition-colors"
+                >
                   Continuar verificación →
                 </a>
-                <button type="button"
-                        (click)="toggleFaq()"
-                        class="inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white/90 hover:border-white hover:text-white transition-colors">
+                <button
+                  type="button"
+                  (click)="toggleFaq()"
+                  class="inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white/90 hover:border-white hover:text-white transition-colors"
+                >
                   {{ showFaq() ? 'Ocultar preguntas' : 'Preguntas frecuentes' }}
                 </button>
               </div>
@@ -163,17 +177,27 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
               <div class="flex items-start justify-between gap-4">
                 <div>
                   <p class="text-sm text-text-secondary">Estado actual</p>
-                  <p class="text-2xl font-semibold text-text-primary mt-1">{{ getStatusLabel(status.status) }}</p>
-                  <p class="text-sm text-text-secondary">Actualizado {{ formatDate(status.updated_at) }}</p>
+                  <p class="text-2xl font-semibold text-text-primary mt-1">
+                    {{ getStatusLabel(status.status) }}
+                  </p>
+                  <p class="text-sm text-text-secondary">
+                    Actualizado {{ formatDate(status.updated_at) }}
+                  </p>
                 </div>
-                <span class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"
-                      [ngClass]="getStatusChipClasses(status.status)">
+                <span
+                  class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"
+                  [ngClass]="getStatusChipClasses(status.status)"
+                >
                   {{ getStatusEmoji(status.status) }} {{ status.status.toLowerCase() }}
                 </span>
               </div>
-              <p class="mt-4 text-sm text-text-secondary">{{ getStatusDescription(status.status) }}</p>
+              <p class="mt-4 text-sm text-text-secondary">
+                {{ getStatusDescription(status.status) }}
+              </p>
               @if (status.notes) {
-                <div class="mt-4 rounded-xl border border-error-border/60 bg-error-bg/60 px-4 py-3 text-sm text-error-strong">
+                <div
+                  class="mt-4 rounded-xl border border-error-border/60 bg-error-bg/60 px-4 py-3 text-sm text-error-strong"
+                >
                   {{ status.notes }}
                 </div>
               }
@@ -199,18 +223,28 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
             </div>
 
             <!-- Action Card -->
-            <div class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm flex flex-col gap-4">
+            <div
+              class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm flex flex-col gap-4"
+            >
               <div>
                 <h3 class="text-lg font-semibold text-text-primary">Acciones inmediatas</h3>
-                <p class="text-sm text-text-secondary">Completa los documentos y solicitaremos revisión automáticamente.</p>
+                <p class="text-sm text-text-secondary">
+                  Completa los documentos y solicitaremos revisión automáticamente.
+                </p>
               </div>
-              <button (click)="triggerVerification()"
-                      [disabled]="isVerifying()"
-                      class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-2 font-semibold text-text-inverse transition-colors disabled:bg-gray-400">
+              <button
+                (click)="triggerVerification()"
+                [disabled]="isVerifying()"
+                class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-2 font-semibold text-text-inverse transition-colors disabled:bg-gray-400"
+              >
                 {{ isVerifying() ? 'Revisando...' : 'Solicitar revisión ahora' }}
               </button>
               <p class="text-xs text-text-secondary">
-                {{ autoTriggered() ? 'Verificación enviada automáticamente.' : 'Envío automático al completar todo.' }}
+                {{
+                  autoTriggered()
+                    ? 'Verificación enviada automáticamente.'
+                    : 'Envío automático al completar todo.'
+                }}
               </p>
             </div>
           </section>
@@ -225,15 +259,24 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
                     <h2 class="text-xl font-semibold text-text-primary">{{ category.title }}</h2>
                     <p class="text-sm text-text-secondary">{{ category.description }}</p>
                   </div>
-                  <div class="rounded-full bg-surface-base px-4 py-1 text-sm font-semibold text-text-secondary">
-                    {{ getCategoryStats(category.docs).completed }}/{{ category.docs.length }} completado
+                  <div
+                    class="rounded-full bg-surface-base px-4 py-1 text-sm font-semibold text-text-secondary"
+                  >
+                    {{ getCategoryStats(category.docs).completed }}/{{
+                      category.docs.length
+                    }}
+                    completado
                   </div>
                 </div>
 
                 <div class="mt-5 space-y-4">
                   @for (doc of category.docs; track doc.id) {
-                    <div class="rounded-2xl border border-border-default bg-white/70 px-4 py-4 shadow-sm">
-                      <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                    <div
+                      class="rounded-2xl border border-border-default bg-white/70 px-4 py-4 shadow-sm"
+                    >
+                      <div
+                        class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between"
+                      >
                         <div>
                           <p class="text-base font-semibold text-text-primary">
                             {{ doc.emoji }} {{ doc.label }}
@@ -250,8 +293,10 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
                             </p>
                           }
                         </div>
-                        <span class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"
-                              [ngClass]="getDocStatusClasses(doc.id)">
+                        <span
+                          class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"
+                          [ngClass]="getDocStatusClasses(doc.id)"
+                        >
                           {{ getDocStatusLabel(doc.id) }}
                         </span>
                       </div>
@@ -259,47 +304,115 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
                       <div class="mt-4 flex flex-wrap gap-3">
                         <!-- CUSTOM LOGIC FOR SELFIE & LICENSE -->
                         @if (doc.id === 'selfie') {
-                           <button
-                             (click)="openSelfieCapture()"
-                             [disabled]="getDocState(doc.id) === 'approved' || getDocState(doc.id) === 'in_review'"
-                             class="inline-flex items-center gap-2 rounded-xl bg-primary-600 text-text-inverse px-3 py-1.5 text-sm font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                             {{ getDocState(doc.id) === 'missing' ? 'Iniciar Validación Facial' : 'Repetir Validación' }}
-                           </button>
+                          <button
+                            (click)="openSelfieCapture()"
+                            [disabled]="
+                              getDocState(doc.id) === 'approved' ||
+                              getDocState(doc.id) === 'in_review'
+                            "
+                            class="inline-flex items-center gap-2 rounded-xl bg-primary-600 text-text-inverse px-3 py-1.5 text-sm font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                              />
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                            </svg>
+                            {{
+                              getDocState(doc.id) === 'missing'
+                                ? 'Iniciar Validación Facial'
+                                : 'Repetir Validación'
+                            }}
+                          </button>
                         } @else if (doc.id === 'driver_license') {
-                           <button
-                             (click)="openLicenseCapture()"
-                             [disabled]="getDocState(doc.id) === 'approved' || getDocState(doc.id) === 'in_review'"
-                             class="inline-flex items-center gap-2 rounded-xl bg-primary-600 text-text-inverse px-3 py-1.5 text-sm font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0c0 .884-.716 1.6-1.6 1.6H9.6a1.6 1.6 0 100-3.2 1.6 1.6 0 001.6 1.6z" /></svg>
-                             {{ getDocState(doc.id) === 'missing' ? 'Escanear Licencia' : 'Repetir Escaneo' }}
-                           </button>
+                          <button
+                            (click)="openLicenseCapture()"
+                            [disabled]="
+                              getDocState(doc.id) === 'approved' ||
+                              getDocState(doc.id) === 'in_review'
+                            "
+                            class="inline-flex items-center gap-2 rounded-xl bg-primary-600 text-text-inverse px-3 py-1.5 text-sm font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0c0 .884-.716 1.6-1.6 1.6H9.6a1.6 1.6 0 100-3.2 1.6 1.6 0 001.6 1.6z"
+                              />
+                            </svg>
+                            {{
+                              getDocState(doc.id) === 'missing'
+                                ? 'Escanear Licencia'
+                                : 'Repetir Escaneo'
+                            }}
+                          </button>
                         } @else {
-                           <!-- STANDARD DOC UPLOAD -->
+                          <!-- STANDARD DOC UPLOAD -->
                           <div class="relative">
                             <input
                               type="file"
                               [id]="doc.id"
                               class="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
                               [accept]="doc.acceptedFormats?.join(',')"
-                              [disabled]="getDocState(doc.id) === 'approved' || getDocState(doc.id) === 'in_review' || isUploading(doc.id)"
+                              [disabled]="
+                                getDocState(doc.id) === 'approved' ||
+                                getDocState(doc.id) === 'in_review' ||
+                                isUploading(doc.id)
+                              "
                               (change)="onFileSelected($event, doc.id)"
                             />
                             <button
                               class="inline-flex items-center gap-2 rounded-xl bg-surface-elevated border border-border-base px-3 py-1.5 text-sm font-medium hover:bg-surface-highlight transition-colors"
-                              [class.opacity-50]="getDocState(doc.id) === 'approved' || getDocState(doc.id) === 'in_review'">
-                              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                              [class.opacity-50]="
+                                getDocState(doc.id) === 'approved' ||
+                                getDocState(doc.id) === 'in_review'
+                              "
+                            >
+                              <svg
+                                class="w-4 h-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                                />
                               </svg>
-                              {{ getDocState(doc.id) === 'missing' ? 'Subir documento' : 'Reemplazar' }}
+                              {{
+                                getDocState(doc.id) === 'missing' ? 'Subir documento' : 'Reemplazar'
+                              }}
                             </button>
                           </div>
                         }
 
                         @if (getDocPrefillLabels(doc.id).length > 0 && doc.id !== 'selfie') {
-                          <button type="button" 
-                                  (click)="prefillDoc(doc.id)"
-                                  class="inline-flex items-center gap-2 rounded-xl bg-surface-base/60 px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors">
+                          <button
+                            type="button"
+                            (click)="prefillDoc(doc.id)"
+                            class="inline-flex items-center gap-2 rounded-xl bg-surface-base/60 px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
+                          >
                             ✨ Autocompletar
                           </button>
                         }
@@ -310,11 +423,13 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
               </div>
             }
           </div>
-          
+
           <aside class="space-y-6">
             <div class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
               <h3 class="text-lg font-semibold text-text-primary">Datos importados del perfil</h3>
-              <p class="text-sm text-text-secondary">Reutilizamos la información que ya completaste.</p>
+              <p class="text-sm text-text-secondary">
+                Reutilizamos la información que ya completaste.
+              </p>
               <ul class="mt-4 space-y-2 text-sm">
                 @if (prefilledFields().length > 0) {
                   @for (hint of prefilledFields(); track hint.label) {
@@ -327,19 +442,26 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
                     </li>
                   }
                 } @else {
-                  <li class="text-text-secondary">Completa tu perfil para habilitar el autollenado.</li>
+                  <li class="text-text-secondary">
+                    Completa tu perfil para habilitar el autollenado.
+                  </li>
                 }
               </ul>
-              <a routerLink="/profile" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700">
+              <a
+                routerLink="/profile"
+                class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700"
+              >
                 Actualizar perfil →
               </a>
             </div>
-            
+
             <div class="rounded-2xl border border-border-default bg-surface-raised p-6 shadow-sm">
               <h3 class="text-lg font-semibold text-text-primary">¿Necesitas ayuda?</h3>
               <p class="text-sm text-text-secondary">¿Hubo problemas? Escribinos.</p>
-              <a href="mailto:hola@autorenta.com"
-                 class="mt-4 inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors">
+              <a
+                href="mailto:hola@autorenta.com"
+                class="mt-4 inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors"
+              >
                 Escribir a soporte
               </a>
             </div>
@@ -353,7 +475,9 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
               <div class="divide-y divide-border-default">
                 @for (faq of faqItems; track faq.question) {
                   <details class="group py-3">
-                    <summary class="flex cursor-pointer items-center justify-between text-base font-semibold text-text-primary">
+                    <summary
+                      class="flex cursor-pointer items-center justify-between text-base font-semibold text-text-primary"
+                    >
                       {{ faq.question }}
                       <span class="text-lg transition-transform group-open:rotate-180">⌄</span>
                     </summary>
@@ -367,9 +491,13 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
       </div>
     </div>
   `,
-  styles: [`
-    .verification-page { min-height: 100vh; }
-  `],
+  styles: [
+    `
+      .verification-page {
+        min-height: 100vh;
+      }
+    `,
+  ],
 })
 export class VerificationPage implements OnInit {
   private readonly verificationService = inject(VerificationService);
@@ -432,12 +560,20 @@ export class VerificationPage implements OnInit {
     }
 
     if (!map['driver_license']) {
-      const licenseDocs = [map['license_front'], map['license_back']].filter(Boolean) as UserDocument[];
+      const licenseDocs = [map['license_front'], map['license_back']].filter(
+        Boolean,
+      ) as UserDocument[];
       if (licenseDocs.length > 0) {
-        const hasRejected = licenseDocs.some(d => d.status === 'rejected');
-        const hasPending = licenseDocs.some(d => d.status === 'pending');
-        const hasVerified = licenseDocs.some(d => d.status === 'verified');
-        const status = hasRejected ? 'rejected' : (hasPending ? 'pending' : (hasVerified ? 'verified' : licenseDocs[0].status));
+        const hasRejected = licenseDocs.some((d) => d.status === 'rejected');
+        const hasPending = licenseDocs.some((d) => d.status === 'pending');
+        const hasVerified = licenseDocs.some((d) => d.status === 'verified');
+        const status = hasRejected
+          ? 'rejected'
+          : hasPending
+            ? 'pending'
+            : hasVerified
+              ? 'verified'
+              : licenseDocs[0].status;
         map['driver_license'] = { ...licenseDocs[0], kind: 'driver_license', status };
       }
     }
@@ -484,21 +620,25 @@ export class VerificationPage implements OnInit {
 
   onLicenseCaptured(blob: Blob) {
     this.showLicenseCapture.set(false);
-    this.licenseVerificationService.processLicense(blob)
+    this.licenseVerificationService
+      .processLicense(blob)
       .then(() => void this.verificationService.loadDocuments()) // reload docs
-      .catch(err => console.error('License analysis failed', err));
+      .catch((err) => console.error('License analysis failed', err));
   }
 
   triggerVerification(auto = false): void {
     if (this.isVerifying()) return;
     this.isVerifying.set(true);
-    this.verificationService.triggerVerification().then(() => {
-      this.isVerifying.set(false);
-      if (!auto) this.autoTriggered.set(false);
-    }).catch(() => {
-      this.isVerifying.set(false);
-      if (auto) this.autoTriggered.set(false);
-    });
+    this.verificationService
+      .triggerVerification()
+      .then(() => {
+        this.isVerifying.set(false);
+        if (!auto) this.autoTriggered.set(false);
+      })
+      .catch(() => {
+        this.isVerifying.set(false);
+        if (auto) this.autoTriggered.set(false);
+      });
   }
 
   prefillDoc(docId: string): void {
@@ -525,7 +665,8 @@ export class VerificationPage implements OnInit {
     if (docRecord?.status === 'rejected') return 'rejected';
     if (docRecord?.status === 'verified') return 'approved';
     if (docRecord?.status === 'pending') return 'in_review';
-    if (docRecord?.status === 'not_started') return this.missingDocs().includes(docId) ? 'missing' : 'in_review';
+    if (docRecord?.status === 'not_started')
+      return this.missingDocs().includes(docId) ? 'missing' : 'in_review';
     // If not in map and missing from missingDocs, default to missing or handle edge case
     if (!docRecord && this.missingDocs().includes(docId)) return 'missing';
     if (!docRecord) return 'missing';
@@ -534,76 +675,108 @@ export class VerificationPage implements OnInit {
 
   getDocStatusLabel(docId: string): string {
     switch (this.getDocState(docId)) {
-      case 'approved': return 'Aprobado';
-      case 'rejected': return 'Observado';
-      case 'in_review': return 'En revisión';
-      default: return 'Pendiente';
+      case 'approved':
+        return 'Aprobado';
+      case 'rejected':
+        return 'Observado';
+      case 'in_review':
+        return 'En revisión';
+      default:
+        return 'Pendiente';
     }
   }
 
   getDocStatusClasses(docId: string): string {
     switch (this.getDocState(docId)) {
-      case 'approved': return 'border-success-light text-success-strong bg-success-light/10';
-      case 'rejected': return 'border-error-border text-error-strong bg-error-bg';
-      case 'in_review': return 'border-primary-400 text-primary-600 bg-primary-50';
-      default: return 'border-warning-border text-warning-600 bg-warning-bg';
+      case 'approved':
+        return 'border-success-light text-success-strong bg-success-light/10';
+      case 'rejected':
+        return 'border-error-border text-error-strong bg-error-bg';
+      case 'in_review':
+        return 'border-primary-400 text-primary-600 bg-primary-50';
+      default:
+        return 'border-warning-border text-warning-600 bg-warning-bg';
     }
   }
 
   getDocStatusHelperText(docId: string): string | null {
     switch (this.getDocState(docId)) {
-      case 'approved': return 'Documento aprobado. Solo actualizalo si cambió algo.';
-      case 'rejected': return 'Hubo observaciones. Revisá las notas en el resumen.';
-      case 'in_review': return 'Ya lo recibimos y lo estamos revisando.';
-      default: return null;
+      case 'approved':
+        return 'Documento aprobado. Solo actualizalo si cambió algo.';
+      case 'rejected':
+        return 'Hubo observaciones. Revisá las notas en el resumen.';
+      case 'in_review':
+        return 'Ya lo recibimos y lo estamos revisando.';
+      default:
+        return null;
     }
   }
 
   getDocStatusHelperClasses(docId: string): string {
     switch (this.getDocState(docId)) {
-      case 'approved': return 'text-success-strong';
-      case 'rejected': return 'text-error-strong';
-      case 'in_review': return 'text-primary-600';
-      default: return 'text-text-secondary';
+      case 'approved':
+        return 'text-success-strong';
+      case 'rejected':
+        return 'text-error-strong';
+      case 'in_review':
+        return 'text-primary-600';
+      default:
+        return 'text-text-secondary';
     }
   }
 
   formatDate(value?: string | null): string {
     if (!value) return '—';
     try {
-      return new Intl.DateTimeFormat('es-AR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
-    } catch { return value; }
+      return new Intl.DateTimeFormat('es-AR', { dateStyle: 'medium', timeStyle: 'short' }).format(
+        new Date(value),
+      );
+    } catch {
+      return value;
+    }
   }
 
   getStatusLabel(status: VerificationStatus): string {
     switch (status) {
-      case 'VERIFICADO': return 'Verificado';
-      case 'RECHAZADO': return 'Rechazado';
-      default: return 'En revisión';
+      case 'VERIFICADO':
+        return 'Verificado';
+      case 'RECHAZADO':
+        return 'Rechazado';
+      default:
+        return 'En revisión';
     }
   }
 
   getStatusDescription(status: VerificationStatus): string {
     switch (status) {
-      case 'VERIFICADO': return 'Ya podés publicar y recibir reservas sin demoras.';
-      case 'RECHAZADO': return 'Revisá las notas para corregir los documentos observados.';
-      default: return 'Estamos revisando tu documentación. Te avisaremos apenas tengamos novedades.';
+      case 'VERIFICADO':
+        return 'Ya podés publicar y recibir reservas sin demoras.';
+      case 'RECHAZADO':
+        return 'Revisá las notas para corregir los documentos observados.';
+      default:
+        return 'Estamos revisando tu documentación. Te avisaremos apenas tengamos novedades.';
     }
   }
 
   getStatusEmoji(status: VerificationStatus): string {
     switch (status) {
-      case 'VERIFICADO': return '✅';
-      case 'RECHAZADO': return '❌';
-      default: return '⏳';
+      case 'VERIFICADO':
+        return '✅';
+      case 'RECHAZADO':
+        return '❌';
+      default:
+        return '⏳';
     }
   }
 
   getStatusChipClasses(status: VerificationStatus): string {
     switch (status) {
-      case 'VERIFICADO': return 'border-success-light text-success-strong bg-success-light/10';
-      case 'RECHAZADO': return 'border-error-border text-error-strong bg-error-bg';
-      default: return 'border-warning-border text-warning-600 bg-warning-bg';
+      case 'VERIFICADO':
+        return 'border-success-light text-success-strong bg-success-light/10';
+      case 'RECHAZADO':
+        return 'border-error-border text-error-strong bg-error-bg';
+      default:
+        return 'border-warning-border text-warning-600 bg-warning-bg';
     }
   }
 
@@ -613,9 +786,10 @@ export class VerificationPage implements OnInit {
     if (input.files?.length) {
       const file = input.files[0];
       // Trigger upload logic via Service
-      this.verificationService.uploadDocument(file, docId)
+      this.verificationService
+        .uploadDocument(file, docId)
         .then(() => this.verificationService.loadDocuments())
-        .catch(err => console.error('Upload failed', err));
+        .catch((err) => console.error('Upload failed', err));
     }
   }
 

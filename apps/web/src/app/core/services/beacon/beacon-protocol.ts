@@ -76,7 +76,8 @@ export class BeaconProtocol {
    * Returns null if invalid magic bytes or checksum failure
    */
   decode(data: Uint8Array | DataView): BeaconMessage | null {
-    const view = data instanceof DataView ? data : new DataView(data.buffer, data.byteOffset, data.byteLength);
+    const view =
+      data instanceof DataView ? data : new DataView(data.buffer, data.byteOffset, data.byteLength);
 
     if (view.byteLength < 25) {
       console.warn('[BeaconProtocol] Packet too short', view.byteLength);

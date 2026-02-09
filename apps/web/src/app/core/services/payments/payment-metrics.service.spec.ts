@@ -21,9 +21,12 @@ describe('PaymentMetricsService', () => {
     mockCircuitBreaker.isOpen.and.returnValue(false);
 
     TestBed.configureTestingModule({
-      providers: [...testProviders, PaymentMetricsService,
+      providers: [
+        ...testProviders,
+        PaymentMetricsService,
         { provide: LoggerService, useValue: mockLogger },
-        { provide: CircuitBreakerService, useValue: mockCircuitBreaker },],
+        { provide: CircuitBreakerService, useValue: mockCircuitBreaker },
+      ],
     });
 
     service = TestBed.inject(PaymentMetricsService);

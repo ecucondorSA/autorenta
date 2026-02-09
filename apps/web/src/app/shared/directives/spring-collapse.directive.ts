@@ -1,12 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  inject,
-  input,
-  effect,
-  signal,
-  output,
-} from '@angular/core';
+import { Directive, ElementRef, inject, input, effect, signal, output } from '@angular/core';
 
 /**
  * Directiva que aplica animación de colapso/expansión con efecto spring.

@@ -31,6 +31,4 @@ export type BookingStatus =
   | 'expired';
 
 // UI-only derived statuses (NOT stored in DB `booking_status`)
-export type BookingUiStatus =
-  | BookingStatus
-  | 'pending_deposit';
+export type BookingUiStatus = BookingStatus | 'pending_deposit';

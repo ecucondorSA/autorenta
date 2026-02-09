@@ -140,7 +140,7 @@ export const kycGuard: CanMatchFn = async () => {
   const profileService = inject(ProfileService);
   const router = inject(Router);
 
- try {
+  try {
     const profile = await profileService.getMe();
 
     // NOTE: `profiles.kyc` does not exist in production.

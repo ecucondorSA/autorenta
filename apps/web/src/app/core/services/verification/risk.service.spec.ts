@@ -56,7 +56,11 @@ describe('RiskService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, RiskService, { provide: SupabaseClientService, useValue: mockSupabaseService }],
+      providers: [
+        ...testProviders,
+        RiskService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(RiskService);
   });

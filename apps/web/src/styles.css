@@ -577,15 +577,15 @@ ion-toast.toast-modern {
     /* ─── Bordes ─── */
     --border-default: #e3e3e3; /* Gray G10 */
     --border-muted: #f3f4f6; /* Gray 50 */
-    --border-focus: #00D95F; /* Verde Neón Unificado */
+    --border-focus: #00d95f; /* Verde Neón Unificado */
     --border-hover: #1a1a1a; /* Dark hover */
     --border-error: #ff2a2a; /* Digital Red */
-    --border-success: #00D95F; /* Verde Neón Unificado */
+    --border-success: #00d95f; /* Verde Neón Unificado */
 
     /* ─── CTAs y Acciones - Verde Neón Unificado ─── */
-    --cta-default: #00D95F; /* Verde Neón - Primary Action */
-    --cta-hover: #00C553; /* Hover state */
-    --cta-pressed: #00B048; /* Pressed state */
+    --cta-default: #00d95f; /* Verde Neón - Primary Action */
+    --cta-hover: #00c553; /* Hover state */
+    --cta-pressed: #00b048; /* Pressed state */
     --cta-text: #000000; /* Negro para máximo contraste */
 
     /* ─── CTA Secondary (Outline/Ghost) ─── */
@@ -598,9 +598,9 @@ ion-toast.toast-modern {
     --cta-info-text: #ffffff; /* Blanco */
 
     /* ─── CTA Neon (Alias para compatibilidad) ─── */
-    --cta-neon: #00D95F; /* Verde Neón */
-    --cta-neon-hover: #00C553;
-    --cta-neon-pressed: #00B048;
+    --cta-neon: #00d95f; /* Verde Neón */
+    --cta-neon-hover: #00c553;
+    --cta-neon-pressed: #00b048;
     --cta-neon-text: #000000;
 
     /* ─── Estados y Feedback ─── */
@@ -620,7 +620,7 @@ ion-toast.toast-modern {
     --success-200: #bbf7d0;
     --success-300: #86efac;
     --success-400: #4ade80;
-    --success-500: #00D95F; /* Verde Neón Unificado */
+    --success-500: #00d95f; /* Verde Neón Unificado */
     --success-600: #16a34a;
     --success-700: #15803d;
     --success-800: #166534;
@@ -631,7 +631,7 @@ ion-toast.toast-modern {
     --warning-200: #fef08a;
     --warning-300: #fde047;
     --warning-400: #facc15;
-    --warning-500: #F59E0B; /* Amber Warning */
+    --warning-500: #f59e0b; /* Amber Warning */
     --warning-600: #ca8a04;
     --warning-700: #a16207;
     --warning-800: #854d0e;
@@ -1772,7 +1772,7 @@ ion-toast.toast-modern {
 
   .nav-link-highlight {
     /* Verde Neón Unificado */
-    background-color: #00D95F !important;
+    background-color: #00d95f !important;
     color: #000000 !important;
     box-shadow: 0 8px 25px rgba(0, 217, 95, 0.3);
     border: none;
@@ -1781,7 +1781,7 @@ ion-toast.toast-modern {
   }
 
   .nav-link-highlight:hover {
-    background-color: #00C553 !important;
+    background-color: #00c553 !important;
     box-shadow: 0 12px 30px rgba(0, 217, 95, 0.4);
     color: #000000 !important;
     transform: translateY(-1px);

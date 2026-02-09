@@ -65,7 +65,7 @@ export class VerificationBadgeComponent implements OnInit {
       promises.push(this.verificationService.loadStatuses().catch(() => {}));
     }
     promises.push(this.trustService.fetchTrustStatus().catch(() => {}));
-    
+
     await Promise.all(promises);
   }
 
@@ -137,7 +137,7 @@ export class VerificationBadgeComponent implements OnInit {
   getButtonTitle(status: VerificationStatus): string {
     const risk = this.risk();
     if (status === 'VERIFICADO' && risk) {
-       return `Nivel de confianza: ${risk.score}/100 (${risk.risk_level.toUpperCase()})`;
+      return `Nivel de confianza: ${risk.score}/100 (${risk.risk_level.toUpperCase()})`;
     }
 
     switch (status) {

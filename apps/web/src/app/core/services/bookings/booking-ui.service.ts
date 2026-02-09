@@ -62,12 +62,15 @@ export interface BookingCardAction {
 
 // ─── Color Definitions ────────────────────────────────────────────────────────
 
-const COLORS: Record<BookingColorScheme, {
-  border: string;
-  badge: string;
-  iconBg: string;
-  header: string;
-}> = {
+const COLORS: Record<
+  BookingColorScheme,
+  {
+    border: string;
+    badge: string;
+    iconBg: string;
+    header: string;
+  }
+> = {
   amber: {
     border: 'border-l-amber-500',
     badge: 'bg-amber-50 text-amber-700 border-amber-200',
@@ -164,7 +167,11 @@ export class BookingUiService {
 
   // ─── Internal Builders ─────────────────────────────────────────────────────
 
-  private buildUiState(booking: Booking, status: BookingUiStatus, role: BookingRole): BookingUiState {
+  private buildUiState(
+    booking: Booking,
+    status: BookingUiStatus,
+    role: BookingRole,
+  ): BookingUiState {
     switch (status) {
       // ── Pending / Payment ────────────────────────────────────────────────
       case 'pending':
@@ -236,12 +243,14 @@ export class BookingUiService {
               route: `/bookings/owner/${booking.id}`,
               variant: 'primary',
             },
-            secondaryActions: [{
-              label: 'Rechazar',
-              icon: 'close-circle',
-              route: `/bookings/owner/${booking.id}`,
-              variant: 'danger',
-            }],
+            secondaryActions: [
+              {
+                label: 'Rechazar',
+                icon: 'close-circle',
+                route: `/bookings/owner/${booking.id}`,
+                variant: 'danger',
+              },
+            ],
           });
         }
         return this.make(status, {
@@ -444,9 +453,10 @@ export class BookingUiService {
         return this.make(status, {
           label: 'Daño Reportado',
           labelShort: 'Daño',
-          hint: role === 'owner'
-            ? 'Se reportó un daño en el vehículo. Documentalo y abrí una disputa si corresponde.'
-            : 'El propietario reportó un daño. Revisá los detalles.',
+          hint:
+            role === 'owner'
+              ? 'Se reportó un daño en el vehículo. Documentalo y abrí una disputa si corresponde.'
+              : 'El propietario reportó un daño. Revisá los detalles.',
           icon: '⚠️',
           ionIcon: 'warning',
           color: 'red',
@@ -464,19 +474,23 @@ export class BookingUiService {
         return this.make(status, {
           label: 'Viaje Finalizado',
           labelShort: 'Finalizado',
-          hint: role === 'owner'
-            ? 'Viaje completado. Los fondos fueron transferidos a tu wallet.'
-            : '¡Gran viaje! Dejá una reseña para ayudar a otros viajeros.',
+          hint:
+            role === 'owner'
+              ? 'Viaje completado. Los fondos fueron transferidos a tu wallet.'
+              : '¡Gran viaje! Dejá una reseña para ayudar a otros viajeros.',
           icon: '🏁',
           ionIcon: 'flag',
           color: 'green',
           priority: 'neutral',
-          primaryAction: role === 'renter' ? {
-            label: 'Dejar Reseña',
-            icon: 'star',
-            route: `/bookings/${booking.id}`,
-            variant: 'primary',
-          } : null,
+          primaryAction:
+            role === 'renter'
+              ? {
+                  label: 'Dejar Reseña',
+                  icon: 'star',
+                  route: `/bookings/${booking.id}`,
+                  variant: 'primary',
+                }
+              : null,
         });
 
       // ── Cancelled variants ───────────────────────────────────────────────
@@ -568,19 +582,23 @@ export class BookingUiService {
         return this.make(status, {
           label: 'Error de Pago',
           labelShort: 'Error',
-          hint: role === 'renter'
-            ? 'Hubo un problema con tu pago. Intentá nuevamente.'
-            : 'El pago del viajero no pudo ser validado.',
+          hint:
+            role === 'renter'
+              ? 'Hubo un problema con tu pago. Intentá nuevamente.'
+              : 'El pago del viajero no pudo ser validado.',
           icon: '❗',
           ionIcon: 'alert',
           color: 'red',
           priority: 'urgent',
-          primaryAction: role === 'renter' ? {
-            label: 'Reintentar Pago',
-            icon: 'card',
-            route: `/bookings/${booking.id}`,
-            variant: 'primary',
-          } : null,
+          primaryAction:
+            role === 'renter'
+              ? {
+                  label: 'Reintentar Pago',
+                  icon: 'card',
+                  route: `/bookings/${booking.id}`,
+                  variant: 'primary',
+                }
+              : null,
         });
 
       default:
@@ -601,7 +619,10 @@ export class BookingUiService {
 
   private make(
     _status: BookingUiStatus | string,
-    partial: Omit<BookingUiState, 'borderClass' | 'badgeClass' | 'iconBgClass' | 'headerClass' | 'secondaryActions'> & {
+    partial: Omit<
+      BookingUiState,
+      'borderClass' | 'badgeClass' | 'iconBgClass' | 'headerClass' | 'secondaryActions'
+    > & {
       secondaryActions?: BookingCardAction[];
     },
   ): BookingUiState {
@@ -616,16 +637,32 @@ export class BookingUiService {
     };
   }
 
-  private resolvePriority(status: BookingUiStatus, role: BookingRole, booking: Booking): BookingPriority {
+  private resolvePriority(
+    status: BookingUiStatus,
+    role: BookingRole,
+    booking: Booking,
+  ): BookingPriority {
     const urgentForOwner: BookingUiStatus[] = [
-      'pending_approval', 'pending_owner_approval',
-      'confirmed', 'pending_return', 'returned', 'pending_review',
-      'damage_reported', 'dispute', 'disputed', 'pending_dispute_resolution',
+      'pending_approval',
+      'pending_owner_approval',
+      'confirmed',
+      'pending_return',
+      'returned',
+      'pending_review',
+      'damage_reported',
+      'dispute',
+      'disputed',
+      'pending_dispute_resolution',
     ];
     const urgentForRenter: BookingUiStatus[] = [
-      'pending', 'pending_payment', 'pending_deposit',
-      'pending_return', 'damage_reported',
-      'dispute', 'disputed', 'pending_dispute_resolution',
+      'pending',
+      'pending_payment',
+      'pending_deposit',
+      'pending_return',
+      'damage_reported',
+      'dispute',
+      'disputed',
+      'pending_dispute_resolution',
       'payment_validation_failed',
     ];
     const activeStatuses: BookingUiStatus[] = ['in_progress', 'confirmed'];
@@ -648,10 +685,14 @@ export class BookingUiService {
 
   private getCancelledLabel(status: BookingUiStatus): string {
     switch (status) {
-      case 'cancelled_renter': return 'Cancelada por Viajero';
-      case 'cancelled_owner': return 'Cancelada por Propietario';
-      case 'cancelled_system': return 'Cancelada por Sistema';
-      default: return 'Cancelada';
+      case 'cancelled_renter':
+        return 'Cancelada por Viajero';
+      case 'cancelled_owner':
+        return 'Cancelada por Propietario';
+      case 'cancelled_system':
+        return 'Cancelada por Sistema';
+      default:
+        return 'Cancelada';
     }
   }
 }

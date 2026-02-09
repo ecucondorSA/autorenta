@@ -14,9 +14,12 @@ describe('PublishCarPhotoService', () => {
     notificationsSpy = jasmine.createSpyObj('NotificationManagerService', ['warning']);
 
     TestBed.configureTestingModule({
-      providers: [...testProviders, PublishCarPhotoService,
+      providers: [
+        ...testProviders,
+        PublishCarPhotoService,
         { provide: CarsService, useValue: carsServiceSpy },
-        { provide: NotificationManagerService, useValue: notificationsSpy },],
+        { provide: NotificationManagerService, useValue: notificationsSpy },
+      ],
     });
 
     service = TestBed.inject(PublishCarPhotoService);

@@ -78,7 +78,9 @@ export class MessagesService implements OnDestroy {
     // P0 EGRESS OPTIMIZATION: Select only required fields instead of *
     const { data, error } = await this.supabase
       .from('messages')
-      .select('id, booking_id, car_id, sender_id, recipient_id, body, created_at, read_at, delivered_at')
+      .select(
+        'id, booking_id, car_id, sender_id, recipient_id, body, created_at, read_at, delivered_at',
+      )
       .eq('booking_id', bookingId)
       .order('created_at', { ascending: true });
     if (error) throw error;
@@ -89,7 +91,9 @@ export class MessagesService implements OnDestroy {
     // P0 EGRESS OPTIMIZATION: Select only required fields instead of *
     const { data, error } = await this.supabase
       .from('messages')
-      .select('id, booking_id, car_id, sender_id, recipient_id, body, created_at, read_at, delivered_at')
+      .select(
+        'id, booking_id, car_id, sender_id, recipient_id, body, created_at, read_at, delivered_at',
+      )
       .eq('car_id', carId)
       .order('created_at', { ascending: true });
     if (error) throw error;
@@ -202,7 +206,9 @@ export class MessagesService implements OnDestroy {
           recipient_id: params.recipientId,
           body: params.body,
         })
-        .select('id, booking_id, car_id, sender_id, recipient_id, body, created_at, read_at, delivered_at')
+        .select(
+          'id, booking_id, car_id, sender_id, recipient_id, body, created_at, read_at, delivered_at',
+        )
         .single<Message>();
 
       if (error) throw error;

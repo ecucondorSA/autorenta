@@ -167,7 +167,7 @@ export class EdgePersonalizationService {
       // Fire and forget
       // Fire and forget, but ensure completion
       this.http.post(`${EDGE_API_BASE}/track`, { type, data }).subscribe({
-        error: () => { }, // Ignorar errores de tracking
+        error: () => {}, // Ignorar errores de tracking
       });
     } catch {
       // Ignorar

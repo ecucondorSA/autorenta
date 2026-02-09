@@ -193,14 +193,14 @@ export class SeoSchemaService {
       },
       ...(car.ratingValue &&
         car.reviewCount && {
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: car.ratingValue,
-          reviewCount: car.reviewCount,
-          bestRating: 5,
-          worstRating: 1,
-        },
-      }),
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: car.ratingValue,
+            reviewCount: car.reviewCount,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }),
     };
 
     this.addSchema('product', schema);

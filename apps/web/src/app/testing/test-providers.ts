@@ -25,7 +25,4 @@ export const testProviders = [
 /**
  * Minimal providers for services that only need HttpClient
  */
-export const httpTestProviders = [
-  provideHttpClient(),
-  provideHttpClientTesting(),
-];
+export const httpTestProviders = [provideHttpClient(), provideHttpClientTesting()];

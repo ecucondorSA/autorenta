@@ -1,4 +1,11 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, signal, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+  signal,
+  OnDestroy,
+} from '@angular/core';
 
 /**
  * 🔄 Pull to Refresh Component

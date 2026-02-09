@@ -175,7 +175,9 @@
   color: var(--cta-default); /* Azul pastel del sistema */
   opacity: 1; /* Full opacity for active state */
   stroke-width: 2.5;
-  filter: drop-shadow(0 0 12px rgba(167, 216, 244, 0.6)); /* cta-default glow - static, no animation */
+  filter: drop-shadow(
+    0 0 12px rgba(167, 216, 244, 0.6)
+  ); /* cta-default glow - static, no animation */
   transform: translateZ(0) scale(1.15);
   /* FIX: Removed infinite animation to prevent CLS/temblor */
 }

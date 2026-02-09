@@ -95,13 +95,15 @@ export class DisputesService {
    * 3. resolveDispute({...params}) - Object-based call
    */
   async resolveDispute(
-    disputeIdOrParams: string | {
-      disputeId: string;
-      resolutionFavor: 'owner' | 'renter' | 'none';
-      penaltyCents: number;
-      internalNotes: string;
-      publicNotes: string;
-    },
+    disputeIdOrParams:
+      | string
+      | {
+          disputeId: string;
+          resolutionFavor: 'owner' | 'renter' | 'none';
+          penaltyCents: number;
+          internalNotes: string;
+          publicNotes: string;
+        },
     status?: DisputeStatus,
     amount?: number | null,
     _currency?: string,
@@ -198,13 +200,11 @@ export class DisputesService {
     try {
       // If it's a string, add it as a comment to the timeline
       if (typeof fileOrMessage === 'string') {
-        const { error: insertError } = await this.supabase
-          .from('dispute_timeline')
-          .insert({
-            dispute_id: disputeId,
-            event_type: 'comment',
-            body: fileOrMessage,
-          });
+        const { error: insertError } = await this.supabase.from('dispute_timeline').insert({
+          dispute_id: disputeId,
+          event_type: 'comment',
+          body: fileOrMessage,
+        });
 
         if (insertError) throw insertError;
         return { success: true };
@@ -213,13 +213,11 @@ export class DisputesService {
       // If no file/message provided, just add the note as a comment
       if (!fileOrMessage) {
         if (note) {
-          const { error: insertError } = await this.supabase
-            .from('dispute_timeline')
-            .insert({
-              dispute_id: disputeId,
-              event_type: 'comment',
-              body: note,
-            });
+          const { error: insertError } = await this.supabase.from('dispute_timeline').insert({
+            dispute_id: disputeId,
+            event_type: 'comment',
+            body: note,
+          });
 
           if (insertError) throw insertError;
         }
@@ -236,20 +234,20 @@ export class DisputesService {
       if (uploadError) throw uploadError;
 
       // Get public URL
-      const { data: urlData } = this.supabase.storage
-        .from('evidence')
-        .getPublicUrl(fileName);
+      const { data: urlData } = this.supabase.storage.from('evidence').getPublicUrl(fileName);
 
       // Insert evidence record
-      const { error: insertError } = await this.supabase
-        .from('dispute_evidence')
-        .insert({
-          dispute_id: disputeId,
-          url: urlData.publicUrl,
-          path: fileName,
-          note,
-          type: file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : 'document',
-        });
+      const { error: insertError } = await this.supabase.from('dispute_evidence').insert({
+        dispute_id: disputeId,
+        url: urlData.publicUrl,
+        path: fileName,
+        note,
+        type: file.type.startsWith('image/')
+          ? 'image'
+          : file.type.startsWith('video/')
+            ? 'video'
+            : 'document',
+      });
 
       if (insertError) throw insertError;
       return { success: true };

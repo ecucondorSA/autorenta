@@ -69,9 +69,9 @@ export interface VAThresholds {
 
 export const VA_THRESHOLDS: VAThresholds = {
   maxResponseHours: 12,
-  minAcceptanceRate: 0.70, // 70% acceptance
+  minAcceptanceRate: 0.7, // 70% acceptance
   maxCancellationRate: 0.05, // Max 5% owner cancellations
-  maxPriceDeviationPct: 0.50, // Within 50% of market median
+  maxPriceDeviationPct: 0.5, // Within 50% of market median
 };
 
 /**
@@ -174,7 +174,8 @@ export function calculateValueFactor(valueUsd: number | null | undefined): numbe
   }
 
   // Logarithmic formula: 1 + ln(value/base) * scale
-  const rawFactor = 1 + Math.log(valueUsd / VALUE_FACTOR_CONFIG.baseValueUsd) * VALUE_FACTOR_CONFIG.scale;
+  const rawFactor =
+    1 + Math.log(valueUsd / VALUE_FACTOR_CONFIG.baseValueUsd) * VALUE_FACTOR_CONFIG.scale;
 
   // Clamp to min/max
   return Math.max(VALUE_FACTOR_CONFIG.min, Math.min(VALUE_FACTOR_CONFIG.max, rawFactor));
@@ -223,7 +224,8 @@ export function calculateRepFactor(
   // Bayesian smoothed rating
   const effectiveRating = avgRating ?? REP_FACTOR_CONFIG.priorRating;
   const smoothedRating =
-    (effectiveRating * reviewCount + REP_FACTOR_CONFIG.priorRating * REP_FACTOR_CONFIG.priorWeight) /
+    (effectiveRating * reviewCount +
+      REP_FACTOR_CONFIG.priorRating * REP_FACTOR_CONFIG.priorWeight) /
     (reviewCount + REP_FACTOR_CONFIG.priorWeight);
 
   // Convert rating to factor (4.0 = 1.0, 5.0 = 1.2, 3.0 = 0.8)
@@ -378,7 +380,11 @@ export function calculateDailyPoints(input: DailyPointsInput): DailyPointsResult
 
   // Step 2: Calculate factors
   const valueFactor = calculateValueFactor(input.valueUsd);
-  const repFactor = calculateRepFactor(input.avgRating, input.reviewCount, input.ownerCancellations90d);
+  const repFactor = calculateRepFactor(
+    input.avgRating,
+    input.reviewCount,
+    input.ownerCancellations90d,
+  );
   const demandFactor = calculateDemandFactor(
     input.searchImpressions30d,
     0, // bookingRequests not used in current formula
@@ -387,7 +393,9 @@ export function calculateDailyPoints(input: DailyPointsInput): DailyPointsResult
 
   // Step 3: Calculate points (multiplicative)
   const vaMultiplier = va.isVerified ? 1 : 0;
-  const points = Math.round(BASE_POINTS_PER_DAY * vaMultiplier * valueFactor * repFactor * demandFactor);
+  const points = Math.round(
+    BASE_POINTS_PER_DAY * vaMultiplier * valueFactor * repFactor * demandFactor,
+  );
 
   // Step 4: Build formula explanation
   const formula = va.isVerified
@@ -506,7 +514,9 @@ export function calculatePoolDistribution(
   }
 
   // Step 4: Redistribute capped amounts proportionally to uncapped owners
-  const uncappedOwners = [...cappedShares.entries()].filter(([, share]) => share < MAX_POOL_SHARE_PER_OWNER);
+  const uncappedOwners = [...cappedShares.entries()].filter(
+    ([, share]) => share < MAX_POOL_SHARE_PER_OWNER,
+  );
   const totalUncappedShare = uncappedOwners.reduce((sum, [, share]) => sum + share, 0);
 
   if (totalCapped > 0 && totalUncappedShare > 0) {
@@ -696,7 +706,8 @@ export function checkEligibility(
 
   const reasons: string[] = [];
   if (!requirements.kycVerified.met) reasons.push('KYC not verified');
-  if (!requirements.minVaDays.met) reasons.push(`Only ${vaDaysThisMonth} VA days (min ${MIN_VA_DAYS_FOR_ELIGIBILITY})`);
+  if (!requirements.minVaDays.met)
+    reasons.push(`Only ${vaDaysThisMonth} VA days (min ${MIN_VA_DAYS_FOR_ELIGIBILITY})`);
   if (!requirements.noActiveSuspension.met) reasons.push('Account suspended');
   if (!requirements.gamingRiskOk.met) reasons.push(`Gaming risk too high (${gamingRiskScore})`);
 

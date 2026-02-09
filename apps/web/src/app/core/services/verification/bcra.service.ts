@@ -20,7 +20,7 @@ export interface BcraResult {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BcraService {
   private readonly supabase = inject(SupabaseClientService);
@@ -36,8 +36,8 @@ export class BcraService {
 
     return from(
       this.supabase.functions.invoke('bcra-debtors', {
-        body: { cuit }
-      })
+        body: { cuit },
+      }),
     ).pipe(
       map(({ data, error }) => {
         if (error) {
@@ -45,10 +45,10 @@ export class BcraService {
         }
         return data as BcraResult;
       }),
-      catchError(err => {
+      catchError((err) => {
         console.error('BCRA Check Failed:', err);
         return throwError(() => err);
-      })
+      }),
     );
   }
 
@@ -57,13 +57,20 @@ export class BcraService {
    */
   getSituationLabel(situation: number): string {
     switch (situation) {
-      case 1: return 'Normal';
-      case 2: return 'Riesgo Bajo';
-      case 3: return 'Riesgo Medio';
-      case 4: return 'Riesgo Alto';
-      case 5: return 'Irrecuperable';
-      case 6: return 'Irrecuperable por Disposición Técnica';
-      default: return 'Desconocido';
+      case 1:
+        return 'Normal';
+      case 2:
+        return 'Riesgo Bajo';
+      case 3:
+        return 'Riesgo Medio';
+      case 4:
+        return 'Riesgo Alto';
+      case 5:
+        return 'Irrecuperable';
+      case 6:
+        return 'Irrecuperable por Disposición Técnica';
+      default:
+        return 'Desconocido';
     }
   }
 

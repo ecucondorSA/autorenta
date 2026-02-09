@@ -216,10 +216,10 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
         this.showDepositConfirmedToast(transaction as unknown as Record<string, unknown>);
 
         // Recargar pending deposits
-        this.loadPendingDeposits().catch(() => { });
+        this.loadPendingDeposits().catch(() => {});
       },
       // Callback para cualquier cambio en transacciones
-      () => { },
+      () => {},
     );
 
     // Iniciar auto-refresh si está habilitado
@@ -244,7 +244,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
       document.removeEventListener('visibilitychange', this.boundVisibilityHandler);
     }
     // Desuscribirse de cambios realtime
-    this.walletService.unsubscribeFromWalletChanges().catch(() => { });
+    this.walletService.unsubscribeFromWalletChanges().catch(() => {});
 
     // Limpiar interval al destruir componente
     if (this.refreshInterval) {
@@ -314,7 +314,10 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
 
       // 4. Mostrar mensaje al usuario si se confirmó algún depósito
       if (pollResult.confirmed > 0) {
-        this.toastService.success('Depósito confirmado', `${pollResult['message']}. Tu balance se ha actualizado.`);
+        this.toastService.success(
+          'Depósito confirmado',
+          `${pollResult['message']}. Tu balance se ha actualizado.`,
+        );
       } else if (this.pendingDeposits() > 0) {
         this.toastService.info(
           'Depósitos pendientes',

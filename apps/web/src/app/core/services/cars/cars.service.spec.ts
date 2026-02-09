@@ -56,7 +56,11 @@ describe('CarsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, CarsService, { provide: SupabaseClientService, useValue: mockSupabaseService }],
+      providers: [
+        ...testProviders,
+        CarsService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(CarsService);
   });

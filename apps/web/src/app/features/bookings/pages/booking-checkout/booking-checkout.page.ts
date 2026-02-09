@@ -114,10 +114,15 @@ export class BookingCheckoutPage implements OnInit {
 
     // Mapping current user subscription to logic membership plan
     const userTier = this.subscriptionService.tier();
-    const plan: MembershipPlan = userTier ?
-      (userTier === 'club_standard' ? 'club' :
-        userTier === 'club_black' ? 'silver' :
-          userTier === 'club_luxury' ? 'black' : 'none') : 'none';
+    const plan: MembershipPlan = userTier
+      ? userTier === 'club_standard'
+        ? 'club'
+        : userTier === 'club_black'
+          ? 'silver'
+          : userTier === 'club_luxury'
+            ? 'black'
+            : 'none'
+      : 'none';
 
     return calcHoldAndBuydown(vehicleTier, plan);
   });
@@ -321,12 +326,10 @@ export class BookingCheckoutPage implements OnInit {
 
     // If wallet is selected, ensure we have the latest balance
     if (event.provider === 'wallet') {
-      this.walletService
-        .fetchBalance()
-        .catch((err: unknown) => {
-          const errorMsg = err instanceof Error ? err.message : String(err);
-          this.logger.warn('Error refreshing wallet balance on selection', { error: errorMsg });
-        });
+      this.walletService.fetchBalance().catch((err: unknown) => {
+        const errorMsg = err instanceof Error ? err.message : String(err);
+        this.logger.warn('Error refreshing wallet balance on selection', { error: errorMsg });
+      });
     }
 
     // Limpiar preferencia previa de MercadoPago
@@ -350,7 +353,7 @@ export class BookingCheckoutPage implements OnInit {
 
       // Crear preferencia de pago
       const preference = (await firstValueFrom(
-        gateway.createBookingPreference(this.bookingId(), true)
+        gateway.createBookingPreference(this.bookingId(), true),
       )) as unknown as MercadoPagoPreferenceResponse;
 
       if (!preference || !preference.success || !preference.init_point) {
@@ -413,7 +416,7 @@ export class BookingCheckoutPage implements OnInit {
           this.bookingId(),
           this.amountInProviderCurrency(),
           `Pago de reserva #${this.bookingId()}`,
-        )
+        ),
       );
 
       // 2. Redirect to confirmation (like PayPal)

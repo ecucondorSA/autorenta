@@ -20,38 +20,75 @@ import { scaleUpOnHoverAnimation } from '../../../../../styles/design-system/tok
       <ng-content></ng-content>
     </button>
   `,
-  styles: [`
-    button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: all 200ms ease-out;
-      font-weight: 500;
-    }
-    button:focus-visible {
-      outline: 2px solid #3ba870;
-      outline-offset: 2px;
-    }
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .size-sm { min-width: 40px; min-height: 40px; padding: 0.5rem; font-size: 0.875rem; }
-    .size-md { min-width: 44px; min-height: 44px; padding: 0.625rem; font-size: 1rem; }
-    .size-lg { min-width: 52px; min-height: 52px; padding: 0.75rem; font-size: 1.125rem; }
-    .variant-primary { background-color: #3ba870; color: white; }
-    .variant-primary:hover:not(:disabled) { background-color: #2d8859; }
-    .variant-secondary { background-color: #e5e5e5; color: #404040; }
-    .variant-secondary:hover:not(:disabled) { background-color: #d4d4d4; }
-    .variant-ghost { background-color: transparent; color: #404040; }
-    .variant-ghost:hover:not(:disabled) { background-color: #f5f5f5; }
-    .variant-danger { background-color: #ef4444; color: white; }
-    .variant-danger:hover:not(:disabled) { background-color: #dc2626; }
-  `],
-  animations: [scaleUpOnHoverAnimation]
+  styles: [
+    `
+      button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 200ms ease-out;
+        font-weight: 500;
+      }
+      button:focus-visible {
+        outline: 2px solid #3ba870;
+        outline-offset: 2px;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .size-sm {
+        min-width: 40px;
+        min-height: 40px;
+        padding: 0.5rem;
+        font-size: 0.875rem;
+      }
+      .size-md {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0.625rem;
+        font-size: 1rem;
+      }
+      .size-lg {
+        min-width: 52px;
+        min-height: 52px;
+        padding: 0.75rem;
+        font-size: 1.125rem;
+      }
+      .variant-primary {
+        background-color: #3ba870;
+        color: white;
+      }
+      .variant-primary:hover:not(:disabled) {
+        background-color: #2d8859;
+      }
+      .variant-secondary {
+        background-color: #e5e5e5;
+        color: #404040;
+      }
+      .variant-secondary:hover:not(:disabled) {
+        background-color: #d4d4d4;
+      }
+      .variant-ghost {
+        background-color: transparent;
+        color: #404040;
+      }
+      .variant-ghost:hover:not(:disabled) {
+        background-color: #f5f5f5;
+      }
+      .variant-danger {
+        background-color: #ef4444;
+        color: white;
+      }
+      .variant-danger:hover:not(:disabled) {
+        background-color: #dc2626;
+      }
+    `,
+  ],
+  animations: [scaleUpOnHoverAnimation],
 })
 export class IconButtonComponent {
   @Input() size: 'sm' | 'md' | 'lg' = 'md';

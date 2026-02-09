@@ -97,10 +97,16 @@
           <app-icon name="chevron-left" [size]="20" />
         </button>
         <div class="flex gap-2">
-          <button class="bg-black/20 backdrop-blur-md p-2 rounded-full text-white" aria-label="Compartir">
+          <button
+            class="bg-black/20 backdrop-blur-md p-2 rounded-full text-white"
+            aria-label="Compartir"
+          >
             <app-icon name="share" [size]="20" />
           </button>
-          <button class="bg-black/20 backdrop-blur-md p-2 rounded-full text-white" aria-label="Agregar a favoritos">
+          <button
+            class="bg-black/20 backdrop-blur-md p-2 rounded-full text-white"
+            aria-label="Agregar a favoritos"
+          >
             <app-icon name="heart" [size]="20" />
           </button>
         </div>
@@ -441,7 +447,9 @@
           [staggerIndex]="0"
           class="glass-panel rounded-3xl border border-border-default overflow-hidden shadow-sm"
         >
-          <div class="p-6 border-b border-border-default bg-surface-secondary flex items-center justify-between">
+          <div
+            class="p-6 border-b border-border-default bg-surface-secondary flex items-center justify-between"
+          >
             <h3
               class="font-black text-xs uppercase tracking-widest text-text-primary flex items-center gap-3"
             >
@@ -449,7 +457,9 @@
               Compensación de Seguridad
             </h3>
             @if (guaranteeEstimate(); as est) {
-              <span class="text-[10px] font-black uppercase px-2 py-1 rounded-md bg-text-primary text-white">
+              <span
+                class="text-[10px] font-black uppercase px-2 py-1 rounded-md bg-text-primary text-white"
+              >
                 Tier {{ est.vehicleTierName }}
               </span>
             }

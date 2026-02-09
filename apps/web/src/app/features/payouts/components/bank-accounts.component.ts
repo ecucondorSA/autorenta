@@ -496,9 +496,7 @@ export class BankAccountsComponent implements OnInit {
     this.error.set(null);
 
     try {
-      const accounts = await firstValueFrom(
-        this.payoutService.getUserBankAccounts(this.userId)
-      );
+      const accounts = await firstValueFrom(this.payoutService.getUserBankAccounts(this.userId));
 
       this.accounts.set(accounts || []);
     } catch (err) {
@@ -533,7 +531,7 @@ export class BankAccountsComponent implements OnInit {
           accountType: formValue.accountType,
           bankCode: formValue.bankCode || 'AUTO',
           isDefault: formValue.isDefault,
-        })
+        }),
       );
 
       this.success.set('Cuenta bancaria agregada exitosamente');
@@ -556,9 +554,7 @@ export class BankAccountsComponent implements OnInit {
     this.success.set(null);
 
     try {
-      await firstValueFrom(
-        this.payoutService.setDefaultBankAccount(this.userId, accountId)
-      );
+      await firstValueFrom(this.payoutService.setDefaultBankAccount(this.userId, accountId));
 
       this.success.set('Cuenta predeterminada actualizada');
       await this.loadAccounts();

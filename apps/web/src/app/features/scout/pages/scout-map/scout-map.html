@@ -7,36 +7,42 @@
           <ion-icon name="scan-outline" class="text-emerald-400 animate-pulse"></ion-icon>
           AUTORENTA SCOUT
         </h1>
-        <p class="text-xs text-white/70 font-mono uppercase tracking-widest">Red de Recuperación Activa</p>
+        <p class="text-xs text-white/70 font-mono uppercase tracking-widest">
+          Red de Recuperación Activa
+        </p>
       </div>
-      <div class="bg-emerald-500/20 border border-emerald-500/50 px-3 py-1 rounded-full text-xs font-bold text-emerald-400">
+      <div
+        class="bg-emerald-500/20 border border-emerald-500/50 px-3 py-1 rounded-full text-xs font-bold text-emerald-400"
+      >
         LIVE
       </div>
     </div>
   </div>
 
   <!-- The Map (Reused Component) -->
-  <app-live-tracking-map
-    class="h-full w-full"
-  ></app-live-tracking-map>
+  <app-live-tracking-map class="h-full w-full"></app-live-tracking-map>
 
   <!-- Bounty Markers (Overlay Simulation) -->
   <!-- En producción esto iría dentro del mapa, aquí simulamos la UI sobrepuesta para el Hackathon -->
   @for (bounty of bounties(); track bounty.id) {
-    <button 
+    <button
       (click)="selectBounty(bounty)"
       class="absolute z-10 transform -translate-x-1/2 -translate-y-1/2 group"
-      [style.left.%]="50 + (bounty.lng + 58.3816) * 1000" 
+      [style.left.%]="50 + (bounty.lng + 58.3816) * 1000"
       [style.top.%]="50 + (bounty.lat + 34.6037) * 1000"
     >
       <!-- Pulsing Ring -->
       <div class="absolute inset-0 bg-red-500/30 rounded-full animate-ping"></div>
       <!-- Marker -->
-      <div class="relative w-12 h-12 bg-red-600 rounded-full border-4 border-white shadow-xl flex items-center justify-center text-white font-bold text-xs group-hover:scale-110 transition-transform">
+      <div
+        class="relative w-12 h-12 bg-red-600 rounded-full border-4 border-white shadow-xl flex items-center justify-center text-white font-bold text-xs group-hover:scale-110 transition-transform"
+      >
         ${{ bounty.reward }}
       </div>
       <!-- Tooltip -->
-      <div class="absolute top-14 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur text-white text-[10px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+      <div
+        class="absolute top-14 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur text-white text-[10px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+      >
         {{ bounty.carModel }}
       </div>
     </button>
@@ -45,25 +51,34 @@
   <!-- Bottom Sheet (Selected Bounty) -->
   @if (selectedBounty()) {
     <div class="absolute bottom-0 left-0 right-0 z-30 p-4 pb-8 animate-slide-up">
-      <div class="bg-surface-base/95 backdrop-blur-xl rounded-3xl p-5 border border-white/20 shadow-2xl">
+      <div
+        class="bg-surface-base/95 backdrop-blur-xl rounded-3xl p-5 border border-white/20 shadow-2xl"
+      >
         <div class="flex justify-between items-start mb-4">
           <div>
             <div class="flex items-center gap-2 mb-1">
-              <span class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold uppercase rounded tracking-wider border border-red-200">
+              <span
+                class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold uppercase rounded tracking-wider border border-red-200"
+              >
                 Robo Reportado
               </span>
               <span class="text-xs text-text-muted">{{ selectedBounty()!.lastSeen }}</span>
             </div>
             <h2 class="text-xl font-bold text-text-primary">{{ selectedBounty()!.carModel }}</h2>
           </div>
-          <button (click)="clearSelection()" class="w-8 h-8 rounded-full bg-surface-secondary flex items-center justify-center">
+          <button
+            (click)="clearSelection()"
+            class="w-8 h-8 rounded-full bg-surface-secondary flex items-center justify-center"
+          >
             <ion-icon name="close-outline"></ion-icon>
           </button>
         </div>
 
         <div class="flex items-center gap-4 mb-6">
           <div class="flex-1 bg-surface-secondary rounded-xl p-3 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-lg">
+            <div
+              class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-lg"
+            >
               💰
             </div>
             <div>
@@ -73,7 +88,7 @@
           </div>
         </div>
 
-        <button 
+        <button
           [routerLink]="['/scout/report', 'demo-123']"
           class="w-full py-4 bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-600/30 active:scale-[0.98] transition-transform flex items-center justify-center gap-2"
         >

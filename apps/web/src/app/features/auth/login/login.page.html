@@ -429,10 +429,14 @@
                 aria-label="tu@email.com"
               />
               @if (form.controls.email.touched && form.controls.email.errors?.['required']) {
-                <p class="mt-2 text-xs font-semibold text-error-strong px-1" role="alert">El email es obligatorio</p>
+                <p class="mt-2 text-xs font-semibold text-error-strong px-1" role="alert">
+                  El email es obligatorio
+                </p>
               }
               @if (form.controls.email.touched && form.controls.email.errors?.['email']) {
-                <p class="mt-2 text-xs font-semibold text-error-strong px-1" role="alert">Formato de email inválido</p>
+                <p class="mt-2 text-xs font-semibold text-error-strong px-1" role="alert">
+                  Formato de email inválido
+                </p>
               }
             </div>
 

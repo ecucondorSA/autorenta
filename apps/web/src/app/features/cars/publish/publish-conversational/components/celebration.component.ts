@@ -1,10 +1,4 @@
-import {
-  Component,
-  input,
-  output,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, input, output, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Celebration component shown after successful publish
@@ -15,7 +9,9 @@ import {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in">
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in"
+    >
       <!-- Confetti container -->
       <div class="confetti-container">
         @for (piece of confettiPieces; track $index) {
@@ -29,15 +25,14 @@ import {
       </div>
 
       <!-- Content card -->
-      <div class="relative z-10 bg-surface-raised rounded-3xl p-8 sm:p-12 shadow-2xl max-w-md mx-4 text-center animate-scale-in">
+      <div
+        class="relative z-10 bg-surface-raised rounded-3xl p-8 sm:p-12 shadow-2xl max-w-md mx-4 text-center animate-scale-in"
+      >
         <!-- Success icon -->
-        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30 animate-bounce-in">
-          <svg
-            class="w-12 h-12 text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+        <div
+          class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30 animate-bounce-in"
+        >
+          <svg class="w-12 h-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"

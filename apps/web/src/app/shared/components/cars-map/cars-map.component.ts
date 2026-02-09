@@ -217,7 +217,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   @Output() readonly carSelected = new EventEmitter<string>();
   /** Emits car selection with native event for validation (isTrusted check) */
-  @Output() readonly carClickedWithEvent = new EventEmitter<{ carId: string; event: MouseEvent | null }>();
+  @Output() readonly carClickedWithEvent = new EventEmitter<{
+    carId: string;
+    event: MouseEvent | null;
+  }>();
   @Output() readonly userLocationChange = new EventEmitter<{ lat: number; lng: number }>();
   @Output() readonly quickBook = new EventEmitter<string>();
   @Output() readonly searchRadiusChange = new EventEmitter<number>();
@@ -307,7 +310,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         essential: true,
         curve: 1.42, // Optimal curve for smooth animation
         speed: 1.2, // Slightly faster than default
-        easing: (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, // Ease in-out quad
+        easing: (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2), // Ease in-out quad
       });
     }
   }
@@ -891,7 +894,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         if (carId) {
           this.carSelected.emit(carId);
           // Extract native event for validation (MapLayerMouseEvent has originalEvent)
-          const nativeEvent = (event as unknown as { originalEvent?: MouseEvent }).originalEvent || null;
+          const nativeEvent =
+            (event as unknown as { originalEvent?: MouseEvent }).originalEvent || null;
           this.carClickedWithEvent.emit({ carId, event: nativeEvent });
           const car = this.cars.find((c) => c['carId'] === carId);
           if (car) {
@@ -1453,7 +1457,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const visibleCarIdsInMapbox = new Set<string>();
     const featuresMap = new Map<string, MapboxGeoJSONFeature>();
 
-    features.forEach(f => {
+    features.forEach((f) => {
       const carId = f.properties?.['carId'];
       if (carId) {
         visibleCarIdsInMapbox.add(carId);
@@ -1469,7 +1473,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       }
     });
 
-    markersToRemove.forEach(carId => {
+    markersToRemove.forEach((carId) => {
       const markerData = this.carMarkers.get(carId);
       if (markerData) {
         markerData.marker.remove();
@@ -1489,7 +1493,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
       // Reconstruct car data from feature properties or look it up
       // Looking up from source is safer for complex objects
-      const fullCarData = this.cars.find(c => c['carId'] === carId);
+      const fullCarData = this.cars.find((c) => c['carId'] === carId);
 
       if (fullCarData) {
         const markerData = this.createCarMarker(fullCarData);
@@ -2047,9 +2051,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.deg2rad(lat1)) *
-      Math.cos(this.deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c; // Distance in km
     return d;
@@ -2299,7 +2303,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     const lat2 = Math.asin(
       Math.sin(lat1) * Math.cos(distanceMeters / R) +
-      Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
+        Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
     );
 
     const lng2 =
@@ -3012,13 +3016,13 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           this.logger.debug('[CarsMap] Cinema Mode: Flying to car ' + currentId);
           this.map.flyTo({
             center: [car.lng, car.lat],
-            zoom: 16,        // Close up
-            pitch: 60,       // Street View tilt
-            bearing: -20,    // Cinematic angle
-            duration: 1500,  // Slow dramatic pan
+            zoom: 16, // Close up
+            pitch: 60, // Street View tilt
+            bearing: -20, // Cinematic angle
+            duration: 1500, // Slow dramatic pan
             essential: true, // Animation respecting reduce-motion
-            curve: 1.2,  // Smooth easing
-            padding: { bottom: 200 } // Offset for carousel
+            curve: 1.2, // Smooth easing
+            padding: { bottom: 200 }, // Offset for carousel
           });
         }
       } else {
@@ -3028,7 +3032,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           pitch: 0,
           bearing: 0,
           zoom: 12,
-          duration: 1200
+          duration: 1200,
         });
       }
     }

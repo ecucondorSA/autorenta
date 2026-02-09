@@ -56,8 +56,11 @@ describe('MercadoPagoWalletGatewayService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, MercadoPagoWalletGatewayService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },],
+      providers: [
+        ...testProviders,
+        MercadoPagoWalletGatewayService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(MercadoPagoWalletGatewayService);
   });

@@ -25,7 +25,13 @@ type PaymentStatus = 'pending' | 'completed' | 'failed' | 'timeout';
   selector: 'app-booking-success',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, RouterModule, ReferralBannerComponent, SkeletonLoaderComponent],
+  imports: [
+    CommonModule,
+    IonicModule,
+    RouterModule,
+    ReferralBannerComponent,
+    SkeletonLoaderComponent,
+  ],
   templateUrl: './booking-success.page.html',
   styleUrls: ['./booking-success.page.scss'],
 })

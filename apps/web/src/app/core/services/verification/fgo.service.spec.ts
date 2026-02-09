@@ -56,7 +56,11 @@ describe('FgoService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, FgoService, { provide: SupabaseClientService, useValue: mockSupabaseService }],
+      providers: [
+        ...testProviders,
+        FgoService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(FgoService);
   });

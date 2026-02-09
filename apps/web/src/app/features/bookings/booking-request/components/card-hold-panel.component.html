@@ -1,13 +1,16 @@
 <div class="space-y-6">
-  
   <!-- Financial Summary Widget -->
   <div class="bg-zinc-900 border border-white/5 rounded-2xl p-5 relative overflow-hidden">
     <!-- Background Pattern -->
-    <div class="absolute inset-0 bg-[radial-gradient(#39FF14_1px,transparent_1px)] [background-size:16px_16px] opacity-[0.03]"></div>
-    
+    <div
+      class="absolute inset-0 bg-[radial-gradient(#39FF14_1px,transparent_1px)] [background-size:16px_16px] opacity-[0.03]"
+    ></div>
+
     <div class="relative z-10 flex justify-between items-start">
       <div>
-        <p class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-1">Reserva de Fondos</p>
+        <p class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-1">
+          Reserva de Fondos
+        </p>
         <div class="flex items-baseline gap-2">
           <span class="text-3xl font-black text-white font-mono tracking-tighter">
             USD {{ riskSnapshot.holdEstimatedUsd | number: '1.2-2' }}
@@ -17,7 +20,7 @@
           ≈ ARS {{ riskSnapshot.holdEstimatedArs | number: '1.0-0' }} (Estimado)
         </p>
       </div>
-      
+
       <app-reembolsability-badge
         type="reembolsable"
         customTooltip="El dinero no sale de tu cuenta. Solo se reserva el cupo."
@@ -26,14 +29,29 @@
 
     <!-- Explanation (Integrated) -->
     <div class="mt-4 pt-4 border-t border-white/5 flex gap-3">
-      <div class="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center shrink-0">
-        <svg class="w-4 h-4 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      <div
+        class="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center shrink-0"
+      >
+        <svg
+          class="w-4 h-4 text-brand-primary"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+          />
+        </svg>
       </div>
       <div>
         <p class="text-sm font-bold text-white mb-0.5">Bloqueo de Seguridad</p>
         <p class="text-xs text-zinc-400 leading-relaxed">
-          Al igual que en un hotel, bloqueamos este monto temporalmente. 
-          <span class="text-zinc-200">Se libera automáticamente</span> al finalizar el alquiler sin novedades.
+          Al igual que en un hotel, bloqueamos este monto temporalmente.
+          <span class="text-zinc-200">Se libera automáticamente</span> al finalizar el alquiler sin
+          novedades.
         </p>
       </div>
     </div>
@@ -49,9 +67,20 @@
       ></app-mercadopago-card-form>
     }
     @case ('authorized') {
-      <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-6 text-center animate-fade-in">
-        <div class="w-16 h-16 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      <div
+        class="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-6 text-center animate-fade-in"
+      >
+        <div
+          class="w-16 h-16 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4"
+        >
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
         </div>
         <h3 class="text-xl font-bold text-white mb-2">Garantía Aprobada</h3>
         <p class="text-sm text-emerald-200 mb-4">
@@ -63,17 +92,32 @@
       </div>
     }
     @case ('failed') {
-      <div class="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 text-center animate-fade-in">
-        <div class="w-16 h-16 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      <div
+        class="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 text-center animate-fade-in"
+      >
+        <div
+          class="w-16 h-16 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4"
+        >
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
         </div>
         <h3 class="text-xl font-bold text-white mb-2">Error de Autorización</h3>
         <p class="text-sm text-red-200 mb-6">
-          {{ errorMessage() || 'El banco rechazó la operación. Revisa los fondos o intenta con otra tarjeta.' }}
+          {{
+            errorMessage() ||
+              'El banco rechazó la operación. Revisa los fondos o intenta con otra tarjeta.'
+          }}
         </p>
-        <button 
+        <button
           (click)="onRetry()"
-          class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-colors">
+          class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-colors"
+        >
           Intentar nuevamente
         </button>
       </div>

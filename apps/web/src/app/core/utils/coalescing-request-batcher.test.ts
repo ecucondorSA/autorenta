@@ -79,4 +79,3 @@ describe('CoalescingRequestBatcher', () => {
     expect(loader).toHaveBeenCalledTimes(1);
   });
 });
-

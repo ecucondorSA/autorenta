@@ -93,7 +93,7 @@ function createSSRStubClient(): SupabaseClient {
           return () => Promise.resolve({ data: { session: null, user: null }, error: null });
         }
         if (prop === 'onAuthStateChange') {
-          return () => ({ data: { subscription: { unsubscribe: () => { } } } });
+          return () => ({ data: { subscription: { unsubscribe: () => {} } } });
         }
         // RPC calls
         if (typeof prop === 'string' && prop.startsWith('rpc')) {
@@ -101,10 +101,10 @@ function createSSRStubClient(): SupabaseClient {
         }
         // Realtime channel
         if (prop === 'subscribe') {
-          return () => ({ unsubscribe: () => { } });
+          return () => ({ unsubscribe: () => {} });
         }
         if (prop === 'unsubscribe') {
-          return () => { };
+          return () => {};
         }
         // Default: return chainable stub
         return createChainableStub();
@@ -363,14 +363,19 @@ export class SupabaseClientService {
   /**
    * Create a realtime channel
    */
-  channel(name: string, opts?: Parameters<SupabaseClient['channel']>[1]): ReturnType<SupabaseClient['channel']> {
+  channel(
+    name: string,
+    opts?: Parameters<SupabaseClient['channel']>[1],
+  ): ReturnType<SupabaseClient['channel']> {
     return this.getClient().channel(name, opts);
   }
 
   /**
    * Remove a realtime channel
    */
-  removeChannel(channel: ReturnType<SupabaseClient['channel']>): Promise<'ok' | 'timed out' | 'error'> {
+  removeChannel(
+    channel: ReturnType<SupabaseClient['channel']>,
+  ): Promise<'ok' | 'timed out' | 'error'> {
     return this.getClient().removeChannel(channel);
   }
 }

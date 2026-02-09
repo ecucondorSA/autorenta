@@ -8,7 +8,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   imports: [CommonModule],
   template: `
     <div class="static-page">
-      <section class="static-hero" style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);">
+      <section
+        class="static-hero"
+        style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);"
+      >
         <h1>📰 Novedades</h1>
         <p>Las últimas noticias y actualizaciones de Autorentar</p>
       </section>
@@ -36,8 +39,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
         <h2>Comunicados de Prensa</h2>
         <p>
-          Para consultas de prensa, contacta a nuestro equipo de comunicaciones
-          en <strong>prensa&#64;autorentar.com.ar</strong>
+          Para consultas de prensa, contacta a nuestro equipo de comunicaciones en
+          <strong>prensa&#64;autorentar.com.ar</strong>
         </p>
 
         <h2>Recursos de Prensa</h2>

@@ -62,8 +62,12 @@ export class CarAvailabilityService {
       const rows = (data ?? []) as Array<{ status: string; expires_at: string | null }>;
       const nowMs = Date.now();
 
-      const pendingRows = rows.filter((r) => r.status === 'pending' || r.status === 'pending_payment');
-      const confirmedRows = rows.filter((r) => r.status === 'confirmed' || r.status === 'in_progress');
+      const pendingRows = rows.filter(
+        (r) => r.status === 'pending' || r.status === 'pending_payment',
+      );
+      const confirmedRows = rows.filter(
+        (r) => r.status === 'confirmed' || r.status === 'in_progress',
+      );
 
       const activePending = pendingRows.filter((r) => {
         if (!r.expires_at) return true;

@@ -21,9 +21,11 @@ import { FilterItem, BookingRole, BookingFilter } from '../bookings-hub.types';
           @for (f of filters(); track f.id) {
             <button
               (click)="onFilterChange(f.id)"
-              [class]="currentFilter() === f.id
-                ? 'px-4 py-2 rounded-full text-sm font-semibold bg-slate-900 text-white transition-all whitespace-nowrap'
-                : 'px-4 py-2 rounded-full text-sm font-medium bg-white text-slate-600 border border-slate-200 transition-all whitespace-nowrap'"
+              [class]="
+                currentFilter() === f.id
+                  ? 'px-4 py-2 rounded-full text-sm font-semibold bg-slate-900 text-white transition-all whitespace-nowrap'
+                  : 'px-4 py-2 rounded-full text-sm font-medium bg-white text-slate-600 border border-slate-200 transition-all whitespace-nowrap'
+              "
             >
               {{ f.label }}
               @if (f.count > 0) {
@@ -76,7 +78,9 @@ import { FilterItem, BookingRole, BookingFilter } from '../bookings-hub.types';
                     <h3 class="text-sm font-bold text-slate-900 truncate">
                       {{ booking.car_title || 'Auto' }}
                     </h3>
-                    <span class="text-sm font-bold text-slate-900 font-mono tabular-nums flex-shrink-0">
+                    <span
+                      class="text-sm font-bold text-slate-900 font-mono tabular-nums flex-shrink-0"
+                    >
                       {{ booking.total_amount | money }}
                     </span>
                   </div>
@@ -88,14 +92,21 @@ import { FilterItem, BookingRole, BookingFilter } from '../bookings-hub.types';
                   <!-- Status + Countdown Row -->
                   <div class="flex items-center justify-between mt-2">
                     <div class="flex items-center gap-2">
-                      <span class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600">
-                        <span [class]="dotColor(booking)" class="w-1.5 h-1.5 rounded-full flex-shrink-0"></span>
+                      <span
+                        class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600"
+                      >
+                        <span
+                          [class]="dotColor(booking)"
+                          class="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                        ></span>
                         {{ statusLabel(booking) }}
                       </span>
 
                       <!-- Unread messages badge -->
                       @if (getUnreadForBooking(booking) > 0) {
-                        <span class="inline-flex items-center gap-0.5 text-[10px] font-bold text-white bg-red-500 px-1.5 py-0.5 rounded-md">
+                        <span
+                          class="inline-flex items-center gap-0.5 text-[10px] font-bold text-white bg-red-500 px-1.5 py-0.5 rounded-md"
+                        >
                           <ion-icon name="chatbubble-outline" class="text-[9px]"></ion-icon>
                           {{ getUnreadForBooking(booking) }}
                         </span>
@@ -105,14 +116,19 @@ import { FilterItem, BookingRole, BookingFilter } from '../bookings-hub.types';
                     <!-- Countdown timer (inline) -->
                     @if (getCountdownForBooking(booking)) {
                       <div class="flex items-center gap-1.5 text-xs text-slate-500">
-                        <span class="text-[10px] font-medium uppercase">{{ getCountdownLabelForBooking(booking) }}</span>
+                        <span class="text-[10px] font-medium uppercase">{{
+                          getCountdownLabelForBooking(booking)
+                        }}</span>
                         <app-countdown-timer
                           [targetDate]="getCountdownForBooking(booking)"
                           size="sm"
                         ></app-countdown-timer>
                       </div>
                     } @else {
-                      <ion-icon name="chevron-forward-outline" class="text-slate-300 text-sm"></ion-icon>
+                      <ion-icon
+                        name="chevron-forward-outline"
+                        class="text-slate-300 text-sm"
+                      ></ion-icon>
                     }
                   </div>
                 </div>
@@ -125,9 +141,11 @@ import { FilterItem, BookingRole, BookingFilter } from '../bookings-hub.types';
                   @for (step of [1, 2, 3, 4, 5]; track step) {
                     <div
                       class="h-1 flex-1 rounded-full transition-colors"
-                      [class]="step <= phaseStep(booking.status)
-                        ? activeStepColor(booking)
-                        : 'bg-slate-100'"
+                      [class]="
+                        step <= phaseStep(booking.status)
+                          ? activeStepColor(booking)
+                          : 'bg-slate-100'
+                      "
                     ></div>
                   }
                 </div>
@@ -173,9 +191,7 @@ export class BookingsListComponent {
   }
 
   detailLink(booking: Booking): string[] {
-    return this.role() === 'owner'
-      ? ['/bookings/owner', booking.id]
-      : ['/bookings', booking.id];
+    return this.role() === 'owner' ? ['/bookings/owner', booking.id] : ['/bookings', booking.id];
   }
 
   rangeLabel(booking: Booking): string {
@@ -242,56 +258,95 @@ export class BookingsListComponent {
   actionButtonClass(booking: Booking): string {
     const color = this.bookingUi.getUiState(booking, this.role()).color;
     switch (color) {
-      case 'amber': return 'text-amber-700 bg-amber-50';
-      case 'red': return 'text-red-700 bg-red-50';
-      case 'blue': return 'text-blue-700 bg-blue-50';
-      case 'green': return 'text-emerald-700 bg-emerald-50';
-      default: return 'text-slate-700 bg-slate-50';
+      case 'amber':
+        return 'text-amber-700 bg-amber-50';
+      case 'red':
+        return 'text-red-700 bg-red-50';
+      case 'blue':
+        return 'text-blue-700 bg-blue-50';
+      case 'green':
+        return 'text-emerald-700 bg-emerald-50';
+      default:
+        return 'text-slate-700 bg-slate-50';
     }
   }
 
   isTerminal(booking: Booking): boolean {
-    return ['completed', 'cancelled', 'expired', 'cancelled_renter', 'cancelled_owner', 'cancelled_system', 'rejected'].includes(booking.status);
+    return [
+      'completed',
+      'cancelled',
+      'expired',
+      'cancelled_renter',
+      'cancelled_owner',
+      'cancelled_system',
+      'rejected',
+    ].includes(booking.status);
   }
 
   /**
-   * TODO(human): Map booking status to phase step (1-5)
-   * 1 = Pago, 2 = Confirmacion, 3 = Viaje, 4 = Devolucion, 5 = Finalizado
-   *
-   * Consider: Which statuses belong to each phase?
-   * - pending/pending_payment → Step 1 (Pago)
-   * - pending_owner_approval/confirmed → Step 2 (Confirmacion)
-   * - in_progress → Step 3 (Viaje)
-   * - pending_return/returned/pending_review → Step 4 (Devolucion)
-   * - completed → Step 5 (Finalizado)
-   *
-   * But what about dispute states? damage_reported? Where do they fit?
+   * Map booking status to phase step (1-5)
+   * 1 = Pre-checkin, 2 = Check-in, 3 = Viaje, 4 = Devolucion, 5 = Finalizado
    */
-  phaseStep(_status: string): number {
-    // TODO(human): implement this function
-    return 1;
+  phaseStep(status: string): number {
+    switch (status) {
+      case 'pending':
+      case 'pending_payment':
+      case 'pending_approval':
+      case 'pending_owner_approval':
+        return 1;
+      case 'confirmed':
+        return 2;
+      case 'in_progress':
+        return 3;
+      case 'pending_return':
+      case 'returned':
+      case 'inspected_good':
+      case 'damage_reported':
+      case 'pending_review':
+      case 'dispute':
+      case 'disputed':
+      case 'pending_dispute_resolution':
+        return 4;
+      case 'completed':
+      case 'resolved':
+        return 5;
+      default:
+        return 1;
+    }
   }
 
   activeStepColor(booking: Booking): string {
     const color = this.bookingUi.getUiState(booking, this.role()).color;
     switch (color) {
-      case 'amber': return 'bg-amber-400';
-      case 'red': return 'bg-red-400';
-      case 'blue': return 'bg-blue-400';
-      case 'green': return 'bg-emerald-400';
-      case 'purple': return 'bg-purple-400';
-      default: return 'bg-slate-400';
+      case 'amber':
+        return 'bg-amber-400';
+      case 'red':
+        return 'bg-red-400';
+      case 'blue':
+        return 'bg-blue-400';
+      case 'green':
+        return 'bg-emerald-400';
+      case 'purple':
+        return 'bg-purple-400';
+      default:
+        return 'bg-slate-400';
     }
   }
 
   private colorToDotClass(color: BookingColorScheme): string {
     switch (color) {
-      case 'amber': return 'bg-amber-400';
-      case 'red': return 'bg-red-400';
-      case 'blue': return 'bg-blue-400';
-      case 'green': return 'bg-emerald-400';
-      case 'purple': return 'bg-purple-400';
-      default: return 'bg-slate-400';
+      case 'amber':
+        return 'bg-amber-400';
+      case 'red':
+        return 'bg-red-400';
+      case 'blue':
+        return 'bg-blue-400';
+      case 'green':
+        return 'bg-emerald-400';
+      case 'purple':
+        return 'bg-purple-400';
+      default:
+        return 'bg-slate-400';
     }
   }
 }

@@ -358,7 +358,8 @@ export class RewardPoolService {
       // Fetch daily points for this month (per car)
       const { data: dailyData, error: dailyError } = await this.supabase
         .from('daily_car_points')
-        .select(`
+        .select(
+          `
           *,
           cars:car_id (
             id,
@@ -366,7 +367,8 @@ export class RewardPoolService {
             model,
             year
           )
-        `)
+        `,
+        )
         .eq('owner_id', userId)
         .gte('date', currentMonth)
         .order('date', { ascending: false });
@@ -383,15 +385,18 @@ export class RewardPoolService {
       if (configError) throw configError;
 
       // Aggregate daily points by car
-      const carPointsMap = new Map<string, {
-        carId: string;
-        carTitle: string;
-        points: number;
-        eligibleDays: number;
-        valueFactor: number;
-        repFactor: number;
-        demandFactor: number;
-      }>();
+      const carPointsMap = new Map<
+        string,
+        {
+          carId: string;
+          carTitle: string;
+          points: number;
+          eligibleDays: number;
+          valueFactor: number;
+          repFactor: number;
+          demandFactor: number;
+        }
+      >();
 
       for (const dp of dailyData || []) {
         const carId = dp.car_id;
@@ -415,7 +420,7 @@ export class RewardPoolService {
         }
       }
 
-      const carPointsArray = Array.from(carPointsMap.values()).map(cp => ({
+      const carPointsArray = Array.from(carPointsMap.values()).map((cp) => ({
         ...cp,
         avgDailyPoints: cp.eligibleDays > 0 ? Math.round(cp.points / cp.eligibleDays) : 0,
         factors: {
@@ -429,10 +434,14 @@ export class RewardPoolService {
       const summary: OwnerMonthlyPointsSummary = {
         ownerId: userId,
         month: currentMonth,
-        totalPoints: summaryData?.total_points || carPointsArray.reduce((sum, c) => sum + c.points, 0),
-        eligibleDays: summaryData?.eligible_days || carPointsArray.reduce((sum, c) => sum + c.eligibleDays, 0),
-        carsContributing: summaryData?.cars_contributing || carPointsArray.filter(c => c.points > 0).length,
-        carsCapped: summaryData?.cars_capped || Math.max(0, carPointsArray.length - MAX_CARS_PER_OWNER),
+        totalPoints:
+          summaryData?.total_points || carPointsArray.reduce((sum, c) => sum + c.points, 0),
+        eligibleDays:
+          summaryData?.eligible_days || carPointsArray.reduce((sum, c) => sum + c.eligibleDays, 0),
+        carsContributing:
+          summaryData?.cars_contributing || carPointsArray.filter((c) => c.points > 0).length,
+        carsCapped:
+          summaryData?.cars_capped || Math.max(0, carPointsArray.length - MAX_CARS_PER_OWNER),
         rawShare: summaryData?.raw_share || 0,
         cappedShare: summaryData?.capped_share || 0,
         payoutUsd: summaryData?.payout_usd || 0,
@@ -453,29 +462,32 @@ export class RewardPoolService {
           maxSharePerOwner: configData.max_share_per_owner || MAX_POOL_SHARE_PER_OWNER,
           vaMaxResponseHours: configData.va_max_response_hours || VA_THRESHOLDS.maxResponseHours,
           vaMinAcceptanceRate: configData.va_min_acceptance_rate || VA_THRESHOLDS.minAcceptanceRate,
-          vaMaxCancellationRate: configData.va_max_cancellation_rate || VA_THRESHOLDS.maxCancellationRate,
+          vaMaxCancellationRate:
+            configData.va_max_cancellation_rate || VA_THRESHOLDS.maxCancellationRate,
           status: configData.status || 'open',
         };
         this.poolConfig.set(poolCfg);
       }
 
       this.seniorSummary.set(summary);
-      this.carDailyPoints.set((dailyData || []).map(dp => ({
-        carId: dp.car_id,
-        carTitle: (dp.cars as { brand?: string; model?: string; year?: number } | null)
-          ? `${(dp.cars as { brand: string }).brand} ${(dp.cars as { model: string }).model}`
-          : 'Auto',
-        date: dp.date,
-        points: dp.points || 0,
-        isEligible: dp.is_eligible || false,
-        basePoints: dp.base_points || BASE_POINTS_PER_DAY,
-        vaStatus: dp.va_status || false,
-        vaFailureReasons: dp.va_failure_reasons || [],
-        valueFactor: dp.value_factor || 1,
-        repFactor: dp.rep_factor || 1,
-        demandFactor: dp.demand_factor || 1,
-        formula: dp.formula || '',
-      })));
+      this.carDailyPoints.set(
+        (dailyData || []).map((dp) => ({
+          carId: dp.car_id,
+          carTitle: (dp.cars as { brand?: string; model?: string; year?: number } | null)
+            ? `${(dp.cars as { brand: string }).brand} ${(dp.cars as { model: string }).model}`
+            : 'Auto',
+          date: dp.date,
+          points: dp.points || 0,
+          isEligible: dp.is_eligible || false,
+          basePoints: dp.base_points || BASE_POINTS_PER_DAY,
+          vaStatus: dp.va_status || false,
+          vaFailureReasons: dp.va_failure_reasons || [],
+          valueFactor: dp.value_factor || 1,
+          repFactor: dp.rep_factor || 1,
+          demandFactor: dp.demand_factor || 1,
+          formula: dp.formula || '',
+        })),
+      );
 
       this.loading.set(false);
       return summary;
@@ -536,18 +548,18 @@ export class RewardPoolService {
   getFactorColor(factor: number, type: 'value' | 'rep' | 'demand'): string {
     const quality = getFactorQuality(factor, type);
     const colors: Record<string, string> = {
-      'Excellent': 'text-success-strong',
-      'Good': 'text-success-text',
+      Excellent: 'text-success-strong',
+      Good: 'text-success-text',
       'Above Average': 'text-primary-600',
-      'Standard': 'text-text-primary',
-      'Average': 'text-text-secondary',
+      Standard: 'text-text-primary',
+      Average: 'text-text-secondary',
       'Normal Demand': 'text-text-secondary',
       'Below Average': 'text-warning-text',
       'Low Demand': 'text-warning-text',
-      'Poor': 'text-error-text',
+      Poor: 'text-error-text',
       'Very Low Demand': 'text-error-text',
-      'Entry': 'text-text-muted',
-      'Premium': 'text-primary-600',
+      Entry: 'text-text-muted',
+      Premium: 'text-primary-600',
       'High Demand': 'text-success-strong',
     };
     return colors[quality] || 'text-text-secondary';
@@ -558,13 +570,13 @@ export class RewardPoolService {
    */
   getVAFailureLabel(reason: string): string {
     const labels: Record<string, string> = {
-      'not_ready_to_book': 'Auto no disponible',
-      'slow_response': 'Respuesta lenta (>12h)',
-      'low_acceptance': 'Tasa de aceptación baja (<70%)',
-      'high_cancellation': 'Muchas cancelaciones (>5%)',
-      'price_too_high': 'Precio muy alto vs mercado',
-      'in_cooldown': 'En período de cooldown',
-      'owner_not_kyc': 'KYC no verificado',
+      not_ready_to_book: 'Auto no disponible',
+      slow_response: 'Respuesta lenta (>12h)',
+      low_acceptance: 'Tasa de aceptación baja (<70%)',
+      high_cancellation: 'Muchas cancelaciones (>5%)',
+      price_too_high: 'Precio muy alto vs mercado',
+      in_cooldown: 'En período de cooldown',
+      owner_not_kyc: 'KYC no verificado',
     };
     return labels[reason] || reason;
   }

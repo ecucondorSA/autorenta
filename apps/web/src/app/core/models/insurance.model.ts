@@ -4,7 +4,14 @@
  */
 
 // Claim status enum - matches database enum
-export type ClaimStatus = 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected' | 'paid' | 'processing';
+export type ClaimStatus =
+  | 'draft'
+  | 'submitted'
+  | 'under_review'
+  | 'approved'
+  | 'rejected'
+  | 'paid'
+  | 'processing';
 
 export type PolicyType = 'platform_floating' | 'owner_byoi';
 export type Insurer = 'rio_uruguay' | 'sancor' | 'federacion_patronal' | 'other';

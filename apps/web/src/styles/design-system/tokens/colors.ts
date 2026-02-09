@@ -15,7 +15,7 @@ export const ColorTokens = {
     700: '#208b48',
     800: '#156a37',
     900: '#0f3829',
-    950: '#072514'
+    950: '#072514',
   },
   secondary: {
     50: '#eff6ff',
@@ -28,13 +28,13 @@ export const ColorTokens = {
     700: '#1d4ed8',
     800: '#1e40af',
     900: '#1e3a8a',
-    950: '#0c2d6b'
+    950: '#0c2d6b',
   },
   semantic: {
     success: '#22c55e',
     error: '#ef4444',
     warning: '#f59e0b',
-    info: '#3b82f6'
+    info: '#3b82f6',
   },
   neutral: {
     0: '#ffffff',
@@ -48,9 +48,9 @@ export const ColorTokens = {
     700: '#404040',
     800: '#262626',
     900: '#171717',
-    950: '#030712'
-  }
-} as const
+    950: '#030712',
+  },
+} as const;
 
 export const tailwindColorConfig = {
   primary: ColorTokens.primary,
@@ -59,23 +59,23 @@ export const tailwindColorConfig = {
   error: ColorTokens.semantic.error,
   warning: ColorTokens.semantic.warning,
   info: ColorTokens.semantic.info,
-  gray: ColorTokens.neutral
-}
+  gray: ColorTokens.neutral,
+};
 
 export const a11yContrast = {
   primaryOnWhite: {
     color: ColorTokens.primary[500],
     background: ColorTokens.neutral[0],
-    contrast: '7.2:1'
+    contrast: '7.2:1',
   },
   textOnWhite: {
     color: ColorTokens.neutral[700],
     background: ColorTokens.neutral[0],
-    contrast: '9.1:1'
+    contrast: '9.1:1',
   },
   textOnLightGray: {
     color: ColorTokens.neutral[600],
     background: ColorTokens.neutral[100],
-    contrast: '7.1:1'
-  }
-}
+    contrast: '7.1:1',
+  },
+};

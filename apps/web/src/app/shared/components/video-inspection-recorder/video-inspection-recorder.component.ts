@@ -331,7 +331,7 @@ export class VideoInspectionRecorderComponent implements AfterViewInit, OnDestro
       const videoSizeMB = (blob.size / 1024 / 1024).toFixed(1);
       this.recorderError.emit(
         `El video (${videoSizeMB}MB) supera el límite de 50MB. ` +
-        `Por favor, grabe un video más corto.`
+          `Por favor, grabe un video más corto.`,
       );
       return;
     }

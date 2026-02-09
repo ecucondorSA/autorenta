@@ -439,7 +439,8 @@ export class PreTripViewComponent implements OnInit, OnDestroy {
     // SSR Safe: Window check
     let apiKey = '';
     if (this.isBrowser) {
-      apiKey = (window as Window & { __GOOGLE_MAPS_API_KEY__?: string }).__GOOGLE_MAPS_API_KEY__ ?? '';
+      apiKey =
+        (window as Window & { __GOOGLE_MAPS_API_KEY__?: string }).__GOOGLE_MAPS_API_KEY__ ?? '';
     }
 
     // Google Static Maps API

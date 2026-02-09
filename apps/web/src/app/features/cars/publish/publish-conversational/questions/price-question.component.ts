@@ -64,7 +64,12 @@ import { FormsModule } from '@angular/forms';
             class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full text-sm font-semibold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all hover:scale-105"
           >
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
             </svg>
             <span>Precio sugerido: US$ {{ suggestedPrice() }}</span>
           </button>
@@ -110,7 +115,12 @@ import { FormsModule } from '@angular/forms';
           [class.text-text-secondary]="!isDynamicPricing()"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+            />
           </svg>
           <span>Precio dinámico</span>
         </button>
@@ -132,17 +142,30 @@ import { FormsModule } from '@angular/forms';
 
       <!-- Dynamic pricing info -->
       @if (isDynamicPricing()) {
-        <div class="flex items-start gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
-          <svg class="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        <div
+          class="flex items-start gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl"
+        >
+          <svg
+            class="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+            />
           </svg>
           <div>
             <p class="text-sm font-medium text-emerald-800 dark:text-emerald-300">
               Precio dinámico activado
             </p>
             <p class="text-xs text-emerald-700 dark:text-emerald-400 mt-1">
-              Tu precio se ajustará automáticamente según la demanda, temporada y eventos especiales.
-              Propietarios con precio dinámico ganan en promedio <strong>20% más</strong>.
+              Tu precio se ajustará automáticamente según la demanda, temporada y eventos
+              especiales. Propietarios con precio dinámico ganan en promedio
+              <strong>20% más</strong>.
             </p>
           </div>
         </div>
@@ -214,7 +237,7 @@ export class PriceQuestionComponent implements OnInit, OnChanges {
   readonly weeklyEarnings = computed(() => {
     // Modelo Comodato: 70% va al pool de rewards de comunidad
     // Estimación basada en ocupación 50% y participación en comunidad
-    const dailyNet = this.priceValue * 0.70;
+    const dailyNet = this.priceValue * 0.7;
     return Math.round(dailyNet * 3.5); // 3.5 days per week at 50% occupancy
   });
 
@@ -308,13 +331,13 @@ export class PriceQuestionComponent implements OnInit, OnChanges {
       // - Lower purchasing power requires competitive pricing
       // - FGO (15% of each booking) absorbs community risk
       // Net effect: 90% of USA equivalent price (adjusted from 85%)
-      const latamRegionalFactor = 0.90;
+      const latamRegionalFactor = 0.9;
 
       // Convert BRL to USD (approximate rate)
       const usdValue = fipeValue / 5;
 
       // Calculate daily rate (aim for 10% monthly return - industry standard)
-      const monthlyReturn = 0.10;
+      const monthlyReturn = 0.1;
       const baseDaily = (usdValue * monthlyReturn) / 30;
 
       // Apply condition and regional factors
@@ -362,7 +385,7 @@ export class PriceQuestionComponent implements OnInit, OnChanges {
     } else if (mileage <= 100000) {
       return 0.82; // 60-100k: 18% discount
     } else if (mileage <= 150000) {
-      return 0.70; // 100-150k: 30% discount
+      return 0.7; // 100-150k: 30% discount
     } else {
       return 0.55; // 150k+: 45% discount
     }

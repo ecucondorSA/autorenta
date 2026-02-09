@@ -653,11 +653,16 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
 
     // Get user's actual membership plan from subscription service logic
     const userTier = this.subscriptionService.tier();
-    const membershipPlan: MembershipPlan = userTier ? 
-      (userTier === 'club_standard' ? 'club' : 
-       userTier === 'club_black' ? 'silver' : 
-       userTier === 'club_luxury' ? 'black' : 'none') : 'none';
-    
+    const membershipPlan: MembershipPlan = userTier
+      ? userTier === 'club_standard'
+        ? 'club'
+        : userTier === 'club_black'
+          ? 'silver'
+          : userTier === 'club_luxury'
+            ? 'black'
+            : 'none'
+      : 'none';
+
     const holdCalc = calcHoldAndBuydown(vehicleTier, membershipPlan);
 
     const holdEstimatedUsd = holdCalc.holdUsd;

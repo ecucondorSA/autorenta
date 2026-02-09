@@ -12,13 +12,15 @@ export const routes: Routes = [
     canActivate: [GuestGuard],
     data: { layout: 'full-bleed' },
     loadComponent: lazyRetry(() =>
-      import('./features/marketplace/marketplace-v2.page').then((m) => m.MarketplaceV2Page)),
+      import('./features/marketplace/marketplace-v2.page').then((m) => m.MarketplaceV2Page),
+    ),
   },
   {
     path: 'rentarfast',
     data: { layout: 'full-bleed', hideFooter: true, hideNav: true },
     loadComponent: lazyRetry(() =>
-      import('./features/rentarfast/rentarfast.page').then((m) => m.RentarfastPage)),
+      import('./features/rentarfast/rentarfast.page').then((m) => m.RentarfastPage),
+    ),
   },
   {
     path: 'auth',
@@ -27,39 +29,48 @@ export const routes: Routes = [
   {
     path: 'oauth/consent',
     loadComponent: lazyRetry(() =>
-      import('./features/oauth/oauth-consent.page').then((m) => m.OAuthConsentPage)),
+      import('./features/oauth/oauth-consent.page').then((m) => m.OAuthConsentPage),
+    ),
   },
   {
     path: 'onboarding',
     loadComponent: lazyRetry(() =>
-      import('./features/onboarding/onboarding.page').then((m) => m.OnboardingPage)),
+      import('./features/onboarding/onboarding.page').then((m) => m.OnboardingPage),
+    ),
   },
   {
     path: 'become-renter',
     loadComponent: lazyRetry(() =>
-      import('./features/become-renter/become-renter.page').then((m) => m.BecomeRenterPage)),
+      import('./features/become-renter/become-renter.page').then((m) => m.BecomeRenterPage),
+    ),
   },
   {
     path: 'ganar',
     data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: lazyRetry(() =>
-      import('./features/owners-landing/owners-landing.page').then((m) => m.OwnersLandingPage)),
+      import('./features/owners-landing/owners-landing.page').then((m) => m.OwnersLandingPage),
+    ),
   },
   {
     path: 'referrals',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
-    loadComponent: lazyRetry(() => import('./features/referrals/referrals.page').then((m) => m.ReferralsPage)),
+    loadComponent: lazyRetry(() =>
+      import('./features/referrals/referrals.page').then((m) => m.ReferralsPage),
+    ),
   },
   {
     path: 'ref/:code',
     loadComponent: lazyRetry(() =>
-      import('./features/referrals/referral-landing.page').then((m) => m.ReferralLandingPage)),
+      import('./features/referrals/referral-landing.page').then((m) => m.ReferralLandingPage),
+    ),
   },
   {
     path: 'favorites',
     data: { layout: 'full-bleed', hideHeader: true },
-    loadComponent: lazyRetry(() => import('./features/favorites/favorites.page').then((m) => m.FavoritesPage)),
+    loadComponent: lazyRetry(() =>
+      import('./features/favorites/favorites.page').then((m) => m.FavoritesPage),
+    ),
   },
   {
     path: 'cars',
@@ -67,22 +78,30 @@ export const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true, animation: 'CarsConversionPage' },
+        data: {
+          layout: 'full-bleed',
+          hideHeader: true,
+          hideMobileNav: true,
+          animation: 'CarsConversionPage',
+        },
         loadComponent: lazyRetry(() =>
           import('./features/cars/conversion/cars-conversion.page').then(
             (m) => m.CarsConversionPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'list',
         data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
         loadComponent: lazyRetry(() =>
-          import('./features/cars/browse/browse-cars.page').then((m) => m.BrowseCarsPage)),
+          import('./features/cars/browse/browse-cars.page').then((m) => m.BrowseCarsPage),
+        ),
       },
       {
         path: 'compare',
         loadComponent: lazyRetry(() =>
-          import('./features/cars/compare/compare.page').then((m) => m.ComparePage)),
+          import('./features/cars/compare/compare.page').then((m) => m.ComparePage),
+        ),
       },
       {
         path: 'publish',
@@ -91,19 +110,22 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/cars/publish/publish-conversational/publish-conversational.page').then(
             (m) => m.PublishConversationalPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'publish/edit/:id',
         canMatch: [AuthGuard],
         loadComponent: lazyRetry(() =>
-          import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page)),
+          import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
+        ),
       },
       {
         path: 'my',
         canMatch: [AuthGuard],
         loadComponent: lazyRetry(() =>
-          import('./features/cars/my-cars/my-cars.page').then((m) => m.MyCarsPage)),
+          import('./features/cars/my-cars/my-cars.page').then((m) => m.MyCarsPage),
+        ),
       },
       {
         path: 'bulk-blocking',
@@ -111,7 +133,8 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/cars/bulk-blocking/bulk-blocking.page').then(
             (m) => m.BulkBlockingPage,
-          )),
+          ),
+        ),
       },
       {
         path: ':id/availability',
@@ -119,7 +142,8 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/cars/availability-calendar/availability-calendar.page').then(
             (m) => m.AvailabilityCalendarPage,
-          )),
+          ),
+        ),
       },
       {
         path: ':id/documents',
@@ -127,13 +151,20 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/cars/vehicle-documents/vehicle-documents.page').then(
             (m) => m.VehicleDocumentsPage,
-          )),
+          ),
+        ),
       },
       {
         path: ':id',
-        data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true, animation: 'CarDetailPage' },
+        data: {
+          layout: 'full-bleed',
+          hideHeader: true,
+          hideMobileNav: true,
+          animation: 'CarDetailPage',
+        },
         loadComponent: lazyRetry(() =>
-          import('./features/cars/detail/car-detail.page').then((m) => m.CarDetailPage)),
+          import('./features/cars/detail/car-detail.page').then((m) => m.CarDetailPage),
+        ),
       },
     ],
   },
@@ -142,7 +173,8 @@ export const routes: Routes = [
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     loadChildren: lazyRetry(() =>
-      import('./features/bookings/bookings.routes').then((m) => m.BOOKINGS_ROUTES)),
+      import('./features/bookings/bookings.routes').then((m) => m.BOOKINGS_ROUTES),
+    ),
   },
   {
     path: 'reviews',
@@ -154,7 +186,8 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/reviews/pending-reviews/pending-reviews.page').then(
             (m) => m.PendingReviewsPage,
-          )),
+          ),
+        ),
       },
     ],
   },
@@ -167,175 +200,202 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/admin/dashboard/admin-dashboard.page').then(
             (m) => m.AdminDashboardPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'withdrawals',
         loadComponent: lazyRetry(() =>
           import('./features/admin/withdrawals/admin-withdrawals.page').then(
             (m) => m.AdminWithdrawalsPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'refunds',
         loadComponent: lazyRetry(() =>
-          import('./features/admin/refunds/admin-refunds.page').then((m) => m.AdminRefundsPage)),
+          import('./features/admin/refunds/admin-refunds.page').then((m) => m.AdminRefundsPage),
+        ),
       },
       {
         path: 'coverage-fund',
         loadComponent: lazyRetry(() =>
           import('./features/admin/components/coverage-fund-dashboard.component').then(
             (m) => m.CoverageFundDashboardComponent,
-          )),
+          ),
+        ),
       },
       {
         path: 'fgo',
         loadComponent: lazyRetry(() =>
-          import('./features/admin/fgo/fgo-overview.page').then((m) => m.FgoOverviewPage)),
+          import('./features/admin/fgo/fgo-overview.page').then((m) => m.FgoOverviewPage),
+        ),
       },
       {
         path: 'exchange-rates',
         loadComponent: lazyRetry(() =>
           import('./features/admin/exchange-rates/exchange-rates.page').then(
             (m) => m.ExchangeRatesPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'accounting',
         loadChildren: lazyRetry(() =>
-          import('./features/admin/accounting/accounting.routes').then((m) => m.ACCOUNTING_ROUTES)),
+          import('./features/admin/accounting/accounting.routes').then((m) => m.ACCOUNTING_ROUTES),
+        ),
       },
       {
         path: 'claims',
         loadComponent: lazyRetry(() =>
-          import('./features/admin/claims/admin-claims.page').then((m) => m.AdminClaimsPage)),
+          import('./features/admin/claims/admin-claims.page').then((m) => m.AdminClaimsPage),
+        ),
       },
       {
         path: 'claims/:id',
         loadComponent: lazyRetry(() =>
           import('./features/admin/claims/admin-claim-detail.page').then(
             (m) => m.AdminClaimDetailPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'reviews',
         loadComponent: lazyRetry(() =>
-          import('./features/admin/reviews/admin-reviews.page').then((m) => m.AdminReviewsPage)),
+          import('./features/admin/reviews/admin-reviews.page').then((m) => m.AdminReviewsPage),
+        ),
       },
       {
         path: 'verifications',
         loadComponent: lazyRetry(() =>
           import('./features/admin/verifications/admin-verifications.page').then(
             (m) => m.AdminVerificationsPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'settlements',
         loadComponent: lazyRetry(() =>
           import('./features/admin/settlements/admin-settlements.page').then(
             (m) => m.AdminSettlementsPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'disputes',
         loadComponent: lazyRetry(() =>
-          import('./features/admin/disputes/admin-disputes.page').then((m) => m.AdminDisputesPage)),
+          import('./features/admin/disputes/admin-disputes.page').then((m) => m.AdminDisputesPage),
+        ),
       },
       {
         path: 'disputes/:id',
         loadComponent: lazyRetry(() =>
           import('./features/disputes/pages/dispute-detail/dispute-detail.page').then(
             (m) => m.DisputeDetailPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'deposits',
         loadComponent: lazyRetry(() =>
           import('./features/admin/deposits-monitoring/deposits-monitoring.page').then(
             (m) => m.DepositsMonitoringPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'database-export',
         loadComponent: lazyRetry(() =>
           import('./features/admin/database-export/database-export.page').then(
             (m) => m.DatabaseExportPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'system-monitoring',
         loadComponent: lazyRetry(() =>
           import('./features/admin/system-monitoring/system-monitoring.page').then(
             (m) => m.SystemMonitoringPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'reviews/moderate',
         loadComponent: lazyRetry(() =>
           import('./features/admin/reviews/moderate-reviews/moderate-reviews.page').then(
             (m) => m.ModerateReviewsPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'analytics',
         loadComponent: lazyRetry(() =>
           import('./features/admin/analytics/admin-analytics.page').then(
             (m) => m.AdminAnalyticsPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'feature-flags',
         loadComponent: lazyRetry(() =>
           import('./features/admin/feature-flags/admin-feature-flags.page').then(
             (m) => m.AdminFeatureFlagsPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'pricing',
         loadComponent: lazyRetry(() =>
-          import('./features/admin/pricing/admin-pricing.page').then((m) => m.AdminPricingPage)),
+          import('./features/admin/pricing/admin-pricing.page').then((m) => m.AdminPricingPage),
+        ),
       },
       {
         path: 'suspended-users',
         loadComponent: lazyRetry(() =>
           import('./features/admin/suspended-users/admin-suspended-users.page').then(
             (m) => m.AdminSuspendedUsersPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'traffic-infractions',
         loadComponent: lazyRetry(() =>
           import('./features/admin/traffic-infractions/admin-traffic-infractions.page').then(
             (m) => m.AdminTrafficInfractionsPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'accidents',
         loadComponent: lazyRetry(() =>
           import('./features/admin/accidents/admin-accidents.page').then(
             (m) => m.AdminAccidentsPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'marketing',
         loadComponent: lazyRetry(() =>
           import('./features/admin/marketing/admin-marketing.page').then(
             (m) => m.AdminMarketingPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'organizations',
         loadComponent: lazyRetry(() =>
           import('./features/organizations/pages/organization-dashboard.component').then(
             (m) => m.OrganizationDashboardComponent,
-          )),
+          ),
+        ),
       },
     ],
   },
   {
     path: 'mp-callback',
     loadComponent: lazyRetry(() =>
-      import('./features/mp-callback/mp-callback.page').then((m) => m.MpCallbackPage)),
+      import('./features/mp-callback/mp-callback.page').then((m) => m.MpCallbackPage),
+    ),
   },
   {
     path: 'profile',
@@ -345,14 +405,16 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: lazyRetry(() =>
-          import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage)),
+          import('./features/profile/profile-expanded.page').then((m) => m.ProfileExpandedPage),
+        ),
         data: { layout: 'full-bleed', hideHeader: true },
       },
       {
         path: 'driver-profile',
         data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: lazyRetry(() =>
-          import('./features/driver-profile/driver-profile.page').then((m) => m.DriverProfilePage)),
+          import('./features/driver-profile/driver-profile.page').then((m) => m.DriverProfilePage),
+        ),
       },
       {
         path: 'mercadopago-connect',
@@ -360,7 +422,8 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/profile/mercadopago-connect.component').then(
             (m) => m.MercadoPagoConnectComponent,
-          )),
+          ),
+        ),
       },
       {
         path: 'notifications-settings',
@@ -368,7 +431,8 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/profile/notifications-settings/notifications-settings.page').then(
             (m) => m.NotificationsSettingsPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'driving-stats',
@@ -376,13 +440,15 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/profile/driving-stats/driving-stats.page').then(
             (m) => m.DrivingStatsPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'location-settings',
         data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: lazyRetry(() =>
-          import('./features/profile/location-settings.page').then((m) => m.LocationSettingsPage)),
+          import('./features/profile/location-settings.page').then((m) => m.LocationSettingsPage),
+        ),
       },
       {
         path: 'personal',
@@ -390,7 +456,8 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/profile/personal/profile-personal.page').then(
             (m) => m.ProfilePersonalPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'contact',
@@ -398,7 +465,8 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/profile/contact/profile-contact.page').then(
             (m) => m.ProfileContactPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'preferences',
@@ -406,7 +474,8 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/profile/preferences/profile-preferences.page').then(
             (m) => m.ProfilePreferencesPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'security',
@@ -414,7 +483,8 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/profile/security/profile-security.page').then(
             (m) => m.ProfileSecurityPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'verification',
@@ -422,7 +492,8 @@ export const routes: Routes = [
         loadComponent: lazyRetry(() =>
           import('./features/profile/verification-page/profile-verification.page').then(
             (m) => m.ProfileVerificationPage,
-          )),
+          ),
+        ),
       },
     ],
   },
@@ -431,12 +502,14 @@ export const routes: Routes = [
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: lazyRetry(() =>
-      import('./features/protections/protections.page').then((m) => m.ProtectionsPage)),
+      import('./features/protections/protections.page').then((m) => m.ProtectionsPage),
+    ),
   },
   {
     path: 'verification',
     loadChildren: lazyRetry(() =>
-      import('./features/verification/verification.routes').then((m) => m.VERIFICATION_ROUTES)),
+      import('./features/verification/verification.routes').then((m) => m.VERIFICATION_ROUTES),
+    ),
   },
   {
     path: 'contact-verification',
@@ -444,19 +517,22 @@ export const routes: Routes = [
     loadChildren: lazyRetry(() =>
       import('./features/contact-verification/contact-verification.routes').then(
         (m) => m.CONTACT_VERIFICATION_ROUTES,
-      )),
+      ),
+    ),
   },
   {
     path: 'users/:id',
     loadComponent: lazyRetry(() =>
-      import('./features/users/public-profile.page').then((m) => m.PublicProfilePage)),
+      import('./features/users/public-profile.page').then((m) => m.PublicProfilePage),
+    ),
   },
   {
     path: 'finanzas',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: lazyRetry(() =>
-      import('./features/finanzas/finanzas.page').then((m) => m.FinanzasPage)),
+      import('./features/finanzas/finanzas.page').then((m) => m.FinanzasPage),
+    ),
     title: 'Finanzas - AutoRenta',
   },
   {
@@ -466,8 +542,12 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: lazyRetry(() => import('./features/wallet/wallet.page').then((m) => m.WalletPage)),
-        loadChildren: lazyRetry(() => import('./features/wallet/wallet.routes').then((m) => m.WALLET_ROUTES)),
+        loadComponent: lazyRetry(() =>
+          import('./features/wallet/wallet.page').then((m) => m.WalletPage),
+        ),
+        loadChildren: lazyRetry(() =>
+          import('./features/wallet/wallet.routes').then((m) => m.WALLET_ROUTES),
+        ),
       },
     ],
   },
@@ -479,46 +559,54 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: lazyRetry(() =>
-          import('./features/dashboard/owner-dashboard.page').then((m) => m.OwnerDashboardPage)),
+          import('./features/dashboard/owner-dashboard.page').then((m) => m.OwnerDashboardPage),
+        ),
       },
       {
         path: 'earnings',
         loadComponent: lazyRetry(() =>
-          import('./features/dashboard/earnings/earnings.page').then((m) => m.EarningsPage)),
+          import('./features/dashboard/earnings/earnings.page').then((m) => m.EarningsPage),
+        ),
       },
       {
         path: 'stats',
         loadComponent: lazyRetry(() =>
-          import('./features/dashboard/stats/stats.page').then((m) => m.StatsPage)),
+          import('./features/dashboard/stats/stats.page').then((m) => m.StatsPage),
+        ),
       },
       {
         path: 'reviews',
         loadComponent: lazyRetry(() =>
-          import('./features/dashboard/reviews/reviews.page').then((m) => m.ReviewsPage)),
+          import('./features/dashboard/reviews/reviews.page').then((m) => m.ReviewsPage),
+        ),
       },
       {
         path: 'insurance',
         loadComponent: lazyRetry(() =>
-          import('./features/dashboard/insurance/insurance.page').then((m) => m.InsurancePage)),
+          import('./features/dashboard/insurance/insurance.page').then((m) => m.InsurancePage),
+        ),
       },
       {
         path: 'calendar',
         loadComponent: lazyRetry(() =>
           import('./features/dashboard/calendar/dashboard-calendar.page').then(
             (m) => m.DashboardCalendarPage,
-          )),
+          ),
+        ),
       },
       {
         path: 'points',
         loadComponent: lazyRetry(() =>
-          import('./features/dashboard/points/points.page').then((m) => m.PointsPage)),
+          import('./features/dashboard/points/points.page').then((m) => m.PointsPage),
+        ),
       },
       {
         path: 'security',
         loadComponent: lazyRetry(() =>
           import('./features/dashboard/pages/security-center/security-dashboard.page').then(
             (m) => m.SecurityDashboardPage,
-          )),
+          ),
+        ),
       },
     ],
   },
@@ -530,28 +618,27 @@ export const routes: Routes = [
       {
         path: '',
         redirectTo: 'map',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'map',
         loadComponent: lazyRetry(() =>
-          import('./features/scout/pages/scout-map/scout-map').then(
-            (m) => m.ScoutMapPage,
-          )),
+          import('./features/scout/pages/scout-map/scout-map').then((m) => m.ScoutMapPage),
+        ),
       },
       {
         path: 'report/:bookingId',
         loadComponent: lazyRetry(() =>
-          import('./features/scout/pages/scout-report/scout-report').then(
-            (m) => m.ScoutReportPage,
-          )),
+          import('./features/scout/pages/scout-report/scout-report').then((m) => m.ScoutReportPage),
+        ),
       },
       {
         path: 'missions',
         loadComponent: lazyRetry(() =>
           import('./features/scout/pages/missions-list/missions-list.page').then(
             (m) => m.MissionsListPage,
-          )),
+          ),
+        ),
       },
     ],
   },
@@ -559,18 +646,24 @@ export const routes: Routes = [
     path: 'calendar-demo',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
-    loadComponent: lazyRetry(() => import('./features/calendar/calendar.page').then((m) => m.CalendarPage)),
+    loadComponent: lazyRetry(() =>
+      import('./features/calendar/calendar.page').then((m) => m.CalendarPage),
+    ),
   },
   {
     path: 'payouts',
     canMatch: [AuthGuard, kycGuard],
     data: { layout: 'full-bleed', hideHeader: true },
-    loadComponent: lazyRetry(() => import('./features/payouts/payouts.page').then((m) => m.PayoutsPage)),
+    loadComponent: lazyRetry(() =>
+      import('./features/payouts/payouts.page').then((m) => m.PayoutsPage),
+    ),
   },
   {
     path: 'support',
     data: { layout: 'full-bleed', hideHeader: true },
-    loadComponent: lazyRetry(() => import('./features/support/support.page').then((m) => m.SupportPage)),
+    loadComponent: lazyRetry(() =>
+      import('./features/support/support.page').then((m) => m.SupportPage),
+    ),
   },
   {
     path: 'panic',
@@ -578,35 +671,43 @@ export const routes: Routes = [
     loadComponent: lazyRetry(() =>
       import('./features/dashboard/pages/security-center/panic-mode.page').then(
         (m) => m.PanicModePage,
-      )),
+      ),
+    ),
   },
   {
     path: 'beacon-test',
     data: { layout: 'full-bleed', hideHeader: true, hideFooter: true, hideMobileNav: true },
     loadComponent: lazyRetry(() =>
-      import('./features/beacon-test/beacon-test.page').then((m) => m.BeaconTestPage)),
+      import('./features/beacon-test/beacon-test.page').then((m) => m.BeaconTestPage),
+    ),
   },
   {
     path: 'terminos',
-    loadComponent: lazyRetry(() => import('./features/legal/terms/terms.page').then((m) => m.TermsPage)),
+    loadComponent: lazyRetry(() =>
+      import('./features/legal/terms/terms.page').then((m) => m.TermsPage),
+    ),
   },
   {
     path: 'privacy',
-    loadComponent: lazyRetry(() => import('./features/legal/privacy/privacy.page').then((m) => m.PrivacyPage)),
+    loadComponent: lazyRetry(() =>
+      import('./features/legal/privacy/privacy.page').then((m) => m.PrivacyPage),
+    ),
   },
   {
     path: 'delete-account',
     loadComponent: lazyRetry(() =>
       import('./features/legal/delete-account/delete-account.page').then(
         (m) => m.DeleteAccountPage,
-      )),
+      ),
+    ),
   },
   {
     path: 'politica-seguros',
     loadComponent: lazyRetry(() =>
       import('./features/legal/insurance-policy/insurance-policy.page').then(
         (m) => m.InsurancePolicyPage,
-      )),
+      ),
+    ),
   },
   {
     path: 'messages',
@@ -616,13 +717,16 @@ export const routes: Routes = [
       {
         path: '',
         data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
-        loadComponent: lazyRetry(() => import('./features/messages/inbox.page').then((m) => m.InboxPage)),
+        loadComponent: lazyRetry(() =>
+          import('./features/messages/inbox.page').then((m) => m.InboxPage),
+        ),
       },
       {
         path: 'chat',
         data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
         loadComponent: lazyRetry(() =>
-          import('./features/messages/messages.page').then((m) => m.MessagesPage)),
+          import('./features/messages/messages.page').then((m) => m.MessagesPage),
+        ),
       },
     ],
   },
@@ -634,14 +738,16 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: lazyRetry(() =>
-          import('./features/notifications/notifications.page').then((m) => m.NotificationsPage)),
+          import('./features/notifications/notifications.page').then((m) => m.NotificationsPage),
+        ),
       },
       {
         path: 'preferences',
         loadComponent: lazyRetry(() =>
           import('./features/notifications/preferences/notification-preferences.page').then(
             (m) => m.NotificationPreferencesPage,
-          )),
+          ),
+        ),
       },
     ],
   },
@@ -651,72 +757,88 @@ export const routes: Routes = [
   {
     path: 'help',
     loadComponent: lazyRetry(() =>
-      import('./features/static/help-center/help-center.page').then((m) => m.HelpCenterPage)),
+      import('./features/static/help-center/help-center.page').then((m) => m.HelpCenterPage),
+    ),
   },
   {
     path: 'aircover',
     loadComponent: lazyRetry(() =>
-      import('./features/static/aircover/aircover.page').then((m) => m.AircoverPage)),
+      import('./features/static/aircover/aircover.page').then((m) => m.AircoverPage),
+    ),
   },
   {
     path: 'safety',
-    loadComponent: lazyRetry(() => import('./features/static/safety/safety.page').then((m) => m.SafetyPage)),
+    loadComponent: lazyRetry(() =>
+      import('./features/static/safety/safety.page').then((m) => m.SafetyPage),
+    ),
   },
   {
     path: 'cancellation',
     loadComponent: lazyRetry(() =>
-      import('./features/static/cancellation/cancellation.page').then((m) => m.CancellationPage)),
+      import('./features/static/cancellation/cancellation.page').then((m) => m.CancellationPage),
+    ),
   },
   {
     path: 'community',
     loadComponent: lazyRetry(() =>
-      import('./features/static/community/community.page').then((m) => m.CommunityPage)),
+      import('./features/static/community/community.page').then((m) => m.CommunityPage),
+    ),
   },
   {
     path: 'rent-your-car',
     loadComponent: lazyRetry(() =>
-      import('./features/static/rent-your-car/rent-your-car.page').then((m) => m.RentYourCarPage)),
+      import('./features/static/rent-your-car/rent-your-car.page').then((m) => m.RentYourCarPage),
+    ),
   },
   {
     path: 'owner-resources',
     loadComponent: lazyRetry(() =>
       import('./features/static/owner-resources/owner-resources.page').then(
         (m) => m.OwnerResourcesPage,
-      )),
+      ),
+    ),
   },
   {
     path: 'resources',
     loadComponent: lazyRetry(() =>
-      import('./features/static/resources/resources.page').then((m) => m.ResourcesPage)),
+      import('./features/static/resources/resources.page').then((m) => m.ResourcesPage),
+    ),
   },
   {
     path: 'newsroom',
     loadComponent: lazyRetry(() =>
-      import('./features/static/newsroom/newsroom.page').then((m) => m.NewsroomPage)),
+      import('./features/static/newsroom/newsroom.page').then((m) => m.NewsroomPage),
+    ),
   },
   {
     path: 'about',
-    loadComponent: lazyRetry(() => import('./features/static/about/about.page').then((m) => m.AboutPage)),
+    loadComponent: lazyRetry(() =>
+      import('./features/static/about/about.page').then((m) => m.AboutPage),
+    ),
   },
   {
     path: 'careers',
     loadComponent: lazyRetry(() =>
-      import('./features/static/careers/careers.page').then((m) => m.CareersPage)),
+      import('./features/static/careers/careers.page').then((m) => m.CareersPage),
+    ),
   },
   {
     path: 'investors',
     loadComponent: lazyRetry(() =>
-      import('./features/static/investors/investors.page').then((m) => m.InvestorsPage)),
+      import('./features/static/investors/investors.page').then((m) => m.InvestorsPage),
+    ),
   },
   {
     path: 'sitemap',
     loadComponent: lazyRetry(() =>
-      import('./features/static/sitemap/sitemap.page').then((m) => m.SitemapPage)),
+      import('./features/static/sitemap/sitemap.page').then((m) => m.SitemapPage),
+    ),
   },
   {
     path: 'company-data',
     loadComponent: lazyRetry(() =>
-      import('./features/static/company-data/company-data.page').then((m) => m.CompanyDataPage)),
+      import('./features/static/company-data/company-data.page').then((m) => m.CompanyDataPage),
+    ),
   },
   {
     path: 'terms',
@@ -733,13 +855,15 @@ export const routes: Routes = [
       {
         path: ':segment1', // e.g. /alquiler/toyota OR /alquiler/palermo
         loadComponent: lazyRetry(() =>
-          import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPageComponent)),
+          import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPageComponent),
+        ),
         resolve: { pageData: seoPageResolver },
       },
       {
         path: ':segment1/:segment2', // e.g. /alquiler/toyota/palermo
         loadComponent: lazyRetry(() =>
-          import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPageComponent)),
+          import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPageComponent),
+        ),
         resolve: { pageData: seoPageResolver },
       },
     ],
@@ -752,18 +876,21 @@ export const routes: Routes = [
     path: 'error/500',
     data: { layout: 'full-bleed', hideHeader: true, hideFooter: true, hideMobileNav: true },
     loadComponent: lazyRetry(() =>
-      import('./features/error/server-error/server-error.page').then((m) => m.ServerErrorPage)),
+      import('./features/error/server-error/server-error.page').then((m) => m.ServerErrorPage),
+    ),
   },
   {
     path: 'error/404',
     data: { layout: 'full-bleed', hideHeader: true, hideFooter: true, hideMobileNav: true },
     loadComponent: lazyRetry(() =>
-      import('./features/error/not-found/not-found.page').then((m) => m.NotFoundPage)),
+      import('./features/error/not-found/not-found.page').then((m) => m.NotFoundPage),
+    ),
   },
   {
     path: '**',
     component: undefined, // Workaround to lazy load via loadComponent on wildcard
     loadComponent: lazyRetry(() =>
-      import('./features/error/not-found/not-found.page').then((m) => m.NotFoundPage)),
+      import('./features/error/not-found/not-found.page').then((m) => m.NotFoundPage),
+    ),
   },
 ];

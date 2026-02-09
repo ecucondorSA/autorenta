@@ -1,7 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { VideoVehicleRecognitionComponent, DetectedVehicle } from '@shared/components/video-vehicle-recognition/video-vehicle-recognition.component';
+import {
+  VideoVehicleRecognitionComponent,
+  DetectedVehicle,
+} from '@shared/components/video-vehicle-recognition/video-vehicle-recognition.component';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { cashOutline, shieldCheckmark, arrowBack, trophyOutline } from 'ionicons/icons';
@@ -12,9 +15,15 @@ import { ToastService } from '@core/services/ui/toast.service';
   standalone: true,
   imports: [CommonModule, VideoVehicleRecognitionComponent, IonIcon, RouterLink],
   templateUrl: './scout-report.html',
-  styles: [`
-    :host { display: block; min-height: 100vh; background: #0f172a; }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+        min-height: 100vh;
+        background: #0f172a;
+      }
+    `,
+  ],
 })
 export class ScoutReportPage implements OnInit {
   private route = inject(ActivatedRoute);
@@ -39,7 +48,7 @@ export class ScoutReportPage implements OnInit {
 
   onVehicleDetected(vehicle: DetectedVehicle) {
     this.detectedData.set(vehicle);
-    
+
     // Simulación: Verificamos si es el vehículo buscado
     // En un hackathon, esto es el factor "Wow"
     if (vehicle.confidence > 70) {
@@ -52,13 +61,16 @@ export class ScoutReportPage implements OnInit {
 
   async claimReward() {
     this.isProcessing.set(true);
-    
+
     // Simulamos latencia de red/blockchain/pago
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     this.isProcessing.set(false);
-    this.toast.success('¡Pago Procesado!', `Se han acreditado $${this.rewardAmount} USD en tu billetera.`);
-    
+    this.toast.success(
+      '¡Pago Procesado!',
+      `Se han acreditado $${this.rewardAmount} USD en tu billetera.`,
+    );
+
     // Redirigir al mapa después del éxito
     setTimeout(() => {
       this.router.navigate(['/scout/map']);

@@ -57,7 +57,9 @@
                   [style.width.%]="verificationProgress()"
                 ></div>
               </div>
-              <span class="drawer-header__progress-text">{{ verificationProgress() }}% verificado</span>
+              <span class="drawer-header__progress-text"
+                >{{ verificationProgress() }}% verificado</span
+              >
             </div>
           }
         </div>
@@ -72,7 +74,10 @@
       <div class="drawer-gamification__level">
         <span class="drawer-gamification__level-icon">{{ gamificationStats().level.icon }}</span>
         <div class="drawer-gamification__level-info">
-          <span class="drawer-gamification__level-name" [style.color]="gamificationStats().level.color">
+          <span
+            class="drawer-gamification__level-name"
+            [style.color]="gamificationStats().level.color"
+          >
             {{ gamificationStats().level.name }}
           </span>
           <div class="drawer-gamification__xp-bar">
@@ -169,7 +174,6 @@
         </button>
       </div>
 
-
       <!-- Invite Friends -->
       <button
         type="button"
@@ -177,7 +181,9 @@
         (click)="navigateAndClose('/referrals')"
         aria-label="Invitar amigos y ganar recompensas"
       >
-        <div class="drawer-item__icon bg-gradient-to-br from-emerald-500/20 to-teal-500/20 text-emerald-600 group-hover:opacity-80">
+        <div
+          class="drawer-item__icon bg-gradient-to-br from-emerald-500/20 to-teal-500/20 text-emerald-600 group-hover:opacity-80"
+        >
           <app-menu-icon name="user-plus" [size]="20" />
         </div>
         <div class="drawer-item__invite-content">

@@ -479,7 +479,8 @@ export class CarsService {
     // 2. Build query - Only select fields needed for listing UI
     let query = this.supabase
       .from('cars')
-      .select(`
+      .select(
+        `
         id,
         title,
         brand,
@@ -495,7 +496,8 @@ export class CarsService {
           url,
           sort_order
         )
-      `)
+      `,
+      )
       .order('created_at', { ascending: false });
 
     if (orgIds.length > 0) {
@@ -817,7 +819,13 @@ export class CarsService {
     // - `model` -> `model_text_backup`
     // - `location` (jsonb) -> individual location fields
     return (data || []).map((car: Record<string, unknown>) => {
-      const location = car['location'] as { city?: string; state?: string; country?: string; lat?: number; lng?: number } | null;
+      const location = car['location'] as {
+        city?: string;
+        state?: string;
+        country?: string;
+        lat?: number;
+        lng?: number;
+      } | null;
       return {
         ...car,
         brand_text_backup: (car['brand'] as string) || '',

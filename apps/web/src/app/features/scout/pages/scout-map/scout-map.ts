@@ -12,13 +12,15 @@ import { BountyMapItem } from '@core/models/bounty.model';
   standalone: true,
   imports: [CommonModule, LiveTrackingMapComponent, RouterLink, IonIcon],
   templateUrl: './scout-map.html',
-  styles: [`
-    :host {
-      display: block;
-      height: 100vh;
-      overflow: hidden;
-    }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+        height: 100vh;
+        overflow: hidden;
+      }
+    `,
+  ],
 })
 export class ScoutMapPage {
   // Simulamos datos de "Autos Perdidos" para el Hackathon
@@ -29,7 +31,7 @@ export class ScoutMapPage {
       lng: -58.3816,
       reward: 500,
       carModel: 'Toyota Corolla 2024',
-      lastSeen: 'Hace 2 horas'
+      lastSeen: 'Hace 2 horas',
     },
     {
       id: 'bounty-2',
@@ -37,8 +39,8 @@ export class ScoutMapPage {
       lng: -58.4016,
       reward: 350,
       carModel: 'Peugeot 208',
-      lastSeen: 'Hace 15 min'
-    }
+      lastSeen: 'Hace 15 min',
+    },
   ]);
 
   selectedBounty = signal<BountyMapItem | null>(null);

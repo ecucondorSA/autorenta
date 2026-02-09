@@ -224,62 +224,66 @@
                         <p class="text-xs text-secondary/80 truncate">{{ userEmail() || '' }}</p>
                       </div>
                     </div>
-	                  </div>
-	                  <div class="py-2">
-	                    @for (section of profileNavSections(); track section.id; let isLastSection = $last) {
-	                      <div class="px-4 py-2">
-	                        <p
-	                          class="text-xs font-bold uppercase tracking-wider"
-	                          [class]="profileNavToneClasses[section.tone].heading"
-	                        >
-	                          {{ section.title }}
-	                        </p>
-	                      </div>
-	                      @for (item of section.items; track item.id) {
-	                        <a
-	                          [routerLink]="item.route"
-	                          (click)="closeProfileMenu()"
-	                          class="menu-item group"
-	                          role="menuitem"
-	                        >
-	                          <div
-	                            class="menu-icon"
-	                            [class]="
-	                              profileNavToneClasses[item.resolvedTone].iconBg +
-	                              ' ' +
-	                              profileNavToneClasses[item.resolvedTone].iconText +
-	                              ' ' +
-	                              profileNavToneClasses[item.resolvedTone].iconBgHover
-	                            "
-	                          >
-	                            <app-icon [name]="item.desktopIcon" [size]="18" />
-	                          </div>
-	                          <span class="flex-1">{{ item.label }}</span>
-	                          @if (item.badgeText) {
-	                            @if (item.badgeKind === 'new') {
-	                              <span
-	                                class="text-xs font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-700"
-	                                >{{ item.badgeText }}</span
-	                              >
-	                            } @else {
-	                              <span
-	                                class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse"
-	                                >{{ item.badgeText }}</span
-	                              >
-	                            }
-	                          }
-	                          <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
-	                        </a>
-	                      }
-	                      @if (!isLastSection) {
-	                        <div class="my-2 mx-3 border-t border-border-subtle"></div>
-	                      }
-	                    }
-	                    <div class="my-2 mx-3 border-t border-border-subtle"></div>
-	                    <!-- CERRAR SESIÓN -->
-	                    <button
-	                      (click)="signOut()"
-	                      class="menu-item group text-red-600 hover:bg-red-50 w-full"
+                  </div>
+                  <div class="py-2">
+                    @for (
+                      section of profileNavSections();
+                      track section.id;
+                      let isLastSection = $last
+                    ) {
+                      <div class="px-4 py-2">
+                        <p
+                          class="text-xs font-bold uppercase tracking-wider"
+                          [class]="profileNavToneClasses[section.tone].heading"
+                        >
+                          {{ section.title }}
+                        </p>
+                      </div>
+                      @for (item of section.items; track item.id) {
+                        <a
+                          [routerLink]="item.route"
+                          (click)="closeProfileMenu()"
+                          class="menu-item group"
+                          role="menuitem"
+                        >
+                          <div
+                            class="menu-icon"
+                            [class]="
+                              profileNavToneClasses[item.resolvedTone].iconBg +
+                              ' ' +
+                              profileNavToneClasses[item.resolvedTone].iconText +
+                              ' ' +
+                              profileNavToneClasses[item.resolvedTone].iconBgHover
+                            "
+                          >
+                            <app-icon [name]="item.desktopIcon" [size]="18" />
+                          </div>
+                          <span class="flex-1">{{ item.label }}</span>
+                          @if (item.badgeText) {
+                            @if (item.badgeKind === 'new') {
+                              <span
+                                class="text-xs font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-700"
+                                >{{ item.badgeText }}</span
+                              >
+                            } @else {
+                              <span
+                                class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse"
+                                >{{ item.badgeText }}</span
+                              >
+                            }
+                          }
+                          <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
+                        </a>
+                      }
+                      @if (!isLastSection) {
+                        <div class="my-2 mx-3 border-t border-border-subtle"></div>
+                      }
+                    }
+                    <div class="my-2 mx-3 border-t border-border-subtle"></div>
+                    <!-- CERRAR SESIÓN -->
+                    <button
+                      (click)="signOut()"
+                      class="menu-item group text-red-600 hover:bg-red-50 w-full"
                       role="menuitem"
                       type="button"
                     >
@@ -305,14 +309,18 @@
 
   <!-- Pending Reviews Banner (hidden on full-bleed layouts) -->
   @if (isAuthenticatedSig() && !fullBleedLayout()) {
-    <app-pending-reviews-banner class="block mx-auto max-w-7xl w-full px-4"></app-pending-reviews-banner>
+    <app-pending-reviews-banner
+      class="block mx-auto max-w-7xl w-full px-4"
+    ></app-pending-reviews-banner>
   }
 
   <!-- Main Content Area -->
   <main
     id="main-content"
     class="app-main w-full"
-    [style.padding-bottom]="fullBleedLayout() ? '0' : (hideMobileNav() ? '0' : 'calc(80px + env(safe-area-inset-bottom))')"
+    [style.padding-bottom]="
+      fullBleedLayout() ? '0' : hideMobileNav() ? '0' : 'calc(80px + env(safe-area-inset-bottom))'
+    "
     [class.container-page]="!fullBleedLayout()"
     [class.mx-auto]="!fullBleedLayout()"
     [class.max-w-none]="fullBleedLayout()"
@@ -363,16 +371,16 @@
 <!-- El componente se crea dinamicamente en app.component.ts usando MobileBottomNavPortalService -->
 
 <!-- Mobile Menu Drawer - Bottom Sheet Style -->
-	@if (isAuthenticatedSig()) {
-	  <app-mobile-menu-drawer
-	    [open]="mobileMenuDrawerOpen()"
-	    [userProfile]="userProfile()"
-	    [pendingApprovalCount]="pendingApprovalCount()"
-	    [unreadNotificationsCount]="unreadNotificationsCount()"
-	    (closeDrawer)="closeMobileMenuDrawer()"
-	  >
-	  </app-mobile-menu-drawer>
-	}
+@if (isAuthenticatedSig()) {
+  <app-mobile-menu-drawer
+    [open]="mobileMenuDrawerOpen()"
+    [userProfile]="userProfile()"
+    [pendingApprovalCount]="pendingApprovalCount()"
+    [unreadNotificationsCount]="unreadNotificationsCount()"
+    (closeDrawer)="closeMobileMenuDrawer()"
+  >
+  </app-mobile-menu-drawer>
+}
 
 <!-- PWA Install Banner - Minimalista y menos intrusivo que pwa-install-prompt -->
 <app-pwa-install-banner></app-pwa-install-banner>

@@ -212,7 +212,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
       this.error = null;
 
       const response = await firstValueFrom(
-        this.gatewayService.createBookingPreference(this.bookingId, this.useSplitPayment)
+        this.gatewayService.createBookingPreference(this.bookingId, this.useSplitPayment),
       );
 
       if (!response || !response.success) {
@@ -246,9 +246,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.logger.debug('Capturing PayPal order:', orderId);
 
-      const captureResponse = await firstValueFrom(
-        this.gatewayService.captureOrder(orderId)
-      );
+      const captureResponse = await firstValueFrom(this.gatewayService.captureOrder(orderId));
 
       if (!captureResponse || !captureResponse.success) {
         throw new Error(captureResponse?.error || 'Failed to capture PayPal payment');

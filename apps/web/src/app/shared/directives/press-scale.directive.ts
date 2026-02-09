@@ -1,10 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  inject,
-  input,
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, inject, input } from '@angular/core';
 import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 
 /**

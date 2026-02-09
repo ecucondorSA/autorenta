@@ -353,9 +353,7 @@ export class PayoutHistoryComponent implements OnInit {
     this.error.set(null);
 
     try {
-      const payouts = await firstValueFrom(
-        this.payoutService.getUserPayouts(this.userId)
-      );
+      const payouts = await firstValueFrom(this.payoutService.getUserPayouts(this.userId));
 
       this.payouts.set(payouts || []);
     } catch (err) {

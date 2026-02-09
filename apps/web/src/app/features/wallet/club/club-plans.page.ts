@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
-import { 
-  MEMBERSHIP_CONFIG, 
-  VEHICLE_TIER_CONFIG, 
+import {
+  MEMBERSHIP_CONFIG,
+  VEHICLE_TIER_CONFIG,
   VEHICLE_TIER_ORDER,
   getVehicleTierName,
-  MembershipPlanConfig
+  MembershipPlanConfig,
 } from '@core/models/guarantee-tiers.model';
 
 @Component({
@@ -30,36 +30,51 @@ import {
             VOLVER A WALLET
           </button>
 
-          <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-cta-default to-emerald-600 flex items-center justify-center shadow-xl shadow-cta-default/30 rotate-3">
+          <div
+            class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-cta-default to-emerald-600 flex items-center justify-center shadow-xl shadow-cta-default/30 rotate-3"
+          >
             <ion-icon name="sparkles" class="text-4xl text-cta-text"></ion-icon>
           </div>
-          
+
           <h1 class="text-4xl md:text-5xl font-black text-text-primary tracking-tighter italic">
             AUTORENTAR <span class="text-cta-default">CLUB</span>
           </h1>
           <p class="text-lg text-text-secondary max-w-2xl mx-auto font-medium">
-            Olvidate de las garantías gigantes. Uníte al Club y alquilá con depósitos reducidos y protección total de la comunidad.
+            Olvidate de las garantías gigantes. Uníte al Club y alquilá con depósitos reducidos y
+            protección total de la comunidad.
           </p>
         </div>
 
         <!-- NEW: Vehicle Tiers Education Section -->
         <div class="bg-surface-secondary/50 rounded-3xl p-6 md:p-8 border border-border-default">
           <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 rounded-xl bg-cta-default/10 flex items-center justify-center text-cta-default">
+            <div
+              class="w-10 h-10 rounded-xl bg-cta-default/10 flex items-center justify-center text-cta-default"
+            >
               <ion-icon name="car-sport" class="text-xl"></ion-icon>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-text-primary italic uppercase tracking-tight">Escala de Garantías</h2>
-              <p class="text-xs text-text-secondary font-bold uppercase tracking-widest">Hold base según el valor del vehículo</p>
+              <h2 class="text-xl font-bold text-text-primary italic uppercase tracking-tight">
+                Escala de Garantías
+              </h2>
+              <p class="text-xs text-text-secondary font-bold uppercase tracking-widest">
+                Hold base según el valor del vehículo
+              </p>
             </div>
           </div>
 
           <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
             @for (tier of vehicleTiers; track tier) {
-              <div class="bg-surface-base p-4 rounded-2xl border border-border-default text-center space-y-1">
+              <div
+                class="bg-surface-base p-4 rounded-2xl border border-border-default text-center space-y-1"
+              >
                 <p class="text-[10px] font-black uppercase text-text-muted">{{ tier }}</p>
-                <p class="text-lg font-black text-text-primary">\${{ vehicleConfigs[tier].holdBaseUsd }}</p>
-                <p class="text-[9px] text-text-secondary leading-none">{{ vehicleConfigs[tier].description.split('(')[1].replace(')', '') }}</p>
+                <p class="text-lg font-black text-text-primary">
+                  \${{ vehicleConfigs[tier].holdBaseUsd }}
+                </p>
+                <p class="text-[9px] text-text-secondary leading-none">
+                  {{ vehicleConfigs[tier].description.split('(')[1].replace(')', '') }}
+                </p>
               </div>
             }
           </div>
@@ -68,14 +83,22 @@ import {
         <!-- Already subscribed banner -->
         @if (hasActiveSubscription()) {
           <div class="rounded-3xl bg-cta-default p-1 shadow-xl shadow-cta-default/20">
-            <div class="bg-surface-base rounded-[22px] p-6 flex flex-col md:flex-row items-center gap-6">
-              <div class="w-14 h-14 rounded-2xl bg-cta-default/10 flex items-center justify-center flex-shrink-0">
+            <div
+              class="bg-surface-base rounded-[22px] p-6 flex flex-col md:flex-row items-center gap-6"
+            >
+              <div
+                class="w-14 h-14 rounded-2xl bg-cta-default/10 flex items-center justify-center flex-shrink-0"
+              >
                 <ion-icon name="ribbon" class="text-3xl text-cta-default"></ion-icon>
               </div>
               <div class="flex-1 text-center md:text-left">
-                <h3 class="text-xl font-black text-text-primary italic uppercase tracking-tighter">Miembro {{ currentTierName() }}</h3>
+                <h3 class="text-xl font-black text-text-primary italic uppercase tracking-tighter">
+                  Miembro {{ currentTierName() }}
+                </h3>
                 <p class="text-sm text-text-secondary font-medium">
-                  Tu protección está activa y cubre hasta vehículos nivel <strong>{{ currentMaxTier() }}</strong>.
+                  Tu protección está activa y cubre hasta vehículos nivel
+                  <strong>{{ currentMaxTier() }}</strong
+                  >.
                 </p>
               </div>
               <button
@@ -98,14 +121,18 @@ import {
               <!-- Popular/Premium badge -->
               @if (plan.plan === 'silver') {
                 <div class="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span class="px-6 py-1.5 rounded-full bg-cta-default text-cta-text text-[10px] font-black uppercase tracking-widest shadow-lg">
+                  <span
+                    class="px-6 py-1.5 rounded-full bg-cta-default text-cta-text text-[10px] font-black uppercase tracking-widest shadow-lg"
+                  >
                     RECOMENDADO
                   </span>
                 </div>
               }
               @if (plan.plan === 'black') {
                 <div class="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span class="px-6 py-1.5 rounded-full bg-black text-white text-[10px] font-black uppercase tracking-widest shadow-lg border border-white/20">
+                  <span
+                    class="px-6 py-1.5 rounded-full bg-black text-white text-[10px] font-black uppercase tracking-widest shadow-lg border border-white/20"
+                  >
                     NIVEL ELITE
                   </span>
                 </div>
@@ -113,32 +140,50 @@ import {
 
               <!-- Tier header -->
               <div class="text-center space-y-3">
-                <h3 class="text-2xl font-black text-text-primary italic uppercase tracking-tighter">{{ plan.name }}</h3>
-                <p class="text-xs font-bold text-text-secondary uppercase tracking-widest">Hasta autos {{ getVehicleTierName(plan.maxVehicleTier) }}</p>
+                <h3 class="text-2xl font-black text-text-primary italic uppercase tracking-tighter">
+                  {{ plan.name }}
+                </h3>
+                <p class="text-xs font-bold text-text-secondary uppercase tracking-widest">
+                  Hasta autos {{ getVehicleTierName(plan.maxVehicleTier) }}
+                </p>
               </div>
 
               <!-- Price -->
-              <div class="text-center py-4 bg-surface-secondary/30 rounded-2xl border border-border-default/50">
+              <div
+                class="text-center py-4 bg-surface-secondary/30 rounded-2xl border border-border-default/50"
+              >
                 <div class="flex items-baseline justify-center gap-1">
                   <span class="text-xs font-black text-text-muted">USD</span>
-                  <span class="text-5xl font-black text-text-primary tracking-tighter italic">{{ plan.priceMonthlyUsd }}</span>
+                  <span class="text-5xl font-black text-text-primary tracking-tighter italic">{{
+                    plan.priceMonthlyUsd
+                  }}</span>
                   <span class="text-xs font-bold text-text-muted">/mes</span>
                 </div>
               </div>
 
               <!-- Features list -->
               <div class="space-y-4">
-                <p class="text-[10px] font-black text-text-muted uppercase tracking-widest text-center">Beneficios Exclusivos</p>
+                <p
+                  class="text-[10px] font-black text-text-muted uppercase tracking-widest text-center"
+                >
+                  Beneficios Exclusivos
+                </p>
                 <ul class="space-y-4">
                   <li class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-lg bg-cta-default text-cta-text flex items-center justify-center flex-shrink-0">
+                    <div
+                      class="w-6 h-6 rounded-lg bg-cta-default text-cta-text flex items-center justify-center flex-shrink-0"
+                    >
                       <ion-icon name="checkmark" class="text-sm font-bold"></ion-icon>
                     </div>
-                    <span class="text-sm font-bold text-text-primary">{{ plan.holdDiscountPct * 100 }}% OFF en Garantía</span>
+                    <span class="text-sm font-bold text-text-primary"
+                      >{{ plan.holdDiscountPct * 100 }}% OFF en Garantía</span
+                    >
                   </li>
                   @for (feature of plan.features.slice(1); track feature) {
                     <li class="flex items-center gap-3">
-                      <div class="w-6 h-6 rounded-lg bg-surface-secondary text-cta-default flex items-center justify-center flex-shrink-0">
+                      <div
+                        class="w-6 h-6 rounded-lg bg-surface-secondary text-cta-default flex items-center justify-center flex-shrink-0"
+                      >
                         <ion-icon name="checkmark" class="text-sm"></ion-icon>
                       </div>
                       <span class="text-sm font-medium text-text-secondary">{{ feature }}</span>
@@ -171,26 +216,40 @@ import {
           <div class="flex flex-col items-center text-center space-y-2">
             <ion-icon name="shield-half" class="text-3xl text-cta-default"></ion-icon>
             <h4 class="font-black text-sm uppercase tracking-tighter italic">Protección FGO</h4>
-            <p class="text-xs text-text-secondary font-medium">El Fondo de Garantía cubre la diferencia del depósito.</p>
+            <p class="text-xs text-text-secondary font-medium">
+              El Fondo de Garantía cubre la diferencia del depósito.
+            </p>
           </div>
           <div class="flex flex-col items-center text-center space-y-2">
             <ion-icon name="flash" class="text-3xl text-cta-default"></ion-icon>
-            <h4 class="font-black text-sm uppercase tracking-tighter italic">Alquiler Instantáneo</h4>
-            <p class="text-xs text-text-secondary font-medium">Sin esperas ni burocracia. Elegís, pagás y salís.</p>
+            <h4 class="font-black text-sm uppercase tracking-tighter italic">
+              Alquiler Instantáneo
+            </h4>
+            <p class="text-xs text-text-secondary font-medium">
+              Sin esperas ni burocracia. Elegís, pagás y salís.
+            </p>
           </div>
           <div class="flex flex-col items-center text-center space-y-2">
             <ion-icon name="infinite" class="text-3xl text-cta-default"></ion-icon>
             <h4 class="font-black text-sm uppercase tracking-tighter italic">Sin Compromiso</h4>
-            <p class="text-xs text-text-secondary font-medium">Cancelá o cambiá de plan en cualquier momento.</p>
+            <p class="text-xs text-text-secondary font-medium">
+              Cancelá o cambiá de plan en cualquier momento.
+            </p>
           </div>
         </div>
       </div>
     </div>
   `,
-  styles: [`
-    :host { display: block; }
-    .rotate-3 { transform: rotate(3deg); }
-  `]
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+      .rotate-3 {
+        transform: rotate(3deg);
+      }
+    `,
+  ],
 })
 export class ClubPlansPage implements OnInit {
   private readonly router = inject(Router);
@@ -207,7 +266,7 @@ export class ClubPlansPage implements OnInit {
   readonly membershipPlans = [
     MEMBERSHIP_CONFIG['club'],
     MEMBERSHIP_CONFIG['silver'],
-    MEMBERSHIP_CONFIG['black']
+    MEMBERSHIP_CONFIG['black'],
   ];
 
   getVehicleTierName = getVehicleTierName;
@@ -222,7 +281,7 @@ export class ClubPlansPage implements OnInit {
     const mapping: Record<string, string> = {
       club_standard: 'Club Access',
       club_black: 'Silver Access',
-      club_luxury: 'Black Access'
+      club_luxury: 'Black Access',
     };
     return mapping[sub.tier] || sub.tier;
   }
@@ -233,7 +292,7 @@ export class ClubPlansPage implements OnInit {
     const mapping: Record<string, string> = {
       club_standard: 'Standard',
       club_black: 'Premium',
-      club_luxury: 'Luxury'
+      club_luxury: 'Luxury',
     };
     return mapping[sub.tier] || 'Standard';
   }
@@ -249,7 +308,7 @@ export class ClubPlansPage implements OnInit {
     const mapping: Record<string, string> = {
       club_standard: 'club',
       club_black: 'silver',
-      club_luxury: 'black'
+      club_luxury: 'black',
     };
     return mapping[sub.tier] === plan;
   }
@@ -257,11 +316,11 @@ export class ClubPlansPage implements OnInit {
   isDowngradeByPlan(plan: string): boolean {
     const sub = this.subscription();
     if (!sub || sub.status !== 'active') return false;
-    
+
     const rank: Record<string, number> = { club: 1, silver: 2, black: 3 };
     const currentRank = rank[this.mapDbTierToPlan(sub.tier)] || 0;
     const targetRank = rank[plan] || 0;
-    
+
     return targetRank < currentRank;
   }
 
@@ -269,7 +328,7 @@ export class ClubPlansPage implements OnInit {
     const mapping: Record<string, string> = {
       club_standard: 'club',
       club_black: 'silver',
-      club_luxury: 'black'
+      club_luxury: 'black',
     };
     return mapping[dbTier] || '';
   }
@@ -302,7 +361,7 @@ export class ClubPlansPage implements OnInit {
     const dbMapping: Record<string, string> = {
       club: 'club_standard',
       silver: 'club_black',
-      black: 'club_luxury'
+      black: 'club_luxury',
     };
     const tierSlug = dbMapping[plan];
     this.analytics.trackEvent('club_plan_selected', { tier: tierSlug });

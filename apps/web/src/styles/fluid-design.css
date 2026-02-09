@@ -226,19 +226,25 @@
   font-size: var(--font-balance-xl);
   line-height: 1.1;
   font-weight: 700;
-  font-feature-settings: 'tnum' on, 'lnum' on; /* Tabular numerals */
+  font-feature-settings:
+    'tnum' on,
+    'lnum' on; /* Tabular numerals */
 }
 .text-balance-lg {
   font-size: var(--font-balance-lg);
   line-height: 1.15;
   font-weight: 600;
-  font-feature-settings: 'tnum' on, 'lnum' on;
+  font-feature-settings:
+    'tnum' on,
+    'lnum' on;
 }
 .text-balance-md {
   font-size: var(--font-balance-md);
   line-height: 1.2;
   font-weight: 600;
-  font-feature-settings: 'tnum' on, 'lnum' on;
+  font-feature-settings:
+    'tnum' on,
+    'lnum' on;
 }
 
 /* Micro/Label Text */

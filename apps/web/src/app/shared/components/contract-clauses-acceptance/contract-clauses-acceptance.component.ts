@@ -105,7 +105,9 @@ const EV_CLAUSE_IDS: ReadonlySet<EVClauseId> = new Set([
             <h3 class="section-title">Cláusulas Generales</h3>
           </ion-text>
           <ion-chip [color]="baseClausesComplete() ? 'success' : 'warning'" size="small">
-            <ion-icon [name]="baseClausesComplete() ? 'checkmark-circle' : 'alert-circle'"></ion-icon>
+            <ion-icon
+              [name]="baseClausesComplete() ? 'checkmark-circle' : 'alert-circle'"
+            ></ion-icon>
             {{ baseClausesAcceptedCount() }}/{{ baseClauseDefinitions.length }}
           </ion-chip>
         </div>
@@ -153,14 +155,16 @@ const EV_CLAUSE_IDS: ReadonlySet<EVClauseId> = new Set([
               </h3>
             </ion-text>
             <ion-chip [color]="evClausesComplete() ? 'success' : 'warning'" size="small">
-              <ion-icon [name]="evClausesComplete() ? 'checkmark-circle' : 'alert-circle'"></ion-icon>
+              <ion-icon
+                [name]="evClausesComplete() ? 'checkmark-circle' : 'alert-circle'"
+              ></ion-icon>
               {{ evClausesAcceptedCount() }}/{{ evClauseDefinitions.length }}
             </ion-chip>
           </div>
 
           <ion-note class="ev-notice" color="primary">
-            Estas cláusulas son específicas para vehículos eléctricos y cubren aspectos
-            de batería, carga y sistemas especiales.
+            Estas cláusulas son específicas para vehículos eléctricos y cubren aspectos de batería,
+            carga y sistemas especiales.
           </ion-note>
 
           <ion-accordion-group [multiple]="true">
@@ -196,12 +200,7 @@ const EV_CLAUSE_IDS: ReadonlySet<EVClauseId> = new Set([
       <!-- Accept All Button -->
       <div class="accept-section">
         @if (!allClausesAccepted()) {
-          <ion-button
-            expand="block"
-            fill="outline"
-            (click)="acceptAll()"
-            class="accept-all-btn"
-          >
+          <ion-button expand="block" fill="outline" (click)="acceptAll()" class="accept-all-btn">
             <ion-icon name="checkmark-circle" slot="start"></ion-icon>
             Aceptar Todas las Cláusulas
           </ion-button>
@@ -223,98 +222,100 @@ const EV_CLAUSE_IDS: ReadonlySet<EVClauseId> = new Set([
       </div>
     </div>
   `,
-  styles: [`
-    .clauses-container {
-      padding: 16px;
-    }
-
-    .clauses-section {
-      margin-bottom: 24px;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding: 0 8px;
-    }
-
-    .section-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .ev-icon {
-      color: var(--ion-color-primary);
-    }
-
-    .ev-section {
-      background: var(--ion-color-primary-tint);
-      border-radius: 12px;
-      padding: 16px;
-      margin-top: 24px;
-    }
-
-    .ev-notice {
-      display: block;
-      padding: 12px;
-      margin-bottom: 16px;
-      background: var(--ion-color-primary-contrast);
-      border-radius: 8px;
-      font-size: 0.85rem;
-    }
-
-    .clause-header {
-      --padding-start: 0;
-    }
-
-    .clause-icon {
-      font-size: 1.5rem;
-      margin-right: 8px;
-    }
-
-    .clause-content {
-      padding: 16px;
-      background: var(--ion-color-light);
-      border-radius: 8px;
-      margin: 8px 16px 16px 16px;
-
-      p {
-        margin: 0;
-        color: var(--ion-color-dark);
-        line-height: 1.5;
+  styles: [
+    `
+      .clauses-container {
+        padding: 16px;
       }
-    }
 
-    .legal-ref {
-      color: var(--ion-color-medium) !important;
-      font-size: 0.85rem;
-      font-style: italic;
-    }
+      .clauses-section {
+        margin-bottom: 24px;
+      }
 
-    .accept-section {
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid var(--ion-color-light-shade);
-    }
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding: 0 8px;
+      }
 
-    .accept-all-btn {
-      margin-bottom: 12px;
-    }
+      .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
 
-    .confirm-btn {
-      --background: var(--ion-color-success);
-    }
+      .ev-icon {
+        color: var(--ion-color-primary);
+      }
 
-    .confirm-btn[disabled] {
-      --background: var(--ion-color-medium);
-    }
-  `],
+      .ev-section {
+        background: var(--ion-color-primary-tint);
+        border-radius: 12px;
+        padding: 16px;
+        margin-top: 24px;
+      }
+
+      .ev-notice {
+        display: block;
+        padding: 12px;
+        margin-bottom: 16px;
+        background: var(--ion-color-primary-contrast);
+        border-radius: 8px;
+        font-size: 0.85rem;
+      }
+
+      .clause-header {
+        --padding-start: 0;
+      }
+
+      .clause-icon {
+        font-size: 1.5rem;
+        margin-right: 8px;
+      }
+
+      .clause-content {
+        padding: 16px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+        margin: 8px 16px 16px 16px;
+
+        p {
+          margin: 0;
+          color: var(--ion-color-dark);
+          line-height: 1.5;
+        }
+      }
+
+      .legal-ref {
+        color: var(--ion-color-medium) !important;
+        font-size: 0.85rem;
+        font-style: italic;
+      }
+
+      .accept-section {
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 1px solid var(--ion-color-light-shade);
+      }
+
+      .accept-all-btn {
+        margin-bottom: 12px;
+      }
+
+      .confirm-btn {
+        --background: var(--ion-color-success);
+      }
+
+      .confirm-btn[disabled] {
+        --background: var(--ion-color-medium);
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContractClausesAcceptanceComponent {
@@ -390,14 +391,14 @@ export class ContractClausesAcceptanceComponent {
     effect(() => {
       const initial = this.initialBaseClauses();
       if (Object.keys(initial).length > 0) {
-        this.baseClauses.update(current => ({ ...current, ...initial }));
+        this.baseClauses.update((current) => ({ ...current, ...initial }));
       }
     });
 
     effect(() => {
       const initial = this.initialEVClauses();
       if (Object.keys(initial).length > 0) {
-        this.evClauses.update(current => ({ ...current, ...initial }));
+        this.evClauses.update((current) => ({ ...current, ...initial }));
       }
     });
   }
@@ -428,7 +429,7 @@ export class ContractClausesAcceptanceComponent {
     if (!this.isBaseClauseId(clauseId)) return;
     event.stopPropagation();
     const checked = event.detail.checked;
-    this.baseClauses.update(current => ({
+    this.baseClauses.update((current) => ({
       ...current,
       [clauseId]: checked,
     }));
@@ -438,7 +439,7 @@ export class ContractClausesAcceptanceComponent {
     if (!this.isEVClauseId(clauseId)) return;
     event.stopPropagation();
     const checked = event.detail.checked;
-    this.evClauses.update(current => ({
+    this.evClauses.update((current) => ({
       ...current,
       [clauseId]: checked,
     }));

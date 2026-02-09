@@ -140,11 +140,15 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
   });
 
   readonly confirmedDamagesCount = computed(() => {
-    return this.damages().filter(d => !d.discarded).length;
+    return this.damages().filter((d) => !d.discarded).length;
   });
 
   readonly isValid = computed(() => {
-    return this.editableOdometer() > 0 && this.editableFuelLevel() >= 0 && this.editableFuelLevel() <= 100;
+    return (
+      this.editableOdometer() > 0 &&
+      this.editableFuelLevel() >= 0 &&
+      this.editableFuelLevel() <= 100
+    );
   });
 
   readonly canFinish = computed(() => {
@@ -235,7 +239,7 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
 
   private stopCamera(): void {
     if (this.mediaStream) {
-      this.mediaStream.getTracks().forEach(track => track.stop());
+      this.mediaStream.getTracks().forEach((track) => track.stop());
       this.mediaStream = null;
     }
   }
@@ -287,7 +291,7 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
 
     // Start timer
     this.recordingInterval = setInterval(() => {
-      this.recordingTime.update(t => t + 1);
+      this.recordingTime.update((t) => t + 1);
     }, 1000);
 
     this.logger.info('Recording started', 'VideoInspectionLive');
@@ -305,11 +309,13 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
 
     // Copy damages from service
     const serviceDamages = this.geminiLive.damages();
-    this.damages.set(serviceDamages.map(d => ({
-      ...d,
-      confirmed: false,
-      discarded: false,
-    })));
+    this.damages.set(
+      serviceDamages.map((d) => ({
+        ...d,
+        confirmed: false,
+        discarded: false,
+      })),
+    );
 
     // Copy odometer and fuel if detected
     const odometer = this.geminiLive.odometer();
@@ -332,7 +338,7 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
 
   private handleLiveEvent(event: LiveAnalysisEvent): void {
     // Add to messages (keep last 10)
-    this.liveMessages.update(msgs => {
+    this.liveMessages.update((msgs) => {
       const updated = [...msgs, event];
       return updated.slice(-10);
     });
@@ -348,7 +354,7 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
   // ============================================================================
 
   confirmDamage(index: number): void {
-    this.damages.update(damages => {
+    this.damages.update((damages) => {
       const updated = [...damages];
       updated[index] = { ...updated[index], confirmed: true, discarded: false };
       return updated;
@@ -356,7 +362,7 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
   }
 
   discardDamage(index: number): void {
-    this.damages.update(damages => {
+    this.damages.update((damages) => {
       const updated = [...damages];
       updated[index] = { ...updated[index], discarded: true, confirmed: false };
       return updated;
@@ -364,7 +370,7 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
   }
 
   restoreDamage(index: number): void {
-    this.damages.update(damages => {
+    this.damages.update((damages) => {
       const updated = [...damages];
       updated[index] = { ...updated[index], discarded: false };
       return updated;
@@ -387,7 +393,9 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
 
     try {
       const supabase = this.supabaseService.getClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         throw new Error('Usuario no autenticado');
@@ -395,8 +403,8 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
 
       // Build photos array from confirmed damages
       // Note: In live mode we don't have frame URLs, so we store damage info only
-      const confirmedDamages = this.damages().filter(d => !d.discarded);
-      const photos: InspectionPhoto[] = confirmedDamages.map(damage => ({
+      const confirmedDamages = this.damages().filter((d) => !d.discarded);
+      const photos: InspectionPhoto[] = confirmedDamages.map((damage) => ({
         url: '', // No frame URL in live mode
         type: 'exterior' as const,
         damageInfo: {
@@ -416,7 +424,7 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
           photos,
           odometer: this.editableOdometer(),
           fuelLevel: this.editableFuelLevel(),
-        })
+        }),
       );
 
       if (!inspection) {
@@ -470,35 +478,54 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
 
   getSeverityClass(severity: string): string {
     switch (severity) {
-      case 'minor': return 'bg-yellow-100 text-yellow-800';
-      case 'moderate': return 'bg-orange-100 text-orange-800';
-      case 'severe': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'minor':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'moderate':
+        return 'bg-orange-100 text-orange-800';
+      case 'severe':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   }
 
   getEventIcon(type: string): string {
     switch (type) {
-      case 'area_detected': return 'checkmark-circle';
-      case 'damage_found': return 'warning';
-      case 'odometer_read': return 'speedometer';
-      case 'fuel_read': return 'battery-half';
-      case 'guidance': return 'information-circle';
-      case 'error': return 'alert-circle';
-      default: return 'chatbubble';
+      case 'area_detected':
+        return 'checkmark-circle';
+      case 'damage_found':
+        return 'warning';
+      case 'odometer_read':
+        return 'speedometer';
+      case 'fuel_read':
+        return 'battery-half';
+      case 'guidance':
+        return 'information-circle';
+      case 'error':
+        return 'alert-circle';
+      default:
+        return 'chatbubble';
     }
   }
 
   getEventClass(type: string): string {
     switch (type) {
-      case 'area_detected': return 'text-green-600';
-      case 'damage_found': return 'text-orange-600';
-      case 'odometer_read': return 'text-blue-600';
-      case 'fuel_read': return 'text-blue-600';
-      case 'guidance': return 'text-purple-600';
-      case 'quality_warning': return 'text-yellow-600';
-      case 'error': return 'text-red-600';
-      default: return 'text-gray-600';
+      case 'area_detected':
+        return 'text-green-600';
+      case 'damage_found':
+        return 'text-orange-600';
+      case 'odometer_read':
+        return 'text-blue-600';
+      case 'fuel_read':
+        return 'text-blue-600';
+      case 'guidance':
+        return 'text-purple-600';
+      case 'quality_warning':
+        return 'text-yellow-600';
+      case 'error':
+        return 'text-red-600';
+      default:
+        return 'text-gray-600';
     }
   }
 
@@ -509,7 +536,23 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
     return 'text-red-400';
   }
 
-  getQualityLabel(quality: 'excellent' | 'good' | 'poor' | 'very_poor' | 'sharp' | 'acceptable' | 'blurry' | 'very_blurry' | 'optimal' | 'suboptimal' | 'unusable' | 'complete' | 'partial' | 'minimal'): string {
+  getQualityLabel(
+    quality:
+      | 'excellent'
+      | 'good'
+      | 'poor'
+      | 'very_poor'
+      | 'sharp'
+      | 'acceptable'
+      | 'blurry'
+      | 'very_blurry'
+      | 'optimal'
+      | 'suboptimal'
+      | 'unusable'
+      | 'complete'
+      | 'partial'
+      | 'minimal',
+  ): string {
     const labels: Record<string, string> = {
       excellent: 'Excelente',
       good: 'Buena',

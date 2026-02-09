@@ -56,8 +56,11 @@ describe('PayPalWalletGatewayService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, PayPalWalletGatewayService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },],
+      providers: [
+        ...testProviders,
+        PayPalWalletGatewayService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(PayPalWalletGatewayService);
   });

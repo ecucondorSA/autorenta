@@ -89,7 +89,7 @@ export class FacebookAuthService {
       'facebook login',
     ];
 
-    return expectedPatterns.some(pattern => lowerMessage.includes(pattern));
+    return expectedPatterns.some((pattern) => lowerMessage.includes(pattern));
   }
 
   /**

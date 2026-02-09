@@ -306,7 +306,7 @@ export interface UpgradeRecommendation {
  */
 export function getUpgradeRecommendation(
   vehicleValueUsd: number,
-  currentTier: SubscriptionTier | null
+  currentTier: SubscriptionTier | null,
 ): UpgradeRecommendation {
   const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
 
@@ -318,12 +318,16 @@ export function getUpgradeRecommendation(
       recommended: true,
       upgradeTo: requiredTier,
       reason: 'Reducir garantía al 50%',
-      savingsUsd: savings
+      savingsUsd: savings,
     };
   }
 
   // If current tier is lower than required
-  const hierarchy: Record<SubscriptionTier, number> = { club_standard: 1, club_black: 2, club_luxury: 3 };
+  const hierarchy: Record<SubscriptionTier, number> = {
+    club_standard: 1,
+    club_black: 2,
+    club_luxury: 3,
+  };
   if (hierarchy[currentTier] < hierarchy[requiredTier]) {
     const config = SUBSCRIPTION_TIERS[requiredTier];
     const savings = config.preauth_hold_usd - config.preauth_with_subscription_usd;
@@ -331,7 +335,7 @@ export function getUpgradeRecommendation(
       recommended: true,
       upgradeTo: requiredTier,
       reason: 'Acceder a este vehículo con garantía reducida',
-      savingsUsd: savings
+      savingsUsd: savings,
     };
   }
 
@@ -349,7 +353,7 @@ export function formatPreauthorizationInfo(preauth: PreauthorizationCalculation)
   return {
     amount: `${preauth.holdAmountUsd} USD`,
     description: preauth.formula,
-    isDiscounted: preauth.discountApplied
+    isDiscounted: preauth.discountApplied,
   };
 }
 
@@ -585,7 +589,11 @@ export function calculatePreauthorization(
 
     if (accessCheck.allowed && accessCheck.userTier) {
       // Verify hierarchy is sufficient
-      const hierarchy: Record<SubscriptionTier, number> = { club_standard: 1, club_black: 2, club_luxury: 3 };
+      const hierarchy: Record<SubscriptionTier, number> = {
+        club_standard: 1,
+        club_black: 2,
+        club_luxury: 3,
+      };
       if (hierarchy[userTier] >= hierarchy[requiredTier]) {
         holdAmountUsd = tierConfig.preauth_with_subscription_usd;
         holdAmountCents = tierConfig.preauth_with_subscription_cents;

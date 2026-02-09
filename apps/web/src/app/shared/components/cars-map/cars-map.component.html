@@ -34,7 +34,8 @@
     <div class="absolute top-4 right-4 z-20 hidden lg:block">
       <app-map-layers-control
         [layers]="mapLayers()"
-        (layerToggle)="onLayerToggle({ layerId: $event.id, visible: $event.visible })">
+        (layerToggle)="onLayerToggle({ layerId: $event.id, visible: $event.visible })"
+      >
       </app-map-layers-control>
     </div>
   }

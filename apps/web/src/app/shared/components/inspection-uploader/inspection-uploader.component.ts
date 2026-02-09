@@ -116,7 +116,14 @@ export class InspectionUploaderComponent implements OnInit {
       // P0-014: Use centralized file validation (basic checks only)
       const validationResults = validateFiles(files, {
         maxSizeBytes: 50 * 1024 * 1024, // 50MB max (before compression)
-        allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'],
+        allowedMimeTypes: [
+          'image/jpeg',
+          'image/jpg',
+          'image/png',
+          'image/webp',
+          'image/heic',
+          'image/heif',
+        ],
         checkMimeType: true,
       });
 
@@ -177,7 +184,14 @@ export class InspectionUploaderComponent implements OnInit {
         compressImages: true,
         targetSizeMB: 1, // Comprimir a ~1MB
         maxImageDimension: 1920,
-        allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'],
+        allowedTypes: [
+          'image/jpeg',
+          'image/jpg',
+          'image/png',
+          'image/webp',
+          'image/heic',
+          'image/heif',
+        ],
       });
 
       if (!result.success || !result.url) {

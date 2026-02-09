@@ -21,7 +21,7 @@ export class BrowseStore {
   readonly cars = signal<Car[]>([]);
   readonly loading = signal<boolean>(true);
   readonly viewMode = signal<BrowseViewMode>('map');
-  
+
   // --- Filter & Search State ---
   readonly filterQuery = signal<string>('');
   readonly searchParams = signal<BrowseSearchParams>({});
@@ -37,7 +37,7 @@ export class BrowseStore {
   readonly modalTrigger = signal<'user-click' | null>(null);
 
   // --- Computed Logic ---
-  
+
   /**
    * Filter cars based on "Group of Words" logic.
    * If query is "SUV Toyota", it finds cars that have BOTH "suv" AND "toyota" in their data.
@@ -48,9 +48,9 @@ export class BrowseStore {
 
     if (!query) return allCars;
 
-    const queryWords = query.split(/\s+/).filter(w => w.length > 0);
+    const queryWords = query.split(/\s+/).filter((w) => w.length > 0);
 
-    return allCars.filter(car => {
+    return allCars.filter((car) => {
       // Create a massive searchable string for the car
       const searchableText = [
         car.brand_text_backup,
@@ -59,11 +59,13 @@ export class BrowseStore {
         car.description,
         car.transmission,
         car.fuel_type,
-        car.location_city
-      ].join(' ').toLowerCase();
+        car.location_city,
+      ]
+        .join(' ')
+        .toLowerCase();
 
       // "Group of Words" AND logic: Car must contain ALL words from query
-      return queryWords.every(word => searchableText.includes(word));
+      return queryWords.every((word) => searchableText.includes(word));
     });
   });
 
@@ -74,13 +76,14 @@ export class BrowseStore {
     if (!car) return null;
 
     const ownerVerified = car.status !== 'pending' && car.owner?.id_verified !== false;
-    
+
     return {
       carId: car.id,
       lat: car.location_lat || 0,
       lng: car.location_lng || 0,
       pricePerDay: car.price_per_day,
-      title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim() || 'Auto disponible',
+      title:
+        `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim() || 'Auto disponible',
       currency: car.currency || 'USD',
       photoUrl:
         car.photos?.[0]?.url || car.car_photos?.[0]?.url || '/assets/images/car-placeholder.svg',
@@ -149,10 +152,17 @@ export class BrowseStore {
    * Open modal with validation - ONLY opens if event.isTrusted is true
    * This prevents accidental modal opens from programmatic scroll events
    */
-  openModalWithValidation(carId: string, event: MouseEvent | TouchEvent, source: InteractionSource = 'carousel'): boolean {
+  openModalWithValidation(
+    carId: string,
+    event: MouseEvent | TouchEvent,
+    source: InteractionSource = 'carousel',
+  ): boolean {
     // Validate that this is a genuine user interaction
     if (!event.isTrusted) {
-      this.logger.debug('Modal open blocked - event not trusted', { carId, isTrusted: event.isTrusted });
+      this.logger.debug('Modal open blocked - event not trusted', {
+        carId,
+        isTrusted: event.isTrusted,
+      });
       return false;
     }
 

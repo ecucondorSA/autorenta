@@ -56,8 +56,11 @@ describe('PaymentOrchestrationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, PaymentOrchestrationService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },],
+      providers: [
+        ...testProviders,
+        PaymentOrchestrationService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(PaymentOrchestrationService);
   });

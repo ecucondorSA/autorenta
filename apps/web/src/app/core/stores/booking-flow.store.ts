@@ -1,13 +1,7 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { BookingWizardData, BookingPrice } from '@core/models/booking-wizard.model';
 
-export type BookingWizardStep = 
-  | 'dates' 
-  | 'extras' 
-  | 'insurance' 
-  | 'driver' 
-  | 'payment' 
-  | 'review';
+export type BookingWizardStep = 'dates' | 'extras' | 'insurance' | 'driver' | 'payment' | 'review';
 
 const INITIAL_WIZARD_DATA: BookingWizardData = {
   carId: '',
@@ -38,13 +32,13 @@ export class BookingFlowStore {
 
   // Computed
   readonly pricing = computed(() => this.wizardData().pricing);
-  
+
   readonly totalUsd = computed(() => this.pricing()?.totalAmountUsd ?? 0);
-  
+
   readonly canProceed = computed(() => {
     const step = this.currentStep();
     const data = this.wizardData();
-    
+
     switch (step) {
       case 'dates':
         return !!data.startDate && !!data.endDate;
@@ -61,7 +55,7 @@ export class BookingFlowStore {
 
   // Actions
   updateData(partial: Partial<BookingWizardData>) {
-    this.wizardData.update(current => ({ ...current, ...partial }));
+    this.wizardData.update((current) => ({ ...current, ...partial }));
   }
 
   setStep(step: BookingWizardStep) {

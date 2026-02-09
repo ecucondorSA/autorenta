@@ -25,14 +25,24 @@ import { EmailVerificationService } from '@core/services/auth/email-verification
             {{ status().value || 'No configurado' }}
           </p>
         </div>
-        
+
         @if (status().isVerified) {
-          <span class="flex items-center gap-1 text-xs font-medium text-success-600 bg-success-50 px-2 py-1 rounded-full">
-            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          <span
+            class="flex items-center gap-1 text-xs font-medium text-success-600 bg-success-50 px-2 py-1 rounded-full"
+          >
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
             Verificado
           </span>
         } @else {
-          <span class="flex items-center gap-1 text-xs font-medium text-warning-700 bg-warning-50 px-2 py-1 rounded-full">
+          <span
+            class="flex items-center gap-1 text-xs font-medium text-warning-700 bg-warning-50 px-2 py-1 rounded-full"
+          >
             Pendiente
           </span>
         }
@@ -42,9 +52,12 @@ import { EmailVerificationService } from '@core/services/auth/email-verification
       @if (!status().isVerified) {
         <div class="animate-fade-in">
           <div class="mb-3 text-sm text-text-secondary">
-            <p>Te enviamos un link de confirmación a <strong>{{ status().value }}</strong>.</p>
+            <p>
+              Te enviamos un link de confirmación a <strong>{{ status().value }}</strong
+              >.
+            </p>
           </div>
-          
+
           <button
             type="button"
             (click)="resendEmail()"
@@ -52,11 +65,24 @@ import { EmailVerificationService } from '@core/services/auth/email-verification
             class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-cta-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             @if (loading()) {
-              <span class="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+              <span
+                class="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"
+              ></span>
               Enviando...
             } @else {
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-              {{ cooldownRemaining() > 0 ? 'Reenviar en ' + cooldownRemaining() + 's' : 'Reenviar email' }}
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+              {{
+                cooldownRemaining() > 0
+                  ? 'Reenviar en ' + cooldownRemaining() + 's'
+                  : 'Reenviar email'
+              }}
             }
           </button>
 

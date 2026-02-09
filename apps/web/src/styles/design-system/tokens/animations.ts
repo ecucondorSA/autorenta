@@ -16,55 +16,53 @@ export const AnimationTimings = {
     easeOut: 'ease-out',
     easeInOut: 'ease-in-out',
     spring: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-    bounce: 'cubic-bezier(0.34, 1.56, 0.64, 1)'
-  }
-} as const
+    bounce: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+  },
+} as const;
 
 export const fadeInAnimation = trigger('fadeIn', [
-  transition(':enter', [
-    style({ opacity: 0 }),
-    animate('300ms ease-out', style({ opacity: 1 }))
-  ])
+  transition(':enter', [style({ opacity: 0 }), animate('300ms ease-out', style({ opacity: 1 }))]),
 ]);
 
 export const fadeOutAnimation = trigger('fadeOut', [
-  transition(':leave', [
-    animate('300ms ease-in', style({ opacity: 0 }))
-  ])
+  transition(':leave', [animate('300ms ease-in', style({ opacity: 0 }))]),
 ]);
 
 export const scaleUpOnHoverAnimation = trigger('scaleOnHover', [
   state('normal', style({ transform: 'scale(1)' })),
   state('hover', style({ transform: 'scale(1.05)' })),
-  transition('normal <=> hover', animate('200ms cubic-bezier(0.68, -0.55, 0.265, 1.55)'))
+  transition('normal <=> hover', animate('200ms cubic-bezier(0.68, -0.55, 0.265, 1.55)')),
 ]);
 
 export const scaleInAnimation = trigger('scaleIn', [
   transition(':enter', [
     style({ transform: 'scale(0.8)', opacity: 0 }),
-    animate('300ms cubic-bezier(0.34, 1.56, 0.64, 1)', style({ transform: 'scale(1)', opacity: 1 }))
-  ])
+    animate(
+      '300ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+      style({ transform: 'scale(1)', opacity: 1 }),
+    ),
+  ]),
 ]);
 
 export const slideInFromBottom = trigger('slideInBottom', [
   transition(':enter', [
     style({ transform: 'translateY(20px)', opacity: 0 }),
-    animate('300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
-  ])
+    animate('300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 })),
+  ]),
 ]);
 
 export const slideInFromRight = trigger('slideInRight', [
   transition(':enter', [
     style({ transform: 'translateX(20px)', opacity: 0 }),
-    animate('300ms ease-out', style({ transform: 'translateX(0)', opacity: 1 }))
-  ])
+    animate('300ms ease-out', style({ transform: 'translateX(0)', opacity: 1 })),
+  ]),
 ]);
 
 export const progressBarAnimation = trigger('progressBar', [
   transition('* => *', [
     style({ width: '0%' }),
-    animate('500ms cubic-bezier(0.34, 1.56, 0.64, 1)')
-  ])
+    animate('500ms cubic-bezier(0.34, 1.56, 0.64, 1)'),
+  ]),
 ]);
 
 export function getStaggerDelay(index: number, baseDelay: number = 50): string {
@@ -77,5 +75,5 @@ export const animationCSSVariables = {
   '--duration-normal': '300ms',
   '--duration-slow': '500ms',
   '--easing-spring': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-  '--easing-bounce': 'cubic-bezier(0.34, 1.56, 0.64, 1)'
-}
+  '--easing-bounce': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+};

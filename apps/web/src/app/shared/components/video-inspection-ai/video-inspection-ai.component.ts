@@ -105,7 +105,9 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
   });
 
   readonly minVideoSeconds = computed(() => this.videoInspectionService.getMinVideoSeconds());
-  readonly recommendedVideoSeconds = computed(() => this.videoInspectionService.getRecommendedVideoSeconds());
+  readonly recommendedVideoSeconds = computed(() =>
+    this.videoInspectionService.getRecommendedVideoSeconds(),
+  );
 
   readonly canStopRecording = computed(() => {
     return this.recordingTime() >= this.minVideoSeconds();
@@ -131,11 +133,15 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
   });
 
   readonly confirmedDamagesCount = computed(() => {
-    return this.damages().filter(d => !d.discarded).length;
+    return this.damages().filter((d) => !d.discarded).length;
   });
 
   readonly isValid = computed(() => {
-    return this.editableOdometer() > 0 && this.editableFuelLevel() >= 0 && this.editableFuelLevel() <= 100;
+    return (
+      this.editableOdometer() > 0 &&
+      this.editableFuelLevel() >= 0 &&
+      this.editableFuelLevel() <= 100
+    );
   });
 
   ngOnInit(): void {
@@ -189,7 +195,7 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
 
   private stopCamera(): void {
     if (this.mediaStream) {
-      this.mediaStream.getTracks().forEach(track => track.stop());
+      this.mediaStream.getTracks().forEach((track) => track.stop());
       this.mediaStream = null;
     }
   }
@@ -241,9 +247,8 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
 
       // Start timer
       this.recordingInterval = setInterval(() => {
-        this.recordingTime.update(t => t + 1);
+        this.recordingTime.update((t) => t + 1);
       }, 1000);
-
     } catch (err) {
       this.logger.error('Failed to start recording', 'VideoInspectionAI', err);
       this.error.set('Error al iniciar la grabación');
@@ -288,8 +293,8 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
           (step, progress) => {
             this.processingStep.set(step);
             this.processingProgress.set(progress);
-          }
-        )
+          },
+        ),
       );
 
       if (!result.success) {
@@ -298,7 +303,7 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
 
       // Set results
       this.analysisResult.set(result);
-      this.damages.set(result.damages.map(d => ({ ...d, confirmed: false, discarded: false })));
+      this.damages.set(result.damages.map((d) => ({ ...d, confirmed: false, discarded: false })));
       this.editableOdometer.set(result.odometer?.value || 0);
       this.editableFuelLevel.set(result.fuel_level?.percentage || 50);
 
@@ -323,7 +328,7 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
   // ============================================================================
 
   confirmDamage(index: number): void {
-    this.damages.update(damages => {
+    this.damages.update((damages) => {
       const updated = [...damages];
       updated[index] = { ...updated[index], confirmed: true, discarded: false };
       return updated;
@@ -331,7 +336,7 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
   }
 
   discardDamage(index: number): void {
-    this.damages.update(damages => {
+    this.damages.update((damages) => {
       const updated = [...damages];
       updated[index] = { ...updated[index], discarded: true, confirmed: false };
       return updated;
@@ -339,7 +344,7 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
   }
 
   restoreDamage(index: number): void {
-    this.damages.update(damages => {
+    this.damages.update((damages) => {
       const updated = [...damages];
       updated[index] = { ...updated[index], discarded: false };
       return updated;
@@ -361,15 +366,17 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
 
     try {
       const supabase = this.supabaseService.getClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
         throw new Error('Usuario no autenticado');
       }
 
       // Build photos array from confirmed damages
-      const confirmedDamages = this.damages().filter(d => !d.discarded);
-      const photos: InspectionPhoto[] = confirmedDamages.map(damage => ({
+      const confirmedDamages = this.damages().filter((d) => !d.discarded);
+      const photos: InspectionPhoto[] = confirmedDamages.map((damage) => ({
         url: damage.frame_url,
         type: 'exterior' as const,
         damageInfo: {
@@ -389,7 +396,7 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
           photos,
           odometer: this.editableOdometer(),
           fuelLevel: this.editableFuelLevel(),
-        })
+        }),
       );
 
       if (!inspection) {
@@ -430,10 +437,14 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
 
   getSeverityClass(severity: InspectionDamage['severity']): string {
     switch (severity) {
-      case 'minor': return 'bg-yellow-100 text-yellow-800';
-      case 'moderate': return 'bg-orange-100 text-orange-800';
-      case 'severe': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'minor':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'moderate':
+        return 'bg-orange-100 text-orange-800';
+      case 'severe':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   }
 

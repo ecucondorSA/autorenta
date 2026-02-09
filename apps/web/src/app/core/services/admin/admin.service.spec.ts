@@ -56,7 +56,11 @@ describe('AdminService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, AdminService, { provide: SupabaseClientService, useValue: mockSupabaseService }],
+      providers: [
+        ...testProviders,
+        AdminService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(AdminService);
   });

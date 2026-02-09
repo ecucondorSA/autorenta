@@ -1,8 +1,8 @@
 export interface BookingPrice {
-  totalAmountUsd: number;      // Canonical value in USD
-  totalAmountLocal: number;    // Actual charge value (if applicable)
-  exchangeRate: number;        // Exchange rate at the time of booking
-  currency: string;            // Local currency code (e.g., 'ARS')
+  totalAmountUsd: number; // Canonical value in USD
+  totalAmountLocal: number; // Actual charge value (if applicable)
+  exchangeRate: number; // Exchange rate at the time of booking
+  currency: string; // Local currency code (e.g., 'ARS')
   breakdown: {
     dailyRateUsd: number;
     insuranceUsd: number;
@@ -42,7 +42,7 @@ export interface BookingWizardData {
   promoCode: string | null;
   termsAccepted: boolean;
   cancellationPolicyAccepted: boolean;
-  
+
   // New: Pricing calculations
   pricing?: BookingPrice;
 }

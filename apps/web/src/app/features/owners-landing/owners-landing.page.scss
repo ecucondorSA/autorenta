@@ -4,9 +4,9 @@
 .landing-page {
   --ivory-accent: #f8f5f0;
   --ivory-dark: #2a2824;
-  
+
   background-attachment: fixed;
-  background-image: 
+  background-image:
     radial-gradient(at 0% 0%, rgba(var(--cta-default-rgb), 0.03) 0px, transparent 50%),
     radial-gradient(at 100% 100%, rgba(var(--cta-default-rgb), 0.03) 0px, transparent 50%);
 
@@ -47,7 +47,7 @@
     header {
       padding-top: 2rem;
     }
-    
+
     h1 {
       font-size: 2.5rem;
     }

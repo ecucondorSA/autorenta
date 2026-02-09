@@ -15,17 +15,21 @@ import { BookingRole } from '../bookings-hub.types';
         <div class="flex bg-slate-100 rounded-xl p-1 max-w-xs">
           <button
             (click)="onRoleChange('renter')"
-            [class]="role() === 'renter'
-              ? 'flex-1 py-2 text-sm font-semibold text-slate-900 bg-white rounded-lg shadow-sm transition-all'
-              : 'flex-1 py-2 text-sm font-medium text-slate-500 rounded-lg transition-all'"
+            [class]="
+              role() === 'renter'
+                ? 'flex-1 py-2 text-sm font-semibold text-slate-900 bg-white rounded-lg shadow-sm transition-all'
+                : 'flex-1 py-2 text-sm font-medium text-slate-500 rounded-lg transition-all'
+            "
           >
             Arrendatario
           </button>
           <button
             (click)="onRoleChange('owner')"
-            [class]="role() === 'owner'
-              ? 'flex-1 py-2 text-sm font-semibold text-slate-900 bg-white rounded-lg shadow-sm transition-all'
-              : 'flex-1 py-2 text-sm font-medium text-slate-500 rounded-lg transition-all'"
+            [class]="
+              role() === 'owner'
+                ? 'flex-1 py-2 text-sm font-semibold text-slate-900 bg-white rounded-lg shadow-sm transition-all'
+                : 'flex-1 py-2 text-sm font-medium text-slate-500 rounded-lg transition-all'
+            "
           >
             Propietario
           </button>

@@ -70,7 +70,7 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
       let severity: 'error' | 'warning' | 'critical' = 'error';
       if (error.status >= 500) {
         severity = 'critical';
-        
+
         // Redirect to error page for generic 500 errors, but avoid infinite loops
         // if the error comes from the error page itself or critical auth endpoints
         if (!req.url.includes('/error/') && !req.url.includes('auth/')) {

@@ -45,7 +45,11 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <ion-item>
           <ion-label position="stacked">Estado</ion-label>
-          <ion-select [(ngModel)]="filters().status" [ngModelOptions]="{ standalone: true }" name="status">
+          <ion-select
+            [(ngModel)]="filters().status"
+            [ngModelOptions]="{ standalone: true }"
+            name="status"
+          >
             <ion-select-option value="">Todos</ion-select-option>
             <ion-select-option value="open">Abierta</ion-select-option>
             <ion-select-option value="in_review">En Revisión</ion-select-option>
@@ -56,8 +60,12 @@
 
         <ion-item>
           <ion-label position="stacked">Búsqueda</ion-label>
-          <ion-input [(ngModel)]="filters().searchTerm" [ngModelOptions]="{ standalone: true }" name="searchTerm"
-            placeholder="Booking ID..."></ion-input>
+          <ion-input
+            [(ngModel)]="filters().searchTerm"
+            [ngModelOptions]="{ standalone: true }"
+            name="searchTerm"
+            placeholder="Booking ID..."
+          ></ion-input>
         </ion-item>
       </div>
 
@@ -70,209 +78,252 @@
 
   <!-- Loading State -->
   @if (loading()) {
-  <div class="flex flex-col items-center justify-center py-12">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-text-secondary">Cargando disputas...</p>
-  </div>
+    <div class="flex flex-col items-center justify-center py-12">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p class="mt-4 text-text-secondary">Cargando disputas...</p>
+    </div>
   }
 
   <!-- Disputes List -->
   @if (!loading()) {
-  <div>
-    @if (disputes().length === 0) {
-    <div class="text-center py-12 text-text-secondary">
-      <p>No hay disputas que coincidan con los filtros</p>
-    </div>
-    }
-    @if (disputes().length > 0) {
-    <div class="space-y-4">
-      @for (dispute of disputes(); track dispute.id) {
-      <ion-card class="mb-4">
-        <ion-card-header>
-          <div class="flex items-center justify-between">
-            <ion-card-title class="text-base">
-              Disputa #{{ dispute.id.slice(0, 8) }}
-            </ion-card-title>
-            <ion-badge [color]="getStatusColor(dispute.status)">
-              {{ getStatusLabel(dispute.status) }}
-            </ion-badge>
-          </div>
-          <ion-card-subtitle>
-            {{ getKindLabel(dispute.kind) }} • Booking: {{ dispute.booking_id.slice(0, 8) }} •
-            {{ formatDate(dispute.created_at) }}
-          </ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <div class="flex gap-2 justify-end">
-            <ion-button fill="outline" size="small" (click)="openDetailModal(dispute)">
-              <ion-icon name="eye" slot="start"></ion-icon>
-              Ver Detalles
-            </ion-button>
-          </div>
-        </ion-card-content>
-      </ion-card>
+    <div>
+      @if (disputes().length === 0) {
+        <div class="text-center py-12 text-text-secondary">
+          <p>No hay disputas que coincidan con los filtros</p>
+        </div>
+      }
+      @if (disputes().length > 0) {
+        <div class="space-y-4">
+          @for (dispute of disputes(); track dispute.id) {
+            <ion-card class="mb-4">
+              <ion-card-header>
+                <div class="flex items-center justify-between">
+                  <ion-card-title class="text-base">
+                    Disputa #{{ dispute.id.slice(0, 8) }}
+                  </ion-card-title>
+                  <ion-badge [color]="getStatusColor(dispute.status)">
+                    {{ getStatusLabel(dispute.status) }}
+                  </ion-badge>
+                </div>
+                <ion-card-subtitle>
+                  {{ getKindLabel(dispute.kind) }} • Booking: {{ dispute.booking_id.slice(0, 8) }} •
+                  {{ formatDate(dispute.created_at) }}
+                </ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="flex gap-2 justify-end">
+                  <ion-button fill="outline" size="small" (click)="openDetailModal(dispute)">
+                    <ion-icon name="eye" slot="start"></ion-icon>
+                    Ver Detalles
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          }
+        </div>
       }
     </div>
-    }
-  </div>
   }
 
   <!-- Detail Modal -->
   @if (showDetailModal()) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
-    (click)="closeDetailModal()">
-    <ion-card class="max-w-4xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-      <ion-card-header>
-        <ion-card-title>Detalles de Disputa</ion-card-title>
-        <ion-card-subtitle>#{{ selectedDispute()?.id?.slice(0, 8) }}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        @if (selectedDispute()) {
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-          <!-- Left Column: Info & Timeline -->
-          <div class="space-y-6">
-            <!-- Info -->
-            <div>
-              <h3 class="text-lg font-semibold mb-2 font-satoshi">Información</h3>
-              <div class="space-y-2 p-4 bg-surface-base rounded-md border border-border-default">
-                <p class="text-sm">
-                  <strong>Booking ID:</strong> {{ selectedDispute()!.booking_id }}
-                </p>
-                <p class="text-sm">
-                  <strong>Tipo:</strong> {{ getKindLabel(selectedDispute()!.kind) }}
-                </p>
-                <p class="text-sm">
-                  <strong>Estado:</strong> {{ getStatusLabel(selectedDispute()!.status) }}
-                </p>
-                <p class="text-sm">
-                  <strong>Creada:</strong> {{ formatDate(selectedDispute()?.created_at ?? null) }}
-                </p>
-              </div>
-            </div>
-
-            <!-- Timeline -->
-            <div>
-              <h3 class="text-lg font-semibold mb-2 font-satoshi">Historial de Eventos</h3>
-              <div class="space-y-4 max-h-60 overflow-y-auto p-2">
-                @for (event of timeline(); track $index) {
-                <div class="flex gap-3 text-sm">
-                  <div class="flex-shrink-0 w-2 h-2 mt-1.5 rounded-full bg-border-active"></div>
-                  <div>
-                    <p class="font-medium">
-                      {{ event.event_type | titlecase }}
-                      <span class="text-text-secondary text-xs ml-1">
-                        {{ formatDate(event.created_at) }}
-                      </span>
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
+      (click)="closeDetailModal()"
+    >
+      <ion-card
+        class="max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()"
+      >
+        <ion-card-header>
+          <ion-card-title>Detalles de Disputa</ion-card-title>
+          <ion-card-subtitle>#{{ selectedDispute()?.id?.slice(0, 8) }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          @if (selectedDispute()) {
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Left Column: Info & Timeline -->
+              <div class="space-y-6">
+                <!-- Info -->
+                <div>
+                  <h3 class="text-lg font-semibold mb-2 font-satoshi">Información</h3>
+                  <div
+                    class="space-y-2 p-4 bg-surface-base rounded-md border border-border-default"
+                  >
+                    <p class="text-sm">
+                      <strong>Booking ID:</strong> {{ selectedDispute()!.booking_id }}
                     </p>
-                    @if (event.body) {
-                    <p class="text-text-secondary">{{ event.body }}</p>
+                    <p class="text-sm">
+                      <strong>Tipo:</strong> {{ getKindLabel(selectedDispute()!.kind) }}
+                    </p>
+                    <p class="text-sm">
+                      <strong>Estado:</strong> {{ getStatusLabel(selectedDispute()!.status) }}
+                    </p>
+                    <p class="text-sm">
+                      <strong>Creada:</strong>
+                      {{ formatDate(selectedDispute()?.created_at ?? null) }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Timeline -->
+                <div>
+                  <h3 class="text-lg font-semibold mb-2 font-satoshi">Historial de Eventos</h3>
+                  <div class="space-y-4 max-h-60 overflow-y-auto p-2">
+                    @for (event of timeline(); track $index) {
+                      <div class="flex gap-3 text-sm">
+                        <div
+                          class="flex-shrink-0 w-2 h-2 mt-1.5 rounded-full bg-border-active"
+                        ></div>
+                        <div>
+                          <p class="font-medium">
+                            {{ event.event_type | titlecase }}
+                            <span class="text-text-secondary text-xs ml-1">
+                              {{ formatDate(event.created_at) }}
+                            </span>
+                          </p>
+                          @if (event.body) {
+                            <p class="text-text-secondary">{{ event.body }}</p>
+                          }
+                          @if (event.from_status && event.to_status) {
+                            <p class="text-xs text-text-muted">
+                              {{ event.from_status }} → {{ event.to_status }}
+                            </p>
+                          }
+                        </div>
+                      </div>
                     }
-                    @if (event.from_status && event.to_status) {
-                    <p class="text-xs text-text-muted">
-                      {{ event.from_status }} → {{ event.to_status }}
-                    </p>
+                    @if (timeline().length === 0) {
+                      <p class="text-sm text-text-muted italic">Sin eventos registrados</p>
                     }
                   </div>
                 </div>
-                }
-                @if (timeline().length === 0) {
-                <p class="text-sm text-text-muted italic">Sin eventos registrados</p>
-                }
               </div>
-            </div>
-          </div>
 
-          <!-- Right Column: Evidence & Resolution -->
-          <div class="space-y-6">
+              <!-- Right Column: Evidence & Resolution -->
+              <div class="space-y-6">
+                <!-- Evidence -->
+                <div>
+                  <h3 class="text-lg font-semibold mb-2 font-satoshi">
+                    Evidencias ({{ evidence().length }})
+                  </h3>
+                  @if (evidence().length > 0) {
+                    <div class="grid grid-cols-2 gap-2">
+                      @for (item of evidence(); track item) {
+                        <a
+                          [href]="item.url"
+                          target="_blank"
+                          class="block group relative aspect-video bg-surface-raised rounded overflow-hidden"
+                        >
+                          @if (item.type === 'image') {
+                            <img
+                              [src]="item.url"
+                              class="w-full h-full object-cover group-hover:opacity-75 transition-opacity"
+                              [alt]="item.note || 'Evidencia de disputa'"
+                            />
+                          } @else {
+                            <div class="w-full h-full flex items-center justify-center">
+                              <ion-icon
+                                name="document-text"
+                                class="text-2xl text-text-muted"
+                              ></ion-icon>
+                            </div>
+                          }
+                          @if (item.note) {
+                            <div
+                              class="absolute bottom-0 inset-x-0 bg-black/60 p-1 text-xs text-white truncate"
+                            >
+                              {{ item.note }}
+                            </div>
+                          }
+                        </a>
+                      }
+                    </div>
+                  }
+                </div>
 
-            <!-- Evidence -->
-            <div>
-              <h3 class="text-lg font-semibold mb-2 font-satoshi">Evidencias ({{ evidence().length }})</h3>
-              @if (evidence().length > 0) {
-              <div class="grid grid-cols-2 gap-2">
-                @for (item of evidence(); track item) {
-                <a [href]="item.url" target="_blank"
-                  class="block group relative aspect-video bg-surface-raised rounded overflow-hidden">
-                  @if (item.type === 'image') {
-                  <img [src]="item.url" class="w-full h-full object-cover group-hover:opacity-75 transition-opacity" [alt]="item.note || 'Evidencia de disputa'" />
+                <!-- Admin Action Zone -->
+                <div class="border-t pt-4">
+                  <h3 class="text-lg font-semibold mb-3 font-satoshi">Resolución Administrativa</h3>
+
+                  @if (selectedDispute()!.status === 'resolved') {
+                    <div
+                      class="p-4 bg-success-light/10 text-success-strong rounded-md border border-success-light/20"
+                    >
+                      <p class="font-bold flex items-center gap-2">
+                        <ion-icon name="check-mark-circle"></ion-icon> Disputa Resuelta
+                      </p>
+                      <p class="text-sm mt-1">
+                        Favor:
+                        <strong>{{ selectedDispute()!.resolution_favor | titlecase }}</strong>
+                      </p>
+                      @if (
+                        selectedDispute()!.penalty_amount_cents &&
+                        selectedDispute()!.penalty_amount_cents! > 0
+                      ) {
+                        <p class="text-sm">
+                          Penalidad:
+                          {{ selectedDispute()!.penalty_amount_cents! / 100 | currency: 'USD' }}
+                        </p>
+                      }
+                      <p class="text-xs mt-2 opacity-75">
+                        Resuelto el {{ formatDate(selectedDispute()!.resolved_at) }}
+                      </p>
+                    </div>
+
                   } @else {
-                  <div class="w-full h-full flex items-center justify-center">
-                    <ion-icon name="document-text" class="text-2xl text-text-muted"></ion-icon>
-                  </div>
+                    <div class="space-y-4 bg-surface-raised p-4 rounded-md">
+                      <ion-item>
+                        <ion-label position="stacked">A favor de:</ion-label>
+                        <ion-select
+                          [(ngModel)]="resolutionFavor"
+                          [ngModelOptions]="{ standalone: true }"
+                        >
+                          <ion-select-option value="owner"
+                            >Propietario (Validar reclamo)</ion-select-option
+                          >
+                          <ion-select-option value="renter"
+                            >Arrendatario (Rechazar reclamo)</ion-select-option
+                          >
+                          <ion-select-option value="split">Split (Fondo Común)</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="stacked">Monto Penalidad / Cobro (USD)</ion-label>
+                        <ion-input
+                          type="number"
+                          [(ngModel)]="finalChargeAmount"
+                          [ngModelOptions]="{ standalone: true }"
+                        ></ion-input>
+                        <ion-note slot="helper">Dejar en 0 si no aplica cobro</ion-note>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="stacked">Notas Internas de Resolución</ion-label>
+                        <ion-textarea
+                          [(ngModel)]="resolutionNotes"
+                          [ngModelOptions]="{ standalone: true }"
+                          rows="3"
+                          placeholder="Justificación de la decisión..."
+                        ></ion-textarea>
+                      </ion-item>
+
+                      <ion-button expand="block" color="primary" (click)="resolve()">
+                        <ion-icon name="gavel" slot="start"></ion-icon>
+                        Confirmar Resolución
+                      </ion-button>
+                    </div>
                   }
-                  @if (item.note) {
-                  <div class="absolute bottom-0 inset-x-0 bg-black/60 p-1 text-xs text-white truncate">
-                    {{ item.note }}
-                  </div>
-                  }
-                </a>
-                }
+                </div>
               </div>
-              }
             </div>
-
-            <!-- Admin Action Zone -->
-            <div class="border-t pt-4">
-              <h3 class="text-lg font-semibold mb-3 font-satoshi">Resolución Administrativa</h3>
-
-              @if (selectedDispute()!.status === 'resolved') {
-              <div class="p-4 bg-success-light/10 text-success-strong rounded-md border border-success-light/20">
-                <p class="font-bold flex items-center gap-2">
-                  <ion-icon name="check-mark-circle"></ion-icon> Disputa Resuelta
-                </p>
-                <p class="text-sm mt-1">
-                  Favor: <strong>{{ selectedDispute()!.resolution_favor | titlecase }}</strong>
-                </p>
-                @if (selectedDispute()!.penalty_amount_cents && selectedDispute()!.penalty_amount_cents! > 0) {
-                <p class="text-sm">Penalidad: {{ (selectedDispute()!.penalty_amount_cents! / 100) | currency:'USD' }}
-                </p>
-                }
-                <p class="text-xs mt-2 opacity-75">Resuelto el {{ formatDate(selectedDispute()!.resolved_at) }}</p>
-              </div>
-              }
-
-              @else {
-              <div class="space-y-4 bg-surface-raised p-4 rounded-md">
-
-                <ion-item>
-                  <ion-label position="stacked">A favor de:</ion-label>
-                  <ion-select [(ngModel)]="resolutionFavor" [ngModelOptions]="{standalone:true}">
-                    <ion-select-option value="owner">Propietario (Validar reclamo)</ion-select-option>
-                    <ion-select-option value="renter">Arrendatario (Rechazar reclamo)</ion-select-option>
-                    <ion-select-option value="split">Split (Fondo Común)</ion-select-option>
-                  </ion-select>
-                </ion-item>
-
-                <ion-item>
-                  <ion-label position="stacked">Monto Penalidad / Cobro (USD)</ion-label>
-                  <ion-input type="number" [(ngModel)]="finalChargeAmount"
-                    [ngModelOptions]="{standalone:true}"></ion-input>
-                  <ion-note slot="helper">Dejar en 0 si no aplica cobro</ion-note>
-                </ion-item>
-
-                <ion-item>
-                  <ion-label position="stacked">Notas Internas de Resolución</ion-label>
-                  <ion-textarea [(ngModel)]="resolutionNotes" [ngModelOptions]="{standalone:true}" rows="3"
-                    placeholder="Justificación de la decisión..."></ion-textarea>
-                </ion-item>
-
-                <ion-button expand="block" color="primary" (click)="resolve()">
-                  <ion-icon name="gavel" slot="start"></ion-icon>
-                  Confirmar Resolución
-                </ion-button>
-              </div>
-              }
-            </div>
-
-          </div>
-        </div>
-        }
-        <ion-button expand="block" fill="outline" class="mt-6" (click)="closeDetailModal()">
-          Cerrar Modal
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
-  </div>
+          }
+          <ion-button expand="block" fill="outline" class="mt-6" (click)="closeDetailModal()">
+            Cerrar Modal
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
   }
 </ion-content>

@@ -139,7 +139,9 @@ export class FileUploadService {
           // For very large images (>5MB), use more aggressive compression
           const isLargeFile = file.size > 5 * 1024 * 1024;
           const targetSize = isLargeFile ? Math.min(opts.targetSizeMB, 0.8) : opts.targetSizeMB;
-          const maxDimension = isLargeFile ? Math.min(opts.maxImageDimension, 1600) : opts.maxImageDimension;
+          const maxDimension = isLargeFile
+            ? Math.min(opts.maxImageDimension, 1600)
+            : opts.maxImageDimension;
 
           const compressed = await this.compressImage(file, {
             maxSizeMB: targetSize,
@@ -151,21 +153,19 @@ export class FileUploadService {
 
           const compressionRatio = ((1 - compressed.size / file.size) * 100).toFixed(0);
 
-          this.logger.info(
-            'Image compressed',
-            'FileUploadService',
-            {
-              original: `${(file.size / 1024).toFixed(0)}KB`,
-              compressed: `${(compressed.size / 1024).toFixed(0)}KB`,
-              ratio: `${compressionRatio}%`,
-            }
-          );
+          this.logger.info('Image compressed', 'FileUploadService', {
+            original: `${(file.size / 1024).toFixed(0)}KB`,
+            compressed: `${(compressed.size / 1024).toFixed(0)}KB`,
+            ratio: `${compressionRatio}%`,
+          });
 
           // If compression didn't help much and file is still too large, warn user
-          if (compressedSize > 45 * 1024 * 1024) { // 45MB threshold (below 50MB Supabase limit)
+          if (compressedSize > 45 * 1024 * 1024) {
+            // 45MB threshold (below 50MB Supabase limit)
             return {
               success: false,
-              error: 'La imagen es demasiado grande incluso después de comprimirla. Por favor, usa una imagen más pequeña.',
+              error:
+                'La imagen es demasiado grande incluso después de comprimirla. Por favor, usa una imagen más pequeña.',
               originalSize: file.size,
               compressedSize,
             };
@@ -178,7 +178,8 @@ export class FileUploadService {
           if (file.size > 45 * 1024 * 1024) {
             return {
               success: false,
-              error: 'No se pudo comprimir la imagen y es demasiado grande para subir. Intenta con una imagen más pequeña.',
+              error:
+                'No se pudo comprimir la imagen y es demasiado grande para subir. Intenta con una imagen más pequeña.',
               originalSize: file.size,
             };
           }
@@ -204,8 +205,7 @@ export class FileUploadService {
       // 5. Upload to Supabase Storage
       const { error: uploadError } = await this.supabaseService
         .getClient()
-        .storage
-        .from(opts.bucket)
+        .storage.from(opts.bucket)
         .upload(filePath, fileToUpload, {
           cacheControl: '3600',
           upsert: false,
@@ -224,9 +224,13 @@ export class FileUploadService {
         const errorMsg = uploadError.message?.toLowerCase() || '';
 
         // Size exceeded errors
-        if (errorMsg.includes('exceeded') || errorMsg.includes('too large') ||
-            errorMsg.includes('maximum') || errorMsg.includes('size limit') ||
-            errorMsg.includes('payload too large')) {
+        if (
+          errorMsg.includes('exceeded') ||
+          errorMsg.includes('too large') ||
+          errorMsg.includes('maximum') ||
+          errorMsg.includes('size limit') ||
+          errorMsg.includes('payload too large')
+        ) {
           const currentMB = (fileToUpload.size / (1024 * 1024)).toFixed(1);
           return {
             success: false,
@@ -237,8 +241,13 @@ export class FileUploadService {
         }
 
         // Bucket not found
-        if (errorMsg.includes('bucket') && (errorMsg.includes('not found') || errorMsg.includes('does not exist'))) {
-          this.logger.error('Storage bucket not configured', 'FileUploadService', { bucket: opts.bucket });
+        if (
+          errorMsg.includes('bucket') &&
+          (errorMsg.includes('not found') || errorMsg.includes('does not exist'))
+        ) {
+          this.logger.error('Storage bucket not configured', 'FileUploadService', {
+            bucket: opts.bucket,
+          });
           return {
             success: false,
             error: 'Error de configuración del servidor. Contacta a soporte.',
@@ -246,7 +255,11 @@ export class FileUploadService {
         }
 
         // Permission errors
-        if (errorMsg.includes('permission') || errorMsg.includes('denied') || errorMsg.includes('unauthorized')) {
+        if (
+          errorMsg.includes('permission') ||
+          errorMsg.includes('denied') ||
+          errorMsg.includes('unauthorized')
+        ) {
           return {
             success: false,
             error: 'No tienes permiso para subir archivos. Por favor inicia sesión nuevamente.',
@@ -262,7 +275,11 @@ export class FileUploadService {
         }
 
         // Network errors
-        if (errorMsg.includes('network') || errorMsg.includes('timeout') || errorMsg.includes('connection')) {
+        if (
+          errorMsg.includes('network') ||
+          errorMsg.includes('timeout') ||
+          errorMsg.includes('connection')
+        ) {
           return {
             success: false,
             error: 'Error de conexión. Verifica tu internet e intenta nuevamente.',
@@ -272,7 +289,8 @@ export class FileUploadService {
         // Generic fallback with user-friendly message
         return {
           success: false,
-          error: 'No se pudo subir el archivo. Intenta con un archivo más pequeño o en otro formato.',
+          error:
+            'No se pudo subir el archivo. Intenta con un archivo más pequeño o en otro formato.',
           originalSize: file.size,
           compressedSize,
         };
@@ -281,8 +299,7 @@ export class FileUploadService {
       // 6. Get public URL
       const { data } = this.supabaseService
         .getClient()
-        .storage
-        .from(opts.bucket)
+        .storage.from(opts.bucket)
         .getPublicUrl(filePath);
 
       return {
@@ -290,9 +307,10 @@ export class FileUploadService {
         url: data.publicUrl,
         originalSize: file.size,
         compressedSize,
-        compressionRatio: file.size !== compressedSize
-          ? parseFloat(((1 - compressedSize / file.size) * 100).toFixed(1))
-          : 0,
+        compressionRatio:
+          file.size !== compressedSize
+            ? parseFloat(((1 - compressedSize / file.size) * 100).toFixed(1))
+            : 0,
       };
     } catch (error) {
       this.logger.error('Unexpected upload error', 'FileUploadService', error);
@@ -306,11 +324,8 @@ export class FileUploadService {
   /**
    * Upload multiple files concurrently
    */
-  async uploadFiles(
-    files: File[],
-    options: UploadOptions
-  ): Promise<UploadResult[]> {
-    return Promise.all(files.map(file => this.uploadFile(file, options)));
+  async uploadFiles(files: File[], options: UploadOptions): Promise<UploadResult[]> {
+    return Promise.all(files.map((file) => this.uploadFile(file, options)));
   }
 
   /**
@@ -318,7 +333,7 @@ export class FileUploadService {
    */
   public async compressImage(
     file: File,
-    options: { maxSizeMB: number; maxWidthOrHeight: number }
+    options: { maxSizeMB: number; maxWidthOrHeight: number },
   ): Promise<File> {
     return imageCompression(file, {
       maxSizeMB: options.maxSizeMB,

@@ -1,370 +1,495 @@
 <div class="min-h-screen bg-surface-base pb-20 sm:pb-12 font-sans text-text-primary">
   <!-- Loading State (Full Screen Overlay) -->
   @if (loading()) {
-  <div class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-surface-base/80 backdrop-blur-md">
-    <div class="w-16 h-16 relative mb-4">
-      <div class="absolute inset-0 rounded-full border-4 border-surface-secondary"></div>
-      <div class="absolute inset-0 rounded-full border-4 border-cta-default border-t-transparent animate-spin"></div>
-      <ion-icon name="car-sport" class="absolute inset-0 m-auto text-2xl text-cta-default animate-pulse"></ion-icon>
+    <div
+      class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-surface-base/80 backdrop-blur-md"
+    >
+      <div class="w-16 h-16 relative mb-4">
+        <div class="absolute inset-0 rounded-full border-4 border-surface-secondary"></div>
+        <div
+          class="absolute inset-0 rounded-full border-4 border-cta-default border-t-transparent animate-spin"
+        ></div>
+        <ion-icon
+          name="car-sport"
+          class="absolute inset-0 m-auto text-2xl text-cta-default animate-pulse"
+        ></ion-icon>
+      </div>
+      <p class="text-text-secondary font-medium animate-pulse tracking-wide">
+        Sincronizando reserva...
+      </p>
     </div>
-    <p class="text-text-secondary font-medium animate-pulse tracking-wide">
-      Sincronizando reserva...
-    </p>
-  </div>
   }
 
   <!-- Error State -->
   @if (error() && !loading()) {
-  <div class="container-page pt-12 px-4">
-    <app-error-state title="No pudimos cargar la reserva" [message]="error() ?? 'Ocurrió un error inesperado.'"
-      variant="banner">
-      <button [routerLink]="backLink()" class="mt-6 btn btn-secondary flex items-center gap-2 mx-auto">
-        <ion-icon name="arrow-back"></ion-icon>
-        {{ backLabel() }}
-      </button>
-    </app-error-state>
-  </div>
+    <div class="container-page pt-12 px-4">
+      <app-error-state
+        title="No pudimos cargar la reserva"
+        [message]="error() ?? 'Ocurrió un error inesperado.'"
+        variant="banner"
+      >
+        <button
+          [routerLink]="backLink()"
+          class="mt-6 btn btn-secondary flex items-center gap-2 mx-auto"
+        >
+          <ion-icon name="arrow-back"></ion-icon>
+          {{ backLabel() }}
+        </button>
+      </app-error-state>
+    </div>
   }
 
   <!-- Main Content -->
   @if (booking() && !loading()) {
-  @if (showPreTripMode()) {
-  <app-pre-trip-view [booking]="booking()!" (viewDetails)="disablePreTripMode()"></app-pre-trip-view>
-  } @else {
-  <!-- 1. CINEMATIC HERO HEADER -->
-  <header class="relative w-full h-[40vh] sm:h-[50vh] min-h-[400px] bg-surface-secondary group overflow-hidden">
-    <!-- Background Image -->
-    @if (booking()?.car_image) {
-    <img [src]="booking()!.car_image" [alt]="booking()?.car_title"
-      class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-    <div class="absolute inset-0 bg-gradient-to-t from-surface-base via-surface-base/40 to-black/30"></div>
+    @if (showPreTripMode()) {
+      <app-pre-trip-view
+        [booking]="booking()!"
+        (viewDetails)="disablePreTripMode()"
+      ></app-pre-trip-view>
     } @else {
-    <div
-      class="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-secondary to-surface-hover">
-      <ion-icon name="car-sport-outline" class="text-9xl text-text-muted/20"></ion-icon>
-    </div>
-    }
-
-    <!-- Top Nav (Floating) -->
-    <nav class="absolute top-0 left-0 right-0 p-4 sm:p-6 flex justify-between items-center z-20">
-      <button [routerLink]="backLink()"
-        class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-premium-sm">
-        <ion-icon name="arrow-back" class="text-xl"></ion-icon>
-      </button>
-
-      <div class="flex gap-2">
-        <!-- Share/Support buttons could go here -->
-        <button
-          class="px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-xs font-mono text-white/80">
-          #{{ booking()!.id.slice(0,8) }}
-        </button>
-      </div>
-    </nav>
-
-    <!-- Hero Content (Bottom Left) -->
-    <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-10 z-20 container-page">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 animate-slide-up">
-        <div>
-          <!-- Status Badge -->
-          <div class="mb-3 inline-block">
-            <app-booking-status [booking]="booking()!" [deliveryCountdown]="deliveryTimeRemaining()"
-              [awaitingRenterCheckIn]="awaitingRenterCheckIn()" [hasRenterCheckIn]="hasRenterCheckIn()"
-              [isOwner]="isOwner()" variant="pill" />
-          </div>
-
-          <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-text-primary tracking-tight mb-2 drop-shadow-sm">
-            {{ booking()?.car_brand }} {{ booking()?.car_model }}
-          </h1>
-          <p class="text-lg text-text-secondary font-medium flex items-center gap-2">
-            <span>{{ booking()?.car_year }}</span>
-            <span class="w-1 h-1 rounded-full bg-text-muted"></span>
-            <span>{{ booking()!.days_count }} días</span>
-            <span class="w-1 h-1 rounded-full bg-text-muted"></span>
-            <span class="text-text-primary font-bold">{{ booking()!.total_amount | currency: booking()!.currency :
-              'symbol' : '1.0-0' }}</span>
-          </p>
-        </div>
-
-        <!-- Owner / Renter Avatar -->
-        <div
-          class="hidden sm:flex items-center gap-3 bg-white/80 backdrop-blur-md p-2 pr-4 rounded-full shadow-premium-sm border border-white/40">
+      <!-- 1. CINEMATIC HERO HEADER -->
+      <header
+        class="relative w-full h-[40vh] sm:h-[50vh] min-h-[400px] bg-surface-secondary group overflow-hidden"
+      >
+        <!-- Background Image -->
+        @if (booking()?.car_image) {
+          <img
+            [src]="booking()!.car_image"
+            [alt]="booking()?.car_title"
+            class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          />
           <div
-            class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-inner">
-            {{ getAvatarInitial() }}
+            class="absolute inset-0 bg-gradient-to-t from-surface-base via-surface-base/40 to-black/30"
+          ></div>
+        } @else {
+          <div
+            class="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface-secondary to-surface-hover"
+          >
+            <ion-icon name="car-sport-outline" class="text-9xl text-text-muted/20"></ion-icon>
           </div>
-          <div class="flex flex-col">
-            <span class="text-[10px] uppercase font-bold text-text-muted tracking-wider">
-              {{ isOwner() ? 'Viajero' : 'Anfitrión' }}
-            </span>
-            <span class="text-sm font-bold text-text-primary truncate max-w-[120px]">
-              {{ isOwner() ? booking()!.renter_name : carOwnerName() }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <div class="container-page px-4 sm:px-6 -mt-8 relative z-30 pb-12">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-
-      <!-- ============================================================================================== -->
-      <!-- LEFT COLUMN (CONTEXT & HISTORY) - Span 8 -->
-      <!-- ============================================================================================== -->
-      <div class="lg:col-span-8 space-y-6">
-
-        <!-- 1. TIMELINE CARD (Elevated) -->
-        <section class="bg-white rounded-2xl shadow-premium-md border border-border-muted p-1">
-          <app-booking-timeline [booking]="booking()!" />
-        </section>
-
-        <!-- 2. ACTION REQUIRED ALERTS -->
-        @if (flowAlert()) {
-        <div class="animate-fade-in-down p-4 rounded-2xl border-l-4 shadow-sm flex items-start gap-4" [ngClass]="{
-                   'bg-amber-50 border-amber-500 text-amber-900': flowAlert()!.tone === 'warning',
-                   'bg-red-50 border-red-500 text-red-900': flowAlert()!.tone === 'danger',
-                   'bg-blue-50 border-blue-500 text-blue-900': flowAlert()!.tone === 'info',
-                   'bg-emerald-50 border-emerald-500 text-emerald-900': flowAlert()!.tone === 'success'
-                 }">
-          <div class="mt-0.5 text-xl">
-            <ion-icon [name]="
-                    flowAlert()!.tone === 'danger' ? 'alert-circle' : 
-                    flowAlert()!.tone === 'success' ? 'checkmark-circle' : 'information-circle'
-                 "></ion-icon>
-          </div>
-          <div class="flex-1">
-            <h3 class="font-bold text-sm">{{ flowAlert()!.title }}</h3>
-            <p class="text-sm opacity-90 mt-0.5">{{ flowAlert()!.message }}</p>
-            @if (flowAlert()!.action) {
-            <a [routerLink]="flowAlert()!.action?.route"
-              class="inline-block mt-2 text-xs font-bold underline hover:opacity-80">
-              {{ flowAlert()!.action?.label }} →
-            </a>
-            }
-          </div>
-        </div>
         }
 
-        <!-- 3. CURRENT STATE CARD (Booking Flow) -->
-        @if (booking()?.status !== 'pending' && booking()?.status !== 'pending_payment') {
-        <app-booking-flow-card [booking]="booking()!" [currentUserId]="currentUserId()"
-          (actionRequested)="handleFlowAction($event)" />
-        }
+        <!-- Top Nav (Floating) -->
+        <nav
+          class="absolute top-0 left-0 right-0 p-4 sm:p-6 flex justify-between items-center z-20"
+        >
+          <button
+            [routerLink]="backLink()"
+            class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-premium-sm"
+          >
+            <ion-icon name="arrow-back" class="text-xl"></ion-icon>
+          </button>
 
-        <!-- 4. CHECK-IN CRITICAL INFO -->
-        <app-booking-check-in-info-card [booking]="booking()!" [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
-          [isOwner]="isOwner()" />
+          <div class="flex gap-2">
+            <!-- Share/Support buttons could go here -->
+            <button
+              class="px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-xs font-mono text-white/80"
+            >
+              #{{ booking()!.id.slice(0, 8) }}
+            </button>
+          </div>
+        </nav>
 
-        <!-- 5. BENTO GRID: DETAILS -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" appStaggerEnter [staggerIndex]="2">
-
-          <!-- Contract & Docs -->
-          <section appHoverLift
-            class="glass-card rounded-2xl p-6 flex flex-col h-full border border-border-muted bg-white/50">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
-                <ion-icon name="document-text-outline" class="text-xl"></ion-icon>
+        <!-- Hero Content (Bottom Left) -->
+        <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-10 z-20 container-page">
+          <div
+            class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 animate-slide-up"
+          >
+            <div>
+              <!-- Status Badge -->
+              <div class="mb-3 inline-block">
+                <app-booking-status
+                  [booking]="booking()!"
+                  [deliveryCountdown]="deliveryTimeRemaining()"
+                  [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
+                  [hasRenterCheckIn]="hasRenterCheckIn()"
+                  [isOwner]="isOwner()"
+                  variant="pill"
+                />
               </div>
-              <h3 class="font-bold text-text-primary">Contrato Digital</h3>
-            </div>
-            <div class="flex-1">
-              <app-booking-contract #contractComponent [bookingId]="booking()!.id"
-                (downloadRequested)="downloadContract(contractComponent)"></app-booking-contract>
-            </div>
-          </section>
 
-          <!-- Location & Delivery -->
-          @if (booking()?.delivery_required || booking()?.dropoff_location_lat) {
-          <section appHoverLift
-            class="glass-card rounded-2xl p-6 flex flex-col h-full border border-border-muted bg-white/50">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
-                <ion-icon name="map-outline" class="text-xl"></ion-icon>
-              </div>
-              <h3 class="font-bold text-text-primary">Punto de Encuentro</h3>
+              <h1
+                class="text-3xl sm:text-4xl md:text-5xl font-black text-text-primary tracking-tight mb-2 drop-shadow-sm"
+              >
+                {{ booking()?.car_brand }} {{ booking()?.car_model }}
+              </h1>
+              <p class="text-lg text-text-secondary font-medium flex items-center gap-2">
+                <span>{{ booking()?.car_year }}</span>
+                <span class="w-1 h-1 rounded-full bg-text-muted"></span>
+                <span>{{ booking()!.days_count }} días</span>
+                <span class="w-1 h-1 rounded-full bg-text-muted"></span>
+                <span class="text-text-primary font-bold">{{
+                  booking()!.total_amount | currency: booking()!.currency : 'symbol' : '1.0-0'
+                }}</span>
+              </p>
             </div>
-            <div class="flex-1">
-              <p class="text-sm font-medium text-text-primary mb-1">
-                @if (booking()?.dropoff_location_lat) {
-                {{ booking()!.dropoff_location_lat?.toFixed(6) }}, {{ booking()!.dropoff_location_lng?.toFixed(6) }}
-                } @else {
-                Mismo punto de retiro
-                }
-              </p>
-              <p class="text-xs text-text-secondary">
-                {{ booking()!.end_at | date: 'EEEE d MMMM, HH:mm' }} hs
-              </p>
-              @if (booking()?.delivery_fee_cents) {
+
+            <!-- Owner / Renter Avatar -->
+            <div
+              class="hidden sm:flex items-center gap-3 bg-white/80 backdrop-blur-md p-2 pr-4 rounded-full shadow-premium-sm border border-white/40"
+            >
               <div
-                class="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100">
-                <ion-icon name="checkmark-circle"></ion-icon>
-                Delivery Incluido
+                class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-inner"
+              >
+                {{ getAvatarInitial() }}
               </div>
+              <div class="flex flex-col">
+                <span class="text-[10px] uppercase font-bold text-text-muted tracking-wider">
+                  {{ isOwner() ? 'Viajero' : 'Anfitrión' }}
+                </span>
+                <span class="text-sm font-bold text-text-primary truncate max-w-[120px]">
+                  {{ isOwner() ? booking()!.renter_name : carOwnerName() }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="container-page px-4 sm:px-6 -mt-8 relative z-30 pb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          <!-- ============================================================================================== -->
+          <!-- LEFT COLUMN (CONTEXT & HISTORY) - Span 8 -->
+          <!-- ============================================================================================== -->
+          <div class="lg:col-span-8 space-y-6">
+            <!-- 1. TIMELINE CARD (Elevated) -->
+            <section class="bg-white rounded-2xl shadow-premium-md border border-border-muted p-1">
+              <app-booking-timeline [booking]="booking()!" />
+            </section>
+
+            <!-- 2. ACTION REQUIRED ALERTS -->
+            @if (flowAlert()) {
+              <div
+                class="animate-fade-in-down p-4 rounded-2xl border-l-4 shadow-sm flex items-start gap-4"
+                [ngClass]="{
+                  'bg-amber-50 border-amber-500 text-amber-900': flowAlert()!.tone === 'warning',
+                  'bg-red-50 border-red-500 text-red-900': flowAlert()!.tone === 'danger',
+                  'bg-blue-50 border-blue-500 text-blue-900': flowAlert()!.tone === 'info',
+                  'bg-emerald-50 border-emerald-500 text-emerald-900':
+                    flowAlert()!.tone === 'success',
+                }"
+              >
+                <div class="mt-0.5 text-xl">
+                  <ion-icon
+                    [name]="
+                      flowAlert()!.tone === 'danger'
+                        ? 'alert-circle'
+                        : flowAlert()!.tone === 'success'
+                          ? 'checkmark-circle'
+                          : 'information-circle'
+                    "
+                  ></ion-icon>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-bold text-sm">{{ flowAlert()!.title }}</h3>
+                  <p class="text-sm opacity-90 mt-0.5">{{ flowAlert()!.message }}</p>
+                  @if (flowAlert()!.action) {
+                    <a
+                      [routerLink]="flowAlert()!.action?.route"
+                      class="inline-block mt-2 text-xs font-bold underline hover:opacity-80"
+                    >
+                      {{ flowAlert()!.action?.label }} →
+                    </a>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- 3. CURRENT STATE CARD (Booking Flow) -->
+            @if (booking()?.status !== 'pending' && booking()?.status !== 'pending_payment') {
+              <app-booking-flow-card
+                [booking]="booking()!"
+                [currentUserId]="currentUserId()"
+                (actionRequested)="handleFlowAction($event)"
+              />
+            }
+
+            <!-- 4. CHECK-IN CRITICAL INFO -->
+            <app-booking-check-in-info-card
+              [booking]="booking()!"
+              [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
+              [isOwner]="isOwner()"
+            />
+
+            <!-- 5. BENTO GRID: DETAILS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" appStaggerEnter [staggerIndex]="2">
+              <!-- Contract & Docs -->
+              <section
+                appHoverLift
+                class="glass-card rounded-2xl p-6 flex flex-col h-full border border-border-muted bg-white/50"
+              >
+                <div class="flex items-center gap-3 mb-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600"
+                  >
+                    <ion-icon name="document-text-outline" class="text-xl"></ion-icon>
+                  </div>
+                  <h3 class="font-bold text-text-primary">Contrato Digital</h3>
+                </div>
+                <div class="flex-1">
+                  <app-booking-contract
+                    #contractComponent
+                    [bookingId]="booking()!.id"
+                    (downloadRequested)="downloadContract(contractComponent)"
+                  ></app-booking-contract>
+                </div>
+              </section>
+
+              <!-- Location & Delivery -->
+              @if (booking()?.delivery_required || booking()?.dropoff_location_lat) {
+                <section
+                  appHoverLift
+                  class="glass-card rounded-2xl p-6 flex flex-col h-full border border-border-muted bg-white/50"
+                >
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600"
+                    >
+                      <ion-icon name="map-outline" class="text-xl"></ion-icon>
+                    </div>
+                    <h3 class="font-bold text-text-primary">Punto de Encuentro</h3>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-text-primary mb-1">
+                      @if (booking()?.dropoff_location_lat) {
+                        {{ booking()!.dropoff_location_lat?.toFixed(6) }},
+                        {{ booking()!.dropoff_location_lng?.toFixed(6) }}
+                      } @else {
+                        Mismo punto de retiro
+                      }
+                    </p>
+                    <p class="text-xs text-text-secondary">
+                      {{ booking()!.end_at | date: 'EEEE d MMMM, HH:mm' }} hs
+                    </p>
+                    @if (booking()?.delivery_fee_cents) {
+                      <div
+                        class="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100"
+                      >
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                        Delivery Incluido
+                      </div>
+                    }
+                  </div>
+                </section>
+              }
+
+              <!-- Pricing Breakdown -->
+              @if (pricingView()) {
+                <section
+                  appHoverLift
+                  class="glass-card rounded-2xl p-6 border border-border-muted bg-white/50"
+                >
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-600"
+                    >
+                      <ion-icon name="receipt-outline" class="text-xl"></ion-icon>
+                    </div>
+                    <h3 class="font-bold text-text-primary">Desglose de Costos</h3>
+                  </div>
+                  <app-booking-pricing-breakdown
+                    [data]="pricingView()!"
+                  ></app-booking-pricing-breakdown>
+                </section>
+              }
+
+              <!-- Insurance -->
+              @if (insuranceView()) {
+                <section
+                  appHoverLift
+                  class="glass-card rounded-2xl p-6 border border-border-muted bg-white/50"
+                >
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"
+                    >
+                      <ion-icon name="shield-checkmark-outline" class="text-xl"></ion-icon>
+                    </div>
+                    <h3 class="font-bold text-text-primary">Cobertura</h3>
+                  </div>
+                  <app-booking-insurance-summary
+                    [data]="insuranceView()!"
+                  ></app-booking-insurance-summary>
+                </section>
               }
             </div>
-          </section>
-          }
 
-          <!-- Pricing Breakdown -->
-          @if (pricingView()) {
-          <section appHoverLift class="glass-card rounded-2xl p-6 border border-border-muted bg-white/50">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-600">
-                <ion-icon name="receipt-outline" class="text-xl"></ion-icon>
-              </div>
-              <h3 class="font-bold text-text-primary">Desglose de Costos</h3>
-            </div>
-            <app-booking-pricing-breakdown [data]="pricingView()!"></app-booking-pricing-breakdown>
-          </section>
-          }
+            <!-- 6. TRACKING (If active) -->
+            @if (tracking()) {
+              <section
+                appHoverLift
+                class="rounded-2xl overflow-hidden shadow-premium-md border border-border-muted"
+              >
+                <div class="bg-slate-900 px-6 py-4 flex justify-between items-center">
+                  <h3 class="font-bold text-white flex items-center gap-2">
+                    <ion-icon name="navigate-circle" class="text-emerald-400"></ion-icon>
+                    Rastreo Satelital
+                  </h3>
+                  <span
+                    class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 animate-pulse"
+                  >
+                    EN VIVO
+                  </span>
+                </div>
+                <div class="p-6 bg-white">
+                  <app-booking-tracking [session]="tracking()"></app-booking-tracking>
+                </div>
+              </section>
+            }
 
-          <!-- Insurance -->
-          @if (insuranceView()) {
-          <section appHoverLift class="glass-card rounded-2xl p-6 border border-border-muted bg-white/50">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                <ion-icon name="shield-checkmark-outline" class="text-xl"></ion-icon>
-              </div>
-              <h3 class="font-bold text-text-primary">Cobertura</h3>
-            </div>
-            <app-booking-insurance-summary [data]="insuranceView()!"></app-booking-insurance-summary>
-          </section>
-          }
-        </div>
+            <!-- 7. INCIDENT MANAGEMENT -->
+            @if (hasClaim() || canReportClaim() || isOwner() || canReportDamage()) {
+              <section class="border-t border-border-default pt-8 mt-8">
+                <h2 class="text-lg font-bold text-text-primary mb-6">Gestión de Incidentes</h2>
 
-        <!-- 6. TRACKING (If active) -->
-        @if (tracking()) {
-        <section appHoverLift class="rounded-2xl overflow-hidden shadow-premium-md border border-border-muted">
-          <div class="bg-slate-900 px-6 py-4 flex justify-between items-center">
-            <h3 class="font-bold text-white flex items-center gap-2">
-              <ion-icon name="navigate-circle" class="text-emerald-400"></ion-icon>
-              Rastreo Satelital
-            </h3>
-            <span
-              class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 animate-pulse">
-              EN VIVO
-            </span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- HACKATHON: SCOUT REPORT BUTTON -->
+                  <a
+                    [routerLink]="['/scout/report', booking()!.id]"
+                    class="flex items-center justify-center gap-3 p-5 rounded-2xl bg-gradient-to-br from-red-50 to-white border-2 border-red-100 hover:border-red-300 hover:shadow-lg transition-all group cursor-pointer text-red-700"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center group-hover:scale-110 transition-transform"
+                    >
+                      <ion-icon name="alert-circle" class="text-xl"></ion-icon>
+                    </div>
+                    <div class="text-left">
+                      <p class="font-bold text-sm">Reportar Robo / Emergencia</p>
+                      <p class="text-xs opacity-80">Activar Red de Búsqueda Scout</p>
+                    </div>
+                  </a>
+
+                  <!-- Damage Report -->
+                  @if (canReportDamage()) {
+                    <a
+                      [routerLink]="['/bookings', booking()!.id, 'owner-damage-report']"
+                      class="flex items-center justify-center gap-3 p-5 rounded-2xl bg-white border-2 border-dashed border-border-muted hover:border-orange-300 hover:bg-orange-50 transition-all group cursor-pointer text-text-secondary hover:text-orange-700"
+                    >
+                      <div
+                        class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center group-hover:bg-white transition-colors"
+                      >
+                        <ion-icon name="hammer-outline" class="text-xl"></ion-icon>
+                      </div>
+                      <div class="text-left">
+                        <p class="font-bold text-sm">Reportar Daños</p>
+                        <p class="text-xs opacity-80">Iniciar reclamo de garantía</p>
+                      </div>
+                    </a>
+                  }
+                </div>
+
+                <!-- Existing Claims -->
+                @if (hasClaim()) {
+                  <div class="mt-6 space-y-3">
+                    @for (claim of bookingClaims(); track claim.id) {
+                      <div
+                        class="flex items-center gap-4 p-4 rounded-xl bg-surface-secondary border border-border-default"
+                      >
+                        <ion-icon name="warning" class="text-orange-500 text-xl"></ion-icon>
+                        <div class="flex-1">
+                          <p class="font-bold text-sm text-text-primary">{{ claim.description }}</p>
+                          <p class="text-xs text-text-secondary">
+                            Estado: {{ getClaimStatusLabel(claim.status) }}
+                          </p>
+                        </div>
+                        <ion-icon name="chevron-forward" class="text-text-muted"></ion-icon>
+                      </div>
+                    }
+                  </div>
+                }
+              </section>
+            }
           </div>
-          <div class="p-6 bg-white">
-            <app-booking-tracking [session]="tracking()"></app-booking-tracking>
-          </div>
-        </section>
-        }
 
-        <!-- 7. INCIDENT MANAGEMENT -->
-        @if (hasClaim() || canReportClaim() || isOwner() || canReportDamage()) {
-        <section class="border-t border-border-default pt-8 mt-8">
-          <h2 class="text-lg font-bold text-text-primary mb-6">Gestión de Incidentes</h2>
+          <!-- ============================================================================================== -->
+          <!-- RIGHT COLUMN (ACTIONS & AI TOOLS) - Span 4 -->
+          <!-- ============================================================================================== -->
+          <div class="lg:col-span-4 space-y-6">
+            <!-- 1. STICKY ACTIONS -->
+            <div class="sticky top-24 space-y-6">
+              <!-- Primary Action Card -->
+              <app-booking-actions-card
+                [booking]="booking()!"
+                [isOwner]="isOwner()"
+                [isRenter]="isRenter()"
+                [needsPayment]="needsPayment()"
+                [canApproveBooking]="canApproveBooking()"
+                [canPerformCheckIn]="canPerformCheckIn()"
+                [canPerformCheckOut]="canPerformCheckOut()"
+                [canOwnerCheckIn]="canOwnerCheckIn()"
+                [canOwnerCheckOut]="canOwnerCheckOut()"
+                [canOwnerCancel]="canOwnerCancel()"
+                [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
+                (chatOpen)="openChatPanel()"
+                (cancelBooking)="cancelBooking($event)"
+                (ownerCancelBooking)="ownerCancelBooking()"
+                (approveBooking)="approveBooking()"
+                (rejectBooking)="rejectBooking()"
+              />
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- HACKATHON: SCOUT REPORT BUTTON -->
-            <a [routerLink]="['/scout/report', booking()!.id]"
-              class="flex items-center justify-center gap-3 p-5 rounded-2xl bg-gradient-to-br from-red-50 to-white border-2 border-red-100 hover:border-red-300 hover:shadow-lg transition-all group cursor-pointer text-red-700">
+              <!-- 2. AI TOOLS (Accordion) -->
               <div
-                class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <ion-icon name="alert-circle" class="text-xl"></ion-icon>
-              </div>
-              <div class="text-left">
-                <p class="font-bold text-sm">Reportar Robo / Emergencia</p>
-                <p class="text-xs opacity-80">Activar Red de Búsqueda Scout</p>
-              </div>
-            </a>
+                class="bg-white rounded-2xl shadow-premium-sm border border-border-muted overflow-hidden"
+              >
+                <div
+                  class="p-4 border-b border-border-muted bg-gradient-to-r from-indigo-50 to-purple-50 flex justify-between items-center"
+                >
+                  <h3 class="font-bold text-indigo-900 flex items-center gap-2">
+                    <ion-icon name="sparkles" class="text-indigo-500"></ion-icon>
+                    Asistente IA
+                  </h3>
+                  <span
+                    class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-indigo-600 border border-indigo-100"
+                    >BETA</span
+                  >
+                </div>
 
-            <!-- Damage Report -->
-            @if (canReportDamage()) {
-            <a [routerLink]="['/bookings', booking()!.id, 'owner-damage-report']"
-              class="flex items-center justify-center gap-3 p-5 rounded-2xl bg-white border-2 border-dashed border-border-muted hover:border-orange-300 hover:bg-orange-50 transition-all group cursor-pointer text-text-secondary hover:text-orange-700">
-              <div
-                class="w-10 h-10 rounded-full bg-surface-secondary flex items-center justify-center group-hover:bg-white transition-colors">
-                <ion-icon name="hammer-outline" class="text-xl"></ion-icon>
-              </div>
-              <div class="text-left">
-                <p class="font-bold text-sm">Reportar Daños</p>
-                <p class="text-xs opacity-80">Iniciar reclamo de garantía</p>
-              </div>
-            </a>
-            }
-          </div>
+                <!-- AI Panels -->
+                <app-ai-legal-panel
+                  [booking]="booking()!"
+                  [isExpanded]="expandedAiPanel() === 'legal'"
+                  (togglePanel)="toggleAiPanel('legal')"
+                />
 
-          <!-- Existing Claims -->
-          @if (hasClaim()) {
-          <div class="mt-6 space-y-3">
-            @for (claim of bookingClaims(); track claim.id) {
-            <div class="flex items-center gap-4 p-4 rounded-xl bg-surface-secondary border border-border-default">
-              <ion-icon name="warning" class="text-orange-500 text-xl"></ion-icon>
-              <div class="flex-1">
-                <p class="font-bold text-sm text-text-primary">{{ claim.description }}</p>
-                <p class="text-xs text-text-secondary">Estado: {{ getClaimStatusLabel(claim.status) }}</p>
+                @if (showTripPlanner()) {
+                  <app-ai-trip-panel
+                    [booking]="booking()!"
+                    [isExpanded]="expandedAiPanel() === 'trip'"
+                    (togglePanel)="toggleAiPanel('trip')"
+                  />
+                }
+
+                @if (showChecklistPanel()) {
+                  <app-ai-checklist-panel
+                    [booking]="booking()!"
+                    [inspectionType]="checklistInspectionType()"
+                    [isExpanded]="expandedAiPanel() === 'checklist'"
+                    (togglePanel)="toggleAiPanel('checklist')"
+                  />
+                }
               </div>
-              <ion-icon name="chevron-forward" class="text-text-muted"></ion-icon>
+
+              <!-- 3. EXTENSIONS -->
+              <app-booking-extensions-manager
+                [booking]="booking()!"
+                [isOwner]="isOwner()"
+                [isRenter]="isRenter()"
+                (bookingUpdated)="booking.set($event)"
+              />
+
+              <!-- 4. TRAFFIC FINES -->
+              <app-booking-traffic-fines-manager
+                [booking]="booking()!"
+                [isOwner]="isOwner()"
+                [isRenter]="isRenter()"
+                (reportFineClicked)="showReportTrafficFineModal.set(true)"
+                (finesUpdated)="trafficFines.set($event)"
+              />
             </div>
-            }
           </div>
-          }
-        </section>
-        }
-
-      </div>
-
-      <!-- ============================================================================================== -->
-      <!-- RIGHT COLUMN (ACTIONS & AI TOOLS) - Span 4 -->
-      <!-- ============================================================================================== -->
-      <div class="lg:col-span-4 space-y-6">
-
-        <!-- 1. STICKY ACTIONS -->
-        <div class="sticky top-24 space-y-6">
-
-          <!-- Primary Action Card -->
-          <app-booking-actions-card [booking]="booking()!" [isOwner]="isOwner()" [isRenter]="isRenter()"
-            [needsPayment]="needsPayment()" [canApproveBooking]="canApproveBooking()"
-            [canPerformCheckIn]="canPerformCheckIn()" [canPerformCheckOut]="canPerformCheckOut()"
-            [canOwnerCheckIn]="canOwnerCheckIn()" [canOwnerCheckOut]="canOwnerCheckOut()"
-            [canOwnerCancel]="canOwnerCancel()" [awaitingRenterCheckIn]="awaitingRenterCheckIn()"
-            (chatOpen)="openChatPanel()" (cancelBooking)="cancelBooking($event)"
-            (ownerCancelBooking)="ownerCancelBooking()" (approveBooking)="approveBooking()"
-            (rejectBooking)="rejectBooking()" />
-
-          <!-- 2. AI TOOLS (Accordion) -->
-          <div class="bg-white rounded-2xl shadow-premium-sm border border-border-muted overflow-hidden">
-            <div
-              class="p-4 border-b border-border-muted bg-gradient-to-r from-indigo-50 to-purple-50 flex justify-between items-center">
-              <h3 class="font-bold text-indigo-900 flex items-center gap-2">
-                <ion-icon name="sparkles" class="text-indigo-500"></ion-icon>
-                Asistente IA
-              </h3>
-              <span
-                class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-indigo-600 border border-indigo-100">BETA</span>
-            </div>
-
-            <!-- AI Panels -->
-            <app-ai-legal-panel [booking]="booking()!" [isExpanded]="expandedAiPanel() === 'legal'"
-              (togglePanel)="toggleAiPanel('legal')" />
-
-            @if (showTripPlanner()) {
-            <app-ai-trip-panel [booking]="booking()!" [isExpanded]="expandedAiPanel() === 'trip'"
-              (togglePanel)="toggleAiPanel('trip')" />
-            }
-
-            @if (showChecklistPanel()) {
-            <app-ai-checklist-panel [booking]="booking()!" [inspectionType]="checklistInspectionType()"
-              [isExpanded]="expandedAiPanel() === 'checklist'" (togglePanel)="toggleAiPanel('checklist')" />
-            }
-          </div>
-
-          <!-- 3. EXTENSIONS -->
-          <app-booking-extensions-manager [booking]="booking()!" [isOwner]="isOwner()" [isRenter]="isRenter()"
-            (bookingUpdated)="booking.set($event)" />
-
-          <!-- 4. TRAFFIC FINES -->
-          <app-booking-traffic-fines-manager [booking]="booking()!" [isOwner]="isOwner()" [isRenter]="isRenter()"
-            (reportFineClicked)="showReportTrafficFineModal.set(true)" (finesUpdated)="trafficFines.set($event)" />
-
         </div>
       </div>
-
-    </div>
-  </div>
-  }
+    }
   }
 </div>
 
@@ -372,40 +497,65 @@
 <!-- MODALS & SIDE PANELS (Keep existing) -->
 <!-- ============================================================================================== -->
 
-<app-side-panel [isOpen]="chatPanelOpen()" [title]="'Chat con ' + (isOwner() ? 'Viajero' : 'Anfitrión')"
-  width="min(450px, 100vw)" (closed)="closeChatPanel()">
+<app-side-panel
+  [isOpen]="chatPanelOpen()"
+  [title]="'Chat con ' + (isOwner() ? 'Viajero' : 'Anfitrión')"
+  width="min(450px, 100vw)"
+  (closed)="closeChatPanel()"
+>
   @if (booking() && carOwnerId()) {
-  <app-booking-chat [bookingId]="booking()!.id" [recipientId]="isOwner() ? booking()!.renter_id : carOwnerId()!"
-    [recipientName]="isOwner() ? booking()!.renter_name || 'Viajero' : carOwnerName()" [booking]="booking()!"
-    class="h-full"></app-booking-chat>
+    <app-booking-chat
+      [bookingId]="booking()!.id"
+      [recipientId]="isOwner() ? booking()!.renter_id : carOwnerId()!"
+      [recipientName]="isOwner() ? booking()!.renter_name || 'Viajero' : carOwnerName()"
+      [booking]="booking()!"
+      class="h-full"
+    ></app-booking-chat>
   }
 </app-side-panel>
 
 <!-- Feature Modals (Deferred Loading) -->
 @defer (when showDisputeForm()) {
-<app-dispute-form [isOpen]="showDisputeForm()" [bookingId]="booking()!.id" (closeModal)="showDisputeForm.set(false)"
-  (disputeCreated)="onDisputeCreated()"></app-dispute-form>
+  <app-dispute-form
+    [isOpen]="showDisputeForm()"
+    [bookingId]="booking()!.id"
+    (closeModal)="showDisputeForm.set(false)"
+    (disputeCreated)="onDisputeCreated()"
+  ></app-dispute-form>
 }
 
 @defer (when showRefundForm()) {
-<app-refund-request [isOpen]="showRefundForm()" [bookingId]="booking()!.id" (closeModal)="showRefundForm.set(false)"
-  (refundRequested)="onRefundRequested()"></app-refund-request>
+  <app-refund-request
+    [isOpen]="showRefundForm()"
+    [bookingId]="booking()!.id"
+    (closeModal)="showRefundForm.set(false)"
+    (refundRequested)="onRefundRequested()"
+  ></app-refund-request>
 }
 
 @defer (when showReportTrafficFineModal()) {
-<app-report-traffic-fine [isOpen]="showReportTrafficFineModal()" [booking]="booking()!"
-  (closeModal)="showReportTrafficFineModal.set(false)"
-  (fineReported)="onTrafficFineReported($event)"></app-report-traffic-fine>
+  <app-report-traffic-fine
+    [isOpen]="showReportTrafficFineModal()"
+    [booking]="booking()!"
+    (closeModal)="showReportTrafficFineModal.set(false)"
+    (fineReported)="onTrafficFineReported($event)"
+  ></app-report-traffic-fine>
 }
 
 @defer (when showReportOwnerNoShowModal()) {
-<app-report-owner-no-show [isOpen]="showReportOwnerNoShowModal()" [booking]="booking()!"
-  (closeModal)="showReportOwnerNoShowModal.set(false)"
-  (noShowReported)="onOwnerNoShowReported($event)"></app-report-owner-no-show>
+  <app-report-owner-no-show
+    [isOpen]="showReportOwnerNoShowModal()"
+    [booking]="booking()!"
+    (closeModal)="showReportOwnerNoShowModal.set(false)"
+    (noShowReported)="onOwnerNoShowReported($event)"
+  ></app-report-owner-no-show>
 }
 
 @defer (when showReportRenterNoShowModal()) {
-<app-report-renter-no-show [isOpen]="showReportRenterNoShowModal()" [booking]="booking()!"
-  (closeModal)="showReportRenterNoShowModal.set(false)"
-  (noShowReported)="onRenterNoShowReported($event)"></app-report-renter-no-show>
+  <app-report-renter-no-show
+    [isOpen]="showReportRenterNoShowModal()"
+    [booking]="booking()!"
+    (closeModal)="showReportRenterNoShowModal.set(false)"
+    (noShowReported)="onRenterNoShowReported($event)"
+  ></app-report-renter-no-show>
 }

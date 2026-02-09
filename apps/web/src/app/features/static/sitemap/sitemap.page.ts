@@ -58,4 +58,4 @@ import { RouterLink } from '@angular/router';
   `,
   styleUrls: ['./static-shared.css'],
 })
-export class SitemapPage{}
+export class SitemapPage {}

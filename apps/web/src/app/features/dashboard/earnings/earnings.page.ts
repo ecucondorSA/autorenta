@@ -111,7 +111,7 @@ export class EarningsPage implements OnInit {
     if (annualDepreciation === 0 || userCars.length === 0) return 0;
     let totalDailyIncome = 0;
     for (const car of userCars) {
-      totalDailyIncome += (car.price_per_day || 0) * 0.70;
+      totalDailyIncome += (car.price_per_day || 0) * 0.7;
     }
     return totalDailyIncome === 0 ? 0 : Math.ceil(annualDepreciation / totalDailyIncome);
   });
@@ -124,8 +124,23 @@ export class EarningsPage implements OnInit {
     return startDate;
   });
 
-  readonly months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-  readonly depreciationChartData = signal<{ month: string; value: number; percentage: number }[]>([]);
+  readonly months = [
+    'Ene',
+    'Feb',
+    'Mar',
+    'Abr',
+    'May',
+    'Jun',
+    'Jul',
+    'Ago',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dic',
+  ];
+  readonly depreciationChartData = signal<{ month: string; value: number; percentage: number }[]>(
+    [],
+  );
   readonly incomeChartData = signal<{ month: string; value: number; percentage: number }[]>([]);
 
   async ngOnInit(): Promise<void> {
@@ -134,17 +149,20 @@ export class EarningsPage implements OnInit {
 
   async loadData(): Promise<void> {
     this.loading.set(true);
-    this.dashboardService.getDashboardStats(false).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (stats) => {
-        this.stats.set(stats);
-        this.updateCharts();
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set('Error al cargar datos');
-        this.loading.set(false);
-      }
-    });
+    this.dashboardService
+      .getDashboardStats(false)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (stats) => {
+          this.stats.set(stats);
+          this.updateCharts();
+          this.loading.set(false);
+        },
+        error: () => {
+          this.error.set('Error al cargar datos');
+          this.loading.set(false);
+        },
+      });
   }
 
   async loadCars(): Promise<void> {
@@ -184,7 +202,7 @@ export class EarningsPage implements OnInit {
       incomeData.push({
         month: this.months[i],
         value: incValue,
-        percentage: (monthlyIncome * 12) > 0 ? (incValue / (monthlyIncome * 12)) * 100 : 0,
+        percentage: monthlyIncome * 12 > 0 ? (incValue / (monthlyIncome * 12)) * 100 : 0,
       });
     }
     this.depreciationChartData.set(depreciationData);

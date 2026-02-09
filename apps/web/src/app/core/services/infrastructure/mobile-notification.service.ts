@@ -1,13 +1,18 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
-import { PushNotifications, PushNotificationSchema, ActionPerformed, Token } from '@capacitor/push-notifications';
+import {
+  PushNotifications,
+  PushNotificationSchema,
+  ActionPerformed,
+  Token,
+} from '@capacitor/push-notifications';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { ToastService } from '@core/services/ui/toast.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MobileNotificationService {
   private readonly supabase = inject(SupabaseClientService);
@@ -40,22 +45,28 @@ export class MobileNotificationService {
     });
 
     // Handle received notification while app is in foreground
-    PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
-      this.logger.debug('[Push] Notification received in foreground', notification);
+    PushNotifications.addListener(
+      'pushNotificationReceived',
+      (notification: PushNotificationSchema) => {
+        this.logger.debug('[Push] Notification received in foreground', notification);
 
-      // In foreground, we show a discrete internal toast instead of system alert
-      this.toast.info(notification.title || 'Nueva notificación', notification.body || '');
-      // Auto-navigate if there's a route in the notification data
-      if (notification.data?.['route'] || notification.data?.['path']) {
-        this.handleNavigation(notification.data);
-      }
-    });
+        // In foreground, we show a discrete internal toast instead of system alert
+        this.toast.info(notification.title || 'Nueva notificación', notification.body || '');
+        // Auto-navigate if there's a route in the notification data
+        if (notification.data?.['route'] || notification.data?.['path']) {
+          this.handleNavigation(notification.data);
+        }
+      },
+    );
 
     // Handle tap on notification (from background/closed)
-    PushNotifications.addListener('pushNotificationActionPerformed', (notification: ActionPerformed) => {
-      this.logger.debug('[Push] Notification action performed', notification);
-      this.handleNavigation(notification.notification.data);
-    });
+    PushNotifications.addListener(
+      'pushNotificationActionPerformed',
+      (notification: ActionPerformed) => {
+        this.logger.debug('[Push] Notification action performed', notification);
+        this.handleNavigation(notification.notification.data);
+      },
+    );
   }
 
   /**

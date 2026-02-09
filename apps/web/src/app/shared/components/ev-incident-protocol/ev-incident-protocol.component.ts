@@ -138,9 +138,7 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
         <ion-card color="danger">
           <ion-card-content>
             <p>{{ service.error() }}</p>
-            <ion-button fill="clear" (click)="service.clearError()">
-              Reintentar
-            </ion-button>
+            <ion-button fill="clear" (click)="service.clearError()"> Reintentar </ion-button>
           </ion-card-content>
         </ion-card>
       } @else {
@@ -156,9 +154,7 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
             <ion-card-content>
               <p class="risk-action">{{ risk.recommended_action }}</p>
               @if (!risk.battery_safe) {
-                <ion-note color="danger">
-                  ⚠️ Batería potencialmente comprometida
-                </ion-note>
+                <ion-note color="danger"> ⚠️ Batería potencialmente comprometida </ion-note>
               }
             </ion-card-content>
           </ion-card>
@@ -169,10 +165,7 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
           @for (section of service.sections(); track section.id; let i = $index) {
             <ion-accordion [value]="section.id">
               <ion-item slot="header" [lines]="'full'" class="section-header">
-                <ion-badge
-                  slot="start"
-                  [color]="getSectionStatusColor(section)"
-                >
+                <ion-badge slot="start" [color]="getSectionStatusColor(section)">
                   {{ section.step_number }}
                 </ion-badge>
                 <ion-icon
@@ -186,17 +179,9 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
                   <p>{{ section.description }}</p>
                 </ion-label>
                 @if (section.status === 'completed') {
-                  <ion-icon
-                    name="checkmark-circle"
-                    slot="end"
-                    color="success"
-                  ></ion-icon>
+                  <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
                 } @else if (section.risk_level === 'red') {
-                  <ion-icon
-                    name="alert-circle"
-                    slot="end"
-                    color="danger"
-                  ></ion-icon>
+                  <ion-icon name="alert-circle" slot="end" color="danger"></ion-icon>
                 }
               </ion-item>
 
@@ -210,7 +195,9 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
                           <ion-checkbox
                             slot="start"
                             [checked]="item.answer === true"
-                            (ionChange)="onChecklistChange(section.id, item.id, $event.detail.checked)"
+                            (ionChange)="
+                              onChecklistChange(section.id, item.id, $event.detail.checked)
+                            "
                           ></ion-checkbox>
                           <ion-label class="ion-text-wrap">
                             <h3>{{ item.question }}</h3>
@@ -223,7 +210,9 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
                           @if (item.risk_if_yes) {
                             <ion-chip
                               slot="end"
-                              [color]="item.answer === true ? getRiskNoteColor(item.risk_if_yes) : 'medium'"
+                              [color]="
+                                item.answer === true ? getRiskNoteColor(item.risk_if_yes) : 'medium'
+                              "
                               size="small"
                             >
                               {{ item.risk_if_yes }}
@@ -235,7 +224,9 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
                           <ion-input
                             type="number"
                             [value]="item.answer"
-                            (ionChange)="onChecklistChange(section.id, item.id, $event.detail.value)"
+                            (ionChange)="
+                              onChecklistChange(section.id, item.id, $event.detail.value)
+                            "
                             placeholder="Ingresa un valor"
                           ></ion-input>
                         }
@@ -243,7 +234,9 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
                           <ion-label position="stacked">{{ item.question }}</ion-label>
                           <ion-textarea
                             [value]="item.answer"
-                            (ionChange)="onChecklistChange(section.id, item.id, $event.detail.value)"
+                            (ionChange)="
+                              onChecklistChange(section.id, item.id, $event.detail.value)
+                            "
                             placeholder="Escribe aquí..."
                             [autoGrow]="true"
                             rows="3"
@@ -260,7 +253,9 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
                     <ion-text color="medium">
                       <p class="photos-label">
                         <ion-icon name="camera"></ion-icon>
-                        Fotos requeridas: {{ section.photos_uploaded.length }}/{{ section.photos_required }}
+                        Fotos requeridas: {{ section.photos_uploaded.length }}/{{
+                          section.photos_required
+                        }}
                       </p>
                     </ion-text>
 
@@ -336,7 +331,7 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
                     </ion-chip>
                     @if (dealer.distance_km) {
                       <ion-chip size="small" color="medium">
-                        {{ dealer.distance_km | number:'1.1-1' }} km
+                        {{ dealer.distance_km | number: '1.1-1' }} km
                       </ion-chip>
                     }
                   </ion-card-header>
@@ -386,107 +381,109 @@ import { getRiskColor, getRiskIcon } from '@core/models/ev-incident-protocol.mod
       </ion-fab>
     }
   `,
-  styles: [`
-    .loading-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 50vh;
-      gap: 16px;
-    }
+  styles: [
+    `
+      .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 50vh;
+        gap: 16px;
+      }
 
-    .section-header {
-      --padding-start: 8px;
-    }
+      .section-header {
+        --padding-start: 8px;
+      }
 
-    .section-icon {
-      font-size: 1.5rem;
-      margin-left: 8px;
-    }
+      .section-icon {
+        font-size: 1.5rem;
+        margin-left: 8px;
+      }
 
-    .section-content {
-      padding: 16px;
-      background: var(--ion-color-light);
-    }
+      .section-content {
+        padding: 16px;
+        background: var(--ion-color-light);
+      }
 
-    .photos-section {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--ion-color-light-shade);
-    }
+      .photos-section {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--ion-color-light-shade);
+      }
 
-    .photos-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
+      .photos-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
 
-    .photos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 8px;
-    }
+      .photos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 8px;
+      }
 
-    .photo-thumb {
-      aspect-ratio: 1;
-      border-radius: 8px;
-      overflow: hidden;
+      .photo-thumb {
+        aspect-ratio: 1;
+        border-radius: 8px;
+        overflow: hidden;
 
-      img {
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .add-photo-btn {
+        aspect-ratio: 1;
         width: 100%;
-        height: 100%;
-        object-fit: cover;
+        height: 80px;
       }
-    }
 
-    .add-photo-btn {
-      aspect-ratio: 1;
-      width: 100%;
-      height: 80px;
-    }
-
-    .complete-section-btn {
-      margin-top: 16px;
-    }
-
-    .complete-protocol-section {
-      margin: 24px 0;
-      padding: 16px;
-      background: var(--ion-color-success-tint);
-      border-radius: 12px;
-    }
-
-    .dealerships-section {
-      margin-top: 24px;
-
-      h3 {
-        margin-bottom: 16px;
+      .complete-section-btn {
+        margin-top: 16px;
       }
-    }
 
-    .dealer-card {
-      margin-bottom: 12px;
-    }
+      .complete-protocol-section {
+        margin: 24px 0;
+        padding: 16px;
+        background: var(--ion-color-success-tint);
+        border-radius: 12px;
+      }
 
-    .dealer-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
+      .dealerships-section {
+        margin-top: 24px;
 
-    .risk-action {
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
+        h3 {
+          margin-bottom: 16px;
+        }
+      }
 
-    ion-note {
-      display: block;
-      margin-top: 8px;
-      font-size: 0.85rem;
-    }
-  `],
+      .dealer-card {
+        margin-bottom: 12px;
+      }
+
+      .dealer-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .risk-action {
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      ion-note {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.85rem;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EVIncidentProtocolComponent implements OnDestroy {
@@ -568,11 +565,7 @@ export class EVIncidentProtocolComponent implements OnDestroy {
 
   async initializeProtocol(): Promise<void> {
     try {
-      await this.service.createProtocol(
-        this.bookingId(),
-        this.claimId(),
-        this.location(),
-      );
+      await this.service.createProtocol(this.bookingId(), this.claimId(), this.location());
     } catch (err) {
       console.error('Failed to initialize protocol:', err);
     }
@@ -618,8 +611,8 @@ export class EVIncidentProtocolComponent implements OnDestroy {
   canCompleteSection(section: EVProtocolSection): boolean {
     // Check all yes/no questions are answered
     const allYesNoAnswered = section.checklist
-      .filter(item => item.answer_type === 'yes_no')
-      .every(item => item.answer !== undefined);
+      .filter((item) => item.answer_type === 'yes_no')
+      .every((item) => item.answer !== undefined);
 
     // Check minimum photos uploaded
     const hasEnoughPhotos = section.photos_uploaded.length >= section.photos_required;
@@ -666,11 +659,16 @@ export class EVIncidentProtocolComponent implements OnDestroy {
 
   getRiskCardColor(risk: string): string {
     switch (risk) {
-      case 'safe': return 'success';
-      case 'caution': return 'warning';
-      case 'danger': return 'warning';
-      case 'critical': return 'danger';
-      default: return 'medium';
+      case 'safe':
+        return 'success';
+      case 'caution':
+        return 'warning';
+      case 'danger':
+        return 'warning';
+      case 'critical':
+        return 'danger';
+      default:
+        return 'medium';
     }
   }
 
@@ -680,21 +678,31 @@ export class EVIncidentProtocolComponent implements OnDestroy {
 
   getRiskLabel(risk: string): string {
     switch (risk) {
-      case 'safe': return 'Seguro';
-      case 'caution': return 'Precaución';
-      case 'danger': return 'Peligro';
-      case 'critical': return 'Crítico';
-      default: return 'Desconocido';
+      case 'safe':
+        return 'Seguro';
+      case 'caution':
+        return 'Precaución';
+      case 'danger':
+        return 'Peligro';
+      case 'critical':
+        return 'Crítico';
+      default:
+        return 'Desconocido';
     }
   }
 
   getRiskNoteColor(risk: string): string {
     switch (risk) {
-      case 'low': return 'success';
-      case 'medium': return 'warning';
-      case 'high': return 'warning';
-      case 'critical': return 'danger';
-      default: return 'medium';
+      case 'low':
+        return 'success';
+      case 'medium':
+        return 'warning';
+      case 'high':
+        return 'warning';
+      case 'critical':
+        return 'danger';
+      default:
+        return 'medium';
     }
   }
 }

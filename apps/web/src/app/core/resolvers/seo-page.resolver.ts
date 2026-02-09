@@ -5,7 +5,7 @@ import { catchError, of } from 'rxjs';
 
 export const seoPageResolver: ResolveFn<SeoPageData | null> = (route) => {
   const service = inject(SeoLandingService);
-  
+
   const segment1 = route.paramMap.get('segment1');
   const segment2 = route.paramMap.get('segment2');
 
@@ -19,6 +19,6 @@ export const seoPageResolver: ResolveFn<SeoPageData | null> = (route) => {
       // Optional: Redirect to marketplace on failure instead of showing broken page
       // router.navigate(['/cars']);
       return of(null);
-    })
+    }),
   );
 };

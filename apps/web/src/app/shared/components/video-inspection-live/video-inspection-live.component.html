@@ -1,8 +1,9 @@
 <!-- Video Inspection Live Component - Professional Forensic UI -->
 <div class="flex flex-col h-full bg-slate-950">
-
   <!-- Header - Professional Inspector Style -->
-  <header class="flex items-center justify-between px-4 py-3 bg-slate-900 border-b border-slate-800">
+  <header
+    class="flex items-center justify-between px-4 py-3 bg-slate-900 border-b border-slate-800"
+  >
     <div class="flex items-center gap-3">
       <button
         (click)="cancel()"
@@ -24,19 +25,25 @@
     <div class="flex items-center">
       @switch (connectionState()) {
         @case ('connected') {
-          <div class="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-full">
+          <div
+            class="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-full"
+          >
             <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
             <span class="text-xs font-medium text-emerald-400">IA Activa</span>
           </div>
         }
         @case ('connecting') {
-          <div class="flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full">
+          <div
+            class="flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full"
+          >
             <span class="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>
             <span class="text-xs font-medium text-amber-400">Conectando...</span>
           </div>
         }
         @default {
-          <div class="flex items-center gap-1.5 px-2.5 py-1 bg-red-500/10 border border-red-500/30 rounded-full">
+          <div
+            class="flex items-center gap-1.5 px-2.5 py-1 bg-red-500/10 border border-red-500/30 rounded-full"
+          >
             <span class="w-1.5 h-1.5 bg-red-400 rounded-full"></span>
             <span class="text-xs font-medium text-red-400">Desconectado</span>
           </div>
@@ -48,7 +55,6 @@
   <!-- Main Content Area -->
   <main class="flex-1 flex flex-col overflow-hidden">
     @switch (viewState()) {
-
       <!-- ========================================== -->
       <!-- INITIALIZING STATE -->
       <!-- ========================================== -->
@@ -56,10 +62,14 @@
         <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
           <div class="relative mb-6">
             <div class="w-20 h-20 border-4 border-slate-700 rounded-full"></div>
-            <div class="absolute inset-0 w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+            <div
+              class="absolute inset-0 w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"
+            ></div>
           </div>
           <h2 class="text-lg font-semibold text-white mb-2">Preparando Sistema de Inspección</h2>
-          <p class="text-sm text-slate-400 max-w-xs">Inicializando cámara y conectando con la IA de análisis forense...</p>
+          <p class="text-sm text-slate-400 max-w-xs">
+            Inicializando cámara y conectando con la IA de análisis forense...
+          </p>
         </div>
       }
 
@@ -80,18 +90,26 @@
 
             <!-- Areas Status Overlay -->
             <div class="absolute top-3 left-3 right-3">
-              <div class="bg-slate-900/90 backdrop-blur-sm rounded-xl p-3 border border-slate-700/50">
+              <div
+                class="bg-slate-900/90 backdrop-blur-sm rounded-xl p-3 border border-slate-700/50"
+              >
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-xs font-medium text-slate-400 uppercase tracking-wide">Áreas a Inspeccionar</span>
-                  <span class="text-xs text-emerald-400">{{ detectedAreasCount() }}/4 requeridas</span>
+                  <span class="text-xs font-medium text-slate-400 uppercase tracking-wide"
+                    >Áreas a Inspeccionar</span
+                  >
+                  <span class="text-xs text-emerald-400"
+                    >{{ detectedAreasCount() }}/4 requeridas</span
+                  >
                 </div>
                 <div class="flex flex-wrap gap-1.5">
                   @for (area of ['front', 'rear', 'left_side', 'right_side']; track area) {
                     <span
                       class="px-2 py-0.5 rounded text-xs font-medium transition-all"
-                      [class]="$any(areasDetected())[area]
-                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                        : 'bg-slate-800 text-slate-500 border border-slate-700'"
+                      [class]="
+                        $any(areasDetected())[area]
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                          : 'bg-slate-800 text-slate-500 border border-slate-700'
+                      "
                     >
                       @if ($any(areasDetected())[area]) {
                         <span class="mr-1">✓</span>
@@ -105,13 +123,18 @@
 
             <!-- Instructions Card -->
             <div class="absolute bottom-4 left-3 right-3">
-              <div class="bg-slate-900/95 backdrop-blur-sm rounded-xl p-4 border border-slate-700/50 text-center">
-                <div class="w-12 h-12 mx-auto mb-3 bg-emerald-500/10 rounded-full flex items-center justify-center">
+              <div
+                class="bg-slate-900/95 backdrop-blur-sm rounded-xl p-4 border border-slate-700/50 text-center"
+              >
+                <div
+                  class="w-12 h-12 mx-auto mb-3 bg-emerald-500/10 rounded-full flex items-center justify-center"
+                >
                   <app-icon name="videocam" class="w-6 h-6 text-emerald-400"></app-icon>
                 </div>
                 <h3 class="text-white font-semibold mb-1">Listo para Inspeccionar</h3>
                 <p class="text-sm text-slate-400 mb-3">
-                  Camine lentamente alrededor del vehículo. La IA analizará cada área y documentará el estado.
+                  Camine lentamente alrededor del vehículo. La IA analizará cada área y documentará
+                  el estado.
                 </p>
                 <div class="flex items-center justify-center gap-4 text-xs text-slate-500">
                   <span class="flex items-center gap-1">
@@ -163,17 +186,23 @@
             ></video>
 
             <!-- Top Bar: Recording + Quality -->
-            <div class="absolute top-0 left-0 right-0 p-3 bg-gradient-to-b from-black/80 to-transparent">
+            <div
+              class="absolute top-0 left-0 right-0 p-3 bg-gradient-to-b from-black/80 to-transparent"
+            >
               <div class="flex items-center justify-between">
                 <!-- Recording Indicator -->
                 <div class="flex items-center gap-2 bg-red-600 px-3 py-1.5 rounded-lg shadow-lg">
                   <span class="w-2.5 h-2.5 bg-white rounded-full animate-pulse"></span>
-                  <span class="text-white font-mono font-semibold text-sm">{{ recordingTimeFormatted() }}</span>
+                  <span class="text-white font-mono font-semibold text-sm">{{
+                    recordingTimeFormatted()
+                  }}</span>
                 </div>
 
                 <!-- Image Quality Meter -->
                 @if (currentImageQuality(); as quality) {
-                  <div class="flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-700/50">
+                  <div
+                    class="flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-700/50"
+                  >
                     <app-icon name="camera-outline" class="w-4 h-4 text-slate-400"></app-icon>
                     <span
                       class="font-mono font-semibold text-sm"
@@ -188,12 +217,18 @@
 
             <!-- Right Side: Areas Progress -->
             <div class="absolute top-16 right-3 w-32">
-              <div class="bg-slate-900/90 backdrop-blur-sm rounded-lg p-2.5 border border-slate-700/50 space-y-1.5">
-                @for (entry of (areasDetected() | keyvalue); track entry.key) {
+              <div
+                class="bg-slate-900/90 backdrop-blur-sm rounded-lg p-2.5 border border-slate-700/50 space-y-1.5"
+              >
+                @for (entry of areasDetected() | keyvalue; track entry.key) {
                   <div class="flex items-center gap-2">
                     <div
                       class="w-5 h-5 rounded flex items-center justify-center text-xs"
-                      [class]="entry.value ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-600'"
+                      [class]="
+                        entry.value
+                          ? 'bg-emerald-500/20 text-emerald-400'
+                          : 'bg-slate-800 text-slate-600'
+                      "
                     >
                       @if (entry.value) {
                         <app-icon name="checkmark" class="w-3.5 h-3.5"></app-icon>
@@ -231,17 +266,24 @@
               }
 
               @if (geminiLive.odometer() || geminiLive.fuelLevel()) {
-                <div class="bg-slate-900/90 backdrop-blur-sm px-3 py-2 rounded-lg border border-slate-700/50 space-y-1">
+                <div
+                  class="bg-slate-900/90 backdrop-blur-sm px-3 py-2 rounded-lg border border-slate-700/50 space-y-1"
+                >
                   @if (geminiLive.odometer(); as odo) {
                     <div class="flex items-center gap-2 text-xs">
                       <app-icon name="speedometer-outline" class="w-4 h-4 text-blue-400"></app-icon>
-                      <span class="text-white font-semibold">{{ odo.value.toLocaleString() }} km</span>
+                      <span class="text-white font-semibold"
+                        >{{ odo.value.toLocaleString() }} km</span
+                      >
                       <span class="text-blue-400/70 text-[10px]">{{ odo.confidence }}%</span>
                     </div>
                   }
                   @if (geminiLive.fuelLevel(); as fuel) {
                     <div class="flex items-center gap-2 text-xs">
-                      <app-icon name="battery-half-outline" class="w-4 h-4 text-amber-400"></app-icon>
+                      <app-icon
+                        name="battery-half-outline"
+                        class="w-4 h-4 text-amber-400"
+                      ></app-icon>
                       <span class="text-white font-semibold">{{ fuel.percentage }}%</span>
                       <span class="text-amber-400/70 text-[10px]">{{ fuel.confidence }}%</span>
                     </div>
@@ -252,16 +294,22 @@
 
             <!-- Bottom: AI Guidance Panel (Main Focus) -->
             <div class="absolute bottom-4 left-3 right-3">
-              <div class="bg-slate-900/95 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden">
+              <div
+                class="bg-slate-900/95 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden"
+              >
                 <!-- Current Guidance -->
                 @if (lastMessage()) {
                   <div class="p-4 border-b border-slate-800">
                     <div class="flex items-start gap-3">
-                      <div class="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div
+                        class="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0"
+                      >
                         <app-icon name="sparkles" class="w-4 h-4 text-purple-400"></app-icon>
                       </div>
                       <div class="flex-1 min-w-0">
-                        <p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line">{{ lastMessage() }}</p>
+                        <p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line">
+                          {{ lastMessage() }}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -276,7 +324,10 @@
                           class="px-4 py-2 flex items-center gap-2 border-b border-slate-800/50 last:border-0 animate-fadeIn"
                           [class]="getEventClass(event.type)"
                         >
-                          <app-icon [name]="getEventIcon(event.type)" class="w-4 h-4 flex-shrink-0"></app-icon>
+                          <app-icon
+                            [name]="getEventIcon(event.type)"
+                            class="w-4 h-4 flex-shrink-0"
+                          ></app-icon>
                           <span class="text-xs truncate">{{ event.message }}</span>
                         </div>
                       }
@@ -310,7 +361,9 @@
           <!-- Stop Button & Missing Areas -->
           <div class="p-4 bg-slate-900 border-t border-slate-800">
             @if (missingAreas().length > 0) {
-              <p class="text-xs text-amber-400 text-center mb-3 flex items-center justify-center gap-1">
+              <p
+                class="text-xs text-amber-400 text-center mb-3 flex items-center justify-center gap-1"
+              >
                 <app-icon name="information-circle" class="w-4 h-4"></app-icon>
                 Pendiente: {{ missingAreas().join(', ') }}
               </p>
@@ -334,29 +387,42 @@
           <!-- Summary Header -->
           <div class="p-4 bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
             <div class="flex items-start gap-4">
-              <div class="w-14 h-14 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
+              <div
+                class="w-14 h-14 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20"
+              >
                 <app-icon name="document-text" class="w-7 h-7 text-emerald-400"></app-icon>
               </div>
               <div class="flex-1">
                 <h2 class="text-lg font-bold text-white mb-1">Reporte de Inspección</h2>
                 <p class="text-sm text-slate-400">
-                  Duración: {{ recordingTimeFormatted() }} · {{ forensicLog().length }} análisis realizados
+                  Duración: {{ recordingTimeFormatted() }} · {{ forensicLog().length }} análisis
+                  realizados
                 </p>
               </div>
             </div>
 
             <!-- Areas Summary -->
             <div class="mt-4 grid grid-cols-4 gap-2">
-              @for (entry of (areasDetected() | keyvalue); track entry.key) {
+              @for (entry of areasDetected() | keyvalue; track entry.key) {
                 @if (['front', 'rear', 'left_side', 'right_side'].includes(entry.key)) {
                   <div
                     class="text-center p-2 rounded-lg"
-                    [class]="entry.value ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-slate-800 border border-slate-700'"
+                    [class]="
+                      entry.value
+                        ? 'bg-emerald-500/10 border border-emerald-500/20'
+                        : 'bg-slate-800 border border-slate-700'
+                    "
                   >
-                    <div class="text-xs font-medium mb-0.5" [class]="entry.value ? 'text-emerald-400' : 'text-slate-500'">
+                    <div
+                      class="text-xs font-medium mb-0.5"
+                      [class]="entry.value ? 'text-emerald-400' : 'text-slate-500'"
+                    >
                       {{ entry.value ? '✓' : '○' }}
                     </div>
-                    <div class="text-[10px]" [class]="entry.value ? 'text-emerald-400/70' : 'text-slate-600'">
+                    <div
+                      class="text-[10px]"
+                      [class]="entry.value ? 'text-emerald-400/70' : 'text-slate-600'"
+                    >
                       {{ AREA_LABELS[entry.key] }}
                     </div>
                     @if (entry.value && $any(areaConfidence())[entry.key]) {
@@ -374,7 +440,9 @@
           <div class="p-4 space-y-4">
             <div class="flex items-center gap-2 mb-3">
               <app-icon name="car-outline" class="w-5 h-5 text-slate-400"></app-icon>
-              <h3 class="text-sm font-semibold text-white uppercase tracking-wide">Datos del Vehículo</h3>
+              <h3 class="text-sm font-semibold text-white uppercase tracking-wide">
+                Datos del Vehículo
+              </h3>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -419,7 +487,9 @@
             <div class="flex items-center justify-between mb-3">
               <div class="flex items-center gap-2">
                 <app-icon name="alert-circle-outline" class="w-5 h-5 text-slate-400"></app-icon>
-                <h3 class="text-sm font-semibold text-white uppercase tracking-wide">Daños Detectados</h3>
+                <h3 class="text-sm font-semibold text-white uppercase tracking-wide">
+                  Daños Detectados
+                </h3>
               </div>
               <span class="text-xs text-slate-500 bg-slate-800 px-2 py-1 rounded-full">
                 {{ confirmedDamagesCount() }} confirmado(s)
@@ -428,11 +498,15 @@
 
             @if (damages().length === 0) {
               <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-6 text-center">
-                <div class="w-12 h-12 mx-auto mb-3 bg-emerald-500/10 rounded-full flex items-center justify-center">
+                <div
+                  class="w-12 h-12 mx-auto mb-3 bg-emerald-500/10 rounded-full flex items-center justify-center"
+                >
                   <app-icon name="checkmark-circle" class="w-6 h-6 text-emerald-400"></app-icon>
                 </div>
                 <p class="text-emerald-400 font-medium">Sin daños detectados</p>
-                <p class="text-xs text-emerald-400/60 mt-1">El vehículo se encuentra en buen estado aparente</p>
+                <p class="text-xs text-emerald-400/60 mt-1">
+                  El vehículo se encuentra en buen estado aparente
+                </p>
               </div>
             } @else {
               <div class="space-y-3">
@@ -450,7 +524,9 @@
                       </div>
                       <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-1">
-                          <span class="font-semibold text-white">{{ DAMAGE_LABELS[damage.type] || damage.type }}</span>
+                          <span class="font-semibold text-white">{{
+                            DAMAGE_LABELS[damage.type] || damage.type
+                          }}</span>
                           <span
                             class="text-xs px-2 py-0.5 rounded-full"
                             [class]="getSeverityClass(damage.severity)"
@@ -468,9 +544,11 @@
                             <button
                               (click)="confirmDamage(i)"
                               class="text-xs px-3 py-1.5 rounded-lg font-medium transition-all"
-                              [class]="damage.confirmed
-                                ? 'bg-emerald-500 text-white'
-                                : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20'"
+                              [class]="
+                                damage.confirmed
+                                  ? 'bg-emerald-500 text-white'
+                                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20'
+                              "
                             >
                               {{ damage.confirmed ? '✓ Confirmado' : 'Confirmar' }}
                             </button>
@@ -503,8 +581,13 @@
               <details class="group">
                 <summary class="flex items-center justify-between cursor-pointer list-none">
                   <div class="flex items-center gap-2">
-                    <app-icon name="document-attach-outline" class="w-5 h-5 text-slate-400"></app-icon>
-                    <h3 class="text-sm font-semibold text-white uppercase tracking-wide">Registro Forense</h3>
+                    <app-icon
+                      name="document-attach-outline"
+                      class="w-5 h-5 text-slate-400"
+                    ></app-icon>
+                    <h3 class="text-sm font-semibold text-white uppercase tracking-wide">
+                      Registro Forense
+                    </h3>
                   </div>
                   <app-icon
                     name="chevron-down"
@@ -571,7 +654,9 @@
             class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 disabled:shadow-none"
           >
             @if (saving()) {
-              <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div
+                class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+              ></div>
               <span>Guardando...</span>
             } @else {
               <app-icon name="checkmark-circle" class="w-5 h-5"></app-icon>
@@ -595,7 +680,9 @@
         <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
           <div class="relative mb-6">
             <div class="w-20 h-20 border-4 border-slate-700 rounded-full"></div>
-            <div class="absolute inset-0 w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+            <div
+              class="absolute inset-0 w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"
+            ></div>
           </div>
           <h2 class="text-lg font-semibold text-white mb-2">Guardando Inspección</h2>
           <p class="text-sm text-slate-400">Generando reporte y firmando digitalmente...</p>
@@ -607,7 +694,9 @@
       <!-- ========================================== -->
       @case ('error') {
         <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
-          <div class="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mb-6 border border-red-500/20">
+          <div
+            class="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mb-6 border border-red-500/20"
+          >
             <app-icon name="alert-circle" class="w-10 h-10 text-red-400"></app-icon>
           </div>
           <h2 class="text-lg font-semibold text-white mb-2">Error en la Inspección</h2>

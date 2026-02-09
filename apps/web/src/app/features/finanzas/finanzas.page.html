@@ -102,10 +102,14 @@
           <a
             [routerLink]="action.route"
             appPressScale
-            class="group rounded-2xl border bg-surface-raised p-4 transition-all hover:shadow-lg {{ action.classes.card }}"
+            class="group rounded-2xl border bg-surface-raised p-4 transition-all hover:shadow-lg {{
+              action.classes.card
+            }}"
           >
             <div
-              class="h-10 w-10 rounded-xl flex items-center justify-center {{ action.classes.iconBg }}"
+              class="h-10 w-10 rounded-xl flex items-center justify-center {{
+                action.classes.iconBg
+              }}"
             >
               <app-icon [name]="action.icon" [size]="18" [cssClass]="action.classes.icon" />
             </div>
@@ -128,12 +132,16 @@
         @for (section of sections; track section.id) {
           <a
             [routerLink]="section.route"
-            class="group rounded-2xl border border-border-default bg-surface-raised p-5 transition-all hover:shadow-lg {{ section.classes.card }}"
+            class="group rounded-2xl border border-border-default bg-surface-raised p-5 transition-all hover:shadow-lg {{
+              section.classes.card
+            }}"
           >
             <div class="flex items-start justify-between gap-3">
               <div class="flex items-center gap-3">
                 <div
-                  class="h-11 w-11 rounded-2xl flex items-center justify-center {{ section.classes.iconBg }}"
+                  class="h-11 w-11 rounded-2xl flex items-center justify-center {{
+                    section.classes.iconBg
+                  }}"
                 >
                   <app-icon [name]="section.icon" [size]="20" [cssClass]="section.classes.icon" />
                 </div>
@@ -144,7 +152,9 @@
               </div>
               @if (section.badge) {
                 <span
-                  class="text-[10px] font-semibold px-2 py-1 rounded-full {{ section.classes.badge }}"
+                  class="text-[10px] font-semibold px-2 py-1 rounded-full {{
+                    section.classes.badge
+                  }}"
                 >
                   {{ section.badge }}
                 </span>
@@ -153,7 +163,9 @@
             <p class="mt-4 text-xs text-text-secondary">{{ section.helper }}</p>
             <div class="mt-4">
               <span
-                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold {{ section.classes.cta }}"
+                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold {{
+                  section.classes.cta
+                }}"
               >
                 {{ section.cta }}
                 <app-icon name="chevron-right" [size]="14" cssClass="text-white" />

@@ -234,8 +234,13 @@ export class AuthService implements OnDestroy {
         }, SDK_INIT_TIMEOUT);
 
         // Listen for the INITIAL_SESSION event from SDK
-        const { data: { subscription } } = this.supabase.auth.onAuthStateChange((event, eventSession) => {
-          this.logger.debug('loadSession: auth event during init', 'AuthService', { event, hasSession: !!eventSession });
+        const {
+          data: { subscription },
+        } = this.supabase.auth.onAuthStateChange((event, eventSession) => {
+          this.logger.debug('loadSession: auth event during init', 'AuthService', {
+            event,
+            hasSession: !!eventSession,
+          });
 
           // INITIAL_SESSION fires when SDK finishes loading from storage
           // SIGNED_IN fires if user was previously authenticated
@@ -554,7 +559,9 @@ export class AuthService implements OnDestroy {
       }
 
       if (!result.isSuccess || !result.success?.idToken) {
-        this.logger.warn('Google Sign-In falló o fue cancelado', 'AuthService', { noSuccess: result.noSuccess });
+        this.logger.warn('Google Sign-In falló o fue cancelado', 'AuthService', {
+          noSuccess: result.noSuccess,
+        });
         throw new Error('Inicio de sesión con Google cancelado');
       }
 

@@ -339,7 +339,8 @@ export class BookingsService {
 
     let query = this.supabase
       .from('my_bookings')
-      .select(`
+      .select(
+        `
         id,
         status,
         start_at,
@@ -355,7 +356,9 @@ export class BookingsService {
         payment_status,
         created_at,
         renter_id
-      `, { count: 'exact' })
+      `,
+        { count: 'exact' },
+      )
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -391,7 +394,8 @@ export class BookingsService {
 
     let query = this.supabase
       .from('owner_bookings')
-      .select(`
+      .select(
+        `
         id,
         status,
         start_at,
@@ -412,7 +416,9 @@ export class BookingsService {
         renter_name,
         renter_avatar,
         created_at
-      `, { count: 'exact' })
+      `,
+        { count: 'exact' },
+      )
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -1161,7 +1167,7 @@ export class BookingsService {
       Math.ceil((new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24)),
     );
     const subtotal = pricePerDay * days;
-    const serviceFee = subtotal * 0.10;
+    const serviceFee = subtotal * 0.1;
     const totalPrice = subtotal + serviceFee;
 
     // Insert directo

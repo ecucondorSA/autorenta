@@ -6,7 +6,7 @@ import { MissionAlertModalComponent } from '@features/scout/components/mission-a
 import { Bounty } from '@core/models/bounty.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ScoutAlarmService {
   private modalCtrl = inject(ModalController);
@@ -32,7 +32,7 @@ export class ScoutAlarmService {
       componentProps: { mission: missionData },
       cssClass: 'mission-alert-modal', // Definiremos esto en styles.css para que sea fullscreen
       backdropDismiss: false,
-      keyboardClose: false
+      keyboardClose: false,
     });
 
     await modal.present();

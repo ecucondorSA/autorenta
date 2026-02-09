@@ -15,9 +15,9 @@ export const APP_CONSTANTS = {
   MAX_BOOKING_DAYS: 90,
   CANCELLATION_HOURS: 24,
   // Modelo Comodato 15-70-15
-  FGO_CONTRIBUTION_PERCENT: 0.15,      // 15% al Fondo de Garantía
-  PLATFORM_FEE_PERCENT: 0.15,          // 15% a la plataforma
-  REWARD_POOL_PERCENT: 0.70,           // 70% al Reward Pool (owners)
+  FGO_CONTRIBUTION_PERCENT: 0.15, // 15% al Fondo de Garantía
+  PLATFORM_FEE_PERCENT: 0.15, // 15% a la plataforma
+  REWARD_POOL_PERCENT: 0.7, // 70% al Reward Pool (owners)
   FX_PAIR: 'USDTARS',
   FX_MARGIN_PERCENT: 0.2,
   FX_EXPIRY_DAYS: 7,

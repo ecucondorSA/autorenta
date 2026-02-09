@@ -320,7 +320,7 @@ export class AppComponent implements OnInit {
 
   /** SOS button only visible during active trips (in_progress bookings) */
   readonly hasActiveTrip = computed(() =>
-    this.bookingsStore.activeBookings().some((b) => b.status === 'in_progress')
+    this.bookingsStore.activeBookings().some((b) => b.status === 'in_progress'),
   );
 
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
@@ -522,7 +522,7 @@ export class AppComponent implements OnInit {
 
     // Detectar si estamos en el homepage para header transparente
     const currentUrl = this.router.url.split('?')[0]; // Ignorar query params
-    
+
     // Force hide footer on cars/publish
     if (currentUrl.startsWith('/cars/publish')) {
       this.hideFooter.set(true);
@@ -700,28 +700,29 @@ export class AppComponent implements OnInit {
     // Subscribe to push notification clicks
     this.pushNotificationService.notificationClicks$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(
-        (action) => {
-          const notificationAction = action as { action: string; notification?: { data?: Record<string, unknown> } };
-          this.logger.debug('[Push] Notification action performed', notificationAction);
+      .subscribe((action) => {
+        const notificationAction = action as {
+          action: string;
+          notification?: { data?: Record<string, unknown> };
+        };
+        this.logger.debug('[Push] Notification action performed', notificationAction);
 
-          // Extract navigation data from notification
-          const data = notificationAction.notification?.data as
-            | { cta_link?: string; route?: string; bookingId?: string }
-            | undefined;
-          const route = data?.cta_link || data?.route;
+        // Extract navigation data from notification
+        const data = notificationAction.notification?.data as
+          | { cta_link?: string; route?: string; bookingId?: string }
+          | undefined;
+        const route = data?.cta_link || data?.route;
 
-          if (route) {
-            this.logger.debug('[Push] Navigating to', { route });
-            // Use setTimeout to ensure app is fully initialized after cold start
-            setTimeout(() => {
-              this.router.navigate([route], {
-                queryParams: data?.bookingId ? { id: data.bookingId } : undefined,
-              });
-            }, 100);
-          }
-        },
-      );
+        if (route) {
+          this.logger.debug('[Push] Navigating to', { route });
+          // Use setTimeout to ensure app is fully initialized after cold start
+          setTimeout(() => {
+            this.router.navigate([route], {
+              queryParams: data?.bookingId ? { id: data.bookingId } : undefined,
+            });
+          }, 100);
+        }
+      });
 
     // Subscribe to push messages received while app is open
     this.pushNotificationService.messages$

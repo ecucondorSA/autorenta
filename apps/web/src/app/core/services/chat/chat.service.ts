@@ -18,7 +18,7 @@ export interface ChatMessage {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ChatService {
   private supabase = injectSupabase();
@@ -37,7 +37,9 @@ export class ChatService {
     // P0 EGRESS OPTIMIZATION: Select only required fields instead of *
     let query = this.supabase
       .from('messages')
-      .select('id, booking_id, car_id, sender_id, recipient_id, body, is_flagged, is_system_message, read_at, created_at')
+      .select(
+        'id, booking_id, car_id, sender_id, recipient_id, body, is_flagged, is_system_message, read_at, created_at',
+      )
       .order('created_at', { ascending: true }); // Oldest first for chat
 
     if (context.bookingId) {
@@ -52,9 +54,9 @@ export class ChatService {
     if (error) throw error;
 
     const user = (await this.supabase.auth.getUser()).data.user;
-    const enriched = (data || []).map(m => ({
+    const enriched = (data || []).map((m) => ({
       ...m,
-      is_mine: m.sender_id === user?.id
+      is_mine: m.sender_id === user?.id,
     }));
 
     this.messagesSignal.set(enriched);
@@ -78,9 +80,9 @@ export class ChatService {
     if (this.detectLeakage(body)) {
       const confirm = window.confirm(
         '⚠️ Aviso de Seguridad:\n\n' +
-        'Detectamos que intentas compartir información de contacto (teléfono/email).\n' +
-        'Por tu seguridad, te recomendamos mantener la comunicación dentro de AutoRenta hasta confirmar la reserva.\n\n' +
-        '¿Deseas enviar el mensaje de todos modos?'
+          'Detectamos que intentas compartir información de contacto (teléfono/email).\n' +
+          'Por tu seguridad, te recomendamos mantener la comunicación dentro de AutoRenta hasta confirmar la reserva.\n\n' +
+          '¿Deseas enviar el mensaje de todos modos?',
       );
       if (!confirm) return;
     }
@@ -101,10 +103,10 @@ export class ChatService {
       is_system_message: false,
       read_at: null,
       created_at: new Date().toISOString(),
-      is_mine: true
+      is_mine: true,
     };
 
-    this.messagesSignal.update(msgs => [...msgs, tempMsg]);
+    this.messagesSignal.update((msgs) => [...msgs, tempMsg]);
 
     // 3. Send to Backend
     const { error } = await this.supabase.from('messages').insert({
@@ -112,12 +114,12 @@ export class ChatService {
       car_id: params.carId,
       recipient_id: params.recipientId,
       sender_id: user.id,
-      body: params.body
+      body: params.body,
     });
 
     if (error) {
       // Revert optimistic update on failure
-      this.messagesSignal.update(msgs => msgs.filter(m => m.id !== tempId));
+      this.messagesSignal.update((msgs) => msgs.filter((m) => m.id !== tempId));
       this.toast.error('Error', 'Error al enviar mensaje');
       throw error;
     }
@@ -135,7 +137,8 @@ export class ChatService {
       ? `booking_id=eq.${context.bookingId}`
       : `car_id=eq.${context.carId}`;
 
-    this.activeChannel = this.supabase.channel('chat-room')
+    this.activeChannel = this.supabase
+      .channel('chat-room')
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'messages', filter },
@@ -149,10 +152,10 @@ export class ChatService {
           // Actually, better to reload or merge.
 
           if (newMsg.sender_id !== user?.id) {
-            this.messagesSignal.update(msgs => [...msgs, { ...newMsg, is_mine: false }]);
+            this.messagesSignal.update((msgs) => [...msgs, { ...newMsg, is_mine: false }]);
             // Play sound?
           }
-        }
+        },
       )
       .subscribe();
   }
@@ -169,7 +172,7 @@ export class ChatService {
     const keywords = ['whatsapp', 'telegram', 'celular', 'llamame'];
 
     if (phoneRegex.test(text) || emailRegex.test(text)) return true;
-    if (keywords.some(k => text.toLowerCase().includes(k))) return true;
+    if (keywords.some((k) => text.toLowerCase().includes(k))) return true;
 
     return false;
   }

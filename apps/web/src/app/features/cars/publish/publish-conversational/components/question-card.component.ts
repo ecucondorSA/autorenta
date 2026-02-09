@@ -1,9 +1,4 @@
-import {
-  Component,
-  input,
-  output,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Question card wrapper with animations
@@ -103,9 +98,13 @@ import {
 
       <!-- Keyboard hint -->
       <p class="text-center text-xs text-text-muted mt-4 hidden sm:block">
-        Presioná <kbd class="px-1.5 py-0.5 bg-surface-secondary rounded text-text-secondary">Enter</kbd> para continuar
+        Presioná
+        <kbd class="px-1.5 py-0.5 bg-surface-secondary rounded text-text-secondary">Enter</kbd> para
+        continuar
         @if (canGoBack()) {
-          o <kbd class="px-1.5 py-0.5 bg-surface-secondary rounded text-text-secondary">Esc</kbd> para volver
+          o
+          <kbd class="px-1.5 py-0.5 bg-surface-secondary rounded text-text-secondary">Esc</kbd> para
+          volver
         }
       </p>
     </div>

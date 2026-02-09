@@ -10,7 +10,14 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -387,8 +394,9 @@ export class ProfilePersonalPage implements OnInit {
     });
 
     // Re-validate gov_id_number when type changes
-    this.personalForm.get('gov_id_type')?.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    this.personalForm
+      .get('gov_id_type')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.personalForm.get('gov_id_number')?.updateValueAndValidity();
       });

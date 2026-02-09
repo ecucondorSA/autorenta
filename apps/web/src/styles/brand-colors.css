@@ -12,15 +12,15 @@
 
 :root {
   /* ===== Brand Primary (Neon Green) ===== */
-  --neon-primary: #00D95F;
-  --neon-primary-hover: #00BF54;
-  --neon-primary-active: #00A648;
+  --neon-primary: #00d95f;
+  --neon-primary-hover: #00bf54;
+  --neon-primary-active: #00a648;
   --neon-primary-glow: rgba(0, 217, 95, 0.4);
   --neon-primary-glow-intense: rgba(0, 217, 95, 0.6);
   --neon-primary-glow-subtle: rgba(0, 217, 95, 0.2);
 
   /* ===== Brand Secondary ===== */
-  --brand-secondary: #1A1A1A;
+  --brand-secondary: #1a1a1a;
 
   /* ===== CTA (Call to Action) ===== */
   --cta-default: var(--neon-primary);
@@ -30,41 +30,41 @@
   --cta-glow: var(--neon-primary-glow);
 
   /* ===== Surfaces ===== */
-  --surface-base: #FFFFFF;
-  --surface-secondary: #F7F7F7;
-  --surface-elevated: #FFFFFF;
-  --surface-raised: #FFFFFF;
+  --surface-base: #ffffff;
+  --surface-secondary: #f7f7f7;
+  --surface-elevated: #ffffff;
+  --surface-raised: #ffffff;
   --surface-overlay-dark: rgba(20, 23, 24, 0.95);
   --surface-overlay-light: #e3e3e3;
 
   /* ===== Text ===== */
-  --text-primary: #1A1A1A;
-  --text-secondary: #6B7280;
-  --text-muted: #9CA3AF;
-  --text-inverse: #FFFFFF;
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --text-inverse: #ffffff;
   --text-on-neon: #000000;
 
   /* ===== Borders ===== */
-  --border-default: #E5E7EB;
-  --border-muted: #F3F4F6;
+  --border-default: #e5e7eb;
+  --border-muted: #f3f4f6;
   --border-focus: var(--neon-primary);
 
   /* ===== Semantic Colors ===== */
-  --success-default: #10B981;
-  --success-light: #D1FAE5;
-  --success-dark: #065F46;
+  --success-default: #10b981;
+  --success-light: #d1fae5;
+  --success-dark: #065f46;
 
-  --warning-default: #F59E0B;
-  --warning-light: #FEF3C7;
-  --warning-dark: #92400E;
+  --warning-default: #f59e0b;
+  --warning-light: #fef3c7;
+  --warning-dark: #92400e;
 
-  --error-default: #EF4444;
-  --error-light: #FEE2E2;
-  --error-dark: #991B1B;
+  --error-default: #ef4444;
+  --error-light: #fee2e2;
+  --error-dark: #991b1b;
 
-  --info-default: #3B82F6;
-  --info-light: #DBEAFE;
-  --info-dark: #1E40AF;
+  --info-default: #3b82f6;
+  --info-light: #dbeafe;
+  --info-dark: #1e40af;
 
   /* ===== Shadows ===== */
   --shadow-neon-sm: 0 2px 8px var(--neon-primary-glow-subtle);
@@ -73,15 +73,15 @@
   --shadow-neon-glow: 0 0 15px var(--neon-primary-glow-intense);
 
   /* ===== Gray Scale ===== */
-  --gray-50: #F7F7F7;
-  --gray-100: #F3F4F6;
-  --gray-200: #E5E7EB;
-  --gray-300: #D1D5DB;
-  --gray-400: #9CA3AF;
-  --gray-500: #6B7280;
-  --gray-600: #4B5563;
+  --gray-50: #f7f7f7;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
   --gray-700: #374151;
-  --gray-800: #1F2937;
+  --gray-800: #1f2937;
   --gray-900: #111827;
 
   /* ===== Animation Tokens ===== */
@@ -105,18 +105,18 @@
 /* ===== Dark Mode ===== */
 @media (prefers-color-scheme: dark) {
   :root {
-    --surface-base: #1A1A1A;
-    --surface-secondary: #2D2D2D;
-    --surface-elevated: #2D2D2D;
-    --surface-raised: #3D3D3D;
+    --surface-base: #1a1a1a;
+    --surface-secondary: #2d2d2d;
+    --surface-elevated: #2d2d2d;
+    --surface-raised: #3d3d3d;
 
-    --text-primary: #FAFAFA;
-    --text-secondary: #A1A1AA;
-    --text-muted: #71717A;
-    --text-inverse: #1A1A1A;
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --text-inverse: #1a1a1a;
 
-    --border-default: #3D3D3D;
-    --border-muted: #2D2D2D;
+    --border-default: #3d3d3d;
+    --border-muted: #2d2d2d;
 
     /* Neon glows more prominent in dark mode */
     --neon-primary-glow: rgba(0, 217, 95, 0.5);
@@ -126,18 +126,18 @@
 
 /* Class-based dark mode override */
 .dark {
-  --surface-base: #1A1A1A;
-  --surface-secondary: #2D2D2D;
-  --surface-elevated: #2D2D2D;
-  --surface-raised: #3D3D3D;
+  --surface-base: #1a1a1a;
+  --surface-secondary: #2d2d2d;
+  --surface-elevated: #2d2d2d;
+  --surface-raised: #3d3d3d;
 
-  --text-primary: #FAFAFA;
-  --text-secondary: #A1A1AA;
-  --text-muted: #71717A;
-  --text-inverse: #1A1A1A;
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --text-inverse: #1a1a1a;
 
-  --border-default: #3D3D3D;
-  --border-muted: #2D2D2D;
+  --border-default: #3d3d3d;
+  --border-muted: #2d2d2d;
 
   --neon-primary-glow: rgba(0, 217, 95, 0.5);
   --neon-primary-glow-intense: rgba(0, 217, 95, 0.7);

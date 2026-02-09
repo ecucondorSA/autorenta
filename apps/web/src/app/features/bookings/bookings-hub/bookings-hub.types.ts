@@ -13,12 +13,12 @@ export type BookingFilter =
 
 // Operational phase grouping for hub command center
 export type OperationalPhase =
-  | 'urgent'     // needs action NOW (payment expiring, approval needed)
-  | 'today'      // checkin/checkout happening today
-  | 'active'     // trips in progress
-  | 'awaiting'   // waiting on other party
-  | 'upcoming'   // confirmed, start_at > 24h away
-  | 'history';   // terminal states
+  | 'urgent' // needs action NOW (payment expiring, approval needed)
+  | 'today' // checkin/checkout happening today
+  | 'active' // trips in progress
+  | 'awaiting' // waiting on other party
+  | 'upcoming' // confirmed, start_at > 24h away
+  | 'history'; // terminal states
 
 export interface OperationalGroup {
   phase: OperationalPhase;

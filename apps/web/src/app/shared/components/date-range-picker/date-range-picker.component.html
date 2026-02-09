@@ -149,69 +149,167 @@
 
     <!-- Availability feedback (solo modo normal) -->
     @if (from() && to()) {
-    <div class="mt-1">
-      <!-- Loading state -->
-      @if (isCheckingAvailability()) {
-        <div class="flex items-center gap-2 text-xs text-text-secondary">
-          <svg
-            class="h-4 w-4 animate-spin"
-            fill="none"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-            role="presentation"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-          <span>Verificando disponibilidad...</span>
-        </div>
-      }
-      <!-- Available -->
-      @if (!isCheckingAvailability() && isAvailable() === true) {
-        <div class="flex items-center gap-2 text-xs font-medium text-success-strong">
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 13l4 4L19 7"
-            ></path>
-          </svg>
-          <span>¡Disponible para estas fechas!</span>
-        </div>
-      }
-      <!-- Not available -->
-      @if (!isCheckingAvailability() && isAvailable() === false) {
-        <div class="flex items-center gap-2 text-xs font-medium text-error-text">
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            ></path>
-          </svg>
-          <span>No disponible para estas fechas. Probá otras fechas.</span>
-        </div>
-      }
-      <!-- Alternative Date Suggestions -->
-      @if (showingSuggestions() && alternativeSuggestions().length > 0) {
-        <div class="mt-3 rounded-xl border border-cta-default/40 bg-cta-default/10 p-4">
-          <div class="flex items-center gap-2 mb-3">
+      <div class="mt-1">
+        <!-- Loading state -->
+        @if (isCheckingAvailability()) {
+          <div class="flex items-center gap-2 text-xs text-text-secondary">
             <svg
-              class="h-5 w-5 text-cta-default"
+              class="h-4 w-4 animate-spin"
+              fill="none"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+              role="presentation"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            <span>Verificando disponibilidad...</span>
+          </div>
+        }
+        <!-- Available -->
+        @if (!isCheckingAvailability() && isAvailable() === true) {
+          <div class="flex items-center gap-2 text-xs font-medium text-success-strong">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              ></path>
+            </svg>
+            <span>¡Disponible para estas fechas!</span>
+          </div>
+        }
+        <!-- Not available -->
+        @if (!isCheckingAvailability() && isAvailable() === false) {
+          <div class="flex items-center gap-2 text-xs font-medium text-error-text">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+            <span>No disponible para estas fechas. Probá otras fechas.</span>
+          </div>
+        }
+        <!-- Alternative Date Suggestions -->
+        @if (showingSuggestions() && alternativeSuggestions().length > 0) {
+          <div class="mt-3 rounded-xl border border-cta-default/40 bg-cta-default/10 p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <svg
+                class="h-5 w-5 text-cta-default"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <h4 class="text-sm font-bold text-cta-default font-satoshi">
+                Fechas similares disponibles ({{ selectedDays() }} días):
+              </h4>
+            </div>
+            <div class="space-y-2">
+              @for (
+                suggestion of alternativeSuggestions().slice(0, 3);
+                track suggestion;
+                let i = $index
+              ) {
+                <button
+                  type="button"
+                  (click)="applySuggestion(suggestion)"
+                  class="w-full flex items-center justify-between p-3 bg-surface-raised rounded-lg border border-cta-default/40 hover:border-cta-default hover:shadow-md transition-all group"
+                >
+                  <div class="flex flex-col items-start gap-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-semibold text-text-primary">
+                        {{ suggestion.from | date: 'dd MMM' }} -
+                        {{ suggestion.to | date: 'dd MMM' }}
+                      </span>
+                      <span class="text-xs text-text-secondary">
+                        ({{ suggestion.days }} días)
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      @if (suggestion.totalPrice) {
+                        <span class="text-sm font-bold text-cta-default">
+                          {{ suggestion.totalPrice | currency: 'USD' : 'symbol' : '1.0-0' }}
+                        </span>
+                      }
+                      @if (suggestion.discount > 0) {
+                        <span
+                          class="text-xs px-2 py-0.5 bg-success-light/20 text-success-700 rounded-full font-medium"
+                        >
+                          -{{ suggestion.discount }}% OFF
+                        </span>
+                      }
+                      @if (suggestion.savings) {
+                        <span class="text-xs text-success-700">
+                          (Ahorrás {{ suggestion.savings | currency: 'USD' : 'symbol' : '1.0-0' }})
+                        </span>
+                      }
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <svg
+                      class="h-5 w-5 text-success-strong"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    <svg
+                      class="h-5 w-5 text-cta-default opacity-0 group-hover:opacity-100 transition-opacity"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              }
+            </div>
+            <p class="mt-3 text-xs text-center text-cta-default">
+              💡 Click en una fecha para seleccionarla automáticamente
+            </p>
+          </div>
+        }
+        @if (availabilityHint()) {
+          <div
+            class="mt-2 flex items-start gap-2 rounded-lg border border-cta-default/30 bg-cta-default/10 px-3 py-2 text-xs text-cta-default"
+          >
+            <svg
+              class="h-4 w-4 flex-shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -220,104 +318,14 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
+                d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+              ></path>
             </svg>
-            <h4 class="text-sm font-bold text-cta-default font-satoshi">
-              Fechas similares disponibles ({{ selectedDays() }} días):
-            </h4>
+            <span>{{ availabilityHint() }}</span>
           </div>
-          <div class="space-y-2">
-            @for (
-              suggestion of alternativeSuggestions().slice(0, 3);
-              track suggestion;
-              let i = $index
-            ) {
-              <button
-                type="button"
-                (click)="applySuggestion(suggestion)"
-                class="w-full flex items-center justify-between p-3 bg-surface-raised rounded-lg border border-cta-default/40 hover:border-cta-default hover:shadow-md transition-all group"
-              >
-                <div class="flex flex-col items-start gap-1">
-                  <div class="flex items-center gap-2">
-                    <span class="text-sm font-semibold text-text-primary">
-                      {{ suggestion.from | date: 'dd MMM' }} - {{ suggestion.to | date: 'dd MMM' }}
-                    </span>
-                    <span class="text-xs text-text-secondary"> ({{ suggestion.days }} días) </span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    @if (suggestion.totalPrice) {
-                      <span class="text-sm font-bold text-cta-default">
-                        {{ suggestion.totalPrice | currency:'USD':'symbol':'1.0-0' }}
-                      </span>
-                    }
-                    @if (suggestion.discount > 0) {
-                      <span
-                        class="text-xs px-2 py-0.5 bg-success-light/20 text-success-700 rounded-full font-medium"
-                      >
-                        -{{ suggestion.discount }}% OFF
-                      </span>
-                    }
-                    @if (suggestion.savings) {
-                      <span class="text-xs text-success-700">
-                        (Ahorrás {{ suggestion.savings | currency:'USD':'symbol':'1.0-0' }})
-                      </span>
-                    }
-                  </div>
-                </div>
-                <div class="flex items-center gap-2">
-                  <svg
-                    class="h-5 w-5 text-success-strong"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <svg
-                    class="h-5 w-5 text-cta-default opacity-0 group-hover:opacity-100 transition-opacity"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </div>
-              </button>
-            }
-          </div>
-          <p class="mt-3 text-xs text-center text-cta-default">
-            💡 Click en una fecha para seleccionarla automáticamente
-          </p>
-        </div>
-      }
-      @if (availabilityHint()) {
-        <div
-          class="mt-2 flex items-start gap-2 rounded-lg border border-cta-default/30 bg-cta-default/10 px-3 py-2 text-xs text-cta-default"
-        >
-          <svg class="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
-            ></path>
-          </svg>
-          <span>{{ availabilityHint() }}</span>
-        </div>
-      }
-    </div>
-  }
+        }
+      </div>
+    }
   </div>
 }
 

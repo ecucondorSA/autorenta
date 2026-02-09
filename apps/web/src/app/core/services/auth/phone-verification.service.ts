@@ -422,8 +422,21 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
     if (countryCode === '+54' && cleaned.length === 10) {
       // Check if it starts with a valid area code (11 for Buenos Aires, etc.)
       // If it's 10 digits without the 9, add it for mobile compatibility
-      const mobileAreaCodes = ['11', '15', '221', '223', '261', '264', '341', '342', '351', '379', '381', '388'];
-      const startsWithAreaCode = mobileAreaCodes.some(code => cleaned.startsWith(code));
+      const mobileAreaCodes = [
+        '11',
+        '15',
+        '221',
+        '223',
+        '261',
+        '264',
+        '341',
+        '342',
+        '351',
+        '379',
+        '381',
+        '388',
+      ];
+      const startsWithAreaCode = mobileAreaCodes.some((code) => cleaned.startsWith(code));
       if (startsWithAreaCode && !cleaned.startsWith('9')) {
         cleaned = '9' + cleaned;
         this.logger.info('Auto-added 9 prefix for Argentina mobile', { originalLength: 10 });
@@ -598,25 +611,25 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
 
       if (refreshError || !refreshData.session) {
         this.logger.error('Session refresh failed', { error: refreshError });
-        return { success: false, error: 'Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.' };
+        return {
+          success: false,
+          error: 'Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.',
+        };
       }
 
       const session = refreshData.session;
 
-      const response = await fetch(
-        `${environment.supabaseUrl}/functions/v1/send-otp-via-n8n`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            phone,
-            channel: 'whatsapp',
-          }),
+      const response = await fetch(`${environment.supabaseUrl}/functions/v1/send-otp-via-n8n`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
         },
-      );
+        body: JSON.stringify({
+          phone,
+          channel: 'whatsapp',
+        }),
+      });
 
       const result = await response.json();
 
@@ -625,14 +638,18 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
 
         // Handle specific error cases
         if (response.status === 401) {
-          return { success: false, error: 'Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.' };
+          return {
+            success: false,
+            error: 'Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.',
+          };
         }
 
         // Check if service is not configured (N8N_OTP_WEBHOOK_URL missing)
         if (result.error?.includes('no configurado') || result.error?.includes('not configured')) {
           return {
             success: false,
-            error: 'El servicio de verificación por WhatsApp no está disponible. Por favor contacta al soporte.',
+            error:
+              'El servicio de verificación por WhatsApp no está disponible. Por favor contacta al soporte.',
           };
         }
 
@@ -653,10 +670,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
   /**
    * Verify OTP via RPC (for WhatsApp/n8n channel)
    */
-  private async verifyViaWhatsApp(
-    phone: string,
-    code: string,
-  ): Promise<OTPVerificationResult> {
+  private async verifyViaWhatsApp(phone: string, code: string): Promise<OTPVerificationResult> {
     try {
       const { data, error } = await this.supabase.rpc('verify_phone_otp_code', {
         p_phone: phone,
@@ -672,7 +686,12 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
         };
       }
 
-      const result = data as { success: boolean; verified: boolean; error?: string; message?: string };
+      const result = data as {
+        success: boolean;
+        verified: boolean;
+        error?: string;
+        message?: string;
+      };
 
       if (!result.success) {
         return {

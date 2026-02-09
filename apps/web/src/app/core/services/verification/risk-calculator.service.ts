@@ -98,11 +98,11 @@ export class RiskCalculatorService {
     let guaranteeMultiplier = 1.0;
     let driverClass: number | undefined;
     let guaranteeDiscountPct: number | undefined;
-    
+
     // AutoRenta Philosophy: Everyone starts clean.
     // If we don't know them (New User / No Profile), we don't punish them with multipliers.
     // We trust in the collateral (Wallet Lock).
-    
+
     if (userId) {
       try {
         const { data, error } = await this.supabase.rpc('get_driver_profile', {
@@ -114,7 +114,7 @@ export class RiskCalculatorService {
           guaranteeMultiplier = profile.guarantee_multiplier || 1.0;
           driverClass = profile.class;
           guaranteeDiscountPct = Math.round((1.0 - guaranteeMultiplier) * 100);
-        } 
+        }
       } catch (err) {
         console.warn('[RiskCalculator] Error fetching profile, using standard 1.0x:', err);
       }
@@ -140,13 +140,13 @@ export class RiskCalculatorService {
       // Opción B: No Bancarizado / Crypto / Cash (El camino Inclusivo)
       // "Garantía Líquida": Deben tener en su Wallet el equivalente a la Franquicia Estándar.
       // Esto protege al dueño al 100% (cash is king) sin discriminar al usuario por su historial.
-      
+
       baseGuaranteeAmountUsd = franchiseInfo.standardUsd; // Ej: 500 USD para un auto Standard
-      
+
       // Aplicamos multiplicador si el usuario tiene mal comportamiento PROBADO en la plataforma.
       // Si es nuevo (desconocido), el multiplicador es 1.0 (Tabula Rasa).
       guaranteeAmountUsd = Math.round(baseGuaranteeAmountUsd * guaranteeMultiplier * 100) / 100;
-      
+
       // Convertimos a ARS para referencia visual, pero el lock es en USD/Tokens
       guaranteeAmountArs = Math.round(guaranteeAmountUsd * fxRate);
     }

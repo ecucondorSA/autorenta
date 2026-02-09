@@ -178,7 +178,10 @@ export class CarCardComponent implements OnDestroy {
       this.priceUsd.set(this.carPricing.getStaticDailyPriceUsd(car));
     } catch (error: unknown) {
       if (requestId !== this.priceRequestId) return;
-      this.logger.debug('Failed to refresh card price', 'CarCardComponent', { carId: car.id, error });
+      this.logger.debug('Failed to refresh card price', 'CarCardComponent', {
+        carId: car.id,
+        error,
+      });
       this.priceUsd.set(this.carPricing.getStaticDailyPriceUsd(car));
     } finally {
       if (requestId === this.priceRequestId) this.priceLoading.set(false);

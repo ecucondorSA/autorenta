@@ -1,10 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  inject,
-  input,
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, inject, input } from '@angular/core';
 
 /**
  * Directiva que aplica un efecto de elevación sutil en hover.

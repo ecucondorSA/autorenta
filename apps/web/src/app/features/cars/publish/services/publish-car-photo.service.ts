@@ -174,7 +174,10 @@ export class PublishCarPhotoService implements OnDestroy {
     options: GenerateAIPhotosOptions = {},
   ): Promise<void> {
     if (!brand || !model || !year) {
-      this.notifications.warning('Fotos IA', 'Debes seleccionar marca, modelo y año para generar fotos de referencia.');
+      this.notifications.warning(
+        'Fotos IA',
+        'Debes seleccionar marca, modelo y año para generar fotos de referencia.',
+      );
       return;
     }
 
@@ -194,7 +197,10 @@ export class PublishCarPhotoService implements OnDestroy {
       // Generación de imágenes se hace vía Worker (server-side) para no exponer keys en el navegador.
       const workerEnabled = Boolean(environment.cloudflareWorkerUrl);
       if (!workerEnabled) {
-        this.notifications.error('Configuración', 'Servicio de generación de imágenes no disponible.');
+        this.notifications.error(
+          'Configuración',
+          'Servicio de generación de imágenes no disponible.',
+        );
         return;
       }
 
@@ -209,7 +215,10 @@ export class PublishCarPhotoService implements OnDestroy {
 
       // Generar hasta 3 imágenes: frente, trasera, interior (estilo marketplace)
       // Map angles to positions for proper slot placement
-      const angleConfig: Array<{ angle: '3/4-front' | 'side' | 'interior'; position: VehiclePosition }> = [
+      const angleConfig: Array<{
+        angle: '3/4-front' | 'side' | 'interior';
+        position: VehiclePosition;
+      }> = [
         { angle: '3/4-front', position: 'front' },
         { angle: 'side', position: 'rear' },
         { angle: 'interior', position: 'interior' },
@@ -254,7 +263,11 @@ export class PublishCarPhotoService implements OnDestroy {
           );
           const workerPreview = await this.createPreview(workerFile);
           // Assign position so photo appears in correct slot
-          generatedPhotos.push({ file: workerFile, preview: workerPreview, position: config.position });
+          generatedPhotos.push({
+            file: workerFile,
+            preview: workerPreview,
+            position: config.position,
+          });
           remainingSlots--;
         } catch (error) {
           console.error(`Error generando foto ${index + 1} con worker:`, error);
@@ -265,7 +278,10 @@ export class PublishCarPhotoService implements OnDestroy {
       if (generatedPhotos.length > 0) {
         this.uploadedPhotos.set([...currentPhotos, ...generatedPhotos]);
         const errorMsg = errors.length ? ` (algunas fallaron)` : '';
-        this.notifications.success('Fotos IA', `Se generaron ${generatedPhotos.length} foto(s)${errorMsg}.`);
+        this.notifications.success(
+          'Fotos IA',
+          `Se generaron ${generatedPhotos.length} foto(s)${errorMsg}.`,
+        );
       } else {
         const msg = errors.length
           ? `No se generaron fotos. ${errors[0]}`
@@ -438,7 +454,10 @@ export class PublishCarPhotoService implements OnDestroy {
     const remainingSlots = this.MAX_PHOTOS - currentPhotos.length;
 
     if (files.length > remainingSlots) {
-      this.notifications.warning('Fotos', `Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`);
+      this.notifications.warning(
+        'Fotos',
+        `Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`,
+      );
       return;
     }
 
@@ -473,7 +492,10 @@ export class PublishCarPhotoService implements OnDestroy {
     const remainingSlots = this.MAX_PHOTOS - currentPhotos.length;
 
     if (photoUrls.length > remainingSlots) {
-      this.notifications.warning('Fotos', `Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`);
+      this.notifications.warning(
+        'Fotos',
+        `Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`,
+      );
       return;
     }
 
@@ -512,7 +534,10 @@ export class PublishCarPhotoService implements OnDestroy {
     const remainingSlots = this.MAX_PHOTOS - currentPhotos.length;
 
     if (files.length > remainingSlots) {
-      this.notifications.warning('Fotos', `Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`);
+      this.notifications.warning(
+        'Fotos',
+        `Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`,
+      );
       return;
     }
 
@@ -547,7 +572,10 @@ export class PublishCarPhotoService implements OnDestroy {
     const remainingSlots = this.MAX_PHOTOS - currentPhotos.length;
 
     if (photoUrls.length > remainingSlots) {
-      this.notifications.warning('Fotos', `Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`);
+      this.notifications.warning(
+        'Fotos',
+        `Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.`,
+      );
       return;
     }
 

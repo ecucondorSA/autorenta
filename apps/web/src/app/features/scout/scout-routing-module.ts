@@ -7,20 +7,20 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'map',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'map',
-    component: ScoutMapPage
+    component: ScoutMapPage,
   },
   {
     path: 'report/:bookingId',
-    component: ScoutReportPage
-  }
+    component: ScoutReportPage,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ScoutRoutingModule { }
+export class ScoutRoutingModule {}

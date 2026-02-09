@@ -129,10 +129,7 @@ export class EvidenceUploaderComponent {
           });
         }
 
-        this.uploaded.update((current) => [
-          ...current,
-          { name: file.name, url: result.url! },
-        ]);
+        this.uploaded.update((current) => [...current, { name: file.name, url: result.url! }]);
         this.emitUrls();
       }
     } catch (err) {

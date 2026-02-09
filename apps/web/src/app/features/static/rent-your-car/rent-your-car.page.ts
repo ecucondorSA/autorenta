@@ -9,7 +9,10 @@ import { RouterLink } from '@angular/router';
   imports: [CommonModule, RouterLink],
   template: `
     <div class="static-page">
-      <section class="static-hero" style="background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);">
+      <section
+        class="static-hero"
+        style="background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);"
+      >
         <h1>🚗 Gana Dinero con tu Auto</h1>
         <p>Publica tu vehículo y genera ingresos cuando no lo usas</p>
       </section>
@@ -37,8 +40,8 @@ import { RouterLink } from '@angular/router';
 
         <h2>¿Cuánto puedo ganar?</h2>
         <p>
-          Los propietarios en Buenos Aires ganan en promedio entre $50,000 y $150,000 USD
-          por mes, dependiendo del tipo de vehículo y la frecuencia de alquileres.
+          Los propietarios en Buenos Aires ganan en promedio entre $50,000 y $150,000 USD por mes,
+          dependiendo del tipo de vehículo y la frecuencia de alquileres.
         </p>
 
         <h2>Cómo empezar</h2>

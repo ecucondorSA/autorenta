@@ -20,19 +20,28 @@ import { RouterLink } from '@angular/router';
         <div class="card-grid">
           <div class="info-card">
             <h3>¿Cómo reservo un auto?</h3>
-            <p>Busca el auto que te gusta, selecciona las fechas y confirma tu reserva con el pago.</p>
+            <p>
+              Busca el auto que te gusta, selecciona las fechas y confirma tu reserva con el pago.
+            </p>
           </div>
           <div class="info-card">
             <h3>¿Qué documentos necesito?</h3>
-            <p>Licencia de conducir vigente, DNI o pasaporte, y una tarjeta de crédito a tu nombre.</p>
+            <p>
+              Licencia de conducir vigente, DNI o pasaporte, y una tarjeta de crédito a tu nombre.
+            </p>
           </div>
           <div class="info-card">
             <h3>¿Cómo cancelo una reserva?</h3>
-            <p>Puedes cancelar desde "Mis Reservas". Las políticas de reembolso varían según el propietario.</p>
+            <p>
+              Puedes cancelar desde "Mis Reservas". Las políticas de reembolso varían según el
+              propietario.
+            </p>
           </div>
           <div class="info-card">
             <h3>¿Qué pasa si tengo un problema?</h3>
-            <p>Nuestro equipo de soporte está disponible 24/7 para ayudarte con cualquier situación.</p>
+            <p>
+              Nuestro equipo de soporte está disponible 24/7 para ayudarte con cualquier situación.
+            </p>
           </div>
         </div>
 

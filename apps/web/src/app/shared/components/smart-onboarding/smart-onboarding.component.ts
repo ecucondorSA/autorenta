@@ -16,17 +16,25 @@ import { ProfileService } from '@core/services/auth/profile.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CarBrandsService } from '@core/services/cars/car-brands.service';
 import { PricingService } from '@core/services/payments/pricing.service';
-import { FipeAutocompleteComponent, FipeAutocompleteOption } from '../fipe-autocomplete/fipe-autocomplete.component';
-
+import {
+  FipeAutocompleteComponent,
+  FipeAutocompleteOption,
+} from '../fipe-autocomplete/fipe-autocomplete.component';
 
 @Component({
   selector: 'app-smart-onboarding',
   standalone: true,
   imports: [CommonModule, FipeAutocompleteComponent],
   templateUrl: './smart-onboarding.component.html',
-  styles: [`
-    :host { display: block; height: 100vh; overflow: hidden; }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+        height: 100vh;
+        overflow: hidden;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SmartOnboardingComponent implements OnInit {
@@ -44,7 +52,7 @@ export class SmartOnboardingComponent implements OnInit {
   readonly role = signal<'owner' | 'renter' | 'both' | null>(null);
 
   /** Total steps varies by role: renter=5 (role, purpose, zone, notif, loading), owner/both=4 */
-  readonly totalSteps = computed(() => this.role() === 'renter' ? 5 : 4);
+  readonly totalSteps = computed(() => (this.role() === 'renter' ? 5 : 4));
 
   // Owner Data
   readonly selectedBrand = signal<FipeAutocompleteOption | null>(null);
@@ -63,7 +71,7 @@ export class SmartOnboardingComponent implements OnInit {
 
   // Options
   readonly brandOptions = computed<FipeAutocompleteOption[]>(() =>
-    this.carBrandsService.getCarBrands().map(b => ({ code: b.code, name: b.name }))
+    this.carBrandsService.getCarBrands().map((b) => ({ code: b.code, name: b.name })),
   );
 
   readonly modelOptions = signal<FipeAutocompleteOption[]>([]);
@@ -74,26 +82,29 @@ export class SmartOnboardingComponent implements OnInit {
     // Generate Year Options (Last 15 years)
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 15 }, (_, i) => currentYear - i);
-    this.yearOptions.set(years.map(y => ({ code: y.toString(), name: y.toString() })));
+    this.yearOptions.set(years.map((y) => ({ code: y.toString(), name: y.toString() })));
 
     // Load models when brand changes
-    effect(async () => {
-      const brand = this.selectedBrand();
-      if (!brand) {
-        this.modelOptions.set([]);
-        return;
-      }
+    effect(
+      async () => {
+        const brand = this.selectedBrand();
+        if (!brand) {
+          this.modelOptions.set([]);
+          return;
+        }
 
-      this.loadingModels.set(true);
-      try {
-        const models = await this.pricingService.getFipeModels(brand.code);
-        this.modelOptions.set(models.map(m => ({ code: m.code, name: m.name })));
-      } catch (err) {
-        this.logger.error('Error loading models', err);
-      } finally {
-        this.loadingModels.set(false);
-      }
-    }, { allowSignalWrites: true });
+        this.loadingModels.set(true);
+        try {
+          const models = await this.pricingService.getFipeModels(brand.code);
+          this.modelOptions.set(models.map((m) => ({ code: m.code, name: m.name })));
+        } catch (err) {
+          this.logger.error('Error loading models', err);
+        } finally {
+          this.loadingModels.set(false);
+        }
+      },
+      { allowSignalWrites: true },
+    );
 
     // Calculate earnings when car data is complete
     effect(async () => {
@@ -154,7 +165,7 @@ export class SmartOnboardingComponent implements OnInit {
         brand,
         model,
         year,
-        country: 'AR'
+        country: 'AR',
       });
 
       const valueUsd = result?.data?.value_usd;
@@ -179,14 +190,14 @@ export class SmartOnboardingComponent implements OnInit {
 
   nextStep() {
     const max = this.totalSteps();
-    this.currentStep.update(s => Math.min(s + 1, max));
+    this.currentStep.update((s) => Math.min(s + 1, max));
     if (this.currentStep() === max) {
       this.completeOnboarding();
     }
   }
 
   prevStep() {
-    this.currentStep.update(s => Math.max(s - 1, 1));
+    this.currentStep.update((s) => Math.max(s - 1, 1));
   }
 
   skip() {

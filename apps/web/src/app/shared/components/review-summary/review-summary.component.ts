@@ -21,104 +21,120 @@ import type { ReviewSummary } from '../../../core/models';
         <!-- Estado vacío cuando no hay reviews -->
         @if (s.total_count === 0) {
           <div class="text-center py-6">
-            <div class="mx-auto w-12 h-12 rounded-full bg-surface-hover flex items-center justify-center mb-3">
-              <svg class="w-6 h-6 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+            <div
+              class="mx-auto w-12 h-12 rounded-full bg-surface-hover flex items-center justify-center mb-3"
+            >
+              <svg
+                class="w-6 h-6 text-text-muted"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                />
               </svg>
             </div>
             <p class="text-sm text-text-secondary">Aún sin calificaciones</p>
           </div>
         } @else {
-        <div class="space-y-6">
-          <!-- Total y Promedio -->
-          <div class="grid grid-cols-2 gap-4">
-            <div class="rounded-lg bg-cta-default/10 p-4">
-              <p class="text-sm font-medium text-cta-default">Total de Reviews</p>
-              <p class="h4 text-cta-default">{{ s.total_count }}</p>
+          <div class="space-y-6">
+            <!-- Total y Promedio -->
+            <div class="grid grid-cols-2 gap-4">
+              <div class="rounded-lg bg-cta-default/10 p-4">
+                <p class="text-sm font-medium text-cta-default">Total de Reviews</p>
+                <p class="h4 text-cta-default">{{ s.total_count }}</p>
+              </div>
+              <div class="rounded-lg bg-success-light/10 p-4">
+                <p class="text-sm font-medium text-success-strong">Promedio</p>
+                <p class="h4 text-success-strong">{{ formatRating(s.average_rating) }} ⭐</p>
+              </div>
             </div>
-            <div class="rounded-lg bg-success-light/10 p-4">
-              <p class="text-sm font-medium text-success-strong">Promedio</p>
-              <p class="h4 text-success-strong">{{ formatRating(s.average_rating) }} ⭐</p>
-            </div>
-          </div>
 
-          <!-- Distribución -->
-          @if (s.rating_distribution) {
-            <div>
-              <h4 class="mb-3 text-sm font-semibold text-text-primary">
-                Distribución de Calificaciones
-              </h4>
-              <div class="space-y-2">
-                @for (rating of [5, 4, 3, 2, 1]; track rating) {
-                  <div class="flex items-center gap-3">
-                    <span class="w-8 text-sm font-medium text-text-secondary">{{ rating }}⭐</span>
-                    <div class="flex-1">
-                      <div class="h-4 w-full rounded-full bg-surface-hover">
-                        <div
-                          class="h-4 rounded-full bg-cta-default"
-                          [style.width.%]="
-                            getPercentage(
-                              getRatingCount(s.rating_distribution, rating),
-                              s.total_count
-                            )
-                          "
-                        ></div>
+            <!-- Distribución -->
+            @if (s.rating_distribution) {
+              <div>
+                <h4 class="mb-3 text-sm font-semibold text-text-primary">
+                  Distribución de Calificaciones
+                </h4>
+                <div class="space-y-2">
+                  @for (rating of [5, 4, 3, 2, 1]; track rating) {
+                    <div class="flex items-center gap-3">
+                      <span class="w-8 text-sm font-medium text-text-secondary"
+                        >{{ rating }}⭐</span
+                      >
+                      <div class="flex-1">
+                        <div class="h-4 w-full rounded-full bg-surface-hover">
+                          <div
+                            class="h-4 rounded-full bg-cta-default"
+                            [style.width.%]="
+                              getPercentage(
+                                getRatingCount(s.rating_distribution, rating),
+                                s.total_count
+                              )
+                            "
+                          ></div>
+                        </div>
                       </div>
+                      <span class="w-12 text-right text-sm text-text-secondary">
+                        {{ getRatingCount(s.rating_distribution, rating) }}
+                      </span>
                     </div>
-                    <span class="w-12 text-right text-sm text-text-secondary">
-                      {{ getRatingCount(s.rating_distribution, rating) }}
-                    </span>
-                  </div>
-                }
+                  }
+                </div>
               </div>
-            </div>
-          }
+            }
 
-          <!-- Promedios por Categoría -->
-          @if (s.category_averages) {
-            <div>
-              <h4 class="mb-3 text-sm font-semibold text-text-primary">Promedios por Categoría</h4>
-              <div class="grid grid-cols-2 gap-3">
-                <div class="rounded-lg border border-border-default p-3">
-                  <p class="text-xs font-medium text-text-secondary">Limpieza</p>
-                  <p class="h5 text-text-primary">
-                    {{ formatRating(s.category_averages.cleanliness) }} ⭐
-                  </p>
-                </div>
-                <div class="rounded-lg border border-border-default p-3">
-                  <p class="text-xs font-medium text-text-secondary">Comunicación</p>
-                  <p class="h5 text-text-primary">
-                    {{ formatRating(s.category_averages.communication) }} ⭐
-                  </p>
-                </div>
-                <div class="rounded-lg border border-border-default p-3">
-                  <p class="text-xs font-medium text-text-secondary">Precisión</p>
-                  <p class="h5 text-text-primary">
-                    {{ formatRating(s.category_averages.accuracy) }} ⭐
-                  </p>
-                </div>
-                <div class="rounded-lg border border-border-default p-3">
-                  <p class="text-xs font-medium text-text-secondary">Ubicación</p>
-                  <p class="h5 text-text-primary">
-                    {{ formatRating(s.category_averages.location) }} ⭐
-                  </p>
-                </div>
-                <div class="rounded-lg border border-border-default p-3">
-                  <p class="text-xs font-medium text-text-secondary">Check-in</p>
-                  <p class="h5 text-text-primary">
-                    {{ formatRating(s.category_averages.checkin) }} ⭐
-                  </p>
-                </div>
-                <div class="rounded-lg border border-border-default p-3">
-                  <p class="text-xs font-medium text-text-secondary">Valor</p>
-                  <p class="h5 text-text-primary">
-                    {{ formatRating(s.category_averages.value) }} ⭐
-                  </p>
+            <!-- Promedios por Categoría -->
+            @if (s.category_averages) {
+              <div>
+                <h4 class="mb-3 text-sm font-semibold text-text-primary">
+                  Promedios por Categoría
+                </h4>
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="rounded-lg border border-border-default p-3">
+                    <p class="text-xs font-medium text-text-secondary">Limpieza</p>
+                    <p class="h5 text-text-primary">
+                      {{ formatRating(s.category_averages.cleanliness) }} ⭐
+                    </p>
+                  </div>
+                  <div class="rounded-lg border border-border-default p-3">
+                    <p class="text-xs font-medium text-text-secondary">Comunicación</p>
+                    <p class="h5 text-text-primary">
+                      {{ formatRating(s.category_averages.communication) }} ⭐
+                    </p>
+                  </div>
+                  <div class="rounded-lg border border-border-default p-3">
+                    <p class="text-xs font-medium text-text-secondary">Precisión</p>
+                    <p class="h5 text-text-primary">
+                      {{ formatRating(s.category_averages.accuracy) }} ⭐
+                    </p>
+                  </div>
+                  <div class="rounded-lg border border-border-default p-3">
+                    <p class="text-xs font-medium text-text-secondary">Ubicación</p>
+                    <p class="h5 text-text-primary">
+                      {{ formatRating(s.category_averages.location) }} ⭐
+                    </p>
+                  </div>
+                  <div class="rounded-lg border border-border-default p-3">
+                    <p class="text-xs font-medium text-text-secondary">Check-in</p>
+                    <p class="h5 text-text-primary">
+                      {{ formatRating(s.category_averages.checkin) }} ⭐
+                    </p>
+                  </div>
+                  <div class="rounded-lg border border-border-default p-3">
+                    <p class="text-xs font-medium text-text-secondary">Valor</p>
+                    <p class="h5 text-text-primary">
+                      {{ formatRating(s.category_averages.value) }} ⭐
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          }
-        </div>
+            }
+          </div>
         }
       } @else {
         <div class="rounded-lg bg-surface-base p-4 text-center text-sm text-text-secondary">

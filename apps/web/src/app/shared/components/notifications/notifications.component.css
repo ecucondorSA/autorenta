@@ -183,7 +183,7 @@
   background: linear-gradient(135deg, var(--surface-raised) 0%, var(--surface-base) 100%);
   border-radius: 28px;
   box-shadow:
-    0 0 0 1px rgba(0,0,0,0.08),
+    0 0 0 1px rgba(0, 0, 0, 0.08),
     0 20px 25px -5px rgba(0, 0, 0, 0.15),
     0 10px 10px -5px rgba(0, 0, 0, 0.08),
     0 25px 50px -12px rgba(0, 0, 0, 0.25);
@@ -263,9 +263,17 @@
   position: relative;
 }
 
-.connection-status.connected { background: var(--success-default); box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
-.connection-status.connecting { background: var(--warning-default); animation: pulse 2s infinite; }
-.connection-status.error { background: var(--error-default); }
+.connection-status.connected {
+  background: var(--success-default);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+.connection-status.connecting {
+  background: var(--warning-default);
+  animation: pulse 2s infinite;
+}
+.connection-status.error {
+  background: var(--error-default);
+}
 
 /* List */
 .notifications-list {
@@ -319,7 +327,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
   opacity: 0;
   transition: opacity 0.25s ease;
 }
@@ -329,7 +337,11 @@
 }
 
 .notification-item.unread .notification-main {
-  background: linear-gradient(135deg, rgba(var(--cta-rgb), 0.05) 0%, rgba(var(--cta-rgb), 0.02) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(var(--cta-rgb), 0.05) 0%,
+    rgba(var(--cta-rgb), 0.02) 100%
+  );
 }
 
 /* Status-specific styling */
@@ -428,9 +440,16 @@
 }
 
 /* Scrollbar */
-.custom-scrollbar::-webkit-scrollbar { width: 4px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 4px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
 
 /* Footer */
 .dropdown-footer {

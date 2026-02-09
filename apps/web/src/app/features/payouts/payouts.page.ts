@@ -190,9 +190,7 @@ export class PayoutsPage implements OnInit, OnDestroy {
       }
 
       // Load payout stats
-      const stats = await firstValueFrom(
-        this.payoutService.getPayoutStats(user.data.user.id)
-      );
+      const stats = await firstValueFrom(this.payoutService.getPayoutStats(user.data.user.id));
 
       if (stats) {
         this.stats.set(stats);
@@ -200,7 +198,7 @@ export class PayoutsPage implements OnInit, OnDestroy {
 
       // Load default bank account
       const bankAccount = await firstValueFrom(
-        this.payoutService.getDefaultBankAccount(user.data.user.id)
+        this.payoutService.getDefaultBankAccount(user.data.user.id),
       );
 
       this.defaultBankAccount.set(bankAccount || null);

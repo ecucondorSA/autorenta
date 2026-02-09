@@ -1,16 +1,19 @@
 <div class="min-h-screen bg-surface-primary flex flex-col relative overflow-hidden">
-
   <!-- BACKGROUND GRADIENTS -->
   <div
-    class="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-cta-default/5 to-transparent pointer-events-none">
-  </div>
+    class="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-cta-default/5 to-transparent pointer-events-none"
+  ></div>
 
   <!-- HEADER (Progress) -->
   <div
-    class="relative z-10 px-6 pt-safe-top pb-2 flex justify-between items-center bg-surface-primary/80 backdrop-blur-md">
+    class="relative z-10 px-6 pt-safe-top pb-2 flex justify-between items-center bg-surface-primary/80 backdrop-blur-md"
+  >
     <!-- Back Button -->
-    <button (click)="prevStep()" [class.invisible]="currentStep() === 1"
-      class="p-2 -ml-2 text-text-secondary hover:bg-surface-secondary rounded-full">
+    <button
+      (click)="prevStep()"
+      [class.invisible]="currentStep() === 1"
+      class="p-2 -ml-2 text-text-secondary hover:bg-surface-secondary rounded-full"
+    >
       <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
       </svg>
@@ -18,312 +21,508 @@
 
     <!-- Progress Bar -->
     <div class="flex-1 mx-4 h-1.5 bg-surface-secondary rounded-full overflow-hidden max-w-[200px]">
-      <div class="h-full bg-cta-default transition-all duration-500 ease-out rounded-full"
-        [style.width.%]="(currentStep() / totalSteps()) * 100"></div>
+      <div
+        class="h-full bg-cta-default transition-all duration-500 ease-out rounded-full"
+        [style.width.%]="(currentStep() / totalSteps()) * 100"
+      ></div>
     </div>
 
     <!-- Skip Button -->
-    <button (click)="skip()" class="text-sm font-medium text-text-muted hover:text-text-primary px-2 transition-colors">
+    <button
+      (click)="skip()"
+      class="text-sm font-medium text-text-muted hover:text-text-primary px-2 transition-colors"
+    >
       Omitir
     </button>
   </div>
 
   <!-- MAIN CONTENT AREA -->
   <div class="flex-1 relative overflow-y-auto overflow-x-hidden">
-
     <!-- STEP 1: IDENTITY (The Hook) -->
     @if (currentStep() === 1) {
-    <div class="min-h-full flex flex-col justify-center px-6 py-10 animate-fade-in-up">
-      <h1 class="text-3xl font-bold text-text-primary text-center mb-2">¿Cómo querés usar AutoRentar?</h1>
-      <p class="text-text-muted text-center mb-10">Personalizamos tu experiencia según tu objetivo</p>
+      <div class="min-h-full flex flex-col justify-center px-6 py-10 animate-fade-in-up">
+        <h1 class="text-3xl font-bold text-text-primary text-center mb-2">
+          ¿Cómo querés usar AutoRentar?
+        </h1>
+        <p class="text-text-muted text-center mb-10">
+          Personalizamos tu experiencia según tu objetivo
+        </p>
 
-      <div class="grid gap-4 max-w-md mx-auto w-full">
-        <!-- CARD: OWNER -->
-        <button (click)="selectRole('owner')"
-          class="group relative p-6 bg-surface-raised border border-border-default rounded-2xl hover:border-cta-default hover:shadow-lg transition-all text-left">
-          <div class="flex items-start justify-between mb-4">
-            <div
-              class="p-3 bg-surface-secondary rounded-xl text-text-primary group-hover:bg-cta-default/10 group-hover:text-cta-default transition-colors">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="stroke-current" stroke-width="1.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path
-                  d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
-                <circle cx="7" cy="17" r="2" />
-                <path d="M9 17h6" />
-                <circle cx="17" cy="17" r="2" />
-              </svg>
+        <div class="grid gap-4 max-w-md mx-auto w-full">
+          <!-- CARD: OWNER -->
+          <button
+            (click)="selectRole('owner')"
+            class="group relative p-6 bg-surface-raised border border-border-default rounded-2xl hover:border-cta-default hover:shadow-lg transition-all text-left"
+          >
+            <div class="flex items-start justify-between mb-4">
+              <div
+                class="p-3 bg-surface-secondary rounded-xl text-text-primary group-hover:bg-cta-default/10 group-hover:text-cta-default transition-colors"
+              >
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  class="stroke-current"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"
+                  />
+                  <circle cx="7" cy="17" r="2" />
+                  <path d="M9 17h6" />
+                  <circle cx="17" cy="17" r="2" />
+                </svg>
+              </div>
+              <span
+                class="px-2 py-1 bg-green-500/10 text-green-600 rounded text-[10px] uppercase font-bold tracking-wider"
+                >Rentabilidad</span
+              >
             </div>
-            <span
-              class="px-2 py-1 bg-green-500/10 text-green-600 rounded text-[10px] uppercase font-bold tracking-wider">Rentabilidad</span>
-          </div>
-          <h3 class="text-xl font-bold text-text-primary mb-1 group-hover:text-cta-default transition-colors">Tengo un
-            auto</h3>
-          <p class="text-text-secondary text-sm leading-relaxed">Publicalo y convertilo en un activo que genera ingresos
-            mensuales.</p>
-        </button>
+            <h3
+              class="text-xl font-bold text-text-primary mb-1 group-hover:text-cta-default transition-colors"
+            >
+              Tengo un auto
+            </h3>
+            <p class="text-text-secondary text-sm leading-relaxed">
+              Publicalo y convertilo en un activo que genera ingresos mensuales.
+            </p>
+          </button>
 
-        <!-- CARD: RENTER -->
-        <button (click)="selectRole('renter')"
-          class="group relative p-6 bg-surface-raised border border-border-default rounded-2xl hover:border-blue-500 hover:shadow-lg transition-all text-left">
-          <div class="flex items-start justify-between mb-4">
-            <div
-              class="p-3 bg-surface-secondary rounded-xl text-text-primary group-hover:bg-blue-500/10 group-hover:text-blue-500 transition-colors">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="stroke-current" stroke-width="1.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="2" y1="12" x2="22" y2="12" />
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-              </svg>
+          <!-- CARD: RENTER -->
+          <button
+            (click)="selectRole('renter')"
+            class="group relative p-6 bg-surface-raised border border-border-default rounded-2xl hover:border-blue-500 hover:shadow-lg transition-all text-left"
+          >
+            <div class="flex items-start justify-between mb-4">
+              <div
+                class="p-3 bg-surface-secondary rounded-xl text-text-primary group-hover:bg-blue-500/10 group-hover:text-blue-500 transition-colors"
+              >
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  class="stroke-current"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="2" y1="12" x2="22" y2="12" />
+                  <path
+                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                  />
+                </svg>
+              </div>
+              <span
+                class="px-2 py-1 bg-blue-500/10 text-blue-600 rounded text-[10px] uppercase font-bold tracking-wider"
+                >Movilidad</span
+              >
             </div>
-            <span
-              class="px-2 py-1 bg-blue-500/10 text-blue-600 rounded text-[10px] uppercase font-bold tracking-wider">Movilidad</span>
-          </div>
-          <h3 class="text-xl font-bold text-text-primary mb-1 group-hover:text-blue-500 transition-colors">Quiero
-            alquilar</h3>
-          <p class="text-text-secondary text-sm leading-relaxed">Accedé a una flota verificada cerca tuyo, sin trámites.
-          </p>
-        </button>
+            <h3
+              class="text-xl font-bold text-text-primary mb-1 group-hover:text-blue-500 transition-colors"
+            >
+              Quiero alquilar
+            </h3>
+            <p class="text-text-secondary text-sm leading-relaxed">
+              Accedé a una flota verificada cerca tuyo, sin trámites.
+            </p>
+          </button>
 
-        <!-- LINK: BOTH -->
-        <button (click)="selectRole('both')"
-          class="mt-4 text-center text-sm text-text-secondary hover:text-text-primary hover:underline py-2">
-          Quiero hacer ambas cosas
-        </button>
+          <!-- LINK: BOTH -->
+          <button
+            (click)="selectRole('both')"
+            class="mt-4 text-center text-sm text-text-secondary hover:text-text-primary hover:underline py-2"
+          >
+            Quiero hacer ambas cosas
+          </button>
+        </div>
       </div>
-    </div>
     }
 
     <!-- STEP 2: OWNER CAR DATA -->
     @if (showOwnerStep) {
-    <div class="min-h-full flex flex-col px-6 py-8 animate-slide-in-right">
-      <div class="max-w-md mx-auto w-full space-y-8">
-        <div class="text-center">
-          <h1 class="text-2xl font-bold text-text-primary mb-2">Tu auto es un activo</h1>
-          <p class="text-text-muted">Contanos qué auto tenés para estimar cuánto podés ganar.</p>
+      <div class="min-h-full flex flex-col px-6 py-8 animate-slide-in-right">
+        <div class="max-w-md mx-auto w-full space-y-8">
+          <div class="text-center">
+            <h1 class="text-2xl font-bold text-text-primary mb-2">Tu auto es un activo</h1>
+            <p class="text-text-muted">Contanos qué auto tenés para estimar cuánto podés ganar.</p>
+          </div>
+
+          <div
+            class="space-y-4 bg-surface-raised p-6 rounded-2xl border border-border-default shadow-sm"
+          >
+            <div>
+              <label class="block text-sm font-medium text-text-secondary mb-1">Marca</label>
+              <app-fipe-autocomplete
+                [options]="brandOptions()"
+                placeholder="Seleccioná la marca..."
+                (optionSelected)="onBrandSelected($event)"
+              >
+              </app-fipe-autocomplete>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-text-secondary mb-1">Modelo</label>
+              <app-fipe-autocomplete
+                [options]="modelOptions()"
+                [disabled]="!selectedBrand()"
+                [isLoading]="loadingModels()"
+                placeholder="Buscá el modelo..."
+                (optionSelected)="onModelSelected($event)"
+              >
+              </app-fipe-autocomplete>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-text-secondary mb-1">Año</label>
+              <app-fipe-autocomplete
+                [options]="yearOptions()"
+                [disabled]="!selectedModel()"
+                placeholder="Año de fabricación"
+                (optionSelected)="onYearSelected($event)"
+              >
+              </app-fipe-autocomplete>
+            </div>
+          </div>
+
+          <!-- LIVE VALUATION -->
+          @if (estimatedEarnings(); as earnings) {
+            <div
+              class="animate-bounce-in p-6 bg-gradient-to-br from-gray-900 to-black rounded-2xl shadow-xl text-center border border-gray-800 relative overflow-hidden"
+            >
+              <div class="absolute inset-0 bg-cta-default/10"></div>
+              <p class="text-gray-400 text-sm font-medium relative z-10">POTENCIAL DE GANANCIAS</p>
+              <div
+                class="text-4xl sm:text-5xl font-bold text-white my-2 relative z-10 tracking-tight"
+              >
+                <span class="text-cta-default text-2xl align-top">$</span>{{ earnings | number }}
+                <span class="text-xl text-gray-400 font-normal">USD</span>
+              </div>
+              <p class="text-gray-500 text-xs relative z-10">al mes estimado *</p>
+              <div
+                class="absolute -right-10 -bottom-10 w-32 h-32 bg-cta-default/20 rounded-full blur-3xl"
+              ></div>
+            </div>
+          }
         </div>
-
-        <div class="space-y-4 bg-surface-raised p-6 rounded-2xl border border-border-default shadow-sm">
-          <div>
-            <label class="block text-sm font-medium text-text-secondary mb-1">Marca</label>
-            <app-fipe-autocomplete [options]="brandOptions()" placeholder="Seleccioná la marca..."
-              (optionSelected)="onBrandSelected($event)">
-            </app-fipe-autocomplete>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-text-secondary mb-1">Modelo</label>
-            <app-fipe-autocomplete [options]="modelOptions()" [disabled]="!selectedBrand()"
-              [isLoading]="loadingModels()" placeholder="Buscá el modelo..." (optionSelected)="onModelSelected($event)">
-            </app-fipe-autocomplete>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-text-secondary mb-1">Año</label>
-            <app-fipe-autocomplete [options]="yearOptions()" [disabled]="!selectedModel()"
-              placeholder="Año de fabricación" (optionSelected)="onYearSelected($event)">
-            </app-fipe-autocomplete>
-          </div>
-        </div>
-
-        <!-- LIVE VALUATION -->
-        @if (estimatedEarnings(); as earnings) {
-        <div
-          class="animate-bounce-in p-6 bg-gradient-to-br from-gray-900 to-black rounded-2xl shadow-xl text-center border border-gray-800 relative overflow-hidden">
-          <div class="absolute inset-0 bg-cta-default/10"></div>
-          <p class="text-gray-400 text-sm font-medium relative z-10">POTENCIAL DE GANANCIAS</p>
-          <div class="text-4xl sm:text-5xl font-bold text-white my-2 relative z-10 tracking-tight">
-            <span class="text-cta-default text-2xl align-top">$</span>{{ earnings | number }} <span
-              class="text-xl text-gray-400 font-normal">USD</span>
-          </div>
-          <p class="text-gray-500 text-xs relative z-10">al mes estimado *</p>
-          <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-cta-default/20 rounded-full blur-3xl"></div>
-        </div>
-        }
       </div>
-    </div>
     }
 
     <!-- STEP 2 (RENTER): PURPOSE SELECTION -->
     @if (showRenterPurposeStep) {
-    <div class="min-h-full flex flex-col justify-center px-6 py-10 animate-slide-in-right">
-      <div class="max-w-md mx-auto w-full">
-        <div class="text-center mb-10">
-          <h1 class="text-3xl font-bold text-text-primary mb-2">¿Para qué lo vas a usar?</h1>
-          <p class="text-text-muted">Elegí una opción y seguimos</p>
-        </div>
+      <div class="min-h-full flex flex-col justify-center px-6 py-10 animate-slide-in-right">
+        <div class="max-w-md mx-auto w-full">
+          <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-text-primary mb-2">¿Para qué lo vas a usar?</h1>
+            <p class="text-text-muted">Elegí una opción y seguimos</p>
+          </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          @for (item of [
-            { label: 'Trabajo', icon: '💼', desc: 'Uso profesional diario' },
-            { label: 'Turismo', icon: '✈️', desc: 'Viajes y vacaciones' },
-            { label: 'Diario', icon: '🏠', desc: 'Movilidad cotidiana' },
-            { label: 'Escapada', icon: '🌄', desc: 'Fines de semana y trips' }
-          ]; track item.label) {
-          <button (click)="selectPurpose(item.label)"
-            [class.border-cta-default]="renterPurpose() === item.label"
-            [class.bg-cta-default/5]="renterPurpose() === item.label"
-            [class.scale-[1.03]]="renterPurpose() === item.label"
-            [class.shadow-lg]="renterPurpose() === item.label"
-            class="group relative flex flex-col items-center p-5 bg-surface-raised border border-border-default rounded-2xl transition-all duration-200 hover:border-cta-default hover:shadow-md active:scale-95 min-h-[120px]">
-            <span class="text-3xl mb-2">{{ item.icon }}</span>
-            <span class="text-text-primary font-semibold text-base">{{ item.label }}</span>
-            <span class="text-text-muted text-xs mt-1">{{ item.desc }}</span>
-            @if (renterPurpose() === item.label) {
-            <div class="absolute top-2 right-2">
-              <svg class="w-5 h-5 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
+          <div class="grid grid-cols-2 gap-4">
+            @for (
+              item of [
+                { label: 'Trabajo', icon: '💼', desc: 'Uso profesional diario' },
+                { label: 'Turismo', icon: '✈️', desc: 'Viajes y vacaciones' },
+                { label: 'Diario', icon: '🏠', desc: 'Movilidad cotidiana' },
+                { label: 'Escapada', icon: '🌄', desc: 'Fines de semana y trips' },
+              ];
+              track item.label
+            ) {
+              <button
+                (click)="selectPurpose(item.label)"
+                [class.border-cta-default]="renterPurpose() === item.label"
+                [class.bg-cta-default/5]="renterPurpose() === item.label"
+                [class.scale-[1.03]]="renterPurpose() === item.label"
+                [class.shadow-lg]="renterPurpose() === item.label"
+                class="group relative flex flex-col items-center p-5 bg-surface-raised border border-border-default rounded-2xl transition-all duration-200 hover:border-cta-default hover:shadow-md active:scale-95 min-h-[120px]"
+              >
+                <span class="text-3xl mb-2">{{ item.icon }}</span>
+                <span class="text-text-primary font-semibold text-base">{{ item.label }}</span>
+                <span class="text-text-muted text-xs mt-1">{{ item.desc }}</span>
+                @if (renterPurpose() === item.label) {
+                  <div class="absolute top-2 right-2">
+                    <svg
+                      class="w-5 h-5 text-cta-default"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                }
+              </button>
             }
-          </button>
-          }
+          </div>
         </div>
       </div>
-    </div>
     }
 
     <!-- STEP 3 (RENTER): ZONE SELECTION -->
     @if (showRenterZoneStep) {
-    <div class="min-h-full flex flex-col justify-center px-6 py-10 animate-slide-in-right">
-      <div class="max-w-md mx-auto w-full">
-        <div class="text-center mb-10">
-          <h1 class="text-3xl font-bold text-text-primary mb-2">¿Dónde te movés?</h1>
-          <p class="text-text-muted">Seleccioná tu zona principal</p>
-        </div>
+      <div class="min-h-full flex flex-col justify-center px-6 py-10 animate-slide-in-right">
+        <div class="max-w-md mx-auto w-full">
+          <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-text-primary mb-2">¿Dónde te movés?</h1>
+            <p class="text-text-muted">Seleccioná tu zona principal</p>
+          </div>
 
-        <div class="grid grid-cols-1 gap-3">
-          @for (loc of ['Capital Federal', 'GBA Zona Norte', 'GBA Zona Sur', 'GBA Zona Oeste', 'Interior/Otro'];
-          track loc) {
-          <button (click)="selectLocation(loc)"
-            [class.border-cta-default]="renterLocation() === loc"
-            [class.bg-cta-default/5]="renterLocation() === loc"
-            [class.shadow-md]="renterLocation() === loc"
-            class="flex items-center p-4 rounded-2xl bg-surface-raised border border-border-default hover:border-cta-default hover:bg-surface-hover transition-all duration-200 text-left group active:scale-[0.98]">
-            <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-secondary group-hover:bg-cta-default/10 transition-colors mr-4">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round"
-                class="text-text-secondary group-hover:text-cta-default transition-colors">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg>
-            </span>
-            <span class="text-text-primary font-medium text-base flex-1">{{ loc }}</span>
-            @if (renterLocation() === loc) {
-            <svg class="w-5 h-5 text-cta-default ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-            </svg>
+          <div class="grid grid-cols-1 gap-3">
+            @for (
+              loc of [
+                'Capital Federal',
+                'GBA Zona Norte',
+                'GBA Zona Sur',
+                'GBA Zona Oeste',
+                'Interior/Otro',
+              ];
+              track loc
+            ) {
+              <button
+                (click)="selectLocation(loc)"
+                [class.border-cta-default]="renterLocation() === loc"
+                [class.bg-cta-default/5]="renterLocation() === loc"
+                [class.shadow-md]="renterLocation() === loc"
+                class="flex items-center p-4 rounded-2xl bg-surface-raised border border-border-default hover:border-cta-default hover:bg-surface-hover transition-all duration-200 text-left group active:scale-[0.98]"
+              >
+                <span
+                  class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-secondary group-hover:bg-cta-default/10 transition-colors mr-4"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="text-text-secondary group-hover:text-cta-default transition-colors"
+                  >
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                </span>
+                <span class="text-text-primary font-medium text-base flex-1">{{ loc }}</span>
+                @if (renterLocation() === loc) {
+                  <svg
+                    class="w-5 h-5 text-cta-default ml-auto"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2.5"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                }
+              </button>
             }
-          </button>
-          }
+          </div>
         </div>
       </div>
-    </div>
     }
 
     <!-- NOTIFICATIONS STEP -->
     @if (showNotificationsStep) {
-    <div class="min-h-full flex flex-col justify-center px-6 py-10 animate-fade-in text-center">
-      <div
-        class="w-24 h-24 bg-surface-raised rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-border-default">
-        <svg class="w-10 h-10 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-        </svg>
-      </div>
+      <div class="min-h-full flex flex-col justify-center px-6 py-10 animate-fade-in text-center">
+        <div
+          class="w-24 h-24 bg-surface-raised rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-border-default"
+        >
+          <svg
+            class="w-10 h-10 text-cta-default"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+            />
+          </svg>
+        </div>
 
-      <h1 class="text-2xl font-bold text-text-primary mb-3">No te pierdas nada</h1>
+        <h1 class="text-2xl font-bold text-text-primary mb-3">No te pierdas nada</h1>
 
-      @if (role() === 'owner') {
-      <p class="text-text-secondary mb-8 max-w-xs mx-auto">Recibí alertas instantáneas cuando alguien quiera alquilar tu
-        auto. <span class="text-cta-default font-medium">¡Responde rápido para ganar más!</span></p>
-      } @else {
-      <p class="text-text-secondary mb-8 max-w-xs mx-auto">Te avisamos cuando bajen los precios en tu zona o haya autos
-        nuevos disponibles.</p>
-      }
+        @if (role() === 'owner') {
+          <p class="text-text-secondary mb-8 max-w-xs mx-auto">
+            Recibí alertas instantáneas cuando alguien quiera alquilar tu auto.
+            <span class="text-cta-default font-medium">¡Responde rápido para ganar más!</span>
+          </p>
+        } @else {
+          <p class="text-text-secondary mb-8 max-w-xs mx-auto">
+            Te avisamos cuando bajen los precios en tu zona o haya autos nuevos disponibles.
+          </p>
+        }
 
-      <!-- Fake Notification UI -->
-      <div
-        class="bg-surface-raised p-4 rounded-xl border border-border-default shadow-sm max-w-sm mx-auto mb-10 text-left transform rotate-1">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded bg-cta-default flex items-center justify-center text-white font-bold text-xs">AR
-          </div>
-          <div>
-            <p class="text-xs font-bold text-text-primary">AutoRentar <span class="text-text-muted font-normal">•
-                Ahora</span></p>
-            <p class="text-sm text-text-secondary truncate">
-              {{ role() === 'owner' ? '¡Nueva solicitud! Juan quiere alquilar tu auto' : 'Encontramos un Toyota Corolla
-              por $30/día' }}
-            </p>
+        <!-- Fake Notification UI -->
+        <div
+          class="bg-surface-raised p-4 rounded-xl border border-border-default shadow-sm max-w-sm mx-auto mb-10 text-left transform rotate-1"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-8 h-8 rounded bg-cta-default flex items-center justify-center text-white font-bold text-xs"
+            >
+              AR
+            </div>
+            <div>
+              <p class="text-xs font-bold text-text-primary">
+                AutoRentar <span class="text-text-muted font-normal">• Ahora</span>
+              </p>
+              <p class="text-sm text-text-secondary truncate">
+                {{
+                  role() === 'owner'
+                    ? '¡Nueva solicitud! Juan quiere alquilar tu auto'
+                    : 'Encontramos un Toyota Corolla
+              por $30/día'
+                }}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="flex flex-col gap-3 max-w-xs mx-auto w-full">
-        <button (click)="nextStep()"
-          class="w-full py-4 rounded-xl bg-cta-default text-white font-bold text-lg hover:bg-cta-hover transition-all shadow-lg shadow-cta-default/30">
-          Activar Notificaciones
-        </button>
-        <button (click)="nextStep()" class="w-full py-4 text-text-secondary font-medium hover:text-text-primary">
-          Ahora no
-        </button>
+        <div class="flex flex-col gap-3 max-w-xs mx-auto w-full">
+          <button
+            (click)="nextStep()"
+            class="w-full py-4 rounded-xl bg-cta-default text-white font-bold text-lg hover:bg-cta-hover transition-all shadow-lg shadow-cta-default/30"
+          >
+            Activar Notificaciones
+          </button>
+          <button
+            (click)="nextStep()"
+            class="w-full py-4 text-text-secondary font-medium hover:text-text-primary"
+          >
+            Ahora no
+          </button>
+        </div>
       </div>
-    </div>
     }
 
     <!-- LOADING STEP -->
     @if (showLoadingStep) {
-    <div class="min-h-full flex flex-col justify-center items-center px-6 py-10 animate-fade-in text-center">
-      <div class="relative w-20 h-20 mb-8">
-        <div class="absolute inset-0 border-4 border-surface-raised rounded-full"></div>
-        <div class="absolute inset-0 border-4 border-cta-default rounded-full border-t-transparent animate-spin"></div>
-        <div class="absolute inset-0 flex items-center justify-center text-cta-default">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
-            </path>
-          </svg>
+      <div
+        class="min-h-full flex flex-col justify-center items-center px-6 py-10 animate-fade-in text-center"
+      >
+        <div class="relative w-20 h-20 mb-8">
+          <div class="absolute inset-0 border-4 border-surface-raised rounded-full"></div>
+          <div
+            class="absolute inset-0 border-4 border-cta-default rounded-full border-t-transparent animate-spin"
+          ></div>
+          <div class="absolute inset-0 flex items-center justify-center text-cta-default">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+              ></path>
+            </svg>
+          </div>
         </div>
-      </div>
 
-      <h2 class="text-2xl font-bold text-text-primary mb-2">Preparando tu perfil...</h2>
-      <div class="space-y-2 mt-4 text-text-secondary text-sm">
-        <div class="flex items-center gap-2 justify-center animate-fade-in" style="animation-delay: 100ms">
-          <svg class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-          Personalizando feed
+        <h2 class="text-2xl font-bold text-text-primary mb-2">Preparando tu perfil...</h2>
+        <div class="space-y-2 mt-4 text-text-secondary text-sm">
+          <div
+            class="flex items-center gap-2 justify-center animate-fade-in"
+            style="animation-delay: 100ms"
+          >
+            <svg
+              class="w-4 h-4 text-green-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Personalizando feed
+          </div>
+          <div
+            class="flex items-center gap-2 justify-center animate-fade-in"
+            style="animation-delay: 500ms"
+          >
+            <svg
+              class="w-4 h-4 text-green-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Guardando preferencias
+          </div>
+          @if (role() === 'owner') {
+            <div
+              class="flex items-center gap-2 justify-center animate-fade-in"
+              style="animation-delay: 900ms"
+            >
+              <svg
+                class="w-4 h-4 text-green-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              Calculando rentabilidad
+            </div>
+          }
         </div>
-        <div class="flex items-center gap-2 justify-center animate-fade-in" style="animation-delay: 500ms">
-          <svg class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-          Guardando preferencias
-        </div>
-        @if (role() === 'owner') {
-        <div class="flex items-center gap-2 justify-center animate-fade-in" style="animation-delay: 900ms">
-          <svg class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-          Calculando rentabilidad
-        </div>
-        }
       </div>
-    </div>
     }
-
   </div>
 
   <!-- FOOTER Navigation (Owner Step 2 Only - renter auto-advances) -->
   @if (showOwnerStep) {
-  <div class="p-6 bg-surface-primary border-t border-border-default pb-safe">
-    <button (click)="nextStep()" [disabled]="!canContinueStep2"
-      class="w-full py-4 rounded-xl bg-text-primary text-surface-primary font-bold text-lg hover:bg-opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-      <span>Continuar</span>
-      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-      </svg>
-    </button>
-  </div>
+    <div class="p-6 bg-surface-primary border-t border-border-default pb-safe">
+      <button
+        (click)="nextStep()"
+        [disabled]="!canContinueStep2"
+        class="w-full py-4 rounded-xl bg-text-primary text-surface-primary font-bold text-lg hover:bg-opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        <span>Continuar</span>
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 8l4 4m0 0l-4 4m4-4H3"
+          />
+        </svg>
+      </button>
+    </div>
   }
-
 </div>

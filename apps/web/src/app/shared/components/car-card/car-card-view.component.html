@@ -63,7 +63,13 @@
           class="bg-emerald-500/90 text-white p-1.5 rounded-full backdrop-blur-md shadow-lg border border-emerald-400/20"
           title="Reserva Instantánea"
         >
-          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+          <svg
+            class="w-3.5 h-3.5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="3"
+          >
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
         </span>
@@ -109,14 +115,24 @@
         {{ displayTitle() }}
       </h3>
       <p class="text-xs font-medium text-zinc-500 mt-1 flex items-center gap-1.5 truncate">
-        <svg class="w-3.5 h-3.5 text-zinc-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          class="w-3.5 h-3.5 text-zinc-600 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
           />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+          />
         </svg>
         <span class="truncate">{{ car.location_city || 'Ubicación desconocida' }}</span>
       </p>
@@ -135,7 +151,9 @@
               d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
             />
           </svg>
-          <span class="text-xs font-medium">{{ car.transmission === 'automatic' ? 'Auto' : 'Manual' }}</span>
+          <span class="text-xs font-medium">{{
+            car.transmission === 'automatic' ? 'Auto' : 'Manual'
+          }}</span>
         </div>
 
         <!-- Seats -->
@@ -153,13 +171,31 @@
 
         <!-- Fuel -->
         <div class="flex items-center gap-1.5" title="Combustible">
-          @if (car.fuel_type?.toLowerCase()?.includes('electric') || car.fuel_type?.toLowerCase()?.includes('eléctrico')) {
-            <svg class="w-4 h-4 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          @if (
+            car.fuel_type?.toLowerCase()?.includes('electric') ||
+            car.fuel_type?.toLowerCase()?.includes('eléctrico')
+          ) {
+            <svg
+              class="w-4 h-4 text-brand-primary"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
             </svg>
             <span class="text-xs font-medium text-brand-primary">Eléctrico</span>
           } @else {
-            <svg class="w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg
+              class="w-4 h-4 text-zinc-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -201,9 +237,21 @@
         [routerLink]="['/cars', car.id]"
         aria-label="Ver detalles"
       >
-        <div class="absolute inset-0 bg-brand-primary opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
-        <svg class="w-5 h-5 relative z-10 transition-transform group-hover/btn:-rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        <div
+          class="absolute inset-0 bg-brand-primary opacity-0 group-hover/btn:opacity-100 transition-opacity"
+        ></div>
+        <svg
+          class="w-5 h-5 relative z-10 transition-transform group-hover/btn:-rotate-45"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2.5"
+            d="M14 5l7 7m0 0l-7 7m7-7H3"
+          />
         </svg>
       </button>
     </div>

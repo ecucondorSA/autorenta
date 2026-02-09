@@ -55,7 +55,8 @@ export class GlobalErrorHandler implements ErrorHandler {
       if (error.stack) {
         const stackLines = error.stack.split('\n');
         const relevantLine = stackLines.find(
-          (line, i) => i > 0 && !line.includes('GlobalErrorHandler') && !line.includes('handleError')
+          (line, i) =>
+            i > 0 && !line.includes('GlobalErrorHandler') && !line.includes('handleError'),
         );
         if (relevantLine) {
           const match = relevantLine.match(/at\s+(.+?)\s+\(|at\s+(.+?):\d+:\d+/);
@@ -118,7 +119,7 @@ export class GlobalErrorHandler implements ErrorHandler {
    */
   private isNetworkError(error: unknown): boolean {
     if (!error) return false;
-    
+
     // Check for offline status
     if (!navigator.onLine) return true;
 
@@ -135,9 +136,9 @@ export class GlobalErrorHandler implements ErrorHandler {
         msg = '';
       }
     }
-    
+
     msg = msg.toLowerCase();
-    
+
     // Common noisy patterns
     const noisyPatterns = [
       'network error',
@@ -145,10 +146,10 @@ export class GlobalErrorHandler implements ErrorHandler {
       'networkrequestfailed',
       'timeout',
       'importing a module script failed',
-      'loading chunk', 
-      'connection lost'
+      'loading chunk',
+      'connection lost',
     ];
 
-    return noisyPatterns.some(pattern => msg.includes(pattern));
+    return noisyPatterns.some((pattern) => msg.includes(pattern));
   }
 }

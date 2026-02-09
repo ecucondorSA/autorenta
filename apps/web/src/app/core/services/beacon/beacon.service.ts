@@ -20,7 +20,9 @@ interface DeviceScannedEvent {
 }
 
 // Lazy load the BLE plugin to avoid errors on web
-let BluetoothLowEnergy: typeof import('@capgo/capacitor-bluetooth-low-energy').BluetoothLowEnergy | null = null;
+let BluetoothLowEnergy:
+  | typeof import('@capgo/capacitor-bluetooth-low-energy').BluetoothLowEnergy
+  | null = null;
 let KeepAwake: typeof import('@capacitor-community/keep-awake').KeepAwake | null = null;
 
 export type BeaconMode = 'idle' | 'broadcasting' | 'scanning' | 'both';
@@ -124,7 +126,10 @@ export class BeaconService {
       this.logger.error('[BeaconService] Initialization failed:', error);
       this._status.set('error');
       this._lastError.set(error instanceof Error ? error.message : 'Unknown error');
-      this.showDebugToast(`❌ BLE Error: ${error instanceof Error ? error.message : 'Unknown'}`, 'danger');
+      this.showDebugToast(
+        `❌ BLE Error: ${error instanceof Error ? error.message : 'Unknown'}`,
+        'danger',
+      );
       return false;
     }
   }
@@ -137,7 +142,7 @@ export class BeaconService {
     type: BeaconMessageType,
     bookingIdHash: string,
     latitude: number,
-    longitude: number
+    longitude: number,
   ): Promise<boolean> {
     if (!this.isReady() || !BluetoothLowEnergy) {
       this.logger.error('[BeaconService] Not ready to broadcast');
@@ -279,14 +284,11 @@ export class BeaconService {
       }
 
       // Set up scan result listener
-      const handle = await ble.addListener(
-        'deviceScanned',
-        (event: DeviceScannedEvent) => {
-          this.ngZone.run(() => {
-            this.processScannedDevice(event.device);
-          });
-        }
-      );
+      const handle = await ble.addListener('deviceScanned', (event: DeviceScannedEvent) => {
+        this.ngZone.run(() => {
+          this.processScannedDevice(event.device);
+        });
+      });
       this.scanListener = () => handle.remove();
 
       // Start the scan
@@ -338,7 +340,10 @@ export class BeaconService {
         try {
           await BluetoothLowEnergy?.stopScan();
           this.logger.debug('[BeaconService] ⏹️ Scan cycle complete');
-          this.showDebugToast(`⏹️ Scan completo: ${this.deviceCount} dispositivos`, this.deviceCount > 0 ? 'success' : 'warning');
+          this.showDebugToast(
+            `⏹️ Scan completo: ${this.deviceCount} dispositivos`,
+            this.deviceCount > 0 ? 'success' : 'warning',
+          );
         } catch {
           // Ignore stop errors
         }
@@ -370,7 +375,14 @@ export class BeaconService {
     }
 
     this.logger.debug('[BeaconService] 🚨🚨🚨 AUTORENTA BEACON DETECTED! 🚨🚨🚨');
-    this.logger.debug('[BeaconService] Device:', device.name, 'RSSI:', device.rssi, 'ID:', device.deviceId);
+    this.logger.debug(
+      '[BeaconService] Device:',
+      device.name,
+      'RSSI:',
+      device.rssi,
+      'ID:',
+      device.deviceId,
+    );
 
     // Show prominent toast for AutoRenta beacon
     this.showDebugToast(`🚨 ¡BEACON ${device.name} DETECTADO!`, 'danger');
@@ -380,7 +392,9 @@ export class BeaconService {
       if (typeof alert !== 'undefined') {
         alert(`¡BEACON DETECTADO!\n${device.name}\nRSSI: ${device.rssi}`);
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
 
     // Extract beacon type from name (e.g., "AR-SOS" -> SOS)
     const typeName = device.name.replace('AR-', '');
@@ -409,9 +423,7 @@ export class BeaconService {
 
     // Add to detected list (deduplicate by deviceId)
     this._detectedBeacons.update((beacons) => {
-      const existing = beacons.findIndex(
-        (b) => b.deviceId === device.deviceId
-      );
+      const existing = beacons.findIndex((b) => b.deviceId === device.deviceId);
       if (existing >= 0) {
         // Update existing
         const updated = [...beacons];
@@ -423,7 +435,10 @@ export class BeaconService {
       }
     });
 
-    this.logger.debug('[BeaconService] ✅ Beacon detected and registered:', BeaconMessageType[beaconType]);
+    this.logger.debug(
+      '[BeaconService] ✅ Beacon detected and registered:',
+      BeaconMessageType[beaconType],
+    );
 
     // Relay to backend
     await this.relayToBackend(detected);
@@ -489,26 +504,23 @@ export class BeaconService {
       }
 
       // Call the beacon-relay Edge Function
-      const response = await fetch(
-        `${environment.supabaseUrl}/functions/v1/beacon-relay`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
-            'apikey': environment.supabaseAnonKey,
+      const response = await fetch(`${environment.supabaseUrl}/functions/v1/beacon-relay`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+          apikey: environment.supabaseAnonKey,
+        },
+        body: JSON.stringify({
+          payload: payloadBase64,
+          scout_location: {
+            latitude: position?.coords.latitude ?? 0,
+            longitude: position?.coords.longitude ?? 0,
           },
-          body: JSON.stringify({
-            payload: payloadBase64,
-            scout_location: {
-              latitude: position?.coords.latitude ?? 0,
-              longitude: position?.coords.longitude ?? 0,
-            },
-            rssi: detected.rssi,
-            device_id: detected.deviceId,
-          }),
-        }
-      );
+          rssi: detected.rssi,
+          device_id: detected.deviceId,
+        }),
+      });
 
       const result = await response.json();
 
@@ -538,7 +550,7 @@ export class BeaconService {
       navigator.geolocation.getCurrentPosition(
         (position) => resolve(position),
         () => resolve(null),
-        { enableHighAccuracy: true, timeout: 5000 }
+        { enableHighAccuracy: true, timeout: 5000 },
       );
     });
   }
@@ -556,7 +568,10 @@ export class BeaconService {
   /**
    * Show a debug toast notification for visual feedback
    */
-  private async showDebugToast(message: string, color: 'success' | 'warning' | 'danger' | 'primary' = 'primary'): Promise<void> {
+  private async showDebugToast(
+    message: string,
+    color: 'success' | 'warning' | 'danger' | 'primary' = 'primary',
+  ): Promise<void> {
     try {
       const toast = await this.toastCtrl.create({
         message,

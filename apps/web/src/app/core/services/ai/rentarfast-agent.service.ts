@@ -394,11 +394,11 @@ export class RentarfastAgentService {
       msgs.map((msg) =>
         msg.id === messageId
           ? {
-            ...msg,
-            content,
-            toolsUsed: toolsUsed ?? msg.toolsUsed,
-            suggestions: suggestions ?? msg.suggestions,
-          }
+              ...msg,
+              content,
+              toolsUsed: toolsUsed ?? msg.toolsUsed,
+              suggestions: suggestions ?? msg.suggestions,
+            }
           : msg,
       ),
     );

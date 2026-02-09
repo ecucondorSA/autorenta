@@ -19,8 +19,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
         <h2>Domicilio Legal</h2>
         <p>
-          Av. Corrientes 1234, Piso 5<br>
-          Ciudad Autónoma de Buenos Aires (C1043AAZ)<br>
+          Av. Corrientes 1234, Piso 5<br />
+          Ciudad Autónoma de Buenos Aires (C1043AAZ)<br />
           Argentina
         </p>
 
@@ -40,9 +40,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
         <h2>Órgano de Control</h2>
         <p>
-          Dirección Nacional de Defensa del Consumidor<br>
-          <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor"
-             target="_blank" rel="noopener">
+          Dirección Nacional de Defensa del Consumidor<br />
+          <a
+            href="https://www.argentina.gob.ar/produccion/defensadelconsumidor"
+            target="_blank"
+            rel="noopener"
+          >
             www.argentina.gob.ar/defensadelconsumidor
           </a>
         </p>

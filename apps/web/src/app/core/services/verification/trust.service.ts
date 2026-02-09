@@ -12,12 +12,12 @@ export interface TrustAssessment {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TrustService {
   private readonly supabase = injectSupabase();
   private readonly bcraService = inject(BcraService);
-  
+
   readonly currentTrust = signal<TrustAssessment | null>(null);
   readonly loading = signal(false);
 
@@ -63,7 +63,7 @@ export class TrustService {
     try {
       const { data: userData } = await this.supabase.auth.getUser();
       const userId = userData.user?.id;
-      
+
       if (!userId) throw new Error('No user logged in');
 
       // 1. Get User Profile to find CUIT
@@ -75,27 +75,26 @@ export class TrustService {
 
       // 2. If CUIT exists, run BCRA Check (Async/Background ideally, but here inline for demo)
       if (profile?.cuit) {
-         try {
-           // We subscribe to observable and convert to promise
-           // Note: In a real flow, this might be triggered by a "Verify Financials" button
-           // or be part of the Edge Function logic directly to keep backend secure.
-           // For now, we assume the RPC 'calculate_user_risk_score' handles the aggregation,
-           // but we might need to populate the 'background_checks' table first.
-           
-           // TODO: Call verifyFinancialSolvency here if we want to update background_checks table
-           // await this.verifyFinancialSolvency(profile.cuit);
-         } catch (e) {
-           console.warn('BCRA check failed silently', e);
-         }
+        try {
+          // We subscribe to observable and convert to promise
+          // Note: In a real flow, this might be triggered by a "Verify Financials" button
+          // or be part of the Edge Function logic directly to keep backend secure.
+          // For now, we assume the RPC 'calculate_user_risk_score' handles the aggregation,
+          // but we might need to populate the 'background_checks' table first.
+          // TODO: Call verifyFinancialSolvency here if we want to update background_checks table
+          // await this.verifyFinancialSolvency(profile.cuit);
+        } catch (e) {
+          console.warn('BCRA check failed silently', e);
+        }
       }
 
       // 3. Call Core Risk Engine (RPC)
       const { data, error } = await this.supabase.rpc('calculate_user_risk_score', {
-        p_user_id: userId
+        p_user_id: userId,
       });
-      
+
       if (error) throw error;
-      
+
       // Refresh local state
       await this.fetchTrustStatus();
       return data;
@@ -116,17 +115,17 @@ export class TrustService {
         next: async (result) => {
           // Save result to 'background_checks' table so the RPC can read it
           const { error } = await this.supabase.from('background_checks').insert({
-             user_id: (await this.supabase.auth.getUser()).data.user?.id,
-             provider: 'bcra_api',
-             status: result.max_situation <= 2 ? 'clear' : 'rejected',
-             raw_data: result,
-             debt_record_found: result.max_situation > 1
+            user_id: (await this.supabase.auth.getUser()).data.user?.id,
+            provider: 'bcra_api',
+            status: result.max_situation <= 2 ? 'clear' : 'rejected',
+            raw_data: result,
+            debt_record_found: result.max_situation > 1,
           });
-          
+
           if (error) reject(error);
           else resolve();
         },
-        error: (err) => reject(err)
+        error: (err) => reject(err),
       });
     });
   }

@@ -17,7 +17,6 @@ interface TikTokConfig {
   clientId?: string;
 }
 
-
 interface GoogleOneTapConfig {
   clientId?: string;
   autoSelect?: boolean;
@@ -212,13 +211,17 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   socialMedia: {
     facebook: resolve(
       'NG_APP_SOCIAL_FACEBOOK',
-      defaults.socialMedia?.facebook ?? 'https://www.facebook.com/people/Autorentar/61586558399370/',
+      defaults.socialMedia?.facebook ??
+        'https://www.facebook.com/people/Autorentar/61586558399370/',
     ),
     instagram: resolve(
       'NG_APP_SOCIAL_INSTAGRAM',
       defaults.socialMedia?.instagram ?? 'https://www.instagram.com/auto.rentar',
     ),
-    twitter: resolve('NG_APP_SOCIAL_TWITTER', defaults.socialMedia?.twitter ?? 'https://twitter.com/autorentar'),
+    twitter: resolve(
+      'NG_APP_SOCIAL_TWITTER',
+      defaults.socialMedia?.twitter ?? 'https://twitter.com/autorentar',
+    ),
     linkedin: resolve(
       'NG_APP_SOCIAL_LINKEDIN',
       defaults.socialMedia?.linkedin ?? 'https://linkedin.com/company/autorentar',

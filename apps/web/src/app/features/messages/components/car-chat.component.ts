@@ -24,7 +24,14 @@ import {
       (menuClicked)="onMenuClicked()"
     />
   `,
-  styles: [`:host { display: block; height: 100%; }`],
+  styles: [
+    `
+      :host {
+        display: block;
+        height: 100%;
+      }
+    `,
+  ],
 })
 export class CarChatComponent {
   private readonly logger = inject(LoggerService);

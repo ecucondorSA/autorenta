@@ -1,4 +1,12 @@
-import { Component, ChangeDetectionStrategy, computed, effect, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';

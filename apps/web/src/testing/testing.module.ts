@@ -98,11 +98,11 @@ export function mockSupabaseClientService() {
     isConfigured: true,
     getClient: jasmine.createSpy('getClient').and.returnValue({
       auth: {
-        getSession: jasmine.createSpy('getSession').and.returnValue(Promise.resolve(mockAuthSession)),
+        getSession: jasmine
+          .createSpy('getSession')
+          .and.returnValue(Promise.resolve(mockAuthSession)),
         getUser: jasmine.createSpy('getUser').and.returnValue(Promise.resolve(mockAuthUser)),
-        onAuthStateChange: jasmine
-          .createSpy('onAuthStateChange')
-          .and.returnValue(mockSubscription),
+        onAuthStateChange: jasmine.createSpy('onAuthStateChange').and.returnValue(mockSubscription),
         signInWithPassword: jasmine
           .createSpy('signInWithPassword')
           .and.returnValue(Promise.resolve(mockAuthSession)),
@@ -111,9 +111,7 @@ export function mockSupabaseClientService() {
         resetPasswordForEmail: jasmine
           .createSpy('resetPasswordForEmail')
           .and.returnValue(Promise.resolve({ data: {}, error: null })),
-        updateUser: jasmine
-          .createSpy('updateUser')
-          .and.returnValue(Promise.resolve(mockAuthUser)),
+        updateUser: jasmine.createSpy('updateUser').and.returnValue(Promise.resolve(mockAuthUser)),
       },
       from: jasmine.createSpy('from').and.callFake(() => createChainableQuery()),
       rpc: jasmine.createSpy('rpc').and.returnValue(Promise.resolve({ data: null, error: null })),

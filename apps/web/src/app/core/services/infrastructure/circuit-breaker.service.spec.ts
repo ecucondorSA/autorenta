@@ -11,7 +11,11 @@ describe('CircuitBreakerService', () => {
     mockLogger = jasmine.createSpyObj('LoggerService', ['info', 'warn', 'error', 'debug']);
 
     TestBed.configureTestingModule({
-      providers: [...testProviders, CircuitBreakerService, { provide: LoggerService, useValue: mockLogger }],
+      providers: [
+        ...testProviders,
+        CircuitBreakerService,
+        { provide: LoggerService, useValue: mockLogger },
+      ],
     });
 
     service = TestBed.inject(CircuitBreakerService);

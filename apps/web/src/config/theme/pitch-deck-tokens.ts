@@ -59,7 +59,7 @@ export type PitchDeckColor = keyof typeof pitchDeckColors;
  */
 export function getPitchDeckColor(
   category: keyof typeof pitchDeckColors,
-  shade: string = 'DEFAULT'
+  shade: string = 'DEFAULT',
 ): string {
   const categoryColors = pitchDeckColors[category] as Record<string, string>;
   return categoryColors[shade] || categoryColors['DEFAULT'] || '#000000';

@@ -128,7 +128,8 @@
               formControlName="subject"
               placeholder="Describe brevemente tu problema"
               class="w-full px-4 py-3 rounded-lg border border-border-default bg-surface-base focus:outline-none focus:ring-2 focus:ring-cta-default focus:border-transparent text-text-primary placeholder-text-muted"
-            aria-label="Describe brevemente tu problema" />
+              aria-label="Describe brevemente tu problema"
+            />
             @if (getFieldError('subject')) {
               <p class="mt-1 text-sm text-red-600">{{ getFieldError('subject') }}</p>
             }

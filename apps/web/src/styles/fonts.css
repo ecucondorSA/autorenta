@@ -33,10 +33,13 @@
 
 :root {
   /* Primary font stack - Used everywhere */
-  --font-sans: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans:
+    'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
 
   /* Mono font stack - Used for prices, codes, IDs */
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -65,8 +68,8 @@ body {
 .money,
 .balance,
 .amount,
-[data-type="price"],
-[data-type="money"] {
+[data-type='price'],
+[data-type='money'] {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
@@ -76,7 +79,7 @@ body {
 .code,
 .booking-id,
 .reference,
-[data-type="code"] {
+[data-type='code'] {
   font-family: var(--font-mono);
   font-size: 0.9em;
 }

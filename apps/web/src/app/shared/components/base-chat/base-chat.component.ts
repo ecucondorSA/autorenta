@@ -396,7 +396,12 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
                             <span
                               class="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 text-cta-default"
                             >
-                              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
                                 <path
                                   stroke-linecap="round"
                                   stroke-linejoin="round"
@@ -479,7 +484,9 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
                               />
                             </a>
                           } @else if (attachment.kind === 'video') {
-                            <div class="overflow-hidden rounded-2xl border border-black/15 bg-black/5">
+                            <div
+                              class="overflow-hidden rounded-2xl border border-black/15 bg-black/5"
+                            >
                               <video
                                 class="block max-h-64 w-full"
                                 [src]="attachment.url"
@@ -496,7 +503,12 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
                             <span
                               class="flex h-10 w-10 items-center justify-center rounded-full bg-black/10 text-black"
                             >
-                              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
                                 <path
                                   stroke-linecap="round"
                                   stroke-linejoin="round"
@@ -729,7 +741,9 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
                   (mousedown)="$event.preventDefault()"
                   (touchstart)="$event.preventDefault()"
                 >
-                  <span class="flex h-8 w-8 items-center justify-center rounded-full bg-cta-default text-white">
+                  <span
+                    class="flex h-8 w-8 items-center justify-center rounded-full bg-cta-default text-white"
+                  >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
@@ -748,7 +762,9 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
                   (mousedown)="$event.preventDefault()"
                   (touchstart)="$event.preventDefault()"
                 >
-                  <span class="flex h-8 w-8 items-center justify-center rounded-full bg-sky-500 text-white">
+                  <span
+                    class="flex h-8 w-8 items-center justify-center rounded-full bg-sky-500 text-white"
+                  >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
@@ -767,7 +783,9 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
                   (mousedown)="$event.preventDefault()"
                   (touchstart)="$event.preventDefault()"
                 >
-                  <span class="flex h-8 w-8 items-center justify-center rounded-full bg-rose-500 text-white">
+                  <span
+                    class="flex h-8 w-8 items-center justify-center rounded-full bg-rose-500 text-white"
+                  >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
@@ -1549,8 +1567,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
 
   isSearchActive(): boolean {
     return (
-      this.showSearch() &&
-      (this.searchQuery().trim().length > 0 || this.searchFilter() !== 'all')
+      this.showSearch() && (this.searchQuery().trim().length > 0 || this.searchFilter() !== 'all')
     );
   }
 

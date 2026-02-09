@@ -148,7 +148,10 @@ export class VehicleRecognitionService {
       if (error) {
         // ✅ FIX: Extract error message properly to avoid [object Object]
         const errorMessage = this.extractErrorMessage(error);
-        this.logger.error('Edge function error', 'VehicleRecognition', { error, message: errorMessage });
+        this.logger.error('Edge function error', 'VehicleRecognition', {
+          error,
+          message: errorMessage,
+        });
         throw new Error(errorMessage);
       }
 

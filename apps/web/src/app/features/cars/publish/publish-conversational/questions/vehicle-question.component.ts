@@ -71,7 +71,13 @@ import {
               aria-label="Limpiar búsqueda"
               class="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-surface-secondary hover:bg-surface-hover text-text-muted hover:text-text-primary transition-all"
             >
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -79,8 +85,19 @@ import {
           @if (isLoading()) {
             <div class="absolute right-4 top-1/2 -translate-y-1/2">
               <svg class="animate-spin h-5 w-5 text-cta-default" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
             </div>
           }
@@ -93,18 +110,44 @@ import {
           class="flex-shrink-0 w-14 h-14 bg-cta-default/10 hover:bg-cta-default/20 border-2 border-cta-default/30 hover:border-cta-default rounded-2xl flex items-center justify-center transition-all active:scale-95 hover:shadow-lg"
           aria-label="Escanear auto con cámara"
         >
-          <svg class="w-6 h-6 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+          <svg
+            class="w-6 h-6 text-cta-default"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+            />
           </svg>
         </button>
       </div>
 
       <!-- Recognition result message -->
       @if (recognitionMessage()) {
-        <div class="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-sm">
-          <svg class="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div
+          class="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-sm"
+        >
+          <svg
+            class="w-5 h-5 text-blue-600 flex-shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <span class="text-blue-700 dark:text-blue-300">{{ recognitionMessage() }}</span>
         </div>
@@ -112,7 +155,9 @@ import {
 
       <!-- Search results -->
       @if (showResults() && filteredBrands().length > 0) {
-        <div class="bg-surface-raised border border-border-default rounded-xl shadow-lg max-h-64 overflow-y-auto">
+        <div
+          class="bg-surface-raised border border-border-default rounded-xl shadow-lg max-h-64 overflow-y-auto"
+        >
           @for (brand of filteredBrands(); track brand.code) {
             <button
               type="button"
@@ -120,9 +165,16 @@ import {
               class="w-full px-4 py-3 flex items-center gap-3 hover:bg-surface-hover transition-colors border-b border-border-default last:border-b-0"
             >
               @if (getBrandLogo(brand.name); as logo) {
-                <img [src]="logo" [alt]="brand.name" class="w-8 h-8 object-contain" loading="lazy" />
+                <img
+                  [src]="logo"
+                  [alt]="brand.name"
+                  class="w-8 h-8 object-contain"
+                  loading="lazy"
+                />
               } @else {
-                <div class="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center">
+                <div
+                  class="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center"
+                >
                   <span class="text-sm font-bold text-text-muted">{{ brand.name.charAt(0) }}</span>
                 </div>
               }
@@ -133,7 +185,9 @@ import {
       }
 
       <!-- No results -->
-      @if (showResults() && searchQuery.length >= 2 && filteredBrands().length === 0 && !isLoading()) {
+      @if (
+        showResults() && searchQuery.length >= 2 && filteredBrands().length === 0 && !isLoading()
+      ) {
         <div class="text-center py-8 text-text-secondary">
           <p>No encontramos esa marca</p>
           <p class="text-sm mt-1">Intentá con otro nombre</p>
@@ -143,7 +197,9 @@ import {
       <!-- Popular brands grid -->
       @if (!showResults()) {
         <div class="space-y-4">
-          <p class="text-xs font-semibold text-text-muted uppercase tracking-widest">Marcas populares</p>
+          <p class="text-xs font-semibold text-text-muted uppercase tracking-widest">
+            Marcas populares
+          </p>
           <div class="grid grid-cols-3 gap-3">
             @for (brand of popularBrands(); track brand.code; let i = $index) {
               <button
@@ -160,11 +216,17 @@ import {
                     loading="lazy"
                   />
                 } @else {
-                  <div class="w-12 h-12 bg-surface-secondary rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:bg-cta-default/10 transition-all duration-200">
-                    <span class="text-xl font-bold text-text-muted group-hover:text-cta-default">{{ brand.name.charAt(0) }}</span>
+                  <div
+                    class="w-12 h-12 bg-surface-secondary rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:bg-cta-default/10 transition-all duration-200"
+                  >
+                    <span class="text-xl font-bold text-text-muted group-hover:text-cta-default">{{
+                      brand.name.charAt(0)
+                    }}</span>
                   </div>
                 }
-                <span class="text-xs font-semibold text-text-secondary group-hover:text-cta-default transition-colors text-center leading-tight line-clamp-1">
+                <span
+                  class="text-xs font-semibold text-text-secondary group-hover:text-cta-default transition-colors text-center leading-tight line-clamp-1"
+                >
                   {{ brand.name }}
                 </span>
               </button>
@@ -175,15 +237,31 @@ import {
 
       <!-- Selected brand indicator -->
       @if (selectedBrand()) {
-        <div class="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
-          <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-800 rounded-full flex items-center justify-center">
-            <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        <div
+          class="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl"
+        >
+          <div
+            class="w-10 h-10 bg-emerald-100 dark:bg-emerald-800 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 text-emerald-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
           <div class="flex-1">
             <p class="text-sm text-emerald-700 dark:text-emerald-400">Marca seleccionada</p>
-            <p class="font-semibold text-emerald-900 dark:text-emerald-200">{{ selectedBrand()?.name }}</p>
+            <p class="font-semibold text-emerald-900 dark:text-emerald-200">
+              {{ selectedBrand()?.name }}
+            </p>
           </div>
           <button
             type="button"
@@ -192,7 +270,12 @@ import {
             class="text-emerald-600 hover:text-emerald-800 transition-colors"
           >
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>

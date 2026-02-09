@@ -48,7 +48,7 @@ bootstrapApplication(AppComponent, {
     // Lazy-load Sentry initialization (saves ~238KB from initial bundle)
     // Sentry doesn't need to block app startup - it can initialize async
     void import('@core/services/infrastructure/sentry.service').then(({ initSentry }) =>
-      initSentry()
+      initSentry(),
     );
   })
   .catch((err) => {

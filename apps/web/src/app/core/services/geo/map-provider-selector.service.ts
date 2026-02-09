@@ -28,9 +28,7 @@ export class MapProviderSelectorService {
    * Select best available map provider
    * Returns Mapbox if available, falls back to Google Maps
    */
-  async selectProvider(
-    forceProvider?: MapProviderType,
-  ): Promise<MapProviderSelectionResult> {
+  async selectProvider(forceProvider?: MapProviderType): Promise<MapProviderSelectionResult> {
     // If specific provider forced, try it first
     if (forceProvider === 'google') {
       const result = await this.tryGoogleMaps('forced by configuration');
@@ -53,9 +51,7 @@ export class MapProviderSelectorService {
     if (googleResult) return googleResult;
 
     // Both failed - throw error
-    throw new Error(
-      'No map provider available. Please check WebGL support and API keys.',
-    );
+    throw new Error('No map provider available. Please check WebGL support and API keys.');
   }
 
   /**
@@ -119,9 +115,7 @@ export class MapProviderSelectorService {
     return {
       mapbox: {
         available: mapboxAvailable,
-        reason: mapboxAvailable
-          ? 'WebGL + valid token'
-          : 'WebGL not supported or invalid token',
+        reason: mapboxAvailable ? 'WebGL + valid token' : 'WebGL not supported or invalid token',
       },
       google: {
         available: googleAvailable,

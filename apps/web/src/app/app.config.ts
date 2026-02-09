@@ -196,11 +196,11 @@ export const appConfig: ApplicationConfig = {
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode()
       ? {
-        provide: APP_INITIALIZER,
-        useFactory: initializePerformanceMonitoring,
-        deps: [PerformanceMonitoringService, LoggerService],
-        multi: true,
-      }
+          provide: APP_INITIALIZER,
+          useFactory: initializePerformanceMonitoring,
+          deps: [PerformanceMonitoringService, LoggerService],
+          multi: true,
+        }
       : [],
     // ✅ Debug Service initialization (para e2e tests)
     // Siempre inicializar para exponer window.__AR_DEBUG__

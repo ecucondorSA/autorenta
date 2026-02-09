@@ -48,4 +48,3 @@ export function calculateFallbackHourlyRateUsd(pricePerDayUsd: number): number {
   if (!Number.isFinite(pricePerDayUsd) || pricePerDayUsd <= 0) return 0;
   return (pricePerDayUsd * 0.75) / 24;
 }
-

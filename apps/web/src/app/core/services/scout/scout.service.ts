@@ -7,7 +7,7 @@ import { ScoutAlarmService } from './scout-alarm.service';
 export type { Bounty };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ScoutService {
   private supabase = inject(SupabaseClientService).getClient();
@@ -20,22 +20,26 @@ export class ScoutService {
   setupRealtimeListener() {
     this.supabase
       .channel('public:bounties')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'bounties' }, async (payload: { new: { id: string } }) => {
-        this.logger.info('NUEVA MISIÓN DETECTADA:', payload.new);
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'bounties' },
+        async (payload: { new: { id: string } }) => {
+          this.logger.info('NUEVA MISIÓN DETECTADA:', payload.new);
 
-        // Cargar datos completos del auto para la alerta
-        const { data: mission } = await this.supabase
-          .from('bounties')
-          .select('*, cars(brand, model, color, license_plate, photos)')
-          .eq('id', payload.new.id)
-          .single();
+          // Cargar datos completos del auto para la alerta
+          const { data: mission } = await this.supabase
+            .from('bounties')
+            .select('*, cars(brand, model, color, license_plate, photos)')
+            .eq('id', payload.new.id)
+            .single();
 
-        if (mission) {
-          this.activeMissions.update(prev => [mission, ...prev]);
-          // ¡DISPARAR ALARMA NUCLEAR!
-          this.alarm.triggerMissionAlert(mission);
-        }
-      })
+          if (mission) {
+            this.activeMissions.update((prev) => [mission, ...prev]);
+            // ¡DISPARAR ALARMA NUCLEAR!
+            this.alarm.triggerMissionAlert(mission);
+          }
+        },
+      )
       .subscribe();
   }
 
@@ -44,7 +48,7 @@ export class ScoutService {
     const { data, error } = await this.supabase.rpc('find_nearby_bounties', {
       user_lat: lat,
       user_long: lng,
-      search_radius_meters: 5000 // 5km por defecto
+      search_radius_meters: 5000, // 5km por defecto
     });
 
     if (error) {
@@ -56,12 +60,14 @@ export class ScoutService {
     const missionIds = (data as { id: string }[]).map((b) => b.id);
     const { data: enrichedData } = await this.supabase
       .from('bounties')
-      .select(`
+      .select(
+        `
         *,
         cars (
           brand, model, color, license_plate, year, photos
         )
-      `)
+      `,
+      )
       .in('id', missionIds);
 
     if (enrichedData) {
@@ -89,7 +95,7 @@ export class ScoutService {
         scout_id: (await this.supabase.auth.getUser()).data.user?.id,
         photo_url: uploadData.path,
         gps_location: `POINT(${lng} ${lat})`,
-        status: 'PENDING'
+        status: 'PENDING',
       })
       .select()
       .single();
@@ -99,7 +105,7 @@ export class ScoutService {
     // 3. Invocar Validación IA (Edge Function)
     // No esperamos el resultado aquí (es asíncrono), la función actualizará el claim
     this.supabase.functions.invoke('verify-bounty-photo', {
-      body: { claim_id: claim.id }
+      body: { claim_id: claim.id },
     });
 
     return claim;

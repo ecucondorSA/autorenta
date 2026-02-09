@@ -16,8 +16,6 @@ export interface DetailedVerificationStatus {
 
 type UserDocumentRow = Database['public']['Tables']['user_documents']['Row'];
 
-
-
 /**
  * Tipos de documento válidos según el enum de la base de datos.
  * SECURITY: Previene SQL injection validando contra whitelist.
@@ -505,7 +503,7 @@ export class VerificationService implements OnDestroy {
       });
       throw new Error(
         'Verificación OCR fallida después de múltiples intentos. ' +
-        'Por favor, asegurate de que la imagen sea clara y esté bien iluminada.'
+          'Por favor, asegurate de que la imagen sea clara y esté bien iluminada.',
       );
     }
 
@@ -558,7 +556,9 @@ export class VerificationService implements OnDestroy {
         maxSizeMB: 1,
         maxWidthOrHeight: 1920,
       });
-      this.logger.info(`Document compressed: ${(file.size / 1024).toFixed(0)}KB -> ${(processedFile.size / 1024).toFixed(0)}KB`);
+      this.logger.info(
+        `Document compressed: ${(file.size / 1024).toFixed(0)}KB -> ${(processedFile.size / 1024).toFixed(0)}KB`,
+      );
     } catch (e) {
       this.logger.warn('Compression failed, proceeding with original', e);
     }

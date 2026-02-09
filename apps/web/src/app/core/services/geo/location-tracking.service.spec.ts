@@ -65,9 +65,12 @@ describe('LocationTrackingService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, LocationTrackingService,
+      providers: [
+        ...testProviders,
+        LocationTrackingService,
         { provide: SupabaseClientService, useValue: mockSupabaseService },
-        { provide: LoggerService, useValue: mockLoggerService },],
+        { provide: LoggerService, useValue: mockLoggerService },
+      ],
     });
     service = TestBed.inject(LocationTrackingService);
   });

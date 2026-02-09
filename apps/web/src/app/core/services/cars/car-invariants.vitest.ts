@@ -221,15 +221,13 @@ describe('I1: active requires id_verified', () => {
 
       // Simulate the service behavior
       const updateCarStatus = async (carId: string, status: CarStatus): Promise<void> => {
-        const result = await mockSupabase
-          .from('cars')
-          .update({ status })
-          .eq('id', carId)
-          .select();
+        const result = await mockSupabase.from('cars').update({ status }).eq('id', carId).select();
 
         if (result.error) {
           if (result.error.code === '23514') {
-            const error = new Error('El propietario debe completar verificación de identidad') as Error & {
+            const error = new Error(
+              'El propietario debe completar verificación de identidad',
+            ) as Error & {
               code: string;
             };
             error.code = 'VERIFICATION_REQUIRED';
@@ -239,7 +237,9 @@ describe('I1: active requires id_verified', () => {
         }
       };
 
-      await expect(updateCarStatus('car-123', 'active')).rejects.toThrow('verificación de identidad');
+      await expect(updateCarStatus('car-123', 'active')).rejects.toThrow(
+        'verificación de identidad',
+      );
     });
   });
 });
@@ -303,7 +303,9 @@ describe('I2: public read only active/pending (RLS)', () => {
       const result = await mockSupabase.from('cars').select();
 
       expect(result.data).toHaveLength(3); // 2 active + 1 pending
-      expect(result.data?.every((car) => car.status === 'active' || car.status === 'pending')).toBe(true);
+      expect(result.data?.every((car) => car.status === 'active' || car.status === 'pending')).toBe(
+        true,
+      );
     });
 
     it('should NOT see cars with status draft', async () => {
@@ -338,7 +340,9 @@ describe('I2: public read only active/pending (RLS)', () => {
       const result = await mockSupabase.from('cars').select();
 
       expect(result.data).toHaveLength(3); // 2 active + 1 pending
-      expect(result.data?.every((car) => car.status === 'active' || car.status === 'pending')).toBe(true);
+      expect(result.data?.every((car) => car.status === 'active' || car.status === 'pending')).toBe(
+        true,
+      );
     });
 
     it('should NOT see other users draft/paused/deleted cars', async () => {
@@ -386,7 +390,9 @@ describe('I2: public read only active/pending (RLS)', () => {
 
       const result = await mockSupabase.from('cars').select();
 
-      const marketplaceCars = result.data?.filter((car) => car.status === 'active' || car.status === 'pending');
+      const marketplaceCars = result.data?.filter(
+        (car) => car.status === 'active' || car.status === 'pending',
+      );
 
       expect(marketplaceCars).toHaveLength(3);
       expect(marketplaceCars?.some((car) => car.status === 'active')).toBe(true);

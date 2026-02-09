@@ -1,5 +1,13 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, EventEmitter, Input, Output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import type { Car } from '@core/models';
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
@@ -143,7 +151,11 @@ export class CarCardViewComponent {
     if (!car) return 'Próximamente';
     if (car.title && car.title.trim().length > 0) return car.title.trim();
 
-    const parts = [car.brand || car.brand_name || '', car.model || car.model_name || '', car.year || '']
+    const parts = [
+      car.brand || car.brand_name || '',
+      car.model || car.model_name || '',
+      car.year || '',
+    ]
       .map((p) => String(p).trim())
       .filter(Boolean);
 

@@ -9,7 +9,10 @@ import { RouterLink } from '@angular/router';
   imports: [CommonModule, RouterLink],
   template: `
     <div class="static-page">
-      <section class="static-hero" style="background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);">
+      <section
+        class="static-hero"
+        style="background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);"
+      >
         <h1>📚 Recursos para Propietarios</h1>
         <p>Herramientas y guías para maximizar tus ganancias</p>
       </section>
@@ -44,8 +47,8 @@ import { RouterLink } from '@angular/router';
 
         <h2>Comunidad de Propietarios</h2>
         <p>
-          Únete a nuestro grupo exclusivo de propietarios donde compartimos
-          tips, novedades y experiencias.
+          Únete a nuestro grupo exclusivo de propietarios donde compartimos tips, novedades y
+          experiencias.
         </p>
 
         <div class="cta-section">

@@ -19,7 +19,10 @@ interface InvestorStats {
   imports: [CommonModule],
   template: `
     <div class="static-page">
-      <section class="static-hero" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+      <section
+        class="static-hero"
+        style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);"
+      >
         <h1>📊 Información para Inversionistas</h1>
         <p>Participa en el crecimiento de Autorentar</p>
       </section>
@@ -27,10 +30,9 @@ interface InvestorStats {
       <div class="static-content">
         <h2>Oportunidad de Mercado</h2>
         <p>
-          El mercado de alquiler de autos entre particulares en Latinoamérica
-          está valorado en miles de millones de dólares y crece año tras año.
-          Autorentar está posicionada para capturar una porción significativa
-          de este mercado en Argentina.
+          El mercado de alquiler de autos entre particulares en Latinoamérica está valorado en miles
+          de millones de dólares y crece año tras año. Autorentar está posicionada para capturar una
+          porción significativa de este mercado en Argentina.
         </p>
 
         <h2>Métricas en Tiempo Real</h2>
@@ -42,7 +44,7 @@ interface InvestorStats {
               <p>Vehículos Activos</p>
             </div>
             <div class="info-card">
-              <h3>💰 {{ stats.total_gmv_usd | currency:'USD':'symbol':'1.0-0' }}</h3>
+              <h3>💰 {{ stats.total_gmv_usd | currency: 'USD' : 'symbol' : '1.0-0' }}</h3>
               <p>GMV Total (Est. USD)</p>
             </div>
             <div class="info-card">
@@ -56,7 +58,7 @@ interface InvestorStats {
           </div>
         } @else {
           <div class="card-grid skeleton">
-            <div class="info-card" *ngFor="let i of [1,2,3,4]">
+            <div class="info-card" *ngFor="let i of [1, 2, 3, 4]">
               <h3>...</h3>
               <p>Cargando métricas...</p>
             </div>
@@ -84,20 +86,24 @@ interface InvestorStats {
 export class InvestorsPage {
   private http = inject(HttpClient);
 
-  stats$ = this.http.get<InvestorStats>(`${environment.supabaseUrl}/functions/v1/public-investor-stats`).pipe(
-    map(data => ({
-      ...data,
-      active_cars: data.active_cars || 28,
-      total_gmv_usd: data.total_gmv_usd || 1500,
-      completed_trips: data.completed_trips || 120,
-      total_users: data.total_users || 350
-    })),
-    catchError(() => of({
-      active_cars: 28,
-      total_gmv_usd: 1500,
-      completed_trips: 120,
-      total_users: 350
-    })),
-    shareReplay(1)
-  );
+  stats$ = this.http
+    .get<InvestorStats>(`${environment.supabaseUrl}/functions/v1/public-investor-stats`)
+    .pipe(
+      map((data) => ({
+        ...data,
+        active_cars: data.active_cars || 28,
+        total_gmv_usd: data.total_gmv_usd || 1500,
+        completed_trips: data.completed_trips || 120,
+        total_users: data.total_users || 350,
+      })),
+      catchError(() =>
+        of({
+          active_cars: 28,
+          total_gmv_usd: 1500,
+          completed_trips: 120,
+          total_users: 350,
+        }),
+      ),
+      shareReplay(1),
+    );
 }

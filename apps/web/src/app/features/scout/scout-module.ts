@@ -3,12 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { ScoutRoutingModule } from './scout-routing-module';
 
-
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    ScoutRoutingModule
-  ]
+  imports: [CommonModule, ScoutRoutingModule],
 })
-export class ScoutModule { }
+export class ScoutModule {}

@@ -1,4 +1,11 @@
-import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, Platform } from '@ionic/angular';
@@ -67,7 +74,8 @@ import { BeaconMessageType } from '../../core/services/beacon/beacon-protocol';
           <ion-button
             expand="block"
             (click)="initialize()"
-            [disabled]="beaconService.status() !== 'uninitialized'">
+            [disabled]="beaconService.status() !== 'uninitialized'"
+          >
             <ion-icon name="power-outline" slot="start"></ion-icon>
             Inicializar BeaconService
           </ion-button>
@@ -97,15 +105,13 @@ import { BeaconMessageType } from '../../core/services/beacon/beacon-protocol';
               expand="block"
               color="danger"
               (click)="startBroadcasting()"
-              [disabled]="beaconService.status() !== 'ready'">
+              [disabled]="beaconService.status() !== 'ready'"
+            >
               <ion-icon name="radio-outline" slot="start"></ion-icon>
               Emitir Señal {{ getAlertName(selectedAlertType) }}
             </ion-button>
           } @else {
-            <ion-button
-              expand="block"
-              color="medium"
-              (click)="stopBroadcasting()">
+            <ion-button expand="block" color="medium" (click)="stopBroadcasting()">
               <ion-icon name="stop-circle-outline" slot="start"></ion-icon>
               Detener Broadcasting
             </ion-button>
@@ -124,15 +130,13 @@ import { BeaconMessageType } from '../../core/services/beacon/beacon-protocol';
               expand="block"
               color="success"
               (click)="startScanning()"
-              [disabled]="beaconService.status() !== 'ready'">
+              [disabled]="beaconService.status() !== 'ready'"
+            >
               <ion-icon name="search-outline" slot="start"></ion-icon>
               Iniciar Escaneo
             </ion-button>
           } @else {
-            <ion-button
-              expand="block"
-              color="medium"
-              (click)="stopScanning()">
+            <ion-button expand="block" color="medium" (click)="stopScanning()">
               <ion-icon name="stop-circle-outline" slot="start"></ion-icon>
               Detener Escaneo
             </ion-button>
@@ -151,9 +155,7 @@ import { BeaconMessageType } from '../../core/services/beacon/beacon-protocol';
           @if (beaconService.detectedBeacons().length === 0) {
             <ion-item lines="none">
               <ion-icon name="radio-outline" slot="start" color="medium"></ion-icon>
-              <ion-label color="medium">
-                No se han detectado beacons aún
-              </ion-label>
+              <ion-label color="medium"> No se han detectado beacons aún </ion-label>
             </ion-item>
           } @else {
             <ion-list>
@@ -162,13 +164,14 @@ import { BeaconMessageType } from '../../core/services/beacon/beacon-protocol';
                   <ion-icon
                     [name]="getAlertIcon(beacon.message.type)"
                     slot="start"
-                    [color]="getAlertColor(beacon.message.type)">
+                    [color]="getAlertColor(beacon.message.type)"
+                  >
                   </ion-icon>
                   <ion-label>
                     <h2>{{ getAlertName(beacon.message.type) }}</h2>
                     <p>ID: {{ beacon.message.bookingIdHash.substring(0, 8) }}...</p>
                     <p>RSSI: {{ beacon.rssi }} dBm</p>
-                    <p>{{ beacon.detectedAt | date:'HH:mm:ss' }}</p>
+                    <p>{{ beacon.detectedAt | date: 'HH:mm:ss' }}</p>
                   </ion-label>
                   <ion-badge slot="end" [color]="getRssiColor(beacon.rssi)">
                     {{ estimateDistance(beacon.rssi) }}m
@@ -185,9 +188,7 @@ import { BeaconMessageType } from '../../core/services/beacon/beacon-protocol';
         <ion-card-header>
           <ion-card-title>
             Logs
-            <ion-button fill="clear" size="small" (click)="clearLogs()">
-              Limpiar
-            </ion-button>
+            <ion-button fill="clear" size="small" (click)="clearLogs()"> Limpiar </ion-button>
           </ion-card-title>
         </ion-card-header>
         <ion-card-content>
@@ -209,29 +210,39 @@ import { BeaconMessageType } from '../../core/services/beacon/beacon-protocol';
       </ion-card>
     </ion-content>
   `,
-  styles: [`
-    .logs-container {
-      max-height: 300px;
-      overflow-y: auto;
-      font-family: monospace;
-      font-size: 12px;
-      background: #1a1a1a;
-      border-radius: 8px;
-      padding: 8px;
-    }
-    .log-entry {
-      padding: 4px 0;
-      border-bottom: 1px solid #333;
-    }
-    .log-entry.info { color: #4fc3f7; }
-    .log-entry.success { color: #81c784; }
-    .log-entry.warning { color: #ffb74d; }
-    .log-entry.error { color: #e57373; }
-    .time {
-      color: #888;
-      margin-right: 8px;
-    }
-  `]
+  styles: [
+    `
+      .logs-container {
+        max-height: 300px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 12px;
+        background: #1a1a1a;
+        border-radius: 8px;
+        padding: 8px;
+      }
+      .log-entry {
+        padding: 4px 0;
+        border-bottom: 1px solid #333;
+      }
+      .log-entry.info {
+        color: #4fc3f7;
+      }
+      .log-entry.success {
+        color: #81c784;
+      }
+      .log-entry.warning {
+        color: #ffb74d;
+      }
+      .log-entry.error {
+        color: #e57373;
+      }
+      .time {
+        color: #888;
+        margin-right: 8px;
+      }
+    `,
+  ],
 })
 export class BeaconTestPage implements OnInit {
   readonly beaconService = inject(BeaconService);
@@ -252,16 +263,23 @@ export class BeaconTestPage implements OnInit {
   statusColor = computed(() => {
     const status = this.beaconService.status();
     switch (status) {
-      case 'ready': return 'success';
-      case 'initializing': return 'warning';
-      case 'error': return 'danger';
-      default: return 'medium';
+      case 'ready':
+        return 'success';
+      case 'initializing':
+        return 'warning';
+      case 'error':
+        return 'danger';
+      default:
+        return 'medium';
     }
   });
 
   ngOnInit() {
-    this.platformInfo = this.platform.is('android') ? 'Android' :
-                        this.platform.is('ios') ? 'iOS' : 'Web';
+    this.platformInfo = this.platform.is('android')
+      ? 'Android'
+      : this.platform.is('ios')
+        ? 'iOS'
+        : 'Web';
     this.log('Página de test inicializada', 'info');
     this.log(`Plataforma: ${this.platformInfo}`, 'info');
     this.fetchLocation();
@@ -275,7 +293,9 @@ export class BeaconTestPage implements OnInit {
       });
       this.currentLatitude = position.coords.latitude;
       this.currentLongitude = position.coords.longitude;
-      this.locationInfo.set(`${this.currentLatitude.toFixed(4)}, ${this.currentLongitude.toFixed(4)}`);
+      this.locationInfo.set(
+        `${this.currentLatitude.toFixed(4)}, ${this.currentLongitude.toFixed(4)}`,
+      );
       this.log(`Ubicación: ${this.locationInfo()}`, 'success');
     } catch (error) {
       this.locationInfo.set('Error obteniendo ubicación');
@@ -308,7 +328,7 @@ export class BeaconTestPage implements OnInit {
         this.selectedAlertType,
         testBookingIdHash,
         this.currentLatitude,
-        this.currentLongitude
+        this.currentLongitude,
       );
       if (success) {
         this.log('Broadcasting iniciado', 'success');
@@ -357,28 +377,40 @@ export class BeaconTestPage implements OnInit {
 
   getAlertName(type: BeaconMessageType): string {
     switch (type) {
-      case BeaconMessageType.SOS: return 'SOS';
-      case BeaconMessageType.THEFT: return 'ROBO';
-      case BeaconMessageType.CRASH: return 'CHOQUE';
-      default: return 'UNKNOWN';
+      case BeaconMessageType.SOS:
+        return 'SOS';
+      case BeaconMessageType.THEFT:
+        return 'ROBO';
+      case BeaconMessageType.CRASH:
+        return 'CHOQUE';
+      default:
+        return 'UNKNOWN';
     }
   }
 
   getAlertIcon(type: BeaconMessageType): string {
     switch (type) {
-      case BeaconMessageType.SOS: return 'warning-outline';
-      case BeaconMessageType.THEFT: return 'car-outline';
-      case BeaconMessageType.CRASH: return 'alert-circle-outline';
-      default: return 'radio-outline';
+      case BeaconMessageType.SOS:
+        return 'warning-outline';
+      case BeaconMessageType.THEFT:
+        return 'car-outline';
+      case BeaconMessageType.CRASH:
+        return 'alert-circle-outline';
+      default:
+        return 'radio-outline';
     }
   }
 
   getAlertColor(type: BeaconMessageType): string {
     switch (type) {
-      case BeaconMessageType.SOS: return 'danger';
-      case BeaconMessageType.THEFT: return 'warning';
-      case BeaconMessageType.CRASH: return 'tertiary';
-      default: return 'medium';
+      case BeaconMessageType.SOS:
+        return 'danger';
+      case BeaconMessageType.THEFT:
+        return 'warning';
+      case BeaconMessageType.CRASH:
+        return 'tertiary';
+      default:
+        return 'medium';
     }
   }
 
@@ -401,7 +433,7 @@ export class BeaconTestPage implements OnInit {
 
   private log(message: string, level: string) {
     const time = new Date().toLocaleTimeString();
-    this.logs.update(logs => [...logs, { time, message, level }]);
+    this.logs.update((logs) => [...logs, { time, message, level }]);
   }
 
   clearLogs() {

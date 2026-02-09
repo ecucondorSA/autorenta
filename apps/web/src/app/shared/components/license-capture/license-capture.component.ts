@@ -1,22 +1,22 @@
 import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    EventEmitter,
-    OnDestroy,
-    Output,
-    ViewChild,
-    signal,
-    AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnDestroy,
+  Output,
+  ViewChild,
+  signal,
+  AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-license-capture',
-    standalone: true,
-    imports: [CommonModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
+  selector: 'app-license-capture',
+  standalone: true,
+  imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
     <div class="fixed inset-0 z-50 flex flex-col bg-black text-white">
       <!-- Header -->
       <div
@@ -97,11 +97,11 @@ import { CommonModule } from '@angular/common';
               }
             </h2>
             <p class="text-sm opacity-80">
-               @if (capturedImage()) {
-                 Revisá que el texto sea legible
-               } @else {
-                 Evitá reflejos y sombras
-               }
+              @if (capturedImage()) {
+                Revisá que el texto sea legible
+              } @else {
+                Evitá reflejos y sombras
+              }
             </p>
           </div>
         </div>
@@ -138,8 +138,8 @@ import { CommonModule } from '@angular/common';
       </div>
     </div>
   `,
-    styles: [
-        `
+  styles: [
+    `
       :host {
         display: block;
         position: fixed;
@@ -147,93 +147,97 @@ import { CommonModule } from '@angular/common';
         z-index: 50;
       }
     `,
-    ],
+  ],
 })
 export class LicenseCaptureComponent implements AfterViewInit, OnDestroy {
-    @Output() cancelled = new EventEmitter<void>();
-    @Output() completed = new EventEmitter<Blob>();
+  @Output() cancelled = new EventEmitter<void>();
+  @Output() completed = new EventEmitter<Blob>();
 
-    @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
+  @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
 
-    stream: MediaStream | null = null;
-    readonly streamReady = signal(false);
-    readonly capturedImage = signal<string | null>(null);
+  stream: MediaStream | null = null;
+  readonly streamReady = signal(false);
+  readonly capturedImage = signal<string | null>(null);
 
-    private blob: Blob | null = null;
+  private blob: Blob | null = null;
 
-    ngAfterViewInit() {
-        this.startCamera();
+  ngAfterViewInit() {
+    this.startCamera();
+  }
+
+  ngOnDestroy() {
+    this.stopCamera();
+  }
+
+  async startCamera() {
+    try {
+      // Request rear camera for documents (better resolution/autofocus)
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+        },
+        audio: false,
+      });
+
+      if (this.videoElement) {
+        this.videoElement.nativeElement.srcObject = this.stream;
+        // Wait for metadata to ensure size is correct?
+        this.videoElement.nativeElement.onloadedmetadata = () => {
+          this.streamReady.set(true);
+        };
+      }
+    } catch (err) {
+      console.error('Camera error', err);
+      alert('Necesitamos acceso a la cámara para escanear el documento.');
+      this.cancelled.emit();
     }
+  }
 
-    ngOnDestroy() {
-        this.stopCamera();
+  stopCamera() {
+    if (this.stream) {
+      this.stream.getTracks().forEach((track) => track.stop());
+      this.stream = null;
     }
+  }
 
-    async startCamera() {
-        try {
-            // Request rear camera for documents (better resolution/autofocus)
-            this.stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: { ideal: 'environment' },
-                    width: { ideal: 1920 },
-                    height: { ideal: 1080 },
-                },
-                audio: false,
-            });
+  capturePhoto() {
+    if (!this.videoElement || !this.streamReady()) return;
 
-            if (this.videoElement) {
-                this.videoElement.nativeElement.srcObject = this.stream;
-                // Wait for metadata to ensure size is correct?
-                this.videoElement.nativeElement.onloadedmetadata = () => {
-                    this.streamReady.set(true);
-                };
-            }
-        } catch (err) {
-            console.error('Camera error', err);
-            alert('Necesitamos acceso a la cámara para escanear el documento.');
-            this.cancelled.emit();
-        }
+    const video = this.videoElement.nativeElement;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      this.capturedImage.set(dataUrl);
+
+      canvas.toBlob(
+        (b) => {
+          this.blob = b;
+        },
+        'image/jpeg',
+        0.9,
+      );
+
+      // Pause stream to save battery? Or keep running?
+      // Typically keep running under the overlay image is standard behavior or stop it.
+      // Let's keep it simple.
     }
+  }
 
-    stopCamera() {
-        if (this.stream) {
-            this.stream.getTracks().forEach((track) => track.stop());
-            this.stream = null;
-        }
+  retake() {
+    this.capturedImage.set(null);
+    this.blob = null;
+  }
+
+  confirm() {
+    if (this.blob) {
+      this.completed.emit(this.blob);
     }
-
-    capturePhoto() {
-        if (!this.videoElement || !this.streamReady()) return;
-
-        const video = this.videoElement.nativeElement;
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-            this.capturedImage.set(dataUrl);
-
-            canvas.toBlob((b) => {
-                this.blob = b;
-            }, 'image/jpeg', 0.9);
-
-            // Pause stream to save battery? Or keep running? 
-            // Typically keep running under the overlay image is standard behavior or stop it.
-            // Let's keep it simple.
-        }
-    }
-
-    retake() {
-        this.capturedImage.set(null);
-        this.blob = null;
-    }
-
-    confirm() {
-        if (this.blob) {
-            this.completed.emit(this.blob);
-        }
-    }
+  }
 }

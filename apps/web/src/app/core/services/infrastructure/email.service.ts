@@ -42,25 +42,22 @@ export class EmailService {
     data: BookingConfirmationEmailData,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { data: result, error } = await this.supabase.functions.invoke(
-        'email-service',
-        {
-          body: {
-            template: 'booking-confirmation',
-            to: data.recipientEmail,
-            recipientName: data.recipientName,
-            data: {
-              bookingId: data.bookingId,
-              carBrand: data.carBrand,
-              carModel: data.carModel,
-              startDate: data.startDate,
-              endDate: data.endDate,
-              totalPrice: data.totalPrice,
-              currency: data.currency,
-            },
+      const { data: result, error } = await this.supabase.functions.invoke('email-service', {
+        body: {
+          template: 'booking-confirmation',
+          to: data.recipientEmail,
+          recipientName: data.recipientName,
+          data: {
+            bookingId: data.bookingId,
+            carBrand: data.carBrand,
+            carModel: data.carModel,
+            startDate: data.startDate,
+            endDate: data.endDate,
+            totalPrice: data.totalPrice,
+            currency: data.currency,
           },
         },
-      );
+      });
 
       if (error) {
         console.error('Error sending booking confirmation email:', error);

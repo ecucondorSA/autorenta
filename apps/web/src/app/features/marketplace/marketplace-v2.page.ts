@@ -66,14 +66,14 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private readonly locationService = inject(LocationService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
-  
+
   // State
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly cars = signal<Car[]>([]);
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
   readonly isScrolled = signal(false);
-  
+
   // Calculator State
   readonly calculatorCarValue = signal(15000);
   readonly calculatorDays = signal(12);
@@ -81,7 +81,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   // Pagination State
   readonly currentPage = signal(1);
   readonly itemsPerPage = 12;
-  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.cars().length / this.itemsPerPage)));
+  readonly totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.cars().length / this.itemsPerPage)),
+  );
 
   // Sort State
   // Keep this aligned with the template options; avoid showing blank selections.
@@ -97,15 +99,37 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
     if (category === 'all') return allCars;
 
-    return allCars.filter(car => {
-      // Logic for demo/prototype mapping. 
+    return allCars.filter((car) => {
+      // Logic for demo/prototype mapping.
       // In a real app, you'd check car.type, car.fuel_type, car.features, etc.
-      const searchText = ((car.brand || '') + (car.model || '') + (car.vehicle_type || '') + (car.transmission || '')).toLowerCase();
-      
-      if (category === 'electric') return searchText.includes('electr') || searchText.includes('hibrid') || searchText.includes('hybrid') || car.fuel_type?.toLowerCase() === 'electric';
-      if (category === 'luxury') return searchText.includes('mercedes') || searchText.includes('bmw') || searchText.includes('audi') || car.price_per_day > 80;
-      if (category === 'suv') return searchText.includes('suv') || searchText.includes('camioneta') || searchText.includes('jeep');
-      
+      const searchText = (
+        (car.brand || '') +
+        (car.model || '') +
+        (car.vehicle_type || '') +
+        (car.transmission || '')
+      ).toLowerCase();
+
+      if (category === 'electric')
+        return (
+          searchText.includes('electr') ||
+          searchText.includes('hibrid') ||
+          searchText.includes('hybrid') ||
+          car.fuel_type?.toLowerCase() === 'electric'
+        );
+      if (category === 'luxury')
+        return (
+          searchText.includes('mercedes') ||
+          searchText.includes('bmw') ||
+          searchText.includes('audi') ||
+          car.price_per_day > 80
+        );
+      if (category === 'suv')
+        return (
+          searchText.includes('suv') ||
+          searchText.includes('camioneta') ||
+          searchText.includes('jeep')
+        );
+
       return true;
     });
   });
@@ -114,13 +138,21 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly visibleCars = computed(() => {
     // Sort logic could go here too, but keeping it simple for now
     let cars = [...this.filteredCars()]; // Copy to sort
-    
+
     // Basic sorting
     switch (this.sortOrder()) {
-      case 'price_asc': cars.sort((a, b) => a.price_per_day - b.price_per_day); break;
-      case 'price_desc': cars.sort((a, b) => b.price_per_day - a.price_per_day); break;
-      case 'newest': cars.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()); break;
-      case 'rating': cars.sort((a, b) => (b.rating_avg || 0) - (a.rating_avg || 0)); break;
+      case 'price_asc':
+        cars.sort((a, b) => a.price_per_day - b.price_per_day);
+        break;
+      case 'price_desc':
+        cars.sort((a, b) => b.price_per_day - a.price_per_day);
+        break;
+      case 'newest':
+        cars.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        break;
+      case 'rating':
+        cars.sort((a, b) => (b.rating_avg || 0) - (a.rating_avg || 0));
+        break;
     }
 
     const start = (this.currentPage() - 1) * this.itemsPerPage;
@@ -136,11 +168,25 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   constructor() {
     addIcons({
-      searchOutline, filterOutline, locationOutline, carSportOutline,
-      flashOutline, shieldCheckmarkOutline, walletOutline, trendingUpOutline,
-      chevronForwardOutline, star, heartOutline, shareOutline,
-      calculatorOutline, gridOutline, listOutline, addOutline, closeOutline,
-      calendarOutline, settingsOutline
+      searchOutline,
+      filterOutline,
+      locationOutline,
+      carSportOutline,
+      flashOutline,
+      shieldCheckmarkOutline,
+      walletOutline,
+      trendingUpOutline,
+      chevronForwardOutline,
+      star,
+      heartOutline,
+      shareOutline,
+      calculatorOutline,
+      gridOutline,
+      listOutline,
+      addOutline,
+      closeOutline,
+      calendarOutline,
+      settingsOutline,
     });
 
     if (this.isBrowser) {
@@ -160,7 +206,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly totalCarsCount = computed(() => this.filteredCars().length);
 
   readonly calculatorEstimate = computed(() => ({
-    netResult: this.earningsEstimate()
+    netResult: this.earningsEstimate(),
   }));
 
   // Testimonials data
@@ -169,17 +215,19 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       avatar: '/assets/images/avatars/avatar-1.jpg',
       name: 'María García',
       location: 'Buenos Aires',
-      quote: 'Excelente plataforma. Alquilé mi auto mientras viajaba y gané dinero extra sin complicaciones.',
+      quote:
+        'Excelente plataforma. Alquilé mi auto mientras viajaba y gané dinero extra sin complicaciones.',
       earnings: 45000,
-      rentals: 12
+      rentals: 12,
     },
     {
       avatar: '/assets/images/avatars/avatar-2.jpg',
       name: 'Carlos Rodríguez',
       location: 'Córdoba',
-      quote: 'La verificación de usuarios me da tranquilidad. Mi auto siempre vuelve en perfectas condiciones.',
+      quote:
+        'La verificación de usuarios me da tranquilidad. Mi auto siempre vuelve en perfectas condiciones.',
       earnings: 38000,
-      rentals: 8
+      rentals: 8,
     },
     {
       avatar: '/assets/images/avatars/avatar-3.jpg',
@@ -187,8 +235,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       location: 'Rosario',
       quote: 'Encontré el auto perfecto para mi viaje familiar. Proceso simple y precios justos.',
       earnings: 0,
-      rentals: 5
-    }
+      rentals: 5,
+    },
   ];
 
   readonly categories = [
@@ -214,7 +262,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       this.loading.set(false);
     }
   }
-  
+
   selectCategory(id: string) {
     this.selectedCategory.set(id);
     this.currentPage.set(1);
@@ -244,7 +292,11 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   onSortOrderChange(event: Event) {
-    const value = (event.target as HTMLSelectElement).value as 'newest' | 'price_asc' | 'price_desc' | 'rating';
+    const value = (event.target as HTMLSelectElement).value as
+      | 'newest'
+      | 'price_asc'
+      | 'price_desc'
+      | 'rating';
     this.sortOrder.set(value);
     this.currentPage.set(1);
   }
@@ -255,13 +307,13 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   previousPage() {
     if (this.currentPage() > 1) {
-      this.currentPage.update(p => p - 1);
+      this.currentPage.update((p) => p - 1);
     }
   }
 
   nextPage() {
     if (this.currentPage() < this.totalPages()) {
-      this.currentPage.update(p => p + 1);
+      this.currentPage.update((p) => p + 1);
     }
   }
 

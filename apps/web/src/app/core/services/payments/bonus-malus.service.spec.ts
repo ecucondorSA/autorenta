@@ -56,8 +56,11 @@ describe('BonusMalusService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, BonusMalusService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },],
+      providers: [
+        ...testProviders,
+        BonusMalusService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(BonusMalusService);
   });
@@ -216,7 +219,11 @@ describe('BonusMalusService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [...testProviders, BonusMalusService, { provide: SupabaseClientService, useValue: errorMock }],
+        providers: [
+          ...testProviders,
+          BonusMalusService,
+          { provide: SupabaseClientService, useValue: errorMock },
+        ],
       });
 
       const freshService = TestBed.inject(BonusMalusService);
@@ -240,7 +247,11 @@ describe('BonusMalusService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [...testProviders, BonusMalusService, { provide: SupabaseClientService, useValue: errorMock }],
+        providers: [
+          ...testProviders,
+          BonusMalusService,
+          { provide: SupabaseClientService, useValue: errorMock },
+        ],
       });
 
       const freshService = TestBed.inject(BonusMalusService);
@@ -291,7 +302,11 @@ describe('BonusMalusService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [...testProviders, BonusMalusService, { provide: SupabaseClientService, useValue: mockClient }],
+        providers: [
+          ...testProviders,
+          BonusMalusService,
+          { provide: SupabaseClientService, useValue: mockClient },
+        ],
       });
 
       const freshService = TestBed.inject(BonusMalusService);
@@ -314,7 +329,11 @@ describe('BonusMalusService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [...testProviders, BonusMalusService, { provide: SupabaseClientService, useValue: unauthMock }],
+        providers: [
+          ...testProviders,
+          BonusMalusService,
+          { provide: SupabaseClientService, useValue: unauthMock },
+        ],
       });
 
       const freshService = TestBed.inject(BonusMalusService);

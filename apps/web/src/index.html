@@ -1,385 +1,433 @@
 <!doctype html>
 <html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Autorentar - Comparte tu auto, encuentra el tuyo</title>
+    <base href="/" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"
+    />
 
-<head>
-  <meta charset="utf-8" />
-  <title>Autorentar - Comparte tu auto, encuentra el tuyo</title>
-  <base href="/" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
+    <!-- SEO Meta Tags -->
+    <meta name="robots" content="index, follow" />
+    <meta
+      name="description"
+      content="Comparte tu auto cuando no lo usas y gana beneficios. Encuentra el auto perfecto para tu viaje. Reserva fácil, rápida y segura."
+    />
+    <meta
+      name="keywords"
+      content="autos compartidos, carsharing, compartir auto, uruguay, autorentar, comunidad autos"
+    />
+    <meta name="author" content="Autorentar" />
+    <meta name="tiktok-developers-site-verification" content="GRIz5qjvcGDIOvq4kx7mriQCMVbR4g1r" />
 
-  <!-- SEO Meta Tags -->
-  <meta name="robots" content="index, follow" />
-  <meta name="description"
-    content="Comparte tu auto cuando no lo usas y gana beneficios. Encuentra el auto perfecto para tu viaje. Reserva fácil, rápida y segura." />
-  <meta name="keywords" content="autos compartidos, carsharing, compartir auto, uruguay, autorentar, comunidad autos" />
-  <meta name="author" content="Autorentar" />
-  <meta name="tiktok-developers-site-verification" content="GRIz5qjvcGDIOvq4kx7mriQCMVbR4g1r" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/assets/images/logo-autorentar-v5.png" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" href="/assets/images/logo-autorentar-v5.png" />
+    <!-- Preconnect for external APIs (performance optimization) -->
+    <link rel="preconnect" href="https://api.mapbox.com" crossorigin />
+    <link rel="preconnect" href="https://sdk.mercadopago.com" crossorigin />
+    <link rel="preconnect" href="https://aceacpaockyxgogxsfyc.supabase.co" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://accounts.google.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.mapbox.com" />
+    <link rel="dns-prefetch" href="https://sdk.mercadopago.com" />
+    <link rel="dns-prefetch" href="https://events.mapbox.com" />
+    <link rel="dns-prefetch" href="https://aceacpaockyxgogxsfyc.supabase.co" />
 
-  <!-- Preconnect for external APIs (performance optimization) -->
-  <link rel="preconnect" href="https://api.mapbox.com" crossorigin />
-  <link rel="preconnect" href="https://sdk.mercadopago.com" crossorigin />
-  <link rel="preconnect" href="https://aceacpaockyxgogxsfyc.supabase.co" crossorigin />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://accounts.google.com" crossorigin />
-  <link rel="dns-prefetch" href="https://api.mapbox.com" />
-  <link rel="dns-prefetch" href="https://sdk.mercadopago.com" />
-  <link rel="dns-prefetch" href="https://events.mapbox.com" />
-  <link rel="dns-prefetch" href="https://aceacpaockyxgogxsfyc.supabase.co" />
+    <!-- Mapbox GL - Preload for faster /cars/list -->
+    <link
+      rel="preload"
+      href="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.css"
+      as="style"
+    />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.css" rel="stylesheet" />
 
-  <!-- Mapbox GL - Preload for faster /cars/list -->
-  <link rel="preload" href="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.css" as="style" />
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.css" rel="stylesheet" />
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WV2PWTKG2E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-WV2PWTKG2E', {
+        send_page_view: true,
+        cookie_flags: 'SameSite=None;Secure',
+      });
+    </script>
 
-  <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WV2PWTKG2E"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-    gtag('config', 'G-WV2PWTKG2E', {
-      send_page_view: true,
-      cookie_flags: 'SameSite=None;Secure',
-    });
-  </script>
+    <!-- Ionicons - Loaded async to not block LCP -->
+    <script
+      type="module"
+      async
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      async
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
 
-  <!-- Ionicons - Loaded async to not block LCP -->
-  <script type="module" async src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule async src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://autorentar.com/" />
+    <meta property="og:title" content="Autorentar - Comparte tu auto, encuentra el tuyo" />
+    <meta
+      property="og:description"
+      content="Comparte tu auto cuando no lo usas y gana beneficios. Encuentra el auto perfecto para tu viaje."
+    />
+    <meta property="og:image" content="https://autorentar.com/assets/og-image.jpg" />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://autorentar.com/" />
-  <meta property="og:title" content="Autorentar - Comparte tu auto, encuentra el tuyo" />
-  <meta property="og:description"
-    content="Comparte tu auto cuando no lo usas y gana beneficios. Encuentra el auto perfecto para tu viaje." />
-  <meta property="og:image" content="https://autorentar.com/assets/og-image.jpg" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://autorentar.com/" />
+    <meta property="twitter:title" content="Autorentar - Comparte tu auto, encuentra el tuyo" />
+    <meta
+      property="twitter:description"
+      content="Comparte tu auto cuando no lo usas y gana beneficios. Encuentra el auto perfecto para tu viaje."
+    />
+    <meta property="twitter:image" content="https://autorentar.com/assets/og-image.jpg" />
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://autorentar.com/" />
-  <meta property="twitter:title" content="Autorentar - Comparte tu auto, encuentra el tuyo" />
-  <meta property="twitter:description"
-    content="Comparte tu auto cuando no lo usas y gana beneficios. Encuentra el auto perfecto para tu viaje." />
-  <meta property="twitter:image" content="https://autorentar.com/assets/og-image.jpg" />
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#ffffff" />
 
-  <!-- Theme Color -->
-  <meta name="theme-color" content="#ffffff" />
+    <!-- Content Security Policy -->
+    <!-- NOTE: This meta tag is overridden by _headers file in production -->
+    <!-- Keep in sync with apps/web/public/_headers and apps/web/scripts/create-cloudflare-config.js -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://*.googletagmanager.com https://www.googletagmanager.com https://*.google-analytics.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://api.mapbox.com https://unpkg.com https://www.gstatic.com https://ajax.googleapis.com https://static.cloudflareinsights.com https://connect.facebook.net https://*.facebook.com https://*.facebook.net https://graph.facebook.com https://accounts.google.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com https://unpkg.com https://*.mlstatic.com https://api.fontshare.com https://accounts.google.com; img-src 'self' data: https: blob: https://i.pravatar.cc https://*.gravatar.com https://*.facebook.com https://platform-lookaside.fbsbx.com; font-src 'self' data: https://fonts.gstatic.com https://unpkg.com https://*.mlstatic.com https://cdn.fontshare.com; media-src 'self' blob:; connect-src 'self' blob: data: http://localhost:8787 https://*.sentry.io https://*.supabase.co wss://*.supabase.co https://*.mercadopago.com https://api.mercadopago.com https://events.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://*.workers.dev https://*.run.app wss://*.run.app https://api.mapbox.com https://events.mapbox.com https://*.mapbox.com https://sql.mapbox.com https://*.googletagmanager.com https://www.googletagmanager.com https://*.google-analytics.com https://www.google-analytics.com https://*.analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://www.googleapis.com https://generativelanguage.googleapis.com wss://generativelanguage.googleapis.com https://api.binance.com https://data-api.binance.vision https://parallelum.com.br https://unpkg.com https://www.gstatic.com https://fonts.gstatic.com https://api.unsplash.com https://images.unsplash.com https://ui-avatars.com https://ipapi.co https://placehold.co https://api.fontshare.com https://cdn.fontshare.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://graph.facebook.com https://connect.facebook.net https://www.facebook.com https://*.facebook.com https://i.pravatar.cc https://*.gravatar.com https://accounts.google.com https://oauth2.googleapis.com https://cdn.jsdelivr.net https://storage.googleapis.com; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.ar https://mercadopago.com.ar https://*.mercadolibre.com https://sdk.mercadopago.com https://calendar.google.com https://*.facebook.com https://www.facebook.com https://web.facebook.com https://accounts.google.com; worker-src 'self' blob: https://www.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.mercadopago.com https://facebook.com;"
+    />
 
-  <!-- Content Security Policy -->
-  <!-- NOTE: This meta tag is overridden by _headers file in production -->
-  <!-- Keep in sync with apps/web/public/_headers and apps/web/scripts/create-cloudflare-config.js -->
-  <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://*.googletagmanager.com https://www.googletagmanager.com https://*.google-analytics.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://api.mapbox.com https://unpkg.com https://www.gstatic.com https://ajax.googleapis.com https://static.cloudflareinsights.com https://connect.facebook.net https://*.facebook.com https://*.facebook.net https://graph.facebook.com https://accounts.google.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com https://unpkg.com https://*.mlstatic.com https://api.fontshare.com https://accounts.google.com; img-src 'self' data: https: blob: https://i.pravatar.cc https://*.gravatar.com https://*.facebook.com https://platform-lookaside.fbsbx.com; font-src 'self' data: https://fonts.gstatic.com https://unpkg.com https://*.mlstatic.com https://cdn.fontshare.com; media-src 'self' blob:; connect-src 'self' blob: data: http://localhost:8787 https://*.sentry.io https://*.supabase.co wss://*.supabase.co https://*.mercadopago.com https://api.mercadopago.com https://events.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://*.workers.dev https://*.run.app wss://*.run.app https://api.mapbox.com https://events.mapbox.com https://*.mapbox.com https://sql.mapbox.com https://*.googletagmanager.com https://www.googletagmanager.com https://*.google-analytics.com https://www.google-analytics.com https://*.analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://www.googleapis.com https://generativelanguage.googleapis.com wss://generativelanguage.googleapis.com https://api.binance.com https://data-api.binance.vision https://parallelum.com.br https://unpkg.com https://www.gstatic.com https://fonts.gstatic.com https://api.unsplash.com https://images.unsplash.com https://ui-avatars.com https://ipapi.co https://placehold.co https://api.fontshare.com https://cdn.fontshare.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://graph.facebook.com https://connect.facebook.net https://www.facebook.com https://*.facebook.com https://i.pravatar.cc https://*.gravatar.com https://accounts.google.com https://oauth2.googleapis.com https://cdn.jsdelivr.net https://storage.googleapis.com; frame-src 'self' https://*.mercadopago.com https://*.mercadopago.com.ar https://mercadopago.com.ar https://*.mercadolibre.com https://sdk.mercadopago.com https://calendar.google.com https://*.facebook.com https://www.facebook.com https://web.facebook.com https://accounts.google.com; worker-src 'self' blob: https://www.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.mercadopago.com https://facebook.com;" />
+    <!-- PWA Configuration -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png" />
+    <link
+      rel="apple-touch-startup-image"
+      href="/icons/apple-splash-2048x2732.png"
+      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/icons/apple-splash-1284x2778.png"
+      media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
 
-  <!-- PWA Configuration -->
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png" />
-  <link rel="apple-touch-startup-image" href="/icons/apple-splash-2048x2732.png"
-    media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-  <link rel="apple-touch-startup-image" href="/icons/apple-splash-1284x2778.png"
-    media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <!-- Preload critical fonts for instant text rendering -->
+    <link
+      rel="preload"
+      href="/assets/fonts/satoshi/satoshi-variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      href="/assets/fonts/jetbrains-mono/JetBrainsMono-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      fetchpriority="high"
+    />
 
-  <!-- Preload critical fonts for instant text rendering -->
-  <link rel="preload" href="/assets/fonts/satoshi/satoshi-variable.woff2" as="font" type="font/woff2" crossorigin
-    fetchpriority="high" />
-  <link rel="preload" href="/assets/fonts/jetbrains-mono/JetBrainsMono-Variable.woff2" as="font" type="font/woff2"
-    crossorigin fetchpriority="high" />
+    <!-- Mapbox GL JS is loaded lazily by MapboxPreloaderService when needed -->
+    <!-- Removed preload to avoid "not used within a few seconds" warning -->
 
-  <!-- Mapbox GL JS is loaded lazily by MapboxPreloaderService when needed -->
-  <!-- Removed preload to avoid "not used within a few seconds" warning -->
+    <!-- PWA Manifests -->
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="manifest" href="manifest-v2.webmanifest" />
+  </head>
 
-  <!-- PWA Manifests -->
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="manifest" href="manifest-v2.webmanifest" />
-</head>
+  <body>
+    <!-- Facebook SDK disabled temporarily -->
 
-<body>
-  <!-- Facebook SDK disabled temporarily -->
+    <!-- Google Identity Services (One-Tap) -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <!-- Google Identity Services (One-Tap) -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Skip Link - Accessibility (WCAG 2.4.1) -->
+    <a href="#main-content" class="skip-link"> Saltar al contenido principal </a>
 
-  <!-- Skip Link - Accessibility (WCAG 2.4.1) -->
-  <a href="#main-content" class="skip-link"> Saltar al contenido principal </a>
+    <!-- Runtime environment configuration (loaded before Angular) -->
+    <!-- __ENV_CONFIG__ -->
+    <script>
+      var debugEnabled = false;
+      try {
+        debugEnabled =
+          new URLSearchParams(window.location.search).get('debug') === '1' ||
+          localStorage.getItem('autorentar_debug') === 'true';
+      } catch (e) {
+        debugEnabled = false;
+      }
+      window.__AR_DEBUG_ENABLED__ = debugEnabled;
 
-  <!-- Runtime environment configuration (loaded before Angular) -->
-  <!-- __ENV_CONFIG__ -->
-  <script>
-    var debugEnabled = false;
-    try {
-      debugEnabled =
-        new URLSearchParams(window.location.search).get('debug') === '1' ||
-        localStorage.getItem('autorentar_debug') === 'true';
-    } catch (e) {
-      debugEnabled = false;
-    }
-    window.__AR_DEBUG_ENABLED__ = debugEnabled;
+      if (!window.__env) {
+        (function () {
+          // Detect if running in Capacitor
+          var isCapacitor =
+            window.Capacitor !== undefined ||
+            (window.location.protocol === 'https:' && window.location.hostname === 'localhost');
 
-    if (!window.__env) {
-      (function () {
-        // Detect if running in Capacitor
-        var isCapacitor = window.Capacitor !== undefined ||
-          (window.location.protocol === 'https:' && window.location.hostname === 'localhost');
+          try {
+            var xhr = new XMLHttpRequest();
+            // Use simple path without cache-busting query for better Capacitor compatibility
+            var envPath = isCapacitor ? '/env.json' : '/env.json?v=' + Date.now();
+            if (debugEnabled) {
+              console.log('[ENV] Loading environment from:', envPath);
+            }
+            xhr.open('GET', envPath, false); // Synchronous
 
-        try {
-          var xhr = new XMLHttpRequest();
-          // Use simple path without cache-busting query for better Capacitor compatibility
-          var envPath = isCapacitor ? '/env.json' : '/env.json?v=' + Date.now();
-          if (debugEnabled) {
-            console.log('[ENV] Loading environment from:', envPath);
-          }
-          xhr.open('GET', envPath, false); // Synchronous
-
-          xhr.send();
-          if (debugEnabled) {
-            console.log('[ENV] XHR status:', xhr.status);
-          }
-          if (xhr.status === 200 && xhr.responseText) {
-            window.__env = JSON.parse(xhr.responseText);
-            if (window.__env) {
-              if (debugEnabled) {
-                console.log(
-                  '[ENV] Loaded window.__env with',
-                  Object.keys(window.__env).length,
-                  'variables',
-                );
+            xhr.send();
+            if (debugEnabled) {
+              console.log('[ENV] XHR status:', xhr.status);
+            }
+            if (xhr.status === 200 && xhr.responseText) {
+              window.__env = JSON.parse(xhr.responseText);
+              if (window.__env) {
+                if (debugEnabled) {
+                  console.log(
+                    '[ENV] Loaded window.__env with',
+                    Object.keys(window.__env).length,
+                    'variables',
+                  );
+                }
+              } else {
+                console.error('[ENV] window.__env is still undefined');
               }
             } else {
-              console.error('[ENV] window.__env is still undefined');
+              console.warn('[ENV] env.json returned status:', xhr.status);
             }
-          } else {
-            console.warn('[ENV] env.json returned status:', xhr.status);
+          } catch (e) {
+            console.error('[ENV] Failed to load env.json:', e.message || e);
+            // Initialize empty env to prevent app from breaking
+            window.__env = window.__env || {};
           }
-        } catch (e) {
-          console.error('[ENV] Failed to load env.json:', e.message || e);
-          // Initialize empty env to prevent app from breaking
-          window.__env = window.__env || {};
+        })();
+      } else {
+        if (debugEnabled) {
+          console.log('[ENV] window.__env already exists (preloaded)');
         }
+      }
+    </script>
+
+    <!-- Debug API stub for e2e tests - populated by DebugService -->
+    <script>
+      // Early stub for e2e tests - DebugService will replace this with full implementation
+      if (
+        new URLSearchParams(window.location.search).get('debug') === '1' ||
+        localStorage.getItem('autorentar_debug') === 'true'
+      ) {
+        window.__AR_DEBUG__ = window.__AR_DEBUG__ || {
+          _logs: [],
+          _httpLogs: [],
+          _isEnabled: true,
+          getLogs: function () {
+            return this._logs;
+          },
+          getHttpLogs: function () {
+            return this._httpLogs;
+          },
+          getLogsByContext: function (ctx) {
+            return this._logs.filter(function (l) {
+              return l.context && l.context.toLowerCase().includes(ctx.toLowerCase());
+            });
+          },
+          getLogsByLevel: function (level) {
+            return this._logs.filter(function (l) {
+              return l.level === level;
+            });
+          },
+          getErrorCount: function () {
+            return this._logs.filter(function (l) {
+              return l.level === 'ERROR' || l.level === 'CRITICAL';
+            }).length;
+          },
+          getWarnCount: function () {
+            return this._logs.filter(function (l) {
+              return l.level === 'WARN';
+            }).length;
+          },
+          isEnabled: function () {
+            return this._isEnabled;
+          },
+          enable: function () {
+            this._isEnabled = true;
+            localStorage.setItem('autorentar_debug', 'true');
+          },
+          disable: function () {
+            this._isEnabled = false;
+            localStorage.removeItem('autorentar_debug');
+          },
+          clear: function () {
+            this._logs = [];
+            this._httpLogs = [];
+          },
+          exportLogs: function () {
+            return JSON.stringify(
+              {
+                exportTime: new Date().toISOString(),
+                logs: this._logs,
+                httpLogs: this._httpLogs,
+              },
+              null,
+              2,
+            );
+          },
+          // Stub method - DebugService will add entries via _addLog
+          _addLog: function (entry) {
+            this._logs.push(entry);
+          },
+          _addHttpLog: function (entry) {
+            this._httpLogs.push(entry);
+          },
+          sessionInfo: {
+            startTime: new Date(),
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            language: navigator.language,
+            screenSize: window.innerWidth + 'x' + window.innerHeight,
+            environment: 'development',
+          },
+        };
+        if (window.__AR_DEBUG_ENABLED__) {
+          console.log('[AR] Debug API stub initialized');
+        }
+      }
+    </script>
+
+    <!-- Emergency SW cache recovery - fixes stale chunk MIME errors -->
+    <script>
+      (function () {
+        var mimeErrorCount = 0;
+        var hasTriedRecovery = sessionStorage.getItem('ar_sw_recovery_attempted');
+
+        window.addEventListener(
+          'error',
+          function (e) {
+            // Detect module loading failures (MIME type errors from stale SW cache)
+            if (
+              e.message &&
+              (e.message.includes('Failed to load module script') ||
+                e.message.includes('MIME type') ||
+                e.message.includes('text/html'))
+            ) {
+              mimeErrorCount++;
+              console.warn('[SW Recovery] Detected stale cache error #' + mimeErrorCount);
+
+              // After 3 errors and if we haven't tried recovery yet, clear everything
+              if (mimeErrorCount >= 3 && !hasTriedRecovery) {
+                sessionStorage.setItem('ar_sw_recovery_attempted', 'true');
+                console.warn('[SW Recovery] Clearing Service Worker caches...');
+
+                // Unregister all service workers
+                if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                    registrations.forEach(function (registration) {
+                      registration.unregister();
+                      console.log('[SW Recovery] Unregistered SW:', registration.scope);
+                    });
+                  });
+                }
+
+                // Clear all caches
+                if ('caches' in window) {
+                  caches.keys().then(function (names) {
+                    names.forEach(function (name) {
+                      caches.delete(name);
+                      console.log('[SW Recovery] Deleted cache:', name);
+                    });
+                  });
+                }
+
+                // Reload after a short delay to let cleanup complete
+                setTimeout(function () {
+                  console.log('[SW Recovery] Reloading page...');
+                  window.location.reload(true);
+                }, 1000);
+              }
+            }
+          },
+          true,
+        );
+
+        // Clear recovery flag after successful load
+        window.addEventListener('load', function () {
+          setTimeout(function () {
+            sessionStorage.removeItem('ar_sw_recovery_attempted');
+          }, 5000);
+        });
       })();
-    } else {
-      if (debugEnabled) {
-        console.log('[ENV] window.__env already exists (preloaded)');
-      }
-    }
-  </script>
+    </script>
 
-  <!-- Debug API stub for e2e tests - populated by DebugService -->
-  <script>
-    // Early stub for e2e tests - DebugService will replace this with full implementation
-    if (
-      new URLSearchParams(window.location.search).get('debug') === '1' ||
-      localStorage.getItem('autorentar_debug') === 'true'
-    ) {
-      window.__AR_DEBUG__ = window.__AR_DEBUG__ || {
-        _logs: [],
-        _httpLogs: [],
-        _isEnabled: true,
-        getLogs: function () {
-          return this._logs;
-        },
-        getHttpLogs: function () {
-          return this._httpLogs;
-        },
-        getLogsByContext: function (ctx) {
-          return this._logs.filter(function (l) {
-            return l.context && l.context.toLowerCase().includes(ctx.toLowerCase());
-          });
-        },
-        getLogsByLevel: function (level) {
-          return this._logs.filter(function (l) {
-            return l.level === level;
-          });
-        },
-        getErrorCount: function () {
-          return this._logs.filter(function (l) {
-            return l.level === 'ERROR' || l.level === 'CRITICAL';
-          }).length;
-        },
-        getWarnCount: function () {
-          return this._logs.filter(function (l) {
-            return l.level === 'WARN';
-          }).length;
-        },
-        isEnabled: function () {
-          return this._isEnabled;
-        },
-        enable: function () {
-          this._isEnabled = true;
-          localStorage.setItem('autorentar_debug', 'true');
-        },
-        disable: function () {
-          this._isEnabled = false;
-          localStorage.removeItem('autorentar_debug');
-        },
-        clear: function () {
-          this._logs = [];
-          this._httpLogs = [];
-        },
-        exportLogs: function () {
-          return JSON.stringify(
-            {
-              exportTime: new Date().toISOString(),
-              logs: this._logs,
-              httpLogs: this._httpLogs,
-            },
-            null,
-            2,
-          );
-        },
-        // Stub method - DebugService will add entries via _addLog
-        _addLog: function (entry) {
-          this._logs.push(entry);
-        },
-        _addHttpLog: function (entry) {
-          this._httpLogs.push(entry);
-        },
-        sessionInfo: {
-          startTime: new Date(),
-          userAgent: navigator.userAgent,
-          platform: navigator.platform,
-          language: navigator.language,
-          screenSize: window.innerWidth + 'x' + window.innerHeight,
-          environment: 'development',
-        },
-      };
-      if (window.__AR_DEBUG_ENABLED__) {
-        console.log('[AR] Debug API stub initialized');
-      }
-    }
-  </script>
+    <app-root></app-root>
+    <noscript>Please enable JavaScript to continue using this application.</noscript>
 
-  <!-- Emergency SW cache recovery - fixes stale chunk MIME errors -->
-  <script>
-    (function () {
-      var mimeErrorCount = 0;
-      var hasTriedRecovery = sessionStorage.getItem('ar_sw_recovery_attempted');
+    <!-- Service Worker Registration -->
+    <!-- DISABLED: Angular ngsw-worker.js not being generated in build -->
+    <!-- TODO: Enable Angular Service Worker in angular.json if offline support needed -->
+    <script>
+      // Service Worker temporarily disabled due to build configuration
+      // Service Worker temporarily disabled due to build configuration
+      // console.log('⚠️ Service Worker disabled - enable in angular.json if needed');
 
-      window.addEventListener('error', function (e) {
-        // Detect module loading failures (MIME type errors from stale SW cache)
-        if (e.message && (
-          e.message.includes('Failed to load module script') ||
-          e.message.includes('MIME type') ||
-          e.message.includes('text/html')
-        )) {
-          mimeErrorCount++;
-          console.warn('[SW Recovery] Detected stale cache error #' + mimeErrorCount);
+      // Install prompt for PWA
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // console.log('💡 PWA install prompt ready');
 
-          // After 3 errors and if we haven't tried recovery yet, clear everything
-          if (mimeErrorCount >= 3 && !hasTriedRecovery) {
-            sessionStorage.setItem('ar_sw_recovery_attempted', 'true');
-            console.warn('[SW Recovery] Clearing Service Worker caches...');
-
-            // Unregister all service workers
-            if ('serviceWorker' in navigator) {
-              navigator.serviceWorker.getRegistrations().then(function (registrations) {
-                registrations.forEach(function (registration) {
-                  registration.unregister();
-                  console.log('[SW Recovery] Unregistered SW:', registration.scope);
-                });
-              });
-            }
-
-            // Clear all caches
-            if ('caches' in window) {
-              caches.keys().then(function (names) {
-                names.forEach(function (name) {
-                  caches.delete(name);
-                  console.log('[SW Recovery] Deleted cache:', name);
-                });
-              });
-            }
-
-            // Reload after a short delay to let cleanup complete
-            setTimeout(function () {
-              console.log('[SW Recovery] Reloading page...');
-              window.location.reload(true);
-            }, 1000);
-          }
-        }
-      }, true);
-
-      // Clear recovery flag after successful load
-      window.addEventListener('load', function () {
-        setTimeout(function () {
-          sessionStorage.removeItem('ar_sw_recovery_attempted');
-        }, 5000);
+        // Dispatch custom event for app to show install button
+        window.dispatchEvent(new CustomEvent('pwa-install-available', { detail: e }));
       });
-    })();
-  </script>
 
-  <app-root></app-root>
-  <noscript>Please enable JavaScript to continue using this application.</noscript>
+      // Track PWA installation
+      window.addEventListener('appinstalled', () => {
+        // console.log('✅ PWA installed successfully');
+        deferredPrompt = null;
+      });
 
-  <!-- Service Worker Registration -->
-  <!-- DISABLED: Angular ngsw-worker.js not being generated in build -->
-  <!-- TODO: Enable Angular Service Worker in angular.json if offline support needed -->
-  <script>
-    // Service Worker temporarily disabled due to build configuration
-    // Service Worker temporarily disabled due to build configuration
-    // console.log('⚠️ Service Worker disabled - enable in angular.json if needed');
-
-    // Install prompt for PWA
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      // console.log('💡 PWA install prompt ready');
-
-      // Dispatch custom event for app to show install button
-      window.dispatchEvent(new CustomEvent('pwa-install-available', { detail: e }));
-    });
-
-    // Track PWA installation
-    window.addEventListener('appinstalled', () => {
-      // console.log('✅ PWA installed successfully');
-      deferredPrompt = null;
-    });
-
-    // Show PWA install banner on iOS Safari
-    if (
-      /iPhone|iPad|iPod/.test(navigator.userAgent) &&
-      !window.navigator.standalone &&
-      !window.matchMedia('(display-mode: standalone)').matches
-    ) {
-      // console.log('💡 iOS: Show "Add to Home Screen" hint');
-      window.dispatchEvent(new CustomEvent('ios-install-hint'));
-    }
-  </script>
-
-  <!-- Network status monitoring -->
-  <script>
-    window.addEventListener('online', () => {
-      if (window.__AR_DEBUG_ENABLED__) {
-        console.log('Online');
+      // Show PWA install banner on iOS Safari
+      if (
+        /iPhone|iPad|iPod/.test(navigator.userAgent) &&
+        !window.navigator.standalone &&
+        !window.matchMedia('(display-mode: standalone)').matches
+      ) {
+        // console.log('💡 iOS: Show "Add to Home Screen" hint');
+        window.dispatchEvent(new CustomEvent('ios-install-hint'));
       }
-      window.dispatchEvent(
-        new CustomEvent('network-status-change', {
-          detail: { online: true },
-        }),
-      );
-    });
+    </script>
 
-    window.addEventListener('offline', () => {
-      if (window.__AR_DEBUG_ENABLED__) {
-        console.log('Offline');
-      }
-      window.dispatchEvent(
-        new CustomEvent('network-status-change', {
-          detail: { online: false },
-        }),
-      );
-    });
-  </script>
-</body>
+    <!-- Network status monitoring -->
+    <script>
+      window.addEventListener('online', () => {
+        if (window.__AR_DEBUG_ENABLED__) {
+          console.log('Online');
+        }
+        window.dispatchEvent(
+          new CustomEvent('network-status-change', {
+            detail: { online: true },
+          }),
+        );
+      });
 
+      window.addEventListener('offline', () => {
+        if (window.__AR_DEBUG_ENABLED__) {
+          console.log('Offline');
+        }
+        window.dispatchEvent(
+          new CustomEvent('network-status-change', {
+            detail: { online: false },
+          }),
+        );
+      });
+    </script>
+  </body>
 </html>

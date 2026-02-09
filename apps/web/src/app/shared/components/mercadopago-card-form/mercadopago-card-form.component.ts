@@ -132,19 +132,32 @@ export interface MercadoPagoCardTokenGeneratedEvent {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   template: `
-    <div class="vault-container relative overflow-hidden rounded-2xl bg-zinc-950 border border-white/10 shadow-2xl">
+    <div
+      class="vault-container relative overflow-hidden rounded-2xl bg-zinc-950 border border-white/10 shadow-2xl"
+    >
       <!-- Glow Effect -->
-      <div class="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-3xl pointer-events-none rounded-full -mr-32 -mt-32"></div>
-      
+      <div
+        class="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-3xl pointer-events-none rounded-full -mr-32 -mt-32"
+      ></div>
+
       <!-- Security Header -->
-      <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-zinc-900/50">
+      <div
+        class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-zinc-900/50"
+      >
         <div class="flex items-center gap-2">
           <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10B981]"></div>
           <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Secure Vault</span>
         </div>
         <div class="flex gap-2 opacity-50">
-          <svg class="h-4 w-auto" viewBox="0 0 36 24" fill="none"><rect width="36" height="24" rx="2" fill="white"/><path d="M12 12H24" stroke="black" stroke-width="2"/></svg>
-          <svg class="h-4 w-auto" viewBox="0 0 36 24" fill="none"><rect width="36" height="24" rx="2" fill="white"/><circle cx="12" cy="12" r="6" fill="#EB001B"/><circle cx="24" cy="12" r="6" fill="#F79E1B"/></svg>
+          <svg class="h-4 w-auto" viewBox="0 0 36 24" fill="none">
+            <rect width="36" height="24" rx="2" fill="white" />
+            <path d="M12 12H24" stroke="black" stroke-width="2" />
+          </svg>
+          <svg class="h-4 w-auto" viewBox="0 0 36 24" fill="none">
+            <rect width="36" height="24" rx="2" fill="white" />
+            <circle cx="12" cy="12" r="6" fill="#EB001B" />
+            <circle cx="24" cy="12" r="6" fill="#F79E1B" />
+          </svg>
         </div>
       </div>
 
@@ -152,12 +165,24 @@ export interface MercadoPagoCardTokenGeneratedEvent {
         @if (isInitializing()) {
           <div class="flex flex-col items-center justify-center py-12 space-y-4">
             <div class="relative">
-              <div class="w-12 h-12 border-4 border-zinc-800 border-t-brand-primary rounded-full animate-spin"></div>
+              <div
+                class="w-12 h-12 border-4 border-zinc-800 border-t-brand-primary rounded-full animate-spin"
+              ></div>
               <div class="absolute inset-0 flex items-center justify-center">
-                <svg class="w-4 h-4 text-brand-primary" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <svg class="w-4 h-4 text-brand-primary" fill="none" viewBox="0 0 24 24">
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
               </div>
             </div>
-            <p class="text-sm font-mono text-zinc-500 animate-pulse">ESTABLISHING SECURE CONNECTION...</p>
+            <p class="text-sm font-mono text-zinc-500 animate-pulse">
+              ESTABLISHING SECURE CONNECTION...
+            </p>
           </div>
         }
 
@@ -173,50 +198,132 @@ export interface MercadoPagoCardTokenGeneratedEvent {
         @if (errorMessage()) {
           <div class="animate-fade-in">
             <!-- Mock Inputs for Visual Preview (Since Real SDK Failed) -->
-            <div class="space-y-5 opacity-50 pointer-events-none select-none grayscale" aria-hidden="true">
+            <div
+              class="space-y-5 opacity-50 pointer-events-none select-none grayscale"
+              aria-hidden="true"
+            >
               <div>
-                <label class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide">Número de Tarjeta</label>
+                <label class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide"
+                  >Número de Tarjeta</label
+                >
                 <div class="relative">
-                  <input type="text" value="•••• •••• •••• ••••" class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono" disabled>
-                  <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-600" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                  <input
+                    type="text"
+                    value="•••• •••• •••• ••••"
+                    class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono"
+                    disabled
+                  />
+                  <svg
+                    class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                    />
+                  </svg>
                 </div>
               </div>
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide">Vencimiento</label>
-                  <input type="text" value="MM/AA" class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono" disabled>
+                  <label
+                    class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide"
+                    >Vencimiento</label
+                  >
+                  <input
+                    type="text"
+                    value="MM/AA"
+                    class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono"
+                    disabled
+                  />
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide">CVC</label>
+                  <label
+                    class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide"
+                    >CVC</label
+                  >
                   <div class="relative">
-                    <input type="text" value="•••" class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono" disabled>
-                    <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <input
+                      type="text"
+                      value="•••"
+                      class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono"
+                      disabled
+                    />
+                    <svg
+                      class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
               <div>
-                <label class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide">Titular</label>
-                <input type="text" value="NOMBRE COMO FIGURA EN LA TARJETA" class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono" disabled>
+                <label class="block text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wide"
+                  >Titular</label
+                >
+                <input
+                  type="text"
+                  value="NOMBRE COMO FIGURA EN LA TARJETA"
+                  class="w-full bg-zinc-900 border border-white/10 rounded-lg px-4 py-3 text-zinc-400 font-mono"
+                  disabled
+                />
               </div>
             </div>
 
             <!-- Error Notification Overlay -->
-            <div class="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3">
+            <div
+              class="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3"
+            >
               <div class="p-2 bg-red-500/20 rounded-full text-red-500 shrink-0">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
               </div>
               <div class="flex-1">
                 <h4 class="text-red-400 font-bold text-sm mb-1">Error de conexión con la bóveda</h4>
                 <p class="text-xs text-red-400/80 mb-3">{{ errorMessage() }}</p>
-                <button (click)="retryInitialization()" class="text-xs font-bold text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition-colors">Reintentar conexión</button>
+                <button
+                  (click)="retryInitialization()"
+                  class="text-xs font-bold text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition-colors"
+                >
+                  Reintentar conexión
+                </button>
               </div>
             </div>
           </div>
         }
 
         <!-- Footer -->
-        <div class="mt-6 flex items-center justify-center gap-2 text-[10px] text-zinc-600 font-mono uppercase tracking-widest">
-          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        <div
+          class="mt-6 flex items-center justify-center gap-2 text-[10px] text-zinc-600 font-mono uppercase tracking-widest"
+        >
+          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24">
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            />
+          </svg>
           <span>End-to-End Encrypted via MercadoPago</span>
         </div>
       </div>
@@ -238,11 +345,11 @@ export interface MercadoPagoCardTokenGeneratedEvent {
       /* ... (Existing styles remain, but updated for dark mode integration) ... */
       :host ::ng-deep .mp-payment-brick-container {
         /* Force brick transparency to blend with vault */
-        background: transparent !important; 
+        background: transparent !important;
       }
-      
+
       /* ... (Rest of styles) ... */
-      
+
       @media (min-width: 640px) {
         .mp-payment-brick-container {
           max-width: 500px;
@@ -290,9 +397,9 @@ export interface MercadoPagoCardTokenGeneratedEvent {
         padding: 0.75rem 1rem !important;
         font-family: 'JetBrains Mono', monospace !important;
       }
-      
+
       :host ::ng-deep [data-testid='payment-form'] input:focus {
-        border-color: #39FF14 !important; /* Brand primary */
+        border-color: #39ff14 !important; /* Brand primary */
         outline: none !important;
         box-shadow: 0 0 0 2px rgba(57, 255, 20, 0.2) !important;
       }

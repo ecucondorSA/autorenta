@@ -16,7 +16,9 @@ describe('IconButtonComponent', () => {
   let buttonElement: DebugElement;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ providers: [...testProviders], imports: [IconButtonComponent, BrowserAnimationsModule]
+    await TestBed.configureTestingModule({
+      providers: [...testProviders],
+      imports: [IconButtonComponent, BrowserAnimationsModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(IconButtonComponent);
@@ -35,7 +37,7 @@ describe('IconButtonComponent', () => {
     it('should support all WCAG-compliant sizes', () => {
       const sizes = ['sm', 'md', 'lg'];
 
-      sizes.forEach(size => {
+      sizes.forEach((size) => {
         component.size = size as any;
         fixture.detectChanges();
 
@@ -86,7 +88,7 @@ describe('IconButtonComponent', () => {
     it('should apply correct variant classes', () => {
       const variants = ['primary', 'secondary', 'ghost', 'danger'];
 
-      variants.forEach(variant => {
+      variants.forEach((variant) => {
         component.variant = variant as any;
         fixture.detectChanges();
 

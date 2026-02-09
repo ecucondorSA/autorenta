@@ -14,7 +14,13 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Booking, BookingExtensionRequest, BookingStatus, BookingUiStatus, TrafficInfraction } from '@core/models';
+import {
+  Booking,
+  BookingExtensionRequest,
+  BookingStatus,
+  BookingUiStatus,
+  TrafficInfraction,
+} from '@core/models';
 import { BookingInspection } from '@core/models/fgo-v1-1.model';
 import { CLAIM_STATUS_LABELS, InsuranceClaim } from '@core/models/insurance.model';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -1851,10 +1857,16 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         this.booking.set(updatedBooking);
       }
 
-      this.notifications.success('Devolución', 'Marcaste la reserva como devuelta. Gracias por completar este paso.');
+      this.notifications.success(
+        'Devolución',
+        'Marcaste la reserva como devuelta. Gracias por completar este paso.',
+      );
     } catch (error) {
       console.error('Error al marcar la reserva como devuelta', error);
-      this.notifications.error('Devolución', 'No pudimos marcar la devolución. Intentalo nuevamente en unos minutos.');
+      this.notifications.error(
+        'Devolución',
+        'No pudimos marcar la devolución. Intentalo nuevamente en unos minutos.',
+      );
     }
   }
 
@@ -1897,7 +1909,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     this.loading.set(true);
     try {
       await this.trafficInfractionsService.updateInfractionStatus(fine.id, 'disputed', reason);
-      this.notifications.success('Multa', 'Multa disputada exitosamente. El propietario será notificado.');
+      this.notifications.success(
+        'Multa',
+        'Multa disputada exitosamente. El propietario será notificado.',
+      );
       // Reload fines to update UI
       await this.loadTrafficFines(this.booking()!.id);
     } catch (error) {
@@ -1953,7 +1968,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       });
       void alert.then((a) => a.present());
     } else {
-      this.notifications.error('No-Show', 'Error al reportar: ' + (result.message || 'Error desconocido.'));
+      this.notifications.error(
+        'No-Show',
+        'Error al reportar: ' + (result.message || 'Error desconocido.'),
+      );
     }
   }
 
@@ -1970,7 +1988,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
         if (updated) this.booking.set(updated);
       });
     } else {
-      this.notifications.error('No-Show', 'Error al reportar: ' + (result.message || 'Error desconocido.'));
+      this.notifications.error(
+        'No-Show',
+        'Error al reportar: ' + (result.message || 'Error desconocido.'),
+      );
     }
   }
 
@@ -2379,7 +2400,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     );
 
     if (!inspection) {
-      this.notifications.warning('Acta', `No hay acta de ${type === 'delivery' ? 'entrega' : 'devolución'} disponible`);
+      this.notifications.warning(
+        'Acta',
+        `No hay acta de ${type === 'delivery' ? 'entrega' : 'devolución'} disponible`,
+      );
       return;
     }
 

@@ -56,7 +56,9 @@ export class PushNotificationService {
   /**
    * Observable de clicks en notificaciones
    */
-  get notificationClicks$(): Observable<ActionPerformed | { action: string; notification?: NotificationOptions }> {
+  get notificationClicks$(): Observable<
+    ActionPerformed | { action: string; notification?: NotificationOptions }
+  > {
     if (this.isNative) {
       return this.nativeNotificationClicks$.asObservable();
     }

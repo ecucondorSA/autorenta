@@ -155,7 +155,6 @@ export class FipeAutocompleteComponent implements OnChanges {
 
   @Input() placeholder = 'Escribe para buscar...';
 
-
   // ✅ FIX: Use signal for options to ensure computed updates when input changes
   private readonly _options = signal<FipeAutocompleteOption[]>([]);
   @Input() set options(value: FipeAutocompleteOption[]) {

@@ -96,7 +96,11 @@ export class ConversationalFormService {
   readonly hasMinimumData = computed(() => {
     const ans = this.answers();
     return (
-      ans.has('vehicle') && ans.has('year') && ans.has('model') && ans.has('photos') && ans.has('price')
+      ans.has('vehicle') &&
+      ans.has('year') &&
+      ans.has('model') &&
+      ans.has('photos') &&
+      ans.has('price')
     );
   });
 

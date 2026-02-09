@@ -228,7 +228,7 @@ export class WalletService {
     amountCents: number,
     description: string,
     refId?: string,
-    idempotencyKey?: string
+    idempotencyKey?: string,
   ): Promise<{ success: boolean; transactionId?: string }> {
     try {
       const userId = await this.authService.getCachedUserId();
@@ -241,7 +241,7 @@ export class WalletService {
         p_category: 'general',
         p_description: description,
         p_reference_id: refId || null,
-        p_idempotency_key: idempotencyKey || crypto.randomUUID()
+        p_idempotency_key: idempotencyKey || crypto.randomUUID(),
       });
 
       if (error) throw error;
@@ -263,12 +263,12 @@ export class WalletService {
    */
   async holdFundsAtomic(
     bookingId: string,
-    amountCents: number
+    amountCents: number,
   ): Promise<{ success: boolean; transactionId?: string }> {
     try {
       const { data, error } = await this.supabase.rpc('wallet_hold_funds', {
         p_amount_cents: amountCents,
-        p_booking_id: bookingId
+        p_booking_id: bookingId,
       });
 
       if (error) throw error;
@@ -280,7 +280,10 @@ export class WalletService {
     } catch (err) {
       // Translate SQL errors to user friendly messages
       if (JSON.stringify(err).includes('Insufficient funds')) {
-        throw new WalletError('INSUFFICIENT_BALANCE', 'Saldo insuficiente para retención de garantía');
+        throw new WalletError(
+          'INSUFFICIENT_BALANCE',
+          'Saldo insuficiente para retención de garantía',
+        );
       }
       this.handleError(err, 'Error al retener fondos');
       throw err;
@@ -292,12 +295,12 @@ export class WalletService {
    */
   async releaseFundsAtomic(
     bookingId: string,
-    amountCents: number
+    amountCents: number,
   ): Promise<{ success: boolean; transactionId?: string }> {
     try {
       const { data, error } = await this.supabase.rpc('wallet_release_funds', {
         p_amount_cents: amountCents,
-        p_booking_id: bookingId
+        p_booking_id: bookingId,
       });
 
       if (error) throw error;
@@ -406,8 +409,8 @@ export class WalletService {
 
       if (!result.success) throw new Error(result.error_message || 'Fallo al depositar fondos');
 
-      this.fetchBalance().catch(() => { });
-      this.fetchTransactions().catch(() => { });
+      this.fetchBalance().catch(() => {});
+      this.fetchTransactions().catch(() => {});
 
       return { success: true, transactionId: result.transaction_id };
     } catch (err) {
@@ -488,7 +491,7 @@ export class WalletService {
         if (response['error']) throw response['error'];
         // FIX 2025-12-27: Invalidate cache and force refresh after lock
         this.invalidateCache();
-        this.fetchBalance(true).catch(() => { });
+        this.fetchBalance(true).catch(() => {});
       }),
       map((response) => response.data![0] as WalletLockFundsResponse),
     );
@@ -505,7 +508,7 @@ export class WalletService {
         if (response['error']) throw response['error'];
         // FIX 2025-12-27: Invalidate cache and force refresh after unlock
         this.invalidateCache();
-        this.fetchBalance(true).catch(() => { });
+        this.fetchBalance(true).catch(() => {});
       }),
       map((response) => response.data![0] as WalletUnlockFundsResponse),
     );
@@ -540,7 +543,7 @@ export class WalletService {
         if (response['error']) throw response['error'];
         // FIX 2025-12-27: Invalidate cache and force refresh after lock
         this.invalidateCache();
-        this.fetchBalance(true).catch(() => { });
+        this.fetchBalance(true).catch(() => {});
       }),
       map((response) => response.data![0] as WalletLockRentalAndDepositResponse),
     );
@@ -567,16 +570,23 @@ export class WalletService {
     const normalizeTransaction = (row: Record<string, unknown>): WalletTransaction => {
       const rawAmount = row['amount'];
       const amountNum =
-        typeof rawAmount === 'number' ? rawAmount : typeof rawAmount === 'string' ? Number(rawAmount) : 0;
+        typeof rawAmount === 'number'
+          ? rawAmount
+          : typeof rawAmount === 'string'
+            ? Number(rawAmount)
+            : 0;
       const amountCents = Number.isFinite(amountNum) ? Math.round(amountNum) : 0;
 
-      const referenceType = typeof row['reference_type'] === 'string' ? row['reference_type'] : undefined;
+      const referenceType =
+        typeof row['reference_type'] === 'string' ? row['reference_type'] : undefined;
       const referenceId = typeof row['reference_id'] === 'string' ? row['reference_id'] : undefined;
 
       return {
         id: String(row['id'] ?? ''),
         user_id: String(row['user_id'] ?? user.id),
-        transaction_date: String(row['created_at'] ?? row['completed_at'] ?? new Date().toISOString()),
+        transaction_date: String(
+          row['created_at'] ?? row['completed_at'] ?? new Date().toISOString(),
+        ),
         transaction_type: String(row['type'] ?? ''),
         status: String(row['status'] ?? ''),
         amount_cents: amountCents,
@@ -585,15 +595,21 @@ export class WalletService {
           description: typeof row['description'] === 'string' ? row['description'] : undefined,
           reference_type: referenceType as WalletReferenceType | undefined,
           reference_id: referenceId,
-          provider: typeof row['provider'] === 'string' ? row['provider'] as WalletPaymentProvider : undefined,
+          provider:
+            typeof row['provider'] === 'string'
+              ? (row['provider'] as WalletPaymentProvider)
+              : undefined,
           provider_transaction_id:
-            typeof row['provider_transaction_id'] === 'string' ? row['provider_transaction_id'] : undefined,
+            typeof row['provider_transaction_id'] === 'string'
+              ? row['provider_transaction_id']
+              : undefined,
           provider_metadata:
             row['provider_metadata'] && typeof row['provider_metadata'] === 'object'
               ? (row['provider_metadata'] as Record<string, unknown>)
               : undefined,
           admin_notes: typeof row['admin_notes'] === 'string' ? row['admin_notes'] : undefined,
-          is_withdrawable: typeof row['is_withdrawable'] === 'boolean' ? row['is_withdrawable'] : undefined,
+          is_withdrawable:
+            typeof row['is_withdrawable'] === 'boolean' ? row['is_withdrawable'] : undefined,
           category: typeof row['category'] === 'string' ? row['category'] : undefined,
           balance_after_cents: row['balance_after_cents'],
         },
@@ -734,7 +750,7 @@ export class WalletService {
       });
 
       if (error) throw error;
-      this.fetchBalance().catch(() => { });
+      this.fetchBalance().catch(() => {});
       return data;
     } catch (err) {
       this.handleError(err, 'Error al emitir Crédito de Protección');

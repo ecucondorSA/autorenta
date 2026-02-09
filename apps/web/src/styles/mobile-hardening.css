@@ -1,4 +1,3 @@
-
 /* ═══════════════════════════════════════════════════════════════
    📱 DEEP MOBILE POLISH - "Native Feel" (2026 Standard)
    ═══════════════════════════════════════════════════════════════ */
@@ -19,7 +18,12 @@ body {
 }
 
 /* Eliminate 300ms delay on touch devices */
-a, button, input, select, textarea, [role="button"] {
+a,
+button,
+input,
+select,
+textarea,
+[role='button'] {
   touch-action: manipulation;
 }
 
@@ -58,8 +62,10 @@ a, button, input, select, textarea, [role="button"] {
 /* 3. Input Zoom Prevention (iOS) */
 /* Inputs need 16px to prevent auto-zoom on focus */
 @media screen and (max-width: 768px) {
-  input, select, textarea {
-    font-size: 16px !important; 
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
   }
 }
 
@@ -80,6 +86,6 @@ a, button, input, select, textarea, [role="button"] {
   display: none;
 }
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

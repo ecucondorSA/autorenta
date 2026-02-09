@@ -49,23 +49,33 @@ export interface VehicleScannerConfirmData {
   imports: [CommonModule, DecimalPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="fixed inset-0 z-[9999] bg-black full-screen-scan scan-stage fade-in" [class.fade-out]="isClosing()">
+    <div
+      class="fixed inset-0 z-[9999] bg-black full-screen-scan scan-stage fade-in"
+      [class.fade-out]="isClosing()"
+    >
       <!-- Header - Clean minimal design with WCAG AA contrast (bg: rgba(0,0,0,0.85) = ~12:1 ratio) -->
       <header class="scan-header-minimal safe-area-top">
-        <button
-          type="button"
-          (click)="cancel()"
-          class="close-btn"
-          aria-label="Cerrar escáner"
-        >
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <button type="button" (click)="cancel()" class="close-btn" aria-label="Cerrar escáner">
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <div class="status-indicator" [class.detected]="scanner.hasDetection()" [class.ready]="scanner.isStableEnough()">
+        <div
+          class="status-indicator"
+          [class.detected]="scanner.hasDetection()"
+          [class.ready]="scanner.isStableEnough()"
+        >
           <span class="status-dot"></span>
           <span class="status-text">
-            {{ scanner.isStableEnough() ? 'Listo' : (scanner.hasDetection() ? 'Detectado' : 'Buscando') }}
+            {{
+              scanner.isStableEnough() ? 'Listo' : scanner.hasDetection() ? 'Detectado' : 'Buscando'
+            }}
           </span>
         </div>
       </header>
@@ -82,7 +92,11 @@ export interface VehicleScannerConfirmData {
         ></video>
 
         <!-- Minimal corner brackets only - no silhouette, no grid, no scan lines -->
-        <div class="scan-frame-minimal" [class.detected]="scanner.hasDetection()" [class.locked]="scanner.isStableEnough()">
+        <div
+          class="scan-frame-minimal"
+          [class.detected]="scanner.hasDetection()"
+          [class.locked]="scanner.isStableEnough()"
+        >
           <div class="corner corner-tl"></div>
           <div class="corner corner-tr"></div>
           <div class="corner corner-bl"></div>
@@ -93,7 +107,12 @@ export interface VehicleScannerConfirmData {
         @if (lowLight()) {
           <div class="low-light-alert">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+              />
             </svg>
             <span>Poca luz - buscá mejor iluminación</span>
           </div>
@@ -117,9 +136,15 @@ export interface VehicleScannerConfirmData {
               <div class="detection-header">
                 <div class="vehicle-info">
                   <h3 class="vehicle-name">{{ detection.brand }} {{ detection.model }}</h3>
-                  <p class="vehicle-details">{{ scanner.yearLabel() }} · {{ detection.color | titlecase }}</p>
+                  <p class="vehicle-details">
+                    {{ scanner.yearLabel() }} · {{ detection.color | titlecase }}
+                  </p>
                 </div>
-                <div class="confidence-badge" [class.high]="detection.confidence >= 80" [class.medium]="detection.confidence >= 60 && detection.confidence < 80">
+                <div
+                  class="confidence-badge"
+                  [class.high]="detection.confidence >= 80"
+                  [class.medium]="detection.confidence >= 60 && detection.confidence < 80"
+                >
                   {{ detection.confidence }}%
                 </div>
               </div>
@@ -127,7 +152,7 @@ export interface VehicleScannerConfirmData {
               @if (scanner.marketValue(); as fipe) {
                 <div class="price-row">
                   <span class="price-label">Valor mercado</span>
-                  <span class="price-value">USD {{ fipe.value_usd | number:'1.0-0' }}</span>
+                  <span class="price-value">USD {{ fipe.value_usd | number: '1.0-0' }}</span>
                 </div>
               }
 
@@ -155,15 +180,17 @@ export interface VehicleScannerConfirmData {
           <div class="camera-error-overlay">
             <div class="error-icon">
               <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
               </svg>
             </div>
             <h3 class="error-title">Cámara no disponible</h3>
             <p class="error-message">{{ cameraError() }}</p>
-            <button type="button" (click)="retryCamera()" class="retry-btn">
-              Reintentar
-            </button>
+            <button type="button" (click)="retryCamera()" class="retry-btn">Reintentar</button>
           </div>
         }
       </main>
@@ -173,508 +200,556 @@ export interface VehicleScannerConfirmData {
         <footer class="scan-footer-minimal safe-area-bottom">
           @if (scanner.isStableEnough() && scanner.currentDetection()) {
             <button type="button" (click)="confirmAndUse()" class="confirm-btn-minimal">
-              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
               </svg>
               Usar estos datos
             </button>
           } @else {
-            <p class="footer-hint">{{ scanner.hasDetection() ? 'Estabilizando...' : 'Buscando vehículo...' }}</p>
+            <p class="footer-hint">
+              {{ scanner.hasDetection() ? 'Estabilizando...' : 'Buscando vehículo...' }}
+            </p>
           }
         </footer>
       }
     </div>
   `,
-  styles: [`
-    /*
+  styles: [
+    `
+      /*
      * MINIMAL SCANNER STYLES - WCAG AA Compliant
      * Contrast ratios: text on dark bg minimum 4.5:1, large text 3:1
      * Background overlays use rgba(0,0,0,0.85) for ~12:1 contrast with white text
      */
 
-    /* === CORE: Fullscreen positioning === */
-    :host {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      height: 100dvh !important;
-      z-index: 999999 !important;
-      display: block !important;
-      contain: none !important;
-      transform: none !important;
-      isolation: isolate;
-    }
-
-    .full-screen-scan {
-      position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      height: 100dvh !important;
-      z-index: 999999 !important;
-      background: #000;
-      overscroll-behavior: contain;
-    }
-
-    /* === SAFE AREAS === */
-    .safe-area-top {
-      padding-top: max(16px, env(safe-area-inset-top));
-    }
-
-    .safe-area-bottom {
-      padding-bottom: max(16px, env(safe-area-inset-bottom));
-    }
-
-    /* === ANIMATIONS === */
-    .fade-in {
-      animation: fadeIn 200ms ease-out;
-    }
-
-    .fade-out {
-      opacity: 0;
-      transform: scale(0.98);
-      transition: opacity 200ms ease, transform 200ms ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* === HEADER: Minimal with high contrast === */
-    .scan-header-minimal {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
-    }
-
-    .close-btn {
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.6);
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      transition: background 150ms ease;
-    }
-
-    .close-btn:hover,
-    .close-btn:active {
-      background: rgba(0,0,0,0.8);
-    }
-
-    /* === STATUS INDICATOR === */
-    .status-indicator {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: 20px;
-      background: rgba(0,0,0,0.9);
-      font-size: 14px;
-      font-weight: 700;
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    }
-
-    .status-indicator.detected {
-      color: #00d95f;
-    }
-
-    .status-indicator.ready {
-      background: #00d95f;
-      color: #000;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.5);
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-
-    .status-indicator.detected .status-dot {
-      background: #00d95f;
-    }
-
-    .status-indicator.ready .status-dot {
-      background: #000;
-      animation: none;
-    }
-
-    .status-text {
-      line-height: 1;
-    }
-
-    /* === VIDEO LAYER === */
-    .scan-video-layer {
-      z-index: 1;
-    }
-
-    /* === MINIMAL CORNER FRAME === */
-    .scan-frame-minimal {
-      position: absolute;
-      inset: 10%;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    .corner {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border: 4px solid #fff;
-      filter: drop-shadow(0 0 4px rgba(0,0,0,0.8)) drop-shadow(0 0 8px rgba(0,0,0,0.5));
-      transition: all 300ms ease;
-    }
-
-    .corner-tl { top: 0; left: 0; border-right: none; border-bottom: none; }
-    .corner-tr { top: 0; right: 0; border-left: none; border-bottom: none; }
-    .corner-bl { bottom: 0; left: 0; border-right: none; border-top: none; }
-    .corner-br { bottom: 0; right: 0; border-left: none; border-top: none; }
-
-    .scan-frame-minimal.detected .corner {
-      border-color: #00d95f;
-      width: 40px;
-      height: 40px;
-    }
-
-    .scan-frame-minimal.locked .corner {
-      border-color: #00d95f;
-      width: 48px;
-      height: 48px;
-      box-shadow: 0 0 12px rgba(0,217,95,0.6);
-    }
-
-    /* === LOW LIGHT ALERT === */
-    .low-light-alert {
-      position: absolute;
-      top: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: 8px;
-      background: rgba(251,191,36,0.9);
-      color: #000;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    /* === DETECTION OVERLAY (bottom) === */
-    .detection-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 5;
-      padding: 16px;
-      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
-    }
-
-    .error-banner {
-      padding: 12px 16px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      background: rgba(239,68,68,0.9);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 500;
-      text-align: center;
-    }
-
-    /* === DETECTION CARD === */
-    .detection-card {
-      padding: 16px;
-      border-radius: 16px;
-      background: rgba(0,0,0,0.85);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .detection-card.detected {
-      border-color: rgba(0,217,95,0.4);
-    }
-
-    .detection-card.scanning {
-      background: rgba(0,0,0,0.9);
-    }
-
-    .detection-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-
-    .vehicle-info {
-      flex: 1;
-    }
-
-    .vehicle-name {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.2;
-    }
-
-    .vehicle-details {
-      margin: 4px 0 0;
-      font-size: 14px;
-      color: rgba(255,255,255,0.9);
-    }
-
-    .confidence-badge {
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 700;
-      background: rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.7);
-    }
-
-    .confidence-badge.high {
-      background: rgba(0,217,95,0.2);
-      color: #00d95f;
-    }
-
-    .confidence-badge.medium {
-      background: rgba(251,191,36,0.2);
-      color: #fbbf24;
-    }
-
-    .price-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      margin-top: 8px;
-    }
-
-    .price-label {
-      font-size: 13px;
-      color: rgba(255,255,255,0.9);
-    }
-
-    .price-value {
-      font-size: 16px;
-      font-weight: 700;
-      color: #00d95f;
-    }
-
-    /* === STABILITY BAR === */
-    .stability-bar {
-      height: 4px;
-      margin-top: 12px;
-      border-radius: 2px;
-      background: rgba(255,255,255,0.1);
-      overflow: hidden;
-    }
-
-    .stability-fill {
-      height: 100%;
-      background: #00d95f;
-      transition: width 200ms ease;
-    }
-
-    .stability-hint {
-      margin: 8px 0 0;
-      font-size: 13px;
-      color: #fff;
-      text-align: center;
-    }
-
-    /* === SCANNING STATE === */
-    .scanning-indicator {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 8px 0;
-    }
-
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255,255,255,0.2);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    .scanning-indicator span {
-      font-size: 15px;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    /* === CAMERA ERROR OVERLAY === */
-    .camera-error-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 50;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: linear-gradient(to bottom, #1a1a1a, #000);
-    }
-
-    .error-icon {
-      width: 80px;
-      height: 80px;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: rgba(239,68,68,0.15);
-      color: #ef4444;
-    }
-
-    .error-title {
-      margin: 0 0 12px;
-      font-size: 22px;
-      font-weight: 700;
-      color: #fff;
-      text-align: center;
-    }
-
-    .error-message {
-      margin: 0 0 24px;
-      font-size: 15px;
-      color: rgba(255,255,255,0.7);
-      text-align: center;
-      max-width: 300px;
-      line-height: 1.5;
-      white-space: pre-line;
-    }
-
-    .retry-btn {
-      padding: 14px 32px;
-      border: none;
-      border-radius: 12px;
-      background: #00d95f;
-      color: #000;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 150ms ease;
-    }
-
-    .retry-btn:hover,
-    .retry-btn:active {
-      background: #00ff6e;
-    }
-
-    /* === FOOTER === */
-    .scan-footer-minimal {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 10;
-      padding: 16px;
-      text-align: center;
-    }
-
-    .confirm-btn-minimal {
-      width: 100%;
-      max-width: 320px;
-      margin: 0 auto;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      border: none;
-      border-radius: 14px;
-      background: #00d95f;
-      color: #000;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 150ms ease;
-    }
-
-    .confirm-btn-minimal:hover,
-    .confirm-btn-minimal:active {
-      background: #00ff6e;
-      transform: scale(1.02);
-    }
-
-    .footer-hint {
-      margin: 0;
-      padding: 12px 20px;
-      font-size: 15px;
-      font-weight: 600;
-      color: #fff;
-      background: rgba(0,0,0,0.8);
-      border-radius: 12px;
-      display: inline-block;
-    }
-
-    /* === RESPONSIVE === */
-    @media (max-width: 480px) {
-      .scan-frame-minimal {
-        inset: 5%;
+      /* === CORE: Fullscreen positioning === */
+      :host {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        z-index: 999999 !important;
+        display: block !important;
+        contain: none !important;
+        transform: none !important;
+        isolation: isolate;
       }
 
+      .full-screen-scan {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100dvh !important;
+        z-index: 999999 !important;
+        background: #000;
+        overscroll-behavior: contain;
+      }
+
+      /* === SAFE AREAS === */
+      .safe-area-top {
+        padding-top: max(16px, env(safe-area-inset-top));
+      }
+
+      .safe-area-bottom {
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
+      }
+
+      /* === ANIMATIONS === */
+      .fade-in {
+        animation: fadeIn 200ms ease-out;
+      }
+
+      .fade-out {
+        opacity: 0;
+        transform: scale(0.98);
+        transition:
+          opacity 200ms ease,
+          transform 200ms ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* === HEADER: Minimal with high contrast === */
+      .scan-header-minimal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+      }
+
+      .close-btn {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.6);
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        transition: background 150ms ease;
+      }
+
+      .close-btn:hover,
+      .close-btn:active {
+        background: rgba(0, 0, 0, 0.8);
+      }
+
+      /* === STATUS INDICATOR === */
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 20px;
+        background: rgba(0, 0, 0, 0.9);
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      }
+
+      .status-indicator.detected {
+        color: #00d95f;
+      }
+
+      .status-indicator.ready {
+        background: #00d95f;
+        color: #000;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      .status-indicator.detected .status-dot {
+        background: #00d95f;
+      }
+
+      .status-indicator.ready .status-dot {
+        background: #000;
+        animation: none;
+      }
+
+      .status-text {
+        line-height: 1;
+      }
+
+      /* === VIDEO LAYER === */
+      .scan-video-layer {
+        z-index: 1;
+      }
+
+      /* === MINIMAL CORNER FRAME === */
+      .scan-frame-minimal {
+        position: absolute;
+        inset: 10%;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .corner {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #fff;
+        filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+        transition: all 300ms ease;
+      }
+
+      .corner-tl {
+        top: 0;
+        left: 0;
+        border-right: none;
+        border-bottom: none;
+      }
+      .corner-tr {
+        top: 0;
+        right: 0;
+        border-left: none;
+        border-bottom: none;
+      }
+      .corner-bl {
+        bottom: 0;
+        left: 0;
+        border-right: none;
+        border-top: none;
+      }
+      .corner-br {
+        bottom: 0;
+        right: 0;
+        border-left: none;
+        border-top: none;
+      }
+
+      .scan-frame-minimal.detected .corner {
+        border-color: #00d95f;
+        width: 40px;
+        height: 40px;
+      }
+
+      .scan-frame-minimal.locked .corner {
+        border-color: #00d95f;
+        width: 48px;
+        height: 48px;
+        box-shadow: 0 0 12px rgba(0, 217, 95, 0.6);
+      }
+
+      /* === LOW LIGHT ALERT === */
+      .low-light-alert {
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 8px;
+        background: rgba(251, 191, 36, 0.9);
+        color: #000;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      /* === DETECTION OVERLAY (bottom) === */
+      .detection-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 5;
+        padding: 16px;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.85) 0%,
+          rgba(0, 0, 0, 0.6) 70%,
+          transparent 100%
+        );
+      }
+
+      .error-banner {
+        padding: 12px 16px;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        background: rgba(239, 68, 68, 0.9);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+      }
+
+      /* === DETECTION CARD === */
       .detection-card {
-        padding: 14px;
+        padding: 16px;
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .detection-card.detected {
+        border-color: rgba(0, 217, 95, 0.4);
+      }
+
+      .detection-card.scanning {
+        background: rgba(0, 0, 0, 0.9);
+      }
+
+      .detection-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .vehicle-info {
+        flex: 1;
       }
 
       .vehicle-name {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.2;
+      }
+
+      .vehicle-details {
+        margin: 4px 0 0;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .confidence-badge {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .confidence-badge.high {
+        background: rgba(0, 217, 95, 0.2);
+        color: #00d95f;
+      }
+
+      .confidence-badge.medium {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+      }
+
+      .price-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 8px;
+      }
+
+      .price-label {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .price-value {
         font-size: 16px;
+        font-weight: 700;
+        color: #00d95f;
+      }
+
+      /* === STABILITY BAR === */
+      .stability-bar {
+        height: 4px;
+        margin-top: 12px;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+
+      .stability-fill {
+        height: 100%;
+        background: #00d95f;
+        transition: width 200ms ease;
+      }
+
+      .stability-hint {
+        margin: 8px 0 0;
+        font-size: 13px;
+        color: #fff;
+        text-align: center;
+      }
+
+      /* === SCANNING STATE === */
+      .scanning-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 8px 0;
+      }
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      .scanning-indicator span {
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      /* === CAMERA ERROR OVERLAY === */
+      .camera-error-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: linear-gradient(to bottom, #1a1a1a, #000);
+      }
+
+      .error-icon {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+      }
+
+      .error-title {
+        margin: 0 0 12px;
+        font-size: 22px;
+        font-weight: 700;
+        color: #fff;
+        text-align: center;
+      }
+
+      .error-message {
+        margin: 0 0 24px;
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.7);
+        text-align: center;
+        max-width: 300px;
+        line-height: 1.5;
+        white-space: pre-line;
+      }
+
+      .retry-btn {
+        padding: 14px 32px;
+        border: none;
+        border-radius: 12px;
+        background: #00d95f;
+        color: #000;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 150ms ease;
+      }
+
+      .retry-btn:hover,
+      .retry-btn:active {
+        background: #00ff6e;
+      }
+
+      /* === FOOTER === */
+      .scan-footer-minimal {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        padding: 16px;
+        text-align: center;
       }
 
       .confirm-btn-minimal {
-        padding: 14px 20px;
-        font-size: 15px;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border: none;
+        border-radius: 14px;
+        background: #00d95f;
+        color: #000;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 150ms ease;
       }
-    }
 
-    /* === REDUCED MOTION === */
-    @media (prefers-reduced-motion: reduce) {
-      .fade-in,
-      .fade-out,
-      .spinner,
-      .status-dot,
-      .corner {
-        animation: none !important;
-        transition: none !important;
+      .confirm-btn-minimal:hover,
+      .confirm-btn-minimal:active {
+        background: #00ff6e;
+        transform: scale(1.02);
       }
-    }
-  `],
+
+      .footer-hint {
+        margin: 0;
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 12px;
+        display: inline-block;
+      }
+
+      /* === RESPONSIVE === */
+      @media (max-width: 480px) {
+        .scan-frame-minimal {
+          inset: 5%;
+        }
+
+        .detection-card {
+          padding: 14px;
+        }
+
+        .vehicle-name {
+          font-size: 16px;
+        }
+
+        .confirm-btn-minimal {
+          padding: 14px 20px;
+          font-size: 15px;
+        }
+      }
+
+      /* === REDUCED MOTION === */
+      @media (prefers-reduced-motion: reduce) {
+        .fade-in,
+        .fade-out,
+        .spinner,
+        .status-dot,
+        .corner {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    `,
+  ],
 })
 export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
   @ViewChild('videoElement') videoRef!: ElementRef<HTMLVideoElement>;
@@ -692,7 +767,10 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
 
   // GHOST SILHOUETTES (SVG paths) - Professional car outlines centered in 400x300
   // Each silhouette includes: body, windows, wheels with realistic proportions
-  private readonly GHOST_SILHOUETTES: Record<string, { body: string; windows: string; wheels: string[] }> = {
+  private readonly GHOST_SILHOUETTES: Record<
+    string,
+    { body: string; windows: string; wheels: string[] }
+  > = {
     sedan: {
       // Classic 3-box sedan silhouette - low roof, trunk
       body: `M 60,185
@@ -704,8 +782,8 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
       windows: `M 110,130 L 125,100 C 135,90 155,87 185,87 L 235,87 C 260,87 275,95 285,110 L 300,130 Z`,
       wheels: [
         'M 105,195 m -22,0 a 22,22 0 1,0 44,0 a 22,22 0 1,0 -44,0', // Front wheel
-        'M 330,195 m -22,0 a 22,22 0 1,0 44,0 a 22,22 0 1,0 -44,0'  // Rear wheel
-      ]
+        'M 330,195 m -22,0 a 22,22 0 1,0 44,0 a 22,22 0 1,0 -44,0', // Rear wheel
+      ],
     },
     suv: {
       // Tall, boxy SUV silhouette - high roof, squared rear
@@ -718,8 +796,8 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
       windows: `M 115,100 L 130,70 C 140,60 165,57 200,57 L 270,57 C 305,57 325,65 335,80 L 350,100 L 350,125 L 115,125 Z`,
       wheels: [
         'M 100,205 m -26,0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0', // Front wheel (bigger)
-        'M 335,205 m -26,0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0'  // Rear wheel (bigger)
-      ]
+        'M 335,205 m -26,0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0', // Rear wheel (bigger)
+      ],
     },
     hatchback: {
       // Compact 2-box silhouette - sloped rear
@@ -731,8 +809,8 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
       windows: `M 125,120 L 140,90 C 155,78 180,72 220,72 L 275,72 C 310,72 335,85 345,105 L 355,120 Z`,
       wheels: [
         'M 110,195 m -22,0 a 22,22 0 1,0 44,0 a 22,22 0 1,0 -44,0', // Front wheel
-        'M 325,195 m -22,0 a 22,22 0 1,0 44,0 a 22,22 0 1,0 -44,0'  // Rear wheel
-      ]
+        'M 325,195 m -22,0 a 22,22 0 1,0 44,0 a 22,22 0 1,0 -44,0', // Rear wheel
+      ],
     },
     pickup: {
       // Pickup truck with cabin and bed
@@ -745,8 +823,8 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
       windows: `M 110,105 L 125,70 C 140,55 170,52 200,52 L 215,52 C 235,52 250,65 255,85 L 255,105 Z`,
       wheels: [
         'M 105,205 m -26,0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0',
-        'M 340,205 m -26,0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0'
-      ]
+        'M 340,205 m -26,0 a 26,26 0 1,0 52,0 a 26,26 0 1,0 -52,0',
+      ],
     },
     coupe: {
       // Sporty coupe - low, sleek, 2-door proportions
@@ -758,8 +836,8 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
       windows: `M 140,120 L 160,85 C 175,72 210,67 250,67 L 285,70 C 320,75 340,90 350,115 L 355,120 Z`,
       wheels: [
         'M 115,190 m -20,0 a 20,20 0 1,0 40,0 a 20,20 0 1,0 -40,0',
-        'M 325,190 m -20,0 a 20,20 0 1,0 40,0 a 20,20 0 1,0 -40,0'
-      ]
+        'M 325,190 m -20,0 a 20,20 0 1,0 40,0 a 20,20 0 1,0 -40,0',
+      ],
     },
     unknown: {
       // Generic vehicle outline - balanced proportions
@@ -771,9 +849,9 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
       windows: `M 125,115 L 145,80 C 165,65 200,62 240,62 L 280,65 C 320,70 345,85 355,110 L 360,115 Z`,
       wheels: [
         'M 110,200 m -24,0 a 24,24 0 1,0 48,0 a 24,24 0 1,0 -48,0',
-        'M 330,200 m -24,0 a 24,24 0 1,0 48,0 a 24,24 0 1,0 -48,0'
-      ]
-    }
+        'M 330,200 m -24,0 a 24,24 0 1,0 48,0 a 24,24 0 1,0 -48,0',
+      ],
+    },
   };
 
   /**
@@ -791,7 +869,6 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
   getGhostPath(): string {
     return this.getCurrentSilhouette().body;
   }
-
 
   /** Camera error message */
   readonly cameraError = signal<string | null>(null);
@@ -832,7 +909,9 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
   ];
 
   /** Get current tip based on index */
-  readonly currentTip = computed(() => this.scanningTips[this.currentTipIndex() % this.scanningTips.length]);
+  readonly currentTip = computed(
+    () => this.scanningTips[this.currentTipIndex() % this.scanningTips.length],
+  );
 
   /** Get random positive message when detected */
   readonly detectionMessage = computed(() => {
@@ -896,7 +975,10 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
    */
   private playConfirmSound(): void {
     try {
-      const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      const audioCtx = new (
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+      )();
 
       // Create a short pleasant "ding" sound
       const oscillator = audioCtx.createOscillator();
@@ -1063,14 +1145,16 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
   private hideIonicNav(): void {
     const ionTabs = document.querySelector('ion-tabs');
     const ionTabBar = document.querySelector('ion-tab-bar');
-    const appHeader = document.querySelector('app-root > ion-app > ion-header, ion-header.app-header');
+    const appHeader = document.querySelector(
+      'app-root > ion-app > ion-header, ion-header.app-header',
+    );
 
     if (ionTabs) this.renderer.setStyle(ionTabs, 'display', 'none');
     if (ionTabBar) this.renderer.setStyle(ionTabBar, 'display', 'none');
     if (appHeader) this.renderer.setStyle(appHeader, 'display', 'none');
 
     // Also hide any visible navbars
-    document.querySelectorAll('ion-tab-bar, .bottom-navigation, [role="tablist"]').forEach(el => {
+    document.querySelectorAll('ion-tab-bar, .bottom-navigation, [role="tablist"]').forEach((el) => {
       this.renderer.setStyle(el, 'display', 'none');
     });
   }
@@ -1078,13 +1162,15 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
   private showIonicNav(): void {
     const ionTabs = document.querySelector('ion-tabs');
     const ionTabBar = document.querySelector('ion-tab-bar');
-    const appHeader = document.querySelector('app-root > ion-app > ion-header, ion-header.app-header');
+    const appHeader = document.querySelector(
+      'app-root > ion-app > ion-header, ion-header.app-header',
+    );
 
     if (ionTabs) this.renderer.removeStyle(ionTabs, 'display');
     if (ionTabBar) this.renderer.removeStyle(ionTabBar, 'display');
     if (appHeader) this.renderer.removeStyle(appHeader, 'display');
 
-    document.querySelectorAll('ion-tab-bar, .bottom-navigation, [role="tablist"]').forEach(el => {
+    document.querySelectorAll('ion-tab-bar, .bottom-navigation, [role="tablist"]').forEach((el) => {
       this.renderer.removeStyle(el, 'display');
     });
   }
@@ -1114,7 +1200,7 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
    */
   private startTipRotation(): void {
     this.tipRotationInterval = setInterval(() => {
-      this.currentTipIndex.update(i => i + 1);
+      this.currentTipIndex.update((i) => i + 1);
     }, 4000);
   }
 
@@ -1136,7 +1222,9 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
       // Check if getUserMedia is available
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         this.logger.error('getUserMedia not supported', 'VehicleScannerLive');
-        this.cameraError.set('Tu navegador no soporta acceso a la cámara. Probá con Chrome o Safari.');
+        this.cameraError.set(
+          'Tu navegador no soporta acceso a la cámara. Probá con Chrome o Safari.',
+        );
         return;
       }
 
@@ -1157,7 +1245,9 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
         });
         this.logger.info('Got environment camera', 'VehicleScannerLive');
       } catch (envError) {
-        this.logger.warn('Environment camera failed, trying any camera...', 'VehicleScannerLive', { error: envError });
+        this.logger.warn('Environment camera failed, trying any camera...', 'VehicleScannerLive', {
+          error: envError,
+        });
         // Fallback to any camera
         stream = await navigator.mediaDevices.getUserMedia({
           video: true,
@@ -1196,7 +1286,9 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
 
       if (error instanceof Error) {
         if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-          this.cameraError.set('Necesitás permitir el acceso a la cámara. Revisá los permisos en la configuración del navegador.');
+          this.cameraError.set(
+            'Necesitás permitir el acceso a la cámara. Revisá los permisos en la configuración del navegador.',
+          );
         } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
           this.cameraError.set('No se encontró ninguna cámara en tu dispositivo');
         } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
@@ -1288,7 +1380,11 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
 
     this.autoConfirmTimer = setTimeout(() => {
       this.autoConfirmTimer = null;
-      if (this.scanner.isStableEnough() && this.scanner.currentDetection() && !this.hasAutoConfirmed()) {
+      if (
+        this.scanner.isStableEnough() &&
+        this.scanner.currentDetection() &&
+        !this.hasAutoConfirmed()
+      ) {
         this.hasAutoConfirmed.set(true);
         this.confirmAndUse();
       }
@@ -1345,9 +1441,9 @@ export class VehicleScannerLiveComponent implements OnInit, OnDestroy {
           // Permission is blocked, show instructions to unblock
           this.cameraError.set(
             'La cámara está bloqueada. Para habilitarla:\n' +
-            '1. Tocá el ícono de candado 🔒 en la barra de direcciones\n' +
-            '2. Buscá "Cámara" y cambiá a "Permitir"\n' +
-            '3. Recargá la página'
+              '1. Tocá el ícono de candado 🔒 en la barra de direcciones\n' +
+              '2. Buscá "Cámara" y cambiá a "Permitir"\n' +
+              '3. Recargá la página',
           );
           return;
         }

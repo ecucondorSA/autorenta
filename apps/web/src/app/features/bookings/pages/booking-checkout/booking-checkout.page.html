@@ -51,46 +51,75 @@
       <!-- Main Column -->
       <div class="space-y-5">
         <!-- Booking Summary Card -->
-        <article class="glass-card p-bento-md shadow-sm border border-border-default" appHoverLift [liftAmount]="3">
+        <article
+          class="glass-card p-bento-md shadow-sm border border-border-default"
+          appHoverLift
+          [liftAmount]="3"
+        >
           <div class="flex items-center justify-between mb-4 pb-3 border-b border-border-default">
             <h2 class="text-lg font-bold text-text-primary">Resumen del Uso Compartido</h2>
             @if (guaranteeInfo(); as info) {
-              <span class="text-[10px] font-black uppercase px-2 py-1 rounded bg-cta-default/10 text-cta-default border border-cta-default/20">
+              <span
+                class="text-[10px] font-black uppercase px-2 py-1 rounded bg-cta-default/10 text-cta-default border border-cta-default/20"
+              >
                 Tier {{ getVehicleTierName(info.vehicleTier) }}
               </span>
             }
           </div>
-          
+
           @if (booking()) {
             <div class="space-y-4">
               <!-- Car Info -->
-              <div class="flex gap-4 items-center p-3 bg-surface-secondary/50 rounded-2xl border border-border-default/30">
-                <div class="w-16 h-16 rounded-xl bg-surface-base border border-border-default overflow-hidden">
-                  <img [src]="booking().car?.photos?.[0]?.url || '/assets/placeholder-car.webp'" class="w-full h-full object-cover" />
+              <div
+                class="flex gap-4 items-center p-3 bg-surface-secondary/50 rounded-2xl border border-border-default/30"
+              >
+                <div
+                  class="w-16 h-16 rounded-xl bg-surface-base border border-border-default overflow-hidden"
+                >
+                  <img
+                    [src]="booking().car?.photos?.[0]?.url || '/assets/placeholder-car.webp'"
+                    class="w-full h-full object-cover"
+                  />
                 </div>
                 <div>
-                  <p class="text-sm font-bold text-text-primary">{{ booking().car?.brand }} {{ booking().car?.model }}</p>
-                  <p class="text-xs text-text-secondary">{{ booking().car?.year }} · {{ booking().car?.transmission }}</p>
+                  <p class="text-sm font-bold text-text-primary">
+                    {{ booking().car?.brand }} {{ booking().car?.model }}
+                  </p>
+                  <p class="text-xs text-text-secondary">
+                    {{ booking().car?.year }} · {{ booking().car?.transmission }}
+                  </p>
                 </div>
               </div>
 
               <!-- Date Details -->
               <div class="grid grid-cols-2 gap-3">
                 <div class="p-3 bg-surface-base border border-border-default rounded-2xl">
-                  <p class="text-[9px] font-black text-text-muted uppercase tracking-widest">Desde</p>
-                  <p class="text-xs font-bold text-text-primary">{{ formatBookingDate(booking().start_date) }}</p>
+                  <p class="text-[9px] font-black text-text-muted uppercase tracking-widest">
+                    Desde
+                  </p>
+                  <p class="text-xs font-bold text-text-primary">
+                    {{ formatBookingDate(booking().start_date) }}
+                  </p>
                 </div>
                 <div class="p-3 bg-surface-base border border-border-default rounded-2xl">
-                  <p class="text-[9px] font-black text-text-muted uppercase tracking-widest">Hasta</p>
-                  <p class="text-xs font-bold text-text-primary">{{ formatBookingDate(booking().end_date) }}</p>
+                  <p class="text-[9px] font-black text-text-muted uppercase tracking-widest">
+                    Hasta
+                  </p>
+                  <p class="text-xs font-bold text-text-primary">
+                    {{ formatBookingDate(booking().end_date) }}
+                  </p>
                 </div>
               </div>
 
               <!-- Price Breakdown -->
               <div class="space-y-2 pt-2">
                 <div class="flex justify-between items-center text-sm">
-                  <span class="text-text-muted">Costo del Uso ({{ booking().days_count || 1 }} días)</span>
-                  <span class="font-bold text-text-primary">{{ formatCurrency(bookingTotalUsd(), 'USD') }}</span>
+                  <span class="text-text-muted"
+                    >Costo del Uso ({{ booking().days_count || 1 }} días)</span
+                  >
+                  <span class="font-bold text-text-primary">{{
+                    formatCurrency(bookingTotalUsd(), 'USD')
+                  }}</span>
                 </div>
 
                 @if (guaranteeInfo(); as info) {
@@ -98,16 +127,22 @@
                     <span class="text-text-muted">Compensación de Seguridad (Hold)</span>
                     <div class="flex flex-col items-end">
                       @if (info.discountApplied) {
-                        <span class="text-[10px] text-text-muted line-through">{{ info.baseHoldUsd | money }}</span>
-                        <span class="font-bold text-cta-default italic">{{ info.holdUsd | money }}</span>
+                        <span class="text-[10px] text-text-muted line-through">{{
+                          info.baseHoldUsd | money
+                        }}</span>
+                        <span class="font-bold text-cta-default italic">{{
+                          info.holdUsd | money
+                        }}</span>
                       } @else {
                         <span class="font-bold text-text-primary">{{ info.holdUsd | money }}</span>
                       }
                     </div>
                   </div>
-                  
+
                   @if (info.discountApplied) {
-                    <div class="p-2.5 rounded-xl bg-cta-default/5 border border-cta-default/10 flex items-center gap-2">
+                    <div
+                      class="p-2.5 rounded-xl bg-cta-default/5 border border-cta-default/10 flex items-center gap-2"
+                    >
                       <app-icon name="sparkles" [size]="14" cssClass="text-cta-default" />
                       <p class="text-[10px] text-cta-default font-bold uppercase tracking-tight">
                         ✨ Beneficio Club: {{ info.buyDownFgoUsd | money }} cubiertos por FGO
@@ -118,10 +153,16 @@
               </div>
 
               <!-- Grand Total Info -->
-              <div class="pt-4 mt-2 border-t-2 border-border-default flex justify-between items-end">
+              <div
+                class="pt-4 mt-2 border-t-2 border-border-default flex justify-between items-end"
+              >
                 <div>
-                  <p class="text-[10px] font-black text-text-muted uppercase tracking-widest">Total Autorización</p>
-                  <p class="text-[9px] text-text-muted leading-tight max-w-[180px]">Uso + Hold (Hold se libera al finalizar)</p>
+                  <p class="text-[10px] font-black text-text-muted uppercase tracking-widest">
+                    Total Autorización
+                  </p>
+                  <p class="text-[9px] text-text-muted leading-tight max-w-[180px]">
+                    Uso + Hold (Hold se libera al finalizar)
+                  </p>
                 </div>
                 <div class="text-right">
                   <p class="text-2xl font-black text-text-primary italic tracking-tighter">

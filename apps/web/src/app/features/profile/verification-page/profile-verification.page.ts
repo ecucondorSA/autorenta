@@ -43,7 +43,12 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
             class="p-2 -ml-2 rounded-full hover:bg-surface-hover text-text-secondary hover:text-text-primary transition-colors"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
           </a>
           <span class="text-sm font-semibold text-text-primary">Verificación de Cuenta</span>
@@ -52,7 +57,6 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
       </nav>
 
       <main class="max-w-md mx-auto px-4 pt-24 pb-20">
-
         <!-- Loading State -->
         @if (dataLoading()) {
           <div class="space-y-6 animate-pulse">
@@ -80,16 +84,23 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                 <path
                   class="text-border-default"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none" stroke="currentColor" stroke-width="3"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
                 />
                 <path
                   class="text-cta-default transition-all duration-1000 ease-out"
                   [attr.stroke-dasharray]="progressPercentage() + ', 100'"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
                 />
               </svg>
-              <span class="absolute text-[10px] font-bold text-text-primary">{{ progressPercentage() }}%</span>
+              <span class="absolute text-[10px] font-bold text-text-primary"
+                >{{ progressPercentage() }}%</span
+              >
             </div>
           </div>
 
@@ -107,8 +118,18 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                   <div class="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                    <svg
+                      class="w-4 h-4 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   </div>
                   <div>
@@ -116,7 +137,10 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                     <p class="text-xs text-emerald-700">{{ userEmail() }}</p>
                   </div>
                 </div>
-                <span class="text-xs font-medium text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">Listo</span>
+                <span
+                  class="text-xs font-medium text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full"
+                  >Listo</span
+                >
               </div>
             </div>
 
@@ -125,13 +149,17 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
               <div class="animate-fade-in space-y-6">
                 @if (!isDniVerified()) {
                   <div>
-                    <h2 class="text-lg font-semibold text-text-primary mb-1">Documento de Identidad</h2>
+                    <h2 class="text-lg font-semibold text-text-primary mb-1">
+                      Documento de Identidad
+                    </h2>
                     <p class="text-sm text-text-secondary mb-4">Sube una foto clara de tu DNI.</p>
                     <app-dni-uploader></app-dni-uploader>
                   </div>
                 } @else {
                   <div>
-                    <h2 class="text-lg font-semibold text-text-primary mb-1">Licencia de Conducir</h2>
+                    <h2 class="text-lg font-semibold text-text-primary mb-1">
+                      Licencia de Conducir
+                    </h2>
                     <p class="text-sm text-text-secondary mb-4">Requerido para poder conducir.</p>
                     <app-license-uploader
                       [hideCountrySelector]="false"
@@ -147,8 +175,18 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
               <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
                 <div class="flex items-center gap-3">
                   <div class="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                    <svg
+                      class="w-4 h-4 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   </div>
                   <div>
@@ -162,7 +200,9 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
               @if (canAccessLevel(3) && !isLevelComplete(3)) {
                 <div class="animate-fade-in">
                   <h2 class="text-lg font-semibold text-text-primary mb-1">Prueba de Vida</h2>
-                  <p class="text-sm text-text-secondary mb-4">Validaremos que eres tú en tiempo real.</p>
+                  <p class="text-sm text-text-secondary mb-4">
+                    Validaremos que eres tú en tiempo real.
+                  </p>
                   <app-selfie-capture></app-selfie-capture>
                 </div>
               }
@@ -171,21 +211,39 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
 
           <!-- Success State -->
           @if (progressPercentage() === 100) {
-            <div class="fixed inset-0 z-[60] bg-surface-base flex flex-col items-center justify-center p-6 animate-scale-up">
-              <div class="w-24 h-24 rounded-full bg-success-100 flex items-center justify-center text-success-600 mb-6 shadow-lg animate-bounce">
+            <div
+              class="fixed inset-0 z-[60] bg-surface-base flex flex-col items-center justify-center p-6 animate-scale-up"
+            >
+              <div
+                class="w-24 h-24 rounded-full bg-success-100 flex items-center justify-center text-success-600 mb-6 shadow-lg animate-bounce"
+              >
                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </div>
-              <h2 class="text-3xl font-bold text-text-primary mb-2 text-center">¡Estás Verificado!</h2>
-              <p class="text-text-secondary text-center max-w-xs mb-10">Ya puedes disfrutar de la experiencia completa de AutoRenta.</p>
+              <h2 class="text-3xl font-bold text-text-primary mb-2 text-center">
+                ¡Estás Verificado!
+              </h2>
+              <p class="text-text-secondary text-center max-w-xs mb-10">
+                Ya puedes disfrutar de la experiencia completa de AutoRenta.
+              </p>
               <a
                 [routerLink]="returnUrl() || '/cars'"
                 class="w-full max-w-sm py-4 bg-cta-default text-white font-bold rounded-2xl shadow-xl hover:bg-cta-hover transition-transform active:scale-95 text-center flex items-center justify-center gap-2"
               >
                 Continuar
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
                 </svg>
               </a>
             </div>

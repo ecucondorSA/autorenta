@@ -23,9 +23,12 @@ describe('AdvisoryLockService', () => {
     mockLogger = jasmine.createSpyObj('LoggerService', ['info', 'warn', 'error', 'debug']);
 
     TestBed.configureTestingModule({
-      providers: [...testProviders, AdvisoryLockService,
+      providers: [
+        ...testProviders,
+        AdvisoryLockService,
         { provide: SupabaseClientService, useValue: mockSupabaseService },
-        { provide: LoggerService, useValue: mockLogger },],
+        { provide: LoggerService, useValue: mockLogger },
+      ],
     });
 
     service = TestBed.inject(AdvisoryLockService);

@@ -147,7 +147,8 @@ export class QuickBookPage {
     if (!car) return '/assets/placeholder-car.jpg';
 
     // Check for photos array (may come as 'photos' or 'car_photos' from different queries)
-    const photos = car.photos || ('car_photos' in car ? (car.car_photos as typeof car.photos) : undefined);
+    const photos =
+      car.photos || ('car_photos' in car ? (car.car_photos as typeof car.photos) : undefined);
     if (photos && photos.length > 0 && photos[0].url) {
       return photos[0].url;
     }

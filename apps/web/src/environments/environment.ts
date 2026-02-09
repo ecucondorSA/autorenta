@@ -8,8 +8,10 @@ export const environment = buildEnvironment({
   // ANDROID BUILD FIX: Hardcoded for mobile builds (not exposed to web)
   // For Cloudflare Pages web builds, these are still loaded from env vars via buildEnvironment()
   // PRODUCTION PROJECT: autorenta-prod (nueva org sin egress issues)
-  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjZWFjcGFvY2t5eGdvZ3hzZnljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNzM4NDQsImV4cCI6MjA4NTY0OTg0NH0._Vzv8a97DskL7y-D6ngSFl1GRXgwBlJA6_daTJ01oqU',
-  mapboxAccessToken: 'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg',
+  supabaseAnonKey:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjZWFjcGFvY2t5eGdvZ3hzZnljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNzM4NDQsImV4cCI6MjA4NTY0OTg0NH0._Vzv8a97DskL7y-D6ngSFl1GRXgwBlJA6_daTJ01oqU',
+  mapboxAccessToken:
+    'pk.eyJ1IjoiZWN1Y29uZG9yIiwiYSI6ImNtaXltdHhqMDBoNGQzZXEwNW9idDBhMDUifQ.rY_vmPzdGQiUksrSMuXrhg',
   tripoApiKey: undefined, // Will be read from NG_APP_TRIPO_API_KEY
   googleAnalyticsMeasurementId: 'G-WV2PWTKG2E', // Google Analytics 4
   enableAnalytics: true,
@@ -33,7 +35,8 @@ export const environment = buildEnvironment({
   // Sentry Configuration
   // IMPORTANTE: Configurar via variables de entorno en Cloudflare Pages
   // NG_APP_SENTRY_DSN - Sentry Project DSN
-  sentryDsn: 'https://54be91389910bcd0eb95f27bd18b5ba9@o4510747355447296.ingest.us.sentry.io/4510747372552192',
+  sentryDsn:
+    'https://54be91389910bcd0eb95f27bd18b5ba9@o4510747355447296.ingest.us.sentry.io/4510747372552192',
   sentryEnvironment: 'production',
   sentryTracesSampleRate: 0.1, // 10% sampling for performance monitoring
   // Google Calendar Configuration

@@ -268,5 +268,4 @@ export class MobileBottomNavComponent implements OnInit, OnDestroy {
   trackByRoute(index: number, item: NavItem): string {
     return item.route;
   }
-
 }

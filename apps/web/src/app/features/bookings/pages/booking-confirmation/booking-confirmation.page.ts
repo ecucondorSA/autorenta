@@ -363,7 +363,7 @@ export class BookingConfirmationPage implements OnInit {
         payment_date: this.confirmedAt().toISOString(),
         payer: {
           full_name: booking.renter_name || 'Cliente',
-          email: (booking as Record<string, unknown>)['renter_email'] as string || '',
+          email: ((booking as Record<string, unknown>)['renter_email'] as string) || '',
           gov_id_number: '',
         },
         amount_cents: Math.round(amountUsd * 100),

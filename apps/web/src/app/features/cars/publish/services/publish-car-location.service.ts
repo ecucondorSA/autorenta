@@ -286,12 +286,15 @@ export class PublishCarLocationService {
    * Find value in Mapbox context array
    */
   private findContextValue(context: unknown[], type: string): string | null {
-    interface MapboxContext { id?: string; text?: string }
+    interface MapboxContext {
+      id?: string;
+      text?: string;
+    }
     const item = context.find((ctx) => {
       const mapboxCtx = ctx as MapboxContext;
       return mapboxCtx.id?.startsWith(type);
     });
-    return item ? (item as MapboxContext).text ?? null : null;
+    return item ? ((item as MapboxContext).text ?? null) : null;
   }
 
   /**

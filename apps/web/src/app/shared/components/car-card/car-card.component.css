@@ -15,18 +15,18 @@
 /* Premium Card Base */
 .card-premium {
   transition: all var(--duration-normal, 300ms) var(--easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
-  border: 1px solid var(--border-muted, #F3F4F6);
+  border: 1px solid var(--border-muted, #f3f4f6);
 }
 
 .card-premium:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px var(--neon-primary-glow-subtle, rgba(0, 217, 95, 0.2));
-  border-color: var(--neon-primary, #00D95F);
+  border-color: var(--neon-primary, #00d95f);
 }
 
 /* Selected State - Neon Glow */
 .card-premium.selected {
-  border-color: var(--neon-primary, #00D95F);
+  border-color: var(--neon-primary, #00d95f);
   border-width: 2px;
   transform: scale(1.02) translateY(-2px);
   box-shadow: 0 0 20px var(--neon-primary-glow, rgba(0, 217, 95, 0.4));
@@ -37,7 +37,7 @@
 /* Primary Button - Neon Green */
 :host .btn-primary,
 :host .bg-cta-default {
-  background-color: var(--neon-primary, #00D95F);
+  background-color: var(--neon-primary, #00d95f);
   color: var(--cta-text, #000000);
   font-weight: 900;
   text-transform: uppercase;
@@ -48,20 +48,20 @@
 
 :host .btn-primary:hover,
 :host .bg-cta-default:hover {
-  background-color: var(--neon-primary-hover, #00BF54);
+  background-color: var(--neon-primary-hover, #00bf54);
   box-shadow: var(--shadow-neon-lg, 0 6px 20px rgba(0, 217, 95, 0.6));
   transform: scale(1.05);
 }
 
 :host .btn-primary:active,
 :host .bg-cta-default:active {
-  background-color: var(--neon-primary-active, #00A648);
+  background-color: var(--neon-primary-active, #00a648);
   transform: scale(1.02);
 }
 
 /* Price Badge - Neon Style */
 :host .price-badge {
-  background: var(--neon-primary, #00D95F);
+  background: var(--neon-primary, #00d95f);
   color: var(--cta-text, #000000);
   font-weight: 900;
   box-shadow: 0 0 10px var(--neon-primary-glow-intense, rgba(0, 217, 95, 0.5));
@@ -69,11 +69,11 @@
 
 /* Neon Utility Classes */
 :host .text-neon-green {
-  color: var(--neon-primary, #00D95F);
+  color: var(--neon-primary, #00d95f);
 }
 
 :host .bg-neon-green {
-  background-color: var(--neon-primary, #00D95F);
+  background-color: var(--neon-primary, #00d95f);
 }
 
 :host .shadow-radioactive {
@@ -83,7 +83,7 @@
 /* Focus States for Accessibility */
 :host .btn-primary:focus-visible,
 :host .bg-cta-default:focus-visible {
-  outline: 2px solid var(--neon-primary, #00D95F);
+  outline: 2px solid var(--neon-primary, #00d95f);
   outline-offset: 2px;
 }
 

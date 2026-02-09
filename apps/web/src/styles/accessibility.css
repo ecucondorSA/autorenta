@@ -63,7 +63,7 @@
  * Uses :focus-visible for modern browsers
  */
 .focus-visible-ring:focus-visible {
-  outline: 2px solid var(--neon-primary, #00D95F);
+  outline: 2px solid var(--neon-primary, #00d95f);
   outline-offset: 2px;
 }
 
@@ -71,16 +71,16 @@
  * Focus ring - high contrast alternative
  */
 .focus-visible-ring-contrast:focus-visible {
-  outline: 3px solid var(--text-primary, #1A1A1A);
+  outline: 3px solid var(--text-primary, #1a1a1a);
   outline-offset: 2px;
-  box-shadow: 0 0 0 6px var(--surface-base, #FFFFFF);
+  box-shadow: 0 0 0 6px var(--surface-base, #ffffff);
 }
 
 /**
  * Focus within container - highlights parent when child is focused
  */
 .focus-within-ring:focus-within {
-  outline: 2px solid var(--neon-primary, #00D95F);
+  outline: 2px solid var(--neon-primary, #00d95f);
   outline-offset: 2px;
 }
 
@@ -102,8 +102,8 @@
   top: -100%;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--surface-base, #FFFFFF);
-  color: var(--text-primary, #1A1A1A);
+  background: var(--surface-base, #ffffff);
+  color: var(--text-primary, #1a1a1a);
   padding: 12px 24px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -164,8 +164,8 @@
  */
 @media (prefers-reduced-motion: reduce) {
   .motion-safe,
-  [class*="animate-"],
-  [class*="transition-"] {
+  [class*='animate-'],
+  [class*='transition-'] {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -226,14 +226,14 @@
  * Ensures 4.5:1 contrast ratio minimum
  */
 .text-high-contrast {
-  color: var(--text-primary, #1A1A1A);
+  color: var(--text-primary, #1a1a1a);
 }
 
 /**
  * Link styling with underline (more accessible than color alone)
  */
 .link-accessible {
-  color: var(--neon-primary, #00D95F);
+  color: var(--neon-primary, #00d95f);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -243,7 +243,7 @@
 }
 
 .link-accessible:focus-visible {
-  outline: 2px solid var(--neon-primary, #00D95F);
+  outline: 2px solid var(--neon-primary, #00d95f);
   outline-offset: 2px;
   text-decoration: none;
 }
@@ -255,7 +255,7 @@
  */
 .disabled-state,
 [disabled],
-[aria-disabled="true"] {
+[aria-disabled='true'] {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
@@ -264,14 +264,14 @@
 /**
  * Loading state with aria-busy
  */
-[aria-busy="true"] {
+[aria-busy='true'] {
   cursor: wait;
 }
 
 /**
  * Expanded/collapsed indicator
  */
-[aria-expanded="true"]::after {
+[aria-expanded='true']::after {
   content: '';
   /* Icon rotation handled by component */
 }
@@ -283,7 +283,7 @@
  */
 .required-indicator::after {
   content: ' *';
-  color: var(--error-default, #EF4444);
+  color: var(--error-default, #ef4444);
   font-weight: 700;
 }
 
@@ -291,24 +291,24 @@
  * Error state for form fields
  */
 .field-error {
-  border-color: var(--error-default, #EF4444);
+  border-color: var(--error-default, #ef4444);
 }
 
 .field-error:focus {
-  outline-color: var(--error-default, #EF4444);
-  box-shadow: 0 0 0 3px var(--error-light, #FEE2E2);
+  outline-color: var(--error-default, #ef4444);
+  box-shadow: 0 0 0 3px var(--error-light, #fee2e2);
 }
 
 /**
  * Success state for form fields
  */
 .field-success {
-  border-color: var(--success-default, #10B981);
+  border-color: var(--success-default, #10b981);
 }
 
 .field-success:focus {
-  outline-color: var(--success-default, #10B981);
-  box-shadow: 0 0 0 3px var(--success-light, #D1FAE5);
+  outline-color: var(--success-default, #10b981);
+  box-shadow: 0 0 0 3px var(--success-light, #d1fae5);
 }
 
 /* ===== Mobile-specific Touch Targets ===== */
@@ -367,21 +367,21 @@
 }
 
 .status-success::before {
-  background: var(--success-default, #10B981);
+  background: var(--success-default, #10b981);
   /* Also add checkmark icon in component */
 }
 
 .status-error::before {
-  background: var(--error-default, #EF4444);
+  background: var(--error-default, #ef4444);
   /* Also add X icon in component */
 }
 
 .status-warning::before {
-  background: var(--warning-default, #F59E0B);
+  background: var(--warning-default, #f59e0b);
   /* Also add warning icon in component */
 }
 
 .status-info::before {
-  background: var(--info-default, #3B82F6);
+  background: var(--info-default, #3b82f6);
   /* Also add info icon in component */
 }

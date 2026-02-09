@@ -1,4 +1,16 @@
-import { Component, Input, ElementRef, ViewChild, ChangeDetectionStrategy, effect, inject, HostListener, Output, EventEmitter, signal } from '@angular/core';
+import {
+  Component,
+  Input,
+  ElementRef,
+  ViewChild,
+  ChangeDetectionStrategy,
+  effect,
+  inject,
+  HostListener,
+  Output,
+  EventEmitter,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { SoundService } from '@core/services/ui/sound.service';
@@ -11,34 +23,45 @@ import { BrowseStore } from '../../../features/cars/browse/browse.store';
   imports: [CommonModule, CarMiniCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="pointer-events-auto w-full overflow-hidden px-4 sm:px-8 pb-6"
-         tabindex="0"
-         (focus)="onFocus()">
+    <div
+      class="pointer-events-auto w-full overflow-hidden px-4 sm:px-8 pb-6"
+      tabindex="0"
+      (focus)="onFocus()"
+    >
       @if (loading) {
         <div class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 hide-scrollbar">
-          @for (i of [1,2,3]; track i) {
-            <div class="min-w-[85vw] sm:min-w-[350px] h-32 bg-surface-secondary/40 backdrop-blur-md rounded-2xl border border-white/5 overflow-hidden relative">
+          @for (i of [1, 2, 3]; track i) {
+            <div
+              class="min-w-[85vw] sm:min-w-[350px] h-32 bg-surface-secondary/40 backdrop-blur-md rounded-2xl border border-white/5 overflow-hidden relative"
+            >
               <!-- Shimmer Effect -->
-              <div class="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+              <div
+                class="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent"
+              ></div>
             </div>
           }
         </div>
       } @else {
-        <div #scrollContainer
-             class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 hide-scrollbar items-center pr-[30vw]"
-             (scroll)="onScroll()"
-             (touchstart)="onTouchStart($event)"
-             (touchmove)="onTouchMove($event)"
-             (touchend)="onTouchEnd()">
+        <div
+          #scrollContainer
+          class="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 hide-scrollbar items-center pr-[30vw]"
+          (scroll)="onScroll()"
+          (touchstart)="onTouchStart($event)"
+          (touchmove)="onTouchMove($event)"
+          (touchend)="onTouchEnd()"
+        >
           @for (car of cars; track car.carId) {
-            <div [id]="'card-' + car.carId"
-                 class="snap-center shrink-0 min-w-[70vw] sm:min-w-[280px] h-full"
-                 (mouseenter)="onCardHover(car.carId)"
-                 (mouseleave)="onCardHover(null)">
+            <div
+              [id]="'card-' + car.carId"
+              class="snap-center shrink-0 min-w-[70vw] sm:min-w-[280px] h-full"
+              (mouseenter)="onCardHover(car.carId)"
+              (mouseleave)="onCardHover(null)"
+            >
               <app-car-mini-card
                 [car]="car"
                 [isSelected]="selectedCarId === car.carId"
-                (cardClicked)="onCardClick(car.carId, $event)">
+                (cardClicked)="onCardClick(car.carId, $event)"
+              >
               </app-car-mini-card>
             </div>
           }
@@ -46,12 +69,25 @@ import { BrowseStore } from '../../../features/cars/browse/browse.store';
       }
     </div>
   `,
-  styles: [`
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    @keyframes shimmer { 100% { transform: translateX(100%); } }
-    .animate-shimmer { animation: shimmer 1.5s infinite; }
-  `]
+  styles: [
+    `
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      @keyframes shimmer {
+        100% {
+          transform: translateX(100%);
+        }
+      }
+      .animate-shimmer {
+        animation: shimmer 1.5s infinite;
+      }
+    `,
+  ],
 })
 export class CarCarouselComponent {
   @Input() cars: CarMapLocation[] = [];
@@ -84,17 +120,23 @@ export class CarCarouselComponent {
 
   // Keyboard Navigation
   @HostListener('document:keydown.arrowLeft')
-  onArrowLeft() { this.navigateCarousel(-1); }
+  onArrowLeft() {
+    this.navigateCarousel(-1);
+  }
 
   @HostListener('document:keydown.arrowRight')
-  onArrowRight() { this.navigateCarousel(1); }
+  onArrowRight() {
+    this.navigateCarousel(1);
+  }
 
-  onFocus() { /* Allows keyboard focus */ }
+  onFocus() {
+    /* Allows keyboard focus */
+  }
 
   navigateCarousel(direction: -1 | 1) {
     if (this.loading || this.cars.length === 0) return;
 
-    let currentIndex = this.cars.findIndex(c => c.carId === this.selectedCarId);
+    let currentIndex = this.cars.findIndex((c) => c.carId === this.selectedCarId);
     if (currentIndex < 0) currentIndex = 0;
 
     // Skip cars that are visible but not selectable (owner verification pending)
@@ -194,14 +236,14 @@ export class CarCarouselComponent {
         const cardWidth = el.offsetWidth;
         const containerWidth = container.offsetWidth;
 
-        const scrollLeft = cardLeft - (containerWidth / 2) + (cardWidth / 2);
+        const scrollLeft = cardLeft - containerWidth / 2 + cardWidth / 2;
 
         container.scrollTo({
           left: scrollLeft,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
 
-        setTimeout(() => this.isProgrammaticScroll = false, 500);
+        setTimeout(() => (this.isProgrammaticScroll = false), 500);
       }
     });
   }
@@ -226,7 +268,7 @@ export class CarCarouselComponent {
     let closestCard = '';
     let minDistance = Infinity;
 
-    this.cars.forEach(car => {
+    this.cars.forEach((car) => {
       const el = document.getElementById('card-' + car.carId);
       if (el) {
         const cardCenter = el.offsetLeft + el.offsetWidth / 2;

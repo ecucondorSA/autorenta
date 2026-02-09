@@ -54,7 +54,9 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
                   Plan
                 </p>
                 <h3 class="text-lg font-bold text-text-primary">{{ tier.name }}</h3>
-                <p class="text-xs text-text-secondary">Hasta autos {{ getVehicleTierName(tier.maxVehicleTier) }}</p>
+                <p class="text-xs text-text-secondary">
+                  Hasta autos {{ getVehicleTierName(tier.maxVehicleTier) }}
+                </p>
               </div>
               <div class="flex flex-col items-end gap-2">
                 @if (tier.plan === 'silver') {
@@ -143,12 +145,12 @@ export class ClubPlansPreviewComponent {
   isCurrentTier(plan: MembershipPlan): boolean {
     const sub = this.subscription();
     if (!sub || sub.status !== 'active') return false;
-    
+
     // Mapping DB slug to Logic plan
     const mapping: Record<string, MembershipPlan> = {
       club_standard: 'club',
       club_black: 'silver',
-      club_luxury: 'black'
+      club_luxury: 'black',
     };
     return mapping[sub.tier] === plan;
   }
@@ -156,18 +158,18 @@ export class ClubPlansPreviewComponent {
   isDowngrade(plan: MembershipPlan): boolean {
     const sub = this.subscription();
     if (!sub || sub.status !== 'active') return false;
-    
+
     const mapping: Record<string, number> = {
       club_standard: 1,
       club_black: 2,
-      club_luxury: 3
+      club_luxury: 3,
     };
-    
+
     const targetMapping: Record<MembershipPlan, number> = {
       none: 0,
       club: 1,
       silver: 2,
-      black: 3
+      black: 3,
     };
 
     return targetMapping[plan] < mapping[sub.tier];
@@ -212,10 +214,12 @@ export class ClubPlansPreviewComponent {
       club: 'club_standard',
       silver: 'club_black',
       black: 'club_luxury',
-      none: ''
+      none: '',
     };
     this.analytics.trackEvent('club_plan_selected', { tier, source: 'wallet' });
-    void this.router.navigate(['/wallet/club/subscribe'], { queryParams: { tier: dbMapping[tier] } });
+    void this.router.navigate(['/wallet/club/subscribe'], {
+      queryParams: { tier: dbMapping[tier] },
+    });
   }
 
   viewAllPlans(): void {

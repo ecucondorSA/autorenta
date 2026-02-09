@@ -23,5 +23,10 @@
  * ```
  */
 
-export { BeaconService, type BeaconMode, type BeaconServiceStatus, type DetectedBeacon } from './beacon.service';
+export {
+  BeaconService,
+  type BeaconMode,
+  type BeaconServiceStatus,
+  type DetectedBeacon,
+} from './beacon.service';
 export { BeaconProtocol, BeaconMessageType, type BeaconMessage } from './beacon-protocol';

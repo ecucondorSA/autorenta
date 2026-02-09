@@ -1,11 +1,4 @@
-import {
-  Component,
-  input,
-  output,
-  signal,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, input, output, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { getYearOptions } from '../questions.config';
 
 /**
@@ -21,7 +14,9 @@ import { getYearOptions } from '../questions.config';
       <!-- Brand reminder -->
       @if (brandName()) {
         <div class="text-center">
-          <span class="inline-flex items-center gap-2 px-4 py-2 bg-surface-secondary rounded-full text-sm">
+          <span
+            class="inline-flex items-center gap-2 px-4 py-2 bg-surface-secondary rounded-full text-sm"
+          >
             <span class="text-text-muted">Para tu</span>
             <span class="font-semibold text-text-primary">{{ brandName() }}</span>
           </span>
@@ -113,7 +108,12 @@ export class YearQuestionComponent implements OnInit {
 
   readonly years = getYearOptions();
   readonly currentYear = new Date().getFullYear();
-  readonly recentYears = [this.currentYear, this.currentYear - 1, this.currentYear - 2, this.currentYear - 3];
+  readonly recentYears = [
+    this.currentYear,
+    this.currentYear - 1,
+    this.currentYear - 2,
+    this.currentYear - 3,
+  ];
 
   readonly selectedYear = signal<number | null>(null);
 

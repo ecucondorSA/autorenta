@@ -123,7 +123,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   readonly riskSnapshot = signal<RiskSnapshot | null>(null);
   readonly subscriptionCoverage = signal<SubscriptionCoverageCheck | null>(null);
   readonly preauthCalculation = signal<PreauthorizationCalculation | null>(null);
-  
+
   // V2 UI Feedback Signals
   readonly discountApplied = signal(false);
   readonly eligibilityReason = signal<string>('');
@@ -161,7 +161,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
   // Edit Logic
   toggleEditDates() {
-    this.isEditingDates.update(v => !v);
+    this.isEditingDates.update((v) => !v);
   }
 
   async onDatesChanged(range: DateRange) {
@@ -169,25 +169,25 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       const startDate = new Date(range.from);
       const endDate = new Date(range.to);
       const currentInput = this.bookingInput();
-      
+
       if (currentInput && !isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
         this.bookingInput.set({
           ...currentInput,
           startDate: startDate,
-          endDate: endDate
+          endDate: endDate,
         });
-        
+
         // Recalculate risks/costs
         await this.calculateRiskSnapshot();
-        
+
         // Update URL query params without reloading to keep state consistent
         this.router.navigate([], {
           relativeTo: this.route,
           queryParams: {
             startDate: startDate.toISOString(),
-            endDate: endDate.toISOString()
+            endDate: endDate.toISOString(),
           },
-          queryParamsHandling: 'merge'
+          queryParamsHandling: 'merge',
         });
       }
     }
@@ -202,7 +202,6 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   }
 
   // ... (rest of methods)
-
 
   readonly walletAvailableBalance = computed(() => this.walletBalance()?.available_balance ?? 0);
   readonly walletCurrency = computed(() => this.walletBalance()?.currency ?? 'USD');
@@ -790,7 +789,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       hasTelemetry,
       fx.platformRate,
       userId,
-      userTier
+      userTier,
     );
 
     // Update Signals for UI Feedback
@@ -799,7 +798,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
     // Construct RiskSnapshot for compatibility
     const standardDeductibleUsd = calculateTierHoldUsd(vehicleValueUsd, false);
-    
+
     // We maintain 'holdEstimatedUsd' to drive the logic downstream
     const holdEstimatedUsd = riskV2.guaranteeAmountUsd;
     const holdEstimatedArs = riskV2.guaranteeAmountArs;
@@ -810,7 +809,12 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       holdEstimatedArs,
       holdEstimatedUsd,
       creditSecurityUsd: holdEstimatedUsd,
-      bucket: riskV2.appliedTier === 'club_luxury' ? 'premium' : riskV2.appliedTier === 'club_black' ? 'standard' : 'economy', // Map back to old buckets roughly
+      bucket:
+        riskV2.appliedTier === 'club_luxury'
+          ? 'premium'
+          : riskV2.appliedTier === 'club_black'
+            ? 'standard'
+            : 'economy', // Map back to old buckets roughly
       vehicleValueUsd,
       country: 'AR',
       fxRate: fx.platformRate,
@@ -823,7 +827,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
       holdEstimatedUsd,
       discountApplied: riskV2.discountApplied,
       eligibilityReason: riskV2.eligibilityReason,
-      hasTelemetry
+      hasTelemetry,
     });
   }
 

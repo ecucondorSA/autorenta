@@ -40,7 +40,9 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
           </span>
           <!-- Hover tooltip -->
           @if (canNavigateTo($index) && $index !== currentIndex()) {
-            <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-text-primary text-surface-base text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+            <span
+              class="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-text-primary text-surface-base text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+            >
               Paso {{ $index + 1 }}
             </span>
           }

@@ -9,7 +9,10 @@ import { RouterLink } from '@angular/router';
   imports: [CommonModule, RouterLink],
   template: `
     <div class="static-page">
-      <section class="static-hero" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+      <section
+        class="static-hero"
+        style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);"
+      >
         <h1>🔒 Tu Seguridad es Nuestra Prioridad</h1>
         <p>Conoce las medidas que tomamos para protegerte</p>
       </section>
@@ -17,8 +20,8 @@ import { RouterLink } from '@angular/router';
       <div class="static-content">
         <h2>Verificación de Identidad</h2>
         <p>
-          Todos los usuarios de Autorentar pasan por un proceso de verificación
-          que incluye validación de identidad, licencia de conducir y datos de pago.
+          Todos los usuarios de Autorentar pasan por un proceso de verificación que incluye
+          validación de identidad, licencia de conducir y datos de pago.
         </p>
 
         <div class="card-grid">
@@ -38,8 +41,8 @@ import { RouterLink } from '@angular/router';
 
         <h2>Comunicación Segura</h2>
         <p>
-          Todo el chat entre arrendatarios y propietarios está encriptado.
-          Nunca compartas información personal fuera de la plataforma.
+          Todo el chat entre arrendatarios y propietarios está encriptado. Nunca compartas
+          información personal fuera de la plataforma.
         </p>
 
         <h2>Consejos de Seguridad</h2>
@@ -60,4 +63,4 @@ import { RouterLink } from '@angular/router';
   `,
   styleUrls: ['./static-shared.css'],
 })
-export class SafetyPage{}
+export class SafetyPage {}

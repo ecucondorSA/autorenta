@@ -207,23 +207,29 @@ export class PublishCarV2Page implements OnInit {
   // IDs are stable based on file name + size to avoid unnecessary re-renders
   readonly uploadedPhotosForComponent = computed(() => {
     const photos = this.uploadedPhotos();
-    return photos.map((p, index): PhotoWithAI => ({
-      id: `photo-${p.file.name}-${p.file.size}-${index}`,
-      file: p.file,
-      preview: p.preview,
-      position: (p.position as PhotoPosition) || 'cover',
-      status: 'valid' as const,
-      progress: 100,
-      quality: p.qualityResult ? {
-        score: p.qualityResult.quality.score,
-        issues: p.qualityResult.quality.issues.map(i => i.description),
-        isAcceptable: p.qualityResult.quality.is_acceptable,
-      } : undefined,
-      plates: p.platesBlurred ? {
-        detected: true,
-        count: p.platesCount || 0,
-      } : undefined,
-    }));
+    return photos.map(
+      (p, index): PhotoWithAI => ({
+        id: `photo-${p.file.name}-${p.file.size}-${index}`,
+        file: p.file,
+        preview: p.preview,
+        position: (p.position as PhotoPosition) || 'cover',
+        status: 'valid' as const,
+        progress: 100,
+        quality: p.qualityResult
+          ? {
+              score: p.qualityResult.quality.score,
+              issues: p.qualityResult.quality.issues.map((i) => i.description),
+              isAcceptable: p.qualityResult.quality.is_acceptable,
+            }
+          : undefined,
+        plates: p.platesBlurred
+          ? {
+              detected: true,
+              count: p.platesCount || 0,
+            }
+          : undefined,
+      }),
+    );
   });
   readonly manualCoordinates = this.locationService.manualCoordinates;
   readonly autofilledFromLast = this.formService.autofilledFromLast;
@@ -459,14 +465,14 @@ export class PublishCarV2Page implements OnInit {
           this.formService.filterModelsByBrand(qParams['brand_id']);
 
           // ✅ Sync FIPE signals if possible
-          const brand = this.formService.brands().find(b => b.id === qParams['brand_id']);
+          const brand = this.formService.brands().find((b) => b.id === qParams['brand_id']);
           if (brand) {
             this.selectedFIPEBrand.set({ code: '', name: brand.name });
             this.publishForm.patchValue({ brand_text_backup: brand.name });
           }
 
           if (qParams['model_id']) {
-            const model = this.formService.models().find(m => m.id === qParams['model_id']);
+            const model = this.formService.models().find((m) => m.id === qParams['model_id']);
             if (model) {
               this.selectedFIPEModel.set({ code: '', name: model.name });
               this.publishForm.patchValue({ model_text_backup: model.name });
@@ -1387,8 +1393,7 @@ export class PublishCarV2Page implements OnInit {
       // - If the owner has identity/documents verification completed (level 2), publish as active.
       // - Otherwise publish as pending: visible but not selectable/bookable until documents are completed.
       const progress = await this.verificationState.refreshProgress(true);
-      const canActivate =
-        !!progress?.requirements?.level_2?.completed;
+      const canActivate = !!progress?.requirements?.level_2?.completed;
 
       carData['status'] = canActivate ? 'active' : 'pending';
 
@@ -1502,7 +1507,7 @@ export class PublishCarV2Page implements OnInit {
     // Check docs only if active
     if (carData['status'] === 'active' && !this.editMode()) {
       setTimeout(() => {
-        this.checkMissingDocuments(carId).catch(() => { });
+        this.checkMissingDocuments(carId).catch(() => {});
       }, 2000);
     }
 
@@ -1607,12 +1612,12 @@ export class PublishCarV2Page implements OnInit {
           quality: p.quality?.score,
           vehicle: p.vehicle
             ? {
-              brand: p.vehicle.brand ?? '',
-              model: p.vehicle.model ?? '',
-              year: p.vehicle.year,
-              color: p.vehicle.color,
-              confidence: p.vehicle.confidence,
-            }
+                brand: p.vehicle.brand ?? '',
+                model: p.vehicle.model ?? '',
+                year: p.vehicle.year,
+                color: p.vehicle.color,
+                confidence: p.vehicle.confidence,
+              }
             : undefined,
           plates: p.plates ? [{ text: '', confidence: 1, blurred: p.plates.detected }] : undefined,
         },

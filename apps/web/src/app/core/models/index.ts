@@ -9,7 +9,13 @@ import type { BookingUiStatus } from './booking-status.model';
 // ============================================================================
 export type PaymentProvider = 'mercadopago' | 'stripe' | 'paypal' | 'wallet' | 'manual';
 // Must match DB enum: public.payment_status (pending, processing, approved, rejected, refunded, cancelled)
-export type PaymentStatus = 'pending' | 'processing' | 'approved' | 'rejected' | 'refunded' | 'cancelled';
+export type PaymentStatus =
+  | 'pending'
+  | 'processing'
+  | 'approved'
+  | 'rejected'
+  | 'refunded'
+  | 'cancelled';
 export type Transmission = 'manual' | 'automatic';
 export type UserRole = 'renter' | 'owner' | 'both';
 export type FuelType = 'gasoline' | 'diesel' | 'electric' | 'electrico' | 'hybrid' | 'gnc' | 'flex';

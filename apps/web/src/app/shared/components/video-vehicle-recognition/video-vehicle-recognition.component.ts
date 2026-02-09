@@ -37,7 +37,14 @@ export interface DetectedVehicle {
   confidence: number;
 }
 
-type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' | 'success' | 'error';
+type ScanState =
+  | 'idle'
+  | 'camera-loading'
+  | 'ready'
+  | 'scanning'
+  | 'analyzing'
+  | 'success'
+  | 'error';
 
 @Component({
   selector: 'app-video-vehicle-recognition',
@@ -63,11 +70,24 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
 
         <!-- Idle State - Start Button -->
         @if (state() === 'idle') {
-          <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 flex flex-col items-center justify-center p-6">
-            <div class="w-20 h-20 rounded-full bg-cta-default flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30">
-              <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 flex flex-col items-center justify-center p-6"
+          >
+            <div
+              class="w-20 h-20 rounded-full bg-cta-default flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30"
+            >
+              <svg
+                class="w-10 h-10 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
               </svg>
             </div>
             <h3 class="text-xl font-bold text-white mb-2">Escanear Vehículo</h3>
@@ -80,8 +100,12 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
               class="px-6 py-3 bg-cta-default text-cta-text rounded-xl font-bold hover:bg-cta-hover transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2"
             >
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                />
               </svg>
               Iniciar Cámara
             </button>
@@ -91,7 +115,9 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
         <!-- Camera Loading -->
         @if (state() === 'camera-loading') {
           <div class="absolute inset-0 bg-slate-900 flex flex-col items-center justify-center">
-            <div class="w-12 h-12 border-4 border-cta-default/30 border-t-cta-default rounded-full animate-spin mb-4"></div>
+            <div
+              class="w-12 h-12 border-4 border-cta-default/30 border-t-cta-default rounded-full animate-spin mb-4"
+            ></div>
             <p class="text-white text-sm">Iniciando cámara...</p>
           </div>
         }
@@ -101,20 +127,32 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
           <!-- Alignment Guide Overlay -->
           <div class="absolute inset-0 pointer-events-none">
             <!-- Corner guides -->
-            <div class="absolute top-4 left-4 w-16 h-16 border-l-4 border-t-4 border-white/60 rounded-tl-xl"></div>
-            <div class="absolute top-4 right-4 w-16 h-16 border-r-4 border-t-4 border-white/60 rounded-tr-xl"></div>
-            <div class="absolute bottom-4 left-4 w-16 h-16 border-l-4 border-b-4 border-white/60 rounded-bl-xl"></div>
-            <div class="absolute bottom-4 right-4 w-16 h-16 border-r-4 border-b-4 border-white/60 rounded-br-xl"></div>
+            <div
+              class="absolute top-4 left-4 w-16 h-16 border-l-4 border-t-4 border-white/60 rounded-tl-xl"
+            ></div>
+            <div
+              class="absolute top-4 right-4 w-16 h-16 border-r-4 border-t-4 border-white/60 rounded-tr-xl"
+            ></div>
+            <div
+              class="absolute bottom-4 left-4 w-16 h-16 border-l-4 border-b-4 border-white/60 rounded-bl-xl"
+            ></div>
+            <div
+              class="absolute bottom-4 right-4 w-16 h-16 border-r-4 border-b-4 border-white/60 rounded-br-xl"
+            ></div>
 
             <!-- Center crosshair -->
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <div class="w-8 h-8 border-2 border-white/40 rounded-full"></div>
-              <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white/60 rounded-full"></div>
+              <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white/60 rounded-full"
+              ></div>
             </div>
 
             <!-- Hint text -->
             <div class="absolute bottom-20 left-0 right-0 text-center">
-              <p class="text-white text-sm font-medium bg-black/40 backdrop-blur-sm inline-block px-4 py-2 rounded-full">
+              <p
+                class="text-white text-sm font-medium bg-black/40 backdrop-blur-sm inline-block px-4 py-2 rounded-full"
+              >
                 @if (state() === 'scanning') {
                   Capturando... {{ captureProgress() }}%
                 } @else {
@@ -148,23 +186,46 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
             class="absolute top-3 right-3 p-2 bg-black/40 backdrop-blur-sm rounded-full text-white hover:bg-black/60 transition-colors"
           >
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         }
 
         <!-- Analyzing State -->
         @if (state() === 'analyzing') {
-          <div class="absolute inset-0 bg-slate-900/95 flex flex-col items-center justify-center p-6">
+          <div
+            class="absolute inset-0 bg-slate-900/95 flex flex-col items-center justify-center p-6"
+          >
             <!-- Analysis Animation -->
             <div class="relative w-24 h-24 mb-6">
               <div class="absolute inset-0 border-4 border-cta-default/30 rounded-full"></div>
-              <div class="absolute inset-0 border-4 border-transparent border-t-cta-default rounded-full animate-spin"></div>
-              <div class="absolute inset-2 border-4 border-transparent border-t-cta-hover rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
-              <div class="absolute inset-4 bg-cta-default rounded-full flex items-center justify-center">
-                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <div
+                class="absolute inset-0 border-4 border-transparent border-t-cta-default rounded-full animate-spin"
+              ></div>
+              <div
+                class="absolute inset-2 border-4 border-transparent border-t-cta-hover rounded-full animate-spin"
+                style="animation-direction: reverse; animation-duration: 1.5s;"
+              ></div>
+              <div
+                class="absolute inset-4 bg-cta-default rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-8 h-8 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
                 </svg>
               </div>
             </div>
@@ -187,17 +248,31 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
 
         <!-- Success State -->
         @if (state() === 'success' && detectedVehicle()) {
-          <div class="absolute inset-0 bg-gradient-to-br from-emerald-900 to-teal-900 flex flex-col p-6">
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-emerald-900 to-teal-900 flex flex-col p-6"
+          >
             <!-- Success Header -->
             <div class="flex items-center gap-3 mb-6">
               <div class="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
-                <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                <svg
+                  class="w-6 h-6 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </div>
               <div>
                 <h3 class="text-xl font-bold text-white">Vehículo Detectado</h3>
-                <p class="text-emerald-300 text-sm">{{ detectedVehicle()!.confidence }}% de confianza</p>
+                <p class="text-emerald-300 text-sm">
+                  {{ detectedVehicle()!.confidence }}% de confianza
+                </p>
               </div>
             </div>
 
@@ -206,9 +281,18 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
               <div class="flex items-center gap-4 mb-4">
                 <!-- Vehicle Icon -->
                 <div class="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
-                  <svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                      d="M8 17h.01M16 17h.01M3 11l1.5-5.5A2 2 0 016.4 4h11.2a2 2 0 011.9 1.5L21 11M3 11v6a1 1 0 001 1h1m16-7v6a1 1 0 01-1 1h-1M3 11h18" />
+                  <svg
+                    class="w-10 h-10 text-white"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M8 17h.01M16 17h.01M3 11l1.5-5.5A2 2 0 016.4 4h11.2a2 2 0 011.9 1.5L21 11M3 11v6a1 1 0 001 1h1m16-7v6a1 1 0 01-1 1h-1M3 11h18"
+                    />
                   </svg>
                 </div>
                 <div class="flex-1">
@@ -253,7 +337,12 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
                 class="flex-1 px-4 py-3 bg-white text-emerald-900 rounded-xl font-bold hover:bg-emerald-50 transition-colors flex items-center justify-center gap-2"
               >
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
                 Usar estos datos
               </button>
@@ -264,15 +353,29 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
         <!-- Error State -->
         @if (state() === 'error') {
           <div class="absolute inset-0 bg-slate-900 flex flex-col items-center justify-center p-6">
-            <div class="w-16 h-16 rounded-full bg-rose-500/20 flex items-center justify-center mb-4">
-              <svg class="w-8 h-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            <div
+              class="w-16 h-16 rounded-full bg-rose-500/20 flex items-center justify-center mb-4"
+            >
+              <svg
+                class="w-8 h-8 text-rose-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
             </div>
             <h3 class="text-xl font-bold text-white mb-2">No se pudo detectar</h3>
             <p class="text-slate-400 text-sm text-center mb-6 max-w-xs">
-              {{ errorMessage() || 'No pudimos identificar el vehículo. Intentá con mejor iluminación o más cerca.' }}
+              {{
+                errorMessage() ||
+                  'No pudimos identificar el vehículo. Intentá con mejor iluminación o más cerca.'
+              }}
             </p>
             <div class="flex gap-3">
               <button
@@ -297,10 +400,21 @@ type ScanState = 'idle' | 'camera-loading' | 'ready' | 'scanning' | 'analyzing' 
       <!-- Bottom Info (when not in success state) -->
       @if (state() !== 'success' && state() !== 'error') {
         <div class="bg-slate-800 px-4 py-3 flex items-center gap-3">
-          <div class="w-8 h-8 rounded-full bg-cta-default/15 flex items-center justify-center flex-shrink-0">
-            <svg class="w-4 h-4 text-cta-default" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div
+            class="w-8 h-8 rounded-full bg-cta-default/15 flex items-center justify-center flex-shrink-0"
+          >
+            <svg
+              class="w-4 h-4 text-cta-default"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
           </div>
           <p class="text-slate-400 text-xs">
@@ -363,7 +477,7 @@ export class VideoVehicleRecognitionComponent implements OnDestroy {
       });
 
       // Wait for video element to be available
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       if (this.videoElement?.nativeElement) {
         this.videoElement.nativeElement.srcObject = this.stream;
@@ -386,7 +500,7 @@ export class VideoVehicleRecognitionComponent implements OnDestroy {
     }
 
     if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
+      this.stream.getTracks().forEach((track) => track.stop());
       this.stream = null;
     }
 
@@ -463,7 +577,7 @@ export class VideoVehicleRecognitionComponent implements OnDestroy {
 
     // Stop camera to save resources during analysis
     if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
+      this.stream.getTracks().forEach((track) => track.stop());
       this.stream = null;
     }
 
@@ -480,7 +594,7 @@ export class VideoVehicleRecognitionComponent implements OnDestroy {
 
       // Send for recognition
       const result = await this.vehicleRecognitionService.recognizeFromBase64(
-        frameToAnalyze.replace(/^data:image\/\w+;base64,/, '')
+        frameToAnalyze.replace(/^data:image\/\w+;base64,/, ''),
       );
 
       this.analyzeProgress.set(80);
@@ -503,7 +617,7 @@ export class VideoVehicleRecognitionComponent implements OnDestroy {
         this.state.set('success');
         this.logger.info(
           `Vehicle detected: ${detected.brand} ${detected.model} (${detected.confidence}%)`,
-          'VideoVehicleRecognition'
+          'VideoVehicleRecognition',
         );
       } else {
         throw new Error(result.error || 'No se pudo identificar el vehículo');

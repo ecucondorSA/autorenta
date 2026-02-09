@@ -1,4 +1,12 @@
-import { Component, DestroyRef, inject, computed, signal, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  computed,
+  signal,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -14,7 +22,6 @@ import { CarCarouselComponent } from '@shared/components/car-carousel/car-carous
 import { BookingSheetComponent } from '@shared/components/booking-sheet/booking-sheet.component';
 import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 import { BrowseStore } from './browse.store';
-
 
 @Component({
   selector: 'app-browse-cars',
@@ -114,8 +121,8 @@ export class BrowseCarsPage {
   /** Car being hovered in the carousel */
   readonly carouselHoveredId = signal<string | null>(null);
   /** The car to highlight on the map: hovered takes priority, then selected, then preview */
-  readonly mapHighlightedCarId = computed(() =>
-    this.carouselHoveredId() ?? this.selectedCarId() ?? this.carouselPreviewId()
+  readonly mapHighlightedCarId = computed(
+    () => this.carouselHoveredId() ?? this.selectedCarId() ?? this.carouselPreviewId(),
   );
   private readonly pollIntervalMs = 30000;
   private lastLocation: LocationData | null = null;
@@ -130,26 +137,26 @@ export class BrowseCarsPage {
     return list.map((car) => {
       const ownerVerified = car.status !== 'pending' && car.owner?.id_verified !== false;
       return {
-      carId: car.id,
-      lat: Number(car.location_lat) || 0,
-      lng: Number(car.location_lng) || 0,
-      pricePerDay: Number(car.price_per_day) || 0,
-      title: this.formatCarTitle(car.brand_text_backup, car.model_text_backup, car.year),
-      currency: car.currency || 'USD',
-      photoUrl:
-        car.photos?.[0]?.url || car.car_photos?.[0]?.url || '/assets/images/car-placeholder.svg',
-      city: car.location_city || '',
-      updatedAt: car.updated_at || new Date().toISOString(),
-      locationLabel: car.location_city || 'Ubicación desconocida',
-      photoGallery: car.photos?.map((p) => p.url) || car.car_photos?.map((p) => p.url) || [],
-      description: car.description || '',
-      availabilityStatus: car.status === 'active' ? 'available' : 'unavailable',
-      instantBooking: car.auto_approval === true,
-      transmission: car.transmission,
-      seats: car.seats,
-      fuelType: car.fuel_type,
-      ownerVerified,
-    };
+        carId: car.id,
+        lat: Number(car.location_lat) || 0,
+        lng: Number(car.location_lng) || 0,
+        pricePerDay: Number(car.price_per_day) || 0,
+        title: this.formatCarTitle(car.brand_text_backup, car.model_text_backup, car.year),
+        currency: car.currency || 'USD',
+        photoUrl:
+          car.photos?.[0]?.url || car.car_photos?.[0]?.url || '/assets/images/car-placeholder.svg',
+        city: car.location_city || '',
+        updatedAt: car.updated_at || new Date().toISOString(),
+        locationLabel: car.location_city || 'Ubicación desconocida',
+        photoGallery: car.photos?.map((p) => p.url) || car.car_photos?.map((p) => p.url) || [],
+        description: car.description || '',
+        availabilityStatus: car.status === 'active' ? 'available' : 'unavailable',
+        instantBooking: car.auto_approval === true,
+        transmission: car.transmission,
+        seats: car.seats,
+        fuelType: car.fuel_type,
+        ownerVerified,
+      };
     });
   });
 
@@ -205,25 +212,31 @@ export class BrowseCarsPage {
         lat: location?.lat,
         lng: location?.lng,
         startDate: searchFrom,
-        endDate: searchTo
+        endDate: searchTo,
       });
 
       // Fallback: if we can't resolve user location (permissions denied, device limitations),
       // still show cars. We keep semantics: active cars should be "available" for the date range,
       // pending cars are visible but not bookable (greyed out).
       if (location?.lat == null || location?.lng == null) {
-        const availableCars = await this.carsService.listActiveCars({ from: searchFrom, to: searchTo });
+        const availableCars = await this.carsService.listActiveCars({
+          from: searchFrom,
+          to: searchTo,
+        });
         const marketplaceCars = await this.carsService.listMarketplaceCars({});
         const pendingCars = marketplaceCars.filter((c) => c.status === 'pending');
 
         const availableIds = new Set(availableCars.map((c) => c.id));
         const merged = [...availableCars, ...pendingCars.filter((c) => !availableIds.has(c.id))];
 
-        this.logger.warn('Location unavailable. Cars loaded without distance (available + pending).', {
-          available: availableCars.length,
-          pending: pendingCars.length,
-          merged: merged.length,
-        });
+        this.logger.warn(
+          'Location unavailable. Cars loaded without distance (available + pending).',
+          {
+            available: availableCars.length,
+            pending: pendingCars.length,
+            merged: merged.length,
+          },
+        );
 
         this.store.setCars(merged);
         return;
@@ -359,9 +372,9 @@ export class BrowseCarsPage {
     const id =
       typeof carId === 'string'
         ? carId
-        : (carId as { detail?: { carId?: string }; carId?: string })?.detail?.carId ??
-        (carId as { detail?: { carId?: string }; carId?: string })?.carId ??
-        String(carId);
+        : ((carId as { detail?: { carId?: string }; carId?: string })?.detail?.carId ??
+          (carId as { detail?: { carId?: string }; carId?: string })?.carId ??
+          String(carId));
     this.logger.debug('Marker click (legacy)', { id });
     this.store.setActiveCar(id, 'map');
     const element = document.getElementById('car-' + id);

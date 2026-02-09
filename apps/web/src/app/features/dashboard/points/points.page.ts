@@ -1,5 +1,12 @@
 import { CommonModule, DecimalPipe, PercentPipe } from '@angular/common';
-import { Component, computed, inject, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   VA_THRESHOLDS,
@@ -83,20 +90,26 @@ export class PointsPage implements OnInit {
     const summary = this.seniorSummary();
     if (!summary) return [];
 
-    return summary.carPoints.map(car => ({
+    return summary.carPoints.map((car) => ({
       carId: car.carId,
       carTitle: car.carTitle,
       points: car.points,
       eligibleDays: car.eligibleDays,
       avgDailyPoints: car.avgDailyPoints,
       valueFactor: car.factors.valueFactor,
-      valueFactorLabel: this.rewardPoolService.getFactorQualityLabel(car.factors.valueFactor, 'value'),
+      valueFactorLabel: this.rewardPoolService.getFactorQualityLabel(
+        car.factors.valueFactor,
+        'value',
+      ),
       valueFactorColor: this.rewardPoolService.getFactorColor(car.factors.valueFactor, 'value'),
       repFactor: car.factors.repFactor,
       repFactorLabel: this.rewardPoolService.getFactorQualityLabel(car.factors.repFactor, 'rep'),
       repFactorColor: this.rewardPoolService.getFactorColor(car.factors.repFactor, 'rep'),
       demandFactor: car.factors.demandFactor,
-      demandFactorLabel: this.rewardPoolService.getFactorQualityLabel(car.factors.demandFactor, 'demand'),
+      demandFactorLabel: this.rewardPoolService.getFactorQualityLabel(
+        car.factors.demandFactor,
+        'demand',
+      ),
       demandFactorColor: this.rewardPoolService.getFactorColor(car.factors.demandFactor, 'demand'),
       isTopCar: summary.carPoints.indexOf(car) < MAX_CARS_PER_OWNER,
     }));
@@ -188,7 +201,7 @@ export class PointsPage implements OnInit {
   }
 
   toggleModel(): void {
-    this.useSeniorModel.update(v => !v);
+    this.useSeniorModel.update((v) => !v);
   }
 
   getMonthName(month: number): string {

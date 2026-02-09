@@ -1,11 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  inject,
-  input,
-  AfterViewInit,
-  DestroyRef,
-} from '@angular/core';
+import { Directive, ElementRef, inject, input, AfterViewInit, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';

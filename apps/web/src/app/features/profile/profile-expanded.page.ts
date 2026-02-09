@@ -37,12 +37,7 @@ import { KycStatus } from '../../core/models';
 @Component({
   standalone: true,
   selector: 'app-profile-expanded-page',
-  imports: [
-    CommonModule,
-    RouterLink,
-    DocumentUploadModalComponent,
-    VerifiedBadgeComponent,
-  ],
+  imports: [CommonModule, RouterLink, DocumentUploadModalComponent, VerifiedBadgeComponent],
   templateUrl: './profile-expanded.page.html',
   styleUrls: ['./profile-expanded.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -88,7 +83,7 @@ export class ProfileExpandedPage implements OnInit {
 
   // Active booking detection for SOS button
   readonly hasActiveTrip = computed(() =>
-    this.bookingsStore.activeBookings().some((b) => b.status === 'in_progress')
+    this.bookingsStore.activeBookings().some((b) => b.status === 'in_progress'),
   );
 
   readonly driverLicenseStatus = computed(() => {
@@ -217,32 +212,58 @@ export class ProfileExpandedPage implements OnInit {
   /**
    * Get risk level properties for UI
    */
-  getRiskLevelProps(level?: 'low' | 'medium' | 'high' | 'critical'): { color: string; label: string; icon: string } {
+  getRiskLevelProps(level?: 'low' | 'medium' | 'high' | 'critical'): {
+    color: string;
+    label: string;
+    icon: string;
+  } {
     const map = {
-      low: { color: 'text-success-700 bg-success-50 border-success-200', label: 'Bajo Riesgo', icon: 'shield-check' },
-      medium: { color: 'text-warning-700 bg-warning-50 border-warning-200', label: 'Riesgo Medio', icon: 'exclamation-triangle' },
-      high: { color: 'text-orange-700 bg-orange-50 border-orange-200', label: 'Riesgo Alto', icon: 'hand-raised' },
-      critical: { color: 'text-error-700 bg-error-50 border-error-200', label: 'Crítico', icon: 'ban' }
+      low: {
+        color: 'text-success-700 bg-success-50 border-success-200',
+        label: 'Bajo Riesgo',
+        icon: 'shield-check',
+      },
+      medium: {
+        color: 'text-warning-700 bg-warning-50 border-warning-200',
+        label: 'Riesgo Medio',
+        icon: 'exclamation-triangle',
+      },
+      high: {
+        color: 'text-orange-700 bg-orange-50 border-orange-200',
+        label: 'Riesgo Alto',
+        icon: 'hand-raised',
+      },
+      critical: {
+        color: 'text-error-700 bg-error-50 border-error-200',
+        label: 'Crítico',
+        icon: 'ban',
+      },
     };
     return map[level || 'medium'] || map.medium;
   }
 
   getFactorLabel(factor: string): string {
     const labels: Record<string, string> = {
-      'verified_identity': 'Identidad Verificada',
-      'unverified_identity': 'Identidad No Verificada',
-      'clean_background': 'Antecedentes Limpios',
-      'failed_background': 'Antecedentes Negativos',
-      'driving_infractions': 'Infracciones de Tránsito',
-      'good_history': 'Buen Historial',
-      'previous_disputes': 'Disputas Previas',
-      'new_account': 'Cuenta Nueva'
+      verified_identity: 'Identidad Verificada',
+      unverified_identity: 'Identidad No Verificada',
+      clean_background: 'Antecedentes Limpios',
+      failed_background: 'Antecedentes Negativos',
+      driving_infractions: 'Infracciones de Tránsito',
+      good_history: 'Buen Historial',
+      previous_disputes: 'Disputas Previas',
+      new_account: 'Cuenta Nueva',
     };
     return labels[factor] || factor;
   }
 
   isPositiveFactor(factor: string): boolean {
-    const negativeFactors = ['unverified_identity', 'failed_background', 'driving_infractions', 'previous_disputes', 'new_account'];
+    const negativeFactors = [
+      'unverified_identity',
+      'failed_background',
+      'driving_infractions',
+      'previous_disputes',
+      'new_account',
+    ];
     return !negativeFactors.includes(factor);
   }
 

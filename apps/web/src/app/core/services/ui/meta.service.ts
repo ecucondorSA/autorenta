@@ -308,8 +308,7 @@ export class MetaService {
       '@type': 'Vehicle', // Schema.org Vehicle type nested within Product
       name: car.title,
       description: car.description,
-      image:
-        car.main_photo_url || 'https://autorentar.com/assets/og-image.jpg',
+      image: car.main_photo_url || 'https://autorentar.com/assets/og-image.jpg',
       brand: {
         '@type': 'Brand',
         name: car.brand || 'AutoRenta',
@@ -326,10 +325,10 @@ export class MetaService {
       aggregateRating:
         car.rating_count && car.rating_count > 0
           ? {
-            '@type': 'AggregateRating',
-            ratingValue: car.rating_avg?.toFixed(1) || '0',
-            reviewCount: car.rating_count.toString(),
-          }
+              '@type': 'AggregateRating',
+              ratingValue: car.rating_avg?.toFixed(1) || '0',
+              reviewCount: car.rating_count.toString(),
+            }
           : undefined,
     });
   }

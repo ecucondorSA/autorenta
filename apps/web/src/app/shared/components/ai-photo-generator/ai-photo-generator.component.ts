@@ -9,10 +9,7 @@ import {
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import {
-  AiPhotoEnhancerService,
-  EnhancedPhoto,
-} from '@core/services/ai/ai-photo-enhancer.service';
+import { AiPhotoEnhancerService, EnhancedPhoto } from '@core/services/ai/ai-photo-enhancer.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 @Component({
@@ -24,24 +21,41 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
     <div class="ai-photo-generator bg-surface-base">
       <!-- Minimalist Header -->
       <div class="text-center mb-8">
-        <div class="w-16 h-16 bg-gradient-to-tr from-cta-default to-cta-hover rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-emerald-200">
-           <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-           </svg>
+        <div
+          class="w-16 h-16 bg-gradient-to-tr from-cta-default to-cta-hover rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-emerald-200"
+        >
+          <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
+          </svg>
         </div>
         <h2 class="text-xl font-bold text-slate-900">Estudio Creativo IA</h2>
-        <p class="text-sm text-slate-500 mt-1">Generando visuales para tu {{ brand }} {{ model }}</p>
+        <p class="text-sm text-slate-500 mt-1">
+          Generando visuales para tu {{ brand }} {{ model }}
+        </p>
       </div>
 
       <!-- Compact Specs Display (Non-editable for minimalism if inputs exist) -->
-      <div class="bg-slate-50 rounded-xl p-4 mb-8 flex justify-between items-center border border-slate-100">
+      <div
+        class="bg-slate-50 rounded-xl p-4 mb-8 flex justify-between items-center border border-slate-100"
+      >
         <div class="flex flex-col">
-          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Vehículo</span>
+          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider"
+            >Vehículo</span
+          >
           <span class="text-sm font-bold text-slate-700">{{ brand }} {{ model }}</span>
         </div>
         <div class="flex flex-col text-right">
-          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Detalles</span>
-          <span class="text-sm font-medium text-slate-600">{{ year || 'S/A' }} · {{ color || 'Color base' }}</span>
+          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider"
+            >Detalles</span
+          >
+          <span class="text-sm font-medium text-slate-600"
+            >{{ year || 'S/A' }} · {{ color || 'Color base' }}</span
+          >
         </div>
       </div>
 
@@ -54,8 +68,19 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
       >
         @if (generating()) {
           <svg class="animate-spin h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
           </svg>
           <span class="tracking-tight">DISEÑANDO...</span>
         } @else {
@@ -73,21 +98,24 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
           <div class="grid grid-cols-2 gap-4 mb-6">
             @for (photo of generatedPhotos(); track photo.preview) {
               <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md border border-white">
-                <img
-                  [src]="photo.preview"
-                  alt="IA Result"
-                  class="w-full h-full object-cover"
-                />
+                <img [src]="photo.preview" alt="IA Result" class="w-full h-full object-cover" />
               </div>
             }
           </div>
-          
+
           <button
             type="button"
             (click)="useGeneratedPhotos()"
             class="w-full py-4 bg-emerald-500 text-white rounded-2xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-100 flex items-center justify-center gap-2"
           >
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
             AGREGAR A LA PUBLICACIÓN
           </button>
         </div>
@@ -100,8 +128,14 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
         animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
     `,
   ],

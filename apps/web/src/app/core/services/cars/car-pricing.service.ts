@@ -1,7 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import type { Car } from '@core/models';
 import { AuthService } from '@core/services/auth/auth.service';
-import { DynamicPricingService, type DynamicPricingResponse } from '@core/services/payments/dynamic-pricing.service';
+import {
+  DynamicPricingService,
+  type DynamicPricingResponse,
+} from '@core/services/payments/dynamic-pricing.service';
 import { CurrencyService } from '@core/services/payments/currency.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CoalescingRequestBatcher } from '@core/utils/coalescing-request-batcher';

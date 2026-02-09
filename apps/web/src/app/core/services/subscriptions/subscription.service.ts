@@ -93,7 +93,7 @@ export class SubscriptionService {
 
     // Map DB rows to SubscriptionPlan interface
     // DB uses 'slug' column, app uses 'tier' property
-    const plans = ((data ?? []) as Record<string, unknown>[]).map(row => ({
+    const plans = ((data ?? []) as Record<string, unknown>[]).map((row) => ({
       ...row,
       tier: row['tier'] ?? row['slug'],
     })) as unknown as SubscriptionPlan[];
@@ -684,7 +684,9 @@ export class SubscriptionService {
       baseHoldCents: calculation.baseHoldUsd * 100,
       baseHoldUsd: calculation.baseHoldUsd,
       discountApplied: calculation.discountApplied,
-      discountReason: calculation.discountApplied ? `Descuento ${calculation.membershipPlan}` : undefined,
+      discountReason: calculation.discountApplied
+        ? `Descuento ${calculation.membershipPlan}`
+        : undefined,
       requiredTier: this.tier() || 'club_standard', // Fallback
       fgoCap: calculation.buyDownFgoUsd,
       formula: calculation.formula,

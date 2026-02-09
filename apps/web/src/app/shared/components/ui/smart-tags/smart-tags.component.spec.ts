@@ -13,7 +13,9 @@ describe('SmartTagsComponent', () => {
   let fixture: ComponentFixture<SmartTagsComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ providers: [...testProviders], imports: [SmartTagsComponent, BrowserAnimationsModule]
+    await TestBed.configureTestingModule({
+      providers: [...testProviders],
+      imports: [SmartTagsComponent, BrowserAnimationsModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SmartTagsComponent);
@@ -51,9 +53,7 @@ describe('SmartTagsComponent', () => {
 
   describe('Rendering', () => {
     it('should render active tags', () => {
-      component.tags = [
-        { icon: '✨', label: 'New', condition: true, color: 'green' },
-      ];
+      component.tags = [{ icon: '✨', label: 'New', condition: true, color: 'green' }];
       fixture.detectChanges();
 
       const tagElement = fixture.nativeElement.querySelector('.tag-green');
@@ -63,9 +63,7 @@ describe('SmartTagsComponent', () => {
     });
 
     it('should not render inactive tags', () => {
-      component.tags = [
-        { icon: '🏔️', label: 'Terrain', condition: false, color: 'blue' },
-      ];
+      component.tags = [{ icon: '🏔️', label: 'Terrain', condition: false, color: 'blue' }];
       fixture.detectChanges();
 
       const tagElement = fixture.nativeElement.querySelector('.tag-blue');
@@ -73,17 +71,13 @@ describe('SmartTagsComponent', () => {
     });
 
     it('should render container only if there are active tags', () => {
-      component.tags = [
-        { icon: '🔋', label: 'Efficient', condition: false },
-      ];
+      component.tags = [{ icon: '🔋', label: 'Efficient', condition: false }];
       fixture.detectChanges();
 
       const container = fixture.nativeElement.querySelector('.smart-tags-container');
       expect(container).toBeFalsy();
 
-      component.tags = [
-        { icon: '🔋', label: 'Efficient', condition: true },
-      ];
+      component.tags = [{ icon: '🔋', label: 'Efficient', condition: true }];
       fixture.detectChanges();
 
       const containerAfter = fixture.nativeElement.querySelector('.smart-tags-container');
@@ -93,9 +87,7 @@ describe('SmartTagsComponent', () => {
 
   describe('Styling', () => {
     it('should apply correct color class', () => {
-      component.tags = [
-        { icon: '✨', label: 'New', condition: true, color: 'orange' },
-      ];
+      component.tags = [{ icon: '✨', label: 'New', condition: true, color: 'orange' }];
       fixture.detectChanges();
 
       const tagElement = fixture.nativeElement.querySelector('[class*="tag-"]');
@@ -103,9 +95,7 @@ describe('SmartTagsComponent', () => {
     });
 
     it('should default to green color if not specified', () => {
-      component.tags = [
-        { icon: '✨', label: 'New', condition: true },
-      ];
+      component.tags = [{ icon: '✨', label: 'New', condition: true }];
       fixture.detectChanges();
 
       const tagElement = fixture.nativeElement.querySelector('[class*="tag-"]');
@@ -115,9 +105,7 @@ describe('SmartTagsComponent', () => {
 
   describe('Animations', () => {
     it('should trigger tag enter animation', (done) => {
-      component.tags = [
-        { icon: '✨', label: 'New', condition: true },
-      ];
+      component.tags = [{ icon: '✨', label: 'New', condition: true }];
       fixture.detectChanges();
 
       // Animation should complete in ~300ms
@@ -141,13 +129,11 @@ describe('SmartTagsComponent', () => {
 
       const activeTags = component.activeTags;
       expect(activeTags.length).toBe(3);
-      expect(activeTags.map(t => t.label)).toEqual(['Terrain', 'New', 'Insurance']);
+      expect(activeTags.map((t) => t.label)).toEqual(['Terrain', 'New', 'Insurance']);
     });
 
     it('should handle dynamic tag changes', () => {
-      component.tags = [
-        { icon: '🏔️', label: 'Terrain', condition: true },
-      ];
+      component.tags = [{ icon: '🏔️', label: 'Terrain', condition: true }];
       expect(component.activeTags.length).toBe(1);
 
       component.tags[0].condition = false;

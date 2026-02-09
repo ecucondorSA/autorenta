@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Output,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GeocodingResult, GeocodingService } from '@core/services/geo/geocoding.service';
 import { LocationService } from '@core/services/geo/location.service';
@@ -18,13 +25,16 @@ export class SmartSearchBarComponent {
   private readonly geocodingService = inject(GeocodingService);
   private readonly locationService = inject(LocationService);
 
-  @Output() searchSubmit = new EventEmitter<{ location: { lat: number; lng: number } | null; dates: DateRange }>();
+  @Output() searchSubmit = new EventEmitter<{
+    location: { lat: number; lng: number } | null;
+    dates: DateRange;
+  }>();
 
   readonly locationQuery = signal('');
   readonly locationSuggestions = signal<GeocodingResult[]>([]);
   readonly showSuggestions = signal(false);
   readonly selectedLocation = signal<{ lat: number; lng: number } | null>(null);
-  
+
   readonly dateRange = signal<DateRange>({ from: null, to: null });
 
   private searchTimeout?: ReturnType<typeof setTimeout>;
@@ -60,7 +70,7 @@ export class SmartSearchBarComponent {
   }
 
   useCurrentLocation() {
-    this.locationService.getCurrentPosition().then(pos => {
+    this.locationService.getCurrentPosition().then((pos) => {
       if (pos) {
         // Reverse geocode could be nice here to set the text
         this.locationQuery.set('Mi ubicación actual');
@@ -77,7 +87,7 @@ export class SmartSearchBarComponent {
   submitSearch() {
     this.searchSubmit.emit({
       location: this.selectedLocation(),
-      dates: this.dateRange()
+      dates: this.dateRange(),
     });
   }
 }

@@ -176,11 +176,15 @@ export function runAfterHydration(callback: () => void): void {
     });
   } else {
     // Wait for load event
-    window.addEventListener('load', () => {
-      requestAnimationFrame(() => {
-        setTimeout(callback, 0);
-      });
-    }, { once: true });
+    window.addEventListener(
+      'load',
+      () => {
+        requestAnimationFrame(() => {
+          setTimeout(callback, 0);
+        });
+      },
+      { once: true },
+    );
   }
 }
 
@@ -230,10 +234,7 @@ export function runInBrowser(callback: () => void): void {
  * }
  * ```
  */
-export function browserValue<T>(
-  getValue: () => T,
-  defaultValue: T | null = null
-): T | null {
+export function browserValue<T>(getValue: () => T, defaultValue: T | null = null): T | null {
   return isBrowser() ? getValue() : defaultValue;
 }
 
@@ -271,7 +272,7 @@ export function browserValue<T>(
 export function signalAfterHydration<T>(
   getValue: () => T,
   defaultValue: T,
-  setter: (value: T) => void
+  setter: (value: T) => void,
 ): void {
   // Set default immediately (works on server)
   setter(defaultValue);
@@ -322,10 +323,7 @@ export function isSSR(): boolean {
  * }
  * ```
  */
-export function browserComputed<T>(
-  computation: () => T,
-  defaultValue: T
-): () => T {
+export function browserComputed<T>(computation: () => T, defaultValue: T): () => T {
   return () => browserValue(computation, defaultValue) as T;
 }
 

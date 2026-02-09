@@ -7,9 +7,7 @@
  */
 
 // Re-export Supabase generated types
-export type {
-  WalletTransactionDB,
-} from '@core/types/supabase-types';
+export type { WalletTransactionDB } from '@core/types/supabase-types';
 
 /**
  * Balance de wallet del usuario (custom extended type)

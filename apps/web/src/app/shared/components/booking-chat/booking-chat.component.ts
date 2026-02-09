@@ -25,7 +25,14 @@ import { BaseChatComponent, ChatContext } from '../base-chat/base-chat.component
       (menuClicked)="onMenuClicked()"
     />
   `,
-  styles: [`:host { display: block; height: 100%; }`],
+  styles: [
+    `
+      :host {
+        display: block;
+        height: 100%;
+      }
+    `,
+  ],
 })
 export class BookingChatComponent {
   private readonly logger = inject(LoggerService);

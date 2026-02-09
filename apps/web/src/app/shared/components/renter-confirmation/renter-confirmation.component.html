@@ -13,19 +13,31 @@
   <div class="mb-6 p-4 bg-slate-50 rounded-lg">
     <div class="grid grid-cols-2 gap-4">
       <div class="flex items-center gap-2">
-        <div class="w-3 h-3 rounded-full" [class.bg-success-light]="ownerConfirmed"
-          [class.bg-slate-300]="!ownerConfirmed"></div>
-        <span class="text-sm" [class.text-success-strong]="ownerConfirmed"
-          [class.text-slate-500]="!ownerConfirmed">
+        <div
+          class="w-3 h-3 rounded-full"
+          [class.bg-success-light]="ownerConfirmed"
+          [class.bg-slate-300]="!ownerConfirmed"
+        ></div>
+        <span
+          class="text-sm"
+          [class.text-success-strong]="ownerConfirmed"
+          [class.text-slate-500]="!ownerConfirmed"
+        >
           Propietario
           <span class="font-medium">{{ ownerConfirmed ? 'confirmó' : 'pendiente' }}</span>
         </span>
       </div>
       <div class="flex items-center gap-2">
-        <div class="w-3 h-3 rounded-full" [class.bg-success-light]="renterConfirmed"
-          [class.bg-slate-300]="!renterConfirmed"></div>
-        <span class="text-sm" [class.text-success-strong]="renterConfirmed"
-          [class.text-slate-500]="!renterConfirmed">
+        <div
+          class="w-3 h-3 rounded-full"
+          [class.bg-success-light]="renterConfirmed"
+          [class.bg-slate-300]="!renterConfirmed"
+        ></div>
+        <span
+          class="text-sm"
+          [class.text-success-strong]="renterConfirmed"
+          [class.text-slate-500]="!renterConfirmed"
+        >
           Locatario
           <span class="font-medium">{{ renterConfirmed ? 'confirmó' : 'pendiente' }}</span>
         </span>
@@ -41,270 +53,343 @@
 
   <!-- Información de daños (si aplica) -->
   @if (ownerConfirmed && damageAmount && damageAmount > 0) {
-  <div class="mb-6 p-4 bg-warning-bg border border-warning-border rounded-lg">
-    <div class="flex items-start gap-3">
-      <svg class="w-5 h-5 text-warning-text mt-0.5 flex-shrink-0" fill="currentColor"
-        viewBox="0 0 20 20">
-        <path fill-rule="evenodd"
-          d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-          clip-rule="evenodd" />
-      </svg>
-      <div class="flex-1">
-        <h4 class="text-sm font-semibold text-warning-strong mb-2 font-satoshi">
-          El propietario reportó daños al vehículo
-        </h4>
-        <div class="space-y-2 text-sm text-warning-strong">
-          <div class="flex justify-between items-center">
-            <span>Monto de daños:</span>
-            <span class="font-semibold font-mono">${{ damageAmount }} USD</span>
+    <div class="mb-6 p-4 bg-warning-bg border border-warning-border rounded-lg">
+      <div class="flex items-start gap-3">
+        <svg
+          class="w-5 h-5 text-warning-text mt-0.5 flex-shrink-0"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <div class="flex-1">
+          <h4 class="text-sm font-semibold text-warning-strong mb-2 font-satoshi">
+            El propietario reportó daños al vehículo
+          </h4>
+          <div class="space-y-2 text-sm text-warning-strong">
+            <div class="flex justify-between items-center">
+              <span>Monto de daños:</span>
+              <span class="font-semibold font-mono">${{ damageAmount }} USD</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span>Depósito original:</span>
+              <span>${{ depositAmount }} USD</span>
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-warning-border">
+              <span class="font-semibold">Devolveremos a tu wallet:</span>
+              <span class="font-bold text-lg text-warning-strong"> ${{ amountToReturn }} USD </span>
+            </div>
           </div>
-          <div class="flex justify-between items-center">
-            <span>Depósito original:</span>
-            <span>${{ depositAmount }} USD</span>
-          </div>
-          <div class="flex justify-between items-center pt-2 border-t border-warning-border">
-            <span class="font-semibold">Devolveremos a tu wallet:</span>
-            <span class="font-bold text-lg text-warning-strong"> ${{ amountToReturn }} USD </span>
-          </div>
-        </div>
-        <!-- Descripción de daños -->
-        @if (damageDescription) {
-        <div class="mt-3 pt-3 border-t border-warning-border">
-          <p class="text-xs font-semibold text-warning-strong mb-1">Descripción de daños:</p>
-          <p class="text-xs text-warning-strong whitespace-pre-wrap">
-            {{ damageDescription }}
-          </p>
-        </div>
-        }
+          <!-- Descripción de daños -->
+          @if (damageDescription) {
+            <div class="mt-3 pt-3 border-t border-warning-border">
+              <p class="text-xs font-semibold text-warning-strong mb-1">Descripción de daños:</p>
+              <p class="text-xs text-warning-strong whitespace-pre-wrap">
+                {{ damageDescription }}
+              </p>
+            </div>
+          }
 
-        <!-- Comparativa Visual (Evidencia) -->
-        @if (checkInPhotos.length > 0 || checkOutPhotos.length > 0) {
-        <div class="mt-6 pt-4 border-t border-warning-border">
-          <h5 class="text-sm font-semibold text-warning-strong mb-4">
-            Comparativa de Estado (Antes vs. Después)
-          </h5>
+          <!-- Comparativa Visual (Evidencia) -->
+          @if (checkInPhotos.length > 0 || checkOutPhotos.length > 0) {
+            <div class="mt-6 pt-4 border-t border-warning-border">
+              <h5 class="text-sm font-semibold text-warning-strong mb-4">
+                Comparativa de Estado (Antes vs. Después)
+              </h5>
 
-          <div class="space-y-4">
-            <!-- Exteriores -->
-            <div>
-              <p class="text-[10px] uppercase tracking-wider font-bold text-warning-strong/60 mb-2">
-                Exteriores</p>
-              <div class="grid grid-cols-2 gap-2">
-                <div class="space-y-1">
-                  <span class="text-[10px] text-slate-500">Check-in</span>
-                  <div class="aspect-video bg-slate-200 rounded overflow-hidden">
-                    @if (getPhotosByType(checkInPhotos, 'exterior'); as photos) {
-                    @if (photos.length > 0) {
-                    <img [src]="photos[0].url" class="w-full h-full object-cover"
-                      [alt]="photos[0].caption || 'Check-in exterior'"
-                      width="200" height="112">
-                    } @else {
-                    <div
-                      class="w-full h-full flex items-center justify-center text-[10px] text-slate-400">
-                      Sin foto</div>
-                    }
-                    }
+              <div class="space-y-4">
+                <!-- Exteriores -->
+                <div>
+                  <p
+                    class="text-[10px] uppercase tracking-wider font-bold text-warning-strong/60 mb-2"
+                  >
+                    Exteriores
+                  </p>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="space-y-1">
+                      <span class="text-[10px] text-slate-500">Check-in</span>
+                      <div class="aspect-video bg-slate-200 rounded overflow-hidden">
+                        @if (getPhotosByType(checkInPhotos, 'exterior'); as photos) {
+                          @if (photos.length > 0) {
+                            <img
+                              [src]="photos[0].url"
+                              class="w-full h-full object-cover"
+                              [alt]="photos[0].caption || 'Check-in exterior'"
+                              width="200"
+                              height="112"
+                            />
+                          } @else {
+                            <div
+                              class="w-full h-full flex items-center justify-center text-[10px] text-slate-400"
+                            >
+                              Sin foto
+                            </div>
+                          }
+                        }
+                      </div>
+                    </div>
+                    <div class="space-y-1">
+                      <span class="text-[10px] text-slate-500">Check-out (Reporte)</span>
+                      <div
+                        class="aspect-video bg-slate-200 rounded border-2 border-warning-border overflow-hidden"
+                      >
+                        @if (getPhotosByType(checkOutPhotos, 'damage'); as damagePhotos) {
+                          @if (damagePhotos.length > 0) {
+                            <img
+                              [src]="damagePhotos[0].url"
+                              class="w-full h-full object-cover"
+                              [alt]="damagePhotos[0].caption || 'Reporte de daño'"
+                              width="200"
+                              height="112"
+                            />
+                          } @else if (getPhotosByType(checkOutPhotos, 'exterior'); as extPhotos) {
+                            @if (extPhotos.length > 0) {
+                              <img
+                                [src]="extPhotos[0].url"
+                                class="w-full h-full object-cover"
+                                [alt]="extPhotos[0].caption || 'Check-out exterior'"
+                                width="200"
+                                height="112"
+                              />
+                            } @else {
+                              <div
+                                class="w-full h-full flex items-center justify-center text-[10px] text-slate-400"
+                              >
+                                Sin foto
+                              </div>
+                            }
+                          }
+                        }
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="space-y-1">
-                  <span class="text-[10px] text-slate-500">Check-out (Reporte)</span>
-                  <div
-                    class="aspect-video bg-slate-200 rounded border-2 border-warning-border overflow-hidden">
-                    @if (getPhotosByType(checkOutPhotos, 'damage'); as damagePhotos) {
-                    @if (damagePhotos.length > 0) {
-                    <img [src]="damagePhotos[0].url" class="w-full h-full object-cover"
-                      [alt]="damagePhotos[0].caption || 'Reporte de daño'"
-                      width="200" height="112">
-                    } @else if (getPhotosByType(checkOutPhotos, 'exterior'); as extPhotos) {
-                    @if (extPhotos.length > 0) {
-                    <img [src]="extPhotos[0].url" class="w-full h-full object-cover"
-                      [alt]="extPhotos[0].caption || 'Check-out exterior'"
-                      width="200" height="112">
-                    } @else {
-                    <div
-                      class="w-full h-full flex items-center justify-center text-[10px] text-slate-400">
-                      Sin foto</div>
-                    }
-                    }
-                    }
-                  </div>
-                </div>
+
+                <p class="text-[10px] text-slate-500 italic">
+                  * Podés ver el reporte completo de inspección en los detalles de la reserva.
+                </p>
               </div>
             </div>
-
-            <p class="text-[10px] text-slate-500 italic">
-              * Podés ver el reporte completo de inspección en los detalles de la reserva.
-            </p>
-          </div>
+          }
         </div>
-        }
       </div>
     </div>
-  </div>
   }
 
   <!-- Resumen de devolución (sin daños) -->
   @if (!renterConfirmed && (!damageAmount || damageAmount === 0)) {
-  <div class="mb-6 p-4 bg-success-light/10 border border-success-light/40 rounded-lg">
-    <div class="flex items-start gap-3">
-      <svg class="w-5 h-5 text-success-700 mt-0.5 flex-shrink-0" fill="currentColor"
-        viewBox="0 0 20 20">
-        <path fill-rule="evenodd"
-          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-          clip-rule="evenodd" />
-      </svg>
-      <div class="flex-1">
-        <h4 class="text-sm font-semibold text-success-700 mb-2 font-satoshi">
-          Sin daños reportados
-        </h4>
-        <p class="text-sm text-success-700">
-          Recibirás el depósito completo de vuelta:
-          <span class="font-bold font-mono">${{ depositAmount }} USD</span>
-        </p>
+    <div class="mb-6 p-4 bg-success-light/10 border border-success-light/40 rounded-lg">
+      <div class="flex items-start gap-3">
+        <svg
+          class="w-5 h-5 text-success-700 mt-0.5 flex-shrink-0"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <div class="flex-1">
+          <h4 class="text-sm font-semibold text-success-700 mb-2 font-satoshi">
+            Sin daños reportados
+          </h4>
+          <p class="text-sm text-success-700">
+            Recibirás el depósito completo de vuelta:
+            <span class="font-bold font-mono">${{ depositAmount }} USD</span>
+          </p>
+        </div>
       </div>
     </div>
-  </div>
   }
 
   <!-- Información importante -->
   @if (!renterConfirmed) {
-  <div class="mb-6 p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg">
-    <h4 class="text-sm font-semibold text-cta-default mb-2 flex items-center gap-2">
-      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd"
-          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-          clip-rule="evenodd" />
-      </svg>
-      Importante
-    </h4>
-    <ul class="text-xs text-cta-default space-y-2">
-      <li class="flex items-start gap-2">
-        <span class="text-cta-default">•</span>
-        <span>Al confirmar, se procesará el cierre de la reserva</span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="text-cta-default">•</span>
-        <span>Tu garantía{{ damageAmount ? ' (menos daños)' : '' }} se devolverá a tu
-          <strong>wallet</strong>, no a tu cuenta bancaria</span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="text-cta-default">•</span>
-        <span>Podrás usar los fondos del wallet para futuras reservas</span>
-      </li>
-      @if (ownerConfirmed) {
-      <li class="flex items-start gap-2">
-        <span class="text-success-700">✓</span>
-        <span>El propietario ya confirmó. Al confirmar tú, los fondos se liberarán
-          <strong>inmediatamente</strong></span>
-      </li>
-      }
-    </ul>
-  </div>
+    <div class="mb-6 p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg">
+      <h4 class="text-sm font-semibold text-cta-default mb-2 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        Importante
+      </h4>
+      <ul class="text-xs text-cta-default space-y-2">
+        <li class="flex items-start gap-2">
+          <span class="text-cta-default">•</span>
+          <span>Al confirmar, se procesará el cierre de la reserva</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-cta-default">•</span>
+          <span
+            >Tu garantía{{ damageAmount ? ' (menos daños)' : '' }} se devolverá a tu
+            <strong>wallet</strong>, no a tu cuenta bancaria</span
+          >
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-cta-default">•</span>
+          <span>Podrás usar los fondos del wallet para futuras reservas</span>
+        </li>
+        @if (ownerConfirmed) {
+          <li class="flex items-start gap-2">
+            <span class="text-success-700">✓</span>
+            <span
+              >El propietario ya confirmó. Al confirmar tú, los fondos se liberarán
+              <strong>inmediatamente</strong></span
+            >
+          </li>
+        }
+      </ul>
+    </div>
   }
 
   <!-- Botón de confirmación -->
   @if (!renterConfirmed) {
-  <div class="flex justify-between items-center gap-4">
-    <!-- Botón de disputa (solo si hay daños) -->
-    @if (damageAmount && damageAmount > 0) {
-    <button type="button" (click)="dispute()"
-      class="px-4 py-2 text-sm font-medium text-error-700 bg-error-50 hover:bg-error-100 border border-error-200 rounded-lg transition-colors flex items-center gap-2"
-      [disabled]="loading().resolvingConclusion">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-      </svg>
-      Disputar Daños
-    </button>
-    } @else {
-    <div></div>
-    <!-- Spacer -->
-    }
+    <div class="flex justify-between items-center gap-4">
+      <!-- Botón de disputa (solo si hay daños) -->
+      @if (damageAmount && damageAmount > 0) {
+        <button
+          type="button"
+          (click)="dispute()"
+          class="px-4 py-2 text-sm font-medium text-error-700 bg-error-50 hover:bg-error-100 border border-error-200 rounded-lg transition-colors flex items-center gap-2"
+          [disabled]="loading().resolvingConclusion"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+          Disputar Daños
+        </button>
+      } @else {
+        <div></div>
+        <!-- Spacer -->
+      }
 
-    <button type="button" (click)="confirm()"
-      class="px-6 py-3 text-sm font-medium text-text-primary bg-success-light hover:bg-success-light rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
-      [disabled]="loading().confirmingRenter || loading().resolvingConclusion">
-      @if (loading().confirmingRenter || loading().resolvingConclusion) {
-      <svg class="animate-spin h-4 w-4 text-text-inverse" xmlns="http://www.w3.org/2000/svg"
-        fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-        </circle>
-        <path class="opacity-75" fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-        </path>
-      </svg>
-      }
-      @if (!loading().confirmingRenter && !loading().resolvingConclusion) {
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
-        </path>
-      </svg>
-      }
-      <span>{{
-        loading().confirmingRenter || loading().resolvingConclusion
-        ? 'Procesando...'
-        : damageAmount && damageAmount > 0
-        ? 'Aceptar Daños y Pagar'
-        : 'Confirmar y liberar pago'
+      <button
+        type="button"
+        (click)="confirm()"
+        class="px-6 py-3 text-sm font-medium text-text-primary bg-success-light hover:bg-success-light rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
+        [disabled]="loading().confirmingRenter || loading().resolvingConclusion"
+      >
+        @if (loading().confirmingRenter || loading().resolvingConclusion) {
+          <svg
+            class="animate-spin h-4 w-4 text-text-inverse"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+        }
+        @if (!loading().confirmingRenter && !loading().resolvingConclusion) {
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            ></path>
+          </svg>
+        }
+        <span>{{
+          loading().confirmingRenter || loading().resolvingConclusion
+            ? 'Procesando...'
+            : damageAmount && damageAmount > 0
+              ? 'Aceptar Daños y Pagar'
+              : 'Confirmar y liberar pago'
         }}</span>
-    </button>
-  </div>
+      </button>
+    </div>
   }
 
   <!-- Estado ya confirmado -->
   @if (renterConfirmed) {
-  <div class="text-center py-8">
-    <div
-      class="inline-flex items-center justify-center w-16 h-16 bg-success-light/20 rounded-full mb-4">
-      <svg class="w-8 h-8 text-success-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
-        </path>
-      </svg>
-    </div>
-    <h4 class="text-lg font-semibold text-slate-900 mb-2 font-satoshi">
-      Ya confirmaste liberar el pago
-    </h4>
-    <p class="text-sm text-slate-600 mb-4">
-      @if (!ownerConfirmed) {
-      <span> Esperando confirmación del propietario para liberar fondos. </span>
-      }
+    <div class="text-center py-8">
+      <div
+        class="inline-flex items-center justify-center w-16 h-16 bg-success-light/20 rounded-full mb-4"
+      >
+        <svg class="w-8 h-8 text-success-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          ></path>
+        </svg>
+      </div>
+      <h4 class="text-lg font-semibold text-slate-900 mb-2 font-satoshi">
+        Ya confirmaste liberar el pago
+      </h4>
+      <p class="text-sm text-slate-600 mb-4">
+        @if (!ownerConfirmed) {
+          <span> Esperando confirmación del propietario para liberar fondos. </span>
+        }
+        @if (ownerConfirmed) {
+          <span> El propietario también confirmó. Los fondos se liberaron automáticamente. </span>
+        }
+      </p>
+      <!-- Resumen de fondos devueltos -->
       @if (ownerConfirmed) {
-      <span> El propietario también confirmó. Los fondos se liberaron automáticamente. </span>
+        <div class="mt-4 p-4 bg-success-light/10 rounded-lg inline-block">
+          <p class="text-xs text-success-700 mb-2">Fondos devueltos a tu wallet:</p>
+          <p class="h4 text-success-700 font-mono">${{ amountToReturn }} USD</p>
+        </div>
       }
-    </p>
-    <!-- Resumen de fondos devueltos -->
-    @if (ownerConfirmed) {
-    <div class="mt-4 p-4 bg-success-light/10 rounded-lg inline-block">
-      <p class="text-xs text-success-700 mb-2">Fondos devueltos a tu wallet:</p>
-      <p class="h4 text-success-700 font-mono">${{ amountToReturn }} USD</p>
     </div>
-    }
-  </div>
   }
 
   <!-- Mensaje de resultado -->
   @if (message()) {
-  <div class="mt-4 p-4 rounded-lg" [class.bg-success-light/10]="confirmationResult()?.success"
-    [class.bg-error-bg]="!confirmationResult()?.success">
-    <p class="text-sm" [class.text-success-strong]="confirmationResult()?.success"
-      [class.text-error-strong]="!confirmationResult()?.success">
-      {{ message() }}
-    </p>
-    <!-- Detalles de liberación de fondos -->
-    @if (confirmationResult()?.funds_released) {
-    <div class="mt-3 pt-3 border-t border-success-light/40">
-      <p class="text-xs font-semibold text-success-700 mb-2">
-        Fondos liberados automáticamente:
+    <div
+      class="mt-4 p-4 rounded-lg"
+      [class.bg-success-light/10]="confirmationResult()?.success"
+      [class.bg-error-bg]="!confirmationResult()?.success"
+    >
+      <p
+        class="text-sm"
+        [class.text-success-strong]="confirmationResult()?.success"
+        [class.text-error-strong]="!confirmationResult()?.success"
+      >
+        {{ message() }}
       </p>
-      <ul class="text-xs text-success-700 space-y-1">
-        <li>✓ Reserva completada exitosamente</li>
-        <li>✓ Garantía de ${{ amountToReturn }} USD devuelta a tu wallet</li>
-        @if (damageAmount && damageAmount > 0) {
-        <li>ℹ Cargo por daños: ${{ damageAmount }} USD</li>
-        }
-      </ul>
+      <!-- Detalles de liberación de fondos -->
+      @if (confirmationResult()?.funds_released) {
+        <div class="mt-3 pt-3 border-t border-success-light/40">
+          <p class="text-xs font-semibold text-success-700 mb-2">
+            Fondos liberados automáticamente:
+          </p>
+          <ul class="text-xs text-success-700 space-y-1">
+            <li>✓ Reserva completada exitosamente</li>
+            <li>✓ Garantía de ${{ amountToReturn }} USD devuelta a tu wallet</li>
+            @if (damageAmount && damageAmount > 0) {
+              <li>ℹ Cargo por daños: ${{ damageAmount }} USD</li>
+            }
+          </ul>
+        </div>
+      }
     </div>
-    }
-  </div>
   }
 </div>

@@ -109,7 +109,7 @@ export class CarDepreciationNotificationsService {
       const totalEarnings = (bookings || []).reduce((sum, booking) => {
         if (booking.status === 'completed' || booking.status === 'active') {
           // Estimación: ~70% del total contribuye a rewards
-          return sum + booking.total_amount * 0.70;
+          return sum + booking.total_amount * 0.7;
         }
         return sum;
       }, 0);

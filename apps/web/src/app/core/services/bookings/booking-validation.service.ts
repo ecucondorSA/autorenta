@@ -217,7 +217,7 @@ export class BookingValidationService {
         .eq('car_id', carId)
         .in('status', ['pending', 'pending_payment'])
         .lt('start_at', endDate) // ✅ FIX: start_at < endDate (overlap correcto)
-        .gt('end_at', startDate) // ✅ FIX: end_at > startDate (overlap correcto)
+        .gt('end_at', startDate); // ✅ FIX: end_at > startDate (overlap correcto)
 
       return pendingBookings ? pendingBookings.length > 0 : false;
     } catch {

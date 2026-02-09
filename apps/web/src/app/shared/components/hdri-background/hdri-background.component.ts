@@ -812,7 +812,10 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     this.isPageVisible = !document.hidden;
     document.addEventListener('visibilitychange', () => {
       this.isPageVisible = !document.hidden;
-      this.logger.debug('[HdriBackground] Visibility changed:', this.isPageVisible ? 'VISIBLE' : 'HIDDEN');
+      this.logger.debug(
+        '[HdriBackground] Visibility changed:',
+        this.isPageVisible ? 'VISIBLE' : 'HIDDEN',
+      );
 
       // Force a frame when becoming visible to avoid visual glitch
       if (this.isPageVisible && !this.isDestroyed) {
@@ -941,7 +944,6 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
             this.rotationSmoothing = originalSmoothing;
           }, 3000);
           this.glanceTimeoutIds.push(t4);
-
         }, 3000); // Hold right longer
         this.glanceTimeoutIds.push(t3);
       }, 3000); // Hold left longer
@@ -949,5 +951,4 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     }, 2000); // Start delay
     this.glanceTimeoutIds.push(t1);
   }
-
 }

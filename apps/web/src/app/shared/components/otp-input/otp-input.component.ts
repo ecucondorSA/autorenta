@@ -36,7 +36,11 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="flex gap-2 sm:gap-3 justify-center" role="group" aria-label="Código de verificación">
+    <div
+      class="flex gap-2 sm:gap-3 justify-center"
+      role="group"
+      aria-label="Código de verificación"
+    >
       @for (i of indices; track i) {
         <input
           #inputs
@@ -66,17 +70,33 @@ import { CommonModule } from '@angular/common';
       }
     </div>
   `,
-  styles: [`
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-      20%, 40%, 60%, 80% { transform: translateX(4px); }
-    }
+  styles: [
+    `
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+          transform: translateX(-4px);
+        }
+        20%,
+        40%,
+        60%,
+        80% {
+          transform: translateX(4px);
+        }
+      }
 
-    .animate-shake {
-      animation: shake 0.5s ease-in-out;
-    }
-  `],
+      .animate-shake {
+        animation: shake 0.5s ease-in-out;
+      }
+    `,
+  ],
 })
 export class OtpInputComponent {
   /** Two-way binding for the OTP value */

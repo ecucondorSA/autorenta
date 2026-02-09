@@ -43,7 +43,7 @@ export class SeoLandingService {
       this.supabase.rpc('get_seo_page_data', {
         p_segment1: segment1,
         p_segment2: segment2 || null,
-      })
+      }),
     ).pipe(
       map(({ data, error }) => {
         if (error) {
@@ -51,7 +51,7 @@ export class SeoLandingService {
           throw error;
         }
         return (data as unknown as SeoPageData) || null;
-      })
+      }),
     );
   }
 }

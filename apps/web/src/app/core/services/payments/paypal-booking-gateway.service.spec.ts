@@ -56,8 +56,11 @@ describe('PayPalBookingGatewayService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [...testProviders, PayPalBookingGatewayService,
-        { provide: SupabaseClientService, useValue: mockSupabaseService },],
+      providers: [
+        ...testProviders,
+        PayPalBookingGatewayService,
+        { provide: SupabaseClientService, useValue: mockSupabaseService },
+      ],
     });
     service = TestBed.inject(PayPalBookingGatewayService);
   });

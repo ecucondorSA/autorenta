@@ -25,9 +25,9 @@ type LocationStatus = 'pending' | 'ready' | 'unavailable';
       <div class="panic-dimmer"></div>
 
       <!-- BOTÓN DE SALIDA RÁPIDA (Solo visible si no hay blackout o al tocar) -->
-      <button 
-        type="button" 
-        class="panic-exit-hitbox" 
+      <button
+        type="button"
+        class="panic-exit-hitbox"
         (click)="handleScreenTouch()"
         *ngIf="isBroadcasting()"
       ></button>
@@ -49,8 +49,8 @@ type LocationStatus = 'pending' | 'ready' | 'unavailable';
         }
 
         <p class="panic-instruction">
-          MANTÉN ESTA PANTALLA ABIERTA. No bloquees el teléfono para asegurar la máxima potencia
-          de emisión.
+          MANTÉN ESTA PANTALLA ABIERTA. No bloquees el teléfono para asegurar la máxima potencia de
+          emisión.
         </p>
 
         <div class="panic-metrics" *ngIf="countdown() === 0">
@@ -123,7 +123,8 @@ type LocationStatus = 'pending' | 'ready' | 'unavailable';
       .panic-dimmer {
         position: absolute;
         inset: 0;
-        background: radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 45%),
+        background:
+          radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 45%),
           radial-gradient(circle at bottom, rgba(255, 0, 0, 0.08), transparent 50%);
         opacity: 0.95;
         pointer-events: none;
@@ -147,7 +148,9 @@ type LocationStatus = 'pending' | 'ready' | 'unavailable';
         display: flex;
         flex-direction: column;
         gap: 24px;
-        transition: opacity 0.5s ease, transform 0.5s ease;
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s ease;
       }
 
       .panic-content--hidden {
@@ -182,9 +185,18 @@ type LocationStatus = 'pending' | 'ready' | 'unavailable';
       }
 
       @keyframes pulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.2); opacity: 0.7; }
-        100% { transform: scale(1); opacity: 1; }
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
       }
 
       .panic-countdown {

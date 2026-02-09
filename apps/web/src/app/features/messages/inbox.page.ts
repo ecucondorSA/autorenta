@@ -154,7 +154,6 @@ import { ChatThreadComponent } from './components/chat-thread.component';
           </div>
         }
       </div>
-
     </div>
   `,
 })

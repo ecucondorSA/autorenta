@@ -26,7 +26,9 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
     <div class="space-y-6">
       <!-- Context reminder -->
       <div class="text-center">
-        <span class="inline-flex items-center gap-2 px-4 py-2 bg-surface-secondary rounded-full text-sm">
+        <span
+          class="inline-flex items-center gap-2 px-4 py-2 bg-surface-secondary rounded-full text-sm"
+        >
           <span class="font-semibold text-text-primary">{{ brandName() }}</span>
           <span class="text-text-muted">{{ year() }}</span>
         </span>
@@ -64,7 +66,13 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
             aria-label="Limpiar búsqueda"
             class="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-surface-secondary hover:bg-surface-hover text-text-muted hover:text-text-primary transition-all"
           >
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -72,8 +80,19 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
         @if (isLoading()) {
           <div class="absolute right-4 top-1/2 -translate-y-1/2">
             <svg class="animate-spin h-5 w-5 text-cta-default" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
           </div>
         }
@@ -102,10 +121,23 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
               [class.border-border-default]="selectedModel()?.code !== model.code"
               [class.hover:border-cta-default/50]="selectedModel()?.code !== model.code"
             >
-              <span class="font-medium text-text-primary text-left text-sm sm:text-base break-words line-clamp-2 flex-1 min-w-0">{{ model.name }}</span>
+              <span
+                class="font-medium text-text-primary text-left text-sm sm:text-base break-words line-clamp-2 flex-1 min-w-0"
+                >{{ model.name }}</span
+              >
               @if (selectedModel()?.code === model.code) {
-                <svg class="w-5 h-5 text-cta-default flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                <svg
+                  class="w-5 h-5 text-cta-default flex-shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               }
             </button>
@@ -124,8 +156,18 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
       <!-- Empty state -->
       @if (!isLoading() && models().length === 0) {
         <div class="text-center py-8 text-text-secondary">
-          <svg class="w-12 h-12 mx-auto mb-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            class="w-12 h-12 mx-auto mb-4 text-text-muted"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <p>No hay modelos disponibles para esta combinación</p>
           <p class="text-sm mt-1">Probá seleccionar otro año</p>
@@ -134,15 +176,33 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
 
       <!-- Selected model indicator -->
       @if (selectedModel()) {
-        <div class="flex items-center gap-3 p-4 bg-emerald-100 dark:bg-emerald-900 border border-emerald-300 dark:border-emerald-700 rounded-xl">
-          <div class="w-10 h-10 bg-emerald-200 dark:bg-emerald-800 rounded-full flex items-center justify-center flex-shrink-0">
-            <svg class="w-5 h-5 text-emerald-700 dark:text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        <div
+          class="flex items-center gap-3 p-4 bg-emerald-100 dark:bg-emerald-900 border border-emerald-300 dark:border-emerald-700 rounded-xl"
+        >
+          <div
+            class="w-10 h-10 bg-emerald-200 dark:bg-emerald-800 rounded-full flex items-center justify-center flex-shrink-0"
+          >
+            <svg
+              class="w-5 h-5 text-emerald-700 dark:text-emerald-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-sm text-emerald-800 dark:text-emerald-100">Modelo seleccionado</p>
-            <p class="font-semibold text-emerald-900 dark:text-white text-sm sm:text-base break-words">{{ selectedModel()?.name }}</p>
+            <p
+              class="font-semibold text-emerald-900 dark:text-white text-sm sm:text-base break-words"
+            >
+              {{ selectedModel()?.name }}
+            </p>
           </div>
           <button
             type="button"
@@ -151,7 +211,12 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
             class="text-emerald-700 dark:text-emerald-200 hover:text-emerald-900 dark:hover:text-white transition-colors"
           >
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -159,17 +224,46 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
 
       <!-- Market value display -->
       @if (selectedModel()) {
-        <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 border border-blue-200 dark:border-blue-700 rounded-xl">
+        <div
+          class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 border border-blue-200 dark:border-blue-700 rounded-xl"
+        >
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center">
+            <div
+              class="w-10 h-10 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center"
+            >
               @if (isLoadingValue()) {
-                <svg class="animate-spin h-5 w-5 text-blue-600 dark:text-blue-300" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  class="animate-spin h-5 w-5 text-blue-600 dark:text-blue-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
               } @else {
-                <svg class="w-5 h-5 text-blue-600 dark:text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  class="w-5 h-5 text-blue-600 dark:text-blue-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               }
             </div>
@@ -178,7 +272,9 @@ import { PricingService, FipeModel } from '@core/services/payments/pricing.servi
               @if (isLoadingValue()) {
                 <p class="font-semibold text-blue-900 dark:text-white">Calculando...</p>
               } @else if (marketValueUsd()) {
-                <p class="font-semibold text-blue-900 dark:text-white text-lg">~US$ {{ formatMarketValue(marketValueUsd()!) }}</p>
+                <p class="font-semibold text-blue-900 dark:text-white text-lg">
+                  ~US$ {{ formatMarketValue(marketValueUsd()!) }}
+                </p>
               } @else {
                 <p class="font-semibold text-blue-900 dark:text-white">No disponible</p>
               }
@@ -278,7 +374,7 @@ export class ModelQuestionComponent implements OnInit, OnChanges {
 
   async selectModel(model: FipeModel): Promise<void> {
     this.selectedModel.set(model);
-    this.searchQuery.set('');  // Clear search to show all models
+    this.searchQuery.set(''); // Clear search to show all models
     this.modelSelected.emit({ code: model.code, name: model.name });
 
     // Load FIPE value

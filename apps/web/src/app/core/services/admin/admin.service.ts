@@ -215,11 +215,7 @@ export class AdminService {
       // Check if any of user's roles has this permission
       return roles.some((role) => PERMISSIONS_MATRIX[role]?.includes(permission));
     } catch (error) {
-      this.logger.error(
-        `Error checking permission ${permission}`,
-        'AdminService',
-        error as Error,
-      );
+      this.logger.error(`Error checking permission ${permission}`, 'AdminService', error as Error);
       return false;
     }
   }

@@ -149,8 +149,10 @@ export class WalletPage implements OnInit {
    */
   readonly isAuthError = computed(() => {
     const error = this.walletError();
-    return error?.message?.toLowerCase().includes('no autenticado') ||
-           error?.message?.toLowerCase().includes('not authenticated');
+    return (
+      error?.message?.toLowerCase().includes('no autenticado') ||
+      error?.message?.toLowerCase().includes('not authenticated')
+    );
   });
 
   /**
@@ -308,7 +310,7 @@ export class WalletPage implements OnInit {
    */
   navigateToLogin(): void {
     void this.router.navigate(['/auth/login'], {
-      queryParams: { returnUrl: '/wallet' }
+      queryParams: { returnUrl: '/wallet' },
     });
   }
 

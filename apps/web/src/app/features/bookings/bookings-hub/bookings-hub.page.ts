@@ -45,6 +45,7 @@ import { BookingsInsightsComponent } from './components/bookings-insights.compon
 import { BookingsQuickActionsComponent } from './components/bookings-quick-actions.component';
 import { BookingsListComponent } from './components/bookings-list.component';
 import { BookingsOperationalDashboardComponent } from './components/bookings-operational-dashboard.component';
+import { ActiveRentalCardComponent } from './components/active-rental-card.component';
 
 @Component({
   standalone: true,
@@ -59,17 +60,14 @@ import { BookingsOperationalDashboardComponent } from './components/bookings-ope
     BookingsQuickActionsComponent,
     BookingsListComponent,
     BookingsOperationalDashboardComponent,
+    ActiveRentalCardComponent,
   ],
   template: `
     <div class="min-h-screen bg-slate-50 pb-24">
       <!-- HEADER -->
-      <app-bookings-header
-        [role]="role()"
-        (roleChange)="setRole($event)"
-      ></app-bookings-header>
+      <app-bookings-header [role]="role()" (roleChange)="setRole($event)"></app-bookings-header>
 
       <main class="px-4 pt-5 space-y-5 max-w-2xl mx-auto">
-
         <!-- LOADING STATE -->
         @if (loading()) {
           <div class="space-y-4 animate-pulse">
@@ -92,7 +90,9 @@ import { BookingsOperationalDashboardComponent } from './components/bookings-ope
               <ion-icon name="alert-circle-outline" class="text-3xl text-red-400"></ion-icon>
             </div>
             <h3 class="text-lg font-bold text-slate-900">No pudimos cargar tus reservas</h3>
-            <p class="text-sm text-slate-500 mt-1 max-w-xs">Verifica tu conexion e intenta nuevamente.</p>
+            <p class="text-sm text-slate-500 mt-1 max-w-xs">
+              Verifica tu conexion e intenta nuevamente.
+            </p>
             <button
               (click)="retry()"
               class="mt-5 px-5 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-xl active:scale-95 transition-transform"
@@ -112,7 +112,11 @@ import { BookingsOperationalDashboardComponent } from './components/bookings-ope
             ></app-bookings-operational-dashboard>
           } @else {
             <div class="flex flex-col items-center justify-center py-16 text-center">
-              <img src="/assets/images/illustrations/empty-bookings.png" alt="Sin reservas" class="w-48 h-auto mb-5 mx-auto" />
+              <img
+                src="/assets/images/illustrations/empty-bookings.png"
+                alt="Sin reservas"
+                class="w-48 h-auto mb-5 mx-auto"
+              />
               <h3 class="text-xl font-bold text-slate-900">Aun no tenes reservas</h3>
               <p class="text-sm text-slate-500 mt-2 max-w-xs mx-auto">
                 Explora autos disponibles y reserva tu proximo viaje.
@@ -130,23 +134,24 @@ import { BookingsOperationalDashboardComponent } from './components/bookings-ope
 
         <!-- CONTENT: OPERATIONAL COMMAND CENTER -->
         @else {
-          <!-- FOCUS CARD (highest priority action) -->
-          @if (focusCard().booking) {
-            <app-bookings-focus-card
-              [card]="focusCard()"
+          <!-- ACTIVE RENTAL DASHBOARD (Smart Widget) -->
+          @if (activeRentals().length > 0) {
+            <app-active-rental-card
+              [bookings]="activeRentals()"
               [role]="role()"
-            ></app-bookings-focus-card>
+            ></app-active-rental-card>
+          }
+
+          <!-- FOCUS CARD (highest priority non-active action) -->
+          @if (focusCard().booking && !isActiveBooking(focusCard().booking)) {
+            <app-bookings-focus-card [card]="focusCard()" [role]="role()"></app-bookings-focus-card>
           }
 
           <!-- STATS / FINANCIAL PULSE -->
-          <app-bookings-insights
-            [items]="insightItems()"
-          ></app-bookings-insights>
+          <app-bookings-insights [items]="insightItems()"></app-bookings-insights>
 
           <!-- QUICK ACTIONS -->
-          <app-bookings-quick-actions
-            [actions]="quickActions()"
-          ></app-bookings-quick-actions>
+          <app-bookings-quick-actions [actions]="quickActions()"></app-bookings-quick-actions>
 
           <!-- OPERATIONAL DASHBOARD (owner mode) -->
           @if (role() === 'owner') {
@@ -159,7 +164,9 @@ import { BookingsOperationalDashboardComponent } from './components/bookings-ope
           <!-- GROUPED BOOKINGS BY OPERATIONAL PHASE -->
           @for (group of operationalGroups(); track group.phase) {
             <section class="space-y-3">
-              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider px-1 flex items-center gap-2">
+              <h3
+                class="text-xs font-bold text-slate-400 uppercase tracking-wider px-1 flex items-center gap-2"
+              >
                 <ion-icon [name]="group.icon" class="text-sm"></ion-icon>
                 {{ group.label }}
                 <span class="text-slate-300">({{ group.bookings.length }})</span>
@@ -177,9 +184,13 @@ import { BookingsOperationalDashboardComponent } from './components/bookings-ope
       </main>
     </div>
   `,
-  styles: [`
-    :host { display: block; }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookingsHubPage implements OnInit, OnDestroy {
@@ -226,14 +237,30 @@ export class BookingsHubPage implements OnInit, OnDestroy {
       const activeBookings = bookings.filter((b) => this.isActive(b));
       const activeRevenue = activeBookings.reduce((sum, b) => sum + (b.total_amount || 0), 0);
       const pendingCount = bookings.filter((b) => this.isPendingOwnerApproval(b)).length;
-      const activeDeposits = bookings.filter((b) =>
-        b.deposit_status === 'locked',
-      ).length;
+      const activeDeposits = bookings.filter((b) => b.deposit_status === 'locked').length;
 
       return [
-        { id: 'revenue', label: 'Ingresos activos', value: activeRevenue, type: 'money' as const, icon: 'cash-outline' },
-        { id: 'pending', label: 'Por aprobar', value: pendingCount, type: 'count' as const, icon: 'hourglass-outline' },
-        { id: 'deposits', label: 'Garantias activas', value: activeDeposits, type: 'count' as const, icon: 'shield-checkmark-outline' },
+        {
+          id: 'revenue',
+          label: 'Ingresos activos',
+          value: activeRevenue,
+          type: 'money' as const,
+          icon: 'cash-outline',
+        },
+        {
+          id: 'pending',
+          label: 'Por aprobar',
+          value: pendingCount,
+          type: 'count' as const,
+          icon: 'hourglass-outline',
+        },
+        {
+          id: 'deposits',
+          label: 'Garantias activas',
+          value: activeDeposits,
+          type: 'count' as const,
+          icon: 'shield-checkmark-outline',
+        },
       ];
     }
 
@@ -242,9 +269,27 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     const historyCount = bookings.filter((b) => this.isHistory(b)).length;
 
     return [
-      { id: 'active', label: 'Activas', value: activeCount, type: 'count' as const, icon: 'rocket-outline' },
-      { id: 'pending', label: 'Pendientes', value: pendingCount, type: 'count' as const, icon: 'hourglass-outline' },
-      { id: 'history', label: 'Historial', value: historyCount, type: 'count' as const, icon: 'receipt-outline' },
+      {
+        id: 'active',
+        label: 'Activas',
+        value: activeCount,
+        type: 'count' as const,
+        icon: 'rocket-outline',
+      },
+      {
+        id: 'pending',
+        label: 'Pendientes',
+        value: pendingCount,
+        type: 'count' as const,
+        icon: 'hourglass-outline',
+      },
+      {
+        id: 'history',
+        label: 'Historial',
+        value: historyCount,
+        type: 'count' as const,
+        icon: 'receipt-outline',
+      },
     ];
   });
 
@@ -297,12 +342,9 @@ export class BookingsHubPage implements OnInit, OnDestroy {
 
     const ui = this.bookingUi.getUiState(focus, this.role());
     const actionLabel = this.primaryActionLabel(focus);
-    const detailLink = this.role() === 'owner'
-      ? ['/bookings/owner', focus.id]
-      : ['/bookings', focus.id];
-    const actionLink = actionLabel
-      ? this.primaryActionLink(focus)
-      : detailLink;
+    const detailLink =
+      this.role() === 'owner' ? ['/bookings/owner', focus.id] : ['/bookings', focus.id];
+    const actionLink = actionLabel ? this.primaryActionLink(focus) : detailLink;
 
     return {
       title: focus.car_title || 'Reserva',
@@ -335,13 +377,25 @@ export class BookingsHubPage implements OnInit, OnDestroy {
           link: '/bookings/pending-approval',
           badge: this.pendingApprovals() ?? 0,
         },
-        { id: 'messages', label: 'Mensajes', icon: 'chatbubble-ellipses-outline', link: '/messages', badge: totalUnread },
+        {
+          id: 'messages',
+          label: 'Mensajes',
+          icon: 'chatbubble-ellipses-outline',
+          link: '/messages',
+          badge: totalUnread,
+        },
       ];
     }
 
     return [
       { id: 'explore', label: 'Explorar', icon: 'search-outline', link: '/cars/list' },
-      { id: 'messages', label: 'Mensajes', icon: 'chatbubble-ellipses-outline', link: '/messages', badge: totalUnread },
+      {
+        id: 'messages',
+        label: 'Mensajes',
+        icon: 'chatbubble-ellipses-outline',
+        link: '/messages',
+        badge: totalUnread,
+      },
     ];
   });
 
@@ -399,6 +453,34 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   readonly historyBookings = computed(() =>
     this.currentBookings().filter((b) => this.isHistory(b)),
   );
+
+  /**
+   * Active rentals for the Smart Widget carousel.
+   * Includes: confirmed (pre-checkin), in_progress, pending_return, pending_review.
+   */
+  readonly activeRentals = computed(() => {
+    return this.currentBookings()
+      .filter((b) =>
+        [
+          'confirmed',
+          'in_progress',
+          'pending_return',
+          'pending_review',
+          'pending',
+          'pending_payment',
+          'pending_owner_approval',
+        ].includes(b.status),
+      )
+      .sort((a, b) => this.bookingPriority(a) - this.bookingPriority(b));
+  });
+
+  /**
+   * Check if a booking is already shown in the active rental card.
+   */
+  isActiveBooking(booking: Booking | null): boolean {
+    if (!booking) return false;
+    return this.activeRentals().some((b) => b.id === booking.id);
+  }
 
   // Keep sortedBookings for backward compat (used nowhere now but safe)
   readonly sortedBookings = computed(() => {
@@ -488,9 +570,7 @@ export class BookingsHubPage implements OnInit, OnDestroy {
 
   getUnreadCount(bookingId: string): number {
     const conversations = this.unreadMessages.unreadConversations();
-    const match = conversations.find(
-      (c) => c.type === 'booking' && c.conversationId === bookingId,
-    );
+    const match = conversations.find((c) => c.type === 'booking' && c.conversationId === bookingId);
     return match?.unreadCount ?? 0;
   }
 
@@ -595,12 +675,22 @@ export class BookingsHubPage implements OnInit, OnDestroy {
   }
 
   private isHistory(booking: Booking): boolean {
-    return ['completed', 'cancelled', 'expired', 'cancelled_renter', 'cancelled_owner', 'cancelled_system', 'rejected'].includes(booking.status);
+    return [
+      'completed',
+      'cancelled',
+      'expired',
+      'cancelled_renter',
+      'cancelled_owner',
+      'cancelled_system',
+      'rejected',
+    ].includes(booking.status);
   }
 
   private pickFocusBooking(bookings: Booking[]): Booking | null {
     if (bookings.length === 0) return null;
-    const actionable = [...bookings].sort((a, b) => this.bookingPriority(a) - this.bookingPriority(b));
+    const actionable = [...bookings].sort(
+      (a, b) => this.bookingPriority(a) - this.bookingPriority(b),
+    );
     const top = actionable[0];
     if (top && this.bookingPriority(top) < 4) return top;
     return null;

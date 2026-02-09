@@ -1,4 +1,11 @@
-import { Component, OnInit, inject, signal, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal,
+  DestroyRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,13 +24,7 @@ import {
   IonNote,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import {
-  alertCircle,
-  helpCircle,
-  chatbubbles,
-  mail,
-  arrowBack,
-} from 'ionicons/icons';
+import { alertCircle, helpCircle, chatbubbles, mail, arrowBack } from 'ionicons/icons';
 
 import { FaceVerificationService } from '@core/services/verification/face-verification.service';
 
@@ -73,15 +74,13 @@ import { FaceVerificationService } from '@core/services/verification/face-verifi
               @if (blockReason()) {
                 {{ blockReason() }}
               } @else {
-                Tu cuenta ha sido bloqueada temporalmente debido a múltiples
-                intentos fallidos de verificación facial.
+                Tu cuenta ha sido bloqueada temporalmente debido a múltiples intentos fallidos de
+                verificación facial.
               }
             </p>
 
             @if (attempts()) {
-              <ion-note color="medium">
-                Intentos fallidos: {{ attempts() }}/5
-              </ion-note>
+              <ion-note color="medium"> Intentos fallidos: {{ attempts() }}/5 </ion-note>
             }
           </ion-card-content>
         </ion-card>
@@ -100,8 +99,8 @@ import { FaceVerificationService } from '@core/services/verification/face-verifi
             </ion-card-header>
             <ion-card-content>
               <p>
-                Nuestro equipo de soporte puede ayudarte a desbloquear tu cuenta
-                después de verificar tu identidad manualmente.
+                Nuestro equipo de soporte puede ayudarte a desbloquear tu cuenta después de
+                verificar tu identidad manualmente.
               </p>
 
               <div class="contact-buttons">
@@ -136,103 +135,100 @@ import { FaceVerificationService } from '@core/services/verification/face-verifi
           </ion-card>
         </div>
 
-        <ion-button
-          expand="block"
-          fill="clear"
-          routerLink="/home"
-          class="back-btn"
-        >
+        <ion-button expand="block" fill="clear" routerLink="/home" class="back-btn">
           <ion-icon name="arrow-back" slot="start"></ion-icon>
           Volver al Inicio
         </ion-button>
       </div>
     </ion-content>
   `,
-  styles: [`
-    .blocked-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 24px 16px;
-    }
-
-    .blocked-icon {
-      width: 100px;
-      height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--ion-color-danger-tint);
-      border-radius: 50%;
-      margin-bottom: 24px;
-
-      ion-icon {
-        font-size: 60px;
-      }
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 16px;
-    }
-
-    .block-reason {
-      font-size: 1rem;
-      line-height: 1.5;
-      margin-bottom: 12px;
-    }
-
-    ion-note {
-      display: block;
-      margin-top: 8px;
-    }
-
-    .help-section {
-      width: 100%;
-      margin-top: 32px;
-      text-align: left;
-
-      h2 {
-        font-size: 1.2rem;
-        margin-bottom: 16px;
+  styles: [
+    `
+      .blocked-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         text-align: center;
+        padding: 24px 16px;
       }
-    }
 
-    .contact-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 16px;
-    }
+      .blocked-icon {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--ion-color-danger-tint);
+        border-radius: 50%;
+        margin-bottom: 24px;
 
-    .reasons-list {
-      margin: 0;
-      padding-left: 20px;
-
-      li {
-        margin-bottom: 8px;
-        line-height: 1.4;
+        ion-icon {
+          font-size: 60px;
+        }
       }
-    }
 
-    ion-card-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 1rem;
-
-      ion-icon {
-        font-size: 1.2rem;
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 16px;
       }
-    }
 
-    .back-btn {
-      margin-top: 32px;
-    }
-  `],
+      .block-reason {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 12px;
+      }
+
+      ion-note {
+        display: block;
+        margin-top: 8px;
+      }
+
+      .help-section {
+        width: 100%;
+        margin-top: 32px;
+        text-align: left;
+
+        h2 {
+          font-size: 1.2rem;
+          margin-bottom: 16px;
+          text-align: center;
+        }
+      }
+
+      .contact-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .reasons-list {
+        margin: 0;
+        padding-left: 20px;
+
+        li {
+          margin-bottom: 8px;
+          line-height: 1.4;
+        }
+      }
+
+      ion-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1rem;
+
+        ion-icon {
+          font-size: 1.2rem;
+        }
+      }
+
+      .back-btn {
+        margin-top: 32px;
+      }
+    `,
+  ],
 })
 export class VerificationBlockedPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -255,16 +251,14 @@ export class VerificationBlockedPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // Get params from route
-    this.route.queryParams
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(params => {
-        if (params['reason']) {
-          this.blockReason.set(params['reason']);
-        }
-        if (params['attempts']) {
-          this.attempts.set(parseInt(params['attempts'], 10));
-        }
-      });
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      if (params['reason']) {
+        this.blockReason.set(params['reason']);
+      }
+      if (params['attempts']) {
+        this.attempts.set(parseInt(params['attempts'], 10));
+      }
+    });
 
     // Also check current block status
     try {
@@ -288,7 +282,7 @@ export class VerificationBlockedPage implements OnInit {
 
   openWhatsApp(): void {
     const message = encodeURIComponent(
-      `Hola, necesito ayuda para desbloquear mi verificación facial en AutoRenta. Mi cuenta fue bloqueada después de múltiples intentos fallidos.`
+      `Hola, necesito ayuda para desbloquear mi verificación facial en AutoRenta. Mi cuenta fue bloqueada después de múltiples intentos fallidos.`,
     );
     window.open(`https://wa.me/5491123456789?text=${message}`, '_blank');
   }
@@ -296,7 +290,7 @@ export class VerificationBlockedPage implements OnInit {
   openEmail(): void {
     const subject = encodeURIComponent('Desbloqueo de Verificación Facial');
     const body = encodeURIComponent(
-      `Hola equipo de soporte,\n\nMi cuenta ha sido bloqueada para verificación facial después de múltiples intentos fallidos.\n\nSolicito ayuda para desbloquear mi cuenta.\n\nGracias.`
+      `Hola equipo de soporte,\n\nMi cuenta ha sido bloqueada para verificación facial después de múltiples intentos fallidos.\n\nSolicito ayuda para desbloquear mi cuenta.\n\nGracias.`,
     );
     window.open(`mailto:soporte@autorenta.com?subject=${subject}&body=${body}`);
   }

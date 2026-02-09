@@ -8,7 +8,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   imports: [CommonModule],
   template: `
     <div class="static-page">
-      <section class="static-hero" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+      <section
+        class="static-hero"
+        style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);"
+      >
         <h1>💼 Únete a Autorentar</h1>
         <p>Construye el futuro de la movilidad con nosotros</p>
       </section>

@@ -35,10 +35,10 @@ export class BookingFlowFacade {
   // Actions
   async init(carId: string) {
     if (this.currentCar()?.id === carId) return;
-    
+
     this.store.reset();
     this.store.updateData({ carId });
-    
+
     try {
       const car = await this.carsService.getCarById(carId);
       if (car) {
@@ -73,7 +73,7 @@ export class BookingFlowFacade {
     }
 
     const days = Math.max(1, differenceInCalendarDays(data.endDate, data.startDate));
-    
+
     // Determine base price in USD
     let dailyRateUsd = car.price_per_day;
     const rateUsdArs = await this.currencyService.getRate('USDARS');
@@ -85,7 +85,7 @@ export class BookingFlowFacade {
 
     // Extras Calculation
     let extrasUsd = 0;
-    data.extras.forEach(extra => {
+    data.extras.forEach((extra) => {
       extrasUsd += extra.dailyRate * extra.quantity * days;
     });
 
@@ -95,11 +95,11 @@ export class BookingFlowFacade {
     if (data.insuranceLevel === 'premium') insuranceUsd = 30 * days;
 
     // Service Fee (e.g., 10%)
-    const subtotal = (dailyRateUsd * days) + extrasUsd + insuranceUsd;
-    const serviceFeeUsd = subtotal * 0.10;
+    const subtotal = dailyRateUsd * days + extrasUsd + insuranceUsd;
+    const serviceFeeUsd = subtotal * 0.1;
 
     const totalAmountUsd = subtotal + serviceFeeUsd;
-    
+
     // Calculate local amount (ARS)
     const totalAmountLocal = totalAmountUsd * rateUsdArs;
 

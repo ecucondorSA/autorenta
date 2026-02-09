@@ -66,8 +66,7 @@ const FINANCE_ACTIONS: FinanceAction[] = [
     route: '/wallet/deposit',
     icon: 'plus',
     classes: {
-      card:
-        'border-emerald-500/20 hover:border-emerald-500/40 hover:shadow-emerald-500/10',
+      card: 'border-emerald-500/20 hover:border-emerald-500/40 hover:shadow-emerald-500/10',
       iconBg: 'bg-emerald-500/10',
       icon: 'text-emerald-600',
     },

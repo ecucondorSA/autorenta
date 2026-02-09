@@ -368,10 +368,10 @@ export class LoggerService {
   logBusinessError(event: string, metadata?: Record<string, unknown>): void {
     const message = `[BUSINESS_ERROR] ${event}`;
     const safeMeta = this.sanitizeData(metadata);
-    
+
     // Always log to console
     this.logger.error(this.buildLogPrefix('[BUSINESS]', 'Business'), message, safeMeta);
-    
+
     // Always send to Sentry with tag
     void this.sendToSentryAsync('error', message, safeMeta).then(async () => {
       const Sentry = await this.getSentry();
@@ -388,10 +388,10 @@ export class LoggerService {
   logSecurityEvent(event: string, metadata?: Record<string, unknown>): void {
     const message = `[SECURITY_EVENT] ${event}`;
     const safeMeta = this.sanitizeData(metadata);
-    
+
     // Always log to console
     this.logger.warn(this.buildLogPrefix('[SECURITY]', 'Security'), message, safeMeta);
-    
+
     // Always send to Sentry with tag
     void this.sendToSentryAsync('warning', message, safeMeta).then(async () => {
       const Sentry = await this.getSentry();
