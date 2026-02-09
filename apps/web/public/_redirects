@@ -54,18 +54,29 @@
 /contact-verification/* /index.html 200
 
 # Domain features (nested routes)
-/cars/*           /index.html   200
-/bookings/*       /index.html   200
-/reviews/*        /index.html   200
-/wallet/*         /index.html   200
-/dashboard/*      /index.html   200
-/profile/*        /index.html   200
-/scout/*          /index.html   200
-/messages/*       /index.html   200
-/notifications/*  /index.html   200
-/admin/*          /index.html   200
-/ref/*            /index.html   200
-/users/*          /index.html   200
+# NOTE: /path/* matches /path/foo but NOT /path alone. Both are needed.
+/cars              /index.html   200
+/cars/*            /index.html   200
+/bookings          /index.html   200
+/bookings/*        /index.html   200
+/reviews           /index.html   200
+/reviews/*         /index.html   200
+/wallet            /index.html   200
+/wallet/*          /index.html   200
+/dashboard         /index.html   200
+/dashboard/*       /index.html   200
+/profile           /index.html   200
+/profile/*         /index.html   200
+/scout             /index.html   200
+/scout/*           /index.html   200
+/messages          /index.html   200
+/messages/*        /index.html   200
+/notifications     /index.html   200
+/notifications/*   /index.html   200
+/admin             /index.html   200
+/admin/*           /index.html   200
+/ref/*             /index.html   200
+/users/*           /index.html   200
 
 # Legal & static pages
 /terminos         /index.html   200
