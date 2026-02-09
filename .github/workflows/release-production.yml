@@ -136,6 +136,12 @@ jobs:
     needs: [pre-flight, deploy-database]
     # Run even if deploy-database was skipped, but not if it failed
     if: always() && (needs.deploy-database.result == 'success' || needs.deploy-database.result == 'skipped')
+    environment:
+      name: production
+      url: https://autorentar.com
+    outputs:
+      deployment_id: ${{ steps.deploy.outputs.deployment_id }}
+      previous_deployment_id: ${{ steps.snapshot.outputs.previous_deployment_id }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -169,20 +175,103 @@ jobs:
           NG_APP_SENTRY_DSN: ${{ secrets.NG_APP_SENTRY_DSN }}
           NG_APP_SENTRY_ENVIRONMENT: "production"
 
+      # ── Sentry Source Maps (dynamic version) ──
       - name: Upload Sentry Source Maps
         working-directory: apps/web
-        run: npm run sentry:sourcemaps
+        run: |
+          VERSION="${{ needs.pre-flight.outputs.version }}"
+          RELEASE="autorenta-web@${VERSION}"
+          echo "📦 Sentry release: $RELEASE"
+
+          npx @sentry/cli releases new "$RELEASE" || true
+          npx @sentry/cli releases files "$RELEASE" upload-sourcemaps \
+            --url-prefix '~/' \
+            --validate \
+            dist/web/browser/
+          npx @sentry/cli releases finalize "$RELEASE"
+          npx @sentry/cli releases deploys "$RELEASE" new -e production || true
+          echo "✅ Source maps uploaded for $RELEASE"
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG || 'autorenta' }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT || 'autorenta-web' }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         continue-on-error: true
 
-      - name: Deploy to Cloudflare Pages
-        run: npx wrangler pages deploy apps/web/dist/web/browser --project-name=autorentar --branch=main
+      # ── Snapshot current production for rollback ──
+      - name: Snapshot current deployment
+        id: snapshot
+        run: |
+          # Get the current production deployment ID before we overwrite it
+          PREV_ID=$(curl -s -X GET \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT_ID }}/pages/projects/autorentar/deployments?env=production&per_page=1" \
+            -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            | jq -r '.result[0].id // empty') || true
+          echo "previous_deployment_id=${PREV_ID}" >> $GITHUB_OUTPUT
+          echo "📸 Current production deployment: ${PREV_ID:-none}"
+        continue-on-error: true
+
+      # ── Deploy to preview first ──
+      - name: Deploy to Preview
+        id: preview
+        run: |
+          OUTPUT=$(npx wrangler pages deploy apps/web/dist/web/browser \
+            --project-name=autorentar \
+            --branch=preview-${{ github.sha }} \
+            2>&1)
+          echo "$OUTPUT"
+          # Extract preview URL
+          PREVIEW_URL=$(echo "$OUTPUT" | grep -oP 'https://[a-z0-9-]+\.autorentar\.pages\.dev' | head -1) || true
+          echo "preview_url=${PREVIEW_URL}" >> $GITHUB_OUTPUT
+          echo "🔍 Preview deployed: ${PREVIEW_URL:-unknown}"
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+
+      # ── Verify preview before promoting ──
+      - name: Smoke test preview
+        run: |
+          PREVIEW_URL="${{ steps.preview.outputs.preview_url }}"
+          if [ -z "$PREVIEW_URL" ]; then
+            echo "⚠️ No preview URL detected, skipping preview smoke test"
+            exit 0
+          fi
+
+          echo "🔍 Testing preview: $PREVIEW_URL"
+          for i in {1..3}; do
+            status=$(curl -o /dev/null -s -w "%{http_code}" -L "$PREVIEW_URL")
+            if [ "$status" = "200" ]; then
+              echo "✅ Preview responds 200"
+              break
+            fi
+            echo "  Attempt $i: Got $status, retrying..."
+            sleep 5
+          done
+
+          # Verify missing chunks return 404 on preview
+          status=$(curl -o /dev/null -s -w "%{http_code}" "${PREVIEW_URL}/chunk-NONEXISTENT-$(date +%s).js")
+          if [ "$status" = "200" ]; then
+            echo "::error::Preview: missing .js returned 200 (HTML fallback). Blocking promotion."
+            exit 1
+          fi
+          echo "✅ Preview: missing .js → $status (correct)"
+
+      # ── Promote to production ──
+      - name: Deploy to Production
+        id: deploy
+        run: |
+          OUTPUT=$(npx wrangler pages deploy apps/web/dist/web/browser \
+            --project-name=autorentar \
+            --branch=main \
+            2>&1)
+          echo "$OUTPUT"
+          # Extract deployment ID
+          DEPLOY_ID=$(echo "$OUTPUT" | grep -oP '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}' | head -1) || true
+          echo "deployment_id=${DEPLOY_ID}" >> $GITHUB_OUTPUT
+          echo "🚀 Production deployment: ${DEPLOY_ID:-unknown}"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
 
       - name: Web Deploy Status
         if: always()
@@ -191,6 +280,9 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
           echo "- URL: https://autorentar.com" >> $GITHUB_STEP_SUMMARY
+          echo "- Preview: ${{ steps.preview.outputs.preview_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Deployment ID: ${{ steps.deploy.outputs.deployment_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Previous ID (rollback target): ${{ steps.snapshot.outputs.previous_deployment_id }}" >> $GITHUB_STEP_SUMMARY
 
   # ============================================
   # STAGE 3: ANDROID BUILD (Parallel with Web)
@@ -302,9 +394,12 @@ jobs:
     needs: deploy-web
     if: needs.deploy-web.result == 'success'
     steps:
+      - name: Wait for CDN propagation
+        run: sleep 15
+
       - name: Test Homepage
         run: |
-          for i in {1..3}; do
+          for i in {1..5}; do
             status=$(curl -o /dev/null -s -w "%{http_code}" -L https://autorentar.com)
             if [ "$status" = "200" ]; then
               echo "✅ Homepage OK"
@@ -313,7 +408,7 @@ jobs:
             echo "Attempt $i: Got $status, retrying..."
             sleep 10
           done
-          echo "::error::Homepage not responding after 3 attempts"
+          echo "::error::Homepage not responding after 5 attempts"
           exit 1
 
       - name: Test API Health
@@ -352,11 +447,68 @@ jobs:
           fi
           echo "  ✅ /cars → 200 (SPA routing works)"
 
-          # 4. Verify Content-Type for main JS bundle
+          # 4. Verify Content-Type for homepage
           content_type=$(curl -sI "https://autorentar.com" | grep -i "content-type" | head -1)
           echo "  ✅ Homepage Content-Type: $content_type"
 
           echo "✅ Static asset integrity verified"
+
+      - name: Test Core Routes
+        run: |
+          echo "🔍 Verifying core SPA routes..."
+          ROUTES=("/auth/login" "/cars" "/bookings" "/wallet" "/profile")
+          FAILED=0
+          for route in "${ROUTES[@]}"; do
+            status=$(curl -o /dev/null -s -w "%{http_code}" -L "https://autorentar.com${route}")
+            if [ "$status" = "200" ]; then
+              echo "  ✅ ${route} → 200"
+            else
+              echo "  ❌ ${route} → $status"
+              FAILED=1
+            fi
+          done
+          if [ "$FAILED" = "1" ]; then
+            echo "::warning::Some SPA routes failed"
+          fi
+          echo "✅ Core routes check completed"
+
+  # ============================================
+  # AUTO-ROLLBACK (If smoke tests fail)
+  # ============================================
+  auto-rollback:
+    name: 🔄 Auto-Rollback
+    runs-on: ubuntu-latest
+    needs: [deploy-web, smoke-tests]
+    if: failure() && needs.deploy-web.result == 'success' && needs.deploy-web.outputs.previous_deployment_id != ''
+    steps:
+      - name: Rollback to previous deployment
+        run: |
+          PREV_ID="${{ needs.deploy-web.outputs.previous_deployment_id }}"
+          echo "🚨 Smoke tests failed! Rolling back to deployment: $PREV_ID"
+
+          RESULT=$(curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT_ID }}/pages/projects/autorentar/deployments/${PREV_ID}/rollback" \
+            -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+            -H "Content-Type: application/json")
+
+          SUCCESS=$(echo "$RESULT" | jq -r '.success')
+          if [ "$SUCCESS" = "true" ]; then
+            echo "✅ Successfully rolled back to $PREV_ID"
+          else
+            echo "::error::Rollback failed: $RESULT"
+            exit 1
+          fi
+
+      - name: Rollback Summary
+        if: always()
+        run: |
+          echo "## 🔄 Auto-Rollback" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger**: Smoke tests failed after deploy" >> $GITHUB_STEP_SUMMARY
+          echo "- **Rolled back to**: ${{ needs.deploy-web.outputs.previous_deployment_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Failed deployment**: ${{ needs.deploy-web.outputs.deployment_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ **Action required**: Investigate the failure, fix, and re-deploy." >> $GITHUB_STEP_SUMMARY
 
   # ============================================
   # RELEASE SUMMARY
@@ -364,7 +516,7 @@ jobs:
   release-summary:
     name: 📊 Release Summary
     runs-on: ubuntu-latest
-    needs: [pre-flight, deploy-database, deploy-web, build-android, smoke-tests]
+    needs: [pre-flight, deploy-database, deploy-web, build-android, smoke-tests, auto-rollback]
     if: always()
     steps:
       - name: Generate Summary
@@ -379,17 +531,34 @@ jobs:
           echo "| Stage | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Database | ${{ needs.deploy-database.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Web | ${{ needs.deploy-web.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Web (Preview → Prod) | ${{ needs.deploy-web.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Android | ${{ needs.build-android.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Smoke Tests | ${{ needs.smoke-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Auto-Rollback | ${{ needs.auto-rollback.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
+          # Rollback details
+          if [[ "${{ needs.auto-rollback.result }}" == "success" ]]; then
+            echo "## 🔄 Rollback Executed" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Production was automatically rolled back to the previous deployment." >> $GITHUB_STEP_SUMMARY
+            echo "- **Rolled back to:** \`${{ needs.deploy-web.outputs.previous_deployment_id }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "- **Failed deployment:** \`${{ needs.deploy-web.outputs.deployment_id }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
           # Overall status
-          if [[ "${{ needs.deploy-web.result }}" == "success" ]]; then
+          if [[ "${{ needs.deploy-web.result }}" == "success" && "${{ needs.smoke-tests.result }}" == "success" ]]; then
             echo "## ✅ Release Successful" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "- 🌐 Web: https://autorentar.com" >> $GITHUB_STEP_SUMMARY
             echo "- 📱 APK: Check GitHub Releases" >> $GITHUB_STEP_SUMMARY
+            echo "- 🔍 Sentry Release: autorenta-web@${{ needs.pre-flight.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          elif [[ "${{ needs.auto-rollback.result }}" == "success" ]]; then
+            echo "## ⚠️ Release Failed — Rolled Back" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Smoke tests failed. Production was automatically rolled back to the previous version." >> $GITHUB_STEP_SUMMARY
+            echo "Investigate and re-deploy." >> $GITHUB_STEP_SUMMARY
           else
             echo "## ❌ Release Failed" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
