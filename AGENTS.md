@@ -85,7 +85,7 @@ constructor(private authService: AuthService) {}
 ### Domains (Service Facade)
 - All Supabase access goes through `apps/web/src/app/core/services/*.service.ts`.
 - Keep domain logic in services; pages orchestrate; components present.
-- Typed RPC calls: `supabase.rpc<T>()` and use explicit schema (`public.fn_name`).
+- Typed RPC calls: use `supabase.schema('public').rpc<T>('fn_name', args)` (or `supabase.rpc<T>('fn_name', args)` if you never change schema).
 - **Forbidden (UI leak):** Do not import `injectSupabase()` or call `supabase.*` from `features/` or `shared/`. Exceptions: `core/services/infrastructure/*`, domain services, and test/dev scripts.
 - **Money logic lives in services:** UI components only format and render amounts; they do not compute pricing, fees, discounts, or call dynamic pricing RPCs directly.
 
@@ -161,11 +161,14 @@ if (error) {
 
 ### RPC & Queries
 ```typescript
-// Correct
-const { data } = await supabase.rpc('public.get_user_bookings', { user_id });
+// Correct (explicit schema via Accept-Profile)
+const { data } = await supabase.schema('public').rpc('get_user_bookings', { user_id });
 
-// Incorrect
+// Also OK (default schema is public)
 const { data } = await supabase.rpc('get_user_bookings', { user_id });
+
+// Wrong (becomes public.public.get_user_bookings in PostgREST)
+const { data } = await supabase.rpc('public.get_user_bookings', { user_id });
 ```
 
 ### Migrations
@@ -231,7 +234,7 @@ Deliverables:
 
 ### Drift Detection Checklist (Production vs Code)
 - Confirm `status` enums match DB (`database.types.ts` vs `pg_enum`).
-- Confirm every RPC used in code exists in DB (`supabase.rpc('public.fn')` vs `pg_proc`).
+- Confirm every RPC used in code exists in DB (`supabase.rpc('fn')` / `supabase.schema('public').rpc('fn')` vs `pg_proc`).
 - Confirm tables/views referenced in services exist (and are in the right schema).
 - Confirm visibility rules are enforced in DB (RLS/policies) and reflected in UI (filters/overlays).
 

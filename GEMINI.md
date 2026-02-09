@@ -89,11 +89,14 @@ PGPASSWORD="$DB_PASSWORD" psql "postgresql://postgres.<project_ref>@aws-1-sa-eas
 
 ### RPC & Queries
 ```typescript
-// Correcto: Prefijo de schema explícito
-const { data } = await supabase.rpc('public.get_user_bookings', { user_id });
+// Correcto: schema explícito via Accept-Profile
+const { data } = await supabase.schema('public').rpc('get_user_bookings', { user_id });
 
-// Incorrecto: Sin prefijo puede fallar en Edge Functions
+// OK: default schema = public
 const { data } = await supabase.rpc('get_user_bookings', { user_id });
+
+// Incorrecto: se interpreta como function name "public.get_user_bookings" dentro de schema public
+const { data } = await supabase.rpc('public.get_user_bookings', { user_id });
 ```
 
 ### Edge Functions
@@ -293,7 +296,7 @@ Entregables:
 
 ### Checklist de Drift (Producción vs Código)
 - Enum `status` consistente con DB (ej: `database.types.ts` vs `pg_enum`).
-- RPCs usados existen en DB (ej: `supabase.rpc('public.fn')` vs `pg_proc`).
+- RPCs usados existen en DB (ej: `supabase.rpc('fn')` / `supabase.schema('public').rpc('fn')` vs `pg_proc`).
 - Tablas/views referenciadas existen y están en el schema correcto.
 - Reglas críticas enforce en DB (RLS/triggers/constraints) y reflejadas en UI (filters/overlays).
 
