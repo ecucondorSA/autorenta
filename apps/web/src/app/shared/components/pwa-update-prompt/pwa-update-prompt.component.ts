@@ -17,8 +17,4 @@ export class PwaUpdatePromptComponent {
   async update(): Promise<void> {
     await this.pwaService.activateUpdate();
   }
-
-  dismiss(): void {
-    this.pwaService.updateAvailable.set(false);
-  }
 }

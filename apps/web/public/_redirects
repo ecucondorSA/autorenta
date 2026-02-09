@@ -26,6 +26,68 @@
 /:a/:b/polyfills-* /polyfills-:splat 302
 /:a/:b/styles-* /styles-:splat 302
 
-# Redirect all requests to index.html for Angular SPA routing
-# IMPORTANTE: Esto permite que Angular maneje todas las rutas, incluyendo /auth/callback
-/*    /index.html   200
+# SPA route fallbacks — explicit patterns instead of catch-all.
+# WHY: A catch-all `/* /index.html 200` returns HTML (200) for missing .js chunks,
+# which turns the Service Worker into a zombie. With explicit routes, missing static
+# assets correctly get a 404 from Cloudflare Pages, breaking the stale-SW loop.
+
+# Core app routes
+/rentarfast       /index.html   200
+/onboarding       /index.html   200
+/become-renter    /index.html   200
+/ganar            /index.html   200
+/referrals        /index.html   200
+/favorites        /index.html   200
+/mp-callback      /index.html   200
+/protections      /index.html   200
+/finanzas         /index.html   200
+/calendar-demo    /index.html   200
+/payouts          /index.html   200
+/support          /index.html   200
+/panic            /index.html   200
+/beacon-test      /index.html   200
+
+# Auth & identity
+/auth/*           /index.html   200
+/oauth/*          /index.html   200
+/verification/*   /index.html   200
+/contact-verification/* /index.html 200
+
+# Domain features (nested routes)
+/cars/*           /index.html   200
+/bookings/*       /index.html   200
+/reviews/*        /index.html   200
+/wallet/*         /index.html   200
+/dashboard/*      /index.html   200
+/profile/*        /index.html   200
+/scout/*          /index.html   200
+/messages/*       /index.html   200
+/notifications/*  /index.html   200
+/admin/*          /index.html   200
+/ref/*            /index.html   200
+/users/*          /index.html   200
+
+# Legal & static pages
+/terminos         /index.html   200
+/terms            /index.html   200
+/privacy          /index.html   200
+/delete-account   /index.html   200
+/politica-seguros /index.html   200
+/help             /index.html   200
+/aircover         /index.html   200
+/safety           /index.html   200
+/cancellation     /index.html   200
+/community        /index.html   200
+/rent-your-car    /index.html   200
+/owner-resources  /index.html   200
+/resources        /index.html   200
+/newsroom         /index.html   200
+/about            /index.html   200
+/careers          /index.html   200
+/investors        /index.html   200
+/sitemap          /index.html   200
+/company-data     /index.html   200
+
+# SEO & error pages
+/alquiler/*       /index.html   200
+/error/*          /index.html   200

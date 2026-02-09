@@ -118,7 +118,7 @@ export function checkServiceWorkerVersion(): void {
     return;
   }
 
-  const SW_VERSION = '2.1.0'; // Increment this when ngsw-config.json changes
+  const SW_VERSION = '2.2.0'; // Increment this when ngsw-config.json changes
   const STORAGE_KEY = 'sw-version';
 
   const storedVersion = localStorage.getItem(STORAGE_KEY);
