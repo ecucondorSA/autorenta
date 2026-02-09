@@ -8,6 +8,7 @@ export type BookingStatus =
   | 'pending'
   | 'pending_payment'
   | 'pending_approval'
+  | 'pending_owner_approval'
   | 'confirmed'
   | 'in_progress'
   | 'pending_return'
@@ -32,5 +33,4 @@ export type BookingStatus =
 // UI-only derived statuses (NOT stored in DB `booking_status`)
 export type BookingUiStatus =
   | BookingStatus
-  | 'pending_owner_approval' // legacy UI alias (use `pending_approval` in DB)
   | 'pending_deposit';

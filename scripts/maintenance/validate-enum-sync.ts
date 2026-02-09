@@ -64,7 +64,7 @@ const CRITICAL_ENUMS: EnumCheck[] = [
   {
     tsType: 'BookingStatus',
     dbEnum: 'booking_status',
-    file: 'apps/web/src/app/core/models/index.ts',
+    file: 'apps/web/src/app/core/models/booking-status.model.ts',
     linePattern: /export type BookingStatus\s*=\s*([^;]+);/s,
   },
   {
