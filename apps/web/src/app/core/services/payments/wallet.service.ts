@@ -166,11 +166,12 @@ export class WalletService {
       const balance = this.parseWalletBalance(rawBalance);
       this.balance.set(balance);
       return balance;
-    } catch (err) {
+    } catch (err: unknown) {
       // RPC may return 400 if function doesn't exist or user lacks auth.
       // Return default balance instead of crashing — this is non-critical on page load.
       this.balance.set(this.DEFAULT_BALANCE);
-      this.logger['error']('wallet_get_balance failed (non-critical)', String(err));
+      const msg = err instanceof Error ? err.message : JSON.stringify(err);
+      this.logger['error']('wallet_get_balance failed (non-critical)', msg);
       return this.DEFAULT_BALANCE;
     } finally {
       this.loading.set(false);

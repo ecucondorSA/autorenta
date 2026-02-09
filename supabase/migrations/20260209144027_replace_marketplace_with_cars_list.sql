@@ -1,8 +1,8 @@
 -- Replace /marketplace references with /cars/list in live DB data
 -- The /marketplace route does not exist; the correct route is /cars/list
 
--- notification_templates: update cta_link
-UPDATE notification_templates
+-- notifications: update cta_link (column is on `notifications`, NOT `notification_templates`)
+UPDATE notifications
 SET cta_link = '/cars/list'
 WHERE cta_link = '/marketplace';
 
@@ -11,12 +11,5 @@ UPDATE marketing_bio_links
 SET url = REPLACE(url, '/marketplace', '/cars/list')
 WHERE url LIKE '%/marketplace%';
 
--- sdui_components: update props->ctaLink
-UPDATE sdui_components
-SET props = jsonb_set(props, '{ctaLink}', '"/cars/list"')
-WHERE props->>'ctaLink' = '/marketplace';
-
--- smart_notification_templates: update deep_link
-UPDATE smart_notification_templates
-SET deep_link = '/cars/list'
-WHERE deep_link = '/marketplace';
+-- Reload PostgREST schema cache (fixes stale RPC resolution e.g. wallet_get_balance)
+NOTIFY pgrst, 'reload schema';
