@@ -336,7 +336,12 @@ export class VerificationService implements OnDestroy {
   }
 
   /**
-   * Ejecuta una operación con exponential backoff.
+   * Ejecuta una operación con exponential backoff inteligente.
+   *
+   * Clasifica errores antes de reintentar:
+   * - 401 → refresca sesión una vez, luego reintenta
+   * - 4xx (excepto 429) → aborta inmediatamente (error determinístico)
+   * - 429/5xx/network → reintenta con backoff exponencial
    *
    * @param operation - Función async a ejecutar
    * @param options - Configuración del retry
@@ -351,22 +356,50 @@ export class VerificationService implements OnDestroy {
     } = {},
   ): Promise<T | null> {
     const { maxAttempts = 3, baseDelayMs = 200, operationName = 'operation' } = options;
+    let tokenRefreshed = false;
+    let attempt = 0;
 
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    while (attempt < maxAttempts) {
+      attempt++;
       try {
         return await operation();
       } catch (error) {
-        const isLastAttempt = attempt === maxAttempts;
+        const statusCode = this.extractHttpStatus(error);
+        const action = this.classifyRetryAction(statusCode);
 
-        if (isLastAttempt) {
+        // 401: intentar refresh de sesión una sola vez
+        if (action === 'refresh_and_retry' && !tokenRefreshed) {
+          this.logger.warn(`${operationName}: HTTP ${statusCode} (Invalid JWT), refreshing session`);
+          const { error: refreshError } = await this.supabase.auth.refreshSession();
+          if (refreshError) {
+            this.logger.error(`${operationName}: Session refresh failed, aborting`, refreshError);
+            return null;
+          }
+          tokenRefreshed = true;
+          attempt--; // No contar el fallo de auth como intento real
+          this.logger.info(`${operationName}: Session refreshed, retrying`);
+          continue;
+        }
+
+        // Error no-retryable (4xx o 401 después de refresh fallido)
+        if (action === 'abort' || (action === 'refresh_and_retry' && tokenRefreshed)) {
+          this.logger.error(
+            `${operationName}: Non-retryable error (HTTP ${statusCode ?? 'unknown'})`,
+            error,
+          );
+          return null;
+        }
+
+        // Último intento agotado
+        if (attempt >= maxAttempts) {
           this.logger.error(`${operationName} failed after ${maxAttempts} attempts`, error);
           return null;
         }
 
-        // Exponential backoff: 200 → 400 → 800ms
+        // Backoff exponencial para errores transitorios (5xx, 429, network)
         const delayMs = baseDelayMs * Math.pow(2, attempt - 1);
         this.logger.warn(
-          `${operationName} attempt ${attempt} failed, retrying in ${delayMs}ms`,
+          `${operationName} attempt ${attempt}/${maxAttempts} failed (HTTP ${statusCode ?? 'network'}), retrying in ${delayMs}ms`,
           error,
         );
         await this.sleep(delayMs);
@@ -381,6 +414,45 @@ export class VerificationService implements OnDestroy {
    */
   private sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Clasifica qué acción tomar según el código HTTP del error.
+   *
+   * - 'retry': error transitorio, reintentar con backoff (5xx, 429, network)
+   * - 'refresh_and_retry': token expirado, refrescar sesión y reintentar (401)
+   * - 'abort': error determinístico, no reintentar (403, 404, otros 4xx)
+   *
+   * @param statusCode - Código HTTP extraído del error, o null para errores de red
+   * @returns Acción a ejecutar en el retry loop
+   */
+  private classifyRetryAction(statusCode: number | null): 'retry' | 'refresh_and_retry' | 'abort' {
+    if (statusCode === null) return 'retry';              // Red caída, transitorio
+    if (statusCode === 401) return 'refresh_and_retry';   // JWT expirado → refrescar sesión
+    if (statusCode === 429) return 'retry';               // Rate limit → esperar y reintentar
+    if (statusCode >= 500) return 'retry';                // Error del servidor, transitorio
+    return 'abort';                                       // 4xx restantes: determinísticos
+  }
+
+  /**
+   * Extrae el código HTTP de un error de Supabase Edge Function.
+   *
+   * Supabase FunctionsHttpError tiene `context: Response` con el status HTTP.
+   * Para errores de red (FunctionsFetchError) retorna null.
+   */
+  private extractHttpStatus(error: unknown): number | null {
+    if (error && typeof error === 'object') {
+      const err = error as { context?: unknown; status?: number };
+      // FunctionsHttpError: la Response original está en .context
+      if (err.context instanceof Response) {
+        return err.context.status;
+      }
+      // Fallback: errores con .status directo
+      if (typeof err.status === 'number') {
+        return err.status;
+      }
+    }
+    return null;
   }
 
   /**
@@ -502,8 +574,7 @@ export class VerificationService implements OnDestroy {
         imageSize: imageBase64.length,
       });
       throw new Error(
-        'Verificación OCR fallida después de múltiples intentos. ' +
-          'Por favor, asegurate de que la imagen sea clara y esté bien iluminada.',
+        'No pudimos verificar tu documento en este momento. Por favor, intenta de nuevo en unos segundos.',
       );
     }
 

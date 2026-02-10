@@ -250,6 +250,26 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
           </section>
         }
 
+        @if (uploadError(); as errorMsg) {
+          <div
+            class="mb-6 flex items-start gap-3 rounded-2xl border border-error-border bg-error-bg px-5 py-4 text-sm text-error-strong shadow-sm"
+            role="alert"
+          >
+            <span class="shrink-0 text-lg">⚠</span>
+            <div class="flex-1">
+              <p class="font-semibold">Ocurrió un problema</p>
+              <p class="mt-1">{{ errorMsg }}</p>
+            </div>
+            <button
+              (click)="uploadError.set(null)"
+              class="shrink-0 rounded-lg p-1 hover:bg-error-border/30 transition-colors"
+              aria-label="Cerrar"
+            >
+              ✕
+            </button>
+          </div>
+        }
+
         <section id="verification-docs" class="mt-10 grid gap-8 lg:grid-cols-[2fr_1fr]">
           <div class="space-y-6">
             @for (category of docCategories; track category.id) {
@@ -518,6 +538,7 @@ export class VerificationPage implements OnInit {
   readonly isVerifying = signal(false);
   readonly autoTriggered = signal(false);
   readonly showFaq = signal(false);
+  readonly uploadError = signal<string | null>(null);
   readonly showSelfieCapture = signal(false);
   readonly showLicenseCapture = signal(false);
 
@@ -629,15 +650,19 @@ export class VerificationPage implements OnInit {
   triggerVerification(auto = false): void {
     if (this.isVerifying()) return;
     this.isVerifying.set(true);
+    this.uploadError.set(null);
     this.verificationService
       .triggerVerification()
       .then(() => {
         this.isVerifying.set(false);
         if (!auto) this.autoTriggered.set(false);
       })
-      .catch(() => {
+      .catch((err) => {
         this.isVerifying.set(false);
         if (auto) this.autoTriggered.set(false);
+        const message =
+          err instanceof Error ? err.message : 'Error en la verificación. Intenta de nuevo.';
+        this.uploadError.set(message);
       });
   }
 
@@ -785,11 +810,15 @@ export class VerificationPage implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
       const file = input.files[0];
-      // Trigger upload logic via Service
+      this.uploadError.set(null);
       this.verificationService
         .uploadDocument(file, docId)
         .then(() => this.verificationService.loadDocuments())
-        .catch((err) => console.error('Upload failed', err));
+        .catch((err) => {
+          const message =
+            err instanceof Error ? err.message : 'Error al subir documento. Intenta de nuevo.';
+          this.uploadError.set(message);
+        });
     }
   }
 

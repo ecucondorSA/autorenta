@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Riesgos · AutoRentar</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            cyan: {
+              50: '#edfff4', 100: '#d5ffe6', 200: '#aeffcf', 300: '#6fffa8',
+              400: '#1adf70', 500: '#00D95F', 600: '#00BF54', 700: '#00A648',
+              800: '#008239', 900: '#006B30',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(0, 217, 95, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 95, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .glass {
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-strong {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .neon-cyan {
+      color: #00D95F;
+      text-shadow: 0 0 10px rgba(0, 217, 95, 0.5), 0 0 40px rgba(0, 217, 95, 0.15);
+    }
+    .neon-violet {
+      color: #8b5cf6;
+      text-shadow: 0 0 10px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.15);
+    }
+    .glow-cyan { box-shadow: 0 0 20px rgba(0, 217, 95, 0.2), 0 0 60px rgba(0, 217, 95, 0.05); }
+    .neon-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 217, 95, 0.4), rgba(139, 92, 246, 0.3), transparent);
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+    .reveal-delay-3 { transition-delay: 0.45s; }
+    .reveal-delay-4 { transition-delay: 0.6s; }
+
+    /* Flow diagram */
+    .flow-step {
+      position: relative;
+    }
+    .flow-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -1.5rem;
+      width: 1.5rem;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(0, 217, 95, 0.5), rgba(139, 92, 246, 0.3));
+    }
+    @media (max-width: 768px) {
+      .flow-step:not(:last-child)::after {
+        top: auto;
+        bottom: -1.5rem;
+        left: 50%;
+        right: auto;
+        width: 2px;
+        height: 1.5rem;
+        background: linear-gradient(180deg, rgba(0, 217, 95, 0.5), rgba(139, 92, 246, 0.3));
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-white grid-bg antialiased">
+
+  <!-- ======== NAV ======== -->
+  <nav class="fixed top-0 left-0 right-0 z-50 glass-strong">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">🛡</span>
+        <span class="font-bold text-lg tracking-tight">Auto<span class="neon-cyan">Rentar</span></span>
+        <span class="text-slate-500 text-sm hidden sm:inline">· Gestión de Riesgos</span>
+      </div>
+      <a href="./tino-partnership-pitch.html" class="text-sm px-4 py-2 rounded-full border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 transition-all">
+        Volver al Pitch
+      </a>
+    </div>
+  </nav>
+
+  <!-- ======== HERO ======== -->
+  <section class="min-h-[60vh] flex items-center justify-center relative overflow-hidden pt-20">
+    <div class="absolute top-20 right-10 w-72 h-72 bg-cyan-500/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 left-10 w-96 h-96 bg-violet-500/5 rounded-full blur-3xl"></div>
+
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+      <span class="inline-block text-xs font-semibold tracking-widest uppercase text-cyan-400/80 px-4 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 mb-6">
+        Documento Confidencial · Febrero 2026
+      </span>
+
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-6">
+        Gestión de <span class="neon-cyan">Riesgos</span>
+      </h1>
+
+      <p class="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        Cómo protegemos cada auto que entra a la plataforma.
+        <br><span class="text-white font-medium">Sin promesas. Con sistemas.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ======== LA PREGUNTA ======== -->
+  <section class="py-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal glass-strong rounded-2xl p-10 text-center glow-cyan relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 via-cyan-400 to-violet-500"></div>
+        <p class="text-slate-400 text-sm uppercase tracking-wider mb-4">La pregunta inevitable</p>
+        <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+          "¿Qué pasa si <span class="neon-violet">chocan</span> el auto de mi alumno?"
+        </h2>
+        <p class="text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          Es la pregunta correcta. Un negociador serio la hace primero.
+          <br>La respuesta corta: <span class="text-white font-semibold">el owner no pierde un peso</span>.
+          <br>La respuesta larga está abajo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== 5 RIESGOS + MITIGACIONES ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">5 Riesgos. 5 <span class="neon-cyan">Escudos</span>.</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Cada riesgo tiene una mitigación concreta y operativa. No son promesas — son sistemas que ya funcionan.</p>
+      </div>
+
+      <div class="space-y-6">
+
+        <!-- Riesgo 1: Siniestro -->
+        <div class="reveal glass rounded-2xl p-8 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1 h-full bg-red-500/50"></div>
+          <div class="grid md:grid-cols-[1fr_2fr] gap-8 items-start">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-2xl">
+                  💥
+                </div>
+                <div>
+                  <div class="text-red-400 text-xs font-semibold uppercase tracking-wider">Riesgo #1</div>
+                  <h3 class="text-xl font-bold">Siniestro / Choque</h3>
+                </div>
+              </div>
+              <p class="text-slate-400 text-sm">Colisión, vuelco, daño parcial o total del vehículo durante una renta.</p>
+            </div>
+            <div>
+              <div class="text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">Mitigación</div>
+              <div class="space-y-3">
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">1.</span>
+                  <span class="text-slate-300"><strong class="text-white">Seguro obligatorio</strong> — Cada auto activo tiene póliza vigente que cubre daños parciales y totales. Sin seguro, el auto no se publica.</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">2.</span>
+                  <span class="text-slate-300"><strong class="text-white">Depósito pre-autorizado</strong> — Antes de recibir el auto, el inquilino tiene un depósito retenido en su tarjeta. Cubre franquicia y daños menores.</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">3.</span>
+                  <span class="text-slate-300"><strong class="text-white">Inspección IA pre/post</strong> — Video obligatorio antes y después de cada renta. La IA detecta daños nuevos automáticamente.</span>
+                </div>
+              </div>
+              <div class="mt-4 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+                <p class="text-sm text-cyan-300"><strong>Resultado:</strong> El owner cobra el valor de la reparación del seguro + depósito. AutoRentar gestiona el claim completo.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Riesgo 2: Robo -->
+        <div class="reveal reveal-delay-1 glass rounded-2xl p-8 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1 h-full bg-red-500/50"></div>
+          <div class="grid md:grid-cols-[1fr_2fr] gap-8 items-start">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-2xl">
+                  🔓
+                </div>
+                <div>
+                  <div class="text-red-400 text-xs font-semibold uppercase tracking-wider">Riesgo #2</div>
+                  <h3 class="text-xl font-bold">Robo / Hurto</h3>
+                </div>
+              </div>
+              <p class="text-slate-400 text-sm">Un inquilino desaparece con el vehículo o lo reporta robado.</p>
+            </div>
+            <div>
+              <div class="text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">Mitigación</div>
+              <div class="space-y-3">
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">1.</span>
+                  <span class="text-slate-300"><strong class="text-white">KYC verificado con IA</strong> — Identidad verificada con documento + selfie + cruce de datos antes de poder reservar. Bloquea identidades falsas.</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">2.</span>
+                  <span class="text-slate-300"><strong class="text-white">Cobertura por robo total</strong> — La póliza incluye robo total. El owner recibe el valor asegurado del vehículo.</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">3.</span>
+                  <span class="text-slate-300"><strong class="text-white">Historial de conducta</strong> — Rating del inquilino visible. Usuarios con historial limpio tienen prioridad; flags se comparten entre owners.</span>
+                </div>
+              </div>
+              <div class="mt-4 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+                <p class="text-sm text-cyan-300"><strong>Dato:</strong> En plataformas P2P como Turo (15M+ trips), la tasa de robo es menor al 0.01%.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Riesgo 3: Desgaste -->
+        <div class="reveal reveal-delay-2 glass rounded-2xl p-8 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1 h-full bg-amber-500/50"></div>
+          <div class="grid md:grid-cols-[1fr_2fr] gap-8 items-start">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl">
+                  ⚙️
+                </div>
+                <div>
+                  <div class="text-amber-400 text-xs font-semibold uppercase tracking-wider">Riesgo #3</div>
+                  <h3 class="text-xl font-bold">Desgaste Mecánico</h3>
+                </div>
+              </div>
+              <p class="text-slate-400 text-sm">Kilómetros, desgaste de neumáticos, frenos, motor — el uso natural degrada el vehículo.</p>
+            </div>
+            <div>
+              <div class="text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">Mitigación</div>
+              <div class="space-y-3">
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">1.</span>
+                  <span class="text-slate-300"><strong class="text-white">Pricing incluye depreciación</strong> — El modelo de precios ya incorpora el costo de desgaste. El owner no "regala" kilómetros.</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">2.</span>
+                  <span class="text-slate-300"><strong class="text-white">Límite de km configurable</strong> — El owner define un tope de kilómetros por viaje. Excedentes se cobran al inquilino automáticamente.</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">3.</span>
+                  <span class="text-slate-300"><strong class="text-white">El owner decide cuándo alquilar</strong> — No es obligatorio aceptar todas las rentas. El owner controla su disponibilidad al 100%.</span>
+                </div>
+              </div>
+              <div class="mt-4 p-3 rounded-lg bg-amber-500/5 border border-amber-500/10">
+                <p class="text-sm text-amber-300"><strong>Perspectiva:</strong> Un auto parado se deprecia igual (batería, neumáticos, oxidación). Alquilar genera ingresos que compensan con creces el desgaste natural.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Riesgo 4: Impago -->
+        <div class="reveal reveal-delay-3 glass rounded-2xl p-8 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1 h-full bg-amber-500/50"></div>
+          <div class="grid md:grid-cols-[1fr_2fr] gap-8 items-start">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl">
+                  💳
+                </div>
+                <div>
+                  <div class="text-amber-400 text-xs font-semibold uppercase tracking-wider">Riesgo #4</div>
+                  <h3 class="text-xl font-bold">Impago del Inquilino</h3>
+                </div>
+              </div>
+              <p class="text-slate-400 text-sm">El inquilino no paga, la tarjeta es rechazada o disputa el cargo.</p>
+            </div>
+            <div>
+              <div class="text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">Mitigación</div>
+              <div class="space-y-3">
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">1.</span>
+                  <span class="text-slate-300"><strong class="text-white">Pago anticipado obligatorio</strong> — El 100% del alquiler se cobra ANTES de entregar el auto. No hay crédito, no hay "después pago".</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">2.</span>
+                  <span class="text-slate-300"><strong class="text-white">Depósito pre-autorizado</strong> — Adicional al pago, se retiene un depósito en la tarjeta del inquilino como garantía contra daños.</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">3.</span>
+                  <span class="text-slate-300"><strong class="text-white">Contracargos gestionados</strong> — AutoRentar tiene un equipo dedicado a disputas con procesadores de pago. El owner no lidia con esto.</span>
+                </div>
+              </div>
+              <div class="mt-4 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+                <p class="text-sm text-cyan-300"><strong>Resultado:</strong> El owner cobra su parte del Reward Pool mensualmente. El riesgo de impago lo absorbe la plataforma, no el owner.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Riesgo 5: Fraude -->
+        <div class="reveal reveal-delay-4 glass rounded-2xl p-8 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-1 h-full bg-violet-500/50"></div>
+          <div class="grid md:grid-cols-[1fr_2fr] gap-8 items-start">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-2xl">
+                  🤖
+                </div>
+                <div>
+                  <div class="text-violet-400 text-xs font-semibold uppercase tracking-wider">Riesgo #5</div>
+                  <h3 class="text-xl font-bold">Fraude / Gaming</h3>
+                </div>
+              </div>
+              <p class="text-slate-400 text-sm">Un owner o inquilino intenta manipular el sistema para obtener pagos indebidos.</p>
+            </div>
+            <div>
+              <div class="text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">Mitigación</div>
+              <div class="space-y-3">
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">1.</span>
+                  <span class="text-slate-300"><strong class="text-white">Sistema antifraude con IA</strong> — 10 señales de gaming detectadas automáticamente: reservas falsas, manipulación de reviews, disponibilidad sintética, colusión entre cuentas.</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">2.</span>
+                  <span class="text-slate-300"><strong class="text-white">Risk scoring en tiempo real</strong> — Cada owner tiene un score de riesgo 0-100. Score alto = pago congelado hasta revisión manual.</span>
+                </div>
+                <div class="flex items-start gap-3">
+                  <span class="text-cyan-400 mt-0.5 font-bold">3.</span>
+                  <span class="text-slate-300"><strong class="text-white">Transparencia total</strong> — Si tu cuenta es flaggeada, te notificamos con el motivo exacto. Sin cajas negras.</span>
+                </div>
+              </div>
+              <div class="mt-4 p-3 rounded-lg bg-violet-500/5 border border-violet-500/10">
+                <p class="text-sm text-violet-300"><strong>Esto protege a TODOS:</strong> El sistema antifraude asegura que los owners honestos no compitan contra tramposos por el Reward Pool.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== FLUJO DE INCIDENTE ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Flujo de <span class="neon-cyan">Incidente</span></h2>
+        <p class="text-slate-400 max-w-xl mx-auto">Cuando algo pasa, el owner no hace nada. El sistema se activa solo.</p>
+      </div>
+
+      <div class="reveal grid grid-cols-2 md:grid-cols-5 gap-6">
+        <!-- Step 1 -->
+        <div class="flow-step text-center">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-2xl">
+            💥
+          </div>
+          <div class="text-sm font-semibold text-white mb-1">Incidente</div>
+          <p class="text-xs text-slate-500">Choque, daño, o problema durante la renta</p>
+        </div>
+        <!-- Step 2 -->
+        <div class="flow-step text-center">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl">
+            📱
+          </div>
+          <div class="text-sm font-semibold text-white mb-1">Reporte en App</div>
+          <p class="text-xs text-slate-500">Fotos + video desde la app en 2 minutos</p>
+        </div>
+        <!-- Step 3 -->
+        <div class="flow-step text-center">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-2xl">
+            🤖
+          </div>
+          <div class="text-sm font-semibold text-white mb-1">IA Analiza</div>
+          <p class="text-xs text-slate-500">Evaluación automática de daños con Gemini</p>
+        </div>
+        <!-- Step 4 -->
+        <div class="flow-step text-center">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-2xl">
+            🛡
+          </div>
+          <div class="text-sm font-semibold text-white mb-1">Seguro Activa</div>
+          <p class="text-xs text-slate-500">AutoRentar gestiona el claim completo</p>
+        </div>
+        <!-- Step 5 -->
+        <div class="flow-step text-center">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-2xl glow-cyan">
+            💰
+          </div>
+          <div class="text-sm font-semibold neon-cyan mb-1">Owner Cobra</div>
+          <p class="text-xs text-slate-500">Reparación o valor asegurado directo a su cuenta</p>
+        </div>
+      </div>
+
+      <div class="reveal mt-10 glass rounded-xl p-6 text-center">
+        <p class="text-slate-300">
+          <strong class="text-white">El owner no gestiona nada.</strong>
+          No llama al seguro, no negocia con el inquilino, no va a un taller.
+          <br>AutoRentar absorbe toda la operativa. El owner recibe el resultado.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== STACK DE PROTECCIÓN ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Stack de <span class="neon-cyan">Protección</span></h2>
+        <p class="text-slate-400 max-w-xl mx-auto">4 capas de tecnología que protegen cada transacción.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Layer 1 -->
+        <div class="reveal glass rounded-2xl p-6 text-center">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-2xl">
+            🪪
+          </div>
+          <h3 class="font-bold text-lg mb-2">KYC con IA</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Verificación de identidad con documento + selfie + análisis facial automatizado. Detecta documentos falsos.
+          </p>
+        </div>
+
+        <!-- Layer 2 -->
+        <div class="reveal reveal-delay-1 glass rounded-2xl p-6 text-center">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-2xl">
+            🎥
+          </div>
+          <h3 class="font-bold text-lg mb-2">Inspección por Video</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Video 360° obligatorio pre y post renta. IA compara automáticamente y detecta daños nuevos con precision.
+          </p>
+        </div>
+
+        <!-- Layer 3 -->
+        <div class="reveal reveal-delay-2 glass rounded-2xl p-6 text-center">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-2xl">
+            🤖
+          </div>
+          <h3 class="font-bold text-lg mb-2">Anti-Fraude IA</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            10 señales de gaming detectadas diariamente. Risk scoring, congelamiento automático, revisión humana.
+          </p>
+        </div>
+
+        <!-- Layer 4 -->
+        <div class="reveal reveal-delay-3 glass rounded-2xl p-6 text-center">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-2xl">
+            📋
+          </div>
+          <h3 class="font-bold text-lg mb-2">Seguro Integrado</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Póliza obligatoria para cada vehículo activo. Cobertura de daños parciales, totales y robo. Sin seguro, no se publica.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== BENCHMARKS ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">El P2P Car-Sharing <span class="neon-cyan">ya funciona</span></h2>
+        <p class="text-slate-400 max-w-xl mx-auto">No estamos inventando el modelo. Estamos ejecutándolo con mejor tecnología.</p>
+      </div>
+
+      <div class="reveal grid sm:grid-cols-3 gap-6 mb-10">
+        <!-- Turo -->
+        <div class="glass rounded-2xl p-8 text-center">
+          <div class="text-4xl mb-3 font-black text-white">Turo</div>
+          <div class="text-slate-400 text-sm mb-4">EE.UU. · Fundado 2010</div>
+          <div class="space-y-3">
+            <div>
+              <div class="text-3xl font-bold neon-cyan">350K+</div>
+              <div class="text-xs text-slate-500">Vehículos activos</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-white">&lt;0.5%</div>
+              <div class="text-xs text-slate-500">Tasa de siniestralidad</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-white">$1.2B</div>
+              <div class="text-xs text-slate-500">Revenue 2024</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Getaround -->
+        <div class="glass rounded-2xl p-8 text-center">
+          <div class="text-4xl mb-3 font-black text-white">Getaround</div>
+          <div class="text-slate-400 text-sm mb-4">EU + EE.UU. · Fundado 2009</div>
+          <div class="space-y-3">
+            <div>
+              <div class="text-3xl font-bold neon-cyan">50K+</div>
+              <div class="text-xs text-slate-500">Vehículos activos</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-white">&lt;1%</div>
+              <div class="text-xs text-slate-500">Claims por viaje</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-white">8 paises</div>
+              <div class="text-xs text-slate-500">Operaciones globales</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AutoRentar -->
+        <div class="glass rounded-2xl p-8 text-center glow-cyan relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-violet-500"></div>
+          <div class="text-4xl mb-3 font-black neon-cyan">AutoRentar</div>
+          <div class="text-slate-400 text-sm mb-4">LATAM · Fundado 2024</div>
+          <div class="space-y-3">
+            <div>
+              <div class="text-3xl font-bold neon-cyan">IA nativa</div>
+              <div class="text-xs text-slate-500">Inspección + Anti-fraude</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-white">0 legacy</div>
+              <div class="text-xs text-slate-500">Stack 100% moderno</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold neon-violet">LATAM first</div>
+              <div class="text-xs text-slate-500">Mercado desatendido</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal glass-strong rounded-xl p-6 text-center">
+        <p class="text-slate-300 leading-relaxed">
+          <strong class="text-white">El modelo P2P car-sharing tiene +15 anhos de datos.</strong>
+          La siniestralidad es consistentemente baja (&lt;1%) porque los inquilinos cuidan autos ajenos
+          como cuidan un auto alquilado en Hertz — con el incentivo extra de reviews y depositos.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== RESUMEN EJECUTIVO ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal glass-strong rounded-2xl p-10 glow-cyan relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 via-violet-500 to-cyan-500"></div>
+        <h2 class="text-2xl sm:text-3xl font-bold mb-8 text-center">Resumen: Riesgos bajo <span class="neon-cyan">Control</span></h2>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="border-b border-slate-700">
+                <th class="py-3 pr-4 text-slate-400 text-sm font-semibold">Riesgo</th>
+                <th class="py-3 pr-4 text-slate-400 text-sm font-semibold">Mitigacion Principal</th>
+                <th class="py-3 text-slate-400 text-sm font-semibold">Quién lo gestiona</th>
+              </tr>
+            </thead>
+            <tbody class="text-sm">
+              <tr class="border-b border-slate-800">
+                <td class="py-3 pr-4 text-white font-medium">Siniestro</td>
+                <td class="py-3 pr-4 text-slate-300">Seguro obligatorio + Deposito</td>
+                <td class="py-3 neon-cyan font-medium">AutoRentar</td>
+              </tr>
+              <tr class="border-b border-slate-800">
+                <td class="py-3 pr-4 text-white font-medium">Robo</td>
+                <td class="py-3 pr-4 text-slate-300">KYC + Cobertura robo total</td>
+                <td class="py-3 neon-cyan font-medium">AutoRentar</td>
+              </tr>
+              <tr class="border-b border-slate-800">
+                <td class="py-3 pr-4 text-white font-medium">Desgaste</td>
+                <td class="py-3 pr-4 text-slate-300">Pricing con depreciación incluida</td>
+                <td class="py-3 text-slate-400">Owner (configura limites)</td>
+              </tr>
+              <tr class="border-b border-slate-800">
+                <td class="py-3 pr-4 text-white font-medium">Impago</td>
+                <td class="py-3 pr-4 text-slate-300">Cobro anticipado 100%</td>
+                <td class="py-3 neon-cyan font-medium">AutoRentar</td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4 text-white font-medium">Fraude</td>
+                <td class="py-3 pr-4 text-slate-300">Anti-fraude IA (10 señales)</td>
+                <td class="py-3 neon-cyan font-medium">AutoRentar</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-8 text-center">
+          <p class="text-slate-400 mb-6">4 de 5 riesgos son gestionados 100% por AutoRentar. El owner solo decide cuándo alquilar.</p>
+          <a href="./tino-partnership-pitch.html" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-slate-900 font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
+            Volver a la Propuesta
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="py-8 px-6 border-t border-slate-800/50">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="text-slate-500 text-sm">
+        &copy; 2026 AutoRentar &middot; ECUCONDOR SAS &middot; Operaciones LATAM
+      </div>
+      <div class="text-slate-600 text-xs">
+        Documento confidencial. Distribucion limitada.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======== SCRIPTS ======== -->
+  <script>
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      observer.observe(el);
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
