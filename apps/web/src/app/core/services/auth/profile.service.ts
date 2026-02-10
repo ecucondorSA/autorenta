@@ -55,6 +55,9 @@ export class ProfileService {
   private readonly supabase = injectSupabase();
   private readonly authService = inject(AuthService);
 
+  /** In-flight deduplication: reuse the same promise if getCurrentProfile() is already running */
+  private currentProfileRequest: Promise<UserProfile | null> | null = null;
+
   /**
    * Get the authenticated user or throw a user-friendly error.
    * The error message intentionally avoids the 'no autenticado' pattern
@@ -70,6 +73,21 @@ export class ProfileService {
   }
 
   async getCurrentProfile(): Promise<UserProfile | null> {
+    // Deduplicate concurrent calls — return the same in-flight promise
+    if (this.currentProfileRequest) {
+      return this.currentProfileRequest;
+    }
+
+    this.currentProfileRequest = this.fetchCurrentProfile();
+
+    try {
+      return await this.currentProfileRequest;
+    } finally {
+      this.currentProfileRequest = null;
+    }
+  }
+
+  private async fetchCurrentProfile(): Promise<UserProfile | null> {
     const user = await this.authService.getCachedUser();
 
     if (!user) {

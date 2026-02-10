@@ -71,6 +71,9 @@ export class VerificationService implements OnDestroy {
   readonly loadingStatuses = signal(false);
   readonly loadingDocuments = signal(false);
 
+  /** In-flight deduplication for loadDocuments() */
+  private documentsRequest: Promise<UserDocument[]> | null = null;
+
   constructor() {
     // Auto-subscribe to realtime when user is authenticated
     effect(() => {
@@ -269,6 +272,21 @@ export class VerificationService implements OnDestroy {
    * Obtiene los documentos subidos por el usuario y los expone vía señal reactiva.
    */
   async loadDocuments(): Promise<UserDocument[]> {
+    // Deduplicate concurrent calls — return the same in-flight promise
+    if (this.documentsRequest) {
+      return this.documentsRequest;
+    }
+
+    this.documentsRequest = this.fetchDocuments();
+
+    try {
+      return await this.documentsRequest;
+    } finally {
+      this.documentsRequest = null;
+    }
+  }
+
+  private async fetchDocuments(): Promise<UserDocument[]> {
     const userId = await this.authService.getCachedUserId();
     if (!userId) {
       this.documents.set([]);
