@@ -106,7 +106,7 @@ jobs:
               'mp-capture-preauth',
 
               // === HIGH: User Flow Functions ===
-              'recognize-vehicle',
+              'ai-vision-service',
               'send-push-notification',
               'booking-notify-n8n',
               'send-otp-via-n8n',
