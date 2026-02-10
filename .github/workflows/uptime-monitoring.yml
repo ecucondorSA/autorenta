@@ -129,7 +129,6 @@ jobs:
               'dashboard-stats',
               'mercadopago-oauth-callback',
               'mercadopago-refresh-token',
-              'facebook-native-login',
               'upgrade-subscription-wallet',
 
               // === LOW: Supporting Functions ===
