@@ -40,6 +40,7 @@ jobs:
       - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HUSKY: '0'
         run: pnpm dlx semantic-release@latest
 
       - name: Trigger Android Build on Release
