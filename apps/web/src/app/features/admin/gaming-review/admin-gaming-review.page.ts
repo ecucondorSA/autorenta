@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RewardPoolService, type AdminReviewItem } from '@core/services/payments/reward-pool.service';
+import { RewardPoolService } from '@core/services/payments/reward-pool.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 @Component({
