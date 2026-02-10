@@ -1,3 +1,7 @@
+## <small>3.80.4 (2026-02-10)</small>
+
+* perf(auth): replace getUser() HTTP calls with cached session in 3 services ([4cac39e](https://github.com/ecucondorSA/autorenta/commit/4cac39e))
+
 ## <small>3.80.3 (2026-02-10)</small>
 
 * chore(ci): remove redundant test-email.yml workflow ([43703da](https://github.com/ecucondorSA/autorenta/commit/43703da))
