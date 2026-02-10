@@ -1,3 +1,7 @@
+## <small>3.78.2 (2026-02-10)</small>
+
+* fix: resolve MIME type errors, missing pricing table, and upload size limit ([8960e9b](https://github.com/ecucondorSA/autorenta/commit/8960e9b))
+
 ## <small>3.78.1 (2026-02-10)</small>
 
 * fix(ci): add RPC allowlist for known missing functions in contract check ([118448a](https://github.com/ecucondorSA/autorenta/commit/118448a))
