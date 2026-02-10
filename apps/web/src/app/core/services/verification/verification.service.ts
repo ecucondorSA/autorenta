@@ -93,31 +93,29 @@ export class VerificationService implements OnDestroy {
    * Setup realtime subscriptions for verification status and documents
    */
   private async setupRealtimeSubscriptions(): Promise<void> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-    if (!user) return;
+    const userId = await this.authService.getCachedUserId();
+    if (!userId) return;
 
     // Avoid duplicate subscriptions
-    if (this.currentUserId === user.id && this.verificationsChannel) {
+    if (this.currentUserId === userId && this.verificationsChannel) {
       return;
     }
 
     this.unsubscribeRealtime();
-    this.currentUserId = user.id;
+    this.currentUserId = userId;
 
-    this.logger.debug('[VerificationService] Setting up realtime subscriptions for user:', user.id);
+    this.logger.debug('[VerificationService] Setting up realtime subscriptions for user:', userId);
 
     // Subscribe to user_verifications changes
     this.verificationsChannel = this.supabase
-      .channel(`verifications:${user.id}`)
+      .channel(`verifications:${userId}`)
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'user_verifications',
-          filter: `user_id=eq.${user.id}`,
+          filter: `user_id=eq.${userId}`,
         },
         () => {
           this.logger.debug('[VerificationService] Verification status changed via realtime');
@@ -128,14 +126,14 @@ export class VerificationService implements OnDestroy {
 
     // Subscribe to user_documents changes
     this.documentsChannel = this.supabase
-      .channel(`documents:${user.id}`)
+      .channel(`documents:${userId}`)
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'user_documents',
-          filter: `user_id=eq.${user.id}`,
+          filter: `user_id=eq.${userId}`,
         },
         () => {
           this.logger.debug('[VerificationService] User documents changed via realtime');
@@ -185,13 +183,11 @@ export class VerificationService implements OnDestroy {
       throw new Error(validation.error || 'Archivo no válido');
     }
 
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-    if (!user) throw new Error('No autenticado');
+    const userId = await this.authService.getCachedUserId();
+    if (!userId) throw new Error('No autenticado');
 
     const fileExt = file.name.split('.').pop();
-    const filePath = `${user.id}/${docType}_${Date.now()}.${fileExt}`;
+    const filePath = `${userId}/${docType}_${Date.now()}.${fileExt}`;
 
     // Upload to identity bucket with fallback for legacy environments
     const { bucket } = await this.uploadToIdentityBucket(filePath, file);
@@ -199,7 +195,7 @@ export class VerificationService implements OnDestroy {
     // Create or update user_documents record using RPC
     // (workaround: PostgREST no expone la tabla directamente)
     const { error: upsertError } = await this.supabase.rpc('upsert_user_document', {
-      p_user_id: user.id,
+      p_user_id: userId,
       p_kind: docType,
       p_storage_path: filePath,
       p_status: 'pending',
@@ -230,10 +226,8 @@ export class VerificationService implements OnDestroy {
    * Carga el estado de verificación del usuario (driver/owner) y actualiza la señal reactiva.
    */
   async loadStatuses(): Promise<UserVerificationStatus[]> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-    if (!user) {
+    const userId = await this.authService.getCachedUserId();
+    if (!userId) {
       this.statuses.set([]);
       return [];
     }
@@ -244,7 +238,7 @@ export class VerificationService implements OnDestroy {
       const { data, error } = await this.supabase
         .from('user_verifications')
         .select('user_id, role, status, missing_docs, notes, metadata, created_at, updated_at')
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
@@ -275,10 +269,8 @@ export class VerificationService implements OnDestroy {
    * Obtiene los documentos subidos por el usuario y los expone vía señal reactiva.
    */
   async loadDocuments(): Promise<UserDocument[]> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-    if (!user) {
+    const userId = await this.authService.getCachedUserId();
+    if (!userId) {
       this.documents.set([]);
       return [];
     }
@@ -287,7 +279,7 @@ export class VerificationService implements OnDestroy {
 
     try {
       // Usar RPC ya que PostgREST no expone la tabla directamente
-      const { data, error } = await this.supabase.rpc('get_user_documents', { p_user_id: user.id });
+      const { data, error } = await this.supabase.rpc('get_user_documents', { p_user_id: userId });
 
       if (error) throw error;
 
@@ -519,10 +511,8 @@ export class VerificationService implements OnDestroy {
     errors: string[];
     warnings: string[];
   }> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-    if (!user) throw new Error('No autenticado');
+    const userId = await this.authService.getCachedUserId();
+    if (!userId) throw new Error('No autenticado');
 
     const result = await this.retryWithBackoff(
       async () => {
@@ -532,7 +522,7 @@ export class VerificationService implements OnDestroy {
             document_type: documentType,
             side,
             country,
-            user_id: user.id,
+            user_id: userId,
           },
         });
 
@@ -697,13 +687,11 @@ export class VerificationService implements OnDestroy {
    * Registra el intento de verificación en la tabla
    */
   async submitVerification(role: 'driver' | 'owner' = 'driver'): Promise<void> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-    if (!user) throw new Error('No autenticado');
+    const userId = await this.authService.getCachedUserId();
+    if (!userId) throw new Error('No autenticado');
 
     const { error } = await this.supabase.from('user_verifications').upsert({
-      user_id: user.id,
+      user_id: userId,
       role,
       status: 'PENDIENTE',
       updated_at: new Date().toISOString(),
@@ -716,15 +704,13 @@ export class VerificationService implements OnDestroy {
    * Obtiene el estado actual
    */
   async getStatus(role: 'driver' | 'owner' = 'driver'): Promise<DetailedVerificationStatus | null> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-    if (!user) return null;
+    const userId = await this.authService.getCachedUserId();
+    if (!userId) return null;
 
     const { data, error } = await this.supabase
       .from('user_verifications')
       .select('status, missing_docs, notes')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .eq('role', role)
       .single();
 
