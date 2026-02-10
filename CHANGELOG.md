@@ -1,3 +1,7 @@
+## <small>3.78.4 (2026-02-10)</small>
+
+* fix(security): enable RLS on critical tables and create payment_intents ([3f80110](https://github.com/ecucondorSA/autorenta/commit/3f80110))
+
 ## <small>3.78.3 (2026-02-10)</small>
 
 * fix(db): deploy 62 RPC stubs to production, clear allowlist ([773b741](https://github.com/ecucondorSA/autorenta/commit/773b741))
