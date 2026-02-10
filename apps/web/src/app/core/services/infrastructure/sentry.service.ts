@@ -207,9 +207,9 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
         levels: ['error', 'assert'],
       }),
 
-      // Track HTTP errors
+      // Track HTTP errors (only server errors; 4xx are often expected — auth, validation)
       Sentry.httpClientIntegration({
-        failedRequestStatusCodes: [[400, 599]],
+        failedRequestStatusCodes: [[500, 599]],
       }),
 
       // Replay sessions for debugging
@@ -219,9 +219,9 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
       }),
     ],
 
-    // Session Replay (sample rate)
-    replaysSessionSampleRate: environment.production ? 0.1 : 1.0,
-    replaysOnErrorSampleRate: 1.0, // Always capture on errors
+    // Session Replay (sample rate) — reduced to prevent Sentry 429 quota exhaustion
+    replaysSessionSampleRate: environment.production ? 0.02 : 1.0,
+    replaysOnErrorSampleRate: 0.5,
 
     // Release tracking
     release: `autorenta-web@${environment.production ? 'production' : 'development'}`,
@@ -236,6 +236,12 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
           exceptionMessage,
         )
       ) {
+        return null;
+      }
+
+      // Drop Sentry's own 429 errors to prevent feedback loop
+      const requestUrl = event.request?.url || '';
+      if (requestUrl.includes('sentry.io') || requestUrl.includes('ingest.us.sentry')) {
         return null;
       }
 

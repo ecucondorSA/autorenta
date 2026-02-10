@@ -574,10 +574,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           // Emit initial bounds
           this.emitBounds();
 
-          // Listen for move end to emit bounds
+          // Listen for move end to emit bounds (debounced to prevent rapid re-fetches)
           if (this.map) {
+            let boundsDebounceTimer: ReturnType<typeof setTimeout> | null = null;
             this.map.on('moveend', () => {
-              this.emitBounds();
+              if (boundsDebounceTimer) clearTimeout(boundsDebounceTimer);
+              boundsDebounceTimer = setTimeout(() => this.emitBounds(), 300);
             });
           }
 
