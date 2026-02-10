@@ -1,3 +1,7 @@
+## <small>3.80.1 (2026-02-10)</small>
+
+* fix(ci): add guardrails baseline and optimize RPC contract check ([d4eee52](https://github.com/ecucondorSA/autorenta/commit/d4eee52))
+
 ## 3.80.0 (2026-02-10)
 
 * feat(verification): smart retry with HTTP error classification + error UI ([7802b94](https://github.com/ecucondorSA/autorenta/commit/7802b94))
