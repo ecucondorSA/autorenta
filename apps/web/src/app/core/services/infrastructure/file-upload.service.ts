@@ -1,5 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import imageCompression from 'browser-image-compression';
 
 import { LoggerService } from './logger.service';
 import { SupabaseClientService } from './supabase-client.service';
@@ -335,6 +334,7 @@ export class FileUploadService {
     file: File,
     options: { maxSizeMB: number; maxWidthOrHeight: number },
   ): Promise<File> {
+    const { default: imageCompression } = await import('browser-image-compression');
     return imageCompression(file, {
       maxSizeMB: options.maxSizeMB,
       maxWidthOrHeight: options.maxWidthOrHeight,
