@@ -1,3 +1,7 @@
+## <small>3.80.2 (2026-02-10)</small>
+
+* fix(db): rename monitoring_alerts migration to resolve duplicate timestamp ([9533e89](https://github.com/ecucondorSA/autorenta/commit/9533e89))
+
 ## <small>3.80.1 (2026-02-10)</small>
 
 * fix(ci): add guardrails baseline and optimize RPC contract check ([d4eee52](https://github.com/ecucondorSA/autorenta/commit/d4eee52))
