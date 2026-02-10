@@ -1,3 +1,12 @@
+## 3.78.0 (2026-02-10)
+
+* chore: auth returnUrl, login ARIA attributes, footer branding fix ([1fb3221](https://github.com/ecucondorSA/autorenta/commit/1fb3221))
+* chore: CSP documentation and marketplace aria-labels ([33f0156](https://github.com/ecucondorSA/autorenta/commit/33f0156))
+* chore(seo): add route titles to all remaining routes ([0ea2840](https://github.com/ecucondorSA/autorenta/commit/0ea2840))
+* chore(seo): add route titles to remaining pages ([66786a8](https://github.com/ecucondorSA/autorenta/commit/66786a8))
+* chore(seo): add titles to auth routes (login, register, reset-password) ([57a483a](https://github.com/ecucondorSA/autorenta/commit/57a483a))
+* feat(seo): frontend runtime audit fixes - routes, titles, sitemap, structured data ([63aac78](https://github.com/ecucondorSA/autorenta/commit/63aac78))
+
 ## 3.77.0 (2026-02-10)
 
 * fix: add 404.html to kill Cloudflare SPA fallback + fix manifest icons ([f192208](https://github.com/ecucondorSA/autorenta/commit/f192208))
