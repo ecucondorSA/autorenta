@@ -1,3 +1,8 @@
+## <small>3.79.1 (2026-02-10)</small>
+
+* fix(edge-functions): create missing DB infrastructure and fix exchange rates ([7be1889](https://github.com/ecucondorSA/autorenta/commit/7be1889))
+* refactor(workflows): apply Regla #1 — workflows orchestrate, Edge Functions execute ([b5b552d](https://github.com/ecucondorSA/autorenta/commit/b5b552d)), closes [#1](https://github.com/ecucondorSA/autorenta/issues/1) [#6](https://github.com/ecucondorSA/autorenta/issues/6)
+
 ## 3.79.0 (2026-02-10)
 
 * fix(lint): remove unused imports in admin-gaming-review page ([276b6bf](https://github.com/ecucondorSA/autorenta/commit/276b6bf))
