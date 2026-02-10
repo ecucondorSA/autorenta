@@ -355,14 +355,14 @@
           <span class="text-xs font-medium text-text-primary text-center">Reservas</span>
         </a>
         <a
-          routerLink="/cars/my"
-          class="group flex flex-col items-center p-3 bg-surface-raised rounded-xl border border-border-default hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/5 transition-all"
+          routerLink="/profile/verification"
+          class="group flex flex-col items-center p-3 bg-surface-raised rounded-xl border border-border-default hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/5 transition-all"
         >
           <div
-            class="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform"
+            class="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform"
           >
             <svg
-              class="h-5 w-5 text-blue-600"
+              class="h-5 w-5 text-amber-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -371,11 +371,11 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
               />
             </svg>
           </div>
-          <span class="text-xs font-medium text-text-primary text-center">Mis Autos</span>
+          <span class="text-xs font-medium text-text-primary text-center">Verificación</span>
         </a>
       </div>
 
@@ -463,151 +463,19 @@
               />
             </svg>
           </a>
-          <a
-            routerLink="/bookings"
-            class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors"
-          >
-            <div class="h-10 w-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-              <svg
-                class="h-5 w-5 text-purple-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <div class="flex-1">
-              <span class="text-sm font-medium text-text-primary">Historial de Viajes</span>
-              <p class="text-xs text-text-secondary">Todas tus reservas</p>
-            </div>
-            <svg
-              class="h-5 w-5 text-text-muted"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </a>
         </div>
       </div>
 
       <!-- ═══════════════════════════════════════════════════════════
-           FINANZAS
+           MI CUENTA
            ═══════════════════════════════════════════════════════════ -->
       <div class="mb-4">
         <h2 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 px-1">
-          Finanzas
+          Mi Cuenta
         </h2>
         <div
           class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default"
         >
-          <a
-            routerLink="/finanzas"
-            class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors"
-          >
-            <div class="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-              <svg
-                class="h-5 w-5 text-emerald-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                />
-              </svg>
-            </div>
-            <div class="flex-1">
-              <span class="text-sm font-medium text-text-primary">Finanzas</span>
-              <p class="text-xs text-text-secondary">Wallet, retiros y ganancias</p>
-            </div>
-            <svg
-              class="h-5 w-5 text-text-muted"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- ═══════════════════════════════════════════════════════════
-           CUENTA
-           ═══════════════════════════════════════════════════════════ -->
-      <div class="mb-4">
-        <h2 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 px-1">
-          Cuenta
-        </h2>
-        <div
-          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default"
-        >
-          <a
-            routerLink="/profile/verification"
-            class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors"
-          >
-            <div class="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-              <svg
-                class="h-5 w-5 text-amber-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                />
-              </svg>
-            </div>
-            <div class="flex-1">
-              <span class="text-sm font-medium text-text-primary">Verificación</span>
-              <p class="text-xs text-text-secondary">Documentos e identidad</p>
-            </div>
-            @if (verificationProgressPercent() < 100) {
-              <span
-                class="text-xs font-medium text-amber-600 bg-amber-500/10 px-2 py-0.5 rounded-full"
-                >{{ verificationProgressPercent() }}%</span
-              >
-            } @else {
-              <span class="text-xs font-medium text-emerald-600">✓</span>
-            }
-            <svg
-              class="h-5 w-5 text-text-muted"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </a>
           <a
             routerLink="/profile/personal"
             class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors"
@@ -725,6 +593,19 @@
               />
             </svg>
           </a>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SEGURIDAD
+           ═══════════════════════════════════════════════════════════ -->
+      <div class="mb-4">
+        <h2 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 px-1">
+          Seguridad
+        </h2>
+        <div
+          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default"
+        >
           <a
             routerLink="/profile/security"
             class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors"
@@ -745,8 +626,8 @@
               </svg>
             </div>
             <div class="flex-1">
-              <span class="text-sm font-medium text-text-primary">Seguridad</span>
-              <p class="text-xs text-text-secondary">Contraseña y sesiones</p>
+              <span class="text-sm font-medium text-text-primary">Contraseña y Sesiones</span>
+              <p class="text-xs text-text-secondary">Cambiar contraseña, dispositivos activos</p>
             </div>
             <svg
               class="h-5 w-5 text-text-muted"
@@ -825,6 +706,19 @@
               </svg>
             </button>
           }
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           PREFERENCIAS
+           ═══════════════════════════════════════════════════════════ -->
+      <div class="mb-4">
+        <h2 class="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 px-1">
+          Preferencias
+        </h2>
+        <div
+          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default"
+        >
           <a
             routerLink="/profile/preferences"
             class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors"
@@ -851,8 +745,8 @@
               </svg>
             </div>
             <div class="flex-1">
-              <span class="text-sm font-medium text-text-primary">Preferencias</span>
-              <p class="text-xs text-text-secondary">Notificaciones y ajustes</p>
+              <span class="text-sm font-medium text-text-primary">Notificaciones y Ajustes</span>
+              <p class="text-xs text-text-secondary">Configurar alertas y preferencias</p>
             </div>
             <svg
               class="h-5 w-5 text-text-muted"
@@ -1003,7 +897,7 @@
             </svg>
           </a>
           <a
-            routerLink="/profile/contact"
+            routerLink="/support"
             class="flex items-center gap-3 p-4 hover:bg-surface-secondary/50 transition-colors"
           >
             <div class="h-10 w-10 rounded-xl bg-violet-500/10 flex items-center justify-center">

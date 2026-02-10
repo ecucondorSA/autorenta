@@ -29,11 +29,9 @@ export type SubscriptionRow = Database['public']['Tables']['subscriptions']['Row
 export type SubscriptionInsert = Database['public']['Tables']['subscriptions']['Insert'];
 export type SubscriptionUpdate = Database['public']['Tables']['subscriptions']['Update'];
 
-// Note: subscription_usage_logs may not exist in schema, use conditional type
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SubscriptionUsageLogRow = any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SubscriptionUsageLogInsert = any;
+// Note: subscription_usage_logs table may not exist in schema yet
+export type SubscriptionUsageLogRow = Record<string, unknown>;
+export type SubscriptionUsageLogInsert = Record<string, unknown>;
 
 // ============================================================================
 // Application Types

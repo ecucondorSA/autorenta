@@ -1,6 +1,7 @@
 import { ErrorHandler, Injectable } from '@angular/core';
 import { environment } from '@environment';
 import { isBrowser, runAfterHydration } from '@core/utils/platform.utils';
+import type { Breadcrumb, ErrorEvent, EventHint } from '@sentry/angular';
 
 /**
  * Sentry module type for lazy loading
@@ -226,10 +227,17 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
     release: `autorenta-web@${environment.production ? 'production' : 'development'}`,
 
     // Configure what data to send
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    beforeSend(event: any, _hint: any) {
-      // Production-only: Skip in development unless explicitly enabled
-      // (Sentry is already disabled in dev via environment check in initSentry)
+    beforeSend(event: ErrorEvent, _hint: EventHint) {
+      // Drop expected auth errors — these are normal when sessions expire
+      // and shouldn't consume Sentry quota (prevents 429 rate limiting)
+      const exceptionMessage = event.exception?.values?.[0]?.value || '';
+      if (
+        /no autenticado|sesión.*expir|sesion.*expir|not authenticated|session.*expired|auth.*error.*protected/i.test(
+          exceptionMessage,
+        )
+      ) {
+        return null;
+      }
 
       // Sanitize sensitive data
       if (event.request) {
@@ -278,13 +286,12 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
     },
 
     // Configure breadcrumbs
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    beforeBreadcrumb(breadcrumb: any): any | null {
+    beforeBreadcrumb(breadcrumb: Breadcrumb): Breadcrumb | null {
       // Don't log sensitive URLs in breadcrumbs
       if (breadcrumb.category === 'fetch' || breadcrumb.category === 'xhr') {
         const url = breadcrumb.data?.['url'];
         if (url && (url.includes('token') || url.includes('auth') || url.includes('key'))) {
-          breadcrumb.data['url'] = '[REDACTED]';
+          breadcrumb.data!['url'] = '[REDACTED]';
         }
       }
 
@@ -333,6 +340,12 @@ async function initializeSentry(Sentry: SentryModule): Promise<void> {
       'NotAllowedError',
       'The operation either timed out',
       'authenticator',
+
+      // Auth session errors (expected when session expires)
+      'Usuario no autenticado',
+      'no autenticado',
+      'sesión expirada',
+      'sesion expirada',
 
       // User-initiated actions
       'User cancelled',

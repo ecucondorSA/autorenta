@@ -1,45 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { isProtectedUrl } from '@core/config/protected-routes';
+import { AuthService } from '@core/services/auth/auth.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { PaymentBusinessError } from '@core/services/payments/mercadopago-payment.service';
 import { getErrorMessage } from '@core/utils/type-guards';
 import { environment } from '@environment';
-
-/**
- * ✅ FIX: Public routes where auth errors should be silently ignored
- * These pages don't require authentication to view, so we shouldn't
- * show "Tu sesión expiró" errors when browsing without login
- */
-/**
- * Route prefixes that require authentication.
- * Auth errors on these routes trigger redirect to login.
- * Source of truth: app.routes.ts — every route WITH canMatch: [AuthGuard]
- */
-const PROTECTED_ROUTE_PREFIXES = [
-  '/profile',
-  '/bookings',
-  '/reviews',
-  '/admin',
-  '/referrals',
-  '/protections',
-  '/verification',
-  '/contact-verification',
-  '/finanzas',
-  '/wallet',
-  '/dashboard',
-  '/scout',
-  '/calendar-demo',
-  '/payouts',
-  '/messages',
-  '/notifications',
-  '/cars/publish',
-  '/cars/my',
-  '/cars/bulk-blocking',
-];
-
-/** Dynamic protected route patterns (e.g. /cars/:id/availability) */
-const PROTECTED_ROUTE_PATTERNS = [/^\/cars\/[^/]+\/availability/, /^\/cars\/[^/]+\/documents/];
 
 /**
  * ErrorHandlerService: Centralized error handling
@@ -68,19 +35,17 @@ export class ErrorHandlerService {
   private readonly logger = inject(LoggerService);
   private readonly toast = inject(NotificationManagerService);
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   /** Timestamp of last auth redirect — prevents infinite redirect loops */
   private lastAuthRedirectMs = 0;
 
   /**
-   * ✅ FIX: Check if current route is protected (requires auth)
+   * Check if current route is protected (requires auth).
+   * Uses shared constants from @core/config/protected-routes.ts
    */
   private isProtectedRoute(): boolean {
-    const currentUrl = this.router.url || '/';
-    if (PROTECTED_ROUTE_PREFIXES.some((prefix) => currentUrl.startsWith(prefix))) {
-      return true;
-    }
-    return PROTECTED_ROUTE_PATTERNS.some((pattern) => pattern.test(currentUrl));
+    return isProtectedUrl(this.router.url);
   }
 
   /**
@@ -279,6 +244,9 @@ export class ErrorHandlerService {
               route: this.router.url,
             },
           );
+          // Clear stale session cache before redirecting to prevent GuestGuard
+          // from seeing a cached expired session and bouncing to /cars/list
+          void this.authService.clearStaleSession();
           void this.router.navigate(['/auth/login'], {
             queryParams: { returnUrl: this.router.url },
           });

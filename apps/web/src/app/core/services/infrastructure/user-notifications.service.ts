@@ -178,7 +178,7 @@ export class NotificationsService implements OnDestroy {
       this.notifications.set(notifications);
       this.updateUnreadCount();
     } catch (_error) {
-      console.error('Error loading notifications:', _error);
+      this.logger.error('Error loading notifications', 'NotificationsService', _error);
     }
   }
 
@@ -193,7 +193,7 @@ export class NotificationsService implements OnDestroy {
       } = await this.supabase.auth.getUser();
 
       if (!user) {
-        console.warn('[NotificationsService] No user found, skipping Realtime subscription');
+        this.logger.warn('[NotificationsService] No user found, skipping Realtime subscription');
         this.connectionStatus.set('disconnected');
         return;
       }
@@ -269,7 +269,7 @@ export class NotificationsService implements OnDestroy {
           } else if (status === 'CHANNEL_ERROR') {
             this.connectionStatus.set('error');
             this.isSubscribed = false;
-            console.error('[NotificationsService] ❌ Realtime channel error');
+            this.logger.error('[NotificationsService] Realtime channel error', 'NotificationsService');
 
             // Intentar reconectar después de 5 segundos
             if (this.reconnectTimeoutId !== null) {
@@ -282,7 +282,7 @@ export class NotificationsService implements OnDestroy {
           } else if (status === 'TIMED_OUT') {
             this.connectionStatus.set('error');
             this.isSubscribed = false;
-            console.warn('[NotificationsService] ⚠️ Realtime subscription timed out');
+            this.logger.warn('[NotificationsService] Realtime subscription timed out');
 
             // Intentar reconectar después de 5 segundos
             if (this.reconnectTimeoutId !== null) {
@@ -299,7 +299,7 @@ export class NotificationsService implements OnDestroy {
           }
         });
     } catch (error) {
-      console.error('[NotificationsService] Error subscribing to Realtime:', error);
+      this.logger.error('[NotificationsService] Error subscribing to Realtime', 'NotificationsService', error);
       this.connectionStatus.set('error');
       this.isSubscribed = false;
 
@@ -480,7 +480,7 @@ export class NotificationsService implements OnDestroy {
       this.notifications.set(updated);
       this.updateUnreadCount();
     } catch (_error) {
-      console.error('Error marking notification as read:', _error);
+      this.logger.error('Error marking notification as read', 'NotificationsService', _error);
     }
   }
 
@@ -505,7 +505,7 @@ export class NotificationsService implements OnDestroy {
       this.notifications.set(updated);
       this.unreadCount.set(0);
     } catch (_error) {
-      console.error('Error marking all notifications as read:', _error);
+      this.logger.error('Error marking all notifications as read', 'NotificationsService', _error);
     }
   }
 
@@ -575,7 +575,7 @@ export class NotificationsService implements OnDestroy {
       }
       return data as NotificationRow;
     } catch (_error) {
-      console.error('Error creating notification:', _error);
+      this.logger.error('Error creating notification', 'NotificationsService', _error);
       throw _error as Error;
     }
   }
@@ -765,7 +765,7 @@ export class NotificationsService implements OnDestroy {
 
       return (data || []).map((notification) => this.mapNotificationWithDbType(notification));
     } catch (_error) {
-      console.error('Error loading all notifications:', _error);
+      this.logger.error('Error loading all notifications', 'NotificationsService', _error);
       return [];
     }
   }
@@ -793,7 +793,7 @@ export class NotificationsService implements OnDestroy {
 
       return (data || []).map((notification) => this.mapNotificationWithDbType(notification));
     } catch (_error) {
-      console.error('Error filtering notifications:', _error);
+      this.logger.error('Error filtering notifications', 'NotificationsService', _error);
       return [];
     }
   }
@@ -810,7 +810,7 @@ export class NotificationsService implements OnDestroy {
       this.notifications.set(updated);
       this.updateUnreadCount();
     } catch (_error) {
-      console.error('Error deleting notification:', _error);
+      this.logger.error('Error deleting notification', 'NotificationsService', _error);
       throw _error as Error;
     }
   }
@@ -835,7 +835,7 @@ export class NotificationsService implements OnDestroy {
       const updated = current.filter((n) => !n.read);
       this.notifications.set(updated);
     } catch (_error) {
-      console.error('Error deleting read notifications:', _error);
+      this.logger.error('Error deleting read notifications', 'NotificationsService', _error);
       throw _error as Error;
     }
   }

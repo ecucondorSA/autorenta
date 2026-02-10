@@ -7,6 +7,7 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingInitiationService } from '@core/services/bookings/booking-initiation.service';
 import { CarsService } from '@core/services/cars/cars.service';
+import type { Car } from '@core/models';
 import { DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import {
   PaymentMethodButtonsComponent,
@@ -39,8 +40,7 @@ export class QuickBookPage {
   private analytics = inject(AnalyticsService);
 
   readonly carId = computed(() => this.route.snapshot.paramMap.get('id'));
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly car = signal<any | null>(null);
+  readonly car = signal<Car | null>(null);
 
   readonly dateRange = signal<{ from: string | null; to: string | null }>({ from: null, to: null });
   readonly selectedPaymentMethod = signal<PaymentMethod>('credit_card');

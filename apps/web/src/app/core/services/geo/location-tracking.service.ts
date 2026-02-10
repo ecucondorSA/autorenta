@@ -83,7 +83,7 @@ export class LocationTrackingService {
       this.logger.debug('[LocationTracking] Started tracking session:', trackingId);
       return trackingId;
     } catch (error) {
-      console.error('[LocationTracking] Error starting tracking:', error);
+      this.logger.error('[LocationTracking] Error starting tracking', 'LocationTrackingService', error);
       throw error;
     }
   }
@@ -111,7 +111,7 @@ export class LocationTrackingService {
 
       this.logger.debug('[LocationTracking] Stopped tracking session');
     } catch (error) {
-      console.error('[LocationTracking] Error stopping tracking:', error);
+      this.logger.error('[LocationTracking] Error stopping tracking', 'LocationTrackingService', error);
     }
   }
 
@@ -167,7 +167,7 @@ export class LocationTrackingService {
       )
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
-          console.debug(`[LocationTracking] Subscribed to tracking for booking ${bookingId}`);
+          this.logger.debug(`[LocationTracking] Subscribed to tracking for booking ${bookingId}`);
         }
       });
 
@@ -227,7 +227,7 @@ export class LocationTrackingService {
    */
   async checkLocationPermission(): Promise<boolean> {
     if (!this.isBrowser || !navigator.geolocation) {
-      console.warn('[LocationTracking] Geolocation not supported');
+      this.logger.warn('[LocationTracking] Geolocation not supported');
       return false;
     }
 
@@ -256,7 +256,7 @@ export class LocationTrackingService {
       navigator.geolocation.getCurrentPosition(
         () => resolve(true),
         (error) => {
-          console.error('[LocationTracking] Permission denied:', error);
+          this.logger.error('[LocationTracking] Permission denied', 'LocationTrackingService', error);
           resolve(false);
         },
         {
@@ -276,7 +276,7 @@ export class LocationTrackingService {
    */
   private startWatchingLocation(trackingId: string): void {
     if (!this.isBrowser || !navigator.geolocation) {
-      console.error('[LocationTracking] Geolocation not supported');
+      this.logger.error('[LocationTracking] Geolocation not supported', 'LocationTrackingService');
       return;
     }
 
@@ -301,7 +301,7 @@ export class LocationTrackingService {
         this.updateLocation(trackingId, location);
       },
       (error) => {
-        console.error('[LocationTracking] Geolocation error:', error);
+        this.logger.error('[LocationTracking] Geolocation error', 'LocationTrackingService', error);
       },
       {
         enableHighAccuracy: true,
@@ -352,7 +352,7 @@ export class LocationTrackingService {
         accuracy: location.accuracy?.toFixed(1),
       });
     } catch (error) {
-      console.error('[LocationTracking] Error updating location:', error);
+      this.logger.error('[LocationTracking] Error updating location', 'LocationTrackingService', error);
     }
   }
 

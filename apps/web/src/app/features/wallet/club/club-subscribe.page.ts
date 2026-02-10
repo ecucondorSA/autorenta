@@ -20,10 +20,13 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
 import { IonicModule } from '@ionic/angular';
 import { environment } from '../../../../environments/environment';
 
+interface MercadoPagoInstance {
+  bricks(): { create(type: string, containerId: string, config: Record<string, unknown>): Promise<unknown> };
+}
+
 declare global {
   interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    MercadoPago: new (key: string, options: { locale: string }) => any;
+    MercadoPago: new (key: string, options: { locale: string }) => MercadoPagoInstance;
   }
 }
 
@@ -240,8 +243,7 @@ export class ClubSubscribePage implements OnInit {
     return this.walletAvailableCents() >= tier.price_cents;
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private mp: any = null;
+  private mp: MercadoPagoInstance | null = null;
 
   ngOnInit(): void {
     const tierParam = this.route.snapshot.queryParamMap.get('tier') as SubscriptionTier | null;

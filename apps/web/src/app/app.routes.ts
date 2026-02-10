@@ -400,7 +400,7 @@ export const routes: Routes = [
   {
     path: 'profile',
     canMatch: [AuthGuard],
-    data: { layout: 'full-bleed', hideHeader: true },
+    data: { layout: 'full-bleed', hideHeader: true, hideFooter: true },
     children: [
       {
         path: '',

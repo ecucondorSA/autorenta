@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BookingInspection } from '@core/models/fgo-v1-1.model';
+import { BookingInspection, InspectionPhoto } from '@core/models/fgo-v1-1.model';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
 import { BookingDisputeService } from '@core/services/bookings/booking-dispute.service';
@@ -81,8 +81,11 @@ export class OwnerCheckOutPage implements OnInit {
 
   readonly booking = signal<Booking | null>(null);
   readonly currentUserId = signal<string | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly checkInData = signal<any>(null);
+  readonly checkInData = signal<{
+    odometer_reading: number;
+    fuel_level: number;
+    photos: InspectionPhoto[];
+  } | null>(null);
   readonly submitting = signal(false);
 
   formatBookingDate(date?: string | Date | null): string {

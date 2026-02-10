@@ -433,7 +433,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
         // No need for canvas filters with Standard style - it handles theming natively
       } catch (error) {
-        console.warn('[CarsMap] Could not update theme, falling back to canvas filter', error);
+        this.logger.warn('[CarsMap] Could not update theme, falling back to canvas filter', error);
         // Fallback for older Mapbox versions or non-Standard styles
         const canvas = this.map.getCanvas();
         if (canvas) {
@@ -584,7 +584,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           // Pre-warm component pool during idle time for better performance
           this.preWarmComponentPoolDuringIdle();
         } catch (err) {
-          console.error('[CarsMap] Error during post-load setup:', err);
+          this.logger.error('[CarsMap] Error during post-load setup:', err);
           const message = err instanceof Error ? err['message'] : String(err);
           this['error'].set(message || 'Error al inicializar el mapa');
           this.markMapLoaded();
@@ -593,7 +593,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
       // Handle map errors
       this.map.on('error', (event: MapboxErrorDetails) => {
-        console.error('[CarsMap] Map error:', event);
+        this.logger.error('[CarsMap] Map error:', event);
 
         const errorStatus =
           (event['error'] && 'status' in event['error'] ? event['error']['status'] : undefined) ??
@@ -620,7 +620,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         this.markMapLoaded();
       });
     } catch (err) {
-      console.error('[CarsMap] Initialization error:', err);
+      this.logger.error('[CarsMap] Initialization error:', err);
       const errorMessage = err instanceof Error ? err['message'] : String(err);
 
       if (errorMessage.includes('WebGL')) {
@@ -2631,7 +2631,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
       const response = await fetch(url);
       if (!response.ok) {
-        console.warn('[CarsMap] Failed to fetch isochrone:', response.statusText);
+        this.logger.warn('[CarsMap] Failed to fetch isochrone:', response.statusText);
         return;
       }
 
@@ -2687,7 +2687,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         `[CarsMap] Added delivery isochrone: ${minutes} min driving radius from car location`,
       );
     } catch (error) {
-      console.error('[CarsMap] Error adding delivery isochrone:', error);
+      this.logger.error('[CarsMap] Error adding delivery isochrone:', error);
     }
   }
 
@@ -2718,13 +2718,13 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    */
   private async addDirectionsRoute(): Promise<void> {
     if (!this.map || !this.mapboxgl || !this.userLocation) {
-      console.warn('[CarsMap] Cannot show directions: missing map or user location');
+      this.logger.warn('[CarsMap] Cannot show directions: missing map or user location');
       return;
     }
 
     const selectedCar = this.selectedCar();
     if (!selectedCar) {
-      console.warn('[CarsMap] Cannot show directions: no selected car');
+      this.logger.warn('[CarsMap] Cannot show directions: no selected car');
       return;
     }
 
@@ -2744,7 +2744,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       const directions = await this.directionsService.getDirections(origin, destination, 'driving');
 
       if (!directions || !directions.routes || directions.routes.length === 0) {
-        console.warn('[CarsMap] No route found');
+        this.logger.warn('[CarsMap] No route found');
         return;
       }
 
@@ -2832,7 +2832,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         distance: this.directionsService.formatDistance(route.distance),
       });
     } catch (error) {
-      console.error('[CarsMap] Error adding directions route:', error);
+      this.logger.error('[CarsMap] Error adding directions route:', error);
     }
   }
 
@@ -3115,7 +3115,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    */
   onLayerToggle(event: { layerId: string; visible: boolean } | null | undefined): void {
     if (!event || typeof event.layerId !== 'string') {
-      console.warn('[CarsMap] Invalid layer toggle event:', event);
+      this.logger.warn('[CarsMap] Invalid layer toggle event:', event);
       return;
     }
     switch (event.layerId) {

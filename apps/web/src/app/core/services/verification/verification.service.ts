@@ -248,8 +248,7 @@ export class VerificationService implements OnDestroy {
 
       if (error) throw error;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const normalized: UserVerificationStatus[] = (data ?? []).map((row: any) => ({
+      const normalized: UserVerificationStatus[] = (data ?? []).map((row) => ({
         user_id: row.user_id as string,
         role: (row.role ?? 'driver') as VerificationRole,
         status: (row.status ?? 'PENDIENTE') as UserVerificationStatus['status'],

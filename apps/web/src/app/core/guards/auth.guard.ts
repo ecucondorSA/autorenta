@@ -9,7 +9,7 @@ export const AuthGuard: CanMatchFn = async (route: Route) => {
   const logger = inject(LoggerService);
 
   // Wait for session to be loaded and get the actual session object
-  const session = await auth.ensureSession();
+  let session = await auth.ensureSession();
 
   const routePath = route.path || '';
   logger.debug(
@@ -17,19 +17,24 @@ export const AuthGuard: CanMatchFn = async (route: Route) => {
     'AuthGuard',
   );
 
-  // Check the session directly instead of relying on the computed signal
-  // This avoids potential race conditions with signal updates
+  // If no session, attempt a silent token refresh before giving up.
+  // ensureSession() only reads from localStorage (getSession()) which doesn't
+  // validate or refresh expired tokens. The refresh token may still be valid.
   if (!session || !session['user']) {
-    logger.debug('No session/user found. Redirecting to /auth/login', 'AuthGuard');
-    // Redirect to login
+    logger.debug('No session from cache, attempting silent refresh...', 'AuthGuard');
+    session = await auth.refreshSession();
+  }
+
+  if (!session || !session['user']) {
+    logger.debug('No session after refresh. Redirecting to /auth/login', 'AuthGuard');
+    // refreshSession() already calls clearStaleSession() on failure (auth.service.ts:305),
+    // so session is guaranteed clean at this point. No need to clear again.
     return router.createUrlTree(['/auth/login']);
   }
 
-  // P0-XXX: Verificación diferida
   // AuthGuard solo valida sesión activa.
   // La verificación de identidad (email, docs, etc.) se maneja con VerificationGuard
   // que se aplica solo a rutas críticas (booking/payment).
-  // Esto permite que usuarios exploren el marketplace sin verificación completa.
 
   return true;
 };

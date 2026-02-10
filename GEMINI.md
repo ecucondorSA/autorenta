@@ -19,7 +19,19 @@
 - **CI/CD:** Web deploy funcionando. Android requiere verificación de `cordova.variables.gradle`.
 - **MercadoPago:** Integración P2P operativa pero requiere supervisión en selección de destinatarios.
 - **Design:** EVITAR Wizards paso a paso y Modales intrusivos. Preferir navegación fluida y Bottom Sheets.
+- **Unit Tests:** deben pasar en CI (`pnpm test:unit:ci`). Si tocás lógica core, correr `pnpm test:unit` local.
+- **Supabase:** Proyecto activo `aceacpaockyxgogxsfyc`. Proyecto anterior `pisqjmoklivzpwufhscx` deprecado por quota exceeded.
 - **Autos (2026-02-08):** `pending` depende SOLO de verificación nivel 2 (`profiles.id_verified`). Marketplace muestra `active` + `pending`. La DB bloquea `active` sin `id_verified` (trigger). UI: `pending` visible con overlay gris y no reservable/no clickeable.
+
+### Modelo de Negocio: Comodato 15-70-15
+Distribución de pagos de reservas:
+- **15%** → Plataforma (Platform Fee)
+- **70%** → Reward Pool (distribución mensual a owners)
+- **15%** → FGO (Fondo de Garantía de Owners)
+
+Configuración en:
+- `apps/web/src/app/core/config/constants.ts`
+- `remote_config` table (keys: `PLATFORM_FEE_RATE`, `REWARD_POOL_RATE`, `FGO_CONTRIBUTION_RATE`)
 
 ---
 
@@ -76,10 +88,16 @@
 | **Hardcoded strings** | Usar constantes o i18n. |
 | **Términos técnicos en UI** | No mostrar "FIPE", "Binance", "API", "RPC", etc. Usar lenguaje amigable: "valor de mercado", "precio sugerido". |
 | **Supabase directo en UI** | Prohibido llamar `supabase.*` o importar `injectSupabase()` desde `features/` o `shared/`. Usar services/facades para evitar drift UI vs DB y endurecer reglas/test. |
+| **`.toPromise()` en RxJS** | Deprecated en RxJS 7+. Usar `firstValueFrom()` de 'rxjs'. |
 
 ---
 
 ## 5. Supabase Guidelines
+
+### Proyecto Activo
+- **Project ID:** `aceacpaockyxgogxsfyc`
+- **URL:** `https://aceacpaockyxgogxsfyc.supabase.co`
+- **Proyecto anterior (DEPRECADO):** `pisqjmoklivzpwufhscx` - No usar, quota exceeded.
 
 ### Acceso DB (CLI - Producción)
 - El host directo (`db.<project_ref>.supabase.co`) puede dar timeout por IPv6. Preferir el pooler para `psql`.
@@ -256,12 +274,28 @@ try {
 |---------|-------------|
 | `pnpm dev` | Servidor de desarrollo |
 | `pnpm dev:fast` | Dev sin sourcemaps (máquinas lentas) |
+| `pnpm build:web` | Compilar solo la app web |
 | `pnpm lint` | Ejecutar ESLint |
 | `pnpm lint --fix` | Auto-fix linting |
 | `pnpm test:unit` | Tests unitarios (Vitest) |
 | `pnpm test:e2e` | Tests E2E |
 | `supabase db diff -f <name>` | Generar migración desde cambios |
 | `supabase gen types typescript` | Regenerar tipos de DB |
+
+### CUIDADO: Comandos de Build en Monorepo
+
+Este proyecto es un **monorepo con pnpm workspaces**. Usar el comando incorrecto puede colapsar la memoria del sistema.
+
+| Comando | Procesos | Memoria | Cuándo usar |
+|---------|----------|---------|-------------|
+| `pnpm build:web` | ~5 | ~2 GB | Siempre para compilar frontend |
+| `pnpm build` | ~17 | ~12 GB | Solo CI/CD o cuando necesites TODO |
+
+**Si el sistema se congela:**
+```bash
+pkill -f "ng build"
+pkill -f "pnpm.*build"
+```
 
 ---
 
@@ -431,6 +465,21 @@ supabase/functions/mercadopago-create-preference/index.ts
 supabase/functions/mercadopago-create-booking-preference/index.ts
 supabase/functions/mercadopago-process-booking-payment/index.ts
 supabase/functions/process-payment-queue/index.ts
+```
+
+### Mobile CI/CD Workflow (v1 - 2026-01-30)
+Critical release pipeline with fragile keystore and track configurations.
+
+```
+.github/workflows/build-android.yml
+```
+
+### FIPE Search & Pricing Core (v2 - 2026-01-28)
+Complex logic for Brazil vehicle pricing and model matching. Recently debugged and stable.
+
+```
+apps/web/src/app/shared/components/inputs/fipe-autocomplete/**
+apps/web/src/app/core/services/pricing.service.ts
 ```
 
 **Rules for frozen code:**
@@ -884,10 +933,38 @@ if (environment.features.enableP2P) {
 4. **Tipos:** Regenerar tipos de TypeScript si el esquema cambia.
 
 ### Despliegue (Deploy)
-1. **Pre-Check:** Ejecutar `pnpm lint` localmente.
-2. **Push:** Commit y Push a `main`.
-3. **CI Monitor:** Verificar GitHub Actions. Si falla, corregir inmediatamente (prioridad máxima).
-4. **Verification:** Smoke test en producción.
+
+**ORDEN OBLIGATORIO DE DEPLOY:**
+
+```
+1. DATABASE (Migraciones SQL)
+   ↓
+2. EDGE FUNCTIONS (Supabase Functions)
+   ↓
+3. BUILD (Frontend Angular)
+```
+
+**Razón:** El frontend puede depender de nuevas tablas/funciones. Si se hace build primero, habrá errores 404/406 hasta que el backend esté listo.
+
+#### Paso 1: Base de Datos
+```bash
+supabase db push
+```
+
+#### Paso 2: Edge Functions
+```bash
+supabase functions deploy
+```
+
+#### Paso 3: Build Frontend
+```bash
+pnpm lint && pnpm build:web
+git add . && git commit -m "feat: descripción" && git push
+```
+
+#### Paso 4: Verificación
+1. **CI Monitor:** Verificar GitHub Actions. Si falla, corregir inmediatamente.
+2. **Smoke Test:** Probar flujos críticos en producción.
 
 ---
 

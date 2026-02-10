@@ -364,7 +364,23 @@ From `.cursorrules` and `.github/copilot-instructions.md`:
 
 ---
 
-## 16. Senior Prompt Template (Hardening + Two Planes)
+## 16. Advanced Hardening Rules
+
+For detailed hardening protocols (enum sync, schema verification, migration idempotency, Edge Function auth patterns, RLS audit scripts, typed status updates, pre-deploy verification), see **`AGENTS-2.md`** in the project root.
+
+Key topics in AGENTS-2.md:
+- Enum Sync Protocol (DB ↔ TypeScript)
+- Schema Verification before coding
+- Migration Idempotency Standards
+- Edge Function Auth-First Pattern (2-client pattern)
+- RLS Coverage Requirements & Audit Script
+- Typed Status Updates (state machine enforcement)
+- Pre-Deploy Verification Protocol
+- Automated Quality Gates for CI
+
+---
+
+## 17. Senior Prompt Template (Hardening + Two Planes)
 
 ```text
 Context: AutoRenta. I need you to debug/implement [FEATURE/BUG] with production-grade hardening.

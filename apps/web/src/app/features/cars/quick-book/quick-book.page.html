@@ -62,7 +62,7 @@
             <app-car-chat
               [carId]="car.id"
               [recipientId]="car.owner_id"
-              [recipientName]="car.owner?.full_name"
+              [recipientName]="car.owner?.full_name ?? 'Anfitrión'"
             ></app-car-chat>
           </div>
         </aside>

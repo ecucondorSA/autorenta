@@ -502,10 +502,10 @@ export class PublishCarV2Page implements OnInit {
         this.logger.debug('[PublishCarV2] ✅ Category name updated:', categoryName);
         this.selectedCategoryName.set(categoryName);
       } else {
-        console.warn('[PublishCarV2] ⚠️ Category not found for ID:', categoryId);
+        this.logger.warn('[PublishCarV2] ⚠️ Category not found for ID:', categoryId);
       }
     } catch (error) {
-      console.error('[PublishCarV2] ❌ Error updating category name:', error);
+      this.logger.error('[PublishCarV2] ❌ Error updating category name:', error);
     }
   }
 
@@ -519,7 +519,7 @@ export class PublishCarV2Page implements OnInit {
       if (error) throw error;
       this.pricingOverrides.set((data as { day: string; price_per_day: number }[]) || []);
     } catch (err) {
-      console.warn('pricing-overrides-load', err);
+      this.logger.warn('[PublishCarV2] pricing-overrides-load', err);
     }
   }
 
@@ -579,7 +579,7 @@ export class PublishCarV2Page implements OnInit {
       this.fipeBrands.set(formattedBrands);
       this.logger.debug('[PublishCarV2] Formatted brands:', formattedBrands.slice(0, 5));
     } catch (error) {
-      console.error('[PublishCarV2] Error loading FIPE brands:', error);
+      this.logger.error('[PublishCarV2] Error loading FIPE brands:', error);
       this.fipeBrands.set([]);
     } finally {
       this.isLoadingFIPEBrands.set(false);
@@ -623,7 +623,7 @@ export class PublishCarV2Page implements OnInit {
 
         this.fipeModels.set(formattedModels);
       } catch (error) {
-        console.error('[PublishCarV2] Error loading FIPE models:', error);
+        this.logger.error('[PublishCarV2] Error loading FIPE models:', error);
         this.fipeModels.set([]);
       } finally {
         this.isLoadingFIPEModels.set(false);
@@ -762,7 +762,7 @@ export class PublishCarV2Page implements OnInit {
         const errorCode = result?.errorCode || 'UNKNOWN';
         const suggestions = result?.suggestions || [];
 
-        console.warn('[PublishCarV2] FIPE lookup failed:', {
+        this.logger.warn('[PublishCarV2] FIPE lookup failed:', {
           errorMsg,
           errorCode,
           suggestions,
@@ -779,7 +779,7 @@ export class PublishCarV2Page implements OnInit {
         this.logger.debug('[PublishCarV2] ⚠️ FIPE failed but manual input allowed');
       }
     } catch (err) {
-      console.error('[PublishCarV2] Error fetching FIPE value:', err);
+      this.logger.error('[PublishCarV2] Error fetching FIPE value:', err);
       this.isFetchingFIPEValue.set(false);
       this.fipeError.set('Error al consultar el valor. Intentá nuevamente en unos momentos.');
       this.fipeErrorCode.set('NETWORK_ERROR');
@@ -833,7 +833,7 @@ export class PublishCarV2Page implements OnInit {
 
     // Validate inputs
     if (!valueUsd || valueUsd <= 0) {
-      console.warn('[PublishCarV2] Invalid value_usd for categorization:', valueUsd);
+      this.logger.warn('[PublishCarV2] Invalid value_usd for categorization:', valueUsd);
       return;
     }
 
@@ -868,14 +868,14 @@ export class PublishCarV2Page implements OnInit {
             this.publishForm.valid,
           );
         } else {
-          console.error('[PublishCarV2] ❌ category_id control not found in form!');
+          this.logger.error('[PublishCarV2] ❌ category_id control not found in form!');
         }
         // Update name immediately
         this.selectedCategoryName.set(estimate.category_name || '');
         return;
       }
     } catch (error) {
-      console.warn('[PublishCarV2] Could not get category from pricing_models:', error);
+      this.logger.warn('[PublishCarV2] Could not get category from pricing_models:', error);
     }
 
     // Method 2: Classify by value USD (fallback)
@@ -884,11 +884,11 @@ export class PublishCarV2Page implements OnInit {
     try {
       categories = await this.pricingService.getVehicleCategories();
       if (!categories || categories.length === 0) {
-        console.warn('[PublishCarV2] No categories available for auto-classification');
+        this.logger.warn('[PublishCarV2] No categories available for auto-classification');
         return;
       }
     } catch (error) {
-      console.error('[PublishCarV2] Error loading categories:', error);
+      this.logger.error('[PublishCarV2] Error loading categories:', error);
       return;
     }
 
@@ -935,7 +935,7 @@ export class PublishCarV2Page implements OnInit {
           this.publishForm.valid,
         );
       } else {
-        console.error('[PublishCarV2] ❌ category_id control not found in form!');
+        this.logger.error('[PublishCarV2] ❌ category_id control not found in form!');
       }
       // Update name immediately
       this.selectedCategoryName.set(categoryName);
@@ -973,7 +973,7 @@ export class PublishCarV2Page implements OnInit {
 
     // Need vehicle value and category
     if (!valueUsd) {
-      console.warn('[PublishCarV2] No value_usd, cannot calculate price');
+      this.logger.warn('[PublishCarV2] No value_usd, cannot calculate price');
       this.suggestedPrice.set(0);
       return;
     }
@@ -1014,7 +1014,7 @@ export class PublishCarV2Page implements OnInit {
         }
       }
     } catch (error) {
-      console.error('[PublishCarV2] Error calculating suggested rate:', error);
+      this.logger.error('[PublishCarV2] Error calculating suggested rate:', error);
       this.suggestedPrice.set(0);
     } finally {
       this.isCalculatingSuggestedPrice.set(false);
@@ -1515,12 +1515,7 @@ export class PublishCarV2Page implements OnInit {
   }
 
   private handleSubmissionError(error: unknown): void {
-    console.error('❌ Failed to publish car:', error);
-
-    // Log detailed error information
-    if (error instanceof Error) {
-      console.error('Error message:', error['message']);
-    }
+    this.logger.error('[PublishCarV2] Failed to publish car', 'PublishCarV2', error);
 
     // Show user-friendly error message
     let errorTitle = 'Error al guardar';

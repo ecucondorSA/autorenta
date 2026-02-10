@@ -154,8 +154,8 @@ export class ProfileExpandedPage implements OnInit {
   constructor() {
     // Set page metadata
     this.metaService.updateMeta({
-      title: 'Mi Perfil - AutoRenta',
-      description: 'Gestiona tu perfil, configuración y preferencias en AutoRenta',
+      title: 'Mi Perfil - AutoRentar',
+      description: 'Gestiona tu perfil, configuración y preferencias en AutoRentar',
     });
 
     // Load profile data

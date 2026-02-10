@@ -1,5 +1,5 @@
 import { Signal, signal } from '@angular/core';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, Subject } from 'rxjs';
 
 /**
  * P1-026 FIX: Search Debounce Utility
@@ -57,7 +57,6 @@ export function createDebouncedSearch(debounceMs = 300): DebouncedSearch {
  *   .subscribe(query => this.performSearch(query));
  * ```
  */
-export function debounceSearch(ms = 300) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (source: any) => source.pipe(debounceTime(ms), distinctUntilChanged());
+export function debounceSearch<T>(ms = 300) {
+  return (source: Observable<T>) => source.pipe(debounceTime(ms), distinctUntilChanged());
 }

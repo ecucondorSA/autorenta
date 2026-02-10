@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { RateLimiterService } from '@core/services/infrastructure/rate-limiter.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { isProtectedUrl } from '@core/config/protected-routes';
 import { getErrorMessage } from '@core/utils/type-guards';
 import { environment } from '@environment';
 import { Capacitor } from '@capacitor/core';
@@ -281,11 +282,16 @@ export class AuthService implements OnDestroy {
   }
 
   /**
-   * ✅ FIX: Clear stale session from localStorage
+   * Clear stale session from localStorage and reset cached state.
    * Called when session is invalid/expired to prevent auth errors on public pages
+   * and to avoid GuestGuard seeing a cached expired session.
    */
-  private async clearStaleSession(): Promise<void> {
+  async clearStaleSession(): Promise<void> {
     this.logger.debug('clearStaleSession: clearing invalid session', 'AuthService');
+    // Reset cache flags so ensureSession() won't return stale data
+    this.sessionResolved = false;
+    this.sessionResolvedAt = 0;
+    this.restoreSessionPromise = null;
     try {
       // Sign out locally without making API call (session is already invalid)
       await this.supabase.auth.signOut({ scope: 'local' });
@@ -321,49 +327,11 @@ export class AuthService implements OnDestroy {
   }
 
   /**
-   * Route prefixes that require authentication.
-   * If session expires on any of these, redirect to login.
-   * Source of truth: app.routes.ts — every route WITH canMatch: [AuthGuard]
-   */
-  private readonly PROTECTED_ROUTE_PREFIXES = [
-    '/profile',
-    '/bookings',
-    '/reviews',
-    '/admin',
-    '/referrals',
-    '/protections',
-    '/verification',
-    '/contact-verification',
-    '/finanzas',
-    '/wallet',
-    '/dashboard',
-    '/scout',
-    '/calendar-demo',
-    '/payouts',
-    '/messages',
-    '/notifications',
-    '/cars/publish',
-    '/cars/my',
-    '/cars/bulk-blocking',
-  ];
-
-  /** Dynamic protected route patterns (e.g. /cars/:id/availability) */
-  private readonly PROTECTED_ROUTE_PATTERNS = [
-    /^\/cars\/[^/]+\/availability/,
-    /^\/cars\/[^/]+\/documents/,
-  ];
-
-  /**
    * Check if the current URL is a protected route that requires auth.
+   * Uses shared constants from @core/config/protected-routes.ts
    */
   private isOnProtectedRoute(): boolean {
-    const currentUrl = this.router.url || '/';
-    // Check static protected prefixes
-    if (this.PROTECTED_ROUTE_PREFIXES.some((prefix) => currentUrl.startsWith(prefix))) {
-      return true;
-    }
-    // Check dynamic protected patterns
-    return this.PROTECTED_ROUTE_PATTERNS.some((pattern) => pattern.test(currentUrl));
+    return isProtectedUrl(this.router.url);
   }
 
   private listenToAuthChanges(): void {

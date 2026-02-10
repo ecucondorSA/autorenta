@@ -4,7 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
+import {
+  UrgentRentalService,
+  type UrgentRentalAvailability,
+  type UrgentRentalQuote,
+} from '@core/services/bookings/urgent-rental.service';
 import type { Car } from '../../../core/models';
 
 @Component({
@@ -25,10 +29,8 @@ export class UrgentBookingPage implements OnInit {
   readonly Math = Math;
 
   readonly car = signal<Car | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly availability = signal<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly quote = signal<any>(null);
+  readonly availability = signal<UrgentRentalAvailability | null>(null);
+  readonly quote = signal<UrgentRentalQuote | null>(null);
   readonly loading = signal(false);
   readonly creating = signal(false);
   readonly error = signal<string | null>(null);

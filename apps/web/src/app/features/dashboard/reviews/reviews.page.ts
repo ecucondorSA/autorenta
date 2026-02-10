@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import type { Review } from '@core/models';
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { PendingReviewsListComponent } from '../../../shared/components/pending-reviews-list/pending-reviews-list.component';
@@ -23,14 +24,12 @@ export class ReviewsPage implements OnInit {
   readonly userRole = signal<'owner' | 'renter' | 'both' | null>(null);
 
   // Reviews as owner
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly ownerReviews = signal<any[]>([]);
+  readonly ownerReviews = signal<Review[]>([]);
   readonly ownerAverageRating = signal<number>(0);
   readonly ownerReviewsCount = signal<number>(0);
 
   // Reviews as renter
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly renterReviews = signal<any[]>([]);
+  readonly renterReviews = signal<Review[]>([]);
   readonly renterAverageRating = signal<number>(0);
   readonly renterReviewsCount = signal<number>(0);
 

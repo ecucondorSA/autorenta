@@ -55,12 +55,12 @@
             <div class="flex justify-between">
               <span class="text-cta-default">Kilometraje:</span>
               <span class="font-semibold text-cta-default"
-                >{{ checkInData().odometer_reading | number }} km</span
+                >{{ checkInData()?.odometer_reading | number }} km</span
               >
             </div>
             <div class="flex justify-between">
               <span class="text-cta-default">Combustible:</span>
-              <span class="font-semibold text-cta-default">{{ checkInData().fuel_level }}%</span>
+              <span class="font-semibold text-cta-default">{{ checkInData()?.fuel_level }}%</span>
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@
                   <p class="text-xs text-text-secondary mb-2">Fotos de entrega:</p>
                   @if (checkInData()?.photos?.length) {
                     <div class="grid grid-cols-3 gap-2">
-                      @for (photo of checkInData().photos; track photo.url) {
+                      @for (photo of checkInData()?.photos ?? []; track photo.url) {
                         <div
                           class="aspect-square rounded-lg overflow-hidden bg-surface-secondary border border-border-default relative group"
                         >

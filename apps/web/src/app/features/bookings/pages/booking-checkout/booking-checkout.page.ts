@@ -11,6 +11,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { normalizeRecordToUsd } from '@core/utils/currency.utils';
 import { PaymentProvider } from '@core/interfaces/payment-gateway.interface';
+import type { Booking } from '@core/models';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { PaymentGatewayFactory } from '@core/services/payments/payment-gateway.factory';
 import { WalletService } from '@core/services/payments/wallet.service';
@@ -99,8 +100,7 @@ export class BookingCheckoutPage implements OnInit {
   /**
    * Detalles del booking cargados desde la DB
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  booking = signal<any>(null);
+  booking = signal<Booking | null>(null);
 
   /**
    * Información de garantía calculada con el nuevo sistema de 6 niveles

@@ -46,6 +46,7 @@ export class UnreadMessagesService {
   private readonly profileService = inject(ProfileService);
 
   private realtimeChannel?: RealtimeChannel;
+  private initializedForUser: string | null = null;
 
   // Signals for reactivity
   readonly unreadConversations = signal<UnreadConversation[]>([]);
@@ -77,13 +78,19 @@ export class UnreadMessagesService {
     const user = this.authService.session$()?.user;
     if (!user) return;
 
+    // Skip if already initialized for this user (prevents duplicate subscriptions
+    // when the session signal updates multiple times during restore/refresh)
+    if (this.initializedForUser === user.id) return;
+    this.initializedForUser = user.id;
+
     this.isLoading.set(true);
 
     try {
       await this.fetchUnreadConversations(user.id);
       this.subscribeToNewMessages(user.id);
     } catch {
-      // Silent fail
+      // Reset so next attempt can retry
+      this.initializedForUser = null;
     } finally {
       this.isLoading.set(false);
     }
@@ -371,6 +378,7 @@ export class UnreadMessagesService {
       this.supabase.removeChannel(this.realtimeChannel);
       this.realtimeChannel = undefined;
     }
+    this.initializedForUser = null;
     this.unreadConversations.set([]);
   }
 

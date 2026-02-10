@@ -322,18 +322,16 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
       this.returnUrl.set(returnUrlParam);
     }
 
-    if (!this.profile()) {
-      void this.profileStore.loadProfile();
-    }
-
-    void this.verificationService.loadDocuments();
-
-    // Load verification progress
+    // Load all data in parallel, waiting for all before marking as loaded
     try {
-      await this.identityService.getVerificationProgress();
+      await Promise.allSettled([
+        this.profile() ? Promise.resolve() : this.profileStore.loadProfile(),
+        this.verificationService.loadDocuments(),
+        this.identityService.getVerificationProgress(),
+      ]);
       await this.identityService.subscribeToRealtimeUpdates();
     } catch (e) {
-      console.error('Failed to load verification progress:', e);
+      console.error('Failed to load verification data:', e);
     } finally {
       this.dataLoading.set(false);
     }

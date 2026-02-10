@@ -3,7 +3,8 @@
  * Integración con sistema contable basado en NIIF 15 y NIIF 37
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { SupabaseClient } from '@supabase/supabase-js';
 
@@ -201,6 +202,7 @@ export interface RevenueRecognition {
   providedIn: 'root',
 })
 export class AccountingService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase: SupabaseClient;
 
   constructor() {
@@ -214,7 +216,7 @@ export class AccountingService {
     const { data, error } = await this.supabase.from('accounting_dashboard').select('*').single();
 
     if (error) {
-      console.warn('[AccountingService] Error getting dashboard:', error.message);
+      this.logger.warn('[AccountingService] Error getting dashboard:', error.message);
       return null;
     }
 
@@ -231,7 +233,7 @@ export class AccountingService {
       .order('code');
 
     if (error) {
-      console.warn('[AccountingService] Error getting balance sheet:', error.message);
+      this.logger.warn('[AccountingService] Error getting balance sheet:', error.message);
       return [];
     }
 
@@ -256,7 +258,7 @@ export class AccountingService {
     const { data, error } = await query;
 
     if (error) {
-      console.warn('[AccountingService] Error getting income statement:', error.message);
+      this.logger.warn('[AccountingService] Error getting income statement:', error.message);
       return [];
     }
 
@@ -273,7 +275,7 @@ export class AccountingService {
       .eq('status', 'ACTIVE');
 
     if (error) {
-      console.warn('[AccountingService] Error getting provisions:', error.message);
+      this.logger.warn('[AccountingService] Error getting provisions:', error.message);
       return [];
     }
 
@@ -289,7 +291,7 @@ export class AccountingService {
       .select('*');
 
     if (error) {
-      console.warn('[AccountingService] Error getting reconciliation:', error.message);
+      this.logger.warn('[AccountingService] Error getting reconciliation:', error.message);
       return [];
     }
 
@@ -307,7 +309,7 @@ export class AccountingService {
       .limit(12); // Últimos 12 meses
 
     if (error) {
-      console.warn('[AccountingService] Error getting commissions report:', error.message);
+      this.logger.warn('[AccountingService] Error getting commissions report:', error.message);
       return [];
     }
 
@@ -325,7 +327,7 @@ export class AccountingService {
       .order('code');
 
     if (error) {
-      console.warn('[AccountingService] Error getting chart of accounts:', error.message);
+      this.logger.warn('[AccountingService] Error getting chart of accounts:', error.message);
       return [];
     }
 
@@ -375,7 +377,7 @@ export class AccountingService {
     const { data, error } = await query;
 
     if (error) {
-      console.warn('[AccountingService] Error getting ledger:', error.message);
+      this.logger.warn('[AccountingService] Error getting ledger:', error.message);
       return [];
     }
 
@@ -392,7 +394,7 @@ export class AccountingService {
       .limit(limit);
 
     if (error) {
-      console.warn('[AccountingService] Error getting cash flow:', error.message);
+      this.logger.warn('[AccountingService] Error getting cash flow:', error.message);
       return [];
     }
 
@@ -406,7 +408,7 @@ export class AccountingService {
     const { error } = await this.supabase.rpc('refresh_accounting_balances');
 
     if (error) {
-      console.warn('[AccountingService] Error refreshing balances:', error.message);
+      this.logger.warn('[AccountingService] Error refreshing balances:', error.message);
       return false;
     }
 
@@ -435,7 +437,7 @@ export class AccountingService {
     });
 
     if (error) {
-      console.warn('[AccountingService] Error creating journal entry:', error.message);
+      this.logger.warn('[AccountingService] Error creating journal entry:', error.message);
       return null;
     }
 
@@ -531,7 +533,7 @@ export class AccountingService {
     const { data, error, count } = await query;
 
     if (error) {
-      console.warn('[AccountingService] Error getting ledger paginated:', error.message);
+      this.logger.warn('[AccountingService] Error getting ledger paginated:', error.message);
       return {
         data: [],
         total: 0,
@@ -576,7 +578,7 @@ export class AccountingService {
     const { data, error } = await query;
 
     if (error) {
-      console.warn('[AccountingService] Error getting provisions:', error.message);
+      this.logger.warn('[AccountingService] Error getting provisions:', error.message);
       return [];
     }
 
@@ -616,7 +618,7 @@ export class AccountingService {
     const { data, error } = await query;
 
     if (error) {
-      console.warn('[AccountingService] Error getting period closures:', error.message);
+      this.logger.warn('[AccountingService] Error getting period closures:', error.message);
       return [];
     }
 
@@ -671,7 +673,7 @@ export class AccountingService {
     const { data, error, count } = await query;
 
     if (error) {
-      console.warn('[AccountingService] Error getting audit logs:', error.message);
+      this.logger.warn('[AccountingService] Error getting audit logs:', error.message);
       return {
         data: [],
         total: 0,
@@ -726,7 +728,7 @@ export class AccountingService {
     const { data, error } = await query;
 
     if (error) {
-      console.warn('[AccountingService] Error getting revenue recognition:', error.message);
+      this.logger.warn('[AccountingService] Error getting revenue recognition:', error.message);
       return [];
     }
 

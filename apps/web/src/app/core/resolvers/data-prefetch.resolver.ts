@@ -4,7 +4,7 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { Booking } from '@core/models';
-import type { Car } from '@core/models';
+import type { Car, UserProfile } from '@core/models';
 
 /**
  * P1-030 FIX: Data Prefetching Resolvers
@@ -83,8 +83,7 @@ export const myBookingsPrefetchResolver: ResolveFn<{
 /**
  * Prefetch user profile
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const profilePrefetchResolver: ResolveFn<any> = async () => {
+export const profilePrefetchResolver: ResolveFn<UserProfile | null> = async () => {
   const profileService = inject(ProfileService);
 
   try {

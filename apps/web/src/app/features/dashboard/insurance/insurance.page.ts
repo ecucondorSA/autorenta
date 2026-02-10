@@ -3,6 +3,16 @@ import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@ang
 import { RouterLink } from '@angular/router';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
+interface InsuranceCarRow {
+  id: string;
+  brand: string;
+  model: string;
+  year: number;
+  status: string;
+  insurance_policy_number: string | null;
+  insurance_expires_at: string | null;
+}
+
 @Component({
   selector: 'app-insurance-page',
   standalone: true,
@@ -16,8 +26,7 @@ export class InsurancePage implements OnInit {
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly cars = signal<any[]>([]);
+  readonly cars = signal<InsuranceCarRow[]>([]);
 
   async ngOnInit(): Promise<void> {
     await this.loadCars();
