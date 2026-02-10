@@ -15,6 +15,7 @@ import { AnalyticsService } from '@core/services/infrastructure/analytics.servic
 import { WalletService } from '@core/services/payments/wallet.service';
 // eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 /**
@@ -46,6 +47,7 @@ export class DepositPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly toastService = inject(NotificationManagerService);
   private readonly analyticsService = inject(AnalyticsService);
+  private readonly authService = inject(AuthService);
   private readonly supabase = injectSupabase();
 
   // Form state (usuario ingresa en USD, convertimos a ARS para MP)
@@ -224,12 +226,10 @@ export class DepositPage implements OnInit {
     this.isProcessing.set(true);
 
     try {
-      // 1. Get current user ID
-      const {
-        data: { user },
-      } = await this.supabase.auth.getUser();
-      if (!user) {
-        throw new Error('Usuario no autenticado');
+      // 1. Get current user ID (cached — no HTTP call)
+      const userId = await this.authService.getCachedUserId();
+      if (!userId) {
+        throw new Error('Tu sesión expiró. Por favor, iniciá sesión nuevamente.');
       }
 
       // 2. Create pending deposit transaction
@@ -238,7 +238,7 @@ export class DepositPage implements OnInit {
       const amountCentsUsd = this.usdAmount(); // centavos USD
 
       const { data: txData, error: txError } = await this.supabase.rpc('wallet_initiate_deposit', {
-        p_user_id: user.id,
+        p_user_id: userId,
         p_amount: amountCentsUsd,
         p_provider: 'mercadopago',
       });
@@ -257,6 +257,10 @@ export class DepositPage implements OnInit {
       let preferenceId: string | null = null;
       let initPoint: string | null = null;
 
+      // Get session token for Edge Function auth
+      const { data: sessionData } = await this.supabase.auth.getSession();
+      const accessToken = sessionData?.session?.access_token;
+
       try {
         const { data: prefData, error: prefError } = await this.supabase.functions.invoke(
           'mercadopago-create-preference',
@@ -266,6 +270,7 @@ export class DepositPage implements OnInit {
               amount: this.arsAmount(), // Monto en ARS para MercadoPago
               description: this.description() || 'Depósito a wallet AutoRentar',
             },
+            headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
           },
         );
 
@@ -382,10 +387,7 @@ export class DepositPage implements OnInit {
     return {
       stage,
       message: errorMessage,
-      user_id: this.supabase.auth
-        .getUser()
-        .then((u) => u.data.user?.id)
-        .catch(() => null),
+      user_id: this.authService.getCachedUserId(),
       amount_ars: this.arsAmount(),
       amount_usd_cents: this.usdAmount(),
       transaction_id: transactionId,
