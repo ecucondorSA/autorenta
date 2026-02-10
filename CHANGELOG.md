@@ -1,3 +1,8 @@
+## <small>3.78.8 (2026-02-10)</small>
+
+* fix(monitoring): update uptime checks after PayPal cleanup and new deploys ([93fdb95](https://github.com/ecucondorSA/autorenta/commit/93fdb95))
+* chore(types): regenerate database.types.ts with 16 new tables ([6b9646b](https://github.com/ecucondorSA/autorenta/commit/6b9646b))
+
 ## <small>3.78.7 (2026-02-10)</small>
 
 * fix(monitoring): remove facebook-native-login from uptime checks ([9f09681](https://github.com/ecucondorSA/autorenta/commit/9f09681))
