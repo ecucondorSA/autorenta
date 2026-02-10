@@ -1,3 +1,7 @@
+## <small>3.78.5 (2026-02-10)</small>
+
+* fix(security): create 15 phantom tables, enable RLS on all public tables, add FK constraints ([08e54dc](https://github.com/ecucondorSA/autorenta/commit/08e54dc))
+
 ## <small>3.78.4 (2026-02-10)</small>
 
 * fix(security): enable RLS on critical tables and create payment_intents ([3f80110](https://github.com/ecucondorSA/autorenta/commit/3f80110))
