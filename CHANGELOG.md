@@ -1,3 +1,7 @@
+## <small>3.80.7 (2026-02-10)</small>
+
+* perf(cars): add 30s query cache to listActiveCars and listMarketplaceCars ([f2617b9](https://github.com/ecucondorSA/autorenta/commit/f2617b9))
+
 ## <small>3.80.6 (2026-02-10)</small>
 
 * perf(network): deduplicate concurrent getCurrentProfile() and loadDocuments() calls ([6799b1d](https://github.com/ecucondorSA/autorenta/commit/6799b1d))
