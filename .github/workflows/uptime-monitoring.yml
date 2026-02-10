@@ -94,22 +94,20 @@ jobs:
             ));
 
             // 4. Key Edge Functions (organized by criticality)
-            // Last updated: 2026-02-10 — reflects current deployed state (100 functions)
+            // Last updated: 2026-02-10 — 99 deployed, PayPal removed (unused)
             const edgeFunctions = [
-              // === CRITICAL: Payment Functions ===
+              // === CRITICAL: Payment Functions (MercadoPago) ===
               'mercadopago-webhook',
               'mercadopago-process-booking-payment',
-              'mercadopago-process-brick-payment',
               'mercadopago-process-deposit-payment',
               'mercadopago-process-refund',
               'mercadopago-money-out',
               'process-payment-queue',
-              'process-payment-split',
               'payment-reconciliation',
+              'payments-gateway',
               'mp-create-preauth',
               'mp-capture-preauth',
               'mp-cancel-preauth',
-              'paypal-webhook',
               'wallet-reconciliation',
               'wallet-transfer',
               'withdrawal-webhook',
@@ -118,6 +116,8 @@ jobs:
               'ai-vision-service',
               'verify-document',
               'verify-face',
+              'verify-user-docs',
+              'verify-vehicle-document',
               'serasa-verify',
               'gemini3-document-analyzer',
               'send-push-notification',
@@ -125,10 +125,8 @@ jobs:
               'email-service',
               'health',
 
-              // === MEDIUM: Analytics, Auth & Integrations ===
+              // === MEDIUM: Analytics & Integrations ===
               'dashboard-stats',
-              'mercadopago-oauth-callback',
-              'mercadopago-refresh-token',
               'upgrade-subscription-wallet',
 
               // === LOW: Supporting Functions ===
