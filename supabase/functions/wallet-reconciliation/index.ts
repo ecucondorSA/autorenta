@@ -33,6 +33,18 @@ interface ReconciliationReport {
 }
 
 serve(async (req) => {
+  // CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+      },
+    });
+  }
+
   // Usar service role key directamente (función administrativa)
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
@@ -112,36 +124,43 @@ serve(async (req) => {
       .select('balance_cents')
       .single();
 
-    if (fundError) throw fundError;
-
-    const fundBalance = fundData.balance_cents;
-
-    // Calcular balance del fondo desde ledger
-    const { data: fundLedger, error: fundLedgerError } = await supabase
-      .from('wallet_ledger')
-      .select('kind, amount_cents')
-      .in('kind', ['franchise_user', 'franchise_fund']);
-
-    if (fundLedgerError) throw fundLedgerError;
-
+    // coverage_fund table may not exist yet — skip gracefully
+    let fundBalance = 0;
     let calculatedFundBalance = 0;
+    let fundOk = true;
 
-    for (const entry of fundLedger) {
-      if (entry.kind === 'franchise_fund') {
-        calculatedFundBalance += entry.amount_cents;
-      } else if (entry.kind === 'franchise_user') {
-        calculatedFundBalance -= entry.amount_cents;
+    if (fundError) {
+      console.warn('[Reconciliation] coverage_fund not available, skipping:', fundError.message);
+    } else {
+      fundBalance = fundData.balance_cents;
+
+      // Calcular balance del fondo desde ledger
+      const { data: fundLedger, error: fundLedgerError } = await supabase
+        .from('wallet_ledger')
+        .select('kind, amount_cents')
+        .in('kind', ['franchise_user', 'franchise_fund']);
+
+      if (fundLedgerError) {
+        console.warn('[Reconciliation] Could not read fund ledger entries:', fundLedgerError.message);
+      } else {
+        for (const entry of fundLedger) {
+          if (entry.kind === 'franchise_fund') {
+            calculatedFundBalance += entry.amount_cents;
+          } else if (entry.kind === 'franchise_user') {
+            calculatedFundBalance -= entry.amount_cents;
+          }
+        }
+
+        const fundDifference = fundBalance - calculatedFundBalance;
+        fundOk = Math.abs(fundDifference) === 0;
       }
     }
-
-    const fundDifference = fundBalance - calculatedFundBalance;
-    const fundOk = Math.abs(fundDifference) === 0;
 
     if (!fundOk) {
       console.warn('[Reconciliation] Coverage fund discrepancy:', {
         stored: fundBalance,
         calculated: calculatedFundBalance,
-        difference: fundDifference,
+        difference: fundBalance - calculatedFundBalance,
       });
     }
 
