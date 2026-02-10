@@ -1,3 +1,7 @@
+## <small>3.78.3 (2026-02-10)</small>
+
+* fix(db): deploy 62 RPC stubs to production, clear allowlist ([773b741](https://github.com/ecucondorSA/autorenta/commit/773b741))
+
 ## <small>3.78.2 (2026-02-10)</small>
 
 * fix: resolve MIME type errors, missing pricing table, and upload size limit ([8960e9b](https://github.com/ecucondorSA/autorenta/commit/8960e9b))
