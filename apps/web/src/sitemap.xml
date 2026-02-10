@@ -4,52 +4,234 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-  <!-- Homepage -->
+  <!-- ===== CORE PAGES ===== -->
   <url>
-    <loc>https://autorenta-web.pages.dev/</loc>
-    <lastmod>2025-10-20</lastmod>
+    <loc>https://autorentar.com/</loc>
+    <lastmod>2026-02-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- Car Catalog -->
   <url>
-    <loc>https://autorenta-web.pages.dev/cars</loc>
-    <lastmod>2025-10-20</lastmod>
+    <loc>https://autorentar.com/cars</loc>
+    <lastmod>2026-02-10</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- Compare Cars -->
   <url>
-    <loc>https://autorenta-web.pages.dev/cars/compare</loc>
-    <lastmod>2025-10-20</lastmod>
+    <loc>https://autorentar.com/cars/compare</loc>
+    <lastmod>2026-02-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-
-  <!-- Auth Pages (public) -->
   <url>
-    <loc>https://autorenta-web.pages.dev/auth/login</loc>
-    <lastmod>2025-10-20</lastmod>
+    <loc>https://autorentar.com/auth/login</loc>
+    <lastmod>2026-02-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-
   <url>
-    <loc>https://autorenta-web.pages.dev/auth/register</loc>
-    <lastmod>2025-10-20</lastmod>
+    <loc>https://autorentar.com/auth/register</loc>
+    <lastmod>2026-02-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-
-  <!-- Terms -->
   <url>
-    <loc>https://autorenta-web.pages.dev/terminos</loc>
-    <lastmod>2025-10-20</lastmod>
+    <loc>https://autorentar.com/terminos</loc>
+    <lastmod>2026-02-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
+
+  <!-- ===== STATIC PAGES ===== -->
+  <url>
+    <loc>https://autorentar.com/help</loc>
+    <lastmod>2026-02-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://autorentar.com/aircover</loc>
+    <lastmod>2026-02-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://autorentar.com/safety</loc>
+    <lastmod>2026-02-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://autorentar.com/support</loc>
+    <lastmod>2026-02-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://autorentar.com/about</loc>
+    <lastmod>2026-02-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://autorentar.com/privacy</loc>
+    <lastmod>2026-02-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://autorentar.com/rent-your-car</loc>
+    <lastmod>2026-02-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- ===== CIUDADES (52) ===== -->
+  <url><loc>https://autorentar.com/alquiler-autos/buenos-aires</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/cordoba</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/mendoza</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/rosario</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/tucuman</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/la-plata</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/mar-del-plata</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/salta</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/santa-fe</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/san-juan</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/resistencia</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/corrientes</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/posadas</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/jujuy</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/parana</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/neuquen</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/formosa</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/san-luis</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/santiago-del-estero</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/la-rioja</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/catamarca</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/rawson</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/rio-gallegos</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/ushuaia</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/viedma</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/santa-rosa</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/bariloche</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/puerto-madryn</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/el-calafate</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/puerto-iguazu</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/carlos-paz</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/san-martin-de-los-andes</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/villa-la-angostura</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/el-chalten</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/cafayate</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/tilcara</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/pinamar</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/villa-gesell</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/tandil</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/bahia-blanca</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/montevideo</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/punta-del-este</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/colonia</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/santiago</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/vina-del-mar</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/sao-paulo</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/rio-de-janeiro</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/florianopolis</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/cancun</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/ciudad-de-mexico</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/guadalajara</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/alquiler-autos/tulum</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+
+  <!-- ===== AEROPUERTOS (28) ===== -->
+  <url><loc>https://autorentar.com/aeropuerto/ezeiza</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/aeroparque</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/cordoba-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/mendoza-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/bariloche-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/salta-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/iguazu-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/ushuaia-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/tucuman-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/rosario-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/neuquen-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/calafate-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/jujuy-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/mardelplata-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/madryn-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/trelew-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/comodoro-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/riogallegos-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/sanjuan-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/posadas-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/montevideo-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/santiago-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/cancun-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/cdmx-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/saopaulo-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/rio-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/lima-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/aeropuerto/bogota-aeropuerto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+
+  <!-- ===== MARCAS (24) ===== -->
+  <url><loc>https://autorentar.com/rentar/toyota</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/rentar/volkswagen</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/rentar/chevrolet</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/rentar/ford</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/rentar/fiat</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/rentar/renault</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/rentar/peugeot</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/rentar/citroen</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/rentar/nissan</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/rentar/honda</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/rentar/hyundai</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/rentar/kia</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/rentar/jeep</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/rentar/bmw</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/rentar/mercedes-benz</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/rentar/audi</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/rentar/mazda</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/rentar/mitsubishi</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/rentar/suzuki</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/rentar/subaru</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/rentar/volvo</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/rentar/ram</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/rentar/porsche</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/rentar/tesla</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+
+  <!-- ===== CATEGORIAS (15) ===== -->
+  <url><loc>https://autorentar.com/categoria/suv</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/categoria/economico</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/categoria/lujo</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/categoria/pickup</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/categoria/sedan</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/categoria/hatchback</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/categoria/deportivo</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/categoria/van</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/categoria/convertible</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/categoria/electrico</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/categoria/hibrido</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/categoria/clasico</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/categoria/4x4</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/categoria/viaje-largo</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/categoria/bodas</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+
+  <!-- ===== BUSQUEDAS POPULARES (18) ===== -->
+  <url><loc>https://autorentar.com/buscar/autos-baratos</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autorentar.com/buscar/sin-tarjeta</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/por-dia</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/mensual</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/con-chofer</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/buscar/empresas</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/buscar/camionetas-4x4</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/turismo</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/fin-de-semana</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/ultimo-minuto</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/con-seguro</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/eventos-lujo</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/buscar/familia</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/cerca-de-mi</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/ida-vuelta</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autorentar.com/buscar/comparar-precios</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/kilometraje-libre</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://autorentar.com/buscar/negocios</loc><lastmod>2026-02-10</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
 
   <!-- Note: Individual car detail pages (/cars/:id) should be added dynamically
        via a server-side sitemap generator or build-time script that queries Supabase -->

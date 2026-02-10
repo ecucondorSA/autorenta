@@ -15,6 +15,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import {
   NoPreloading,
   provideRouter,
+  TitleStrategy,
   withInMemoryScrolling,
   withPreloading,
   withViewTransitions,
@@ -33,6 +34,7 @@ import { GlobalErrorHandler } from '@core/services/infrastructure/global-error-h
 import { PerformanceMonitoringService } from '@core/services/infrastructure/performance-monitoring.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { routeReuseStrategyProvider } from '@core/strategies/custom-route-reuse.strategy';
+import { PageTitleStrategy } from '@core/strategies/page-title.strategy';
 import { routes } from './app.routes';
 
 /**
@@ -191,6 +193,8 @@ export const appConfig: ApplicationConfig = {
     ),
     // ✅ Route Reuse Strategy - keeps Marketplace & Map in memory for instant navigation
     routeReuseStrategyProvider,
+    // ✅ Page Title Strategy - appends " | AutoRentar" to route titles
+    { provide: TitleStrategy, useClass: PageTitleStrategy },
     // ✅ Global Error Handler (handles Sentry internally)
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     // ✅ Performance Monitoring (solo en desarrollo)

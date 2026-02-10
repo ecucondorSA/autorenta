@@ -41,6 +41,7 @@ import { PwaService } from '@core/services/infrastructure/pwa.service';
 import { DeepLinkService } from '@core/services/infrastructure/deep-link.service';
 import { NotificationsService } from '@core/services/infrastructure/user-notifications.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { SeoSchemaService } from '@core/services/ui/seo-schema.service';
 import { SplashScreenService } from '@core/services/ui/splash-screen.service';
 import { routeAnimations } from '@core/animations/route-animations'; // Importar animaciones
 import {
@@ -275,6 +276,7 @@ export class AppComponent implements OnInit {
   private readonly pushNotificationService = inject(PushNotificationService);
   private readonly deepLinkService = inject(DeepLinkService);
   private readonly notificationsService = inject(NotificationsService);
+  private readonly seoSchemaService = inject(SeoSchemaService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
@@ -391,6 +393,8 @@ export class AppComponent implements OnInit {
       return;
     }
 
+    this.seoSchemaService.setOrganizationSchema();
+    this.seoSchemaService.setWebSiteSchema();
     this.handleOAuthCallbackRedirect();
     this.initializeTheme();
     this.initializeLayoutWatcher();

@@ -17,6 +17,7 @@ export const routes: Routes = [
   },
   {
     path: 'rentarfast',
+    title: 'Reserva Rápida',
     data: { layout: 'full-bleed', hideFooter: true, hideNav: true },
     loadComponent: lazyRetry(() =>
       import('./features/rentarfast/rentarfast.page').then((m) => m.RentarfastPage),
@@ -28,24 +29,28 @@ export const routes: Routes = [
   },
   {
     path: 'oauth/consent',
+    title: 'Autorización',
     loadComponent: lazyRetry(() =>
       import('./features/oauth/oauth-consent.page').then((m) => m.OAuthConsentPage),
     ),
   },
   {
     path: 'onboarding',
+    title: 'Bienvenida',
     loadComponent: lazyRetry(() =>
       import('./features/onboarding/onboarding.page').then((m) => m.OnboardingPage),
     ),
   },
   {
     path: 'become-renter',
+    title: 'Convertite en Conductor',
     loadComponent: lazyRetry(() =>
       import('./features/become-renter/become-renter.page').then((m) => m.BecomeRenterPage),
     ),
   },
   {
     path: 'ganar',
+    title: 'Ganá con tu Auto',
     data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: lazyRetry(() =>
       import('./features/owners-landing/owners-landing.page').then((m) => m.OwnersLandingPage),
@@ -53,6 +58,7 @@ export const routes: Routes = [
   },
   {
     path: 'referrals',
+    title: 'Referidos',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: lazyRetry(() =>
@@ -67,6 +73,7 @@ export const routes: Routes = [
   },
   {
     path: 'favorites',
+    title: 'Favoritos',
     data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: lazyRetry(() =>
       import('./features/favorites/favorites.page').then((m) => m.FavoritesPage),
@@ -92,6 +99,7 @@ export const routes: Routes = [
       },
       {
         path: 'list',
+        title: 'Marketplace',
         data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
         loadComponent: lazyRetry(() =>
           import('./features/cars/browse/browse-cars.page').then((m) => m.BrowseCarsPage),
@@ -99,12 +107,14 @@ export const routes: Routes = [
       },
       {
         path: 'compare',
+        title: 'Comparar Autos',
         loadComponent: lazyRetry(() =>
           import('./features/cars/compare/compare.page').then((m) => m.ComparePage),
         ),
       },
       {
         path: 'publish',
+        title: 'Publicar Auto',
         canMatch: [AuthGuard],
         data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
         loadComponent: lazyRetry(() =>
@@ -115,6 +125,7 @@ export const routes: Routes = [
       },
       {
         path: 'publish/edit/:id',
+        title: 'Editar Auto',
         canMatch: [AuthGuard],
         loadComponent: lazyRetry(() =>
           import('./features/cars/publish/publish-car-v2.page').then((m) => m.PublishCarV2Page),
@@ -122,6 +133,7 @@ export const routes: Routes = [
       },
       {
         path: 'my',
+        title: 'Mis Autos',
         canMatch: [AuthGuard],
         loadComponent: lazyRetry(() =>
           import('./features/cars/my-cars/my-cars.page').then((m) => m.MyCarsPage),
@@ -129,6 +141,7 @@ export const routes: Routes = [
       },
       {
         path: 'bulk-blocking',
+        title: 'Bloqueo Masivo',
         canMatch: [AuthGuard],
         loadComponent: lazyRetry(() =>
           import('./features/cars/bulk-blocking/bulk-blocking.page').then(
@@ -138,6 +151,7 @@ export const routes: Routes = [
       },
       {
         path: ':id/availability',
+        title: 'Disponibilidad',
         canMatch: [AuthGuard],
         loadComponent: lazyRetry(() =>
           import('./features/cars/availability-calendar/availability-calendar.page').then(
@@ -147,6 +161,7 @@ export const routes: Routes = [
       },
       {
         path: ':id/documents',
+        title: 'Documentos del Auto',
         canMatch: [AuthGuard],
         loadComponent: lazyRetry(() =>
           import('./features/cars/vehicle-documents/vehicle-documents.page').then(
@@ -156,6 +171,7 @@ export const routes: Routes = [
       },
       {
         path: ':id',
+        title: 'Detalle del Auto',
         data: {
           layout: 'full-bleed',
           hideHeader: true,
@@ -170,6 +186,7 @@ export const routes: Routes = [
   },
   {
     path: 'bookings',
+    title: 'Mis Reservas',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     loadChildren: lazyRetry(() =>
@@ -178,11 +195,13 @@ export const routes: Routes = [
   },
   {
     path: 'reviews',
+    title: 'Reseñas',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     children: [
       {
         path: 'pending',
+        title: 'Reseñas Pendientes',
         loadComponent: lazyRetry(() =>
           import('./features/reviews/pending-reviews/pending-reviews.page').then(
             (m) => m.PendingReviewsPage,
@@ -399,6 +418,7 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
+    title: 'Mi Perfil',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true, hideFooter: true },
     children: [
@@ -533,10 +553,11 @@ export const routes: Routes = [
     loadComponent: lazyRetry(() =>
       import('./features/finanzas/finanzas.page').then((m) => m.FinanzasPage),
     ),
-    title: 'Finanzas - AutoRenta',
+    title: 'Finanzas',
   },
   {
     path: 'wallet',
+    title: 'Mi Billetera',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     children: [
@@ -553,6 +574,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
+    title: 'Panel de Propietario',
     canMatch: [AuthGuard, onboardingGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     children: [
@@ -660,6 +682,7 @@ export const routes: Routes = [
   },
   {
     path: 'support',
+    title: 'Soporte',
     data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: lazyRetry(() =>
       import('./features/support/support.page').then((m) => m.SupportPage),
@@ -683,12 +706,14 @@ export const routes: Routes = [
   },
   {
     path: 'terminos',
+    title: 'Términos y Condiciones',
     loadComponent: lazyRetry(() =>
       import('./features/legal/terms/terms.page').then((m) => m.TermsPage),
     ),
   },
   {
     path: 'privacy',
+    title: 'Política de Privacidad',
     loadComponent: lazyRetry(() =>
       import('./features/legal/privacy/privacy.page').then((m) => m.PrivacyPage),
     ),
@@ -756,24 +781,28 @@ export const routes: Routes = [
   // ============================================================================
   {
     path: 'help',
+    title: 'Centro de Ayuda',
     loadComponent: lazyRetry(() =>
       import('./features/static/help-center/help-center.page').then((m) => m.HelpCenterPage),
     ),
   },
   {
     path: 'aircover',
+    title: 'AirCover - Protección',
     loadComponent: lazyRetry(() =>
       import('./features/static/aircover/aircover.page').then((m) => m.AircoverPage),
     ),
   },
   {
     path: 'safety',
+    title: 'Seguridad',
     loadComponent: lazyRetry(() =>
       import('./features/static/safety/safety.page').then((m) => m.SafetyPage),
     ),
   },
   {
     path: 'cancellation',
+    title: 'Política de Cancelación',
     loadComponent: lazyRetry(() =>
       import('./features/static/cancellation/cancellation.page').then((m) => m.CancellationPage),
     ),
@@ -812,6 +841,7 @@ export const routes: Routes = [
   },
   {
     path: 'about',
+    title: 'Sobre Nosotros',
     loadComponent: lazyRetry(() =>
       import('./features/static/about/about.page').then((m) => m.AboutPage),
     ),
@@ -830,6 +860,7 @@ export const routes: Routes = [
   },
   {
     path: 'sitemap',
+    title: 'Mapa del Sitio',
     loadComponent: lazyRetry(() =>
       import('./features/static/sitemap/sitemap.page').then((m) => m.SitemapPage),
     ),
@@ -867,6 +898,45 @@ export const routes: Routes = [
         resolve: { pageData: seoPageResolver },
       },
     ],
+  },
+
+  // ============================================================================
+  // SEO FOOTER ROUTES (reuse landing page for /alquiler-autos, /aeropuerto, etc.)
+  // ============================================================================
+  {
+    path: 'alquiler-autos/:segment1',
+    loadComponent: lazyRetry(() =>
+      import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPageComponent),
+    ),
+    resolve: { pageData: seoPageResolver },
+  },
+  {
+    path: 'aeropuerto/:segment1',
+    loadComponent: lazyRetry(() =>
+      import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPageComponent),
+    ),
+    resolve: { pageData: seoPageResolver },
+  },
+  {
+    path: 'rentar/:segment1',
+    loadComponent: lazyRetry(() =>
+      import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPageComponent),
+    ),
+    resolve: { pageData: seoPageResolver },
+  },
+  {
+    path: 'categoria/:segment1',
+    loadComponent: lazyRetry(() =>
+      import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPageComponent),
+    ),
+    resolve: { pageData: seoPageResolver },
+  },
+  {
+    path: 'buscar/:segment1',
+    loadComponent: lazyRetry(() =>
+      import('./features/seo/landing/seo-landing.page').then((m) => m.SeoLandingPageComponent),
+    ),
+    resolve: { pageData: seoPageResolver },
   },
 
   // ============================================================================

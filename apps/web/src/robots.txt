@@ -1,5 +1,5 @@
-# robots.txt for AutoRenta
-# https://autorenta-web.pages.dev
+# robots.txt for AutoRentar
+# https://autorentar.com
 
 User-agent: *
 Allow: /
@@ -8,9 +8,10 @@ Disallow: /bookings/
 Disallow: /wallet/
 Disallow: /profile/
 Disallow: /auth/
+Disallow: /dashboard/
 
 # Sitemaps
-Sitemap: https://autorenta-web.pages.dev/sitemap.xml
+Sitemap: https://autorentar.com/sitemap.xml
 
 # Crawl-delay (be nice to servers)
 Crawl-delay: 1
