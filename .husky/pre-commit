@@ -7,10 +7,11 @@ set -e  # Exit on first error
 echo "🔍 Running lint and guardrails..."
 pnpm run lint && pnpm run guardrails
 
-# 2. Enum sync validation
+# 2. Enum sync validation (load .env for Supabase credentials)
 echo ""
 echo "🔍 Validating enum sync..."
-if ! bun scripts/maintenance/validate-enum-sync.ts; then
+if [ -f ./.env.local ]; then set -a && . ./.env.local && set +a; fi
+if ! pnpm exec tsx scripts/maintenance/validate-enum-sync.ts; then
   echo ""
   echo "❌ Enum validation failed!"
   echo "Fix the mismatches before committing."
