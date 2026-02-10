@@ -212,6 +212,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
+    title: 'Administración',
     canMatch: [AuthGuard, AdminGuard],
     children: [
       {
@@ -412,6 +413,7 @@ export const routes: Routes = [
   },
   {
     path: 'mp-callback',
+    title: 'Procesando Pago',
     loadComponent: lazyRetry(() =>
       import('./features/mp-callback/mp-callback.page').then((m) => m.MpCallbackPage),
     ),
@@ -431,6 +433,7 @@ export const routes: Routes = [
       },
       {
         path: 'driver-profile',
+        title: 'Perfil de Conductor',
         data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: lazyRetry(() =>
           import('./features/driver-profile/driver-profile.page').then((m) => m.DriverProfilePage),
@@ -438,6 +441,7 @@ export const routes: Routes = [
       },
       {
         path: 'mercadopago-connect',
+        title: 'Conectar MercadoPago',
         data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: lazyRetry(() =>
           import('./features/profile/mercadopago-connect.component').then(
@@ -447,6 +451,7 @@ export const routes: Routes = [
       },
       {
         path: 'notifications-settings',
+        title: 'Ajustes de Notificaciones',
         data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: lazyRetry(() =>
           import('./features/profile/notifications-settings/notifications-settings.page').then(
@@ -456,6 +461,7 @@ export const routes: Routes = [
       },
       {
         path: 'driving-stats',
+        title: 'Estadísticas de Manejo',
         data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: lazyRetry(() =>
           import('./features/profile/driving-stats/driving-stats.page').then(
@@ -465,6 +471,7 @@ export const routes: Routes = [
       },
       {
         path: 'location-settings',
+        title: 'Ubicación',
         data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: lazyRetry(() =>
           import('./features/profile/location-settings.page').then((m) => m.LocationSettingsPage),
@@ -472,6 +479,7 @@ export const routes: Routes = [
       },
       {
         path: 'personal',
+        title: 'Datos Personales',
         data: { layout: 'full-bleed', hideHeader: true, hideFooter: true },
         loadComponent: lazyRetry(() =>
           import('./features/profile/personal/profile-personal.page').then(
@@ -481,6 +489,7 @@ export const routes: Routes = [
       },
       {
         path: 'contact',
+        title: 'Contacto',
         data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: lazyRetry(() =>
           import('./features/profile/contact/profile-contact.page').then(
@@ -490,6 +499,7 @@ export const routes: Routes = [
       },
       {
         path: 'preferences',
+        title: 'Preferencias',
         data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: lazyRetry(() =>
           import('./features/profile/preferences/profile-preferences.page').then(
@@ -499,6 +509,7 @@ export const routes: Routes = [
       },
       {
         path: 'security',
+        title: 'Seguridad de la Cuenta',
         data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: lazyRetry(() =>
           import('./features/profile/security/profile-security.page').then(
