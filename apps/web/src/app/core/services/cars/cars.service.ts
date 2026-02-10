@@ -25,6 +25,30 @@ export class CarsService {
     averageRentalDays: 300,
   };
 
+  /** Short-lived query cache to prevent duplicate requests across components (30s TTL) */
+  private readonly queryCache = new Map<string, { data: Car[]; timestamp: number }>();
+  private readonly QUERY_CACHE_TTL_MS = 30_000;
+
+  private getCached(key: string): Car[] | null {
+    const entry = this.queryCache.get(key);
+    if (entry && Date.now() - entry.timestamp < this.QUERY_CACHE_TTL_MS) {
+      return entry.data;
+    }
+    this.queryCache.delete(key);
+    return null;
+  }
+
+  private setCache(key: string, data: Car[]): void {
+    this.queryCache.set(key, { data, timestamp: Date.now() });
+    // Evict stale entries to prevent memory growth
+    if (this.queryCache.size > 20) {
+      const now = Date.now();
+      for (const [k, v] of this.queryCache) {
+        if (now - v.timestamp > this.QUERY_CACHE_TTL_MS) this.queryCache.delete(k);
+      }
+    }
+  }
+
   private parseMissingColumnFromSchemaCacheError(error: unknown): string | null {
     const anyError = error as { code?: string; message?: string } | null;
     if (!anyError || anyError.code !== 'PGRST204' || typeof anyError.message !== 'string') {
@@ -248,6 +272,10 @@ export class CarsService {
   }
 
   async listActiveCars(filters: CarFilters): Promise<Car[]> {
+    const cacheKey = `active:${JSON.stringify(filters)}`;
+    const cached = this.getCached(cacheKey);
+    if (cached) return cached;
+
     let query = this.supabase
       .from('cars')
       .select(
@@ -296,7 +324,7 @@ export class CarsService {
         filters.to,
         filters.blockedCarIds || [],
       );
-      return (availableCars as unknown[]).map((car) => {
+      const result = (availableCars as unknown[]).map((car) => {
         const typedCar = car as CarWithPhotosRaw;
         return {
           ...typedCar,
@@ -304,13 +332,17 @@ export class CarsService {
           owner: Array.isArray(typedCar.owner) ? typedCar.owner[0] : typedCar.owner,
         };
       }) as Car[];
+      this.setCache(cacheKey, result);
+      return result;
     }
 
-    return (data ?? []).map((car: CarWithPhotosRaw) => ({
+    const result = (data ?? []).map((car: CarWithPhotosRaw) => ({
       ...car,
       photos: car.car_photos || [],
       owner: Array.isArray(car.owner) ? car.owner[0] : car.owner,
     })) as Car[];
+    this.setCache(cacheKey, result);
+    return result;
   }
 
   /**
@@ -323,6 +355,10 @@ export class CarsService {
    * Keep listActiveCars() strict to avoid changing behavior in other parts of the app.
    */
   async listMarketplaceCars(filters: CarFilters): Promise<Car[]> {
+    const cacheKey = `marketplace:${JSON.stringify(filters)}`;
+    const cached = this.getCached(cacheKey);
+    if (cached) return cached;
+
     let query = this.supabase
       .from('cars')
       .select(
@@ -359,11 +395,13 @@ export class CarsService {
 
     const { data, error } = await query;
     if (error) throw error;
-    return (data ?? []).map((car: CarWithPhotosRaw) => ({
+    const result = (data ?? []).map((car: CarWithPhotosRaw) => ({
       ...car,
       photos: car.car_photos || [],
       owner: Array.isArray(car.owner) ? car.owner[0] : car.owner,
     })) as Car[];
+    this.setCache(cacheKey, result);
+    return result;
   }
 
   /**
