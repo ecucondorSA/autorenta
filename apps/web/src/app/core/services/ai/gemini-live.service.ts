@@ -239,6 +239,11 @@ export class GeminiLiveService {
   // Current image quality
   readonly currentImageQuality = signal<ImageQualityReport | null>(null);
 
+  // Config from gemini-live-config Edge Function
+  private readonly configSystemPrompt = signal<string | null>(null);
+  private readonly configModel = signal<string | null>(null);
+  private readonly configWebsocketUrl = signal<string | null>(null);
+
   // Inspection start time for limits
   private inspectionStartTime: number | null = null;
 
@@ -248,13 +253,19 @@ export class GeminiLiveService {
 
   /**
    * Connect to Gemini analysis service
-   * With the new approach, we just verify the Edge Function is available
+   * Fetches config from gemini-live-config Edge Function, then marks as ready.
+   * Falls back to default behavior if config fetch fails.
    */
   connect(): Observable<boolean> {
     this.connectionState.set('connecting');
     this.logger.info('Initializing Gemini analysis service...', 'GeminiLive');
 
-    // Simply mark as connected - the Edge Function handles authentication
+    // Fetch config from Edge Function (non-blocking — fallback if it fails)
+    this.fetchLiveConfig().then(
+      () => this.logger.info('Live config loaded successfully', 'GeminiLive'),
+      (err) => this.logger.warn(`Live config fetch failed, using defaults: ${err}`, 'GeminiLive'),
+    );
+
     this.connectionState.set('connected');
     this.emitEvent({
       type: 'connected',
@@ -262,8 +273,32 @@ export class GeminiLiveService {
       timestamp: Date.now(),
     });
 
-    this.logger.info('✅ Gemini analysis service ready', 'GeminiLive');
+    this.logger.info('Gemini analysis service ready', 'GeminiLive');
     return of(true);
+  }
+
+  /**
+   * Fetch centralized config from gemini-live-config Edge Function.
+   * Stores system prompt, model name, and websocket URL for future use.
+   */
+  private async fetchLiveConfig(): Promise<void> {
+    const { data, error } = await this.supabaseClient.functions.invoke('gemini-live-config');
+
+    if (error) {
+      throw new Error(error.message || 'Config fetch failed');
+    }
+
+    if (data?.systemPrompt) {
+      this.configSystemPrompt.set(data.systemPrompt);
+    }
+    if (data?.model) {
+      this.configModel.set(data.model);
+    }
+    if (data?.websocketUrl) {
+      this.configWebsocketUrl.set(data.websocketUrl);
+    }
+
+    this.logger.info(`Config loaded: model=${data?.model || 'default'}`, 'GeminiLive');
   }
 
   /**
@@ -307,6 +342,9 @@ export class GeminiLiveService {
     this.lastMessage.set('');
     this.forensicLog.set([]);
     this.currentImageQuality.set(null);
+    this.configSystemPrompt.set(null);
+    this.configModel.set(null);
+    this.configWebsocketUrl.set(null);
     this.inspectionStartTime = null;
   }
 
@@ -458,12 +496,19 @@ export class GeminiLiveService {
       }
       context += `Por favor, guía al usuario de forma calmada y específica sobre qué mostrar.`;
 
-      // Call Edge Function
+      // Call Edge Function — include centralized system prompt if available
+      const body: Record<string, unknown> = {
+        image: base64Data,
+        context,
+      };
+
+      const systemPrompt = this.configSystemPrompt();
+      if (systemPrompt) {
+        body['systemPrompt'] = systemPrompt;
+      }
+
       const { data, error } = await this.supabaseClient.functions.invoke('gemini-analyze-frame', {
-        body: {
-          image: base64Data,
-          context,
-        },
+        body,
       });
 
       if (error) {

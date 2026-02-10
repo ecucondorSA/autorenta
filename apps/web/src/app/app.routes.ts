@@ -402,6 +402,14 @@ export const routes: Routes = [
         ),
       },
       {
+        path: 'gaming-review',
+        loadComponent: lazyRetry(() =>
+          import('./features/admin/gaming-review/admin-gaming-review.page').then(
+            (m) => m.AdminGamingReviewPage,
+          ),
+        ),
+      },
+      {
         path: 'organizations',
         loadComponent: lazyRetry(() =>
           import('./features/organizations/pages/organization-dashboard.component').then(

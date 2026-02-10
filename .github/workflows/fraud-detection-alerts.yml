@@ -204,6 +204,53 @@ jobs:
               }
             }
 
+            // 7. Active gaming signals with high risk score (reward pool anti-fraud)
+            console.log('Checking active gaming signals...');
+            const gamingSignals = await query(
+              'owner_gaming_signals',
+              `?status=eq.active&risk_score=gte.40&detected_at=gte.${twentyFourHoursAgo}&select=owner_id,signal_type,risk_score`
+            );
+
+            const gamingByOwner = {};
+            for (const s of gamingSignals) {
+              if (s.owner_id) {
+                if (!gamingByOwner[s.owner_id]) gamingByOwner[s.owner_id] = { signals: [], totalScore: 0 };
+                gamingByOwner[s.owner_id].signals.push(s.signal_type);
+                gamingByOwner[s.owner_id].totalScore += s.risk_score;
+              }
+            }
+
+            for (const [ownerId, data] of Object.entries(gamingByOwner)) {
+              if (data.totalScore >= 40) {
+                alerts.push({
+                  type: 'GAMING_SIGNALS_DETECTED',
+                  severity: data.totalScore >= 60 ? 'high' : 'medium',
+                  user_id: ownerId,
+                  signals: data.signals,
+                  total_score: data.totalScore,
+                  message: 'Owner ' + ownerId.substring(0, 8) + '... has gaming signals (score: ' + data.totalScore + '): ' + data.signals.join(', '),
+                });
+              }
+            }
+
+            // 8. Frozen payouts pending admin review
+            console.log('Checking frozen payouts...');
+            const frozenPayouts = await query(
+              'admin_review_queue',
+              `?status=eq.pending&select=id,owner_id,risk_score,frozen_amount`
+            );
+
+            if (frozenPayouts.length > 0) {
+              const totalFrozen = frozenPayouts.reduce((sum, p) => sum + (p.frozen_amount || 0), 0);
+              alerts.push({
+                type: 'FROZEN_PAYOUTS_PENDING',
+                severity: frozenPayouts.length >= 5 ? 'high' : 'medium',
+                count: frozenPayouts.length,
+                total_frozen_usd: totalFrozen,
+                message: frozenPayouts.length + ' frozen payouts pending review (total: $' + totalFrozen.toFixed(2) + ' USD)',
+              });
+            }
+
             // Categorize alerts
             const criticalAlerts = alerts.filter(a => a.severity === 'critical');
             const highAlerts = alerts.filter(a => a.severity === 'high');

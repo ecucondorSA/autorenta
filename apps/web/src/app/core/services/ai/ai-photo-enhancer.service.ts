@@ -1,4 +1,6 @@
 import { Injectable, inject } from '@angular/core';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { StockPhotosService, StockPhoto } from '@core/services/ai/stock-photos.service';
 import { CloudflareAiService } from '@core/services/ai/cloudflare-ai.service';
 
@@ -7,27 +9,30 @@ export interface EnhancedPhoto {
   enhanced: Blob;
   stockPhoto?: StockPhoto;
   preview: string; // Object URL
-  source: 'stock' | 'cloudflare-ai'; // Reverted: removed 'google-ai'
+  source: 'stock' | 'cloudflare-ai' | 'google-ai';
 }
 
-export type GenerationMethod = 'stock-photos' | 'cloudflare-ai'; // Reverted: removed 'google-ai'
+export type GenerationMethod = 'stock-photos' | 'cloudflare-ai' | 'google-ai';
 
 /**
  * Servicio para mejorar fotos de autos con IA
- * Soporta 2 métodos:
- * 1. Stock Photos (rápido, fotos reales)
+ * Soporta 3 métodos:
+ * 1. Stock Photos (rápido, fotos reales de Unsplash)
  * 2. Cloudflare AI FLUX.1 (lento, generación desde cero)
+ * 3. Google AI Vertex (alta calidad, genera via Edge Function)
  */
 @Injectable({
   providedIn: 'root',
 })
 export class AiPhotoEnhancerService {
+  private readonly supabaseClient = inject(SupabaseClientService).getClient();
+  private readonly logger = inject(LoggerService).createChildLogger('AiPhotoEnhancer');
   private readonly stockPhotos = inject(StockPhotosService);
   private readonly cloudflareAi = inject(CloudflareAiService);
 
   /**
-   * Genera fotos de un auto - soporta 2 métodos
-   * @param method 'stock-photos' (default, rápido) o 'cloudflare-ai' (lento, generación real)
+   * Genera fotos de un auto - soporta 3 métodos
+   * @param method 'stock-photos' (default), 'cloudflare-ai', o 'google-ai' (Vertex AI)
    */
   async generateCarPhotos(params: {
     brand: string;
@@ -39,10 +44,9 @@ export class AiPhotoEnhancerService {
   }): Promise<EnhancedPhoto[]> {
     const method = params.method || 'stock-photos';
 
-    // Reverted: Removed google-ai condition
-    // if (method === 'google-ai') {
-    //   return this.generateWithGoogleAI(params);
-    // }
+    if (method === 'google-ai') {
+      return this.generateWithGoogleAI(params);
+    }
 
     if (method === 'cloudflare-ai') {
       return this.generateWithCloudflareAI(params);
@@ -51,11 +55,80 @@ export class AiPhotoEnhancerService {
     return this.generateWithStockPhotos(params);
   }
 
-  // Reverted: Removed generateWithGoogleAI method
-  // private async generateWithGoogleAI(...) { ... }
+  /**
+   * Método 3: Google Vertex AI (ALTA CALIDAD, via Edge Function)
+   * Llama a la Edge Function `generate-car-images` que usa ImageGeneration@006
+   * Retorna 3 imágenes base64 PNG en formato 4:3
+   */
+  private async generateWithGoogleAI(params: {
+    brand: string;
+    model: string;
+    year?: number;
+    color?: string;
+    count?: number;
+  }): Promise<EnhancedPhoto[]> {
+    this.logger.info('Generating with Google Vertex AI', 'generateWithGoogleAI', {
+      brand: params.brand,
+      model: params.model,
+    });
 
-  // Reverted: Removed buildGeminiPrompts method
-  // private buildGeminiPrompts(...) { ... }
+    const { data, error } = await this.supabaseClient.functions.invoke('generate-car-images', {
+      body: {
+        brand: params.brand,
+        model: params.model,
+        year: params.year ?? new Date().getFullYear(),
+        color: params.color ?? 'silver',
+      },
+    });
+
+    if (error) {
+      this.logger.error('Edge Function error', 'generateWithGoogleAI', { error });
+      throw new Error(`Google AI generation failed: ${error.message}`);
+    }
+
+    if (!data?.success || !Array.isArray(data.images)) {
+      throw new Error('Respuesta inválida de generate-car-images');
+    }
+
+    const enhanced: EnhancedPhoto[] = [];
+    const count = params.count || 3;
+    const images: string[] = data.images.slice(0, count);
+
+    for (let i = 0; i < images.length; i++) {
+      try {
+        const base64 = images[i];
+        const byteString = atob(base64);
+        const bytes = new Uint8Array(byteString.length);
+        for (let j = 0; j < byteString.length; j++) {
+          bytes[j] = byteString.charCodeAt(j);
+        }
+        const blob = new Blob([bytes], { type: 'image/png' });
+
+        const file = new File(
+          [blob],
+          `google-ai-${params.brand}-${params.model}-${i + 1}.png`,
+          { type: 'image/png' },
+        );
+
+        const preview = URL.createObjectURL(blob);
+
+        enhanced.push({
+          original: file,
+          enhanced: blob,
+          preview,
+          source: 'google-ai',
+        });
+      } catch {
+        this.logger.warn(`Failed to decode image ${i + 1}`, 'generateWithGoogleAI');
+      }
+    }
+
+    if (data.mock) {
+      this.logger.warn('Google AI returned mock images (credentials not configured)', 'generateWithGoogleAI');
+    }
+
+    return enhanced;
+  }
 
   /**
    * Método 1: Stock Photos (RÁPIDO)

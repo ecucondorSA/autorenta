@@ -557,40 +557,95 @@
             </div>
           </div>
 
-          <!-- Anti-Gaming Warning -->
-          <div
-            class="bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-xl p-5 border border-red-200 dark:border-red-800"
-          >
-            <div class="flex items-start gap-3">
-              <div
-                class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center flex-shrink-0"
-              >
-                <svg
-                  class="w-4 h-4 text-red-600 dark:text-red-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+          <!-- Anti-Fraud Status (Dynamic) -->
+          @if (gamingRiskScore() > 0 || activeCooldowns().length > 0 || hasActiveWarnings()) {
+            <!-- Risk Score Banner -->
+            <div
+              class="rounded-xl p-5 border"
+              [ngClass]="{
+                'bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border-red-200 dark:border-red-800': gamingRiskScore() >= 40,
+                'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 border-amber-200 dark:border-amber-800': gamingRiskScore() >= 20 && gamingRiskScore() < 40,
+                'bg-gradient-to-r from-slate-50 to-slate-50 dark:from-slate-800/50 dark:to-slate-800/50 border-slate-200 dark:border-slate-700': gamingRiskScore() < 20
+              }"
+            >
+              <div class="flex items-start gap-3">
+                <div
+                  class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 font-bold"
+                  [ngClass]="getRiskLevel(gamingRiskScore()).color"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h4 class="font-semibold text-red-800 dark:text-red-200 mb-1">
-                  Protección Anti-Gaming
-                </h4>
-                <p class="text-sm text-red-700 dark:text-red-300">
-                  Si rechazás muchas solicitudes, respondés lento, o cancelás reservas confirmadas,
-                  tu VA = 0 y no ganás puntos ese día.
-                  <strong>Cancelaciones del owner = 14 días de cooldown.</strong>
-                </p>
+                  {{ gamingRiskScore() }}
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-semibold text-text-primary mb-1">
+                    Tu Estado Anti-Fraude
+                    <span
+                      class="ml-2 px-2 py-0.5 rounded text-xs font-medium"
+                      [ngClass]="getRiskLevel(gamingRiskScore()).color"
+                    >
+                      Riesgo {{ getRiskLevel(gamingRiskScore()).label }}
+                    </span>
+                  </h4>
+
+                  <!-- Active Cooldowns -->
+                  @if (activeCooldowns().length > 0) {
+                    <div class="mt-2 space-y-1">
+                      @for (cd of activeCooldowns(); track cd.id) {
+                        <div class="flex items-center gap-2 text-sm text-amber-700 dark:text-amber-300">
+                          <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                          <span>{{ getCooldownReasonLabel(cd.reason) }}</span>
+                          <span class="text-text-muted">hasta {{ cd.endsAt | date: 'mediumDate' }}</span>
+                        </div>
+                      }
+                    </div>
+                  }
+
+                  <!-- Active Gaming Signals -->
+                  @if (activeGamingSignals().length > 0) {
+                    <div class="mt-2 flex flex-wrap gap-1.5">
+                      @for (sig of activeGamingSignals(); track sig.id) {
+                        <span
+                          class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-slate-700/30 text-text-secondary"
+                        >
+                          {{ getGamingSignalLabel(sig.signalType) }}
+                          <span class="text-text-muted">(+{{ sig.riskScore }})</span>
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (!isEligible() && gamingRiskScore() >= 40) {
+                    <p class="mt-2 text-sm text-red-700 dark:text-red-300 font-medium">
+                      Tu cuenta no es elegible para el Reward Pool este mes.
+                      Mejorá tus métricas para recuperar la elegibilidad.
+                    </p>
+                  }
+                </div>
               </div>
             </div>
-          </div>
+          } @else {
+            <!-- Clean Status -->
+            <div
+              class="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-xl p-5 border border-emerald-200 dark:border-emerald-800"
+            >
+              <div class="flex items-start gap-3">
+                <div
+                  class="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center flex-shrink-0"
+                >
+                  <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-emerald-800 dark:text-emerald-200 mb-1">
+                    Protección Anti-Fraude: Todo en orden
+                  </h4>
+                  <p class="text-sm text-emerald-700 dark:text-emerald-300">
+                    Sin señales de riesgo. Mantené buenas prácticas: respondé rápido, aceptá reservas y evitá cancelaciones.
+                  </p>
+                </div>
+              </div>
+            </div>
+          }
         </div>
       </div>
     </div>

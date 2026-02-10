@@ -3,6 +3,25 @@
 > **Fuente de Verdad para el Agente Claude en AutoRenta.**
 > Este documento define el contexto, las reglas inquebrantables y los flujos de trabajo estándar.
 
+---
+
+## 🚨 REGLA #0: CERO CÓDIGO SIN INTEGRACIÓN
+
+> **PROHIBIDO generar código que no esté integrado de punta a punta.**
+>
+> En Febrero 2026 se descubrieron **19 Edge Functions** creadas pero NUNCA conectadas al frontend ni a ningún consumidor. Código muerto desde el día que se generó. Esto es un **desperdicio inadmisible** de tiempo, contexto y slots de infraestructura.
+>
+> **La regla es simple:** si generás una Edge Function, un servicio, un componente, o cualquier pieza de código, **DEBE quedar integrada en el mismo PR/commit**. No existe "lo conecto después". Una pieza suelta es peor que no haberla creado — ocupa espacio, confunde, y genera falsa sensación de progreso.
+>
+> **Checklist obligatorio antes de dar por terminada cualquier tarea:**
+> - [ ] ¿El código nuevo tiene al menos UN consumidor real? (frontend, cron, webhook, otro servicio)
+> - [ ] ¿Puedo trazar el flujo completo desde el trigger hasta el resultado visible?
+> - [ ] ¿Si elimino este código, algo se rompe? (Si la respuesta es "no", no debería existir)
+>
+> **Anti-patrón:** "Creo la Edge Function y después la integro" → NO. Se crea Y se integra en la misma tarea.
+
+---
+
 ## 1. Contexto & Memorias Activas
 
 ### Perfil del Proyecto

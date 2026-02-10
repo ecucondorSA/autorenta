@@ -9,7 +9,11 @@ import {
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { AiPhotoEnhancerService, EnhancedPhoto } from '@core/services/ai/ai-photo-enhancer.service';
+import {
+  AiPhotoEnhancerService,
+  EnhancedPhoto,
+  GenerationMethod,
+} from '@core/services/ai/ai-photo-enhancer.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 @Component({
@@ -150,6 +154,8 @@ export class AiPhotoGeneratorComponent {
   private readonly aiPhotoService = inject(AiPhotoEnhancerService);
   private readonly toastService = inject(NotificationManagerService);
 
+  @Input() method: GenerationMethod = 'google-ai';
+
   readonly count = signal(3);
   readonly generating = signal(false);
   readonly generatedPhotos = signal<EnhancedPhoto[]>([]);
@@ -174,7 +180,7 @@ export class AiPhotoGeneratorComponent {
         year: this.year,
         color: this.color,
         count: this.count(),
-        method: 'cloudflare-ai', // Force AI method
+        method: this.method,
       });
 
       this.generatedPhotos.set(photos);

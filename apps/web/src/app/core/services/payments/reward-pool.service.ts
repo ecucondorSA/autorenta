@@ -590,4 +590,239 @@ export class RewardPoolService {
     }
     return points.toString();
   }
+
+  // ============================================================================
+  // ANTI-FRAUD: Owner-facing status + Admin review queue
+  // ============================================================================
+
+  /** Anti-fraud status signals (owner-facing) */
+  readonly antifraudLoading = signal(false);
+  readonly activeCooldowns = signal<AntifraudCooldown[]>([]);
+  readonly activeGamingSignals = signal<AntifraudGamingSignal[]>([]);
+  readonly gamingRiskScore = computed(() => this.seniorSummary()?.gamingRiskScore ?? 0);
+  readonly hasActiveWarnings = computed(() => this.activeGamingSignals().length > 0);
+
+  /** Admin review queue signals */
+  readonly reviewQueue = signal<AdminReviewItem[]>([]);
+  readonly reviewQueueLoading = signal(false);
+  readonly reviewQueueStats = computed(() => {
+    const items = this.reviewQueue();
+    return {
+      total: items.length,
+      pending: items.filter((i) => i.status === 'pending').length,
+      inReview: items.filter((i) => i.status === 'in_review').length,
+      highRisk: items.filter((i) => i.riskScore >= 60).length,
+    };
+  });
+
+  /**
+   * Load anti-fraud status for current owner (cooldowns + gaming signals)
+   */
+  async loadAntifraudStatus(): Promise<void> {
+    const userId = this.authService.userId();
+    if (!userId) return;
+
+    this.antifraudLoading.set(true);
+
+    try {
+      const [cooldownResult, signalResult] = await Promise.all([
+        this.supabase
+          .from('owner_cooldowns')
+          .select('*')
+          .eq('owner_id', userId)
+          .gt('ends_at', new Date().toISOString())
+          .order('ends_at', { ascending: true }),
+        this.supabase
+          .from('owner_gaming_signals')
+          .select('*')
+          .eq('owner_id', userId)
+          .eq('status', 'active')
+          .order('detected_at', { ascending: false })
+          .limit(20),
+      ]);
+
+      if (cooldownResult.error) throw cooldownResult.error;
+      if (signalResult.error) throw signalResult.error;
+
+      this.activeCooldowns.set(
+        (cooldownResult.data || []).map((c) => ({
+          id: c.id,
+          carId: c.car_id,
+          reason: c.reason,
+          startsAt: c.starts_at,
+          endsAt: c.ends_at,
+          reasonLabel: this.getCooldownReasonLabel(c.reason),
+        })),
+      );
+
+      this.activeGamingSignals.set(
+        (signalResult.data || []).map((s) => ({
+          id: s.id,
+          signalType: s.signal_type,
+          riskScore: s.risk_score,
+          detectedAt: s.detected_at,
+          details: s.details,
+          signalLabel: this.getGamingSignalLabel(s.signal_type),
+        })),
+      );
+    } catch (err) {
+      console.error('[RewardPoolService] Error loading anti-fraud status:', err);
+    } finally {
+      this.antifraudLoading.set(false);
+    }
+  }
+
+  /**
+   * Load admin review queue (admin only)
+   */
+  async loadAdminReviewQueue(): Promise<void> {
+    this.reviewQueueLoading.set(true);
+
+    try {
+      const { data, error } = await this.supabase
+        .from('admin_review_queue')
+        .select(
+          `
+          *,
+          owner:owner_id (
+            id,
+            first_name,
+            last_name,
+            email,
+            phone,
+            id_verified,
+            rating_avg,
+            rating_count
+          )
+        `,
+        )
+        .in('status', ['pending', 'in_review'])
+        .order('risk_score', { ascending: false });
+
+      if (error) throw error;
+
+      this.reviewQueue.set(
+        (data || []).map((item) => ({
+          id: item.id,
+          ownerId: item.owner_id,
+          ownerName: item.owner
+            ? `${(item.owner as { first_name?: string }).first_name || ''} ${(item.owner as { last_name?: string }).last_name || ''}`.trim()
+            : 'Desconocido',
+          ownerEmail: (item.owner as { email?: string })?.email || '',
+          ownerRating: (item.owner as { rating_avg?: number })?.rating_avg || 0,
+          ownerVerified: (item.owner as { id_verified?: boolean })?.id_verified || false,
+          reviewType: item.review_type,
+          riskScore: item.risk_score,
+          signals: item.signals || [],
+          month: item.month,
+          frozenAmount: item.frozen_amount,
+          status: item.status,
+          payoutId: item.payout_id,
+          createdAt: item.created_at,
+        })),
+      );
+    } catch (err) {
+      console.error('[RewardPoolService] Error loading review queue:', err);
+    } finally {
+      this.reviewQueueLoading.set(false);
+    }
+  }
+
+  /**
+   * Admin: resolve a review item
+   */
+  async resolveReview(
+    reviewId: string,
+    action: 'clear' | 'warn' | 'suspend' | 'release_payout' | 'cancel_payout',
+    notes?: string,
+  ): Promise<boolean> {
+    try {
+      const { error } = await this.supabase.rpc('admin_resolve_review', {
+        p_review_id: reviewId,
+        p_action: action,
+        p_notes: notes || null,
+      });
+
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      console.error('[RewardPoolService] Error resolving review:', err);
+      return false;
+    }
+  }
+
+  /** Get cooldown reason in Spanish */
+  getCooldownReasonLabel(reason: string): string {
+    const labels: Record<string, string> = {
+      owner_cancellation: 'Cancelación de reserva',
+      gaming_detected: 'Actividad sospechosa detectada',
+      manual: 'Aplicado manualmente por admin',
+    };
+    return labels[reason] || reason;
+  }
+
+  /** Get gaming signal label in Spanish */
+  getGamingSignalLabel(signalType: string): string {
+    const labels: Record<string, string> = {
+      calendar_open_no_bookings: 'Calendario abierto sin reservas',
+      high_rejection_rate: 'Alta tasa de rechazo',
+      price_manipulation: 'Manipulación de precios',
+      fake_bookings_suspected: 'Reservas sospechosas',
+      multi_account_suspected: 'Múltiples cuentas sospechosas',
+      rapid_cancellation_pattern: 'Patrón de cancelaciones',
+      listing_velocity: 'Publicación acelerada de autos',
+      cross_account_collusion: 'Colusión entre cuentas',
+      synthetic_availability: 'Disponibilidad sintética',
+      review_manipulation: 'Manipulación de reseñas',
+      geographic_anomaly: 'Anomalía geográfica',
+    };
+    return labels[signalType] || signalType;
+  }
+
+  /** Get risk level label and color */
+  getRiskLevel(score: number): { label: string; color: string } {
+    if (score >= 60) return { label: 'Alto', color: 'text-red-400 bg-red-500/20' };
+    if (score >= 40) return { label: 'Medio', color: 'text-amber-400 bg-amber-500/20' };
+    if (score >= 20) return { label: 'Bajo', color: 'text-yellow-400 bg-yellow-500/20' };
+    return { label: 'Sin riesgo', color: 'text-emerald-400 bg-emerald-500/20' };
+  }
+}
+
+// ============================================================================
+// ANTI-FRAUD TYPES
+// ============================================================================
+
+export interface AntifraudCooldown {
+  id: string;
+  carId: string | null;
+  reason: string;
+  startsAt: string;
+  endsAt: string;
+  reasonLabel: string;
+}
+
+export interface AntifraudGamingSignal {
+  id: string;
+  signalType: string;
+  riskScore: number;
+  detectedAt: string;
+  details: Record<string, unknown>;
+  signalLabel: string;
+}
+
+export interface AdminReviewItem {
+  id: string;
+  ownerId: string;
+  ownerName: string;
+  ownerEmail: string;
+  ownerRating: number;
+  ownerVerified: boolean;
+  reviewType: string;
+  riskScore: number;
+  signals: Array<{ type: string; score: number; details: Record<string, unknown> }>;
+  month: string;
+  frozenAmount: number | null;
+  status: string;
+  payoutId: string | null;
+  createdAt: string;
 }

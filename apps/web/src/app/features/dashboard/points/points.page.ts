@@ -55,6 +55,13 @@ export class PointsPage implements OnInit {
   readonly eligibleCars = this.rewardPoolService.eligibleCars;
   readonly isEligible = this.rewardPoolService.isEligible;
 
+  // Anti-fraud signals
+  readonly gamingRiskScore = this.rewardPoolService.gamingRiskScore;
+  readonly activeCooldowns = this.rewardPoolService.activeCooldowns;
+  readonly activeGamingSignals = this.rewardPoolService.activeGamingSignals;
+  readonly hasActiveWarnings = this.rewardPoolService.hasActiveWarnings;
+  readonly antifraudLoading = this.rewardPoolService.antifraudLoading;
+
   // Local computed
   readonly currentMonthName = computed(() => {
     const summary = this.summary();
@@ -196,8 +203,11 @@ export class PointsPage implements OnInit {
   }
 
   async loadData(): Promise<void> {
-    // Only load senior model - legacy tables (community_rewards, reward_pool) don't exist
-    await this.rewardPoolService.loadSeniorSummary();
+    // Load senior model + anti-fraud status in parallel
+    await Promise.all([
+      this.rewardPoolService.loadSeniorSummary(),
+      this.rewardPoolService.loadAntifraudStatus(),
+    ]);
   }
 
   toggleModel(): void {
@@ -218,5 +228,17 @@ export class PointsPage implements OnInit {
 
   formatCents(cents: number | null | undefined): number {
     return (cents || 0) / 100;
+  }
+
+  getRiskLevel(score: number): { label: string; color: string } {
+    return this.rewardPoolService.getRiskLevel(score);
+  }
+
+  getGamingSignalLabel(type: string): string {
+    return this.rewardPoolService.getGamingSignalLabel(type);
+  }
+
+  getCooldownReasonLabel(reason: string): string {
+    return this.rewardPoolService.getCooldownReasonLabel(reason);
   }
 }

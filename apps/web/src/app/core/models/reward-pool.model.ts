@@ -564,12 +564,19 @@ export function calculatePoolDistribution(
  * Gaming signal types
  */
 export type GamingSignal =
-  | 'calendar_open_no_bookings' // Open calendar but 0 bookings
-  | 'high_rejection_rate' // Rejects most requests
-  | 'price_manipulation' // Price changes frequently to avoid bookings
-  | 'fake_bookings_suspected' // Bookings with same users repeatedly
-  | 'multi_account_suspected' // Multiple accounts same device/payment
-  | 'rapid_cancellation_pattern'; // Cancels to cherry-pick bookings
+  // Original signals
+  | 'calendar_open_no_bookings' // Open calendar but 0 bookings (+20)
+  | 'high_rejection_rate' // Rejects most requests (+30)
+  | 'price_manipulation' // Price changes frequently to avoid bookings (+15)
+  | 'fake_bookings_suspected' // Bookings with same users repeatedly (+40)
+  | 'multi_account_suspected' // Multiple accounts same device/payment (+35)
+  | 'rapid_cancellation_pattern' // Cancels to cherry-pick bookings (+25)
+  // Tier 2 signals
+  | 'listing_velocity' // 4+ cars added in 30 days (+20)
+  | 'cross_account_collusion' // 2+ accounts share phone/payment method (+35)
+  | 'synthetic_availability' // 5+ requests, 0 accepted, 3+ rejected (+25)
+  | 'review_manipulation' // 70%+ 5-star reviews from new accounts (+30)
+  | 'geographic_anomaly'; // Car 500+km from owner address (+15)
 
 /**
  * Gaming detection result
@@ -583,33 +590,45 @@ export interface GamingDetection {
 }
 
 /**
- * Detect potential gaming behavior
+ * Extended gaming detection input (Tier 2)
  */
-export function detectGaming(
-  ownerId: string,
-  vaDays30d: number,
-  bookings30d: number,
-  rejections30d: number,
-  cancellations30d: number,
-  uniqueRenters90d: number,
-  totalBookings90d: number,
-  priceChanges30d: number,
-): GamingDetection {
+export interface GamingDetectionInput {
+  ownerId: string;
+  // Original metrics
+  vaDays30d: number;
+  bookings30d: number;
+  rejections30d: number;
+  cancellations30d: number;
+  uniqueRenters90d: number;
+  totalBookings90d: number;
+  priceChanges30d: number;
+  // Tier 2 metrics
+  carsAdded30d: number;
+  sharesPhoneOrPayment: boolean; // cross-account collusion flag
+  fiveStarFromNewAccounts: number; // count of 5-star reviews from accounts < 30d old
+  totalReviews: number;
+  carDistanceFromOwnerKm: number; // max distance of any car from owner address
+}
+
+/**
+ * Detect potential gaming behavior (v2 — includes Tier 2 signals)
+ */
+export function detectGaming(input: GamingDetectionInput): GamingDetection {
   const signals: GamingSignal[] = [];
   const details: string[] = [];
   let riskScore = 0;
 
-  // Signal 1: Calendar open but no bookings
-  if (vaDays30d >= 20 && bookings30d === 0) {
+  // Signal 1: Calendar open but no bookings (+20)
+  if (input.vaDays30d >= 20 && input.bookings30d === 0) {
     signals.push('calendar_open_no_bookings');
-    details.push(`${vaDays30d} VA days but 0 bookings`);
+    details.push(`${input.vaDays30d} VA days but 0 bookings`);
     riskScore += 20;
   }
 
-  // Signal 2: High rejection rate
-  const totalRequests = bookings30d + rejections30d;
+  // Signal 2: High rejection rate (+30)
+  const totalRequests = input.bookings30d + input.rejections30d;
   if (totalRequests >= 5) {
-    const rejectionRate = rejections30d / totalRequests;
+    const rejectionRate = input.rejections30d / totalRequests;
     if (rejectionRate > 0.5) {
       signals.push('high_rejection_rate');
       details.push(`${Math.round(rejectionRate * 100)}% rejection rate`);
@@ -617,25 +636,85 @@ export function detectGaming(
     }
   }
 
-  // Signal 3: Price manipulation
-  if (priceChanges30d > 10) {
+  // Signal 3: Price manipulation (+15)
+  if (input.priceChanges30d > 10) {
     signals.push('price_manipulation');
-    details.push(`${priceChanges30d} price changes in 30 days`);
+    details.push(`${input.priceChanges30d} price changes in 30 days`);
     riskScore += 15;
   }
 
-  // Signal 4: Fake bookings (same renters)
-  if (totalBookings90d >= 5 && uniqueRenters90d <= 2) {
+  // Signal 4: Fake bookings (same renters) (+40)
+  if (input.totalBookings90d >= 5 && input.uniqueRenters90d <= 2) {
     signals.push('fake_bookings_suspected');
-    details.push(`${totalBookings90d} bookings with only ${uniqueRenters90d} unique renters`);
+    details.push(`${input.totalBookings90d} bookings with only ${input.uniqueRenters90d} unique renters`);
     riskScore += 40;
   }
 
-  // Signal 5: Rapid cancellation pattern
-  if (cancellations30d >= 3) {
+  // Signal 5: Rapid cancellation pattern (+25)
+  if (input.cancellations30d >= 3) {
     signals.push('rapid_cancellation_pattern');
-    details.push(`${cancellations30d} owner cancellations in 30 days`);
+    details.push(`${input.cancellations30d} owner cancellations in 30 days`);
     riskScore += 25;
+  }
+
+  // Signal 6 (Tier 2): Listing velocity (+20)
+  if (input.carsAdded30d >= 4) {
+    signals.push('listing_velocity');
+    details.push(`${input.carsAdded30d} cars added in 30 days`);
+    riskScore += 20;
+  }
+
+  // Signal 7 (Tier 2): Cross-account collusion (+35)
+  if (input.sharesPhoneOrPayment) {
+    signals.push('cross_account_collusion');
+    details.push('Shares phone or payment method with another account');
+    riskScore += 35;
+  }
+
+  // Signal 8 (Tier 2): Synthetic availability (+25)
+  if (totalRequests >= 5 && input.bookings30d === 0 && input.rejections30d >= 3) {
+    signals.push('synthetic_availability');
+    details.push(`${totalRequests} requests, 0 accepted, ${input.rejections30d} rejected`);
+    riskScore += 25;
+  }
+
+  // Signal 9 (Tier 2): Review manipulation (+30)
+  // Triple gate: totalReviews >= 12 AND fiveStarFromNew >= 8 AND ratio >= 70%
+  // Each condition eliminates a different false positive type:
+  // - totalReviews: new owners with few reviews
+  // - absolute count: edge cases near threshold
+  // - ratio: legitimate owners with some new-account reviews
+  const totalReviews = Math.max(0, input.totalReviews ?? 0);
+  const fiveStarFromNew = Math.max(0, input.fiveStarFromNewAccounts ?? 0);
+  const fiveStarFromNewClamped = Math.min(fiveStarFromNew, totalReviews);
+
+  const MIN_TOTAL_REVIEWS_FOR_SIGNAL = 12;
+  const MIN_NEW_ACCOUNT_5STAR_COUNT = 8;
+  const NEW_ACCOUNT_5STAR_RATIO_THRESHOLD = 0.7;
+
+  if (totalReviews >= MIN_TOTAL_REVIEWS_FOR_SIGNAL && fiveStarFromNewClamped >= MIN_NEW_ACCOUNT_5STAR_COUNT) {
+    const ratio = fiveStarFromNewClamped / totalReviews;
+    if (ratio >= NEW_ACCOUNT_5STAR_RATIO_THRESHOLD) {
+      signals.push('review_manipulation');
+      details.push(
+        `${fiveStarFromNewClamped}/${totalReviews} (${Math.round(ratio * 100)}%) 5★ reviews from accounts <30d old`
+      );
+      riskScore += 30;
+    }
+  }
+
+  // Signal 10 (Tier 2): Geographic anomaly (+15)
+  if (input.carDistanceFromOwnerKm > 500) {
+    signals.push('geographic_anomaly');
+    details.push(`Car located ${Math.round(input.carDistanceFromOwnerKm)}km from owner address`);
+    riskScore += 15;
+  }
+
+  // Compound risk: 3+ simultaneous signals add bonus
+  if (signals.length >= 3) {
+    const compoundBonus = Math.min(20, (signals.length - 2) * 10);
+    details.push(`Compound risk: ${signals.length} simultaneous signals (+${compoundBonus})`);
+    riskScore += compoundBonus;
   }
 
   // Determine recommendation
@@ -649,7 +728,7 @@ export function detectGaming(
   }
 
   return {
-    ownerId,
+    ownerId: input.ownerId,
     signals,
     riskScore: Math.min(100, riskScore),
     recommendation,
