@@ -35,7 +35,8 @@ const VALID_DOC_TYPES = [
 
 type ValidDocType = (typeof VALID_DOC_TYPES)[number];
 
-const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB (mobile-friendly)
+const MAX_ORIGINAL_BYTES = 15 * 1024 * 1024; // 15MB pre-compression (mobile cameras produce 3-8MB)
+const MAX_COMPRESSED_BYTES = 2 * 1024 * 1024; // 2MB post-compression target
 const IDENTITY_BUCKETS = ['identity-documents', 'documents'] as const;
 
 /**
@@ -176,7 +177,7 @@ export class VerificationService implements OnDestroy {
     validateDocType(docType);
 
     const validation = validateFile(file, {
-      maxSizeBytes: MAX_UPLOAD_BYTES,
+      maxSizeBytes: MAX_COMPRESSED_BYTES,
       allowedMimeTypes: DEFAULT_IMAGE_MIME_TYPES,
     });
 
@@ -539,16 +540,17 @@ export class VerificationService implements OnDestroy {
       warnings: string[];
     } | null;
   }> {
-    const validation = validateFile(file, {
-      maxSizeBytes: MAX_UPLOAD_BYTES,
+    // 1. Validate MIME type and pre-compression size ceiling
+    const typeValidation = validateFile(file, {
+      maxSizeBytes: MAX_ORIGINAL_BYTES,
       allowedMimeTypes: DEFAULT_IMAGE_MIME_TYPES,
     });
 
-    if (!validation.valid) {
-      throw new Error(validation.error || 'Archivo no válido');
+    if (!typeValidation.valid) {
+      throw new Error(typeValidation.error || 'Archivo no válido');
     }
 
-    // 2. Compress image using FileUploadService
+    // 2. Compress image BEFORE size validation (mobile cameras produce 3-8MB photos)
     let processedFile = file;
     try {
       processedFile = await this.fileUploadService.compressImage(file, {
@@ -560,6 +562,14 @@ export class VerificationService implements OnDestroy {
       );
     } catch (e) {
       this.logger.warn('Compression failed, proceeding with original', e);
+    }
+
+    // 3. Validate compressed size
+    if (processedFile.size > MAX_COMPRESSED_BYTES) {
+      const maxMB = (MAX_COMPRESSED_BYTES / (1024 * 1024)).toFixed(0);
+      throw new Error(
+        `Imagen demasiado grande incluso después de comprimir (${(processedFile.size / (1024 * 1024)).toFixed(1)}MB). Máximo ${maxMB}MB.`,
+      );
     }
 
     // Determinar tipo de documento y lado

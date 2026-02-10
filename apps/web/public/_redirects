@@ -27,6 +27,10 @@
 /:a/:b/main-*         /main-:splat      302
 /:a/:b/polyfills-*    /polyfills-:splat 302
 /:a/:b/styles-*       /styles-:splat    302
+/:a/:b/:c/chunk-*        /chunk-:splat     302
+/:a/:b/:c/main-*         /main-:splat      302
+/:a/:b/:c/polyfills-*    /polyfills-:splat 302
+/:a/:b/:c/styles-*       /styles-:splat    302
 
 # ──────────────────────────────────────────────────
 # SPA routes — explicit patterns from app.routes.ts

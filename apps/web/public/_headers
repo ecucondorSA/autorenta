@@ -17,7 +17,6 @@
 
 /index.html
   Cache-Control: no-cache, no-store, must-revalidate, max-age=0
-  Clear-Site-Data: "cache", "storage"
 
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
