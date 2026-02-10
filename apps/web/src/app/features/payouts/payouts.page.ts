@@ -12,6 +12,7 @@ import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { BankAccount, PayoutService } from '@core/services/payments/payout.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { MercadoPagoConnectComponent } from '../profile/mercadopago-connect.component';

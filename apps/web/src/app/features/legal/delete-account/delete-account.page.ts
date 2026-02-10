@@ -3,6 +3,7 @@ import { Component, ChangeDetectionStrategy, signal, inject, computed } from '@a
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import { Router } from '@angular/router';

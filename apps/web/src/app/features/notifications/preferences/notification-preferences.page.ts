@@ -10,6 +10,7 @@ import {
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { NotificationSoundService } from '@core/services/infrastructure/notification-sound.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';

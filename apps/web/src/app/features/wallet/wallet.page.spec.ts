@@ -10,6 +10,7 @@ import { WithdrawalService } from '@core/services/payments/withdrawal.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { MetaService } from '@core/services/ui/meta.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { testProviders } from '@app/testing/test-providers';
 import { WalletPage } from './wallet.page';

@@ -17,6 +17,7 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BookingWalletService } from '@core/services/bookings/booking-wallet.service';
 import { FxService } from '@core/services/payments/fx.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { MessagesService } from '@core/services/bookings/messages.service';

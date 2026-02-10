@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { WalletLedgerService } from '@core/services/payments/wallet-ledger.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 @Component({

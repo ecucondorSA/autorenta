@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import type { Booking, BookingStatus, BookingUiStatus } from '@core/models';
+import type { Booking, BookingUiStatus } from '@core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
 import { isValidStatusTransition } from '@core/services/bookings/booking-flow-helpers';

@@ -12,6 +12,7 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { BookingInspection, InspectionPhoto, InspectionStage } from '@core/models/fgo-v1-1.model';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { FileUploadService } from '@core/services/infrastructure/file-upload.service';
 import {

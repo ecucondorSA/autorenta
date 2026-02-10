@@ -16,6 +16,7 @@ import {
   CosmeticConditionService,
   CosmeticIssue,
 } from '@core/services/ai/cosmetic-condition.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { IconComponent } from '../icon/icon.component';

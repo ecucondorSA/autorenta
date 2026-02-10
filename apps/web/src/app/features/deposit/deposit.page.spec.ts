@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { testProviders } from '@app/testing/test-providers';

@@ -12,6 +12,7 @@ import {
   CarAvailabilityService,
   DetailedBlockedRange,
 } from '@core/services/cars/car-availability.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { Car } from '../../core/models';
 import { IconComponent } from '../../shared/components/icon/icon.component';

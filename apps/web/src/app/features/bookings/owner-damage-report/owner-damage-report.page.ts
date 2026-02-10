@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { IonicModule } from '@ionic/angular';
 import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';

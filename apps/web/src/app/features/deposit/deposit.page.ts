@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { WalletService } from '@core/services/payments/wallet.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 

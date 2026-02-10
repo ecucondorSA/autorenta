@@ -19,13 +19,54 @@ import type {
 } from './map-provider.interface';
 
 // Google Maps types - declared globally since loaded dynamically at runtime
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const google: any;
+// Minimal interfaces for runtime-loaded Google Maps API (no @types/google.maps installed)
+interface GoogleMapsNamespace {
+  maps: {
+    importLibrary(name: string): Promise<Record<string, unknown>>;
+    LatLngBounds: new () => GoogleLatLngBounds;
+    InfoWindow: new (opts?: Record<string, unknown>) => GoogleInfoWindow;
+    ControlPosition: Record<string, unknown>;
+    event: {
+      clearInstanceListeners(instance: unknown): void;
+      trigger(instance: unknown, event: string): void;
+    };
+    marker: {
+      AdvancedMarkerElement: new (opts?: Record<string, unknown>) => GoogleMarker;
+    };
+  };
+}
+interface GoogleLatLngBounds {
+  extend(point: { lat: number; lng: number }): void;
+  getSouthWest(): { lat(): number; lng(): number };
+  getNorthEast(): { lat(): number; lng(): number };
+}
+declare const google: GoogleMapsNamespace;
 
-// Lightweight type aliases for internal use
-type GoogleMap = any;
-type GoogleMarker = any;
-type GoogleInfoWindow = any;
+// Lightweight type aliases for internal use (runtime Google Maps objects)
+type GoogleMap = Record<string, unknown> & {
+  setCenter(pos: { lat: number; lng: number }): void;
+  getCenter(): { lat(): number; lng(): number } | null;
+  setZoom(z: number): void;
+  getZoom(): number | undefined;
+  panTo(pos: { lat: number; lng: number }): void;
+  fitBounds(bounds: GoogleLatLngBounds, padding?: number): void;
+  getBounds(): GoogleLatLngBounds | null;
+  setOptions(opts: Record<string, unknown>): void;
+  addListener(event: string, cb: (e?: unknown) => void): { remove(): void };
+};
+type GoogleMarker = Record<string, unknown> & {
+  map: GoogleMap | null;
+  position: { lat: number; lng: number } | null;
+  element?: HTMLElement;
+  addListener(event: string, cb: () => void): { remove(): void };
+};
+type GoogleInfoWindow = Record<string, unknown> & {
+  open(opts: { map: GoogleMap; anchor?: GoogleMarker } | GoogleMap): void;
+  close(): void;
+  setContent(content: string | HTMLElement): void;
+  setPosition(pos: { lat: number; lng: number }): void;
+  get(key: string): unknown;
+};
 
 /**
  * Wrapper around google.maps.Map to implement IMapInstance
@@ -110,7 +151,7 @@ class GoogleMapInstance implements IMapInstance {
     this.map.setOptions({
       zoomControl: true,
       zoomControlOptions: {
-        position: google.maps.ControlPosition.RIGHT_TOP,
+        position: google.maps.ControlPosition['RIGHT_TOP'],
       },
     });
   }
@@ -256,7 +297,9 @@ export class GoogleMapsProviderService implements IMapProvider {
       throw new Error('Google Maps failed to load');
     }
 
-    const { Map } = (await google.maps.importLibrary('maps')) as { Map: any };
+    const { Map } = (await google.maps.importLibrary('maps')) as {
+      Map: new (el: HTMLElement, opts: Record<string, unknown>) => GoogleMap;
+    };
 
     const mapOptions: Record<string, unknown> = {
       center: { lat: options.center.lat, lng: options.center.lng },
@@ -337,7 +380,7 @@ export class GoogleMapsProviderService implements IMapProvider {
       // Wait for google.maps to be defined
       await this.waitForGoogleMaps();
 
-      console.log('[GoogleMapsProvider] Loaded successfully');
+      console.info('[GoogleMapsProvider] Loaded successfully');
       return true;
     } catch (err) {
       console.error('[GoogleMapsProvider] Load failed:', err);

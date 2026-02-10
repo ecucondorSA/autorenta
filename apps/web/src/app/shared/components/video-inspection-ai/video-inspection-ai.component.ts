@@ -25,6 +25,7 @@ import {
   VideoInspectionResult,
 } from '@core/services/ai/video-inspection-ai.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { firstValueFrom } from 'rxjs';

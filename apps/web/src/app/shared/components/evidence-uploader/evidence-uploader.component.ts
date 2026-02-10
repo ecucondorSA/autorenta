@@ -11,6 +11,7 @@ import {
 import { IonicModule } from '@ionic/angular';
 import { FileUploadService } from '@core/services/infrastructure/file-upload.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 type UploadedEvidence = {

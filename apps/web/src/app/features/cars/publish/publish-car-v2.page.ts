@@ -16,6 +16,7 @@ import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-noti
 import { CarsService } from '@core/services/cars/cars.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { PricingService } from '@core/services/payments/pricing.service';
 import { VerificationStateService } from '@core/services/verification/verification-state.service';
@@ -1429,8 +1430,7 @@ export class PublishCarV2Page implements OnInit {
     try {
       const formData = this.formService.getFormData();
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const carData: any = {
+      const carData: Record<string, unknown> = {
         ...formData,
         status: 'draft', // ✅ Explicitly set as draft
         // Defaults for draft to avoid DB constraints if any

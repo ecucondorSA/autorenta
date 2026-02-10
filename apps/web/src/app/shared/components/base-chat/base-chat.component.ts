@@ -22,6 +22,7 @@ import { GeminiService } from '@core/services/ai/gemini.service';
 import { Message, MessagesService } from '@core/services/bookings/messages.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationSoundService } from '@core/services/infrastructure/notification-sound.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import type { AiBookingContext, ChatSuggestion } from '../../../core/models';

@@ -13,6 +13,7 @@ import {
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
 import { ReviewFormComponent } from '../../../shared/components/review-form/review-form.component';

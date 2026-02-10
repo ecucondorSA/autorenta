@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { IdentityLevelService } from '@core/services/verification/identity-level.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 type BadgeSize = 'xs' | 'sm' | 'md' | 'lg';

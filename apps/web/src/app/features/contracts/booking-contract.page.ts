@@ -2,6 +2,7 @@ import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@ang
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ContractsService, BookingContract } from '@core/services/bookings/contracts.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { formatDate } from '../../shared/utils/date.utils';
 import { ContractPdfViewerComponent } from './components/contract-pdf-viewer.component';

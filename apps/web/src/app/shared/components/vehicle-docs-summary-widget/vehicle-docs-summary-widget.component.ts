@@ -4,6 +4,7 @@ import {
   VehicleDocumentsService,
   VehicleDocument,
 } from '@core/services/verification/vehicle-documents.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 interface CarDocStatus {

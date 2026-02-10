@@ -21,6 +21,7 @@ import {
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import { DEFAULT_DOCUMENT_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';

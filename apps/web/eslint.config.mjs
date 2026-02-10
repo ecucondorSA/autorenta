@@ -46,14 +46,53 @@ export default [
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-undef': 'off', // Disabled for test files with jasmine globals
       '@angular-eslint/prefer-inject': 'off', // Allow constructor injection for now
+      // Allow intentional logging but flag console.log (CLAUDE.md §4)
+      'no-console': ['warn', { allow: ['warn', 'error', 'info', 'debug'] }],
+    },
+  },
+  // Restrict direct Supabase access in features/ and shared/ (CLAUDE.md §4)
+  // Supabase must be accessed through core/services/ facades only
+  // Admin pages are excluded — internal tools with legitimate direct DB access
+  {
+    files: ['src/app/features/**/*.ts', 'src/app/shared/**/*.ts'],
+    ignores: ['src/app/features/admin/**/*.ts', 'src/app/features/dashboard/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'warn',
+        {
+          patterns: [
+            {
+              group: ['**/supabase-client.service*'],
+              message:
+                'Import Supabase through core/services/ facades, not directly. See CLAUDE.md §4.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  // Allow console in infrastructure/debug services that wrap or extend it
+  {
+    files: [
+      'src/app/core/services/infrastructure/logger.service.ts',
+      'src/app/core/services/infrastructure/sentry.service.ts',
+      'src/app/core/services/infrastructure/global-error-handler.ts',
+      'src/app/core/services/admin/debug.service.ts',
+      'src/app/core/services/bookings/booking-flow-logger.service.ts',
+      'src/server.ts',
+      'src/test-setup.ts',
+    ],
+    rules: {
+      'no-console': 'off',
     },
   },
   // Relaxed rules for test files
   {
-    files: ['**/*.spec.ts', '**/*.test.ts'],
+    files: ['**/*.spec.ts', '**/*.test.ts', '**/*.vitest.ts'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off', // Allow 'any' in tests for mocking
       '@typescript-eslint/no-unused-vars': 'off', // Allow unused vars in test setup
+      'no-console': 'off', // Allow console in tests
     },
   },
 ];

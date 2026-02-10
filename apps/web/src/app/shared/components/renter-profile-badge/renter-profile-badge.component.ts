@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
+// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 export interface RenterProfileBadge {
