@@ -1,3 +1,7 @@
+## <small>3.80.6 (2026-02-10)</small>
+
+* perf(network): deduplicate concurrent getCurrentProfile() and loadDocuments() calls ([6799b1d](https://github.com/ecucondorSA/autorenta/commit/6799b1d))
+
 ## <small>3.80.5 (2026-02-10)</small>
 
 * fix(deposit): add Authorization header to mercadopago-create-preference call ([9395524](https://github.com/ecucondorSA/autorenta/commit/9395524))
