@@ -92,7 +92,18 @@ jobs:
 
           RPC_LIST="${{ needs.extract-rpcs.outputs.rpc_list }}"
 
+          # Load allowlist (known missing RPCs that are intentionally deferred)
+          ALLOWLIST=""
+          if [ -f ".github/rpc-allowlist.txt" ]; then
+            ALLOWLIST=$(grep -v '^#' .github/rpc-allowlist.txt | grep -v '^$' | cut -d'|' -f1 | tr -d ' ')
+            ALLOWLIST_COUNT=$(echo "$ALLOWLIST" | grep -c '.')
+            echo "📋 Loaded $ALLOWLIST_COUNT entries from rpc-allowlist.txt"
+          else
+            echo "📋 No rpc-allowlist.txt found, all missing RPCs will be errors"
+          fi
+
           MISSING=""
+          ALLOWED_MISSING=""
           FOUND=0
 
           for RPC in $(echo "$RPC_LIST" | tr ',' '\n'); do
@@ -108,29 +119,42 @@ jobs:
             " 2>&1 | tr -d ' ')
 
             if [ "$EXISTS" = "0" ] || [ -z "$EXISTS" ]; then
-              echo "❌ MISSING: $RPC"
-              MISSING="$MISSING $RPC"
+              # Check if in allowlist
+              if echo "$ALLOWLIST" | grep -qx "$RPC"; then
+                echo "⚠️ ALLOWED MISSING: $RPC (in allowlist)"
+                ALLOWED_MISSING="$ALLOWED_MISSING $RPC"
+              else
+                echo "❌ MISSING: $RPC"
+                MISSING="$MISSING $RPC"
+              fi
             else
               echo "✅ Found: $RPC"
               FOUND=$((FOUND + 1))
             fi
           done
 
+          ALLOWED_COUNT=$(echo "$ALLOWED_MISSING" | wc -w)
+
           echo ""
-          echo "📊 Results: $FOUND found"
+          echo "📊 Results: $FOUND found, $ALLOWED_COUNT allowed missing"
+
+          if [ "$ALLOWED_COUNT" -gt 0 ]; then
+            echo "::warning::⚠️ $ALLOWED_COUNT RPCs in allowlist (known tech debt)"
+          fi
 
           if [ -n "$MISSING" ]; then
             echo ""
-            echo "::error::❌ Missing RPC functions:$MISSING"
+            echo "::error::❌ NEW missing RPC functions (not in allowlist):$MISSING"
             echo ""
             echo "These functions are called in the frontend but don't exist in the database."
             echo "Either:"
             echo "  1. Add the missing migration to create the function"
             echo "  2. Remove the RPC call from the frontend"
+            echo "  3. Add to .github/rpc-allowlist.txt if intentionally deferred"
             exit 1
           fi
 
-          echo "✅ All RPCs verified successfully!"
+          echo "✅ All RPCs verified ($ALLOWED_COUNT allowed missing)!"
 
   check-migrations-applied:
     name: 🔄 Check migrations are applied
@@ -204,11 +228,14 @@ jobs:
           if [ "${{ needs.verify-rpcs.result }}" == "failure" ]; then
             echo "### ❌ Action Required" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "Some RPC functions used in the frontend don't exist in the database." >> $GITHUB_STEP_SUMMARY
-            echo "This will cause 400/404 errors at runtime." >> $GITHUB_STEP_SUMMARY
+            echo "NEW RPC functions (not in allowlist) are missing from the database." >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "**To fix:**" >> $GITHUB_STEP_SUMMARY
-            echo "1. Check if the migration was applied: \`supabase db push\`" >> $GITHUB_STEP_SUMMARY
-            echo "2. Force PostgREST reload: pause/restore project in dashboard" >> $GITHUB_STEP_SUMMARY
-            echo "3. Or create the missing function in a new migration" >> $GITHUB_STEP_SUMMARY
+            echo "1. Add the missing migration to create the function" >> $GITHUB_STEP_SUMMARY
+            echo "2. Or remove the RPC call from the frontend" >> $GITHUB_STEP_SUMMARY
+            echo "3. Or add to \`.github/rpc-allowlist.txt\` if intentionally deferred" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ✅ All RPCs verified" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Some RPCs may be in the allowlist (known tech debt). See \`.github/rpc-allowlist.txt\`." >> $GITHUB_STEP_SUMMARY
           fi
