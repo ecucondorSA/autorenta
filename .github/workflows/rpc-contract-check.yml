@@ -81,7 +81,14 @@ jobs:
         run: |
           echo "🔗 Connecting to database via pooler..."
 
-          DB_URL="postgresql://postgres.${{ secrets.SUPABASE_PROJECT_ID }}:${{ secrets.SUPABASE_DB_PASSWORD }}@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&connect_timeout=10"
+          DB_URL="postgresql://postgres.${{ secrets.SUPABASE_PROJECT_ID }}:${{ secrets.SUPABASE_DB_PASSWORD }}@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&connect_timeout=10"
+
+          # Test connection first
+          if ! psql "$DB_URL" -c "SELECT 1" > /dev/null 2>&1; then
+            echo "::error::❌ Cannot connect to database. Check SUPABASE_PROJECT_ID and SUPABASE_DB_PASSWORD secrets."
+            exit 1
+          fi
+          echo "✅ Database connection OK"
 
           RPC_LIST="${{ needs.extract-rpcs.outputs.rpc_list }}"
 
@@ -98,7 +105,7 @@ jobs:
               SELECT COUNT(*) FROM pg_proc p
               JOIN pg_namespace n ON p.pronamespace = n.oid
               WHERE n.nspname = 'public' AND p.proname = '$RPC'
-            " 2>/dev/null | tr -d ' ')
+            " 2>&1 | tr -d ' ')
 
             if [ "$EXISTS" = "0" ] || [ -z "$EXISTS" ]; then
               echo "❌ MISSING: $RPC"
@@ -148,7 +155,7 @@ jobs:
       - name: Compare local vs remote migrations
         if: steps.check-secrets.outputs.skip != 'true'
         run: |
-          DB_URL="postgresql://postgres.${{ secrets.SUPABASE_PROJECT_ID }}:${{ secrets.SUPABASE_DB_PASSWORD }}@aws-0-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&connect_timeout=10"
+          DB_URL="postgresql://postgres.${{ secrets.SUPABASE_PROJECT_ID }}:${{ secrets.SUPABASE_DB_PASSWORD }}@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require&connect_timeout=10"
 
           echo "📂 Local migrations:"
           LOCAL_MIGRATIONS=$(ls -1 supabase/migrations/*.sql 2>/dev/null | xargs -I {} basename {} | sort)
