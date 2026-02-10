@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, computed, signal } from '@angular/core';
+import { Injectable, OnDestroy, computed, inject, signal } from '@angular/core';
 import type {
   RealtimeChannel,
   RealtimePostgresChangesPayload,
@@ -6,6 +6,7 @@ import type {
 } from '@supabase/supabase-js';
 import type { VerificationProgress } from '@core/services/verification/identity-level.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { AuthService } from '@core/services/auth/auth.service';
 
 type VerificationStatusRow = {
   email_verified_at?: string | null;
@@ -28,6 +29,7 @@ type VerificationStatusRow = {
 })
 export class VerificationStateService implements OnDestroy {
   private readonly supabase: SupabaseClient = injectSupabase();
+  private readonly authService = inject(AuthService);
 
   // Reactive state
   readonly verificationProgress = signal<VerificationProgress | null>(null);
@@ -65,11 +67,9 @@ export class VerificationStateService implements OnDestroy {
    */
   async initialize(): Promise<void> {
     try {
-      const {
-        data: { user },
-      } = await this.supabase.auth.getUser();
+      const userId = await this.authService.getCachedUserId();
 
-      if (!user) {
+      if (!userId) {
         return;
       }
 
@@ -77,7 +77,7 @@ export class VerificationStateService implements OnDestroy {
       await this.refreshProgress();
 
       // Subscribe to changes
-      this.subscribeToChanges(user.id);
+      this.subscribeToChanges(userId);
     } catch {
       this.error.set('No se pudo inicializar el estado de verificación');
     }

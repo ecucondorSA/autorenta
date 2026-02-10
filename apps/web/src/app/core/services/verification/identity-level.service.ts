@@ -2,6 +2,7 @@ import { computed, inject, Injectable, OnDestroy, signal } from '@angular/core';
 import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { AuthService } from '@core/services/auth/auth.service';
 
 /**
  * User Identity Level Data
@@ -113,6 +114,7 @@ export interface LevelAccessCheck {
 export class IdentityLevelService implements OnDestroy {
   private readonly supabase: SupabaseClient = injectSupabase();
   private readonly logger = inject(LoggerService).createChildLogger('IdentityLevelService');
+  private readonly authService = inject(AuthService);
 
   // Reactive state
   readonly identityLevel = signal<UserIdentityLevel | null>(null);
@@ -147,18 +149,16 @@ export class IdentityLevelService implements OnDestroy {
     this.error.set(null);
 
     try {
-      const {
-        data: { user },
-      } = await this.supabase.auth.getUser();
+      const userId = await this.authService.getCachedUserId();
 
-      if (!user) {
+      if (!userId) {
         throw new Error('Usuario no autenticado');
       }
 
       const { data, error } = await this.supabase
         .from('user_identity_levels')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .single();
 
       if (error) {
@@ -269,11 +269,9 @@ export class IdentityLevelService implements OnDestroy {
     this.error.set(null);
 
     try {
-      const {
-        data: { user },
-      } = await this.supabase.auth.getUser();
+      const userId = await this.authService.getCachedUserId();
 
-      if (!user) {
+      if (!userId) {
         throw new Error('Usuario no autenticado');
       }
 
@@ -283,7 +281,7 @@ export class IdentityLevelService implements OnDestroy {
           ...updates,
           updated_at: new Date().toISOString(),
         })
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .select()
         .single();
 
@@ -351,29 +349,27 @@ export class IdentityLevelService implements OnDestroy {
    */
   async subscribeToRealtimeUpdates(): Promise<void> {
     try {
-      const {
-        data: { user },
-      } = await this.supabase.auth.getUser();
+      const userId = await this.authService.getCachedUserId();
 
-      if (!user) {
+      if (!userId) {
         return;
       }
 
-      this.currentUserId = user.id;
+      this.currentUserId = userId;
 
       // Unsubscribe from previous channel if exists
       this.unsubscribeFromRealtime();
 
       // Create new channel for this user
       this.realtimeChannel = this.supabase
-        .channel(`identity_level_${user.id}`)
+        .channel(`identity_level_${userId}`)
         .on(
           'postgres_changes',
           {
             event: '*',
             schema: 'public',
             table: 'user_identity_levels',
-            filter: `user_id=eq.${user.id}`,
+            filter: `user_id=eq.${userId}`,
           },
           async () => {
             // Refresh progress when changes detected

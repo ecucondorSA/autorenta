@@ -11,6 +11,7 @@ import {
 import { isNotFoundError, isPermissionError, handleSupabaseError, AuthError } from '@core/errors';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { AuthService } from '@core/services/auth/auth.service';
 
 // Re-export UserProfile for convenience
 export type { UserProfile };
@@ -52,6 +53,7 @@ export interface UpdateProfileData {
 export class ProfileService {
   private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
+  private readonly authService = inject(AuthService);
 
   /**
    * Get the authenticated user or throw a user-friendly error.
@@ -59,7 +61,7 @@ export class ProfileService {
    * so it surfaces as a toast instead of triggering the auth redirect loop.
    */
   private async requireUser(): Promise<{ id: string; email?: string }> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const user = await this.authService.getCachedUser();
     if (!user) {
       this.logger.warn('requireUser() — sesión expirada', 'ProfileService');
       throw new Error('Tu sesión expiró. Por favor, iniciá sesión nuevamente.');
@@ -68,12 +70,10 @@ export class ProfileService {
   }
 
   async getCurrentProfile(): Promise<UserProfile | null> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
+    const user = await this.authService.getCachedUser();
 
     if (!user) {
-      this.logger.warn('getUser() retornó null — sesión expirada o no autenticado', 'ProfileService');
+      this.logger.warn('getCachedUser() retornó null — sesión expirada o no autenticado', 'ProfileService');
       return null;
     }
 
