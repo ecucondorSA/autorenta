@@ -1,3 +1,8 @@
+## <small>3.80.8 (2026-02-10)</small>
+
+* fix(seo): add H1 heading and MetaService calls to marketplace/browse pages ([4239ab0](https://github.com/ecucondorSA/autorenta/commit/4239ab0))
+* perf(map,sentry): debounce map bounds emission + reduce Sentry event volume ([dd93294](https://github.com/ecucondorSA/autorenta/commit/dd93294))
+
 ## <small>3.80.7 (2026-02-10)</small>
 
 * perf(cars): add 30s query cache to listActiveCars and listMarketplaceCars ([f2617b9](https://github.com/ecucondorSA/autorenta/commit/f2617b9))
