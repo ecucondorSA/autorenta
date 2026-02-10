@@ -1,3 +1,8 @@
+## <small>3.80.3 (2026-02-10)</small>
+
+* chore(ci): remove redundant test-email.yml workflow ([43703da](https://github.com/ecucondorSA/autorenta/commit/43703da))
+* perf(verification): replace 7x getUser() HTTP calls with cached session reads ([c6e58ff](https://github.com/ecucondorSA/autorenta/commit/c6e58ff))
+
 ## <small>3.80.2 (2026-02-10)</small>
 
 * fix(db): rename monitoring_alerts migration to resolve duplicate timestamp ([9533e89](https://github.com/ecucondorSA/autorenta/commit/9533e89))
