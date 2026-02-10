@@ -1,7 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
-import { injectSupabase } from './supabase-client.service';
-import { LoggerService } from './logger.service';
+import { Injectable } from '@angular/core';
 
 /**
  * Generative UI Service
@@ -55,13 +52,8 @@ const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutos
 
 @Injectable({ providedIn: 'root' })
 export class GenerativeUIService {
-  private readonly supabase = injectSupabase();
-  private readonly logger = inject(LoggerService);
-  private readonly auth = inject(AuthService);
-
   // Cache en memoria
   private readonly contentCache = new Map<string, GeneratedContent>();
-  private readonly isGenerating = signal(false);
 
   /**
    * Genera descripción optimizada para un auto
@@ -69,56 +61,19 @@ export class GenerativeUIService {
   async generateCarDescription(car: CarData, context?: UserContext): Promise<GeneratedContent> {
     const cacheKey = `car-desc-${car.brand}-${car.model}-${car.year}-${context?.language || 'es'}`;
 
-    // Verificar cache
     const cached = this.getFromCache(cacheKey);
     if (cached) return cached;
 
-    try {
-      this.isGenerating.set(true);
+    // Uses deterministic fallbacks (AI edge function not yet deployed)
+    const result: GeneratedContent = {
+      content: this.getFallbackCarDescription(car),
+      confidence: 0.9,
+      generatedAt: Date.now(),
+      cached: false,
+    };
 
-      const { data, error } = await this.supabase.functions.invoke('gemini-generate-content', {
-        body: {
-          type: 'car_description',
-          data: {
-            brand: car.brand,
-            model: car.model,
-            year: car.year,
-            type: car.type,
-            features: car.features || [],
-            dailyPrice: car.dailyPrice,
-            rating: car.rating,
-            totalBookings: car.totalBookings,
-          },
-          context: {
-            language: context?.language || 'es',
-            country: context?.country || 'BR',
-            tone: context?.isNewUser ? 'welcoming' : 'professional',
-          },
-        },
-      });
-
-      if (error) throw error;
-
-      const result: GeneratedContent = {
-        content: data.content || this.getFallbackCarDescription(car),
-        confidence: data.confidence || 0.8,
-        generatedAt: Date.now(),
-        cached: false,
-      };
-
-      this.setCache(cacheKey, result);
-      return result;
-    } catch (err) {
-      this.logger.warn('AI car description failed, using fallback', { car: car.brand, error: err });
-      return {
-        content: this.getFallbackCarDescription(car),
-        confidence: 0.5,
-        generatedAt: Date.now(),
-        cached: false,
-      };
-    } finally {
-      this.isGenerating.set(false);
-    }
+    this.setCache(cacheKey, result);
+    return result;
   }
 
   /**
@@ -133,39 +88,16 @@ export class GenerativeUIService {
     const cached = this.getFromCache(cacheKey);
     if (cached) return cached;
 
-    try {
-      const { data, error } = await this.supabase.functions.invoke('gemini-generate-content', {
-        body: {
-          type: 'cta',
-          data: { action },
-          context: {
-            timeOfDay: context?.timeOfDay,
-            isNewUser: context?.isNewUser,
-            language: context?.language || 'es',
-          },
-        },
-      });
+    // Uses deterministic fallbacks (AI edge function not yet deployed)
+    const result: GeneratedContent = {
+      content: this.getFallbackCTA(action),
+      confidence: 0.9,
+      generatedAt: Date.now(),
+      cached: false,
+    };
 
-      if (error) throw error;
-
-      const result: GeneratedContent = {
-        content: data.content || this.getFallbackCTA(action),
-        confidence: data.confidence || 0.8,
-        generatedAt: Date.now(),
-        cached: false,
-      };
-
-      this.setCache(cacheKey, result);
-      return result;
-    } catch (err) {
-      this.logger.warn('AI CTA generation failed', { action, error: err });
-      return {
-        content: this.getFallbackCTA(action),
-        confidence: 0.5,
-        generatedAt: Date.now(),
-        cached: false,
-      };
-    }
+    this.setCache(cacheKey, result);
+    return result;
   }
 
   /**
@@ -209,62 +141,24 @@ export class GenerativeUIService {
     const cached = this.getFromCache(cacheKey);
     if (cached) return cached;
 
-    try {
-      const { data, error } = await this.supabase.functions.invoke('gemini-generate-content', {
-        body: {
-          type: 'welcome_message',
-          context: {
-            timeOfDay,
-            isNewUser: context?.isNewUser,
-            language: context?.language || 'es',
-            userName: await this.getUserName(),
-          },
-        },
-      });
+    // Uses deterministic fallbacks (AI edge function not yet deployed)
+    const result: GeneratedContent = {
+      content: this.getFallbackWelcome(timeOfDay, context?.isNewUser),
+      confidence: 0.9,
+      generatedAt: Date.now(),
+      cached: false,
+    };
 
-      if (error) throw error;
-
-      const result: GeneratedContent = {
-        content: data.content || this.getFallbackWelcome(timeOfDay, context?.isNewUser),
-        confidence: data.confidence || 0.8,
-        generatedAt: Date.now(),
-        cached: false,
-      };
-
-      this.setCache(cacheKey, result);
-      return result;
-    } catch {
-      return {
-        content: this.getFallbackWelcome(timeOfDay, context?.isNewUser),
-        confidence: 0.5,
-        generatedAt: Date.now(),
-        cached: false,
-      };
-    }
+    this.setCache(cacheKey, result);
+    return result;
   }
 
   /**
    * Genera sugerencias de búsqueda
    */
-  async generateSearchSuggestions(context?: UserContext): Promise<string[]> {
-    try {
-      const { data, error } = await this.supabase.functions.invoke('gemini-generate-content', {
-        body: {
-          type: 'search_suggestions',
-          context: {
-            previousSearches: context?.previousSearches,
-            preferredCarTypes: context?.preferredCarTypes,
-            country: context?.country,
-            timeOfDay: context?.timeOfDay,
-          },
-        },
-      });
-
-      if (error) throw error;
-      return data.suggestions || this.getFallbackSearchSuggestions();
-    } catch {
-      return this.getFallbackSearchSuggestions();
-    }
+  async generateSearchSuggestions(_context?: UserContext): Promise<string[]> {
+    // Uses deterministic fallbacks (AI edge function not yet deployed)
+    return this.getFallbackSearchSuggestions();
   }
 
   // ============================================
@@ -290,11 +184,6 @@ export class GenerativeUIService {
         }
       }
     }
-  }
-
-  private async getUserName(): Promise<string | undefined> {
-    const session = this.auth.session$();
-    return session?.user?.user_metadata?.['first_name'] as string | undefined;
   }
 
   private getFallbackCarDescription(car: CarData): string {

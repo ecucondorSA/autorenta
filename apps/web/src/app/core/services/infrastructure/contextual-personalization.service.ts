@@ -482,32 +482,9 @@ export class ContextualPersonalizationService implements OnDestroy {
   }
 
   private async loadWeather(): Promise<void> {
-    try {
-      // Usar API de clima gratuita o edge function
-      const geoData = this.edgePersonalization.geoData();
-      if (!geoData?.latitude || !geoData?.longitude) return;
-
-      const { data, error } = await this.supabase.functions.invoke('get-weather', {
-        body: {
-          lat: geoData.latitude,
-          lon: geoData.longitude,
-        },
-      });
-
-      if (error) throw error;
-
-      if (data) {
-        this.weatherData.set({
-          condition: this.mapWeatherCondition(data.condition),
-          temperature: data.temperature,
-          humidity: data.humidity,
-          description: data.description,
-        });
-      }
-    } catch (err) {
-      // Clima es opcional, no bloquear
-      this.logger.debug('Weather data not available', { error: err });
-    }
+    // Weather edge function not yet deployed — feature disabled
+    // When ready, create a get-weather edge function and restore the invocation
+    this.logger.debug('Weather data not available: edge function not deployed');
   }
 
   private mapWeatherCondition(condition: string): WeatherData['condition'] {

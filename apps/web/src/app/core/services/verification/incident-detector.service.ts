@@ -192,8 +192,9 @@ export class IncidentDetectorService {
 
     if (ownerFcmToken) {
       // Send FCM notification via edge function
-      await this.supabase.functions.invoke('send-notification', {
+      await this.supabase.functions.invoke('send-push-notification', {
         body: {
+          action: 'send_direct',
           token: ownerFcmToken,
           title: 'Incidente Detectado en tu Auto',
           body: 'Se detectó un posible accidente. Revisa los detalles.',

@@ -915,24 +915,24 @@ export class AdminService {
    */
   private async sendVerificationApprovedEmail(response: AdminVerificationResponse): Promise<void> {
     try {
-      const { error } = await this.supabase.functions.invoke('send-verification-approved-email', {
+      const { error } = await this.supabase.functions.invoke('email-service', {
         body: {
-          user_id: response['user_id'],
-          user_email: response.user_email,
-          user_name: response.user_name,
-          approved_level: response['approved_level'],
-          previous_level: response['previous_level'],
-          notes: response['notes'],
+          template: 'verification-approved',
+          to: response.user_email,
+          recipientName: response.user_name,
+          data: {
+            verificationLevel: response['approved_level'],
+            previousLevel: response['previous_level'],
+            notes: response['notes'],
+          },
         },
       });
 
       if (error) {
         console.error('Error sending approval email:', error);
-        // Don't throw - email is not critical for the approval process
       }
     } catch (error) {
       console.error('Failed to send approval email:', error);
-      // Don't throw - email is not critical
     }
   }
 
@@ -944,23 +944,23 @@ export class AdminService {
     reason: string,
   ): Promise<void> {
     try {
-      const { error } = await this.supabase.functions.invoke('send-verification-rejected-email', {
+      const { error } = await this.supabase.functions.invoke('email-service', {
         body: {
-          user_id: response['user_id'],
-          user_email: response.user_email,
-          user_name: response.user_name,
-          rejected_level: response['rejected_level'],
-          reason: reason,
+          template: 'verification-rejected',
+          to: response.user_email,
+          recipientName: response.user_name,
+          data: {
+            rejectedLevel: response['rejected_level'],
+            reason: reason,
+          },
         },
       });
 
       if (error) {
         console.error('Error sending rejection email:', error);
-        // Don't throw - email is not critical
       }
     } catch (error) {
       console.error('Failed to send rejection email:', error);
-      // Don't throw - email is not critical
     }
   }
 
