@@ -1,3 +1,7 @@
+## <small>3.78.6 (2026-02-10)</small>
+
+* fix(infra): migrate orphan edge functions and expand uptime monitoring ([d423aa7](https://github.com/ecucondorSA/autorenta/commit/d423aa7))
+
 ## <small>3.78.5 (2026-02-10)</small>
 
 * fix(security): create 15 phantom tables, enable RLS on all public tables, add FK constraints ([08e54dc](https://github.com/ecucondorSA/autorenta/commit/08e54dc))
