@@ -1,3 +1,9 @@
+## <small>3.78.1 (2026-02-10)</small>
+
+* fix(ci): add RPC allowlist for known missing functions in contract check ([118448a](https://github.com/ecucondorSA/autorenta/commit/118448a))
+* fix(ci): graceful skip for email-sequences when RESEND_API_KEY is missing ([b133a9e](https://github.com/ecucondorSA/autorenta/commit/b133a9e))
+* fix(ci): update uptime monitoring to use consolidated ai-vision-service ([de4084f](https://github.com/ecucondorSA/autorenta/commit/de4084f))
+
 ## 3.78.0 (2026-02-10)
 
 * chore: auth returnUrl, login ARIA attributes, footer branding fix ([1fb3221](https://github.com/ecucondorSA/autorenta/commit/1fb3221))
