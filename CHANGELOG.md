@@ -1,3 +1,7 @@
+## <small>3.80.5 (2026-02-10)</small>
+
+* fix(deposit): add Authorization header to mercadopago-create-preference call ([9395524](https://github.com/ecucondorSA/autorenta/commit/9395524))
+
 ## <small>3.80.4 (2026-02-10)</small>
 
 * perf(auth): replace getUser() HTTP calls with cached session in 3 services ([4cac39e](https://github.com/ecucondorSA/autorenta/commit/4cac39e))
