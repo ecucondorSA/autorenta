@@ -14,6 +14,7 @@ import { interval } from 'rxjs';
 import { CarsService } from '@core/services/cars/cars.service';
 import { LocationService, type LocationData } from '@core/services/geo/location.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { MetaService } from '@core/services/ui/meta.service';
 import { Car } from '@core/models';
 import { CarCardComponent } from '@shared/components/car-card/car-card.component';
 import { CarsMapComponent } from '@shared/components/cars-map/cars-map.component';
@@ -108,6 +109,7 @@ export class BrowseCarsPage {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly metaService = inject(MetaService);
   readonly store = inject(BrowseStore);
 
   readonly cars = this.store.filteredCars;
@@ -169,6 +171,7 @@ export class BrowseCarsPage {
   }
 
   constructor() {
+    this.metaService.updateCarsListMeta();
     this.initializeSearchRange();
     this.loadCars();
     interval(this.pollIntervalMs)

@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { MetaService } from '@core/services/ui/meta.service';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -64,6 +65,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
   private readonly locationService = inject(LocationService);
+  private readonly metaService = inject(MetaService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -247,6 +249,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   ];
 
   async ngOnInit() {
+    this.metaService.updateCarsListMeta();
     await this.loadCars();
     if (this.isBrowser) {
       this.initializeUserLocation();
