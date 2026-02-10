@@ -2,293 +2,63 @@ name: Cleanup Expired Data
 
 on:
   schedule:
-    # Run daily at 4:00 AM Argentina time (7:00 UTC)
+    # Daily at 4:00 AM Argentina time (7:00 UTC)
     - cron: '0 7 * * *'
   workflow_dispatch:
     inputs:
       dry_run:
-        description: 'Dry run (no deletions)'
+        description: 'Dry run (count only, no deletions)'
         required: false
         default: 'false'
         type: boolean
-
-permissions:
-  contents: read
-  issues: write
 
 jobs:
   cleanup:
     name: Cleanup Expired Data
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
-      - name: Cleanup Expired Records
+      - name: Call expire-pending-deposits Edge Function
         id: cleanup
-        uses: actions/github-script@v7
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        with:
-          script: |
-            const supabaseUrl = process.env.SUPABASE_URL;
-            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
-            const dryRun = '${{ inputs.dry_run }}' === 'true';
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: |
+          echo "Cleaning expired data (dry_run: ${DRY_RUN})..."
 
-            const results = {
-              expired_otps: 0,
-              expired_tokens: 0,
-              expired_price_locks: 0,
-              old_notifications: 0,
-              old_logs: 0,
-              expired_sessions: 0,
-            };
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "${SUPABASE_URL}/functions/v1/expire-pending-deposits?dry_run=${DRY_RUN}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+            -H "Content-Type: application/json")
 
-            const deleteRecords = async (table, filter, description) => {
-              // First count
-              const countRes = await fetch(
-                supabaseUrl + '/rest/v1/' + table + '?' + filter + '&select=id',
-                {
-                  method: 'GET',
-                  headers: {
-                    'apikey': supabaseKey,
-                    'Authorization': 'Bearer ' + supabaseKey,
-                    'Prefer': 'count=exact',
-                  }
-                }
-              );
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
 
-              const countHeader = countRes.headers.get('content-range');
-              const count = countHeader ? parseInt(countHeader.split('/')[1]) || 0 : 0;
+          echo "HTTP Status: $HTTP_CODE"
+          echo "$BODY" | jq . 2>/dev/null || echo "$BODY"
 
-              if (count === 0) {
-                console.log(description + ': 0 records to delete');
-                return 0;
-              }
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::Cleanup failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
 
-              if (dryRun) {
-                console.log('[DRY RUN] ' + description + ': Would delete ' + count + ' records');
-                return count;
-              }
+          TOTAL=$(echo "$BODY" | jq -r '.total_cleaned // 0')
+          ERRORS=$(echo "$BODY" | jq -r '.errors // 0')
 
-              // Delete in batches
-              const batchSize = 1000;
-              let deleted = 0;
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
+          echo "errors=$ERRORS" >> $GITHUB_OUTPUT
 
-              while (deleted < count) {
-                const res = await fetch(
-                  supabaseUrl + '/rest/v1/' + table + '?' + filter + '&limit=' + batchSize,
-                  {
-                    method: 'DELETE',
-                    headers: {
-                      'apikey': supabaseKey,
-                      'Authorization': 'Bearer ' + supabaseKey,
-                    }
-                  }
-                );
-
-                if (!res.ok) {
-                  console.error('Failed to delete from ' + table + ': ' + res.status);
-                  break;
-                }
-
-                deleted += batchSize;
-                if (deleted < count) {
-                  // Small delay between batches
-                  await new Promise(r => setTimeout(r, 100));
-                }
-              }
-
-              console.log(description + ': Deleted ' + Math.min(deleted, count) + ' records');
-              return Math.min(deleted, count);
-            };
-
-            const now = new Date();
-            const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000).toISOString();
-            const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString();
-            const thirtyDaysAgo = new Date(now - 30 * 24 * 60 * 60 * 1000).toISOString();
-            const ninetyDaysAgo = new Date(now - 90 * 24 * 60 * 60 * 1000).toISOString();
-
-            console.log('Cleanup started at ' + now.toISOString());
-            console.log('Dry run: ' + dryRun);
-
-            // 1. Expired OTP verifications (older than 24h)
-            console.log('\n1. Cleaning expired OTPs...');
-            try {
-              results.expired_otps = await deleteRecords(
-                'otp_verifications',
-                'expires_at=lt.' + oneDayAgo,
-                'Expired OTPs'
-              );
-            } catch (e) {
-              console.log('OTP cleanup skipped (table may not exist)');
-            }
-
-            // 2. Expired price locks (older than 1 day, already expired)
-            console.log('\n2. Cleaning expired price locks...');
-            try {
-              results.expired_price_locks = await deleteRecords(
-                'price_locks',
-                'expires_at=lt.' + oneDayAgo,
-                'Expired price locks'
-              );
-            } catch (e) {
-              console.log('Price lock cleanup skipped');
-            }
-
-            // 3. Old notification logs (older than 90 days)
-            console.log('\n3. Cleaning old notification logs...');
-            try {
-              results.old_notifications = await deleteRecords(
-                'notification_logs',
-                'created_at=lt.' + ninetyDaysAgo,
-                'Old notifications'
-              );
-            } catch (e) {
-              console.log('Notification log cleanup skipped');
-            }
-
-            // 4. Old audit logs (older than 90 days, keep important ones)
-            console.log('\n4. Cleaning old audit logs...');
-            try {
-              results.old_logs = await deleteRecords(
-                'audit_logs',
-                'created_at=lt.' + ninetyDaysAgo + '&severity=neq.critical',
-                'Old audit logs'
-              );
-            } catch (e) {
-              console.log('Audit log cleanup skipped');
-            }
-
-            // 5. Expired refresh tokens (from OAuth, older than 30 days)
-            console.log('\n5. Cleaning expired tokens...');
-            try {
-              results.expired_tokens = await deleteRecords(
-                'oauth_tokens',
-                'expires_at=lt.' + now.toISOString(),
-                'Expired OAuth tokens'
-              );
-            } catch (e) {
-              console.log('Token cleanup skipped');
-            }
-
-            // 6. Old failed payment attempts (older than 30 days)
-            console.log('\n6. Cleaning old failed payments...');
-            try {
-              const failedPayments = await deleteRecords(
-                'payments',
-                'status=eq.rejected&created_at=lt.' + thirtyDaysAgo,
-                'Old failed payments'
-              );
-            } catch (e) {
-              console.log('Failed payment cleanup skipped');
-            }
-
-            // 7. Expired pending deposits (older than 7 days, never completed)
-            console.log('\n7. Cleaning expired pending deposits...');
-            try {
-              await deleteRecords(
-                'deposits',
-                'status=eq.pending&created_at=lt.' + sevenDaysAgo,
-                'Expired pending deposits'
-              );
-            } catch (e) {
-              console.log('Pending deposit cleanup skipped');
-            }
-
-            // 8. Old search/view analytics (older than 90 days)
-            console.log('\n8. Cleaning old analytics...');
-            try {
-              await deleteRecords(
-                'car_views',
-                'created_at=lt.' + ninetyDaysAgo,
-                'Old car views'
-              );
-            } catch (e) {
-              console.log('Car views cleanup skipped');
-            }
-
-            try {
-              await deleteRecords(
-                'search_logs',
-                'created_at=lt.' + ninetyDaysAgo,
-                'Old search logs'
-              );
-            } catch (e) {
-              console.log('Search logs cleanup skipped');
-            }
-
-            // Summary
-            console.log('\n=== Cleanup Summary ===');
-            console.log('Dry run: ' + dryRun);
-            console.log('Expired OTPs: ' + results.expired_otps);
-            console.log('Expired tokens: ' + results.expired_tokens);
-            console.log('Expired price locks: ' + results.expired_price_locks);
-            console.log('Old notifications: ' + results.old_notifications);
-            console.log('Old logs: ' + results.old_logs);
-
-            const totalCleaned = Object.values(results).reduce((a, b) => a + b, 0);
-            console.log('\nTotal records ' + (dryRun ? 'would be ' : '') + 'cleaned: ' + totalCleaned);
-
-            core.setOutput('total_cleaned', totalCleaned);
-            core.setOutput('dry_run', dryRun);
-
-            return results;
-
-      - name: Report Cleanup Results
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const totalCleaned = '${{ steps.cleanup.outputs.total_cleaned }}';
-            const dryRun = '${{ steps.cleanup.outputs.dry_run }}' === 'true';
-
-            if (parseInt(totalCleaned) > 10000) {
-              // Create issue for significant cleanups
-                const title = '[CLEANUP] ' + (dryRun ? '[DRY RUN] ' : '') +
-                  'Cleaned ' + totalCleaned + ' expired records';
-                const body =
-                  '## Data Cleanup Report\n\n' +
-                  '**Mode:** ' + (dryRun ? 'Dry Run (no actual deletions)' : 'Live') + '\n' +
-                  '**Total Records ' + (dryRun ? 'Would Be ' : '') + 'Cleaned:** ' + totalCleaned + '\n\n' +
-                  '### What was cleaned\n' +
-                  '- Expired OTP verifications (>24h)\n' +
-                  '- Expired price locks (>24h)\n' +
-                  '- Old notification logs (>90 days)\n' +
-                  '- Old audit logs (>90 days, non-critical)\n' +
-                  '- Expired OAuth tokens\n' +
-                  '- Old failed payments (>30 days)\n' +
-                  '- Expired pending deposits (>7 days)\n' +
-                  '- Old analytics data (>90 days)\n\n' +
-                  '### Links\n' +
-                  '- [Workflow Run](https://github.com/' + context.repo.owner + '/' + context.repo.repo +
-                  '/actions/runs/' + context.runId + ')\n\n' +
-                  '---\n' +
-                  '*Auto-generated by Cleanup Expired Data workflow*';
-
-                await github.rest.issues.create({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  title: title,
-                  body: body,
-                  labels: ['maintenance', 'cleanup'],
-                });
-
-            }
-
-  vacuum-analyze:
-    name: Run VACUUM ANALYZE
-    runs-on: ubuntu-latest
-    needs: cleanup
-    if: ${{ inputs.dry_run != 'true' }}
-    steps:
-      - name: Trigger VACUUM ANALYZE
-        uses: actions/github-script@v7
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        with:
-          script: |
-            // Note: VACUUM ANALYZE is typically handled automatically by Supabase
-            // This step just logs that cleanup was completed
-            console.log('Cleanup completed. Supabase autovacuum will handle table maintenance.');
-            console.log('For manual VACUUM, use Supabase SQL Editor.');
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Cleanup Expired Data" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Total Cleaned | ${{ steps.cleanup.outputs.total || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Errors | ${{ steps.cleanup.outputs.errors || '0' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dry Run | ${{ inputs.dry_run || 'false' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "*Powered by expire-pending-deposits Edge Function*" >> $GITHUB_STEP_SUMMARY

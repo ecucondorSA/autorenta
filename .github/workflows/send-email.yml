@@ -1,0 +1,82 @@
+name: Send Email (via Edge Function)
+
+on:
+  workflow_dispatch:
+    inputs:
+      to_email:
+        description: 'Recipient email'
+        required: true
+      subject:
+        description: 'Email subject'
+        required: true
+      html_content:
+        description: 'HTML body content (or leave empty for default template)'
+        required: false
+        default: ''
+      to_name:
+        description: 'Recipient name (optional)'
+        required: false
+        default: ''
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Call send-marketing-email Edge Function
+        id: send
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TO_EMAIL: ${{ github.event.inputs.to_email }}
+          SUBJECT: ${{ github.event.inputs.subject }}
+          HTML_CONTENT: ${{ github.event.inputs.html_content }}
+          TO_NAME: ${{ github.event.inputs.to_name }}
+        run: |
+          # Default HTML if none provided
+          if [ -z "$HTML_CONTENT" ]; then
+            HTML_CONTENT="<h2>AutoRenta</h2><p>Mensaje enviado desde GitHub Actions.</p>"
+          fi
+
+          BODY=$(jq -n \
+            --arg email "$TO_EMAIL" \
+            --arg subject "$SUBJECT" \
+            --arg html "$HTML_CONTENT" \
+            --arg name "$TO_NAME" \
+            '{
+              subscriberId: "github-actions",
+              toEmail: $email,
+              subject: $subject,
+              htmlContent: $html,
+              toName: $name
+            }')
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "${SUPABASE_URL}/functions/v1/send-marketing-email" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+            -H "Content-Type: application/json" \
+            -d "$BODY")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          RESP_BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: $HTTP_CODE"
+          echo "$RESP_BODY" | jq . 2>/dev/null || echo "$RESP_BODY"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::Email send failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+          echo "email_id=$(echo "$RESP_BODY" | jq -r '.emailId // "unknown"')" >> $GITHUB_OUTPUT
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Email Sent" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| To | ${{ github.event.inputs.to_email }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Subject | ${{ github.event.inputs.subject }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Email ID | ${{ steps.send.outputs.email_id || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY

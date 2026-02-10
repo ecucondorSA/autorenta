@@ -13,6 +13,8 @@
  * 2. Pagos en nuestra DB sin confirmación de MP
  * 3. Preautorizaciones vencidas no procesadas
  * 4. Wallets con balance inconsistente
+ * 5. Webhook DLQ backlog
+ * 6. Commission percentage audit (migrado de commission-reconciliation.yml — Regla #1)
  *
  * Environment Variables Required:
  * - SUPABASE_URL: URL del proyecto Supabase
@@ -117,6 +119,12 @@ serve(async (req: Request) => {
     const check5Result = await checkDLQBacklog(supabase);
     results.push(check5Result);
 
+    // ========================================
+    // CHECK 6: Commission percentage audit
+    // ========================================
+    const check6Result = await checkCommissionPercentage(supabase, MP_ACCESS_TOKEN, daysBack);
+    results.push(check6Result);
+
     // Calcular resumen
     const totalIssues = results.reduce((sum, r) => sum + r.issues_count, 0);
     const totalFixed = results.reduce((sum, r) => sum + r.fixed_count, 0);
@@ -192,7 +200,7 @@ async function checkPendingBookingsWithApprovedPayments(
     // Obtener bookings pendientes (limited to avoid rate limits)
     const { data: pendingBookings, error } = await supabase
       .from('bookings')
-      .select('id, created_at, user_id')
+      .select('id, created_at, renter_id')
       .eq('status', 'pending_payment')
       .gte('created_at', cutoffDate)
       .order('created_at', { ascending: false })
@@ -309,7 +317,7 @@ async function checkUnconfirmedPayments(
     const { data: payments, error } = await supabase
       .from('payments')
       .select('id, booking_id, amount, provider_payment_id, status')
-      .eq('status', 'completed')
+      .eq('status', 'approved')
       .eq('provider', 'mercadopago')
       .gte('created_at', cutoffDate)
       .limit(MAX_BOOKINGS_PER_CHECK);
@@ -360,7 +368,7 @@ async function checkUnconfirmedPayments(
           });
 
           if (autoFix && (mpPayment.status === 'cancelled' || mpPayment.status === 'rejected')) {
-            await supabase.from('payments').update({ status: 'failed' }).eq('id', payment.id);
+            await supabase.from('payments').update({ status: 'rejected' }).eq('id', payment.id);
 
             fixedCount++;
           }
@@ -469,10 +477,10 @@ async function checkWalletIntegrity(supabase: any): Promise<ReconciliationResult
   const details: unknown[] = [];
 
   try {
-    // Obtener wallets con sus transacciones
+    // Obtener wallets
     const { data: wallets, error } = await supabase
       .from('wallets')
-      .select('id, user_id, balance, available_balance')
+      .select('id, user_id, balance, locked_balance')
       .limit(100);
 
     if (error) throw error;
@@ -488,48 +496,39 @@ async function checkWalletIntegrity(supabase: any): Promise<ReconciliationResult
     }
 
     for (const wallet of wallets) {
-      // Calcular balance esperado desde transacciones
-      // Note: wallet_transactions uses user_id, not wallet_id
-      const { data: transactions } = await supabase
-        .from('wallet_transactions')
-        .select('amount, type')
-        .eq('user_id', wallet.user_id)
-        .eq('status', 'completed');
+      // Calcular balance esperado desde wallet_ledger (amount_cents, kind)
+      const { data: ledgerEntries, error: ledgerError } = await supabase
+        .from('wallet_ledger')
+        .select('amount_cents, kind')
+        .eq('user_id', wallet.user_id);
 
-      if (transactions) {
-        // Transaction types that ADD to balance
-        const creditTypes = [
-          'deposit',
-          'refund',
-          'bonus',
-          'unlock',
-          'security_deposit_release',
-        ];
+      if (ledgerError) {
+        // Table might not exist or have different schema — skip gracefully
+        if (ledgerError.message?.includes('does not exist') || ledgerError.code === '42P01') break;
+        continue;
+      }
 
-        // Transaction types that SUBTRACT from balance
-        const debitTypes = [
-          'charge',
-          'withdrawal',
-          'rental_payment_transfer',
-          'security_deposit_charge',
-        ];
+      if (ledgerEntries) {
+        // Credit kinds (add to balance)
+        const creditKinds = ['deposit', 'refund', 'bonus', 'transfer_in', 'reward', 'release'];
+        // Debit kinds (subtract from balance)
+        const debitKinds = ['charge', 'withdrawal', 'transfer_out', 'lock', 'fee'];
 
-        // Note: 'lock' types affect available_balance, not total balance
-        // 'rental_payment_lock', 'security_deposit_lock' are locks, not debits
-
-        const calculatedBalance = transactions.reduce((sum: number, tx: any) => {
-          if (creditTypes.includes(tx.type)) {
-            return sum + Number(tx.amount);
-          } else if (debitTypes.includes(tx.type)) {
-            return sum - Number(tx.amount);
+        const calculatedCents = ledgerEntries.reduce((sum: number, entry: any) => {
+          const cents = Number(entry.amount_cents) || 0;
+          if (creditKinds.some((k) => entry.kind?.includes(k))) {
+            return sum + cents;
+          } else if (debitKinds.some((k) => entry.kind?.includes(k))) {
+            return sum - cents;
           }
-          return sum;
+          return sum + cents; // Default: treat as credit
         }, 0);
 
-        const diff = Math.abs(calculatedBalance - wallet.balance);
+        // wallet.balance is in major units (numeric), ledger is in cents
+        const calculatedBalance = calculatedCents / 100;
+        const diff = Math.abs(calculatedBalance - Number(wallet.balance));
 
         if (diff > 0.01) {
-          // Diferencia mayor a 1 centavo
           details.push({
             wallet_id: wallet.id,
             user_id: wallet.user_id,
@@ -565,7 +564,7 @@ async function checkWalletIntegrity(supabase: any): Promise<ReconciliationResult
 async function checkDLQBacklog(supabase: any): Promise<ReconciliationResult> {
   try {
     const { data, error } = await supabase
-      .from('webhook_dead_letter')
+      .from('pending_webhook_events')
       .select('status', { count: 'exact' })
       .in('status', ['pending', 'retrying']);
 
@@ -576,7 +575,7 @@ async function checkDLQBacklog(supabase: any): Promise<ReconciliationResult> {
           status: 'ok',
           issues_count: 0,
           fixed_count: 0,
-          details: [{ message: 'DLQ table not yet created' }],
+          details: [{ message: 'Webhook events table not found' }],
         };
       }
       throw error;
@@ -586,7 +585,7 @@ async function checkDLQBacklog(supabase: any): Promise<ReconciliationResult> {
 
     // También obtener failed count
     const { data: failedData } = await supabase
-      .from('webhook_dead_letter')
+      .from('pending_webhook_events')
       .select('id', { count: 'exact' })
       .eq('status', 'failed');
 
@@ -607,6 +606,134 @@ async function checkDLQBacklog(supabase: any): Promise<ReconciliationResult> {
   } catch (e) {
     return {
       check: 'dlq_backlog',
+      status: 'error',
+      issues_count: 0,
+      fixed_count: 0,
+      details: [{ error: e instanceof Error ? e.message : 'Unknown error' }],
+    };
+  }
+}
+
+/**
+ * Check 6: Auditoría de comisiones — verifica que platform_fee ≈ PLATFORM_FEE_RATE
+ * Migrado desde commission-reconciliation.yml (Regla #1)
+ */
+async function checkCommissionPercentage(
+  supabase: any,
+  mpToken: string | undefined,
+  daysBack: number
+): Promise<ReconciliationResult> {
+  const details: unknown[] = [];
+
+  try {
+    // Leer tasa de comisión desde remote_config (single source of truth)
+    let expectedRate = 0.15; // default 15%
+    try {
+      const { data: configRow } = await supabase
+        .from('remote_config')
+        .select('value')
+        .eq('key', 'PLATFORM_FEE_RATE')
+        .single();
+      if (configRow?.value) {
+        expectedRate = parseFloat(configRow.value);
+      }
+    } catch {
+      // Usar default si remote_config no tiene la key
+    }
+
+    const cutoffDate = new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000).toISOString();
+
+    // Bookings completados/confirmados en el período
+    const { data: bookings, error } = await supabase
+      .from('bookings')
+      .select('id, total_price, service_fee, status')
+      .in('status', ['confirmed', 'in_progress', 'completed'])
+      .gte('created_at', cutoffDate)
+      .limit(100);
+
+    if (error) throw error;
+    if (!bookings || bookings.length === 0) {
+      return {
+        check: 'commission_percentage_audit',
+        status: 'ok',
+        issues_count: 0,
+        fixed_count: 0,
+        details: [{ message: 'No bookings in period', expected_rate: expectedRate }],
+      };
+    }
+
+    let expectedTotal = 0;
+    let actualTotal = 0;
+    let missingCount = 0;
+    let wrongRateCount = 0;
+
+    for (const booking of bookings) {
+      const totalAmount = Number(booking.total_price) || 0;
+      const actualFee = Number(booking.service_fee) || 0;
+      const expectedFee = totalAmount * expectedRate;
+
+      expectedTotal += expectedFee;
+      actualTotal += actualFee;
+
+      // Missing commission
+      if (actualFee === 0 && totalAmount > 0) {
+        missingCount++;
+        details.push({
+          type: 'MISSING_COMMISSION',
+          booking_id: booking.id,
+          total_amount: totalAmount,
+          expected_fee: expectedFee,
+        });
+        continue;
+      }
+
+      // Wrong percentage (±1% tolerance, only for bookings > 1000)
+      if (totalAmount > 1000) {
+        const actualRate = actualFee / totalAmount;
+        const rateDiff = Math.abs(actualRate - expectedRate);
+        if (rateDiff > 0.01) {
+          wrongRateCount++;
+          details.push({
+            type: 'WRONG_COMMISSION_RATE',
+            booking_id: booking.id,
+            total_amount: totalAmount,
+            expected_fee: expectedFee,
+            actual_fee: actualFee,
+            expected_rate: `${(expectedRate * 100).toFixed(1)}%`,
+            actual_rate: `${(actualRate * 100).toFixed(1)}%`,
+          });
+        }
+      }
+    }
+
+    // Note: payments table only has 'amount', no 'marketplace_fee' column.
+    // Cross-check with MercadoPago API would require live API calls (out of scope for reconciliation).
+
+    const totalDiff = Math.abs(expectedTotal - actualTotal);
+    const issueCount = details.length;
+
+    // Add summary to details
+    details.unshift({
+      type: 'SUMMARY',
+      bookings_checked: bookings.length,
+      expected_rate: `${(expectedRate * 100).toFixed(1)}%`,
+      expected_total: expectedTotal,
+      actual_total: actualTotal,
+      difference: totalDiff,
+      missing_commissions: missingCount,
+      wrong_rate: wrongRateCount,
+    });
+
+    return {
+      check: 'commission_percentage_audit',
+      status: issueCount > 0 ? 'issues_found' : 'ok',
+      issues_count: issueCount,
+      fixed_count: 0, // Audit only — no auto-fix for commission discrepancies
+      details,
+    };
+  } catch (e) {
+    return {
+      check: 'commission_percentage_audit',
       status: 'error',
       issues_count: 0,
       fixed_count: 0,

@@ -2,7 +2,7 @@ name: Fraud Detection Alerts
 
 on:
   schedule:
-    # Run every 6 hours (fraud patterns are analyzed in batch, not real-time)
+    # Every 6 hours — batch fraud detection
     - cron: '0 */6 * * *'
   workflow_dispatch:
 
@@ -17,292 +17,88 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Check for Suspicious Patterns
-        uses: actions/github-script@v7
+      - name: Call realtime-alerting Edge Function (detect mode)
+        id: detect
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "Running fraud detection..."
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "${SUPABASE_URL}/functions/v1/realtime-alerting?mode=detect" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+            -H "Content-Type: application/json")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: $HTTP_CODE"
+          echo "$BODY" | jq . 2>/dev/null || echo "$BODY"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::Fraud detection failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+          DETECTED=$(echo "$BODY" | jq -r '.detected // 0')
+          HIGH_COUNT=$(echo "$BODY" | jq -r '.high_count // 0')
+          WARNING_COUNT=$(echo "$BODY" | jq -r '.warning_count // 0')
+          INSERTED=$(echo "$BODY" | jq -r '.inserted // 0')
+
+          echo "detected=$DETECTED" >> $GITHUB_OUTPUT
+          echo "high_count=$HIGH_COUNT" >> $GITHUB_OUTPUT
+          echo "warning_count=$WARNING_COUNT" >> $GITHUB_OUTPUT
+          echo "inserted=$INSERTED" >> $GITHUB_OUTPUT
+
+          # Save alerts JSON for issue creation
+          echo "$BODY" | jq -r '.alerts // []' > /tmp/fraud-alerts.json
+
+      - name: Create GitHub Issue for High/Critical Alerts
+        if: steps.detect.outputs.high_count != '0'
+        uses: actions/github-script@v7
         with:
           script: |
-            const supabaseUrl = process.env.SUPABASE_URL;
-            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
-            const alerts = [];
+            const fs = require('fs');
+            const alerts = JSON.parse(fs.readFileSync('/tmp/fraud-alerts.json', 'utf8'));
+            const highAlerts = alerts.filter(a => a.severity === 'high' || a.severity === 'critical');
 
-            const query = async (table, params = '') => {
-              try {
-                const res = await fetch(
-                  supabaseUrl + '/rest/v1/' + table + params,
-                  {
-                    headers: {
-                      'apikey': supabaseKey,
-                      'Authorization': 'Bearer ' + supabaseKey,
-                    }
-                  }
-                );
-                if (!res.ok) {
-                  const errorText = await res.text();
-                  console.error(`Error querying ${table}: ${res.status} ${errorText}`);
-                  return [];
-                }
-                const data = await res.json();
-                return Array.isArray(data) ? data : [];
-              } catch (err) {
-                console.error(`Fetch error for ${table}:`, err);
-                return [];
-              }
-            };
+            if (highAlerts.length === 0) return;
 
-            const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-            const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+            const alertsSummary = highAlerts
+              .slice(0, 10)
+              .map(a => `- **${a.alert_type}** (${a.severity}): ${a.message}`)
+              .join('\n');
 
-            // 1. Multiple failed payments from same user (>3 in last hour)
-            console.log('Checking failed payments...');
-            const failedPayments = await query(
-              'payments',
-              `?status=eq.rejected&created_at=gte.${oneHourAgo}&select=user_id`
-            );
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[FRAUD ALERT] ${highAlerts.length} suspicious patterns detected`,
+              body: `## Fraud Detection Alert\n\n` +
+                `**High/Critical Alerts:** ${highAlerts.length}\n` +
+                `**Total Detected:** ${alerts.length}\n\n` +
+                `### Detected Patterns\n${alertsSummary}\n\n` +
+                `### Recommended Actions\n` +
+                `1. Review affected user accounts\n` +
+                `2. Check transaction history\n` +
+                `3. Consider temporary account restrictions if needed\n\n` +
+                `---\n*Powered by realtime-alerting Edge Function (detect mode)*`,
+              labels: ['alert', 'security', 'fraud'],
+            });
 
-            const failedByUser = {};
-            for (const p of failedPayments) {
-              if (p.user_id) {
-                failedByUser[p.user_id] = (failedByUser[p.user_id] || 0) + 1;
-              }
-            }
-
-            for (const [userId, count] of Object.entries(failedByUser)) {
-              if (count >= 3) {
-                alerts.push({
-                  type: 'MULTIPLE_FAILED_PAYMENTS',
-                  severity: 'high',
-                  user_id: userId,
-                  count: count,
-                  message: 'User ' + userId.substring(0, 8) + '... had ' + count + ' failed payments in the last hour',
-                });
-              }
-            }
-
-            // 2. Rapid booking attempts (>5 bookings in 1 hour from same user)
-            console.log('Checking rapid booking attempts...');
-            const recentBookings = await query(
-              'bookings',
-              `?created_at=gte.${oneHourAgo}&select=renter_id`
-            );
-
-            const bookingsByRenter = {};
-            for (const b of recentBookings) {
-              if (b.renter_id) {
-                bookingsByRenter[b.renter_id] = (bookingsByRenter[b.renter_id] || 0) + 1;
-              }
-            }
-
-            for (const [renterId, count] of Object.entries(bookingsByRenter)) {
-              if (count >= 5) {
-                alerts.push({
-                  type: 'RAPID_BOOKING_ATTEMPTS',
-                  severity: 'medium',
-                  user_id: renterId,
-                  count: count,
-                  message: 'User ' + renterId.substring(0, 8) + '... made ' + count + ' booking attempts in the last hour',
-                });
-              }
-            }
-
-            // 3. Large wallet transfers (>$50,000 ARS in 24h)
-            console.log('Checking large transfers...');
-            const largeTransfers = await query(
-              'wallet_ledger',
-              `?kind=in.(transfer_in,transfer_out)&amount_cents=gte.5000000&created_at=gte.${twentyFourHoursAgo}&select=user_id,kind,amount_cents`
-            );
-
-            for (const t of largeTransfers) {
-              alerts.push({
-                type: 'LARGE_TRANSFER',
-                severity: 'medium',
-                user_id: t.user_id,
-                amount_ars: t.amount_cents / 100,
-                kind: t.kind,
-                message: 'Large transfer of ARS ' + (t.amount_cents / 100).toLocaleString() + ' detected',
-              });
-            }
-
-            // 4. Multiple cancellations by same owner (>3 in 24h)
-            console.log('Checking owner cancellations...');
-            const cancelledBookings = await query(
-              'bookings',
-              `?status=eq.cancelled&cancelled_by_role=eq.owner&updated_at=gte.${twentyFourHoursAgo}&select=owner_id`
-            );
-
-            const cancellationsByOwner = {};
-            for (const b of cancelledBookings) {
-              if (b.owner_id) {
-                cancellationsByOwner[b.owner_id] = (cancellationsByOwner[b.owner_id] || 0) + 1;
-              }
-            }
-
-            for (const [ownerId, count] of Object.entries(cancellationsByOwner)) {
-              if (count >= 3) {
-                alerts.push({
-                  type: 'MULTIPLE_OWNER_CANCELLATIONS',
-                  severity: 'medium',
-                  user_id: ownerId,
-                  count: count,
-                  message: 'Owner ' + ownerId.substring(0, 8) + '... cancelled ' + count + ' bookings in 24h',
-                });
-              }
-            }
-
-            // 5. High-value bookings from unverified users
-            console.log('Checking unverified high-value bookings...');
-            const highValueBookings = await query(
-              'bookings',
-              `?total_amount_ars=gte.100000&status=eq.pending_payment&created_at=gte.${twentyFourHoursAgo}&select=id,renter_id,total_amount_ars`
-            );
-
-            for (const booking of highValueBookings) {
-              const profileData = await query(
-                'profiles',
-                `?id=eq.${booking.renter_id}&select=identity_verified_at`
-              );
-
-              if (profileData[0] && !profileData[0].identity_verified_at) {
-                alerts.push({
-                  type: 'UNVERIFIED_HIGH_VALUE_BOOKING',
-                  severity: 'high',
-                  booking_id: booking.id,
-                  user_id: booking.renter_id,
-                  amount_ars: booking.total_amount_ars,
-                  message: 'Unverified user attempting high-value booking of ARS ' +
-                    booking.total_amount_ars.toLocaleString(),
-                });
-              }
-            }
-
-            // 6. Check for suspicious refund patterns
-            console.log('Checking refund patterns...');
-            const refunds = await query(
-              'wallet_ledger',
-              `?kind=eq.refund&created_at=gte.${twentyFourHoursAgo}&select=user_id,amount_cents`
-            );
-
-            const refundsByUser = {};
-            for (const r of refunds) {
-              if (r.user_id) {
-                refundsByUser[r.user_id] = (refundsByUser[r.user_id] || 0) + r.amount_cents;
-              }
-            }
-
-            for (const [userId, totalCents] of Object.entries(refundsByUser)) {
-              if (totalCents >= 5000000) { // >$50,000 ARS in refunds
-                alerts.push({
-                  type: 'HIGH_REFUND_VOLUME',
-                  severity: 'high',
-                  user_id: userId,
-                  total_ars: totalCents / 100,
-                  message: 'User ' + userId.substring(0, 8) + '... received ARS ' +
-                    (totalCents / 100).toLocaleString() + ' in refunds in 24h',
-                });
-              }
-            }
-
-            // 7. Active gaming signals with high risk score (reward pool anti-fraud)
-            console.log('Checking active gaming signals...');
-            const gamingSignals = await query(
-              'owner_gaming_signals',
-              `?status=eq.active&risk_score=gte.40&detected_at=gte.${twentyFourHoursAgo}&select=owner_id,signal_type,risk_score`
-            );
-
-            const gamingByOwner = {};
-            for (const s of gamingSignals) {
-              if (s.owner_id) {
-                if (!gamingByOwner[s.owner_id]) gamingByOwner[s.owner_id] = { signals: [], totalScore: 0 };
-                gamingByOwner[s.owner_id].signals.push(s.signal_type);
-                gamingByOwner[s.owner_id].totalScore += s.risk_score;
-              }
-            }
-
-            for (const [ownerId, data] of Object.entries(gamingByOwner)) {
-              if (data.totalScore >= 40) {
-                alerts.push({
-                  type: 'GAMING_SIGNALS_DETECTED',
-                  severity: data.totalScore >= 60 ? 'high' : 'medium',
-                  user_id: ownerId,
-                  signals: data.signals,
-                  total_score: data.totalScore,
-                  message: 'Owner ' + ownerId.substring(0, 8) + '... has gaming signals (score: ' + data.totalScore + '): ' + data.signals.join(', '),
-                });
-              }
-            }
-
-            // 8. Frozen payouts pending admin review
-            console.log('Checking frozen payouts...');
-            const frozenPayouts = await query(
-              'admin_review_queue',
-              `?status=eq.pending&select=id,owner_id,risk_score,frozen_amount`
-            );
-
-            if (frozenPayouts.length > 0) {
-              const totalFrozen = frozenPayouts.reduce((sum, p) => sum + (p.frozen_amount || 0), 0);
-              alerts.push({
-                type: 'FROZEN_PAYOUTS_PENDING',
-                severity: frozenPayouts.length >= 5 ? 'high' : 'medium',
-                count: frozenPayouts.length,
-                total_frozen_usd: totalFrozen,
-                message: frozenPayouts.length + ' frozen payouts pending review (total: $' + totalFrozen.toFixed(2) + ' USD)',
-              });
-            }
-
-            // Categorize alerts
-            const criticalAlerts = alerts.filter(a => a.severity === 'critical');
-            const highAlerts = alerts.filter(a => a.severity === 'high');
-            const mediumAlerts = alerts.filter(a => a.severity === 'medium');
-
-            // Report results
-            console.log('Found ' + alerts.length + ' suspicious patterns');
-            console.log('Critical: ' + criticalAlerts.length + ', High: ' + highAlerts.length + ', Medium: ' + mediumAlerts.length);
-
-
-            if (alerts.length > 0) {
-              console.log('Alerts:', JSON.stringify(alerts, null, 2));
-            }
-
-            // Create issue for high/critical alerts
-            if (highAlerts.length > 0 || criticalAlerts.length > 0) {
-              const alertsSummary = [...criticalAlerts, ...highAlerts]
-                .slice(0, 10)
-                .map(alert => '- **' + alert.type + '** (' + alert.severity + '): ' + alert.message)
-                .join('\n');
-
-              const title = '[FRAUD ALERT] ' + (criticalAlerts.length + highAlerts.length) +
-                ' suspicious patterns detected';
-              const body =
-                '## Fraud Detection Alert\n\n' +
-                '**Critical Alerts:** ' + criticalAlerts.length + '\n' +
-                '**High Alerts:** ' + highAlerts.length + '\n' +
-                '**Medium Alerts:** ' + mediumAlerts.length + '\n\n' +
-                '### Detected Patterns\n' +
-                alertsSummary + '\n\n' +
-                '### Recommended Actions\n' +
-                '1. Review affected user accounts\n' +
-                '2. Check transaction history\n' +
-                '3. Consider temporary account restrictions if needed\n' +
-                '4. Document findings\n\n' +
-                '---\n' +
-                '*Auto-generated by Fraud Detection workflow*';
-
-              await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: title,
-                body: body,
-                labels: ['alert', 'security', 'fraud'],
-              });
-
-              if (criticalAlerts.length > 0) {
-                core.setFailed('Critical fraud patterns detected');
-              }
-            }
-
-            return { alerts };
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Fraud Detection" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Patterns Detected | ${{ steps.detect.outputs.detected || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| High/Critical | ${{ steps.detect.outputs.high_count || '0' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Warnings | ${{ steps.detect.outputs.warning_count || '0' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Alerts Inserted | ${{ steps.detect.outputs.inserted || '0' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "*Powered by realtime-alerting Edge Function (detect mode)*" >> $GITHUB_STEP_SUMMARY
 
   notify-critical:
     name: Notify on Critical
@@ -311,25 +107,24 @@ jobs:
     if: failure()
     steps:
       - name: Send Critical Alert
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
-            if (!webhookUrl) return;
+        env:
+          INCIDENT_WEBHOOK_URL: ${{ secrets.INCIDENT_WEBHOOK_URL }}
+        run: |
+          if [ -z "$INCIDENT_WEBHOOK_URL" ]; then
+            echo "No incident webhook configured, skipping"
+            exit 0
+          fi
 
-            await fetch(webhookUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                source: 'github',
-                severity: 'critical',
-                title: 'Critical Fraud Pattern Detected',
-                message: 'The fraud detection system has identified critical suspicious patterns requiring immediate attention.',
-                metadata: {
-                  workflow: 'fraud-detection-alerts',
-                  run_url: 'https://github.com/' + context.repo.owner + '/' + context.repo.repo +
-                    '/actions/runs/' + context.runId,
-                },
-                timestamp: new Date().toISOString(),
-              }),
-            });
+          curl -s -X POST "$INCIDENT_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"source\": \"github\",
+              \"severity\": \"critical\",
+              \"title\": \"Critical Fraud Pattern Detected\",
+              \"message\": \"The fraud detection system has identified critical suspicious patterns requiring immediate attention.\",
+              \"metadata\": {
+                \"workflow\": \"fraud-detection-alerts\",
+                \"run_url\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+              },
+              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+            }"

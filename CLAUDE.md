@@ -22,6 +22,28 @@
 
 ---
 
+## 🚨 REGLA #1: WORKFLOWS ORQUESTAN, EDGE FUNCTIONS EJECUTAN
+
+> **La lógica de negocio vive en Edge Functions. Los GitHub Actions solo las disparan.**
+>
+> En Febrero 2026 se descubrieron **5 workflows** que reimplementaban lógica ya existente en Edge Functions (reconciliación de pagos, detección de fraude, limpieza de depósitos, envío de emails, cálculo de comisiones). Cuando la tasa de comisión cambia de 15% a 12%, hay que actualizar 2 archivos en vez de 1. Esto es un vector de bugs silenciosos.
+>
+> **La separación es clara:**
+>
+> | Capa | Responsabilidad | Ejemplo |
+> |------|----------------|---------|
+> | **GitHub Actions** | Schedule, trigger, retry, alertar si falla | `cron: '0 * * * *'` → `curl Edge Function` |
+> | **Edge Functions** | Lógica de negocio, queries, cálculos, mutaciones | Calcular split, enviar email, detectar fraude |
+>
+> **Checklist para workflows:**
+> - [ ] ¿El workflow tiene lógica de negocio inline (queries SQL, cálculos, llamadas a APIs externas)? → **Mover a Edge Function**
+> - [ ] ¿El workflow hardcodea constantes de negocio (tasas, umbrales, porcentajes)? → **Leerlas desde `remote_config` en la Edge Function**
+> - [ ] ¿El workflow y una Edge Function hacen lo mismo? → **Eliminar la lógica del workflow, que solo invoque la función**
+>
+> **Anti-patrón:** Workflow con 200 líneas de JavaScript/SQL inline que replican lo que una Edge Function ya hace. El workflow debe ser ~10 líneas: curl + manejo de error + alerta.
+
+---
+
 ## 1. Contexto & Memorias Activas
 
 ### Perfil del Proyecto
@@ -1135,6 +1157,17 @@ La aplicación está organizada en dominios de servicio bajo `core/services/`:
 | `wallet-balance-audit` | Diario | Auditoría de balances |
 | `payment-reconciliation` | Diario | Reconciliación de pagos |
 | `daily-metrics-report` | Diario | Reporte de métricas |
+
+### ⚠️ Workflows con Lógica Duplicada (Refactorizar → Regla #1)
+Estos workflows reimplementan lógica que debería vivir en Edge Functions:
+
+| Workflow | Edge Function duplicada | Acción pendiente |
+|----------|------------------------|-----------------|
+| `payment-reconciliation.yml` | `process-payment-split` | Mover lógica inline a la Edge Function |
+| `cleanup-expired-data.yml` | `expire-pending-deposits` | Que el workflow llame la función |
+| `commission-reconciliation.yml` | `distribute-monthly-rewards` | Eliminar cálculo inline, llamar función |
+| `send-email-demo.yml` + `send-community-email.yml` | `send-marketing-email` | Unificar en 1 workflow que llame la función |
+| `fraud-detection-alerts.yml` | `realtime-alerting` | Mover 8 patrones de fraude a la Edge Function |
 
 ---
 

@@ -2,7 +2,7 @@ name: Commission Reconciliation
 
 on:
   schedule:
-    # Run weekly on Sundays at 6:00 AM Argentina time (9:00 UTC)
+    # Weekly on Sundays at 6:00 AM Argentina time (9:00 UTC)
     - cron: '0 9 * * 0'
   workflow_dispatch:
     inputs:
@@ -19,242 +19,57 @@ jobs:
   reconcile-commissions:
     name: Reconcile Platform Commissions
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
-      - name: Reconcile Commissions
+      - name: Call payment-reconciliation Edge Function
         id: reconcile
-        uses: actions/github-script@v7
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        with:
-          script: |
-            const supabaseUrl = process.env.SUPABASE_URL;
-            const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
-            const daysBack = parseInt('${{ inputs.days_back }}' || '7');
+          DAYS_BACK: ${{ inputs.days_back || '7' }}
+        run: |
+          echo "Reconciling commissions (last ${DAYS_BACK} days)..."
 
-            const query = async (endpoint) => {
-              const res = await fetch(supabaseUrl + '/rest/v1/' + endpoint, {
-                headers: {
-                  'apikey': supabaseKey,
-                  'Authorization': 'Bearer ' + supabaseKey,
-                }
-              });
-              return res.json();
-            };
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST "${SUPABASE_URL}/functions/v1/payment-reconciliation?days=${DAYS_BACK}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+            -H "Content-Type: application/json")
 
-            const fromDate = new Date();
-            fromDate.setDate(fromDate.getDate() - daysBack);
-            const fromDateStr = fromDate.toISOString();
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
 
-            console.log('Reconciling commissions from ' + fromDateStr);
+          echo "HTTP Status: $HTTP_CODE"
+          echo "$BODY" | jq . 2>/dev/null || echo "$BODY"
 
-            const issues = [];
-            const stats = {
-              bookings_checked: 0,
-              expected_commission_total: 0,
-              actual_commission_total: 0,
-              discrepancies: 0,
-              missing_commissions: 0,
-              wrong_percentage: 0,
-            };
+          # Extract commission check specifically
+          COMMISSION_CHECK=$(echo "$BODY" | jq -r '.results[] | select(.check == "commission_percentage_audit")')
+          COMMISSION_ISSUES=$(echo "$COMMISSION_CHECK" | jq -r '.issues_count // 0')
+          TOTAL_ISSUES=$(echo "$BODY" | jq -r '.summary.total_issues // 0')
+          OVERALL=$(echo "$BODY" | jq -r '.overall_status // "unknown"')
 
-            // Get all completed/confirmed bookings in the period
-            const bookings = await query(
-              `bookings?status=in.(confirmed,in_progress,completed)&created_at=gte.${fromDateStr}&select=id,total_amount_ars,platform_fee_ars,owner_id,renter_id,status`
-            );
+          echo "commission_issues=$COMMISSION_ISSUES" >> $GITHUB_OUTPUT
+          echo "total_issues=$TOTAL_ISSUES" >> $GITHUB_OUTPUT
+          echo "overall=$OVERALL" >> $GITHUB_OUTPUT
 
-            console.log('Found ' + bookings.length + ' bookings to check');            stats.bookings_checked = bookings.length;
+          if [ "$HTTP_CODE" = "500" ]; then
+            echo "::error::Reconciliation found critical issues"
+            exit 1
+          fi
 
-            const EXPECTED_COMMISSION_RATE = 0.15; // 15%
+          if [ "$COMMISSION_ISSUES" -gt "5" ]; then
+            echo "::warning::Found $COMMISSION_ISSUES commission discrepancies"
+          fi
 
-            for (const booking of bookings) {
-              const expectedCommission = booking.total_amount_ars * EXPECTED_COMMISSION_RATE;
-              const actualCommission = booking.platform_fee_ars || 0;
-
-              stats.expected_commission_total += expectedCommission;
-              stats.actual_commission_total += actualCommission;
-
-              // Check if commission is missing
-              if (actualCommission === 0 && booking.total_amount_ars > 0) {
-                stats.missing_commissions++;
-                issues.push({
-                  type: 'MISSING_COMMISSION',
-                  severity: 'high',
-                  booking_id: booking.id,
-                  total_amount: booking.total_amount_ars,
-                  expected_commission: expectedCommission,
-                  message: 'Booking ' + booking.id.substring(0, 8) + '... has no platform fee recorded',
-                });
-                continue;
-              }
-
-              // Check if commission percentage is wrong (allow 1% tolerance)
-              const actualRate = actualCommission / booking.total_amount_ars;
-              const rateDiff = Math.abs(actualRate - EXPECTED_COMMISSION_RATE);
-
-              if (rateDiff > 0.01 && booking.total_amount_ars > 1000) {
-                stats.wrong_percentage++;
-                issues.push({
-                  type: 'WRONG_COMMISSION_RATE',
-                  severity: 'medium',
-                  booking_id: booking.id,
-                  total_amount: booking.total_amount_ars,
-                  expected_commission: expectedCommission,
-                  actual_commission: actualCommission,
-                  expected_rate: '15%',
-                  actual_rate: (actualRate * 100).toFixed(2) + '%',
-                  difference: expectedCommission - actualCommission,
-                  message: 'Booking ' + booking.id.substring(0, 8) + '... has ' +
-                    (actualRate * 100).toFixed(1) + '% fee instead of 15%',
-                });
-              }
-            }
-
-            stats.discrepancies = issues.length;
-
-            // Check MercadoPago split payments match
-            console.log('\nChecking MercadoPago split payments...');
-
-            const mpPayments = await query(
-              `payments?status=eq.approved&created_at=gte.${fromDateStr}&select=id,booking_id,amount,marketplace_fee,external_payment_id`
-            );
-
-            let mpFeesTotal = 0;
-            for (const payment of mpPayments) {
-              if (payment.marketplace_fee) {
-                mpFeesTotal += payment.marketplace_fee;
-
-                // Cross-check with booking
-                if (payment.booking_id) {
-                  const booking = bookings.find(b => b.id === payment.booking_id);
-                  if (booking && Math.abs(payment.marketplace_fee - booking.platform_fee_ars) > 1) {
-                    issues.push({
-                      type: 'MP_FEE_MISMATCH',
-                      severity: 'medium',
-                      booking_id: payment.booking_id,
-                      payment_id: payment.id,
-                      mp_fee: payment.marketplace_fee,
-                      db_fee: booking.platform_fee_ars,
-                      message: 'MP fee (' + payment.marketplace_fee + ') doesn\'t match DB (' +
-                      booking.platform_fee_ars + ')',
-                    });
-                  }
-                }
-              }
-            }
-
-            // Summary
-            const totalDifference = stats.expected_commission_total - stats.actual_commission_total;
-
-            console.log('\n=== Commission Reconciliation ===');
-            console.log('Period: Last ' + daysBack + ' days');
-            console.log('Bookings checked: ' + stats.bookings_checked);
-            console.log('Expected commissions: ARS ' + stats.expected_commission_total.toFixed(2));
-            console.log('Actual commissions: ARS ' + stats.actual_commission_total.toFixed(2));
-            console.log('Difference: ARS ' + totalDifference.toFixed(2));
-            console.log('MP fees collected: ARS ' + mpFeesTotal.toFixed(2));
-            console.log('\nIssues found: ' + issues.length);
-            console.log('- Missing commissions: ' + stats.missing_commissions);
-            console.log('- Wrong percentage: ' + stats.wrong_percentage);
-
-
-            if (issues.length > 0) {
-              console.log('\nIssues:', JSON.stringify(issues.slice(0, 10), null, 2));
-            }
-
-            core.setOutput('bookings_checked', stats.bookings_checked);
-            core.setOutput('expected_total', stats.expected_commission_total.toFixed(2));
-            core.setOutput('actual_total', stats.actual_commission_total.toFixed(2));
-            core.setOutput('difference', totalDifference.toFixed(2));
-            core.setOutput('issues_count', issues.length);
-            core.setOutput('mp_fees', mpFeesTotal.toFixed(2));
-
-            // Fail if significant discrepancies
-            if (Math.abs(totalDifference) > 10000 || stats.missing_commissions > 5) {
-              core.setFailed('Commission discrepancies detected: ARS ' + totalDifference.toFixed(2) + ' difference');
-            }
-
-            return { stats, issues };
-
-      - name: Create Report
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const bookingsChecked = '${{ steps.reconcile.outputs.bookings_checked }}';
-            const expectedTotal = '${{ steps.reconcile.outputs.expected_total }}';
-            const actualTotal = '${{ steps.reconcile.outputs.actual_total }}';
-            const difference = '${{ steps.reconcile.outputs.difference }}';
-            const issuesCount = '${{ steps.reconcile.outputs.issues_count }}';
-            const mpFees = '${{ steps.reconcile.outputs.mp_fees }}';
-
-            const diffNum = parseFloat(difference);
-            const status = Math.abs(diffNum) < 100 ? '✅' : (Math.abs(diffNum) < 10000 ? '⚠️' : '❌');
-
-            const title = '[COMMISSION REPORT] ' + status +
-              ' Weekly Reconciliation - Diff: ARS ' + difference;
-            const actionItems = parseInt(issuesCount) > 0
-              ? '- [ ] Review ' + issuesCount + ' discrepancies\n' +
-                '- [ ] Verify MercadoPago dashboard matches\n' +
-                '- [ ] Investigate missing commissions'
-              : '- No action required - all commissions reconciled';
-
-            const body =
-              '## Commission Reconciliation Report\n\n' +
-              '**Period:** Last 7 days\n' +
-              '**Status:** ' + status + '\n\n' +
-              '### Summary\n' +
-              '| Metric | Value |\n' +
-              '|--------|-------|\n' +
-              '| Bookings Checked | ' + bookingsChecked + ' |\n' +
-              '| Expected Commissions (15%) | ARS ' + expectedTotal + ' |\n' +
-              '| Actual Commissions | ARS ' + actualTotal + ' |\n' +
-              '| **Difference** | **ARS ' + difference + '** |\n' +
-              '| MercadoPago Fees | ARS ' + mpFees + ' |\n' +
-              '| Issues Found | ' + issuesCount + ' |\n\n' +
-              '### Commission Rate\n' +
-              '- Expected: 15% of GMV\n' +
-              '- Platform receives fees via MercadoPago split payments\n\n' +
-              '### Action Items\n' +
-              actionItems + '\n\n' +
-              '---\n' +
-              '*Auto-generated by Commission Reconciliation workflow*';
-
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: title,
-              body: body,
-              labels: ['report', 'commissions', 'finance'],
-            });
-
-  notify-discrepancy:
-    name: Notify on Discrepancy
-    runs-on: ubuntu-latest
-    needs: reconcile-commissions
-    if: failure()
-    steps:
-      - name: Send Alert
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const webhookUrl = '${{ secrets.INCIDENT_WEBHOOK_URL }}';
-            if (!webhookUrl) return;
-
-            await fetch(webhookUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                source: 'github',
-                severity: 'high',
-                title: 'Commission Reconciliation Alert',
-                message: 'Significant commission discrepancies detected. Review required.',
-                metadata: {
-                  workflow: 'commission-reconciliation',
-                  run_url: 'https://github.com/' + context.repo.owner + '/' + context.repo.repo +
-                    '/actions/runs/' + context.runId,
-                },
-                timestamp: new Date().toISOString(),
-              }),
-            });
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Commission Reconciliation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Overall Status | ${{ steps.reconcile.outputs.overall || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commission Issues | ${{ steps.reconcile.outputs.commission_issues || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Total Issues (all checks) | ${{ steps.reconcile.outputs.total_issues || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "*Powered by payment-reconciliation Edge Function (check #6)*" >> $GITHUB_STEP_SUMMARY
