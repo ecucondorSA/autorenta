@@ -292,7 +292,8 @@ export class ActiveRentalCardComponent {
     this.countdownTick();
     const b = this.currentBooking();
     if (!b) return null;
-    return getCountdownLabel(b.status);
+    const role = this.role() === 'unknown' ? 'renter' : this.role();
+    return getCountdownLabel(b.status, role as 'renter' | 'owner');
   });
 
   readonly countdownDisplay = computed(() => {

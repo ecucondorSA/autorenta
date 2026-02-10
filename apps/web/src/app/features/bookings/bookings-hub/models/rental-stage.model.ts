@@ -171,15 +171,18 @@ export function getStatusBadge(status: string): StatusBadge {
 
 // ─── Micro-Data Helpers (countdown, location, PIN) ─────────────────
 
-export function getCountdownLabel(status: string): string | null {
+export function getCountdownLabel(
+  status: string,
+  role: 'renter' | 'owner' = 'renter',
+): string | null {
   switch (status) {
     case 'pending':
     case 'pending_payment':
       return 'Vence en';
     case 'confirmed':
-      return 'Retiro en';
+      return role === 'owner' ? 'Entrega en' : 'Retiro en';
     case 'in_progress':
-      return 'Devolver en';
+      return role === 'owner' ? 'Regresa en' : 'Devolver en';
     case 'pending_return':
       return 'Inspección en';
     default:

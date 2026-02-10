@@ -31,6 +31,7 @@ import {
   shieldCheckmarkOutline,
   closeCircleOutline,
   chatbubbleEllipsesOutline,
+  cashOutline,
 } from 'ionicons/icons';
 
 import { IonIcon } from '@ionic/angular/standalone';
@@ -88,7 +89,7 @@ import { BookingContextService } from './services/booking-context.service';
       <!-- HEADER -->
       <app-bookings-header
         [role]="role()"
-        [contextTitle]="showAssetDashboard() ? 'Gestión de Renta Activa' : null"
+        [contextTitle]="showAssetDashboard() ? assetTitle() : null"
         [statusBadge]="assetStatusBadge()"
         (roleChange)="setRole($event)"
       ></app-bookings-header>
@@ -130,12 +131,56 @@ import { BookingContextService } from './services/booking-context.service';
 
         <!-- EMPTY STATE -->
         @else if (currentBookings().length === 0) {
-          <!-- Owner empty: show operational dashboard -->
           @if (role() === 'owner') {
-            <app-bookings-operational-dashboard
-              [role]="role()"
-              [historyBookings]="[]"
-            ></app-bookings-operational-dashboard>
+            <!-- ═══ PROFESSIONAL OWNER EMPTY STATE ═══ -->
+            <div class="space-y-6 py-6">
+              <!-- Hero message -->
+              <div class="text-center space-y-2">
+                <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto mb-4">
+                  <ion-icon name="car-sport-outline" class="text-3xl text-blue-500"></ion-icon>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">Publicá tu primer auto</h3>
+                <p class="text-sm text-slate-500 max-w-xs mx-auto">
+                  Ganá dinero con tu vehículo y gestioná cada entrega desde acá.
+                </p>
+              </div>
+
+              <!-- Stepper preview (all locked) -->
+              <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4 text-center">
+                  Así vas a gestionar cada entrega
+                </p>
+                <app-booking-stepper
+                  [stages]="emptyStages()"
+                  [detailed]="true"
+                ></app-booking-stepper>
+              </div>
+
+              <!-- CTA -->
+              <a
+                routerLink="/cars/publish"
+                class="flex items-center justify-center gap-2 w-full py-4 bg-blue-500 text-white text-base font-semibold rounded-2xl active:scale-[0.98] transition-transform shadow-lg shadow-blue-200/50"
+              >
+                <ion-icon name="add-outline" class="text-lg"></ion-icon>
+                Publicar auto
+              </a>
+
+              <!-- Trust badges -->
+              <div class="flex gap-3">
+                <div class="flex-1 flex items-center gap-2 bg-white rounded-xl p-3 border border-slate-100">
+                  <ion-icon name="shield-checkmark-outline" class="text-blue-500 text-lg"></ion-icon>
+                  <span class="text-xs font-medium text-slate-600">Cobertura incluida</span>
+                </div>
+                <div class="flex-1 flex items-center gap-2 bg-white rounded-xl p-3 border border-slate-100">
+                  <ion-icon name="cash-outline" class="text-blue-500 text-lg"></ion-icon>
+                  <span class="text-xs font-medium text-slate-600">Pagos garantizados</span>
+                </div>
+                <div class="flex-1 flex items-center gap-2 bg-white rounded-xl p-3 border border-slate-100">
+                  <ion-icon name="chatbubble-ellipses-outline" class="text-blue-500 text-lg"></ion-icon>
+                  <span class="text-xs font-medium text-slate-600">Soporte 24/7</span>
+                </div>
+              </div>
+            </div>
           } @else {
             <!-- ═══ PROFESSIONAL EMPTY STATE ═══ -->
             <div class="space-y-6 py-6">
@@ -346,14 +391,27 @@ export class BookingsHubPage implements OnInit, OnDestroy {
 
   /**
    * Show the expanded "Asset Dashboard" when:
-   * - Role is renter (owners manage fleets, not single trips)
-   * - Context mode indicates an active or imminent trip
+   * - Renter: context mode indicates an active or imminent trip
+   * - Owner: has bookings in active operational states (car is out or about to be)
    */
   readonly showAssetDashboard = computed(() => {
-    if (this.role() !== 'renter') return false;
-    const mode = this.contextMode();
-    return mode === 'active-trip' || mode === 'pre-trip';
+    const role = this.role();
+    if (role === 'renter') {
+      const mode = this.contextMode();
+      return mode === 'active-trip' || mode === 'pre-trip';
+    }
+    if (role === 'owner') {
+      return this.activeRentals().some((b) =>
+        ['in_progress', 'confirmed', 'pending_return', 'pending_review'].includes(b.status),
+      );
+    }
+    return false;
   });
+
+  /** Dynamic title based on role */
+  readonly assetTitle = computed(() =>
+    this.role() === 'owner' ? 'Gestión de Entrega Activa' : 'Gestión de Renta Activa',
+  );
 
   /** The primary booking for asset management mode */
   readonly assetBooking = computed(() => {
@@ -387,7 +445,8 @@ export class BookingsHubPage implements OnInit, OnDestroy {
     this.countdownTick();
     const b = this.assetBooking();
     if (!b) return null;
-    return getCountdownLabel(b.status);
+    const role = this.role() === 'unknown' ? 'renter' : this.role();
+    return getCountdownLabel(b.status, role as 'renter' | 'owner');
   });
 
   readonly assetCountdownDisplay = computed(() => {
@@ -432,6 +491,7 @@ export class BookingsHubPage implements OnInit, OnDestroy {
       shieldCheckmarkOutline,
       closeCircleOutline,
       chatbubbleEllipsesOutline,
+      cashOutline,
     });
   }
 
