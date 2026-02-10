@@ -1,3 +1,7 @@
+## <small>3.80.9 (2026-02-10)</small>
+
+* perf: lazy-load browser-image-compression to reduce initial bundle by 140 kB ([65c6bd1](https://github.com/ecucondorSA/autorenta/commit/65c6bd1))
+
 ## <small>3.80.8 (2026-02-10)</small>
 
 * fix(seo): add H1 heading and MetaService calls to marketplace/browse pages ([4239ab0](https://github.com/ecucondorSA/autorenta/commit/4239ab0))
