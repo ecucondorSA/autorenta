@@ -519,6 +519,7 @@ export const routes: Routes = [
       },
       {
         path: 'verification',
+        title: 'Verificación de Identidad',
         data: { layout: 'full-bleed', hideHeader: true },
         loadComponent: lazyRetry(() =>
           import('./features/profile/verification-page/profile-verification.page').then(
@@ -530,6 +531,7 @@ export const routes: Routes = [
   },
   {
     path: 'protections',
+    title: 'Protecciones',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: lazyRetry(() =>
@@ -538,6 +540,7 @@ export const routes: Routes = [
   },
   {
     path: 'verification',
+    title: 'Verificación',
     loadChildren: lazyRetry(() =>
       import('./features/verification/verification.routes').then((m) => m.VERIFICATION_ROUTES),
     ),
@@ -553,6 +556,7 @@ export const routes: Routes = [
   },
   {
     path: 'users/:id',
+    title: 'Perfil Público',
     loadComponent: lazyRetry(() =>
       import('./features/users/public-profile.page').then((m) => m.PublicProfilePage),
     ),
@@ -597,30 +601,35 @@ export const routes: Routes = [
       },
       {
         path: 'earnings',
+        title: 'Ganancias',
         loadComponent: lazyRetry(() =>
           import('./features/dashboard/earnings/earnings.page').then((m) => m.EarningsPage),
         ),
       },
       {
         path: 'stats',
+        title: 'Estadísticas',
         loadComponent: lazyRetry(() =>
           import('./features/dashboard/stats/stats.page').then((m) => m.StatsPage),
         ),
       },
       {
         path: 'reviews',
+        title: 'Mis Reseñas',
         loadComponent: lazyRetry(() =>
           import('./features/dashboard/reviews/reviews.page').then((m) => m.ReviewsPage),
         ),
       },
       {
         path: 'insurance',
+        title: 'Seguros',
         loadComponent: lazyRetry(() =>
           import('./features/dashboard/insurance/insurance.page').then((m) => m.InsurancePage),
         ),
       },
       {
         path: 'calendar',
+        title: 'Calendario',
         loadComponent: lazyRetry(() =>
           import('./features/dashboard/calendar/dashboard-calendar.page').then(
             (m) => m.DashboardCalendarPage,
@@ -629,12 +638,14 @@ export const routes: Routes = [
       },
       {
         path: 'points',
+        title: 'Puntos',
         loadComponent: lazyRetry(() =>
           import('./features/dashboard/points/points.page').then((m) => m.PointsPage),
         ),
       },
       {
         path: 'security',
+        title: 'Centro de Seguridad',
         loadComponent: lazyRetry(() =>
           import('./features/dashboard/pages/security-center/security-dashboard.page').then(
             (m) => m.SecurityDashboardPage,
@@ -645,6 +656,7 @@ export const routes: Routes = [
   },
   {
     path: 'scout',
+    title: 'Scout',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     children: [
@@ -685,6 +697,7 @@ export const routes: Routes = [
   },
   {
     path: 'payouts',
+    title: 'Retiros',
     canMatch: [AuthGuard, kycGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     loadComponent: lazyRetry(() =>
@@ -701,6 +714,7 @@ export const routes: Routes = [
   },
   {
     path: 'panic',
+    title: 'Emergencia',
     data: { layout: 'full-bleed', hideHeader: true, hideFooter: true, hideMobileNav: true },
     loadComponent: lazyRetry(() =>
       import('./features/dashboard/pages/security-center/panic-mode.page').then(
@@ -731,6 +745,7 @@ export const routes: Routes = [
   },
   {
     path: 'delete-account',
+    title: 'Eliminar Cuenta',
     loadComponent: lazyRetry(() =>
       import('./features/legal/delete-account/delete-account.page').then(
         (m) => m.DeleteAccountPage,
@@ -739,6 +754,7 @@ export const routes: Routes = [
   },
   {
     path: 'politica-seguros',
+    title: 'Política de Seguros',
     loadComponent: lazyRetry(() =>
       import('./features/legal/insurance-policy/insurance-policy.page').then(
         (m) => m.InsurancePolicyPage,
@@ -747,6 +763,7 @@ export const routes: Routes = [
   },
   {
     path: 'messages',
+    title: 'Mensajes',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true, hideMobileNav: true },
     children: [
@@ -768,6 +785,7 @@ export const routes: Routes = [
   },
   {
     path: 'notifications',
+    title: 'Notificaciones',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
     children: [
@@ -799,7 +817,7 @@ export const routes: Routes = [
   },
   {
     path: 'aircover',
-    title: 'AirCover - Protección',
+    title: 'Protección AutoRenta',
     loadComponent: lazyRetry(() =>
       import('./features/static/aircover/aircover.page').then((m) => m.AircoverPage),
     ),
@@ -820,18 +838,21 @@ export const routes: Routes = [
   },
   {
     path: 'community',
+    title: 'Comunidad',
     loadComponent: lazyRetry(() =>
       import('./features/static/community/community.page').then((m) => m.CommunityPage),
     ),
   },
   {
     path: 'rent-your-car',
+    title: 'Alquilá tu Auto',
     loadComponent: lazyRetry(() =>
       import('./features/static/rent-your-car/rent-your-car.page').then((m) => m.RentYourCarPage),
     ),
   },
   {
     path: 'owner-resources',
+    title: 'Recursos para Propietarios',
     loadComponent: lazyRetry(() =>
       import('./features/static/owner-resources/owner-resources.page').then(
         (m) => m.OwnerResourcesPage,
@@ -840,12 +861,14 @@ export const routes: Routes = [
   },
   {
     path: 'resources',
+    title: 'Centro de Recursos',
     loadComponent: lazyRetry(() =>
       import('./features/static/resources/resources.page').then((m) => m.ResourcesPage),
     ),
   },
   {
     path: 'newsroom',
+    title: 'Novedades',
     loadComponent: lazyRetry(() =>
       import('./features/static/newsroom/newsroom.page').then((m) => m.NewsroomPage),
     ),
@@ -859,12 +882,14 @@ export const routes: Routes = [
   },
   {
     path: 'careers',
+    title: 'Empleo',
     loadComponent: lazyRetry(() =>
       import('./features/static/careers/careers.page').then((m) => m.CareersPage),
     ),
   },
   {
     path: 'investors',
+    title: 'Inversores',
     loadComponent: lazyRetry(() =>
       import('./features/static/investors/investors.page').then((m) => m.InvestorsPage),
     ),
@@ -878,6 +903,7 @@ export const routes: Routes = [
   },
   {
     path: 'company-data',
+    title: 'Datos de la Empresa',
     loadComponent: lazyRetry(() =>
       import('./features/static/company-data/company-data.page').then((m) => m.CompanyDataPage),
     ),
