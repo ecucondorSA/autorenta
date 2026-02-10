@@ -1,3 +1,7 @@
+## <small>3.78.9 (2026-02-10)</small>
+
+* fix(wallet): add CORS handler and graceful coverage_fund fallback ([4f0e460](https://github.com/ecucondorSA/autorenta/commit/4f0e460))
+
 ## <small>3.78.8 (2026-02-10)</small>
 
 * fix(monitoring): update uptime checks after PayPal cleanup and new deploys ([93fdb95](https://github.com/ecucondorSA/autorenta/commit/93fdb95))
