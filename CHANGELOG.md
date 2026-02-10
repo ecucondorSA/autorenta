@@ -1,3 +1,7 @@
+## 3.80.0 (2026-02-10)
+
+* feat(verification): smart retry with HTTP error classification + error UI ([7802b94](https://github.com/ecucondorSA/autorenta/commit/7802b94))
+
 ## <small>3.79.1 (2026-02-10)</small>
 
 * fix(edge-functions): create missing DB infrastructure and fix exchange rates ([7be1889](https://github.com/ecucondorSA/autorenta/commit/7be1889))
