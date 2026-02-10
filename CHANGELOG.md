@@ -1,3 +1,8 @@
+## 3.79.0 (2026-02-10)
+
+* fix(lint): remove unused imports in admin-gaming-review page ([276b6bf](https://github.com/ecucondorSA/autorenta/commit/276b6bf))
+* feat(antifraud): wire complete anti-fraud pipeline into reward pool ([14a0d85](https://github.com/ecucondorSA/autorenta/commit/14a0d85))
+
 ## <small>3.78.10 (2026-02-10)</small>
 
 * fix: replace 5 phantom edge function invocations with real endpoints ([eb81181](https://github.com/ecucondorSA/autorenta/commit/eb81181))
