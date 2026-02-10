@@ -80,7 +80,7 @@ serve(async (req) => {
     // 4. Obtener tasa anterior para calcular volatilidad
     const { data: previousRate } = await supabase
       .from('exchange_rates')
-      .select('binance_rate')
+      .select('binance_rate, rate')
       .eq('pair', 'USDTARS')
       .eq('is_active', true)
       .order('last_updated', { ascending: false })
@@ -89,36 +89,26 @@ serve(async (req) => {
 
     let volatility24h = null;
     if (previousRate) {
-      const priceDiff = binanceRate - previousRate.binance_rate;
-      volatility24h = Math.round((priceDiff / previousRate.binance_rate) * 10000) / 100; // Porcentaje con 2 decimales
+      const prevRate = previousRate.binance_rate ?? previousRate.rate;
+      const priceDiff = binanceRate - prevRate;
+      volatility24h = prevRate > 0 ? Math.round((priceDiff / prevRate) * 10000) / 100 : null; // Porcentaje con 2 decimales
       console.log(`📊 Volatilidad 24h: ${volatility24h}%`);
     }
 
-    // 5. Desactivar tasas anteriores
-    const { error: deactivateError } = await supabase
-      .from('exchange_rates')
-      .update({ is_active: false })
-      .eq('pair', 'USDTARS')
-      .eq('is_active', true);
-
-    if (deactivateError) {
-      console.error('⚠️  Error al desactivar tasas anteriores:', deactivateError);
-      // No lanzar error, continuar con la inserción
-    }
-
-    // 6. Insertar nueva tasa
+    // 5. Upsert tasa (unique constraint en pair)
     const { data: newRate, error: insertError } = await supabase
       .from('exchange_rates')
-      .insert({
+      .upsert({
         pair: 'USDTARS',
         source: 'binance',
+        rate: platformRate,
         binance_rate: binanceRate,
         platform_rate: platformRate,
         margin_percent: marginPercent,
         margin_absolute: marginAbsolute,
         volatility_24h: volatility24h,
         is_active: true,
-      })
+      }, { onConflict: 'pair' })
       .select()
       .single();
 
