@@ -234,6 +234,9 @@
       (click)="closeForm()"
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="login-modal-title"
         class="w-full max-w-md max-h-[calc(100dvh-100px)] sm:max-h-[90dvh] overflow-y-auto bg-surface-elevated rounded-t-3xl sm:rounded-3xl shadow-elevation-4 animate-slideUp sm:animate-scaleIn"
         (click)="$event.stopPropagation()"
       >
@@ -274,7 +277,7 @@
                 />
               </svg>
             </div>
-            <h2 class="text-xl font-bold text-text-primary">Bienvenido de vuelta</h2>
+            <h2 id="login-modal-title" class="text-xl font-bold text-text-primary">Bienvenido de vuelta</h2>
             <p class="text-sm text-text-secondary mt-1">Ingresá a tu cuenta para continuar</p>
           </div>
         </div>
@@ -558,7 +561,7 @@
     <div
       class="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 animate-fadeIn p-4"
     >
-      <div class="w-full max-w-sm bg-white rounded-3xl shadow-2xl animate-scaleIn overflow-hidden">
+      <div role="dialog" aria-modal="true" aria-labelledby="biometric-prompt-title" class="w-full max-w-sm bg-white rounded-3xl shadow-2xl animate-scaleIn overflow-hidden">
         <!-- Header con gradiente -->
         <div class="bg-gradient-to-br from-emerald-400 to-emerald-600 px-6 pt-8 pb-12 text-center">
           <!-- Ícono de huella animado -->
@@ -582,7 +585,7 @@
               />
             </svg>
           </div>
-          <h2 class="text-xl font-bold text-white mb-1">¿Activar acceso rápido?</h2>
+          <h2 id="biometric-prompt-title" class="text-xl font-bold text-white mb-1">¿Activar acceso rápido?</h2>
           <p class="text-white/80 text-sm">Ingresá con {{ biometryLabel() }} la próxima vez</p>
         </div>
 

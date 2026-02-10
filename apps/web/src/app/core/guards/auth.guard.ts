@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
-import { CanMatchFn, Router, Route } from '@angular/router';
+import { CanMatchFn, Router, Route, UrlSegment } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
-export const AuthGuard: CanMatchFn = async (route: Route) => {
+export const AuthGuard: CanMatchFn = async (route: Route, segments: UrlSegment[]) => {
   const auth = inject(AuthService);
   const router = inject(Router);
   const logger = inject(LoggerService);
@@ -26,10 +26,12 @@ export const AuthGuard: CanMatchFn = async (route: Route) => {
   }
 
   if (!session || !session['user']) {
-    logger.debug('No session after refresh. Redirecting to /auth/login', 'AuthGuard');
-    // refreshSession() already calls clearStaleSession() on failure (auth.service.ts:305),
-    // so session is guaranteed clean at this point. No need to clear again.
-    return router.createUrlTree(['/auth/login']);
+    // Build returnUrl from matched segments so the user returns here after login
+    const returnUrl = '/' + segments.map((s) => s.path).join('/');
+    logger.debug(`No session after refresh. Redirecting to /auth/login (returnUrl: ${returnUrl})`, 'AuthGuard');
+    return router.createUrlTree(['/auth/login'], {
+      queryParams: returnUrl !== '/' ? { returnUrl } : {},
+    });
   }
 
   // AuthGuard solo valida sesión activa.

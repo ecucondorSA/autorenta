@@ -46,7 +46,7 @@ export class FooterComponent {
       title: 'Soporte',
       links: [
         { label: 'Centro de ayuda', url: '/help' },
-        { label: 'AirCover', url: '/aircover' },
+        { label: 'Protección AutoRenta', url: '/aircover' },
         { label: 'Seguridad', url: '/safety' },
         { label: 'Opciones de cancelación', url: '/cancellation' },
         { label: 'Atención al cliente', url: '/support' },
