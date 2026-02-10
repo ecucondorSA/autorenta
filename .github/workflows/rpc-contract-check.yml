@@ -92,44 +92,48 @@ jobs:
 
           RPC_LIST="${{ needs.extract-rpcs.outputs.rpc_list }}"
 
-          # Load allowlist (known missing RPCs that are intentionally deferred)
+          # Load allowlist
           ALLOWLIST=""
           if [ -f ".github/rpc-allowlist.txt" ]; then
             ALLOWLIST=$(grep -v '^#' .github/rpc-allowlist.txt | grep -v '^$' | cut -d'|' -f1 | tr -d ' ')
-            ALLOWLIST_COUNT=$(echo "$ALLOWLIST" | grep -c '.')
-            echo "📋 Loaded $ALLOWLIST_COUNT entries from rpc-allowlist.txt"
-          else
-            echo "📋 No rpc-allowlist.txt found, all missing RPCs will be errors"
+            echo "📋 Loaded allowlist"
           fi
 
+          # Build SQL array from RPC list (single query instead of 166 connections)
+          SQL_ARRAY=$(echo "$RPC_LIST" | tr ',' '\n' | sed "s/^/'/;s/$/'/" | tr '\n' ',' | sed 's/,$//')
+
+          # Single query: get all existing public functions that match frontend RPCs
+          EXISTING=$(psql "$DB_URL" -t -A -c "
+            SELECT DISTINCT p.proname
+            FROM pg_proc p
+            JOIN pg_namespace n ON p.pronamespace = n.oid
+            WHERE n.nspname = 'public'
+            AND p.proname IN ($SQL_ARRAY)
+            ORDER BY p.proname;
+          " 2>&1)
+
+          if [ $? -ne 0 ]; then
+            echo "::error::❌ Database query failed: $EXISTING"
+            exit 1
+          fi
+
+          FOUND=0
           MISSING=""
           ALLOWED_MISSING=""
-          FOUND=0
 
           for RPC in $(echo "$RPC_LIST" | tr ',' '\n'); do
             [ -z "$RPC" ] && continue
 
-            echo "🔍 Checking: $RPC"
-
-            # Check if function exists in public schema
-            EXISTS=$(psql "$DB_URL" -t -c "
-              SELECT COUNT(*) FROM pg_proc p
-              JOIN pg_namespace n ON p.pronamespace = n.oid
-              WHERE n.nspname = 'public' AND p.proname = '$RPC'
-            " 2>&1 | tr -d ' ')
-
-            if [ "$EXISTS" = "0" ] || [ -z "$EXISTS" ]; then
-              # Check if in allowlist
+            if echo "$EXISTING" | grep -qx "$RPC"; then
+              FOUND=$((FOUND + 1))
+            else
               if echo "$ALLOWLIST" | grep -qx "$RPC"; then
-                echo "⚠️ ALLOWED MISSING: $RPC (in allowlist)"
+                echo "⚠️ ALLOWED MISSING: $RPC"
                 ALLOWED_MISSING="$ALLOWED_MISSING $RPC"
               else
                 echo "❌ MISSING: $RPC"
                 MISSING="$MISSING $RPC"
               fi
-            else
-              echo "✅ Found: $RPC"
-              FOUND=$((FOUND + 1))
             fi
           done
 
@@ -146,15 +150,11 @@ jobs:
             echo ""
             echo "::error::❌ NEW missing RPC functions (not in allowlist):$MISSING"
             echo ""
-            echo "These functions are called in the frontend but don't exist in the database."
-            echo "Either:"
-            echo "  1. Add the missing migration to create the function"
-            echo "  2. Remove the RPC call from the frontend"
-            echo "  3. Add to .github/rpc-allowlist.txt if intentionally deferred"
+            echo "Fix: add migration, remove RPC call, or add to .github/rpc-allowlist.txt"
             exit 1
           fi
 
-          echo "✅ All RPCs verified ($ALLOWED_COUNT allowed missing)!"
+          echo "✅ All $FOUND RPCs verified ($ALLOWED_COUNT allowed missing)!"
 
   check-migrations-applied:
     name: 🔄 Check migrations are applied
