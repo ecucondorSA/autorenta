@@ -1,3 +1,7 @@
+## <small>3.78.7 (2026-02-10)</small>
+
+* fix(monitoring): remove facebook-native-login from uptime checks ([9f09681](https://github.com/ecucondorSA/autorenta/commit/9f09681))
+
 ## <small>3.78.6 (2026-02-10)</small>
 
 * fix(infra): migrate orphan edge functions and expand uptime monitoring ([d423aa7](https://github.com/ecucondorSA/autorenta/commit/d423aa7))
