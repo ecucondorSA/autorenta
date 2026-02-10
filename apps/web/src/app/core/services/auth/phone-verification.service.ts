@@ -619,7 +619,7 @@ export class PhoneVerificationService extends VerificationBaseService<PhoneVerif
 
       const session = refreshData.session;
 
-      const response = await fetch(`${environment.supabaseUrl}/functions/v1/send-otp-via-n8n`, {
+      const response = await fetch(`${environment.supabaseUrl}/functions/v1/send-whatsapp-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

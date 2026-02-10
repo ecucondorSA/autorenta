@@ -52,8 +52,8 @@ verify_jwt = false
 # Security: Validates webhook signature via X-Hub-Signature-256 header
 verify_jwt = false
 
-[functions.send-otp-via-n8n]
-# OTP via WhatsApp/SMS - disable middleware JWT verification
+[functions.send-whatsapp-otp]
+# OTP via WhatsApp - disable middleware JWT verification
 # Function handles authentication manually for better error handling
 # This allows us to provide user-friendly error messages on auth failures
 verify_jwt = false

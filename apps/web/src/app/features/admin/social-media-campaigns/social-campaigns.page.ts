@@ -422,7 +422,7 @@ export class SocialCampaignsPage implements OnInit {
       // Llamar a Edge Function
       const { data: sessionData } = await this.supabase.auth.getSession();
       const response = await fetch(
-        `${environment.supabaseUrl}/functions/v1/publish-to-social-media`,
+        `${environment.supabaseUrl}/functions/v1/social-media-publisher`,
         {
           method: 'POST',
           headers: {

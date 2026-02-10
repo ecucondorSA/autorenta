@@ -575,17 +575,9 @@ export const routes: Routes = [
     title: 'Mi Billetera',
     canMatch: [AuthGuard],
     data: { layout: 'full-bleed', hideHeader: true },
-    children: [
-      {
-        path: '',
-        loadComponent: lazyRetry(() =>
-          import('./features/wallet/wallet.page').then((m) => m.WalletPage),
-        ),
-        loadChildren: lazyRetry(() =>
-          import('./features/wallet/wallet.routes').then((m) => m.WALLET_ROUTES),
-        ),
-      },
-    ],
+    loadChildren: lazyRetry(() =>
+      import('./features/wallet/wallet.routes').then((m) => m.WALLET_ROUTES),
+    ),
   },
   {
     path: 'dashboard',

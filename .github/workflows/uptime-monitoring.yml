@@ -94,29 +94,48 @@ jobs:
             ));
 
             // 4. Key Edge Functions (organized by criticality)
-            // NOTE: Only includes DEPLOYED functions (verified via `supabase functions list`)
-            // Functions not deployed due to plan limits: verify-document, verify-face, tiktok-events, sync-binance-rates
+            // Last updated: 2026-02-10 — reflects current deployed state (100 functions)
             const edgeFunctions = [
               // === CRITICAL: Payment Functions ===
               'mercadopago-webhook',
               'mercadopago-process-booking-payment',
               'mercadopago-process-brick-payment',
+              'mercadopago-process-deposit-payment',
+              'mercadopago-process-refund',
+              'mercadopago-money-out',
               'process-payment-queue',
+              'process-payment-split',
+              'payment-reconciliation',
               'mp-create-preauth',
               'mp-capture-preauth',
+              'mp-cancel-preauth',
+              'paypal-webhook',
+              'wallet-reconciliation',
+              'wallet-transfer',
+              'withdrawal-webhook',
 
-              // === HIGH: User Flow Functions ===
+              // === HIGH: User Flow & Verification ===
               'ai-vision-service',
+              'verify-document',
+              'verify-face',
+              'serasa-verify',
+              'gemini3-document-analyzer',
               'send-push-notification',
-              'booking-notify-n8n',
-              'send-otp-via-n8n',
+              'notify-multi-channel',
+              'email-service',
+              'health',
 
-              // === MEDIUM: Analytics & Integrations ===
+              // === MEDIUM: Analytics, Auth & Integrations ===
               'dashboard-stats',
+              'mercadopago-oauth-callback',
+              'mercadopago-refresh-token',
+              'facebook-native-login',
+              'upgrade-subscription-wallet',
 
               // === LOW: Supporting Functions ===
               'get-fipe-value',
               'generate-booking-contract-pdf',
+              'vehicle-location-update',
             ];
 
             for (const fn of edgeFunctions) {
