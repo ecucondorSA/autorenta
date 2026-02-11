@@ -1,3 +1,7 @@
+## <small>3.88.5 (2026-02-11)</small>
+
+* fix(kyc): harden verify-document CORS fallback and KYC telemetry ([76af715](https://github.com/ecucondorSA/autorenta/commit/76af715))
+
 ## <small>3.88.4 (2026-02-11)</small>
 
 * fix: harden auth and verification flows ([81dce7b](https://github.com/ecucondorSA/autorenta/commit/81dce7b))
