@@ -1,3 +1,7 @@
+## <small>3.84.3 (2026-02-11)</small>
+
+* fix: guard byd pitch checkout when opened from file protocol ([03c2ac9](https://github.com/ecucondorSA/autorenta/commit/03c2ac9))
+
 ## <small>3.84.2 (2026-02-11)</small>
 
 * fix: use live USDTARS rate for BYD checkout and pitch display ([6d6ccc8](https://github.com/ecucondorSA/autorenta/commit/6d6ccc8))
