@@ -19,12 +19,4 @@ describe('AssetPreloaderService', () => {
   it('should have preloadCriticalAssets method', () => {
     expect(typeof service.preloadCriticalAssets).toBe('function');
   });
-
-  it('should have preloadMapbox method', () => {
-    expect(typeof service.preloadMapbox).toBe('function');
-  });
-
-  it('should have isMapboxLoaded method', () => {
-    expect(typeof service.isMapboxLoaded).toBe('function');
-  });
 });

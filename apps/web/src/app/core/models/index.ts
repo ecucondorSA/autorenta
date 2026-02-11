@@ -921,8 +921,7 @@ export interface ProcessRefundResult {
 // Export Subscription models (Autorentar Club)
 export * from './subscription.model';
 
-// Export Participation models (Negocio en Participacion)
-export * from './participation.model';
+// (participation.model re-exported above via line 168)
 
 // Export Credit Report models (Nosis/Veraz integration)
 export * from './credit-report.model';

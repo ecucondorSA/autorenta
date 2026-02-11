@@ -127,8 +127,6 @@ export class VerificationStateService implements OnDestroy {
 
   /**
    * Subscribe to user_identity_levels changes via RealtimeConnectionService
-   *
-   * TODO(human): Implement the onStatusChange callback logic below.
    */
   private subscribeToChanges(userId: string): void {
     // Unsubscribe from previous channel if exists
@@ -157,8 +155,16 @@ export class VerificationStateService implements OnDestroy {
         // Emit event for notifications immediately
         this.emitVerificationEvent(payload);
       },
-      // TODO(human): implement onStatusChange callback
-      undefined,
+      (status) => {
+        this.logger.debug(`Realtime verification channel: ${status}`);
+        if (status === 'error') {
+          this.error.set('Conexión realtime perdida — reintentando');
+        } else if (status === 'connected') {
+          this.error.set(null);
+          // May have missed events while disconnected — sync state
+          void this.refreshProgress(true);
+        }
+      },
     );
   }
 
