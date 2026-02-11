@@ -41,9 +41,73 @@ interface VerifyDocumentResponse {
   warnings: string[];
 }
 
+interface OcrFailureResponse {
+  status: number;
+  body: {
+    success: false;
+    error: string;
+    message: string;
+    retries: number;
+  };
+}
+
 // Environment
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+
+function mapOcrFailure(error: unknown, retries: number): OcrFailureResponse {
+  const message = error instanceof Error ? error.message : 'Unknown error';
+
+  if (message.includes('OCR_PROVIDER_UNAVAILABLE:')) {
+    return {
+      status: 503,
+      body: {
+        success: false,
+        error: 'OCR_PROVIDER_UNAVAILABLE',
+        message:
+          'El servicio de verificación está temporalmente no disponible. Intenta de nuevo en unos minutos.',
+        retries,
+      },
+    };
+  }
+
+  if (message.includes('OCR_REQUEST_INVALID:')) {
+    return {
+      status: 400,
+      body: {
+        success: false,
+        error: 'OCR_REQUEST_INVALID',
+        message:
+          'No pudimos procesar el formato de la imagen. Intenta con una foto JPG o PNG, bien enfocada y completa.',
+        retries,
+      },
+    };
+  }
+
+  if (message.includes('OCR_NO_TEXT:')) {
+    return {
+      status: 400,
+      body: {
+        success: false,
+        error: 'OCR_NO_TEXT',
+        message:
+          'No se detectó texto legible en la imagen. Intenta con una foto más clara y con mejor iluminación.',
+        retries,
+      },
+    };
+  }
+
+  return {
+    status: 400,
+    body: {
+      success: false,
+      error: 'OCR_FAILED',
+      message:
+        'No se pudo procesar la imagen después de varios intentos. Por favor, intenta con una foto más clara y asegúrate de que el documento esté completo y bien iluminado.',
+      retries,
+    },
+  };
+}
 
 // =============================================================================
 // MAIN HANDLER
@@ -176,16 +240,12 @@ serve(async (req: Request) => {
     if (lastError || !ocrResult!) {
       const errorMessage = lastError instanceof Error ? lastError.message : 'Unknown error';
       console.error('[verify-document] OCR failed after all retries:', errorMessage);
-      
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'OCR_FAILED',
-          message: 'No se pudo procesar la imagen después de varios intentos. Por favor, intenta con una foto más clara y asegúrate de que el documento esté completo y bien iluminado.',
-          retries: maxRetries
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+
+      const failure = mapOcrFailure(lastError, maxRetries);
+      return new Response(JSON.stringify(failure.body), {
+        status: failure.status,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     // Step 2: Validate document based on country

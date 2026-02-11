@@ -806,7 +806,13 @@ export class LicenseUploaderComponent {
       if (isFront) this.frontProgress.set(100);
       else this.backProgress.set(100);
 
-      this.toastService.success('Éxito', 'Imagen procesada correctamente');
+      if (result.ocrWarning) {
+        this.setUploadError(result.ocrWarning);
+        this.toastService.warning('Revisión pendiente', result.ocrWarning);
+      } else {
+        this.uploadError.set(null);
+        this.toastService.success('Éxito', 'Imagen procesada correctamente');
+      }
 
       // Mark as uploaded
       if (isFront) {
@@ -865,8 +871,12 @@ export class LicenseUploaderComponent {
     } catch (error) {
       clearInterval(progressInterval);
       console.error('Error uploading license:', error);
-      this.setUploadError('No pudimos subir la foto. Intenta nuevamente con mejor luz.');
-      this.toastService.error('Error', 'No pudimos procesar la imagen.');
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'No pudimos subir la foto. Intenta nuevamente con mejor luz.';
+      this.setUploadError(message);
+      this.toastService.error('Error', message);
 
       // Clear preview on error
       if (isFront) {

@@ -2,12 +2,16 @@
  * Google Cloud Vision API Helper
  *
  * OCR and face detection for document verification.
- * Uses service account authentication.
+ * Uses service account authentication with Gemini fallback.
  */
 
 import { fetchWithTimeout } from './fetch-utils.ts';
 
 const VISION_API_URL = 'https://vision.googleapis.com/v1/images:annotate';
+const GEMINI_VISION_MODEL = Deno.env.get('GEMINI_VISION_MODEL') || 'gemini-2.5-flash';
+const OCR_PROVIDER_ERROR = 'OCR_PROVIDER_UNAVAILABLE';
+const OCR_REQUEST_ERROR = 'OCR_REQUEST_INVALID';
+const OCR_NO_TEXT_ERROR = 'OCR_NO_TEXT';
 
 export interface OcrResult {
   text: string;
@@ -55,6 +59,38 @@ interface VisionApiResponse {
     }>;
     error?: { code: number; message: string };
   }>;
+}
+
+interface GeminiOcrPayload {
+  text: string;
+  has_face: boolean;
+  confidence: number;
+}
+
+function createOcrError(code: string, message: string): Error {
+  return new Error(`${code}: ${message}`);
+}
+
+function inferMimeTypeFromBase64(base64: string): string | null {
+  const prefix = base64.slice(0, 40);
+
+  if (prefix.startsWith('/9j/')) return 'image/jpeg';
+  if (prefix.startsWith('iVBORw0KGgo')) return 'image/png';
+  if (prefix.startsWith('R0lGOD')) return 'image/gif';
+  if (prefix.startsWith('UklGR')) return 'image/webp';
+  if (prefix.startsWith('SUkq') || prefix.startsWith('TU0A')) return 'image/tiff';
+  if (
+    prefix.includes('ftypheic') ||
+    prefix.includes('ftypheix') ||
+    prefix.includes('ftyphevc') ||
+    prefix.includes('ftyphevx')
+  ) {
+    return 'image/heic';
+  }
+  if (prefix.includes('ftypheif')) return 'image/heif';
+  if (prefix.includes('ftypavif')) return 'image/avif';
+
+  return null;
 }
 
 /**
@@ -135,6 +171,189 @@ async function getAccessToken(): Promise<string> {
   }
 }
 
+function isMissingVisionCredentialsError(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  return error.message.includes('GOOGLE_SERVICE_ACCOUNT or GOOGLE_CLOUD_VISION_API_KEY not configured');
+}
+
+function shouldUseGeminiFallback(status: number, errorText: string): boolean {
+  const text = errorText.toLowerCase();
+  return (
+    status === 400 ||
+    status === 401 ||
+    status === 403 ||
+    text.includes('api key expired') ||
+    text.includes('api key invalid') ||
+    text.includes('permission') ||
+    text.includes('forbidden') ||
+    text.includes('billing')
+  );
+}
+
+function clamp(value: number, min = 0, max = 100): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function parseGeminiJson(textContent: string): GeminiOcrPayload | null {
+  let jsonStr = textContent.trim();
+  const fencedMatch = jsonStr.match(/```json\s*([\s\S]*?)\s*```/i);
+  if (fencedMatch) {
+    jsonStr = fencedMatch[1];
+  } else {
+    const objMatch = jsonStr.match(/\{[\s\S]*\}/);
+    if (objMatch) {
+      jsonStr = objMatch[0];
+    }
+  }
+
+  try {
+    const parsed = JSON.parse(jsonStr) as Partial<GeminiOcrPayload>;
+    const confidence = typeof parsed.confidence === 'number'
+      ? (parsed.confidence <= 1 ? parsed.confidence * 100 : parsed.confidence)
+      : 65;
+
+    return {
+      text: typeof parsed.text === 'string' ? parsed.text : '',
+      has_face: Boolean(parsed.has_face),
+      confidence: clamp(confidence),
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function sourceToInlineImage(
+  imageSource: string | { base64: string; mimeType?: string }
+): Promise<{ base64: string; mimeType: string }> {
+  if (typeof imageSource !== 'string') {
+    const inferredMimeType = imageSource.mimeType || inferMimeTypeFromBase64(imageSource.base64);
+    return {
+      base64: imageSource.base64,
+      mimeType: inferredMimeType || 'image/jpeg',
+    };
+  }
+
+  const response = await fetchWithTimeout(imageSource, { timeoutMs: 15000 });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch image source for Gemini fallback: ${response.status}`);
+  }
+
+  const contentType = response.headers.get('content-type') || 'image/jpeg';
+  const arrayBuffer = await response.arrayBuffer();
+  const bytes = new Uint8Array(arrayBuffer);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+
+  return {
+    base64: btoa(binary),
+    mimeType: contentType.split(';')[0],
+  };
+}
+
+async function callGeminiVisionFallback(
+  imageSource: string | { base64: string; mimeType?: string },
+): Promise<OcrResult> {
+  const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
+  if (!geminiApiKey) {
+    throw createOcrError(OCR_PROVIDER_ERROR, 'GEMINI_API_KEY not configured for OCR fallback');
+  }
+
+  const imageData = await sourceToInlineImage(imageSource);
+  const endpoint =
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_VISION_MODEL}:generateContent?key=${geminiApiKey}`;
+
+  const requestBody = {
+    contents: [{
+      role: 'user',
+      parts: [
+        {
+          text:
+            'Extrae todo el texto visible del documento y detecta si hay rostro. ' +
+            'Responde SOLO JSON con este formato: ' +
+            '{"text":"...","has_face":true|false,"confidence":0-100}',
+        },
+        {
+          inlineData: {
+            mimeType: imageData.mimeType,
+            data: imageData.base64,
+          },
+        },
+      ],
+    }],
+    generationConfig: {
+      temperature: 0.1,
+      maxOutputTokens: 1200,
+    },
+  };
+
+  const response = await fetchWithTimeout(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestBody),
+    timeoutMs: 30000,
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    const isProviderFailure = response.status === 401
+      || response.status === 403
+      || response.status === 429
+      || response.status >= 500;
+
+    if (isProviderFailure) {
+      throw createOcrError(
+        OCR_PROVIDER_ERROR,
+        `Gemini fallback error: ${response.status} - ${errorText}`,
+      );
+    }
+
+    throw createOcrError(
+      OCR_REQUEST_ERROR,
+      `Gemini fallback error: ${response.status} - ${errorText}`,
+    );
+  }
+
+  const data = await response.json();
+  const textContent = data?.candidates?.[0]?.content?.parts
+    ?.filter((part: { text?: string }) => Boolean(part.text))
+    ?.map((part: { text: string }) => part.text)
+    ?.join('\n')
+    ?.trim() || '';
+
+  const parsed = parseGeminiJson(textContent);
+  const extractedText = parsed?.text || textContent;
+  const confidence = parsed?.confidence ?? 65;
+  const hasFace = parsed?.has_face ?? false;
+
+  if (!extractedText || extractedText.trim().length === 0) {
+    throw createOcrError(
+      OCR_NO_TEXT_ERROR,
+      'Gemini OCR completed but extracted text is empty',
+    );
+  }
+
+  return {
+    text: extractedText,
+    confidence,
+    hasFace,
+    faceConfidence: hasFace ? confidence : null,
+    blocks: extractedText
+      ? [{
+          text: extractedText,
+          confidence,
+        }]
+      : [],
+    rawResponse: data,
+  };
+}
+
 /**
  * Convert PEM private key to ArrayBuffer
  */
@@ -160,7 +379,17 @@ function pemToArrayBuffer(pem: string): ArrayBuffer {
 export async function callVisionApi(
   imageSource: string | { base64: string; mimeType?: string }
 ): Promise<OcrResult> {
-  const accessToken = await getAccessToken();
+  let accessToken: string;
+  try {
+    accessToken = await getAccessToken();
+  } catch (authError) {
+    if (!isMissingVisionCredentialsError(authError)) {
+      throw authError;
+    }
+
+    console.warn('[VisionAPI] Vision credentials missing, using Gemini OCR fallback');
+    return await callGeminiVisionFallback(imageSource);
+  }
 
   // Determine if using API key or OAuth token
   const isApiKey = !accessToken.startsWith('ya29.');
@@ -210,7 +439,31 @@ export async function callVisionApi(
   if (!response.ok) {
     const errorText = await response.text();
     console.error('[VisionAPI] API error:', response.status, errorText);
-    throw new Error(`Vision API error: ${response.status} - ${errorText}`);
+
+    if (shouldUseGeminiFallback(response.status, errorText)) {
+      console.warn('[VisionAPI] Falling back to Gemini OCR due to Vision API error');
+      try {
+        return await callGeminiVisionFallback(imageSource);
+      } catch (geminiFallbackError) {
+        console.error('[VisionAPI] Gemini fallback failed:', geminiFallbackError);
+        if (geminiFallbackError instanceof Error) {
+          throw geminiFallbackError;
+        }
+        throw createOcrError(OCR_PROVIDER_ERROR, 'Gemini fallback failed with unknown error');
+      }
+    }
+
+    if (response.status === 429 || response.status >= 500) {
+      throw createOcrError(
+        OCR_PROVIDER_ERROR,
+        `Vision API error: ${response.status} - ${errorText}`,
+      );
+    }
+
+    throw createOcrError(
+      OCR_REQUEST_ERROR,
+      `Vision API error: ${response.status} - ${errorText}`,
+    );
   }
 
   const data: VisionApiResponse = await response.json();

@@ -39,6 +39,23 @@ const MAX_ORIGINAL_BYTES = 15 * 1024 * 1024; // 15MB pre-compression (mobile cam
 const MAX_COMPRESSED_BYTES = 2 * 1024 * 1024; // 2MB post-compression target
 const IDENTITY_BUCKETS = ['identity-documents', 'documents'] as const;
 
+interface EdgeFunctionErrorInfo {
+  status: number | null;
+  code: string | null;
+  message: string | null;
+}
+
+class EdgeFunctionUserError extends Error {
+  constructor(
+    message: string,
+    readonly status: number | null,
+    readonly code: string | null,
+  ) {
+    super(message);
+    this.name = 'EdgeFunctionUserError';
+  }
+}
+
 /**
  * Valida que el tipo de documento sea uno de los permitidos.
  * @throws Error si el tipo no es válido
@@ -363,17 +380,25 @@ export class VerificationService implements OnDestroy {
       maxAttempts?: number;
       baseDelayMs?: number;
       operationName?: string;
+      throwLastError?: boolean;
     } = {},
   ): Promise<T | null> {
-    const { maxAttempts = 3, baseDelayMs = 200, operationName = 'operation' } = options;
+    const {
+      maxAttempts = 3,
+      baseDelayMs = 200,
+      operationName = 'operation',
+      throwLastError = false,
+    } = options;
     let tokenRefreshed = false;
     let attempt = 0;
+    let lastError: unknown = null;
 
     while (attempt < maxAttempts) {
       attempt++;
       try {
         return await operation();
       } catch (error) {
+        lastError = error;
         const statusCode = this.extractHttpStatus(error);
         const action = this.classifyRetryAction(statusCode);
 
@@ -397,12 +422,18 @@ export class VerificationService implements OnDestroy {
             `${operationName}: Non-retryable error (HTTP ${statusCode ?? 'unknown'})`,
             error,
           );
+          if (throwLastError) {
+            throw error;
+          }
           return null;
         }
 
         // Último intento agotado
         if (attempt >= maxAttempts) {
           this.logger.error(`${operationName} failed after ${maxAttempts} attempts`, error);
+          if (throwLastError && lastError) {
+            throw lastError;
+          }
           return null;
         }
 
@@ -414,6 +445,10 @@ export class VerificationService implements OnDestroy {
         );
         await this.sleep(delayMs);
       }
+    }
+
+    if (throwLastError && lastError) {
+      throw lastError;
     }
 
     return null;
@@ -463,6 +498,75 @@ export class VerificationService implements OnDestroy {
       }
     }
     return null;
+  }
+
+  private async extractEdgeFunctionErrorInfo(error: unknown): Promise<EdgeFunctionErrorInfo> {
+    const status = this.extractHttpStatus(error);
+    let code: string | null = null;
+    let message: string | null = null;
+
+    if (error && typeof error === 'object') {
+      const err = error as { context?: unknown; code?: unknown; message?: unknown };
+
+      if (typeof err.code === 'string') {
+        code = err.code;
+      }
+
+      if (typeof err.message === 'string' && err.message.trim().length > 0) {
+        message = err.message;
+      }
+
+      if (err.context instanceof Response) {
+        try {
+          const responseText = await err.context.clone().text();
+          if (responseText) {
+            const parsed = JSON.parse(responseText) as Record<string, unknown>;
+
+            const parsedCode = parsed['error'] ?? parsed['code'];
+            if (typeof parsedCode === 'string') {
+              code = parsedCode;
+            }
+
+            const parsedMessage = parsed['message'];
+            if (typeof parsedMessage === 'string' && parsedMessage.trim().length > 0) {
+              message = parsedMessage;
+            }
+          }
+        } catch {
+          // Ignore invalid/non-JSON response bodies.
+        }
+      }
+    }
+
+    return { status, code, message };
+  }
+
+  private getOcrUserMessage(info: EdgeFunctionErrorInfo): string {
+    if (info.message) {
+      return info.message;
+    }
+
+    if (info.status === 401 || info.code === 'AUTH_INVALID' || info.code === 'AUTH_REQUIRED') {
+      return 'Tu sesión expiró. Vuelve a iniciar sesión e intenta nuevamente.';
+    }
+
+    if (info.code === 'OCR_PROVIDER_UNAVAILABLE' || info.status === 503) {
+      return 'El servicio de verificación está temporalmente no disponible. Intenta de nuevo en unos minutos.';
+    }
+
+    if (info.code === 'OCR_REQUEST_INVALID') {
+      return 'No pudimos procesar la foto. Intenta con una imagen JPG o PNG, bien enfocada y completa.';
+    }
+
+    if (info.code === 'OCR_NO_TEXT') {
+      return 'No se detectó texto legible en la imagen. Intenta con mejor luz y enfoque.';
+    }
+
+    if (info.code === 'OCR_FAILED') {
+      return 'No pudimos verificar tu documento con esa foto. Intenta nuevamente con el documento completo, bien iluminado y sin reflejos.';
+    }
+
+    return 'No pudimos verificar tu documento en este momento. Por favor, intenta de nuevo en unos segundos.';
   }
 
   /**
@@ -550,33 +654,22 @@ export class VerificationService implements OnDestroy {
         });
 
         if (error) {
-          console.error('[VerifyDocument] Edge Function Error:', error);
-
-          // Read response body if available
-          if (error instanceof Error && 'context' in error) {
-            const context = (error as { context: unknown }).context;
-            console.error('[VerifyDocument] Error Context:', context);
-
-            if (context instanceof Response && !context.bodyUsed) {
-              try {
-                const responseText = await context.clone().text();
-                console.error('[VerifyDocument] Response Body:', responseText);
-                try {
-                  const jsonBody = JSON.parse(responseText);
-                  console.error('[VerifyDocument] Parsed Error:', jsonBody);
-                } catch {
-                  // Not JSON, already logged as text
-                }
-              } catch (e) {
-                console.error('[VerifyDocument] Could not read response body:', e);
-              }
-            }
-          }
-          throw error;
+          const info = await this.extractEdgeFunctionErrorInfo(error);
+          this.logger.error('verifyDocumentOcr: Edge Function Error', {
+            status: info.status,
+            code: info.code,
+            message: info.message,
+          });
+          throw new EdgeFunctionUserError(this.getOcrUserMessage(info), info.status, info.code);
         }
         return data;
       },
-      { maxAttempts: 3, baseDelayMs: 200, operationName: 'verifyDocumentOcr' },
+      {
+        maxAttempts: 3,
+        baseDelayMs: 200,
+        operationName: 'verifyDocumentOcr',
+        throwLastError: true,
+      },
     );
 
     if (!result) {
@@ -609,6 +702,7 @@ export class VerificationService implements OnDestroy {
     country: string,
   ): Promise<{
     storagePath: string;
+    ocrWarning: string | null;
     ocrResult: {
       success: boolean;
       ocr_confidence: number;
@@ -668,6 +762,7 @@ export class VerificationService implements OnDestroy {
 
     // 3. Llamar a verify-document para OCR con base64
     let ocrResult = null;
+    let ocrWarning: string | null = null;
 
     // Only run OCR for supported countries to avoid backend errors
     if (['AR', 'EC'].includes(country)) {
@@ -680,13 +775,20 @@ export class VerificationService implements OnDestroy {
           confidence: ocrResult.ocr_confidence,
         });
       } catch (ocrError) {
-        this.logger.warn('OCR verification failed, document still uploading', ocrError);
+        ocrWarning =
+          ocrError instanceof Error
+            ? ocrError.message
+            : 'No pudimos verificar el documento automáticamente. Intenta con una foto más clara.';
+        this.logger.warn('OCR verification failed, document still uploading', {
+          error: ocrError,
+          warning: ocrWarning,
+        });
       }
     } else {
       this.logger.info(`Skipping OCR for unsupported country: ${country}`);
     }
 
-    return { storagePath, ocrResult };
+    return { storagePath, ocrWarning, ocrResult };
   }
 
   /**

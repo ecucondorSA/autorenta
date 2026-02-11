@@ -779,6 +779,12 @@ export class DniUploaderComponent {
       if (isFront) this.frontProgress.set(100);
       else this.backProgress.set(100);
 
+      if (result.ocrWarning) {
+        this.setUploadError(result.ocrWarning);
+      } else {
+        this.uploadError.set(null);
+      }
+
       // Mark as uploaded
       if (isFront) {
         this.frontUploaded.set(true);
@@ -817,7 +823,11 @@ export class DniUploaderComponent {
     } catch (error) {
       clearInterval(progressInterval);
       console.error('Error uploading document:', error);
-      this.setUploadError('No pudimos subir la foto. Intenta nuevamente con mejor luz.');
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'No pudimos subir la foto. Intenta nuevamente con mejor luz.';
+      this.setUploadError(message);
 
       // Clear preview on error
       if (isFront) {
