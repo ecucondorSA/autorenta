@@ -1,3 +1,7 @@
+## <small>3.88.7 (2026-02-11)</small>
+
+* fix: align guarantee tiers with plans and harden kyc cors ([7c14212](https://github.com/ecucondorSA/autorenta/commit/7c14212))
+
 ## <small>3.88.6 (2026-02-11)</small>
 
 * fix(ci): add MP OAuth secrets to sync-secrets-to-supabase workflow ([cb10808](https://github.com/ecucondorSA/autorenta/commit/cb10808))
