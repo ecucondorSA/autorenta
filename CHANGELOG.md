@@ -1,3 +1,7 @@
+## <small>3.90.1 (2026-02-11)</small>
+
+* fix: improve edge function robustness for media and oauth errors ([754a24c](https://github.com/ecucondorSA/autorenta/commit/754a24c))
+
 ## 3.90.0 (2026-02-11)
 
 * feat(wallet): support ?tab= query param for deep linking ([3b2ab68](https://github.com/ecucondorSA/autorenta/commit/3b2ab68))
