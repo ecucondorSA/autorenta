@@ -7,16 +7,7 @@ console.log("[payments-gateway] Service initialized");
 
 serve(async (req: Request) => {
   // 1. CORS Preflight
-  let corsHeaders: HeadersInit;
-  try {
-    corsHeaders = getCorsHeaders(req);
-  } catch {
-    corsHeaders = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    };
-  }
+  const corsHeaders = getCorsHeaders(req);
 
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });

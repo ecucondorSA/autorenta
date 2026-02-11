@@ -397,7 +397,7 @@ serve(async (req) => {
             const errorData = await emailResponse.json();
             console.error('[email-service] Resend API error:', errorData);
             return new Response(
-                JSON.stringify({ success: false, error: 'Failed to send email', details: errorData }),
+                JSON.stringify({ success: false, error: 'Failed to send email' }),
                 { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             );
         }

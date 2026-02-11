@@ -253,7 +253,6 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({
           error: 'Failed to process refund in MercadoPago',
-          details: errorData,
           code: 'MP_REFUND_ERROR',
         }),
         {

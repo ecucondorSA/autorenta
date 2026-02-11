@@ -2,6 +2,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.4';
 import { MercadoPagoClient } from '../utils/mercadopago-client.ts';
 import { requireEmailVerification } from '../../_shared/auth-utils.ts';
+import { getCorsHeaders } from '../../_shared/cors.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -18,7 +19,7 @@ export async function createBookingPreference(req: Request): Promise<Response> {
   const mpClient = new MercadoPagoClient('CreateBookingPreference');
   const corsHeaders = {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
+    ...getCorsHeaders(req),
   };
 
   try {

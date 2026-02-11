@@ -126,7 +126,6 @@ serve(async (req: Request) => {
         JSON.stringify({
           error: "Failed to insert payment splits",
           success: false,
-          details: insertError.message,
         }),
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
