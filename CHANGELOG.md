@@ -1,3 +1,7 @@
+## 3.90.0 (2026-02-11)
+
+* feat(wallet): support ?tab= query param for deep linking ([3b2ab68](https://github.com/ecucondorSA/autorenta/commit/3b2ab68))
+
 ## 3.89.0 (2026-02-11)
 
 * feat: harden kyc document verification and update guarantee plans UI ([96bb072](https://github.com/ecucondorSA/autorenta/commit/96bb072))
