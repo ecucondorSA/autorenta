@@ -1,3 +1,7 @@
+## <small>3.88.6 (2026-02-11)</small>
+
+* fix(ci): add MP OAuth secrets to sync-secrets-to-supabase workflow ([cb10808](https://github.com/ecucondorSA/autorenta/commit/cb10808))
+
 ## <small>3.88.5 (2026-02-11)</small>
 
 * fix(kyc): harden verify-document CORS fallback and KYC telemetry ([76af715](https://github.com/ecucondorSA/autorenta/commit/76af715))
