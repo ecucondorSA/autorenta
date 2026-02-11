@@ -124,7 +124,7 @@ export class PushNotificationService {
       }
 
       if (permStatus.receive !== 'granted') {
-        console.warn('Push notification permission not granted');
+        this.logger.warn('Push notification permission not granted', 'PushNotificationService');
         return;
       }
 

@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { environment } from '@environment';
 
 interface MapboxFeature {
@@ -36,8 +37,7 @@ interface MapboxContextItem {
 })
 export class GeocodingService {
   private readonly MAPBOX_BASE_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places';
-
-  constructor() {}
+  private readonly logger = inject(LoggerService);
 
   /**
    * Geocode an address string to latitude/longitude coordinates using Mapbox API
@@ -185,7 +185,7 @@ export class GeocodingService {
       const response = await fetch(url);
 
       if (!response.ok) {
-        console.warn(`Mapbox API error: ${response.status}`);
+        this.logger.warn(`Mapbox API error: ${response.status}`, 'GeocodingService');
         return [];
       }
 
@@ -206,7 +206,7 @@ export class GeocodingService {
         };
       });
     } catch (error) {
-      console.warn('Error getting location suggestions:', error);
+      this.logger.warn('Error getting location suggestions:', 'GeocodingService', error);
       return [];
     }
   }

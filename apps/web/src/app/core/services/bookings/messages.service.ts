@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, signal, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import {
   MessagesRepository,
@@ -31,6 +32,7 @@ export interface Message {
   providedIn: 'root',
 })
 export class MessagesService implements OnDestroy {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly realtimeConnection = inject(RealtimeConnectionService);
   private readonly offlineMessages = inject(OfflineMessagesService);
@@ -403,7 +405,7 @@ export class MessagesService implements OnDestroy {
       })
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
-          console.debug('[Messages] Typing subscription active');
+          this.logger.debug('[Messages] Typing subscription active', 'MessagesService');
         }
       });
 

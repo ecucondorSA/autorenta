@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * 🔊 Service for playing notification sounds
@@ -8,6 +9,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class NotificationSoundService {
+  private readonly logger = inject(LoggerService);
   private readonly audioContext?: AudioContext;
   private readonly isSoundEnabled = signal(true);
   private hasUserInteracted = false;
@@ -18,7 +20,7 @@ export class NotificationSoundService {
       try {
         this.audioContext = new AudioContext();
       } catch (e) {
-        console.warn('AudioContext not available:', e);
+        this.logger.warn('AudioContext not available:', 'NotificationSoundService', e);
       }
     }
 
@@ -54,7 +56,7 @@ export class NotificationSoundService {
         await this.playWithAudioElement();
       }
     } catch (_error) {
-      console.warn('Failed to play notification sound:', _error);
+      this.logger.warn('Failed to play notification sound:', 'NotificationSoundService', _error);
     }
   }
 
@@ -140,7 +142,7 @@ export class NotificationSoundService {
       oscillator.start(now);
       oscillator.stop(now + duration);
     } catch (_error) {
-      console.warn('Failed to play sent sound:', _error);
+      this.logger.warn('Failed to play sent sound:', 'NotificationSoundService', _error);
     }
   }
 

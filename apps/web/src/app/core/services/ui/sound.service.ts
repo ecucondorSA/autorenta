@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 export type SoundType = 'click' | 'tick' | 'swoosh' | 'success' | 'pop';
 
@@ -8,6 +9,7 @@ type WebkitAudioContextWindow = Window & { webkitAudioContext?: typeof AudioCont
   providedIn: 'root',
 })
 export class SoundService {
+  private readonly logger = inject(LoggerService);
   private audioCtx: AudioContext | null = null;
   private masterGain: GainNode | null = null;
   private isMuted = false;
@@ -27,7 +29,7 @@ export class SoundService {
         this.masterGain.connect(this.audioCtx.destination);
       }
     } catch (e) {
-      console.warn('Web Audio API not supported', e);
+      this.logger.warn('Web Audio API not supported', 'SoundService', e);
     }
   }
 

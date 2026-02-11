@@ -46,7 +46,7 @@ export class NavigationService {
    */
   navigateWithWaze(options: NavigationOptions): void {
     if (!this.isBrowser) {
-      console.warn('[NavigationService] Cannot navigate in SSR mode');
+      this.logger.warn('Cannot navigate in SSR mode', 'NavigationService');
       return;
     }
 
@@ -66,7 +66,7 @@ export class NavigationService {
    */
   navigateWithGoogleMaps(options: NavigationOptions): void {
     if (!this.isBrowser) {
-      console.warn('[NavigationService] Cannot navigate in SSR mode');
+      this.logger.warn('Cannot navigate in SSR mode', 'NavigationService');
       return;
     }
 
@@ -91,7 +91,7 @@ export class NavigationService {
    */
   navigateWithAppleMaps(options: NavigationOptions): void {
     if (!this.isBrowser) {
-      console.warn('[NavigationService] Cannot navigate in SSR mode');
+      this.logger.warn('Cannot navigate in SSR mode', 'NavigationService');
       return;
     }
 
@@ -117,7 +117,7 @@ export class NavigationService {
    */
   navigateAuto(options: NavigationOptions): void {
     if (!this.isBrowser) {
-      console.warn('[NavigationService] Cannot navigate in SSR mode');
+      this.logger.warn('Cannot navigate in SSR mode', 'NavigationService');
       return;
     }
 

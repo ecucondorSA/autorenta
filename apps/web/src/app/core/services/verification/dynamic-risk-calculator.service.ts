@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { getRequiredTierByVehicleValue, SubscriptionTier } from '@core/models/subscription.model';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { FranchiseTableService } from '@core/services/payments/franchise-table.service';
 import { SubscriptionPolicyService } from './subscription-policy.service';
@@ -28,6 +29,7 @@ export interface DynamicRiskCalculation {
 })
 export class DynamicRiskCalculatorService {
   private readonly franchiseService = inject(FranchiseTableService);
+  private readonly logger = inject(LoggerService);
   private readonly policyService = inject(SubscriptionPolicyService);
   private readonly supabase = inject(SupabaseClientService);
 
@@ -49,7 +51,7 @@ export class DynamicRiskCalculatorService {
 
     // Fallback if policy not found in DB yet (Safety net)
     if (!policy) {
-      console.warn(`Policy not found for ${requiredTier}, using fallback.`);
+      this.logger.warn(`Policy not found for ${requiredTier}, using fallback.`, 'DynamicRiskCalculatorService');
       return this.calculateFallback(carValueUsd, fxRate);
     }
 

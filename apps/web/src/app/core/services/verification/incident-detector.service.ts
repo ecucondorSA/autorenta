@@ -57,7 +57,7 @@ export class IncidentDetectorService {
       this.isMonitoring = false;
       this.currentBookingId = null;
       this.accelerationBuffer = [];
-      console.warn('⚠️ Failed to start incident detector', error);
+      this.logger.warn('Failed to start incident detector', 'IncidentDetectorService', error);
     }
   }
 
@@ -120,7 +120,7 @@ export class IncidentDetectorService {
         speed: position.coords.speed || 0,
       };
     } catch (e) {
-      console.warn('Could not get location during incident', e);
+      this.logger.warn('Could not get location during incident', 'IncidentDetectorService', e);
     }
 
     // Create incident report
@@ -163,7 +163,7 @@ export class IncidentDetectorService {
     // Send push to owner
     await this.notifyOwner(incident['id']);
 
-    console.warn('🚨 INCIDENT DETECTED:', {
+    this.logger.warn('INCIDENT DETECTED:', 'IncidentDetectorService', {
       gForce,
       location: locationData,
       incidentId: incident.id,

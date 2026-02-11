@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { GeocodingResult, GeocodingService } from '@core/services/geo/geocoding.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { environment } from '@environment';
 
@@ -42,6 +43,7 @@ export class LocationService {
   private readonly supabase = injectSupabase();
   private readonly profileService = inject(ProfileService);
   private readonly geocodingService = inject(GeocodingService);
+  private readonly logger = inject(LoggerService);
   private readonly googleGeolocationApiKey = environment.googleGeolocationApiKey;
 
   /**
@@ -113,7 +115,7 @@ export class LocationService {
    */
   async getCurrentPosition(): Promise<LocationCoordinates | null> {
     if (!this.isBrowser || !navigator.geolocation) {
-      console.warn('[LocationService] Geolocation is not supported');
+      this.logger.warn('Geolocation is not supported', 'LocationService');
       return null;
     }
 
@@ -121,7 +123,7 @@ export class LocationService {
     // We don't hard-fail here, but it's useful to log for debugging.
     try {
       if (typeof window !== 'undefined' && window.isSecureContext === false) {
-        console.warn('[LocationService] window.isSecureContext=false (geolocation may be blocked)');
+        this.logger.warn('window.isSecureContext=false (geolocation may be blocked)', 'LocationService');
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_e) {
@@ -283,7 +285,7 @@ export class LocationService {
    */
   watchPosition(callback: (location: LocationCoordinates) => void): number | null {
     if (!this.isBrowser || !navigator.geolocation) {
-      console.warn('Geolocation is not supported by this browser');
+      this.logger.warn('Geolocation is not supported by this browser', 'LocationService');
       return null;
     }
 
@@ -297,7 +299,7 @@ export class LocationService {
         });
       },
       (error) => {
-        console.warn('Error watching position:', error.message);
+        this.logger.warn('Error watching position: ' + error.message, 'LocationService');
       },
       {
         enableHighAccuracy: true,

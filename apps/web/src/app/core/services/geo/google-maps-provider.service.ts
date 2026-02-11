@@ -4,7 +4,8 @@
  * Provides fallback when Mapbox fails (WebGL issues, network, token expired)
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { environment } from '@environment';
 import type {
   IMapInstance,
@@ -72,7 +73,7 @@ type GoogleInfoWindow = Record<string, unknown> & {
  * Wrapper around google.maps.Map to implement IMapInstance
  */
 class GoogleMapInstance implements IMapInstance {
-  constructor(private map: GoogleMap) {}
+  constructor(private map: GoogleMap, private logger: LoggerService) {}
 
   setCenter(coords: MapCoordinates): void {
     this.map.setCenter({ lat: coords.lat, lng: coords.lng });
@@ -133,7 +134,7 @@ class GoogleMapInstance implements IMapInstance {
   off(_event: string, _handler: (e: unknown) => void): void {
     // Google Maps doesn't support removing specific handlers easily
     // This is a limitation - would need to track listeners manually
-    console.warn('[GoogleMapsProvider] off() not fully supported, use clearInstanceListeners');
+    this.logger.warn('off() not fully supported, use clearInstanceListeners', 'GoogleMapsProviderService');
   }
 
   addMarker(coords: MapCoordinates, options?: MapMarkerOptions): IMapMarker {
@@ -275,6 +276,7 @@ class GoogleMapPopup implements IMapPopup {
 })
 export class GoogleMapsProviderService implements IMapProvider {
   readonly type = 'google' as const;
+  private readonly logger = inject(LoggerService);
   private loadPromise?: Promise<boolean>;
 
   /**
@@ -328,7 +330,7 @@ export class GoogleMapsProviderService implements IMapProvider {
 
     const map = new Map(container, mapOptions);
 
-    return new GoogleMapInstance(map);
+    return new GoogleMapInstance(map, this.logger);
   }
 
   /**
@@ -361,7 +363,7 @@ export class GoogleMapsProviderService implements IMapProvider {
 
       const apiKey = environment.googleMapsApiKey;
       if (!apiKey || apiKey.trim() === '') {
-        console.warn('[GoogleMapsProvider] No API key configured (NG_APP_GOOGLE_MAPS_API_KEY)');
+        this.logger.warn('No API key configured (NG_APP_GOOGLE_MAPS_API_KEY)', 'GoogleMapsProviderService');
         return false;
       }
 

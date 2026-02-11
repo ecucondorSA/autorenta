@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { environment } from '@environment';
 
 export interface DirectionsResponse {
@@ -49,6 +50,7 @@ export interface Waypoint {
   providedIn: 'root',
 })
 export class MapboxDirectionsService {
+  private readonly logger = inject(LoggerService);
   private readonly baseUrl = 'https://api.mapbox.com/directions/v5/mapbox';
 
   /**
@@ -76,7 +78,7 @@ export class MapboxDirectionsService {
       const data: DirectionsResponse = await response.json();
 
       if (data.code !== 'Ok') {
-        console.warn('[MapboxDirections] No route found:', data.code);
+        this.logger.warn('No route found: ' + data.code, 'MapboxDirectionsService');
         return null;
       }
 

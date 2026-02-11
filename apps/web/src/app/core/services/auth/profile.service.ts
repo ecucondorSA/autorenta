@@ -326,7 +326,7 @@ export class ProfileService {
         },
       });
     } catch (verificationError) {
-      console.warn('Document verification failed (non-blocking):', verificationError);
+      this.logger.warn(`Document verification failed (non-blocking): ${verificationError}`, 'ProfileService');
     }
 
     return data as UserDocument;
@@ -396,7 +396,7 @@ export class ProfileService {
       const profile = await this.getCurrentProfile();
       return profile?.onboarding === 'complete';
     } catch (error) {
-      console.warn('[ProfileService] Error checking onboarding status:', error);
+      this.logger.warn(`Error checking onboarding status: ${error}`, 'ProfileService');
       return false;
     }
   }

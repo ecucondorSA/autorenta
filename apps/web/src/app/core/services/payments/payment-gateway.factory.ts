@@ -4,6 +4,7 @@ import {
   PaymentProvider,
   WalletPaymentGateway,
 } from '@core/interfaces/payment-gateway.interface';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { MercadoPagoBookingGatewayService } from '@core/services/payments/mercadopago-booking-gateway.service';
 import { MercadoPagoWalletGatewayService } from '@core/services/payments/mercadopago-wallet-gateway.service';
 import { PayPalBookingGatewayService } from '@core/services/payments/paypal-booking-gateway.service';
@@ -37,6 +38,7 @@ import { PayPalWalletGatewayService } from '@core/services/payments/paypal-walle
   providedIn: 'root',
 })
 export class PaymentGatewayFactory {
+  private readonly logger = inject(LoggerService);
   // Inject all available gateway services
   private readonly mercadoPagoBookingGateway = inject(MercadoPagoBookingGatewayService);
   private readonly mercadoPagoWalletGateway = inject(MercadoPagoWalletGatewayService);
@@ -141,7 +143,7 @@ export class PaymentGatewayFactory {
       },
       isPreferenceValid: async () => true,
       redirectToCheckout: () => {
-        console.warn('Mock gateway: redirectToCheckout called');
+        this.logger.warn('Mock gateway: redirectToCheckout called', 'PaymentGatewayFactory');
       },
     };
   }

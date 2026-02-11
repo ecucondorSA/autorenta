@@ -137,7 +137,7 @@ export class MapboxPreloaderService {
       this.logger.debug('[MapboxPreloader] Map preload complete');
     } catch (error: unknown) {
       if (error instanceof Error && error.message?.includes('timeout')) {
-        console.warn('[MapboxPreloader] Skipping map preload due to timeout (non-critical)');
+        this.logger.warn('Skipping map preload due to timeout (non-critical)', 'MapboxPreloaderService');
       } else {
         console.error('[MapboxPreloader] Failed to preload map:', error);
       }
@@ -187,7 +187,7 @@ export class MapboxPreloaderService {
    */
   transferMapToContainer(targetContainer: HTMLElement): MapboxMap | null {
     if (!this.preloadedMap || !this.hiddenContainer) {
-      console.warn('[MapboxPreloader] No preloaded map available');
+      this.logger.warn('No preloaded map available', 'MapboxPreloaderService');
       return null;
     }
 
@@ -231,7 +231,7 @@ export class MapboxPreloaderService {
     }>,
   ): MapboxMap | null {
     if (!this.mapboxgl) {
-      console.warn('[MapboxPreloader] Mapbox GL not loaded');
+      this.logger.warn('Mapbox GL not loaded', 'MapboxPreloaderService');
       return null;
     }
 

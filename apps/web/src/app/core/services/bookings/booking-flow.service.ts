@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import type { Booking, BookingUiStatus } from '@core/models';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
 import { isValidStatusTransition } from '@core/services/bookings/booking-flow-helpers';
@@ -34,6 +35,7 @@ import { NotificationsService } from '@core/services/infrastructure/user-notific
   providedIn: 'root',
 })
 export class BookingFlowService {
+  private readonly logger = inject(LoggerService);
   private readonly bookingsService = inject(BookingsService);
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly confirmationService = inject(BookingConfirmationService);
@@ -266,7 +268,7 @@ export class BookingFlowService {
       }
     } catch (error) {
       // Si hay error en la verificación, permitir ver la acción pero dejar que el servicio maneje el error al guardar
-      console.warn('Error checking review status:', error);
+      this.logger.warn('Error checking review status:', 'BookingFlowService', error);
     }
 
     return {

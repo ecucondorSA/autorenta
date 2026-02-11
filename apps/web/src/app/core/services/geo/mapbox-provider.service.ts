@@ -5,6 +5,7 @@
  */
 
 import { Injectable, inject } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { environment } from '@environment';
 import type {
   IMapInstance,
@@ -219,6 +220,7 @@ class MapboxMapPopup implements IMapPopup {
 export class MapboxProviderService implements IMapProvider {
   readonly type = 'mapbox' as const;
   private mapboxPreloader = inject(MapboxPreloaderService);
+  private readonly logger = inject(LoggerService);
   private mapboxgl?: MapboxGL;
 
   /**
@@ -229,13 +231,13 @@ export class MapboxProviderService implements IMapProvider {
     try {
       // Check WebGL support
       if (!this.hasWebGL()) {
-        console.warn('[MapboxProvider] WebGL not supported');
+        this.logger.warn('WebGL not supported', 'MapboxProviderService');
         return false;
       }
 
       // Validate access token
       if (!environment.mapboxAccessToken || !environment.mapboxAccessToken.startsWith('pk.')) {
-        console.warn('[MapboxProvider] Invalid or missing Mapbox token');
+        this.logger.warn('Invalid or missing Mapbox token', 'MapboxProviderService');
         return false;
       }
 

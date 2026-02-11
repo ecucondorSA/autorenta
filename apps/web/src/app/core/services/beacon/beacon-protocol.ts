@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 export enum BeaconMessageType {
   SOS = 0x01,
@@ -31,6 +32,7 @@ export interface BeaconMessage {
   providedIn: 'root',
 })
 export class BeaconProtocol {
+  private readonly logger = inject(LoggerService);
   private readonly MAGIC_BYTE_1 = 0x41; // 'A'
   private readonly MAGIC_BYTE_2 = 0x52; // 'R'
 
@@ -80,7 +82,7 @@ export class BeaconProtocol {
       data instanceof DataView ? data : new DataView(data.buffer, data.byteOffset, data.byteLength);
 
     if (view.byteLength < 25) {
-      console.warn('[BeaconProtocol] Packet too short', view.byteLength);
+      this.logger.warn('Packet too short', 'BeaconProtocol', view.byteLength);
       return null;
     }
 
@@ -96,7 +98,7 @@ export class BeaconProtocol {
     const calculatedCrc = this.calculateCRC16(payloadForCrc);
 
     if (storedCrc !== calculatedCrc) {
-      console.warn('[BeaconProtocol] Invalid Checksum');
+      this.logger.warn('Invalid Checksum', 'BeaconProtocol');
       return null;
     }
 

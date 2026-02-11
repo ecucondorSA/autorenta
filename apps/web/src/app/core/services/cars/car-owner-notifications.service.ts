@@ -462,7 +462,7 @@ export class CarOwnerNotificationsService {
         data: { user },
       } = await this.supabase.auth.getUser();
       if (!user) {
-        console.warn('No user found, cannot save notification');
+        this.logger.warn('No user found, cannot save notification', 'CarOwnerNotificationsService');
         return;
       }
 

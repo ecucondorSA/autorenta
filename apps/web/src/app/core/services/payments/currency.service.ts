@@ -1,11 +1,13 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { formatMoney, Currency } from '@shared/utils/money.utils';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { ExchangeRateService } from './exchange-rate.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CurrencyService {
+  private readonly logger = inject(LoggerService);
   private readonly exchangeRateService = inject(ExchangeRateService);
 
   // 1. State: Active Display Currency (User Preference)
@@ -19,7 +21,7 @@ export class CurrencyService {
   constructor() {
     // Eagerly load rates on init
     this.exchangeRateService.getBinanceRate().catch((err) => {
-      console.warn('⚠️ CurrencyService: Could not fetch initial rates', err);
+      this.logger.warn(`Could not fetch initial rates: ${err}`, 'CurrencyService');
     });
   }
 

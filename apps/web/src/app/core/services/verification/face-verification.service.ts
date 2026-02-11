@@ -1,6 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '@environment';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
@@ -87,6 +88,7 @@ export interface VideoUploadProgress {
 })
 export class FaceVerificationService {
   private readonly supabase: SupabaseClient = injectSupabase();
+  private readonly logger = inject(LoggerService);
   private readonly DOC_VERIFIER_URL =
     environment.docVerifierUrl || 'https://doc-verifier.autorentar.workers.dev';
   private readonly identityBuckets = IDENTITY_BUCKETS;
@@ -391,7 +393,7 @@ export class FaceVerificationService {
       type.includes('webm');
 
     if (!isValid) {
-      console.warn('Rejected video type:', type);
+      this.logger.warn('Rejected video type:', 'FaceVerificationService', type);
       throw new Error(
         `Formato de video no válido (${type}). Aceptamos cualquier formato de video.`,
       );
@@ -511,7 +513,7 @@ export class FaceVerificationService {
 
       if (!error) {
         if (bucket !== this.identityBuckets[0]) {
-          console.warn(`[FaceVerificationService] Falling back to bucket ${bucket}`);
+          this.logger.warn(`Falling back to bucket ${bucket}`, 'FaceVerificationService');
         }
         return { bucket };
       }

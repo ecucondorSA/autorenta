@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * P0-015: Client-side Rate Limiter Service
@@ -34,6 +35,7 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   providedIn: 'root',
 })
 export class RateLimiterService {
+  private readonly logger = inject(LoggerService);
   private readonly STORAGE_PREFIX = 'ratelimit_';
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -48,7 +50,7 @@ export class RateLimiterService {
   isAllowed(action: keyof typeof RATE_LIMITS, userId?: string): boolean {
     const config = RATE_LIMITS[action];
     if (!config) {
-      console.warn(`[RateLimiter] Unknown action: ${action}`);
+      this.logger.warn(`Unknown action: ${action}`, 'RateLimiterService');
       return true; // Allow if unknown action
     }
 
@@ -80,7 +82,7 @@ export class RateLimiterService {
   recordAttempt(action: keyof typeof RATE_LIMITS, userId?: string): void {
     const config = RATE_LIMITS[action];
     if (!config) {
-      console.warn(`[RateLimiter] Unknown action: ${action}`);
+      this.logger.warn(`Unknown action: ${action}`, 'RateLimiterService');
       return;
     }
 
@@ -188,7 +190,7 @@ export class RateLimiterService {
       userId: userId || 'anonymous',
     };
 
-    console.warn('[RateLimiter] Rate limit exceeded:', logEntry);
+    this.logger.warn('Rate limit exceeded:', 'RateLimiterService', logEntry);
 
     // Store in sessionStorage for audit (browser only)
     if (!this.isBrowser) return;

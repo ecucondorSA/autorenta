@@ -28,7 +28,7 @@ export class ShareService {
    */
   async share(data: ShareData): Promise<boolean> {
     if (!this.canShare) {
-      console.warn('Web Share API no disponible');
+      this.logger.warn('Web Share API no disponible', 'ShareService');
       return this.fallbackShare(data);
     }
 
@@ -135,7 +135,7 @@ export class ShareService {
    */
   async shareFiles(files: File[], title?: string, text?: string): Promise<boolean> {
     if (!this.canShareFiles(files)) {
-      console.warn('No se pueden compartir archivos');
+      this.logger.warn('No se pueden compartir archivos', 'ShareService');
       return false;
     }
 

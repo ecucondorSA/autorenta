@@ -299,7 +299,7 @@ export class CarLocationsService {
 
     void channel.subscribe((status) => {
       if (status === 'SUBSCRIBED') {
-        console.debug('[CarLocations] Realtime subscription active');
+        this.logger.debug('[CarLocations] Realtime subscription active', 'CarLocationsService');
       }
     });
     this.realtimeChannel = channel;
@@ -442,7 +442,7 @@ export class CarLocationsService {
         .maybeSingle();
 
       if (error) {
-        console.warn(`Error fetching review count for car ${carId}:`, error);
+        this.logger.warn(`Error fetching review count for car ${carId}: ${error}`, 'CarLocationsService');
         return 0;
       }
 
@@ -456,7 +456,7 @@ export class CarLocationsService {
 
       return reviewsCount;
     } catch (error) {
-      console.warn(`Exception fetching review count for car ${carId}:`, error);
+      this.logger.warn(`Exception fetching review count for car ${carId}: ${error}`, 'CarLocationsService');
       return 0;
     }
   }
@@ -499,7 +499,7 @@ export class CarLocationsService {
           .in('car_id', uncachedIds);
 
         if (error) {
-          console.warn('Error batch fetching review counts:', error);
+          this.logger.warn(`Error batch fetching review counts: ${error}`, 'CarLocationsService');
           // Set 0 for all uncached
           uncachedIds.forEach((id) => result.set(id, 0));
         } else {
@@ -522,7 +522,7 @@ export class CarLocationsService {
           });
         }
       } catch (error) {
-        console.warn('Exception batch fetching review counts:', error);
+        this.logger.warn(`Exception batch fetching review counts: ${error}`, 'CarLocationsService');
         uncachedIds.forEach((id) => result.set(id, 0));
       }
     }

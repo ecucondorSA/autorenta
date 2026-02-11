@@ -442,7 +442,7 @@ export class BookingNotificationsService {
     // `undefined` into the DB and satisfies callers that may have
     // optional user ids on the booking model.
     if (!data.user_id) {
-      console.warn('Skipping notification creation: missing user_id', data);
+      this.logger.warn('Skipping notification creation: missing user_id', 'BookingNotificationsService', data);
       return;
     }
 

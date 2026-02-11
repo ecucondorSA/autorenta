@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import type { Car } from '@core/models';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 export interface CarBlackout {
@@ -43,6 +44,7 @@ export interface CarWithAvailability extends Car {
 
 @Injectable({ providedIn: 'root' })
 export class CarAvailabilityService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
 
   async getAvailabilityConflictInfo(
@@ -477,7 +479,7 @@ export class CarAvailabilityService {
       .limit(10);
 
     if (error) {
-      console.warn('hasActiveBookings error', error);
+      this.logger.warn(`hasActiveBookings error: ${error}`, 'CarAvailabilityService');
       return { hasActive: false, count: 0 };
     }
 

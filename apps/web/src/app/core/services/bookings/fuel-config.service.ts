@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 export interface FuelConfig {
@@ -14,6 +15,7 @@ export interface FuelConfig {
  */
 @Injectable({ providedIn: 'root' })
 export class FuelConfigService {
+  private readonly logger = inject(LoggerService);
   private readonly supabaseService = inject(SupabaseClientService);
 
   // Default values (fallback if DB config not available)
@@ -42,7 +44,7 @@ export class FuelConfigService {
         .single();
 
       if (error || !data) {
-        console.warn('Could not load car fuel config, using defaults:', error);
+        this.logger.warn('Could not load car fuel config, using defaults:', 'FuelConfigService', error);
         return this.getDefaultConfig();
       }
 

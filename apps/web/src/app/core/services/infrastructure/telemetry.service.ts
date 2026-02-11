@@ -165,7 +165,7 @@ export class TelemetryService {
    */
   startCollection(bookingId: string): void {
     if (this.state().isCollecting) {
-      console.warn('[TelemetryService] Ya hay una sesión de recolección activa');
+      this.logger.warn('Ya hay una sesión de recolección activa', 'TelemetryService');
       return;
     }
 
@@ -195,7 +195,7 @@ export class TelemetryService {
    */
   async stopCollection(): Promise<string | null> {
     if (!this.state().isCollecting) {
-      console.warn('[TelemetryService] No hay sesión de recolección activa');
+      this.logger.warn('No hay sesión de recolección activa', 'TelemetryService');
       return null;
     }
 

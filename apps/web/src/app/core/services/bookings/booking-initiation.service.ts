@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import type { Booking } from '@core/models';
 import { AuthService } from '@core/services/auth/auth.service';
 import { CarsService } from '@core/services/cars/cars.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import type { BookingLocationData } from '@features/bookings/components/booking-location-form/booking-location-form.component';
 import { BookingsService } from './bookings.service';
 
@@ -15,6 +16,7 @@ import { BookingsService } from './bookings.service';
  */
 @Injectable({ providedIn: 'root' })
 export class BookingInitiationService {
+  private readonly logger = inject(LoggerService);
   private readonly auth = inject(AuthService);
   private readonly bookings = inject(BookingsService);
   private readonly cars = inject(CarsService);
@@ -63,7 +65,7 @@ export class BookingInitiationService {
         }
       } catch (err) {
         // Si falla la revalidación, no bloqueamos el flujo; dejamos que BookingsService valide
-        console.warn('[BookingInitiation] Availability check failed, continuing', err);
+        this.logger.warn('Availability check failed, continuing', 'BookingInitiationService', err);
       }
 
       // Delegar la creación validada a BookingsService

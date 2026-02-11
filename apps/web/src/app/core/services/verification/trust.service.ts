@@ -1,4 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { BcraService } from './bcra.service';
 
@@ -17,6 +18,7 @@ export interface TrustAssessment {
 export class TrustService {
   private readonly supabase = injectSupabase();
   private readonly bcraService = inject(BcraService);
+  private readonly logger = inject(LoggerService);
 
   readonly currentTrust = signal<TrustAssessment | null>(null);
   readonly loading = signal(false);
@@ -38,7 +40,7 @@ export class TrustService {
       if (error && !['PGRST116', '42P01'].includes(error.code ?? '')) {
         // Only log if it's not a known "table missing" error
         if (error.message?.includes('406') || error.code === 'PGRST200') {
-          console.debug('[TrustService] risk_assessments table not ready yet');
+          this.logger.debug('risk_assessments table not ready yet', 'TrustService');
         } else {
           throw error;
         }
@@ -47,7 +49,7 @@ export class TrustService {
       this.currentTrust.set(data as TrustAssessment | null);
       return data;
     } catch (err) {
-      console.debug('[TrustService] Trust status unavailable:', err);
+      this.logger.debug('Trust status unavailable:', 'TrustService', err);
       this.currentTrust.set(null);
       return null;
     } finally {
@@ -84,7 +86,7 @@ export class TrustService {
           // TODO: Call verifyFinancialSolvency here if we want to update background_checks table
           // await this.verifyFinancialSolvency(profile.cuit);
         } catch (e) {
-          console.warn('BCRA check failed silently', e);
+          this.logger.warn('BCRA check failed silently', 'TrustService', e);
         }
       }
 

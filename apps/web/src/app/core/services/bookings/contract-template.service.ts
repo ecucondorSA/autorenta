@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * Contract data interface for template merging
@@ -51,6 +52,7 @@ export interface ContractData {
   providedIn: 'root',
 })
 export class ContractTemplateService {
+  private readonly logger = inject(LoggerService);
   /**
    * Load contract template HTML from assets
    * @param version - Semantic version (e.g., 'v1.0.0')
@@ -163,8 +165,9 @@ export class ContractTemplateService {
     const remainingPlaceholders = mergedHtml.match(/\{\{[^}]+\}\}/g);
 
     if (remainingPlaceholders && remainingPlaceholders.length > 0) {
-      console.warn(
-        '[ContractTemplateService] Warning: Unresolved placeholders found:',
+      this.logger.warn(
+        'Unresolved placeholders found:',
+        'ContractTemplateService',
         remainingPlaceholders,
       );
       return false;

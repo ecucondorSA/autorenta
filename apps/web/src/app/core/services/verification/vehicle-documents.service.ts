@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, from, map, catchError, of } from 'rxjs';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
@@ -91,6 +92,7 @@ const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB
 })
 export class VehicleDocumentsService {
   private readonly supabase = injectSupabase();
+  private readonly logger = inject(LoggerService);
   private readonly BUCKET_NAME = 'vehicle-documents';
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
   private readonly carsService = inject(CarsService);
@@ -262,7 +264,7 @@ export class VehicleDocumentsService {
       .remove([doc.storage_path]);
 
     if (storageError) {
-      console.warn('Error deleting file from storage:', storageError);
+      this.logger.warn('Error deleting file from storage:', 'VehicleDocumentsService', storageError);
       // Continue anyway - mejor borrar el registro aunque falle el storage
     }
 
@@ -324,7 +326,7 @@ export class VehicleDocumentsService {
     if (data.vtv_expiry) {
       const vtvExpiry = new Date(data.vtv_expiry);
       if (vtvExpiry < now) {
-        console.warn(`VTV expired for car ${carId}: ${data.vtv_expiry}`);
+        this.logger.warn(`VTV expired for car ${carId}: ${data.vtv_expiry}`, 'VehicleDocumentsService');
         return false;
       }
     }
@@ -332,7 +334,7 @@ export class VehicleDocumentsService {
     if (data.insurance_expiry) {
       const insuranceExpiry = new Date(data.insurance_expiry);
       if (insuranceExpiry < now) {
-        console.warn(`Insurance expired for car ${carId}: ${data.insurance_expiry}`);
+        this.logger.warn(`Insurance expired for car ${carId}: ${data.insurance_expiry}`, 'VehicleDocumentsService');
         return false;
       }
     }
@@ -459,7 +461,7 @@ export class VehicleDocumentsService {
       )
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
-          console.debug('[VehicleDocuments] Realtime subscription active');
+          this.logger.debug('Realtime subscription active', 'VehicleDocumentsService');
         }
       });
 

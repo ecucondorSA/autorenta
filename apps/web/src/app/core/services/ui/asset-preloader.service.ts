@@ -72,7 +72,7 @@ export class AssetPreloaderService {
       try {
         await task();
       } catch (error) {
-        console.warn(`[Preloader] Failed to preload ${name}:`, error);
+        this.logger.warn(`[Preloader] Failed to preload ${name}:`, 'AssetPreloaderService', error);
         errors.push(name);
       }
 
@@ -156,7 +156,7 @@ export class AssetPreloaderService {
       this._mapboxReady.set(true);
       this.logger.debug('[Preloader] Mapbox preload complete');
     } catch (error) {
-      console.warn('[Preloader] Mapbox preload failed (non-blocking):', error);
+      this.logger.warn('[Preloader] Mapbox preload failed (non-blocking):', 'AssetPreloaderService', error);
       // Don't fail - map will still load when user navigates to /cars/list
     }
   }

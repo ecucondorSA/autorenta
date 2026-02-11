@@ -1,4 +1,5 @@
 import { Injectable, computed, signal, inject } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { AuthService } from '@core/services/auth/auth.service';
 
@@ -52,6 +53,7 @@ interface BonusProtectorState {
   providedIn: 'root',
 })
 export class BonusProtectorService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly authService = inject(AuthService);
 
@@ -93,7 +95,7 @@ export class BonusProtectorService {
       if (error) {
         // Si la función no existe, devolver opciones mockeadas
         if (error.message.includes('Could not find the function')) {
-          console.warn('[BonusProtectorService] Function not found, using mock data');
+          this.logger.warn('Function not found, using mock data', 'BonusProtectorService');
           const mockOptions: BonusProtectorOption[] = [
             {
               protection_level: 1,
@@ -174,7 +176,7 @@ export class BonusProtectorService {
       if (error) {
         // Si la función no existe, no hay protector activo
         if (error.message.includes('Could not find the function')) {
-          console.warn('[BonusProtectorService] Function not found, assuming no active protector');
+          this.logger.warn('Function not found, assuming no active protector', 'BonusProtectorService');
           this.state.update((s) => ({
             ...s,
             activeProtector: null,

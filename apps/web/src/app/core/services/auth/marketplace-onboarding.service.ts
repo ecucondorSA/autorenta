@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { EncryptionService } from '@core/services/infrastructure/encryption.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { environment } from '@environment';
 
@@ -63,6 +64,7 @@ export interface AuthMarketplaceStatus {
   providedIn: 'root',
 })
 export class MarketplaceOnboardingService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly encryptionService = inject(EncryptionService);
 
@@ -237,12 +239,12 @@ export class MarketplaceOnboardingService {
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          console.warn('[MarketplaceOnboarding] Token revocation failed:', errorData);
+          this.logger.warn(`Token revocation failed: ${JSON.stringify(errorData)}`, 'MarketplaceOnboardingService');
           // Continue anyway - we still want to clear local tokens
         }
       }
     } catch (revokeError) {
-      console.warn('[MarketplaceOnboarding] Token revocation error:', revokeError);
+      this.logger.warn(`Token revocation error: ${revokeError}`, 'MarketplaceOnboardingService');
       // Continue anyway - we still want to clear local tokens
     }
 

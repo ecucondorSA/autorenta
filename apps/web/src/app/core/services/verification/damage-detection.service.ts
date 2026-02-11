@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { DamageItem, DamageType } from '@core/services/payments/settlement.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { environment } from '../../../../environments/environment';
@@ -57,6 +58,7 @@ interface RawDamage {
 })
 export class DamageDetectionService {
   private readonly supabaseService = inject(SupabaseClientService);
+  private readonly logger = inject(LoggerService);
 
   /**
    * Analiza y compara imágenes de check-in vs check-out
@@ -163,7 +165,7 @@ export class DamageDetectionService {
       const data = await response.json();
 
       if (!data.success) {
-        console.warn(`Image pair ${pairIndex} analysis returned no damages`);
+        this.logger.warn(`Image pair ${pairIndex} analysis returned no damages`, 'DamageDetectionService');
         return [];
       }
 

@@ -98,7 +98,7 @@ export class PwaInstallService {
    */
   async promptInstall(): Promise<boolean> {
     if (!this.deferredPrompt) {
-      console.warn('No hay prompt de instalación disponible');
+      this.logger.warn('No hay prompt de instalación disponible', 'PwaInstallService');
       return false;
     }
 

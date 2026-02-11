@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '@environment';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * EncryptionService: Secure AES-256-GCM encryption for sensitive tokens
@@ -19,6 +20,7 @@ import { environment } from '@environment';
   providedIn: 'root',
 })
 export class EncryptionService {
+  private readonly logger = inject(LoggerService);
   private readonly ALGORITHM = 'AES-GCM';
   private readonly KEY_LENGTH = 256;
   private readonly SALT_LENGTH = 16;
@@ -28,8 +30,9 @@ export class EncryptionService {
 
   constructor() {
     if (!environment.encryptionKey) {
-      console.warn(
-        'EncryptionService: ENCRYPTION_KEY not found in environment. Tokens will not be encrypted.',
+      this.logger.warn(
+        'ENCRYPTION_KEY not found in environment. Tokens will not be encrypted.',
+        'EncryptionService',
       );
     }
   }

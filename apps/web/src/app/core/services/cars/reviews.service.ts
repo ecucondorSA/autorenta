@@ -10,6 +10,7 @@ import type {
 import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { ProfileService } from '@core/services/auth/profile.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 export interface CreateReviewResult {
@@ -23,6 +24,7 @@ export interface CreateReviewResult {
   providedIn: 'root',
 })
 export class ReviewsService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
   private readonly carsService = inject(CarsService);
@@ -236,7 +238,7 @@ export class ReviewsService {
       this.reviewsSignal.set(reviews);
     } catch (err) {
       // Gracefully handle errors (e.g. missing table, bad request)
-      console.warn('⚠️ Error loading reviews (suppressed):', err);
+      this.logger.warn(`Error loading reviews (suppressed): ${err}`, 'ReviewsService');
       this.reviewsSignal.set([]);
       // Do not set errorSignal to avoid breaking UI for non-critical data
     } finally {
@@ -271,7 +273,7 @@ export class ReviewsService {
       if (error) throw error;
       this.userStatsSignal.set(data as UserStats | null);
     } catch (err) {
-      console.debug('⚠️ User stats table not ready yet (debug info only):', err);
+      this.logger.debug(`User stats table not ready yet (debug info only): ${err}`, 'ReviewsService');
       this.userStatsSignal.set(null);
     } finally {
       this.loadingSignal.set(false);
@@ -305,7 +307,7 @@ export class ReviewsService {
       this.carStatsSignal.set(data as CarStats | null);
     } catch (err) {
       // Gracefully handle missing table/data
-      console.warn('⚠️ Error loading car stats (suppressed):', err);
+      this.logger.warn(`Error loading car stats (suppressed): ${err}`, 'ReviewsService');
       this.carStatsSignal.set(null);
     } finally {
       this.loadingSignal.set(false);

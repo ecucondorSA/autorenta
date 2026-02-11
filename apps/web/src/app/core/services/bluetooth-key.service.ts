@@ -1,4 +1,5 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 // Web Bluetooth API type declarations (not in standard TypeScript lib yet)
 declare global {
@@ -75,6 +76,8 @@ export type LockState = 'locked' | 'unlocking' | 'unlocked' | 'locking';
   providedIn: 'root',
 })
 export class BluetoothKeyService {
+  private readonly logger = inject(LoggerService);
+
   // Signals
   connectionState = signal<BluetoothConnectionState>('disconnected');
   lockState = signal<LockState>('locked');
@@ -181,7 +184,7 @@ export class BluetoothKeyService {
       const level = value.getUint8(0);
       this.batteryLevel.set(level);
     } catch (e) {
-      console.warn('Could not read battery level', e);
+      this.logger.warn('Could not read battery level', 'BluetoothKeyService', e);
     }
   }
 }
