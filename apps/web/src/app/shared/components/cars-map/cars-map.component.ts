@@ -360,6 +360,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private routeOutlineLayerId = 'directions-route-outline-layer';
   private followLocationInterval: ReturnType<typeof setInterval> | null = null;
   private isDarkMode = signal(false);
+  private darkModeMediaQuery: MediaQueryList | null = null;
+  private readonly darkModeHandler = () => this.detectDarkMode();
   private circleSizeMultiplier = signal(1.0); // Para ajustar tamaño del círculo
 
   ngOnInit(): void {
@@ -373,8 +375,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     // Escuchar cambios de tema
     if (this.isBrowser) {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      mediaQuery.addEventListener('change', () => this.detectDarkMode());
+      this.darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      this.darkModeMediaQuery.addEventListener('change', this.darkModeHandler);
     }
   }
 
@@ -2907,6 +2909,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     if (this.map) {
       this.map.remove();
       this.map = null;
+    }
+
+    // Remove dark mode listener
+    if (this.darkModeMediaQuery) {
+      this.darkModeMediaQuery.removeEventListener('change', this.darkModeHandler);
+      this.darkModeMediaQuery = null;
     }
 
     // Reset event registration flag so listeners are re-added if map is re-created
