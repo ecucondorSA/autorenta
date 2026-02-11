@@ -222,7 +222,7 @@ export class PerformanceMonitoringService {
           void this.sendToSentry('lcp', lcp);
 
           if (lcp > 2500) {
-            console.warn(`⚠️ LCP is above target (2.5s): ${(lcp / 1000).toFixed(2)}s`);
+            this.logger.warn(`LCP is above target (2.5s): ${(lcp / 1000).toFixed(2)}s`);
             void this.sendWarningToSentry(`Poor LCP: ${(lcp / 1000).toFixed(2)}s`, {
               metric: 'lcp',
             });
@@ -246,7 +246,7 @@ export class PerformanceMonitoringService {
             void this.sendToSentry('fid', fid);
 
             if (fid > 100) {
-              console.warn(`⚠️ FID is above target (100ms): ${fid.toFixed(2)}ms`);
+              this.logger.warn(`FID is above target (100ms): ${fid.toFixed(2)}ms`);
               void this.sendWarningToSentry(`Poor FID: ${fid.toFixed(2)}ms`, {
                 metric: 'fid',
               });
@@ -296,7 +296,7 @@ export class PerformanceMonitoringService {
 
           if (clsScore > 0.1 && !warnedPoorCls) {
             warnedPoorCls = true;
-            console.warn(`⚠️ CLS is above target (0.1): ${clsScore.toFixed(4)}`);
+            this.logger.warn(`CLS is above target (0.1): ${clsScore.toFixed(4)}`);
             void this.sendWarningToSentry(`Poor CLS: ${clsScore.toFixed(4)}`, {
               metric: 'cls',
             });
@@ -350,7 +350,7 @@ export class PerformanceMonitoringService {
               // Warn once when crossing threshold.
               if (clsScore > 0.1 && !warnedPoorCls) {
                 warnedPoorCls = true;
-                console.warn(`⚠️ CLS is above target (0.1): ${clsScore.toFixed(4)}`);
+                this.logger.warn(`CLS is above target (0.1): ${clsScore.toFixed(4)}`);
                 void this.sendWarningToSentry(`Poor CLS: ${clsScore.toFixed(4)}`, {
                   metric: 'cls',
                 });
@@ -415,7 +415,7 @@ export class PerformanceMonitoringService {
       void this.sendToSentry(metricKey, duration);
 
       if (duration > 100) {
-        console.warn(`⚠️ Slow operation detected: ${name} took ${duration.toFixed(2)}ms`);
+        this.logger.warn(`Slow operation detected: ${name} took ${duration.toFixed(2)}ms`);
         void this.sendWarningToSentry(`Slow operation: ${name} took ${duration.toFixed(2)}ms`, {
           metric: 'operation_duration',
           operation: name,
