@@ -1,3 +1,7 @@
+## <small>3.81.6 (2026-02-11)</small>
+
+* fix: skip protector audit when addons table is unavailable ([6dc952f](https://github.com/ecucondorSA/autorenta/commit/6dc952f))
+
 ## <small>3.81.5 (2026-02-11)</small>
 
 * fix: stabilize scheduled wallet and protector audits ([4a54ce3](https://github.com/ecucondorSA/autorenta/commit/4a54ce3))
