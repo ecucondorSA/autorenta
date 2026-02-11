@@ -1,3 +1,7 @@
+## <small>3.80.14 (2026-02-11)</small>
+
+* perf(shared): add OnPush change detection to 3 remaining shared components ([828e732](https://github.com/ecucondorSA/autorenta/commit/828e732))
+
 ## <small>3.80.13 (2026-02-11)</small>
 
 * fix(security): add Realtime channel cleanup to prevent zombie subscriptions ([8491969](https://github.com/ecucondorSA/autorenta/commit/8491969))
