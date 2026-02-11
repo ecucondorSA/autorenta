@@ -1,3 +1,8 @@
+## <small>3.87.1 (2026-02-11)</small>
+
+* fix: stabilize CI pipelines and verification tests ([ccab752](https://github.com/ecucondorSA/autorenta/commit/ccab752))
+* chore(ci): allow disconnect_mercadopago rpc redefinition in guardrails baseline ([8060474](https://github.com/ecucondorSA/autorenta/commit/8060474))
+
 ## 3.87.0 (2026-02-11)
 
 * fix(mp-oauth): finalize refresh-token disconnect strategy ([419795c](https://github.com/ecucondorSA/autorenta/commit/419795c))
