@@ -139,7 +139,7 @@ jobs:
 
             // Check for negative balances (should never happen)
             const negativeBalancesRes = await fetch(
-              supabaseUrl + '/rest/v1/user_wallets?available_balance=lt.0&select=user_id,available_balance',
+              supabaseUrl + '/rest/v1/user_wallets?available_balance_cents=lt.0&select=user_id,available_balance_cents',
               {
                 headers: {
                   'apikey': supabaseKey,

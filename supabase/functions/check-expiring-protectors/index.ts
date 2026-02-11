@@ -23,10 +23,10 @@ interface ExpiringProtector {
   id: string;
   user_id: string;
   protection_level: number;
-  remaining_protected_claims: number;
-  purchased_at: string;
+  max_protected_claims: number;
+  claims_used: number;
+  purchase_date: string;
   expires_at: string;
-  days_until_expiry: number;
 }
 
 interface NotificationResult {
@@ -38,6 +38,22 @@ interface NotificationResult {
     success: boolean;
     error?: string;
   }>;
+}
+
+function normalizeError(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === 'string') {
+    return error;
+  }
+
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return 'Unknown error';
+  }
 }
 
 serve(async (req) => {
@@ -65,17 +81,33 @@ serve(async (req) => {
     // Get all active protectors that haven't been fully used
     const { data: protectors, error: fetchError } = await supabase
       .from('driver_protection_addons')
-      .select('*')
-      .eq('status', 'ACTIVE')
-      .gt('remaining_protected_claims', 0)
+      .select('id, user_id, protection_level, max_protected_claims, claims_used, purchase_date, expires_at')
+      .eq('addon_type', 'bonus_protector')
+      .eq('is_active', true)
       .not('expires_at', 'is', null);
 
     if (fetchError) {
+      // En entornos donde la tabla aún no está desplegada, no romper el cron.
+      if (fetchError.code === '42P01') {
+        console.warn('[check-expiring-protectors] driver_protection_addons not found, skipping');
+        return new Response(
+          JSON.stringify({ message: 'Protection addon table not available', sent: 0, skipped: true }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
       console.error('[check-expiring-protectors] Error fetching protectors:', fetchError);
       throw fetchError;
     }
 
-    if (!protectors || protectors.length === 0) {
+    const activeProtectors = ((protectors ?? []) as ExpiringProtector[]).filter(
+      (protector) => protector.max_protected_claims > protector.claims_used
+    );
+
+    if (activeProtectors.length === 0) {
       console.log('[check-expiring-protectors] No active protectors found');
       return new Response(
         JSON.stringify({ message: 'No active protectors to check', sent: 0 }),
@@ -86,7 +118,7 @@ serve(async (req) => {
       );
     }
 
-    console.log(`[check-expiring-protectors] Found ${protectors.length} active protectors`);
+    console.log(`[check-expiring-protectors] Found ${activeProtectors.length} active protectors`);
 
     const results: NotificationResult = {
       sent: 0,
@@ -97,10 +129,11 @@ serve(async (req) => {
     const now = new Date();
 
     // Process each protector
-    for (const protector of protectors) {
+    for (const protector of activeProtectors) {
       try {
         const expiresAt = new Date(protector.expires_at);
         const daysUntilExpiry = Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        const remainingProtectedClaims = Math.max(0, protector.max_protected_claims - protector.claims_used);
 
         console.log(`[check-expiring-protectors] Protector ${protector.id} expires in ${daysUntilExpiry} days`);
 
@@ -122,10 +155,10 @@ serve(async (req) => {
           title = 'Tu Bonus Protector ha expirado';
           body = `Tu protección Nivel ${protector.protection_level} ha expirado. Compra una nueva protección para volver a estar cubierto.`;
 
-          // Update protector status to EXPIRED
+          // Desactivar para evitar notificaciones duplicadas de expiración.
           await supabase
             .from('driver_protection_addons')
-            .update({ status: 'EXPIRED', updated_at: now.toISOString() })
+            .update({ is_active: false })
             .eq('id', protector.id);
         }
 
@@ -143,7 +176,7 @@ serve(async (req) => {
               metadata: {
                 protector_id: protector.id,
                 protection_level: protector.protection_level,
-                remaining_claims: protector.remaining_protected_claims,
+                remaining_claims: remainingProtectedClaims,
                 expires_at: protector.expires_at,
                 days_until_expiry: daysUntilExpiry,
               },
@@ -175,7 +208,7 @@ serve(async (req) => {
           user_id: protector.user_id,
           type: 'error',
           success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: normalizeError(error),
         });
       }
     }
@@ -196,7 +229,7 @@ serve(async (req) => {
     console.error('[check-expiring-protectors] Fatal error:', error);
     return new Response(
       JSON.stringify({
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: normalizeError(error),
       }),
       {
         status: 500,

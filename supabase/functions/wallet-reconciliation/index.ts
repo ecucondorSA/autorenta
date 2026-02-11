@@ -9,9 +9,6 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { sendReconciliationAlert } from '../_shared/alerts.ts';
 
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-
 interface ReconciliationResult {
   user_id: string;
   stored_balance: number;
@@ -32,6 +29,42 @@ interface ReconciliationReport {
   coverage_fund_ok: boolean;
 }
 
+interface WalletRow {
+  user_id: string;
+  balance_cents: number;
+  available_balance_cents: number;
+  locked_balance_cents: number;
+}
+
+const JSON_HEADERS = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+};
+
+function getRequiredEnv(name: string): string {
+  const value = Deno.env.get(name);
+  if (!value) {
+    throw new Error(`Missing required env var: ${name}`);
+  }
+  return value;
+}
+
+function normalizeError(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === 'string') {
+    return error;
+  }
+
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return 'Unknown error';
+  }
+}
+
 serve(async (req) => {
   // CORS preflight
   if (req.method === 'OPTIONS') {
@@ -45,10 +78,13 @@ serve(async (req) => {
     });
   }
 
-  // Usar service role key directamente (función administrativa)
-  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
   try {
+    const supabaseUrl = getRequiredEnv('SUPABASE_URL');
+    const supabaseServiceRoleKey = getRequiredEnv('SUPABASE_SERVICE_ROLE_KEY');
+
+    // Usar service role key directamente (función administrativa)
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+
     console.log('[Reconciliation] Starting wallet reconciliation...');
 
     // ========================================
@@ -58,17 +94,18 @@ serve(async (req) => {
     // Obtener todos los usuarios con wallet
     const { data: wallets, error: walletsError } = await supabase
       .from('user_wallets')
-      .select('user_id, available_balance, locked_balance');
+      .select('user_id, balance_cents, available_balance_cents, locked_balance_cents');
 
     if (walletsError) throw walletsError;
+    const typedWallets = (wallets ?? []) as WalletRow[];
 
-    console.log(`[Reconciliation] Found ${wallets.length} user wallets`);
+    console.log(`[Reconciliation] Found ${typedWallets.length} user wallets`);
 
     const discrepancies: ReconciliationResult[] = [];
     let totalDifference = 0;
 
     // Para cada usuario, calcular balance desde ledger
-    for (const wallet of wallets) {
+    for (const wallet of typedWallets) {
       const { data: ledgerEntries, error: ledgerError } = await supabase
         .from('wallet_ledger')
         .select('kind, amount_cents')
@@ -93,7 +130,9 @@ serve(async (req) => {
         }
       }
 
-      const storedBalance = wallet.available_balance + wallet.locked_balance;
+      const storedBalance = typeof wallet.balance_cents === 'number'
+        ? wallet.balance_cents
+        : wallet.available_balance_cents + wallet.locked_balance_cents;
       const difference = storedBalance - calculatedBalance;
 
       if (Math.abs(difference) > 0) {
@@ -170,8 +209,8 @@ serve(async (req) => {
 
     const report: ReconciliationReport = {
       timestamp: new Date().toISOString(),
-      total_users: wallets.length,
-      users_checked: wallets.length,
+      total_users: typedWallets.length,
+      users_checked: typedWallets.length,
       discrepancies_found: discrepancies.length,
       total_difference: totalDifference,
       users_with_issues: discrepancies,
@@ -226,27 +265,31 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         report,
+        discrepancies: report.discrepancies_found,
+        coverage_fund_ok: report.coverage_fund_ok,
+        total_difference: report.total_difference,
         message: discrepancies.length === 0 && fundOk
           ? '✅ All balances reconciled successfully'
           : '⚠️ Discrepancies found - check report',
       }),
       {
         status: 200,
-        headers: { 'Content-Type': 'application/json' },
+        headers: JSON_HEADERS,
       }
     );
   } catch (error) {
     console.error('[Reconciliation] Error:', error);
+    const normalizedError = normalizeError(error);
 
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Internal server error',
+        error: normalizedError,
         details: error instanceof Error ? error.stack : undefined,
       }),
       {
         status: 500,
-        headers: { 'Content-Type': 'application/json' },
+        headers: JSON_HEADERS,
       }
     );
   }
