@@ -1554,12 +1554,32 @@
 
         // Force token refresh before invoking protected Edge Function to avoid stale JWT (401).
         var refreshResp = await sb.auth.refreshSession();
-        if (!refreshResp.error && refreshResp.data && refreshResp.data.session) {
+        if (refreshResp.error) {
+          await sb.auth.signOut();
+          currentUser = null;
+          updateAuthUI();
+          closePurchaseModal();
+          openAuthModal();
+          throw new Error('Tu sesion expiro. Inicia sesion nuevamente.');
+        }
+
+        if (refreshResp.data && refreshResp.data.session) {
           session = refreshResp.data.session;
         }
 
         if (!session || !session.access_token) {
           throw new Error('Sesion expirada. Volve a iniciar sesion.');
+        }
+
+        // Validate refreshed token before payment creation
+        var userResp = await sb.auth.getUser();
+        if (userResp.error || !userResp.data || !userResp.data.user) {
+          await sb.auth.signOut();
+          currentUser = null;
+          updateAuthUI();
+          closePurchaseModal();
+          openAuthModal();
+          throw new Error('Tu sesion expiro. Inicia sesion nuevamente.');
         }
 
         var resp = await fetch(SUPABASE_URL + '/functions/v1/create-fragment-preference', {
