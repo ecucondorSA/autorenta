@@ -1,3 +1,7 @@
+## <small>3.80.16 (2026-02-11)</small>
+
+* fix(car-detail): clean up error handling and fix loading/error state order ([40e98cd](https://github.com/ecucondorSA/autorenta/commit/40e98cd)), closes [#errorTpl](https://github.com/ecucondorSA/autorenta/issues/errorTpl)
+
 ## <small>3.80.15 (2026-02-11)</small>
 
 * perf(features): add OnPush to 5 remaining feature components ([e5ad417](https://github.com/ecucondorSA/autorenta/commit/e5ad417))
