@@ -90,7 +90,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
 
             <div [class]="getCoverageBoxClass(tier)" class="rounded-lg p-3">
               <p class="text-xs uppercase tracking-widest font-semibold opacity-80">Garantía Off</p>
-              <p class="text-base font-semibold">{{ tier.holdDiscountPct * 100 }}% de descuento</p>
+              <p class="text-base font-semibold">{{ tier.holdDiscountPct * 100 }}% OFF en Garantía</p>
             </div>
 
             <ul class="space-y-1">

@@ -168,11 +168,16 @@ describe('VerificationService', () => {
     const result = await service.verifyDocumentOcr('base64-image', 'dni', 'front', 'AR');
 
     expect(result.success).toBeTrue();
-    expect(invokeSpy).toHaveBeenCalledTimes(2);
     const firstInvokeOptions = invokeSpy.calls.argsFor(0)[1] as { headers?: Record<string, string> };
-    const secondInvokeOptions = invokeSpy.calls.argsFor(1)[1] as { headers?: Record<string, string> };
-    expect(firstInvokeOptions.headers?.['x-kyc-trace-id']).toBeDefined();
-    expect(secondInvokeOptions.headers?.['x-kyc-trace-id']).toBeUndefined();
+    if (environment.production) {
+      expect(invokeSpy).toHaveBeenCalledTimes(1);
+      expect(firstInvokeOptions.headers?.['x-kyc-trace-id']).toBeUndefined();
+    } else {
+      expect(invokeSpy).toHaveBeenCalledTimes(2);
+      const secondInvokeOptions = invokeSpy.calls.argsFor(1)[1] as { headers?: Record<string, string> };
+      expect(firstInvokeOptions.headers?.['x-kyc-trace-id']).toBeDefined();
+      expect(secondInvokeOptions.headers?.['x-kyc-trace-id']).toBeUndefined();
+    }
     expect(authServiceMock.refreshSession).not.toHaveBeenCalled();
   });
 
@@ -259,7 +264,7 @@ describe('VerificationService', () => {
 
     expect(authServiceMock.refreshSession).toHaveBeenCalledTimes(1);
     const invokeArgs = invokeSpy.calls.mostRecent().args[1] as { headers?: Record<string, string> };
-    expect(invokeArgs.headers?.Authorization).toBe(`Bearer ${freshToken}`);
+    expect(invokeArgs.headers?.['Authorization']).toBe(`Bearer ${freshToken}`);
   });
 
   it('evita loop de OCR_FAILED aplicando cooldown corto por imagen/lado', async () => {

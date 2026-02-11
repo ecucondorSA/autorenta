@@ -73,7 +73,7 @@ import {
                   \${{ vehicleConfigs[tier].holdBaseUsd }}
                 </p>
                 <p class="text-[9px] text-text-secondary leading-none">
-                  {{ vehicleConfigs[tier].description.split('(')[1].replace(')', '') }}
+                  {{ formatTierRange(tier) }}
                 </p>
               </div>
             }
@@ -270,6 +270,25 @@ export class ClubPlansPage implements OnInit {
   ];
 
   getVehicleTierName = getVehicleTierName;
+
+  formatTierRange(tier: keyof typeof VEHICLE_TIER_CONFIG): string {
+    const config = this.vehicleConfigs[tier];
+    const formatUsd = (value: number): string => value.toLocaleString('en-US');
+
+    if (config.valueMinUsd === null && config.valueMaxUsd !== null) {
+      return `< USD ${formatUsd(config.valueMaxUsd)}`;
+    }
+
+    if (config.valueMinUsd !== null && config.valueMaxUsd === null) {
+      return `> USD ${formatUsd(config.valueMinUsd)}`;
+    }
+
+    if (config.valueMinUsd !== null && config.valueMaxUsd !== null) {
+      return `USD ${formatUsd(config.valueMinUsd)} - ${formatUsd(config.valueMaxUsd)}`;
+    }
+
+    return 'USD';
+  }
 
   async ngOnInit() {
     await this.subscriptionService.fetchPlans();

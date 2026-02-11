@@ -1054,10 +1054,16 @@ export class VerificationService implements OnDestroy {
       }
     }
 
-    return {
+    const headers: Record<string, string> = {
       Authorization: `Bearer ${session.access_token}`,
-      [OCR_TRACE_HEADER]: this.createOcrTraceId(),
     };
+
+    // Avoid unnecessary preflight failures in production when custom CORS headers are restricted.
+    if (!environment.production) {
+      headers[OCR_TRACE_HEADER] = this.createOcrTraceId();
+    }
+
+    return headers;
   }
 
   private shouldRefreshAccessToken(accessToken: string, payload?: AccessTokenPayload): boolean {

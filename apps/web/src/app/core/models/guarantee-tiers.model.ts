@@ -126,7 +126,7 @@ export const MEMBERSHIP_CONFIG: Record<Exclude<MembershipPlan, 'none'>, Membersh
     holdDiscountPct: 0.25, // 25% descuento
     maxVehicleTier: 'standard', // Hasta autos de USD 25,000
     features: [
-      '25% descuento en garantía',
+      '25% OFF en Garantía',
       'Acceso a autos hasta USD 25,000',
       'Soporte prioritario',
       'FGO buy-down incluido',
@@ -139,7 +139,7 @@ export const MEMBERSHIP_CONFIG: Record<Exclude<MembershipPlan, 'none'>, Membersh
     holdDiscountPct: 0.4, // 40% descuento
     maxVehicleTier: 'premium', // Hasta autos de USD 70,000
     features: [
-      '40% descuento en garantía',
+      '40% OFF en Garantía',
       'Acceso a autos hasta USD 70,000',
       'Soporte VIP 24/7',
       'FGO buy-down incluido',
@@ -153,7 +153,7 @@ export const MEMBERSHIP_CONFIG: Record<Exclude<MembershipPlan, 'none'>, Membersh
     holdDiscountPct: 0.5, // 50% descuento
     maxVehicleTier: 'luxury', // Todos los autos
     features: [
-      '50% descuento en garantía',
+      '50% OFF en Garantía',
       'Acceso a TODA la flota',
       'Soporte VIP exclusivo 24/7',
       'FGO buy-down incluido',
