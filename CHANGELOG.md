@@ -1,3 +1,7 @@
+## <small>3.80.15 (2026-02-11)</small>
+
+* perf(features): add OnPush to 5 remaining feature components ([e5ad417](https://github.com/ecucondorSA/autorenta/commit/e5ad417))
+
 ## <small>3.80.14 (2026-02-11)</small>
 
 * perf(shared): add OnPush change detection to 3 remaining shared components ([828e732](https://github.com/ecucondorSA/autorenta/commit/828e732))
