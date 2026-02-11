@@ -1497,16 +1497,43 @@
     }
 
     async function loadExchangeRate() {
+      // Primary source: exchange_rates.USDTARS (updated by sync-binance-rates workflow)
+      try {
+        var marketResp = await sb
+          .from('exchange_rates')
+          .select('platform_rate, rate, last_updated, updated_at')
+          .eq('pair', 'USDTARS')
+          .eq('is_active', true)
+          .order('last_updated', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (marketResp.data) {
+          var marketRaw = marketResp.data.platform_rate != null ? marketResp.data.platform_rate : marketResp.data.rate;
+          var marketRate = parseFloat(String(marketRaw));
+          if (!isNaN(marketRate) && marketRate > 0) {
+            exchangeRate = marketRate;
+            updatePurchasePrice();
+            return;
+          }
+        }
+      } catch (e) {
+        console.error('Failed to load market exchange rate', e);
+      }
+
+      // Fallback: app_config static rate
       try {
         var resp = await sb.from('app_config').select('value').eq('key', 'USD_ARS_RATE').eq('environment', 'production').single();
         if (resp.data) {
-          // app_config.value is JSONB — could be number or string
           exchangeRate = parseFloat(String(resp.data.value));
           updatePurchasePrice();
+          return;
         }
       } catch (e) {
-        console.error('Failed to load exchange rate', e);
+        console.error('Failed to load fallback exchange rate', e);
       }
+
+      showToast('No pudimos cargar la cotizacion de USD/ARS', 'error');
     }
 
     async function loadFragmentsAvailable() {
@@ -1648,6 +1675,19 @@
         .subscribe();
     }
 
+    function subscribeToExchangeRate() {
+      sb.channel('exchange-rate-usdtars')
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'exchange_rates',
+          filter: 'pair=eq.USDTARS',
+        }, function() {
+          loadExchangeRate();
+        })
+        .subscribe();
+    }
+
     // === HANDLE RETURN URLs ===
     function handlePaymentReturn() {
       var params = new URLSearchParams(window.location.search);
@@ -1687,9 +1727,14 @@
       });
 
       // Load fragment stats on page load
+      loadExchangeRate();
       loadFragmentsAvailable();
       subscribeToFragments();
+      subscribeToExchangeRate();
       handlePaymentReturn();
+
+      // Keep quote fresh even without realtime events.
+      setInterval(loadExchangeRate, 90000);
     }
 
     initAuth();

@@ -134,49 +134,95 @@ serve(async (req: Request) => {
 
     // ========================================
     // FETCH EXCHANGE RATE
+    // Priority:
+    // 1) exchange_rates (USDTARS, updated by sync-binance-rates workflow)
+    // 2) app_config.USD_ARS_RATE (fallback/manual)
     // ========================================
-    // app_config.value is JSONB — stored as a number or string
-    const { data: rateConfig, error: rateError } = await supabase
-      .from('app_config')
-      .select('value, updated_at')
-      .eq('key', 'USD_ARS_RATE')
-      .eq('environment', 'production')
-      .single();
-
-    if (rateError || !rateConfig) {
-      log.error('Exchange rate not found in app_config', rateError);
-      return new Response(
-        JSON.stringify({ error: 'Exchange rate not configured. Contact support.' }),
-        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // JSONB value can be a number directly or a string
-    const rawVal = typeof rateConfig.value === 'object' ? rateConfig.value : rateConfig.value;
-    const usdArsRate = parseFloat(String(rawVal));
-    if (isNaN(usdArsRate) || usdArsRate <= 0) {
-      log.error('Invalid exchange rate value', { value: rateConfig.value });
-      return new Response(
-        JSON.stringify({ error: 'Invalid exchange rate configuration' }),
-        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Staleness check: reject if rate is older than 48h
-    const rateAge = Date.now() - new Date(rateConfig.updated_at).getTime();
     const MAX_RATE_AGE_MS = 48 * 60 * 60 * 1000;
-    if (rateAge > MAX_RATE_AGE_MS) {
-      log.error('Exchange rate is stale', {
-        updated_at: rateConfig.updated_at,
-        age_hours: Math.round(rateAge / 3600000),
-      });
-      return new Response(
-        JSON.stringify({ error: 'Exchange rate is outdated. Contact admin to update.' }),
-        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    let usdArsRate: number | null = null;
+    let rateUpdatedAt: string | null = null;
+    let rateSource = 'unknown';
+
+    const { data: marketRate, error: marketRateError } = await supabase
+      .from('exchange_rates')
+      .select('platform_rate, rate, last_updated, updated_at')
+      .eq('pair', 'USDTARS')
+      .eq('is_active', true)
+      .order('last_updated', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (marketRateError) {
+      log.warn('Could not read exchange_rates.USDTARS, trying app_config fallback', marketRateError);
     }
 
-    log.info('Exchange rate fetched', { usdArsRate, updated_at: rateConfig.updated_at });
+    if (marketRate) {
+      const marketRaw =
+        marketRate.platform_rate !== null && marketRate.platform_rate !== undefined
+          ? marketRate.platform_rate
+          : marketRate.rate;
+      const marketParsed = parseFloat(String(marketRaw));
+      const marketUpdatedAt = marketRate.last_updated || marketRate.updated_at || null;
+      const marketAge =
+        marketUpdatedAt ? Date.now() - new Date(marketUpdatedAt).getTime() : Number.POSITIVE_INFINITY;
+
+      if (!isNaN(marketParsed) && marketParsed > 0 && marketAge <= MAX_RATE_AGE_MS) {
+        usdArsRate = marketParsed;
+        rateUpdatedAt = marketUpdatedAt;
+        rateSource = 'exchange_rates';
+      } else {
+        log.warn('exchange_rates.USDTARS is invalid or stale, falling back to app_config', {
+          marketParsed,
+          marketUpdatedAt,
+          age_hours: marketUpdatedAt ? Math.round(marketAge / 3600000) : null,
+        });
+      }
+    }
+
+    if (usdArsRate === null) {
+      const { data: rateConfig, error: rateError } = await supabase
+        .from('app_config')
+        .select('value, updated_at')
+        .eq('key', 'USD_ARS_RATE')
+        .eq('environment', 'production')
+        .single();
+
+      if (rateError || !rateConfig) {
+        log.error('Exchange rate not found in app_config fallback', rateError);
+        return new Response(
+          JSON.stringify({ error: 'Exchange rate not configured. Contact support.' }),
+          { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const rawVal = typeof rateConfig.value === 'object' ? rateConfig.value : rateConfig.value;
+      const fallbackRate = parseFloat(String(rawVal));
+      if (isNaN(fallbackRate) || fallbackRate <= 0) {
+        log.error('Invalid exchange rate in app_config fallback', { value: rateConfig.value });
+        return new Response(
+          JSON.stringify({ error: 'Invalid exchange rate configuration' }),
+          { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const fallbackAge = Date.now() - new Date(rateConfig.updated_at).getTime();
+      if (fallbackAge > MAX_RATE_AGE_MS) {
+        log.error('Fallback app_config exchange rate is stale', {
+          updated_at: rateConfig.updated_at,
+          age_hours: Math.round(fallbackAge / 3600000),
+        });
+        return new Response(
+          JSON.stringify({ error: 'Exchange rate is outdated. Contact admin to update.' }),
+          { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      usdArsRate = fallbackRate;
+      rateUpdatedAt = rateConfig.updated_at;
+      rateSource = 'app_config';
+    }
+
+    log.info('Exchange rate fetched', { usdArsRate, updated_at: rateUpdatedAt, source: rateSource });
 
     // ========================================
     // INITIATE PURCHASE (DB RPC — atomic validation)
