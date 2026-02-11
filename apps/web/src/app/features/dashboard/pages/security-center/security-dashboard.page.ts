@@ -484,6 +484,7 @@ export class SecurityDashboardPage implements OnInit {
 
     this.destroyRef.onDestroy(() => {
       if (this.rewardTimeoutId) clearTimeout(this.rewardTimeoutId);
+      this.security.cleanupRealtime();
     });
 
     void this.syncLocationPermission();

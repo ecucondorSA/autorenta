@@ -62,6 +62,9 @@ export class SecurityService {
   }
 
   private subscribeToRealtime(carId: string) {
+    // Cleanup previous subscription to avoid zombie channels
+    this.cleanupRealtime();
+
     this.realtimeSubscription = this.supabase
       .channel(`security-${carId}`)
       .on(
@@ -70,18 +73,23 @@ export class SecurityService {
         (payload) => {
           const newAlert = payload.new as SecurityAlert;
           this.activeAlerts.update((current) => [newAlert, ...current]);
-          // TODO: Trigger sound/toast
         },
       )
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
         (payload) => {
-          // Alerta crítica: Scout encontró el auto
           this.logger.warn('Bounty claimed', payload.new);
         },
       )
       .subscribe();
+  }
+
+  cleanupRealtime(): void {
+    if (this.realtimeSubscription) {
+      this.supabase.removeChannel(this.realtimeSubscription);
+      this.realtimeSubscription = undefined;
+    }
   }
 
   // Acciones Tácticas
