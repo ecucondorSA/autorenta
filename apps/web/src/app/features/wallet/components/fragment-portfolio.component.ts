@@ -11,7 +11,6 @@ import { RouterLink } from '@angular/router';
 import {
   FragmentInvestmentService,
   type FragmentPortfolioItem,
-  type FragmentDistributionPayout,
 } from '@core/services/business/fragment-investment.service';
 import { IconComponent } from '@shared/components/icon/icon.component';
 

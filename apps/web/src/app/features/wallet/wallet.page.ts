@@ -24,6 +24,7 @@ import { ProfileService } from '@core/services/auth/profile.service';
 import { WalletService } from '@core/services/payments/wallet.service';
 import { WithdrawalService } from '@core/services/payments/withdrawal.service';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
+import { FragmentInvestmentService } from '@core/services/business/fragment-investment.service';
 import { BankAccountFormComponent } from '../../shared/components/bank-account-form/bank-account-form.component';
 import { BankAccountsListComponent } from '../../shared/components/bank-accounts-list/bank-accounts-list.component';
 import { TransactionHistoryComponent } from '../../shared/components/transaction-history/transaction-history.component';
@@ -56,7 +57,6 @@ import { WalletTransfersComponent } from './components/wallet-transfers.componen
 import { ClubMembershipCardComponent } from './components/club-membership-card.component';
 import { ClubPlansPreviewComponent } from './components/club-plans-preview.component';
 import { FragmentPortfolioComponent } from './components/fragment-portfolio.component';
-import { FragmentInvestmentService } from '@core/services/business/fragment-investment.service';
 
 @Component({
   selector: 'app-wallet',
