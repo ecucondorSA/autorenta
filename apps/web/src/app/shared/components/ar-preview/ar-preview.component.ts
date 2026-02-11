@@ -6,7 +6,6 @@ import {
   ChangeDetectionStrategy,
   CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 // Import model-viewer for side effects (registers the custom element)
 import '@google/model-viewer';
@@ -14,7 +13,7 @@ import '@google/model-viewer';
 @Component({
   selector: 'app-ar-preview',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA], // Allow model-viewer custom element
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

@@ -339,15 +339,20 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Format price for display
+   * Cached Intl.NumberFormat for price formatting
+   */
+  private readonly priceFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
+  /**
+   * Format price for display (uses cached formatter)
    */
   formatPrice(price: number): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
+    return this.priceFormatter.format(price);
   }
 
   /**
@@ -356,7 +361,7 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
   onPriceSliderInput(handle: 'min' | 'max', rawValue: number): void {
     const min = this.priceMin();
     const max = this.priceMax();
-    const step = this.getPriceStep();
+    const step = this.priceStep();
     const current = this.priceRange() ?? { min, max };
 
     if (handle === 'min') {
@@ -374,34 +379,6 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
     }
 
     this.emitFilterChange();
-  }
-
-  getOccupancyClass(ratio: number): string {
-    if (ratio >= 0.85) return 'occupancy-day occupancy-day--critical';
-    if (ratio >= 0.65) return 'occupancy-day occupancy-day--high';
-    if (ratio >= 0.35) return 'occupancy-day occupancy-day--medium';
-    if (ratio > 0) return 'occupancy-day occupancy-day--low';
-    return 'occupancy-day occupancy-day--free';
-  }
-
-  getOccupancyTooltip(day: FleetOccupancyDay): string {
-    const percent = Math.round(day.ratio * 100);
-    return `${this.formatDate(day.date)} • ${percent}% de la flota reservada`;
-  }
-
-  formatDate(date: string): string {
-    return new Intl.DateTimeFormat('es-AR', {
-      day: '2-digit',
-      month: 'short',
-    }).format(new Date(date));
-  }
-
-  trackByIndex(index: number): number {
-    return index;
-  }
-
-  trackByDate(_index: number, day: FleetOccupancyDay): string {
-    return day.date;
   }
 
   /**
@@ -565,14 +542,14 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
     }
   }
 
-  getPriceStep(): number {
+  readonly priceStep = computed(() => {
     const span = this.priceMax() - this.priceMin();
     if (span > 20000) return 250;
     if (span > 10000) return 200;
     if (span > 5000) return 100;
     if (span > 2000) return 50;
     return 10;
-  }
+  });
 }
 
 interface FleetOccupancyDay {

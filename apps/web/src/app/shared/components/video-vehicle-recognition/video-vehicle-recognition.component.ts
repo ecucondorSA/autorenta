@@ -9,7 +9,6 @@ import {
   computed,
   output,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { VehicleRecognitionService } from '@core/services/ai/vehicle-recognition.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
@@ -49,7 +48,7 @@ type ScanState =
 @Component({
   selector: 'app-video-vehicle-recognition',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="relative rounded-2xl overflow-hidden bg-slate-900">

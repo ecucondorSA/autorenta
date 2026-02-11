@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 
 /**
@@ -20,7 +19,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from 
 @Component({
   selector: 'app-side-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <!-- Backdrop (clickable to close) -->
