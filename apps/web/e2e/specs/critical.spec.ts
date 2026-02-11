@@ -140,12 +140,27 @@ test.describe('Console Error Guardian @guardian', () => {
     test(`zero console errors on ${url}`, async ({ page }) => {
       const consoleErrors: string[] = [];
       const pageErrors: string[] = [];
+      let hasSentryRateLimit429 = false;
+
+      // Detect Sentry throttling (429) so it doesn't fail the guardian as an app regression.
+      page.on('response', (response) => {
+        if (response.status() === 429) {
+          const responseUrl = response.url().toLowerCase();
+          if (responseUrl.includes('sentry.io') || responseUrl.includes('ingest.us.sentry')) {
+            hasSentryRateLimit429 = true;
+          }
+        }
+      });
 
       // Capturar errores de consola
       page.on('console', (msg) => {
         if (msg.type() === 'error') {
           const text = msg.text();
-          if (!shouldIgnoreError(text)) {
+          const isSentry429ConsoleNoise =
+            hasSentryRateLimit429 &&
+            text.includes('Failed to load resource: the server responded with a status of 429');
+
+          if (!shouldIgnoreError(text) && !isSentry429ConsoleNoise) {
             consoleErrors.push(`[console.error] ${text}`);
           }
         }

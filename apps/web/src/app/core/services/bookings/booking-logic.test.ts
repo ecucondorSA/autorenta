@@ -90,7 +90,7 @@ describe('Booking Logic Integration', () => {
       expect(result.success).toBe(true);
       expect(result.booking?.id).toBe(mockBooking.id);
       expect(result.booking?.car_id).toBe(mockBooking.car_id);
-      expect(result.booking?.status).toBe(mockBooking.status);
+      expect(result.booking?.status).toBe('pending');
       expect(supabase.rpc).toHaveBeenCalledWith('is_car_available', {
         p_car_id: carId,
         p_start_date: startDate,

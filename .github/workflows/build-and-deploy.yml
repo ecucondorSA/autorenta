@@ -100,6 +100,8 @@ jobs:
           supabase migration repair --status reverted 20260203141128 2>/dev/null || true
           supabase migration repair --status reverted 20260203141916 2>/dev/null || true
           supabase migration repair --status reverted 20260203161408 2>/dev/null || true
+          supabase migration repair --status reverted 20260211141628 2>/dev/null || true
+          supabase migration repair --status reverted 20260211141632 2>/dev/null || true
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}

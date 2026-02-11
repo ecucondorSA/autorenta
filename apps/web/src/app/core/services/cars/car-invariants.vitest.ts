@@ -249,13 +249,20 @@ describe('I1: active requires id_verified', () => {
 // =============================================================================
 
 describe('I2: public read only active/pending (RLS)', () => {
+  type RlsTestCar = {
+    id: string;
+    status: CarStatus;
+    owner_id: string;
+    title: string;
+  };
+
   /**
    * Mock Supabase that simulates RLS policy behavior.
    * Policy: "Anyone can view active cars"
    *   USING (status IN ('active', 'pending') OR auth.uid() = owner_id)
    */
   const createMockSupabaseWithRLS = (currentUserId: string | null) => {
-    const allCars = [
+    const allCars: RlsTestCar[] = [
       { id: 'car-1', status: 'active', owner_id: 'owner-1', title: 'Active Car 1' },
       { id: 'car-2', status: 'active', owner_id: 'owner-2', title: 'Active Car 2' },
       { id: 'car-3', status: 'pending', owner_id: 'owner-1', title: 'Pending Car' },
@@ -303,9 +310,9 @@ describe('I2: public read only active/pending (RLS)', () => {
       const result = await mockSupabase.from('cars').select();
 
       expect(result.data).toHaveLength(3); // 2 active + 1 pending
-      expect(result.data?.every((car) => car.status === 'active' || car.status === 'pending')).toBe(
-        true,
-      );
+      expect(
+        result.data?.every((car: RlsTestCar) => car.status === 'active' || car.status === 'pending'),
+      ).toBe(true);
     });
 
     it('should NOT see cars with status draft', async () => {
@@ -313,7 +320,7 @@ describe('I2: public read only active/pending (RLS)', () => {
 
       const result = await mockSupabase.from('cars').select();
 
-      expect(result.data?.some((car) => car.status === 'draft')).toBe(false);
+      expect(result.data?.some((car: RlsTestCar) => car.status === 'draft')).toBe(false);
     });
 
     it('should NOT see cars with status paused', async () => {
@@ -321,7 +328,7 @@ describe('I2: public read only active/pending (RLS)', () => {
 
       const result = await mockSupabase.from('cars').select();
 
-      expect(result.data?.some((car) => car.status === 'paused')).toBe(false);
+      expect(result.data?.some((car: RlsTestCar) => car.status === 'paused')).toBe(false);
     });
 
     it('should NOT see cars with status deleted', async () => {
@@ -329,7 +336,7 @@ describe('I2: public read only active/pending (RLS)', () => {
 
       const result = await mockSupabase.from('cars').select();
 
-      expect(result.data?.some((car) => car.status === 'deleted')).toBe(false);
+      expect(result.data?.some((car: RlsTestCar) => car.status === 'deleted')).toBe(false);
     });
   });
 
@@ -340,9 +347,9 @@ describe('I2: public read only active/pending (RLS)', () => {
       const result = await mockSupabase.from('cars').select();
 
       expect(result.data).toHaveLength(3); // 2 active + 1 pending
-      expect(result.data?.every((car) => car.status === 'active' || car.status === 'pending')).toBe(
-        true,
-      );
+      expect(
+        result.data?.every((car: RlsTestCar) => car.status === 'active' || car.status === 'pending'),
+      ).toBe(true);
     });
 
     it('should NOT see other users draft/paused/deleted cars', async () => {
@@ -350,9 +357,9 @@ describe('I2: public read only active/pending (RLS)', () => {
 
       const result = await mockSupabase.from('cars').select();
 
-      expect(result.data?.some((car) => car.status === 'draft')).toBe(false);
-      expect(result.data?.some((car) => car.status === 'paused')).toBe(false);
-      expect(result.data?.some((car) => car.status === 'deleted')).toBe(false);
+      expect(result.data?.some((car: RlsTestCar) => car.status === 'draft')).toBe(false);
+      expect(result.data?.some((car: RlsTestCar) => car.status === 'paused')).toBe(false);
+      expect(result.data?.some((car: RlsTestCar) => car.status === 'deleted')).toBe(false);
     });
   });
 
@@ -368,10 +375,14 @@ describe('I2: public read only active/pending (RLS)', () => {
       expect(result.data).toHaveLength(5);
 
       // Should see their own draft
-      expect(result.data?.some((car) => car.id === 'car-4' && car.status === 'draft')).toBe(true);
+      expect(result.data?.some((car: RlsTestCar) => car.id === 'car-4' && car.status === 'draft')).toBe(
+        true,
+      );
 
       // Should see their own deleted
-      expect(result.data?.some((car) => car.id === 'car-6' && car.status === 'deleted')).toBe(true);
+      expect(
+        result.data?.some((car: RlsTestCar) => car.id === 'car-6' && car.status === 'deleted'),
+      ).toBe(true);
     });
 
     it('should NOT see other owners paused/deleted cars', async () => {
@@ -380,7 +391,7 @@ describe('I2: public read only active/pending (RLS)', () => {
       const result = await mockSupabase.from('cars').select();
 
       // car-5 belongs to owner-2 and is paused - should NOT be visible
-      expect(result.data?.some((car) => car.id === 'car-5')).toBe(false);
+      expect(result.data?.some((car: RlsTestCar) => car.id === 'car-5')).toBe(false);
     });
   });
 
@@ -391,21 +402,20 @@ describe('I2: public read only active/pending (RLS)', () => {
       const result = await mockSupabase.from('cars').select();
 
       const marketplaceCars = result.data?.filter(
-        (car) => car.status === 'active' || car.status === 'pending',
+        (car: RlsTestCar) => car.status === 'active' || car.status === 'pending',
       );
 
       expect(marketplaceCars).toHaveLength(3);
-      expect(marketplaceCars?.some((car) => car.status === 'active')).toBe(true);
-      expect(marketplaceCars?.some((car) => car.status === 'pending')).toBe(true);
+      expect(marketplaceCars?.some((car: RlsTestCar) => car.status === 'active')).toBe(true);
+      expect(marketplaceCars?.some((car: RlsTestCar) => car.status === 'pending')).toBe(true);
     });
 
     it('pending cars should be visible but marked as non-bookable (UI concern)', () => {
       // This is a UI concern - pending cars are visible but have a grey overlay
       // and are not clickeable/bookable. The RLS only controls visibility.
-      const pendingCarStatus: CarStatus = 'pending';
-      const isBookable = pendingCarStatus === 'active'; // Only active cars are bookable
+      const isBookable = (status: CarStatus): boolean => status === 'active';
 
-      expect(isBookable).toBe(false);
+      expect(isBookable('pending')).toBe(false);
     });
   });
 });
