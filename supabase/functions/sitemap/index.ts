@@ -1,4 +1,5 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { fromRequest } from '../_shared/logger.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -10,6 +11,8 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
+
+  const log = fromRequest(req).child('sitemap');
 
   try {
     // Create Supabase Client
@@ -108,6 +111,7 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
+    log.error('Failed to generate sitemap', error instanceof Error ? error : new Error(String(error)));
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 500,

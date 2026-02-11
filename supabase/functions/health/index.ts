@@ -16,6 +16,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { fromRequest } from '../_shared/logger.ts';
 
 interface HealthCheck {
   component: string;
@@ -249,6 +250,7 @@ serve(async (req: Request) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
+  const log = fromRequest(req).child('health');
   const url = new URL(req.url);
   const verbose = url.searchParams.get('verbose') === 'true';
 
@@ -307,8 +309,15 @@ serve(async (req: Request) => {
       p_latency_ms: checks.reduce((sum, c) => sum + c.latency_ms, 0),
       p_details: { checks: checks.map((c) => ({ component: c.component, status: c.status })) },
     });
-  } catch (e) {
+  } catch (_e) {
     // Ignore - table might not exist
+  }
+
+  if (overallStatus !== 'healthy') {
+    log.warn('Health check degraded/unhealthy', {
+      status: overallStatus,
+      failing: checks.filter(c => c.status !== 'healthy').map(c => c.component),
+    });
   }
 
   const response: HealthResponse = {

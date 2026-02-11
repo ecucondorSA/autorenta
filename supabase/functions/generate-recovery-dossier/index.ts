@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { PDFDocument, StandardFonts, rgb } from "https://esm.sh/pdf-lib@1.17.1";
+import { fromRequest } from '../_shared/logger.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -9,6 +10,8 @@ const corsHeaders = {
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+  const log = fromRequest(req).child('generate-recovery-dossier');
 
   try {
     const supabase = createClient(
@@ -140,12 +143,15 @@ serve(async (req) => {
         recovery_dossier_url: urlData?.signedUrl
     }).eq('claim_id', claim_id);
 
+    log.info('Recovery dossier generated', { claim_id, fileName });
+
     return new Response(
       JSON.stringify({ success: true, url: urlData?.signedUrl }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
+    log.error('Recovery dossier generation failed', error instanceof Error ? error : new Error(String(error)));
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

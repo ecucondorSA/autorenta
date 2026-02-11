@@ -20,8 +20,8 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
-import MercadoPagoConfig from 'https://esm.sh/mercadopago@2';
-import { Payment } from 'https://esm.sh/mercadopago@2';
+import { getMercadoPagoAccessToken, MP_API_BASE, MP_TIMEOUT } from '../_shared/mercadopago-token.ts';
+import { fromRequest } from '../_shared/logger.ts';
 
 interface RetryResult {
   transaction_id: string;
@@ -30,39 +30,34 @@ interface RetryResult {
   message: string;
 }
 
-serve(async (req: Request) => {
-  // CORS headers
-  const corsHeaders = {
-    ...corsHeaders,
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  };
+interface MPPaymentResponse {
+  id: number;
+  status: string;
+  status_detail: string;
+  payment_type_id?: string;
+  transaction_amount?: number;
+  date_approved?: string;
+}
 
-  // Handle OPTIONS request for CORS
+serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
+  const log = fromRequest(req).child('retry-failed-deposits');
+
   try {
-    // Configuración
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const MP_ACCESS_TOKEN = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN')!;
+    const MP_ACCESS_TOKEN = getMercadoPagoAccessToken('mercadopago-retry-failed-deposits');
 
-    if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !MP_ACCESS_TOKEN) {
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
       throw new Error('Missing required environment variables');
     }
 
-    // Crear cliente de Supabase
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-
-    // Crear cliente de MercadoPago
-    const client = new MercadoPagoConfig({
-      accessToken: MP_ACCESS_TOKEN,
-      options: {
-        timeout: 5000,
-      },
-    });
-    const paymentClient = new Payment(client);
 
     // Buscar depósitos pendientes antiguos (más de 5 minutos)
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
@@ -74,15 +69,14 @@ serve(async (req: Request) => {
       .eq('status', 'pending')
       .lt('created_at', fiveMinutesAgo)
       .order('created_at', { ascending: true })
-      .limit(50); // Procesar máximo 50 por ejecución
+      .limit(50);
 
     if (fetchError) {
-      console.error('Error fetching pending deposits:', fetchError);
+      log.error('Error fetching pending deposits', fetchError);
       throw fetchError;
     }
 
     if (!pendingDeposits || pendingDeposits.length === 0) {
-      console.log('No pending deposits found older than 5 minutes');
       return new Response(
         JSON.stringify({
           success: true,
@@ -96,14 +90,11 @@ serve(async (req: Request) => {
       );
     }
 
-    // Procesar cada depósito
     const results: RetryResult[] = [];
 
     for (const deposit of pendingDeposits) {
-      // Intentar obtener payment_id de metadata
       const metadata = deposit.provider_metadata;
 
-      // Validate metadata structure
       if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
         results.push({
           transaction_id: deposit.id,
@@ -115,9 +106,8 @@ serve(async (req: Request) => {
       }
 
       const metadataRecord = metadata as Record<string, unknown>;
-      let paymentId = metadataRecord.payment_id || metadataRecord.id;
+      const paymentId = metadataRecord.payment_id || metadataRecord.id;
 
-      // Si no hay payment_id en metadata, buscar por external_reference en MP
       if (!paymentId || typeof paymentId !== 'string') {
         results.push({
           transaction_id: deposit.id,
@@ -128,9 +118,34 @@ serve(async (req: Request) => {
         continue;
       }
 
-      // Consultar MercadoPago API
+      // Consultar MercadoPago REST API directamente (SDK-free)
       try {
-        const paymentData = await paymentClient.get({ id: paymentId });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), MP_TIMEOUT.DEFAULT);
+
+        const mpResponse = await fetch(`${MP_API_BASE}/payments/${paymentId}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${MP_ACCESS_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!mpResponse.ok) {
+          const errorText = await mpResponse.text().catch(() => 'Unknown error');
+          results.push({
+            transaction_id: deposit.id,
+            payment_id: paymentId,
+            status: 'api_error',
+            message: `MP API ${mpResponse.status}: ${errorText.substring(0, 200)}`,
+          });
+          continue;
+        }
+
+        const paymentData: MPPaymentResponse = await mpResponse.json();
 
         if (!paymentData || !paymentData.id) {
           results.push({
@@ -142,11 +157,8 @@ serve(async (req: Request) => {
           continue;
         }
 
-        // Verificar estado del pago
         if (paymentData.status === 'approved') {
-          // Pago aprobado - confirmar depósito
-
-          const { data: confirmResult, error: confirmError } = await supabase.rpc(
+          const { error: confirmError } = await supabase.rpc(
             'wallet_confirm_deposit_admin',
             {
               p_user_id: deposit.user_id,
@@ -165,7 +177,7 @@ serve(async (req: Request) => {
           );
 
           if (confirmError) {
-            console.error(`Error confirming deposit ${deposit.id}:`, confirmError);
+            log.error('Error confirming deposit', new Error(confirmError.message), { deposit_id: deposit.id });
             results.push({
               transaction_id: deposit.id,
               payment_id: paymentId,
@@ -173,7 +185,6 @@ serve(async (req: Request) => {
               message: `Confirmation failed: ${confirmError.message}`,
             });
           } else {
-            console.log(`Deposit ${deposit.id} confirmed successfully`);
             results.push({
               transaction_id: deposit.id,
               payment_id: paymentId,
@@ -182,9 +193,6 @@ serve(async (req: Request) => {
             });
           }
         } else if (['rejected', 'cancelled', 'refunded', 'charged_back'].includes(paymentData.status)) {
-          // Pago rechazado/cancelado - marcar transacción como fallida
-          console.log(`Payment ${paymentData.status}, marking deposit as failed...`);
-
           await supabase
             .from('wallet_transactions')
             .update({
@@ -207,8 +215,6 @@ serve(async (req: Request) => {
             message: `Payment ${paymentData.status}: ${paymentData.status_detail}`,
           });
         } else {
-          // Pago aún pendiente - dejar para el siguiente ciclo
-          console.log(`Payment still pending (${paymentData.status}), will retry later`);
           results.push({
             transaction_id: deposit.id,
             payment_id: paymentId,
@@ -217,35 +223,26 @@ serve(async (req: Request) => {
           });
         }
       } catch (apiError) {
-        console.error(`MercadoPago API error for payment ${paymentId}:`, apiError);
+        log.error('MercadoPago API error', apiError instanceof Error ? apiError : new Error(String(apiError)), { payment_id: paymentId });
 
-        // Si API devolvió HTML (error 500), guardar para debugging
-        if (apiError instanceof Error && apiError.message?.includes('Unexpected token')) {
-          await supabase
-            .from('wallet_transactions')
-            .update({
-              provider_metadata: {
-                ...metadata,
-                last_retry_error: {
-                  timestamp: new Date().toISOString(),
-                  error: 'MercadoPago API returned HTML',
-                  payment_id: paymentId,
-                },
-              },
-            })
-            .eq('id', deposit.id);
+        if (apiError instanceof Error && apiError.name === 'AbortError') {
+          results.push({
+            transaction_id: deposit.id,
+            payment_id: paymentId,
+            status: 'api_error',
+            message: 'MercadoPago API timeout',
+          });
+        } else {
+          results.push({
+            transaction_id: deposit.id,
+            payment_id: paymentId,
+            status: 'api_error',
+            message: apiError instanceof Error ? apiError.message : 'Unknown API error',
+          });
         }
-
-        results.push({
-          transaction_id: deposit.id,
-          payment_id: paymentId,
-          status: 'api_error',
-          message: apiError instanceof Error ? apiError.message : 'Unknown API error',
-        });
       }
     }
 
-    // Resumen de resultados
     const summary = {
       total_processed: results.length,
       confirmed: results.filter((r) => r.status === 'confirmed').length,
@@ -255,8 +252,7 @@ serve(async (req: Request) => {
       api_errors: results.filter((r) => r.status === 'api_error').length,
     };
 
-    console.log('=== Retry Job Summary ===');
-    console.log(JSON.stringify(summary, null, 2));
+    log.info('Retry job completed', summary);
 
     return new Response(
       JSON.stringify({
@@ -270,13 +266,12 @@ serve(async (req: Request) => {
       }
     );
   } catch (error) {
-    console.error('Error in retry job:', error);
+    log.error('Retry job failed', error instanceof Error ? error : new Error(String(error)));
 
     return new Response(
       JSON.stringify({
         success: false,
         error: error instanceof Error ? error.message : 'Internal server error',
-        details: error instanceof Error ? error.stack : undefined,
       }),
       {
         status: 500,

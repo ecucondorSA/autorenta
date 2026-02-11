@@ -1,12 +1,15 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { fromRequest } from '../_shared/logger.ts';
 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
+
+  const log = fromRequest(req).child('public-investor-stats');
 
   try {
     const supabase = createClient(
@@ -56,6 +59,7 @@ serve(async (req) => {
     });
 
   } catch (error) {
+    log.error('Failed to compute investor stats', error instanceof Error ? error : new Error(String(error)));
     return new Response(JSON.stringify({ error: String(error) }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

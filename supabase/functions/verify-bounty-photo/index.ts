@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { GoogleGenerativeAI } from "https://esm.sh/@google/generative-ai";
+import { fromRequest } from '../_shared/logger.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,6 +12,8 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
+
+  const log = fromRequest(req).child('verify-bounty-photo');
 
   try {
     const supabase = createClient(
@@ -36,7 +39,10 @@ serve(async (req) => {
       .eq('id', claim_id)
       .single();
 
-    if (claimError || !claim) throw new Error('Claim not found');
+    if (claimError || !claim) {
+      log.warn('Claim not found', { claim_id });
+      throw new Error('Claim not found');
+    }
 
     const car = claim.bounties.cars;
     const carDescription = `${car.color} ${car.brand} ${car.model}`;
@@ -118,12 +124,15 @@ serve(async (req) => {
        // await capturePreAuth(claim.bounties.booking_id);
     }
 
+    log.info('Bounty photo verified', { claim_id, finalStatus, confidence: analysis.plate_match_confidence });
+
     return new Response(
       JSON.stringify({ success: true, analysis, finalStatus }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
+    log.error('Bounty photo verification failed', error instanceof Error ? error : new Error(String(error)));
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
