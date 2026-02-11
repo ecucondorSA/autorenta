@@ -3,6 +3,7 @@ import {
   Component,
   HostListener,
   computed,
+  effect,
   inject,
   output,
   signal,
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 import { VerificationService } from '@core/services/verification/verification.service';
+import type { UserDocument } from '@core/models';
 
 const COUNTRIES = [
   { code: 'AR', name: 'Argentina', flag: '🇦🇷', docName: 'DNI' },
@@ -235,8 +237,14 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
       </section>
 
       @if (uploadError()) {
-        <div class="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900" role="alert">
+        <div class="rounded-2xl border border-rose-300 bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert">
           {{ uploadError() }}
+        </div>
+      }
+
+      @if (uploadWarning()) {
+        <div class="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900" role="status">
+          {{ uploadWarning() }}
         </div>
       }
 
@@ -303,8 +311,25 @@ export class DniUploaderComponent {
   frontOcrResult = signal<OcrResultDisplay | null>(null);
   backOcrResult = signal<OcrResultDisplay | null>(null);
   uploadError = signal<string | null>(null);
+  uploadWarning = signal<string | null>(null);
 
   readonly allSidesUploaded = computed(() => this.frontUploaded() && this.backUploaded());
+
+  constructor() {
+    effect(() => {
+      const docs = this.verificationService.documents();
+      const hasFront = this.hasUploadedDocument(docs, 'gov_id_front');
+      const hasBack = this.hasUploadedDocument(docs, 'gov_id_back');
+
+      if (!this.uploadingFront() && !this.frontPreview() && this.frontUploaded() !== hasFront) {
+        this.frontUploaded.set(hasFront);
+      }
+
+      if (!this.uploadingBack() && !this.backPreview() && this.backUploaded() !== hasBack) {
+        this.backUploaded.set(hasBack);
+      }
+    });
+  }
 
   readonly extractedFields = computed<ExtractedField[]>(() => {
     const fields: ExtractedField[] = [];
@@ -345,6 +370,7 @@ export class DniUploaderComponent {
     this.frontProgress.set(0);
     this.backProgress.set(0);
     this.uploadError.set(null);
+    this.uploadWarning.set(null);
   }
 
   @HostListener('document:paste', ['$event'])
@@ -519,6 +545,7 @@ export class DniUploaderComponent {
     const isFront = type === 'dni_front';
 
     this.uploadError.set(null);
+    this.uploadWarning.set(null);
 
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -569,9 +596,11 @@ export class DniUploaderComponent {
       }
 
       if (result.ocrWarning) {
-        this.setUploadError(result.ocrWarning);
+        this.uploadWarning.set(result.ocrWarning);
+        this.uploadError.set(null);
       } else {
         this.uploadError.set(null);
+        this.uploadWarning.set(null);
       }
 
       if (isFront) {
@@ -616,6 +645,7 @@ export class DniUploaderComponent {
         error instanceof Error
           ? error.message
           : 'No pudimos subir la foto. Intenta nuevamente con mejor luz.';
+      this.uploadWarning.set(null);
       this.setUploadError(message);
 
       if (isFront) {
@@ -646,6 +676,7 @@ export class DniUploaderComponent {
     }
 
     this.uploadError.set(null);
+    this.uploadWarning.set(null);
     return true;
   }
 
@@ -654,8 +685,19 @@ export class DniUploaderComponent {
   }
 
   private setUploadError(message: string): void {
+    this.uploadWarning.set(null);
     this.uploadError.set(message);
     this.announcePaste(message);
+  }
+
+  private hasUploadedDocument(
+    documents: UserDocument[],
+    kind: 'gov_id_front' | 'gov_id_back',
+  ): boolean {
+    return documents.some(
+      (document) =>
+        document.kind === kind && !!document.storage_path && String(document.status) !== 'rejected',
+    );
   }
 
   private announcePaste(message: string): void {

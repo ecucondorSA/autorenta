@@ -38,6 +38,8 @@ type ValidDocType = (typeof VALID_DOC_TYPES)[number];
 const MAX_ORIGINAL_BYTES = 15 * 1024 * 1024; // 15MB pre-compression (mobile cameras produce 3-8MB)
 const MAX_COMPRESSED_BYTES = 2 * 1024 * 1024; // 2MB post-compression target
 const IDENTITY_BUCKETS = ['identity-documents', 'documents'] as const;
+const ACCESS_TOKEN_MIN_TTL_SECONDS = 30;
+const OCR_TRACE_HEADER = 'x-kyc-trace-id';
 
 interface EdgeFunctionErrorInfo {
   status: number | null;
@@ -404,10 +406,10 @@ export class VerificationService implements OnDestroy {
 
         // 401: intentar refresh de sesión una sola vez
         if (action === 'refresh_and_retry' && !tokenRefreshed) {
-          this.logger.warn(`${operationName}: HTTP ${statusCode} (Invalid JWT), refreshing session`);
+          this.logger.info(`${operationName}: HTTP ${statusCode} (Invalid JWT), refreshing session`);
           const refreshedSession = await this.authService.refreshSession();
           if (!refreshedSession) {
-            this.logger.warn(`${operationName}: session refresh failed, aborting`);
+            this.logger.info(`${operationName}: session refresh failed, aborting`);
             const sessionError = new EdgeFunctionUserError(
               'Tu sesión expiró. Vuelve a iniciar sesión e intenta nuevamente.',
               401,
@@ -428,7 +430,7 @@ export class VerificationService implements OnDestroy {
         if (action === 'abort' || (action === 'refresh_and_retry' && tokenRefreshed)) {
           const message = `${operationName}: Non-retryable error (HTTP ${statusCode ?? 'unknown'})`;
           if (statusCode !== null && statusCode < 500) {
-            this.logger.warn(message, error);
+            this.logger.info(message, error);
           } else {
             this.logger.error(message, error);
           }
@@ -448,7 +450,9 @@ export class VerificationService implements OnDestroy {
         }
 
         // Backoff exponencial para errores transitorios (5xx, 429, network)
-        const delayMs = baseDelayMs * Math.pow(2, attempt - 1);
+        const backoffMs = baseDelayMs * Math.pow(2, attempt - 1);
+        const jitterMs = Math.floor(Math.random() * Math.max(50, Math.floor(baseDelayMs / 2)));
+        const delayMs = backoffMs + jitterMs;
         this.logger.warn(
           `${operationName} attempt ${attempt}/${maxAttempts} failed (HTTP ${statusCode ?? 'network'}), retrying in ${delayMs}ms`,
           error,
@@ -652,10 +656,7 @@ export class VerificationService implements OnDestroy {
 
     const result = await this.retryWithBackoff(
       async () => {
-        const session = await this.authService.ensureSession();
-        const headers = session?.access_token
-          ? { Authorization: `Bearer ${session.access_token}` }
-          : undefined;
+        const headers = await this.buildVerifyDocumentHeaders();
 
         const { data, error } = await this.supabase.functions.invoke('verify-document', {
           body: {
@@ -664,7 +665,7 @@ export class VerificationService implements OnDestroy {
             side,
             country,
           },
-          ...(headers ? { headers } : {}),
+          headers,
         });
 
         if (error) {
@@ -677,7 +678,7 @@ export class VerificationService implements OnDestroy {
           };
 
           if (info.status !== null && info.status < 500) {
-            this.logger.warn(logMessage, logPayload);
+            this.logger.info(logMessage, logPayload);
           } else {
             this.logger.error(logMessage, logPayload);
           }
@@ -800,10 +801,13 @@ export class VerificationService implements OnDestroy {
           ocrError instanceof Error
             ? ocrError.message
             : 'No pudimos verificar el documento automáticamente. Intenta con una foto más clara.';
-        this.logger.warn('OCR verification failed, document still uploading', {
-          error: ocrError,
-          warning: ocrWarning,
-        });
+        const status = this.extractHttpStatus(ocrError);
+        const logPayload = { error: ocrError, warning: ocrWarning, status };
+        if (status !== null && status < 500) {
+          this.logger.info('OCR verification failed, document still uploading', logPayload);
+        } else {
+          this.logger.warn('OCR verification failed, document still uploading', logPayload);
+        }
       }
     } else {
       this.logger.info(`Skipping OCR for unsupported country: ${country}`);
@@ -836,6 +840,89 @@ export class VerificationService implements OnDestroy {
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
+  }
+
+  /**
+   * Construye headers para verify-document con token de usuario vigente.
+   * Si el access token está por expirar, intenta refrescarlo antes del request.
+   */
+  private async buildVerifyDocumentHeaders(): Promise<Record<string, string>> {
+    let session = await this.authService.ensureSession();
+
+    if (!session?.access_token) {
+      throw new EdgeFunctionUserError(
+        'Tu sesión expiró. Vuelve a iniciar sesión e intenta nuevamente.',
+        401,
+        'AUTH_INVALID',
+      );
+    }
+
+    if (this.shouldRefreshAccessToken(session.access_token)) {
+      const refreshedSession = await this.authService.refreshSession();
+      if (!refreshedSession?.access_token) {
+        throw new EdgeFunctionUserError(
+          'Tu sesión expiró. Vuelve a iniciar sesión e intenta nuevamente.',
+          401,
+          'AUTH_INVALID',
+        );
+      }
+      session = refreshedSession;
+    }
+
+    return {
+      Authorization: `Bearer ${session.access_token}`,
+      [OCR_TRACE_HEADER]: this.createOcrTraceId(),
+    };
+  }
+
+  private shouldRefreshAccessToken(accessToken: string): boolean {
+    const expiryEpochSeconds = this.extractAccessTokenExpiry(accessToken);
+    if (!expiryEpochSeconds) {
+      return false;
+    }
+    const ttlMs = expiryEpochSeconds * 1000 - Date.now();
+    return ttlMs <= ACCESS_TOKEN_MIN_TTL_SECONDS * 1000;
+  }
+
+  private extractAccessTokenExpiry(accessToken: string): number | null {
+    const tokenParts = accessToken.split('.');
+    if (tokenParts.length < 2) {
+      return null;
+    }
+
+    const payloadRaw = this.decodeBase64Url(tokenParts[1]);
+    if (!payloadRaw) {
+      return null;
+    }
+
+    try {
+      const payload = JSON.parse(payloadRaw) as { exp?: unknown };
+      return typeof payload.exp === 'number' ? payload.exp : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private decodeBase64Url(input: string): string | null {
+    if (typeof globalThis.atob !== 'function') {
+      return null;
+    }
+
+    const normalized = input.replace(/-/g, '+').replace(/_/g, '/');
+    const padding = normalized.length % 4 === 0 ? '' : '='.repeat(4 - (normalized.length % 4));
+
+    try {
+      return globalThis.atob(normalized + padding);
+    } catch {
+      return null;
+    }
+  }
+
+  private createOcrTraceId(): string {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    return `kyc-${Date.now()}-${Math.floor(Math.random() * 1_000_000)}`;
   }
 
   /**

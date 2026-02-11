@@ -12,6 +12,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import type { UserDocument } from '@core/models';
 import { VerificationService } from '@core/services/verification/verification.service';
 import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 
@@ -375,6 +376,20 @@ export class LicenseUploaderComponent {
         this.selectedCountry.set(initial);
       }
     });
+
+    effect(() => {
+      const docs = this.verificationService.documents();
+      const hasFront = this.hasUploadedDocument(docs, 'license_front');
+      const hasBack = this.hasUploadedDocument(docs, 'license_back');
+
+      if (!this.uploadingFront() && !this.frontPreview() && this.frontUploaded() !== hasFront) {
+        this.frontUploaded.set(hasFront);
+      }
+
+      if (!this.uploadingBack() && !this.backPreview() && this.backUploaded() !== hasBack) {
+        this.backUploaded.set(hasBack);
+      }
+    });
   }
 
   selectCountry(country: string): void {
@@ -691,12 +706,24 @@ export class LicenseUploaderComponent {
     }
 
     this.uploadError.set(null);
+    this.uploadWarning.set(null);
     return true;
   }
 
   private setUploadError(message: string): void {
+    this.uploadWarning.set(null);
     this.uploadError.set(message);
     this.announcePaste(message);
+  }
+
+  private hasUploadedDocument(
+    documents: UserDocument[],
+    kind: 'license_front' | 'license_back',
+  ): boolean {
+    return documents.some(
+      (document) =>
+        document.kind === kind && !!document.storage_path && String(document.status) !== 'rejected',
+    );
   }
 
   private announcePaste(message: string): void {
