@@ -1,3 +1,7 @@
+## 3.88.0 (2026-02-11)
+
+* feat(investments): distribution notification trigger + link BYD-001 to car ([57a7537](https://github.com/ecucondorSA/autorenta/commit/57a7537))
+
 ## <small>3.87.2 (2026-02-11)</small>
 
 * fix: increase code coverage workflow timeout ([6702450](https://github.com/ecucondorSA/autorenta/commit/6702450))
