@@ -350,6 +350,22 @@
             <app-icon name="arrow-up" [size]="14" cssClass="inline-block mr-1.5" />
             Retiros
           </button>
+          @if (hasInvestments()) {
+            <button
+              type="button"
+              (click)="setActiveTab('investments')"
+              appPressScale
+              [ngClass]="{
+                'bg-cta-default text-cta-text shadow-sm': activeTab() === 'investments',
+                'text-text-secondary hover:text-text-primary hover:bg-surface-secondary/50':
+                  activeTab() !== 'investments',
+              }"
+              class="px-4 py-2.5 text-sm font-medium rounded-lg transition-all whitespace-nowrap"
+            >
+              <app-icon name="battery-charging" [size]="14" cssClass="inline-block mr-1.5" />
+              Inversiones
+            </button>
+          }
           @if (subscriptionService.subscription()) {
             <button
               type="button"
@@ -478,6 +494,10 @@
               </div>
             }
           </div>
+        }
+
+        @if (activeTab() === 'investments') {
+          <app-fragment-portfolio></app-fragment-portfolio>
         }
 
         @if (activeTab() === 'coverage' && subscriptionService.subscription()) {

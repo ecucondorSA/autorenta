@@ -1,0 +1,212 @@
+<!-- Loading state -->
+@if (portfolioLoading()) {
+  <div class="flex items-center justify-center py-12">
+    <div class="animate-spin rounded-full h-8 w-8 border-2 border-cta-default border-t-transparent"></div>
+  </div>
+}
+
+<!-- Empty state -->
+@if (!portfolioLoading() && portfolio().length === 0) {
+  <div class="text-center py-12 text-text-secondary">
+    <svg class="w-12 h-12 mx-auto mb-4 text-border-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+    </svg>
+    <p class="text-lg font-medium">Sin inversiones</p>
+    <p class="text-sm mt-1">Cuando compres fragmentos, apareceran aqui.</p>
+    <a routerLink="/investors"
+      class="inline-flex items-center gap-1.5 mt-4 px-4 py-2 rounded-xl text-sm font-semibold bg-cta-default text-cta-text hover:bg-cta-hover transition-all">
+      Ver oportunidades
+    </a>
+  </div>
+}
+
+<!-- Portfolio content -->
+@if (!portfolioLoading() && portfolio().length > 0) {
+  <!-- Summary cards -->
+  <div class="grid grid-cols-3 gap-3 mb-6">
+    <!-- Total invertido -->
+    <div class="glass-card rounded-xl p-3 sm:p-4">
+      <p class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-semibold mb-1">Invertido</p>
+      <p class="text-base sm:text-lg font-bold text-text-primary tabular-nums">
+        ${{ formatUsd(totalInvestedCents()) }}
+      </p>
+      <p class="text-[10px] text-text-tertiary">USD</p>
+    </div>
+
+    <!-- Distribuciones recibidas -->
+    <div class="glass-card rounded-xl p-3 sm:p-4">
+      <p class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-semibold mb-1">Recibido</p>
+      <p class="text-base sm:text-lg font-bold tabular-nums"
+         [class.text-success-strong]="totalDistributedCents() > 0"
+         [class.text-text-primary]="totalDistributedCents() === 0">
+        @if (totalDistributedCents() > 0) { + }${{ formatUsd(totalDistributedCents()) }}
+      </p>
+      <p class="text-[10px] text-text-tertiary">ARS</p>
+    </div>
+
+    <!-- ROI -->
+    <div class="glass-card rounded-xl p-3 sm:p-4">
+      <p class="text-[10px] sm:text-xs uppercase tracking-wider text-text-secondary font-semibold mb-1">Retorno</p>
+      <p class="text-base sm:text-lg font-bold text-text-primary tabular-nums">{{ roiDisplay() }}</p>
+      <p class="text-[10px] text-text-tertiary">{{ totalFragments() }} frag.</p>
+    </div>
+  </div>
+
+  <!-- Sub-tabs: Holdings / Distribuciones -->
+  <div class="flex gap-1 p-1 glass rounded-xl mb-4">
+    <button type="button" (click)="setSection('holdings')"
+      [class.bg-cta-default]="activeSection() === 'holdings'"
+      [class.text-cta-text]="activeSection() === 'holdings'"
+      [class.shadow-sm]="activeSection() === 'holdings'"
+      [class.text-text-secondary]="activeSection() !== 'holdings'"
+      class="flex-1 px-3 py-2 text-sm font-medium rounded-lg transition-all text-center">
+      Mis Fragmentos
+    </button>
+    <button type="button" (click)="setSection('distributions')"
+      [class.bg-cta-default]="activeSection() === 'distributions'"
+      [class.text-cta-text]="activeSection() === 'distributions'"
+      [class.shadow-sm]="activeSection() === 'distributions'"
+      [class.text-text-secondary]="activeSection() !== 'distributions'"
+      class="flex-1 px-3 py-2 text-sm font-medium rounded-lg transition-all text-center">
+      Distribuciones
+    </button>
+  </div>
+
+  <!-- Holdings section -->
+  @if (activeSection() === 'holdings') {
+    <div class="space-y-3">
+      @for (item of portfolio(); track item.vehicleAssetId) {
+        <div class="glass-card rounded-xl p-4 border border-border-default hover:border-border-hover transition-colors">
+          <!-- Header: vehicle + status -->
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-cta-default/10 flex items-center justify-center">
+                <svg class="w-4 h-4 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-text-primary">{{ item.assetCode }}</p>
+                <p class="text-xs text-text-secondary">{{ item.vehicleName }} {{ item.vehicleYear }}</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide {{ getStatusColor(item.vehicleStatus) }}">
+              {{ getStatusLabel(item.vehicleStatus) }}
+            </span>
+          </div>
+
+          <!-- Stats grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+            <div>
+              <p class="text-xs text-text-secondary">Fragmentos</p>
+              <p class="text-sm font-bold text-text-primary tabular-nums">{{ item.quantity }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-text-secondary">Precio compra</p>
+              <p class="text-sm font-bold text-text-primary tabular-nums">${{ formatUsd(item.purchasePriceCents) }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-text-secondary">NAV actual</p>
+              @if (item.currentNavCents != null) {
+                <p class="text-sm font-bold tabular-nums"
+                   [class.text-success-strong]="navChangePercent(item) !== null && navChangePercent(item)! >= 0"
+                   [class.text-error-strong]="navChangePercent(item) !== null && navChangePercent(item)! < 0">
+                  ${{ formatUsd(item.currentNavCents) }}
+                  @if (navChangePercent(item); as pct) {
+                    <span class="text-[10px]">({{ pct > 0 ? '+' : '' }}{{ pct | number:'1.1-1' }}%)</span>
+                  }
+                </p>
+              } @else {
+                <p class="text-sm text-text-tertiary">Pendiente</p>
+              }
+            </div>
+            <div>
+              <p class="text-xs text-text-secondary">Distribuciones</p>
+              <p class="text-sm font-bold tabular-nums"
+                 [class.text-success-strong]="item.totalDistributionsCents > 0"
+                 [class.text-text-primary]="item.totalDistributionsCents === 0">
+                @if (item.totalDistributionsCents > 0) { + }${{ formatUsd(item.totalDistributionsCents) }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="mt-3 pt-2 border-t border-border-default/30 flex items-center justify-between text-xs text-text-tertiary">
+            <span>Desde {{ formatDate(item.heldSince) }}</span>
+            @if (item.distributionCount > 0) {
+              <span>{{ item.distributionCount }} distribuciones recibidas</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Distributions section -->
+  @if (activeSection() === 'distributions') {
+    @if (distributionsLoading()) {
+      <div class="flex items-center justify-center py-8">
+        <div class="animate-spin rounded-full h-6 w-6 border-2 border-cta-default border-t-transparent"></div>
+      </div>
+    } @else if (distributions().length === 0) {
+      <div class="text-center py-8 text-text-secondary">
+        <p class="text-sm">Aun no se registraron distribuciones.</p>
+        <p class="text-xs mt-1">Las distribuciones se generan cuando el vehiculo completa viajes.</p>
+      </div>
+    } @else {
+      <div class="space-y-2">
+        @for (dist of distributions(); track dist.id) {
+          <button type="button" (click)="toggleDistDetail(dist.id)"
+            class="w-full text-left glass-card rounded-xl p-3 hover:bg-surface-hover/50 transition-colors">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-success-bg-hover flex items-center justify-center flex-shrink-0">
+                  <span class="text-success-strong text-sm">+</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-text-primary">
+                    {{ dist.assetCode ?? 'Fragmento' }} · {{ dist.fragmentsHeld }} frag.
+                  </p>
+                  <p class="text-xs text-text-secondary">{{ formatDate(dist.createdAt) }}</p>
+                </div>
+              </div>
+              <p class="text-sm font-bold text-success-strong tabular-nums">
+                +${{ formatUsd(dist.amountCents) }}
+                <span class="text-[10px] text-text-tertiary font-normal ml-0.5">{{ dist.currency }}</span>
+              </p>
+            </div>
+
+            <!-- Expanded detail -->
+            @if (expandedDistId() === dist.id) {
+              <div class="mt-3 pt-2 border-t border-border-default/30 grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <span class="text-text-tertiary">ID distribucion</span>
+                  <p class="text-text-secondary font-mono truncate">{{ dist.distributionId }}</p>
+                </div>
+                @if (dist.bookingId) {
+                  <div>
+                    <span class="text-text-tertiary">Booking</span>
+                    <a [routerLink]="['/bookings', dist.bookingId]"
+                       class="block text-cta-default font-mono truncate hover:underline">
+                      {{ dist.bookingId | slice:0:8 }}...
+                    </a>
+                  </div>
+                }
+                <div>
+                  <span class="text-text-tertiary">Fragmentos al momento</span>
+                  <p class="text-text-secondary">{{ dist.fragmentsHeld }}</p>
+                </div>
+                <div>
+                  <span class="text-text-tertiary">Estado</span>
+                  <p class="text-text-secondary">{{ dist.status }}</p>
+                </div>
+              </div>
+            }
+          </button>
+        }
+      </div>
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import type { FunctionsError } from '@supabase/supabase-js';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
@@ -58,6 +58,34 @@ export interface FragmentPreferenceResult {
   usdArsRate: number;
 }
 
+export interface FragmentPortfolioItem {
+  vehicleAssetId: string;
+  assetCode: string;
+  vehicleName: string;
+  vehicleYear: number;
+  vehicleStatus: string;
+  quantity: number;
+  purchasePriceCents: number;
+  currentNavCents: number | null;
+  navPeriod: string | null;
+  totalDistributionsCents: number;
+  distributionCount: number;
+  heldSince: string;
+}
+
+export interface FragmentDistributionPayout {
+  id: string;
+  distributionId: string;
+  fragmentsHeld: number;
+  amountCents: number;
+  currency: string;
+  status: string;
+  createdAt: string;
+  /** Joined from fragment_distributions */
+  assetCode: string | null;
+  bookingId: string | null;
+}
+
 export class FragmentInvestmentError extends Error {
   constructor(
     public readonly code: string,
@@ -74,6 +102,129 @@ export class FragmentInvestmentError extends Error {
 export class FragmentInvestmentService {
   private readonly supabase = injectSupabase();
   private readonly logger = inject(LoggerService).createChildLogger('FragmentInvestmentService');
+
+  // ── Portfolio signals ──────────────────────────────────────
+  readonly portfolio = signal<FragmentPortfolioItem[]>([]);
+  readonly distributions = signal<FragmentDistributionPayout[]>([]);
+  readonly portfolioLoading = signal(false);
+  readonly distributionsLoading = signal(false);
+
+  readonly hasHoldings = computed(() => this.portfolio().length > 0);
+
+  readonly totalInvestedCents = computed(() =>
+    this.portfolio().reduce((sum, item) => sum + item.purchasePriceCents * item.quantity, 0),
+  );
+
+  readonly totalDistributedCents = computed(() =>
+    this.portfolio().reduce((sum, item) => sum + item.totalDistributionsCents, 0),
+  );
+
+  readonly totalFragments = computed(() =>
+    this.portfolio().reduce((sum, item) => sum + item.quantity, 0),
+  );
+
+  // ── Portfolio methods ──────────────────────────────────────
+
+  async fetchMyPortfolio(): Promise<FragmentPortfolioItem[]> {
+    this.portfolioLoading.set(true);
+    try {
+      const { data, error } = await this.supabase
+        .from('v_my_fragment_portfolio')
+        .select('*');
+
+      if (error) {
+        this.logger.error('Failed to fetch portfolio', { error });
+        return [];
+      }
+
+      const items: FragmentPortfolioItem[] = (data ?? []).map((row) => ({
+        vehicleAssetId: row.vehicle_asset_id ?? '',
+        assetCode: row.asset_code ?? '',
+        vehicleName: row.vehicle_name ?? '',
+        vehicleYear: row.vehicle_year ?? 0,
+        vehicleStatus: row.vehicle_status ?? 'unknown',
+        quantity: this.toPositiveInteger(row.quantity, 0),
+        purchasePriceCents: this.toPositiveInteger(row.purchase_price_cents, 0),
+        currentNavCents: typeof row.current_nav_cents === 'number' ? row.current_nav_cents : null,
+        navPeriod: row.nav_period ?? null,
+        totalDistributionsCents: this.toPositiveInteger(row.total_distributions_cents, 0),
+        distributionCount: this.toPositiveInteger(row.distribution_count, 0),
+        heldSince: row.held_since ?? '',
+      }));
+
+      this.portfolio.set(items);
+      return items;
+    } finally {
+      this.portfolioLoading.set(false);
+    }
+  }
+
+  async fetchMyDistributions(): Promise<FragmentDistributionPayout[]> {
+    this.distributionsLoading.set(true);
+    try {
+      const { data, error } = await this.supabase
+        .from('fragment_distribution_payouts')
+        .select(`
+          id, distribution_id, fragments_held, amount_cents,
+          currency, status, created_at,
+          fragment_distributions!inner (
+            booking_id,
+            vehicle_asset_id
+          )
+        `)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (error) {
+        this.logger.error('Failed to fetch distributions', { error });
+        return [];
+      }
+
+      // Fetch asset codes for each unique vehicle_asset_id
+      const vehicleIds = new Set<string>();
+      for (const row of data ?? []) {
+        const dist = row.fragment_distributions as unknown as {
+          vehicle_asset_id: string;
+          booking_id: string | null;
+        };
+        if (dist?.vehicle_asset_id) vehicleIds.add(dist.vehicle_asset_id);
+      }
+
+      let assetCodeMap = new Map<string, string>();
+      if (vehicleIds.size > 0) {
+        const { data: assets } = await this.supabase
+          .from('vehicle_assets')
+          .select('id, asset_code')
+          .in('id', [...vehicleIds]);
+        if (assets) {
+          assetCodeMap = new Map(assets.map((a) => [a.id, a.asset_code]));
+        }
+      }
+
+      const items: FragmentDistributionPayout[] = (data ?? []).map((row) => {
+        const dist = row.fragment_distributions as unknown as {
+          vehicle_asset_id: string;
+          booking_id: string | null;
+        };
+        return {
+          id: row.id,
+          distributionId: row.distribution_id,
+          fragmentsHeld: row.fragments_held,
+          amountCents: row.amount_cents,
+          currency: row.currency,
+          status: row.status,
+          createdAt: row.created_at,
+          assetCode: dist?.vehicle_asset_id ? (assetCodeMap.get(dist.vehicle_asset_id) ?? null) : null,
+          bookingId: dist?.booking_id ?? null,
+        };
+      });
+
+      this.distributions.set(items);
+      return items;
+    } finally {
+      this.distributionsLoading.set(false);
+    }
+  }
 
   async getInvestorStats(): Promise<InvestorStats> {
     const fallback: InvestorStats = {

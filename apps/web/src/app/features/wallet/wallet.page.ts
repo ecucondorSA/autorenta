@@ -55,6 +55,8 @@ import { WalletFaqComponent } from './components/wallet-faq.component';
 import { WalletTransfersComponent } from './components/wallet-transfers.component';
 import { ClubMembershipCardComponent } from './components/club-membership-card.component';
 import { ClubPlansPreviewComponent } from './components/club-plans-preview.component';
+import { FragmentPortfolioComponent } from './components/fragment-portfolio.component';
+import { FragmentInvestmentService } from '@core/services/business/fragment-investment.service';
 
 @Component({
   selector: 'app-wallet',
@@ -75,6 +77,7 @@ import { ClubPlansPreviewComponent } from './components/club-plans-preview.compo
     ClubMembershipCardComponent,
     ClubPlansPreviewComponent,
     WalletAccountNumberCardComponent,
+    FragmentPortfolioComponent,
     // UI 2026 Directives
     HoverLiftDirective,
     PressScaleDirective,
@@ -87,7 +90,7 @@ export class WalletPage implements OnInit {
   /**
    * Tab activa (transactions | withdrawals | transfers | coverage)
    */
-  activeTab = signal<'transactions' | 'withdrawals' | 'transfers' | 'coverage'>('transactions');
+  activeTab = signal<'transactions' | 'withdrawals' | 'transfers' | 'coverage' | 'investments'>('transactions');
 
   /**
    * Tabs definition for the view
@@ -128,6 +131,12 @@ export class WalletPage implements OnInit {
   private readonly toastService = inject(NotificationManagerService);
   private readonly analyticsService = inject(AnalyticsService);
   readonly subscriptionService = inject(SubscriptionService);
+  private readonly fragmentService = inject(FragmentInvestmentService);
+
+  /**
+   * Computed: show Inversiones tab only if user has fragment holdings
+   */
+  readonly hasInvestments = this.fragmentService.hasHoldings;
 
   /**
    * Wallet Account Number del usuario actual
@@ -283,7 +292,11 @@ export class WalletPage implements OnInit {
     });
 
     // Cargar datos al iniciar (en paralelo para mejor performance)
-    void Promise.all([this.loadWithdrawalData(), this.loadWalletAccountNumber()]);
+    void Promise.all([
+      this.loadWithdrawalData(),
+      this.loadWalletAccountNumber(),
+      this.fragmentService.fetchMyPortfolio(),
+    ]);
   }
 
   async ngOnInit(): Promise<void> {
@@ -367,7 +380,7 @@ export class WalletPage implements OnInit {
   /**
    * Cambia el tab activo
    */
-  setActiveTab(tab: 'transactions' | 'withdrawals' | 'transfers' | 'coverage'): void {
+  setActiveTab(tab: 'transactions' | 'withdrawals' | 'transfers' | 'coverage' | 'investments'): void {
     this.activeTab.set(tab);
   }
 
