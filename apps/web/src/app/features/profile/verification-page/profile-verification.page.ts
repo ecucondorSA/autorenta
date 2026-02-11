@@ -11,6 +11,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProfileStore } from '@core/stores/profile.store';
 import { IdentityLevelService } from '@core/services/verification/identity-level.service';
 import { VerificationService } from '@core/services/verification/verification.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { EmailVerificationComponent } from '../../../shared/components/email-verification/email-verification.component';
 import { PhoneVerificationComponent } from '../../../shared/components/phone-verification/phone-verification.component';
 import { SelfieCaptureComponent } from '../../../shared/components/selfie-capture/selfie-capture.component';
@@ -276,6 +277,7 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
   private readonly profileStore = inject(ProfileStore);
   private readonly identityService = inject(IdentityLevelService);
   private readonly verificationService = inject(VerificationService);
+  private readonly analyticsService = inject(AnalyticsService);
   private readonly route = inject(ActivatedRoute);
 
   readonly profile = this.profileStore.profile;
@@ -378,6 +380,7 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
 
     try {
       await this.refreshVerificationContext();
+      this.trackKycView('kyc_verification_viewed');
       await this.identityService.subscribeToRealtimeUpdates();
     } catch {
       // The view keeps rendering with the last known state.
@@ -451,10 +454,12 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
 
   async onDocumentsUpdated(): Promise<void> {
     await this.refreshVerificationContext();
+    this.trackKycView('kyc_documents_updated');
   }
 
   async onLicenseVerificationComplete(): Promise<void> {
     await this.refreshVerificationContext();
+    this.trackKycView('kyc_license_upload_completed');
   }
 
   private getStepState(level: number): StepState {
@@ -470,7 +475,9 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
   }
 
   private hasDocument(kind: string): boolean {
-    return this.documents().some((doc) => doc.kind === kind && Boolean(doc.storage_path));
+    return this.documents().some(
+      (doc) => doc.kind === kind && Boolean(doc.storage_path) && String(doc.status) !== 'rejected',
+    );
   }
 
   private async refreshVerificationContext(): Promise<void> {
@@ -479,5 +486,17 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
       this.verificationService.loadDocuments(),
       this.identityService.getVerificationProgress(),
     ]);
+  }
+
+  private trackKycView(eventType: string): void {
+    this.analyticsService.trackEvent(eventType, {
+      source: 'profile_verification_page',
+      progress_percentage: this.progressPercentage(),
+      level_1_completed: this.isLevelComplete(1),
+      level_2_completed: this.isLevelComplete(2),
+      level_3_completed: this.isLevelComplete(3),
+      has_dni_pair: this.hasDniPair(),
+      has_license_pair: this.hasLicensePair(),
+    });
   }
 }

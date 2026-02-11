@@ -45,6 +45,14 @@ const OCR_TRACE_HEADER = 'x-kyc-trace-id';
 const OCR_FAILURE_COOLDOWN_MS = 12_000;
 const AUTH_ERROR_CODES = new Set(['401', 'AUTH_INVALID', 'AUTH_REQUIRED', 'INVALID_JWT']);
 const TECHNICAL_AUTH_HINTS = ['invalid jwt', 'jwt expired', 'jwt malformed', 'auth session missing'];
+const CORS_FALLBACK_HINTS = [
+  'access-control-allow-headers',
+  'request header field',
+  'cors',
+  'failed to fetch',
+  'network request failed',
+  'networkerror',
+];
 
 interface EdgeFunctionErrorInfo {
   status: number | null;
@@ -56,6 +64,28 @@ interface AccessTokenPayload {
   exp: number | null;
   iat: number | null;
   iss: string | null;
+}
+
+interface VerifyDocumentRequestBody {
+  image_base64: string;
+  document_type: 'dni' | 'license';
+  side: 'front' | 'back';
+  country: string;
+}
+
+interface VerifyDocumentOcrResult {
+  success: boolean;
+  ocr_confidence: number;
+  validation: {
+    isValid: boolean;
+    confidence: number;
+    extracted: Record<string, unknown>;
+    errors: string[];
+    warnings: string[];
+  };
+  extracted_data: Record<string, unknown>;
+  errors: string[];
+  warnings: string[];
 }
 
 class EdgeFunctionUserError extends Error {
@@ -674,20 +704,7 @@ export class VerificationService implements OnDestroy {
     documentType: 'dni' | 'license',
     side: 'front' | 'back',
     country: string,
-  ): Promise<{
-    success: boolean;
-    ocr_confidence: number;
-    validation: {
-      isValid: boolean;
-      confidence: number;
-      extracted: Record<string, unknown>;
-      errors: string[];
-      warnings: string[];
-    };
-    extracted_data: Record<string, unknown>;
-    errors: string[];
-    warnings: string[];
-  }> {
+  ): Promise<VerifyDocumentOcrResult> {
     const userId = await this.authService.getCachedUserId();
     if (!userId) throw new Error('No autenticado');
     const cooldownKey = this.buildOcrCooldownKey(userId, documentType, side, country, imageBase64);
@@ -703,16 +720,13 @@ export class VerificationService implements OnDestroy {
     const result = await this.retryWithBackoff(
       async () => {
         const headers = await this.buildVerifyDocumentHeaders();
-
-        const { data, error } = await this.supabase.functions.invoke('verify-document', {
-          body: {
-            image_base64: imageBase64,
-            document_type: documentType,
-            side,
-            country,
-          },
-          headers,
-        });
+        const requestBody: VerifyDocumentRequestBody = {
+          image_base64: imageBase64,
+          document_type: documentType,
+          side,
+          country,
+        };
+        const { data, error } = await this.invokeVerifyDocumentWithCorsFallback(requestBody, headers);
 
         if (error) {
           const info = await this.extractEdgeFunctionErrorInfo(error);
@@ -799,6 +813,82 @@ export class VerificationService implements OnDestroy {
     );
   }
 
+  private async invokeVerifyDocumentWithCorsFallback(
+    requestBody: VerifyDocumentRequestBody,
+    headers: Record<string, string>,
+  ): Promise<{ data: VerifyDocumentOcrResult | null; error: unknown | null }> {
+    let response = await this.invokeVerifyDocument(requestBody, headers);
+    if (!response.error) {
+      return response;
+    }
+
+    const info = await this.extractEdgeFunctionErrorInfo(response.error);
+    if (!this.shouldRetryWithoutTraceHeader(response.error, info, headers)) {
+      return response;
+    }
+
+    const fallbackHeaders = { ...headers };
+    delete fallbackHeaders[OCR_TRACE_HEADER];
+
+    this.logger.warn(
+      'verifyDocumentOcr: possible CORS/preflight issue with trace header, retrying without it',
+      {
+        status: info.status,
+        code: info.code,
+        message: info.message,
+      },
+    );
+
+    response = await this.invokeVerifyDocument(requestBody, fallbackHeaders);
+    if (!response.error) {
+      this.logger.info('verifyDocumentOcr: fallback without trace header succeeded');
+    }
+
+    return response;
+  }
+
+  private async invokeVerifyDocument(
+    requestBody: VerifyDocumentRequestBody,
+    headers: Record<string, string>,
+  ): Promise<{ data: VerifyDocumentOcrResult | null; error: unknown | null }> {
+    const { data, error } = await this.supabase.functions.invoke<VerifyDocumentOcrResult>(
+      'verify-document',
+      {
+        body: requestBody,
+        headers,
+      },
+    );
+
+    return {
+      data: data ?? null,
+      error,
+    };
+  }
+
+  private shouldRetryWithoutTraceHeader(
+    error: unknown,
+    info: EdgeFunctionErrorInfo,
+    headers: Record<string, string>,
+  ): boolean {
+    if (!headers[OCR_TRACE_HEADER]) return false;
+    if (this.isAuthErrorInfo(info)) return false;
+
+    if (info.status === null || info.status === 403) {
+      return true;
+    }
+
+    const normalizedMessage = this.getEdgeErrorMessage(error, info.message);
+    return CORS_FALLBACK_HINTS.some((hint) => normalizedMessage.includes(hint));
+  }
+
+  private getEdgeErrorMessage(error: unknown, parsedMessage: string | null): string {
+    const rawMessage =
+      error && typeof error === 'object' && 'message' in error && typeof error.message === 'string'
+        ? error.message
+        : '';
+    return `${rawMessage} ${parsedMessage ?? ''}`.toLowerCase();
+  }
+
   /**
    * Sube un documento y lo verifica con OCR en un solo paso.
    * Combina uploadDocument() + verifyDocumentOcr() para mejor UX.
@@ -815,20 +905,7 @@ export class VerificationService implements OnDestroy {
   ): Promise<{
     storagePath: string;
     ocrWarning: string | null;
-    ocrResult: {
-      success: boolean;
-      ocr_confidence: number;
-      validation: {
-        isValid: boolean;
-        confidence: number;
-        extracted: Record<string, unknown>;
-        errors: string[];
-        warnings: string[];
-      };
-      extracted_data: Record<string, unknown>;
-      errors: string[];
-      warnings: string[];
-    } | null;
+    ocrResult: VerifyDocumentOcrResult | null;
   }> {
     // 1. Validate MIME type and pre-compression size ceiling
     const typeValidation = validateFile(file, {

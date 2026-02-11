@@ -17,6 +17,7 @@ interface MockSession {
 const createEdgeFunctionError = (status: number, body: Record<string, unknown>): { context: Response } => ({
   context: new Response(JSON.stringify(body), { status }),
 });
+const createFetchError = (message = 'Failed to fetch'): Error => new Error(message);
 
 const encodeBase64Url = (value: string): string =>
   globalThis.btoa(value).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -143,6 +144,36 @@ describe('VerificationService', () => {
     expect(authServiceMock.refreshSession).toHaveBeenCalledTimes(1);
     expect(invokeSpy).toHaveBeenCalledTimes(2);
     expect(result.success).toBeTrue();
+  });
+
+  it('reintenta verify-document sin x-kyc-trace-id ante fallo de red/CORS', async () => {
+    invokeSpy.and.callFake(
+      async (_fn: string, options: { headers?: Record<string, string> }) => {
+        const traceHeader = options.headers?.['x-kyc-trace-id'];
+
+        if (traceHeader) {
+          return {
+            data: null,
+            error: createFetchError('Failed to fetch'),
+          };
+        }
+
+        return {
+          data: ocrSuccessResponse,
+          error: null,
+        };
+      },
+    );
+
+    const result = await service.verifyDocumentOcr('base64-image', 'dni', 'front', 'AR');
+
+    expect(result.success).toBeTrue();
+    expect(invokeSpy).toHaveBeenCalledTimes(2);
+    const firstInvokeOptions = invokeSpy.calls.argsFor(0)[1] as { headers?: Record<string, string> };
+    const secondInvokeOptions = invokeSpy.calls.argsFor(1)[1] as { headers?: Record<string, string> };
+    expect(firstInvokeOptions.headers?.['x-kyc-trace-id']).toBeDefined();
+    expect(secondInvokeOptions.headers?.['x-kyc-trace-id']).toBeUndefined();
+    expect(authServiceMock.refreshSession).not.toHaveBeenCalled();
   });
 
   it('mapea OCR_FAILED (400) a error de usuario legible', async () => {

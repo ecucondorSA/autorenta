@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 
 import type { UserDocument } from '@core/models';
 import { VerificationService } from '@core/services/verification/verification.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 
 const COUNTRIES = [
@@ -287,6 +288,7 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
 })
 export class LicenseUploaderComponent {
   private readonly verificationService = inject(VerificationService);
+  private readonly analyticsService = inject(AnalyticsService);
 
   readonly countries = COUNTRIES;
 
@@ -406,6 +408,10 @@ export class LicenseUploaderComponent {
     this.backOcrResult.set(null);
     this.uploadError.set(null);
     this.uploadWarning.set(null);
+    this.analyticsService.trackEvent('kyc_license_country_selected', {
+      source: 'license_uploader',
+      country,
+    });
   }
 
   @HostListener('document:paste', ['$event'])
@@ -577,6 +583,13 @@ export class LicenseUploaderComponent {
   private async processFile(file: File, type: 'license_front' | 'license_back'): Promise<void> {
     const docType = type === 'license_front' ? 'license_front' : 'license_back';
     const isFront = type === 'license_front';
+    this.analyticsService.trackEvent('kyc_document_upload_started', {
+      source: 'license_uploader',
+      doc_type: docType,
+      side: isFront ? 'front' : 'back',
+      country: this.selectedCountry(),
+      file_size_bytes: file.size,
+    });
 
     this.uploadError.set(null);
     this.uploadWarning.set(null);
@@ -631,6 +644,13 @@ export class LicenseUploaderComponent {
 
       if (result.ocrWarning) {
         this.uploadWarning.set(result.ocrWarning);
+        this.analyticsService.trackEvent('kyc_document_ocr_warning', {
+          source: 'license_uploader',
+          doc_type: docType,
+          side: isFront ? 'front' : 'back',
+          country: this.selectedCountry(),
+          warning_message: result.ocrWarning,
+        });
       } else {
         this.uploadWarning.set(null);
       }
@@ -665,6 +685,14 @@ export class LicenseUploaderComponent {
         }
       }
 
+      this.analyticsService.trackEvent('kyc_document_upload_completed', {
+        source: 'license_uploader',
+        doc_type: docType,
+        side: isFront ? 'front' : 'back',
+        country: this.selectedCountry(),
+        ocr_success: result.ocrResult?.success ?? null,
+        ocr_confidence: result.ocrResult?.ocr_confidence ?? null,
+      });
       if (this.frontUploaded() && this.backUploaded()) {
         this.verificationCompleted.emit();
       }
@@ -677,6 +705,13 @@ export class LicenseUploaderComponent {
           : 'No pudimos subir la imagen. Intenta nuevamente con mejor luz.';
 
       this.uploadError.set(message);
+      this.analyticsService.trackEvent('kyc_document_upload_failed', {
+        source: 'license_uploader',
+        doc_type: docType,
+        side: isFront ? 'front' : 'back',
+        country: this.selectedCountry(),
+        error_message: message,
+      });
 
       if (isFront) {
         this.frontPreview.set(null);

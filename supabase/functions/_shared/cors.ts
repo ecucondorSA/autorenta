@@ -45,7 +45,8 @@ export function getCorsHeaders(req: Request): HeadersInit {
 
   return {
     'Access-Control-Allow-Origin': allowedOrigin,
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-signature, x-request-id, baggage, sentry-trace',
+    'Access-Control-Allow-Headers':
+      'authorization, x-client-info, apikey, content-type, x-signature, x-request-id, x-kyc-trace-id, baggage, sentry-trace',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Credentials': 'true',
     'Access-Control-Max-Age': '86400', // 24 horas
@@ -60,7 +61,8 @@ export function getCorsHeaders(req: Request): HeadersInit {
  */
 export const corsHeaders = {
   'Access-Control-Allow-Origin': 'https://autorentar.com',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-signature, x-request-id, baggage, sentry-trace',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type, x-signature, x-request-id, x-kyc-trace-id, baggage, sentry-trace',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Credentials': 'true',
 };

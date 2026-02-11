@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 import { VerificationService } from '@core/services/verification/verification.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import type { UserDocument } from '@core/models';
 
 const COUNTRIES = [
@@ -287,6 +288,7 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
 })
 export class DniUploaderComponent {
   private readonly verificationService = inject(VerificationService);
+  private readonly analyticsService = inject(AnalyticsService);
 
   readonly documentsUpdated = output<void>();
   readonly countries = COUNTRIES;
@@ -371,6 +373,10 @@ export class DniUploaderComponent {
     this.backProgress.set(0);
     this.uploadError.set(null);
     this.uploadWarning.set(null);
+    this.analyticsService.trackEvent('kyc_dni_country_selected', {
+      source: 'dni_uploader',
+      country,
+    });
   }
 
   @HostListener('document:paste', ['$event'])
@@ -543,6 +549,13 @@ export class DniUploaderComponent {
   private async processFile(file: File, type: 'dni_front' | 'dni_back'): Promise<void> {
     const docType = type === 'dni_front' ? 'gov_id_front' : 'gov_id_back';
     const isFront = type === 'dni_front';
+    this.analyticsService.trackEvent('kyc_document_upload_started', {
+      source: 'dni_uploader',
+      doc_type: docType,
+      side: isFront ? 'front' : 'back',
+      country: this.selectedCountry(),
+      file_size_bytes: file.size,
+    });
 
     this.uploadError.set(null);
     this.uploadWarning.set(null);
@@ -598,6 +611,13 @@ export class DniUploaderComponent {
       if (result.ocrWarning) {
         this.uploadWarning.set(result.ocrWarning);
         this.uploadError.set(null);
+        this.analyticsService.trackEvent('kyc_document_ocr_warning', {
+          source: 'dni_uploader',
+          doc_type: docType,
+          side: isFront ? 'front' : 'back',
+          country: this.selectedCountry(),
+          warning_message: result.ocrWarning,
+        });
       } else {
         this.uploadError.set(null);
         this.uploadWarning.set(null);
@@ -638,6 +658,14 @@ export class DniUploaderComponent {
         }
       }
 
+      this.analyticsService.trackEvent('kyc_document_upload_completed', {
+        source: 'dni_uploader',
+        doc_type: docType,
+        side: isFront ? 'front' : 'back',
+        country: this.selectedCountry(),
+        ocr_success: result.ocrResult?.success ?? null,
+        ocr_confidence: result.ocrResult?.ocr_confidence ?? null,
+      });
       this.documentsUpdated.emit();
     } catch (error) {
       clearInterval(progressInterval);
@@ -647,6 +675,13 @@ export class DniUploaderComponent {
           : 'No pudimos subir la foto. Intenta nuevamente con mejor luz.';
       this.uploadWarning.set(null);
       this.setUploadError(message);
+      this.analyticsService.trackEvent('kyc_document_upload_failed', {
+        source: 'dni_uploader',
+        doc_type: docType,
+        side: isFront ? 'front' : 'back',
+        country: this.selectedCountry(),
+        error_message: message,
+      });
 
       if (isFront) {
         this.frontPreview.set(null);
