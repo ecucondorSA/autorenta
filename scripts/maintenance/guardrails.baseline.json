@@ -46,6 +46,7 @@
       "create_subscription",
       "create_subscription_with_wallet",
       "decrypt_message",
+      "disconnect_mercadopago",
       "encrypt_message",
       "estimate_vehicle_value_usd",
       "execute_protocol_event",
