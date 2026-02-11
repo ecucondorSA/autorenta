@@ -1,3 +1,7 @@
+## <small>3.84.1 (2026-02-11)</small>
+
+* fix: enforce token refresh before BYD checkout request ([2501a15](https://github.com/ecucondorSA/autorenta/commit/2501a15))
+
 ## 3.84.0 (2026-02-11)
 
 * fix: handle expired auth in BYD pitch checkout ([f15fc09](https://github.com/ecucondorSA/autorenta/commit/f15fc09))
