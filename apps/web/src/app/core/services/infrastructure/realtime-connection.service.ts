@@ -24,6 +24,8 @@ export interface ConnectionMetrics {
   failureCount: number;
   /** Average connection latency in ms */
   averageLatencyMs: number;
+  /** Number of latency samples collected (makes signal graph complete for healthScore) */
+  latencySampleCount: number;
   /** Last successful connection timestamp */
   lastConnectedAt: number | null;
   /** Last error timestamp */
@@ -64,6 +66,7 @@ export class RealtimeConnectionService implements OnDestroy {
     successCount: 0,
     failureCount: 0,
     averageLatencyMs: 0,
+    latencySampleCount: 0,
     lastConnectedAt: null,
     lastErrorAt: null,
     uptimeMs: 0,
@@ -133,10 +136,9 @@ export class RealtimeConnectionService implements OnDestroy {
     const existingChannel = this.activeChannels.get(channelName);
     if (!forceNew && existingChannel) {
       this.logger.debug(`♻️ [Realtime] Reusing existing channel: ${channelName}`);
-      // Notify status change callback with current status
-      if (this.connectionStatus() === 'connected') {
-        onStatusChange?.('connected');
-      }
+      // Always notify consumer of current status (not just 'connected')
+      // so they know if the channel is in error/disconnected state
+      onStatusChange?.(this.connectionStatus());
       return existingChannel;
     }
 
@@ -338,18 +340,24 @@ export class RealtimeConnectionService implements OnDestroy {
       // Clear from pending timeouts
       this.pendingTimeouts.delete(channelName);
 
-      // Remove old channel
-      this.unsubscribe(channelName);
+      try {
+        // Remove old channel
+        this.unsubscribe(channelName);
 
-      // Track new connection attempt
-      this.connectionStartTimes.set(channelName, Date.now());
-      this.trackConnectionAttempt();
+        // Track new connection attempt
+        this.connectionStartTimes.set(channelName, Date.now());
+        this.trackConnectionAttempt();
 
-      // Create new channel
-      const newChannel = this.createChannel(channelName, config, handler, onStatusChange);
+        // Create new channel
+        const newChannel = this.createChannel(channelName, config, handler, onStatusChange);
 
-      // Store in registry
-      this.activeChannels.set(channelName, newChannel);
+        // Store in registry
+        this.activeChannels.set(channelName, newChannel);
+      } catch (error) {
+        this.logger.error(`[Realtime] Reconnect failed for ${channelName}:`, error);
+        // Don't die silently — schedule another retry attempt
+        this.attemptReconnect(channelName, config, handler, onStatusChange);
+      }
     }, delay);
 
     this.pendingTimeouts.set(channelName, timeoutId);
@@ -386,12 +394,17 @@ export class RealtimeConnectionService implements OnDestroy {
     });
     this.pendingTimeouts.clear();
 
-    // Then unsubscribe from all channels
-    this.activeChannels.forEach((_, channelName) => {
-      this.unsubscribe(channelName);
-    });
+    // Collect channel names before iterating (unsubscribe mutates the map)
+    const channelNames = Array.from(this.activeChannels.keys());
+    for (const name of channelNames) {
+      const channel = this.activeChannels.get(name);
+      if (channel) {
+        this.supabase.removeChannel(channel);
+      }
+    }
 
-    // Clear remaining state
+    // Clear all state in one pass
+    this.activeChannels.clear();
     this.retryCounters.clear();
     this.connectionStartTimes.clear();
   }
@@ -439,6 +452,7 @@ export class RealtimeConnectionService implements OnDestroy {
       ...m,
       successCount: m.successCount + 1,
       averageLatencyMs: Math.round(avgLatency),
+      latencySampleCount: this.latencyHistory.length,
       lastConnectedAt: Date.now(),
       uptimeMs: 0, // Will be calculated separately if needed
     }));
@@ -471,6 +485,7 @@ export class RealtimeConnectionService implements OnDestroy {
       successCount: 0,
       failureCount: 0,
       averageLatencyMs: 0,
+      latencySampleCount: 0,
       lastConnectedAt: null,
       lastErrorAt: null,
       uptimeMs: 0,

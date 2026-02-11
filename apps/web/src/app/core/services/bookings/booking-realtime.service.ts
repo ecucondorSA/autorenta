@@ -216,6 +216,12 @@ export class BookingRealtimeService implements OnDestroy {
    * Unsubscribe from all booking channels
    */
   unsubscribeAll(): void {
+    // Clear debounce timer FIRST to prevent stale handler execution after navigation
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = null;
+    }
+
     if (this.channels.length === 0) return;
 
     this.logger.debug(`[BookingRealtime] Unsubscribing from ${this.channels.length} channels`);

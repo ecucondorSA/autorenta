@@ -329,6 +329,7 @@ export class FileUploadService {
 
   /**
    * Compress an image file
+   * Uses dynamic import to avoid pulling 52 kB library into initial bundle
    */
   public async compressImage(
     file: File,

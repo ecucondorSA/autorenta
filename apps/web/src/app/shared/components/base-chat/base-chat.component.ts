@@ -1020,6 +1020,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
 
   ngOnDestroy(): void {
     this.messagesService.unsubscribe();
+    // Use removeChannel (not just unsubscribe) to fully clean up WebSocket resources
     if (this.typingChannel) {
       this.supabase.removeChannel(this.typingChannel);
       this.typingChannel = undefined;
