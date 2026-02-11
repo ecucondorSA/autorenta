@@ -473,7 +473,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
     if (c.mileage) {
       specs.push({ icon: 'speedometer', label: 'Kilometraje', value: `${c.mileage.toLocaleString('en-US')} km` });
     }
-    if (c.color) {
+    if (c.color && !c.color.toLowerCase().includes('no especificado')) {
       specs.push({ icon: 'eye', label: 'Color', value: c.color });
     }
 

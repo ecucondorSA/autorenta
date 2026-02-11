@@ -1,4 +1,4 @@
-import { Component, inject, signal, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 // eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
@@ -26,6 +26,7 @@ interface TikTokWindow extends Window {
 @Component({
   selector: 'app-lead-capture-form',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule, IonIcon],
   template: `
     <div
