@@ -1,3 +1,7 @@
+## <small>3.80.19 (2026-02-11)</small>
+
+* perf: cache Intl.NumberFormat in wallet balance card + remove dead code ([f970523](https://github.com/ecucondorSA/autorenta/commit/f970523))
+
 ## <small>3.80.18 (2026-02-11)</small>
 
 * refactor: migrate remaining *ngIf/*ngFor to @if/@for block syntax ([5d87735](https://github.com/ecucondorSA/autorenta/commit/5d87735))
