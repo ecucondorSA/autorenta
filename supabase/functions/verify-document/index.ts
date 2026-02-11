@@ -12,6 +12,7 @@
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.4';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { requireAuth } from '../_shared/auth-helpers.ts';
 import { callVisionApi, OcrResult } from '../_shared/vision-api.ts';
 import { validateArgentinaDocument, DocumentValidationResult as ArgentinaResult } from '../_shared/validators/argentina.ts';
 import { validateEcuadorDocument, DocumentValidationResult as EcuadorResult } from '../_shared/validators/ecuador.ts';
@@ -28,7 +29,7 @@ interface VerifyDocumentRequest {
   document_type: DocumentType;
   side: DocumentSide;
   country: Country;
-  user_id: string;
+  user_id?: string;
 }
 
 interface VerifyDocumentResponse {
@@ -68,6 +69,10 @@ serve(async (req: Request) => {
   }
 
   try {
+    // Verify auth inside function (gateway JWT check is disabled for this function).
+    const { user } = await requireAuth(req);
+    const authenticatedUserId = user.id;
+
     // Parse request with error handling
     let payload: VerifyDocumentRequest;
     try {
@@ -83,15 +88,24 @@ serve(async (req: Request) => {
       );
     }
 
-    const { image_url, image_base64, document_type, side, country, user_id } = payload;
+    const { image_url, image_base64, document_type, side, country, user_id: payloadUserId } = payload;
+    const user_id = authenticatedUserId;
 
     // Validate required fields
-    if ((!image_url && !image_base64) || !document_type || !side || !country || !user_id) {
+    if ((!image_url && !image_base64) || !document_type || !side || !country) {
       return new Response(
         JSON.stringify({
-          error: 'Missing required fields: (image_url OR image_base64), document_type, side, country, user_id'
+          error: 'Missing required fields: (image_url OR image_base64), document_type, side, country'
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Never trust user_id from client: we always use the authenticated user.
+    // If the payload carries a different id, ignore it and continue.
+    if (payloadUserId && payloadUserId !== authenticatedUserId) {
+      console.warn(
+        `[verify-document] Ignoring mismatched payload user_id=${payloadUserId}, auth user_id=${authenticatedUserId}`
       );
     }
 
@@ -306,6 +320,19 @@ serve(async (req: Request) => {
     );
 
   } catch (error) {
+    if (error instanceof Response) {
+      const body = await error.text();
+      const contentType = error.headers.get('Content-Type') ?? 'application/json';
+
+      return new Response(
+        body || JSON.stringify({ error: 'AUTH_FAILED', message: 'No autenticado' }),
+        {
+          status: error.status,
+          headers: { ...corsHeaders, 'Content-Type': contentType },
+        }
+      );
+    }
+
     console.error('[verify-document] Unexpected error:', error);
     
     // Capture error in Sentry

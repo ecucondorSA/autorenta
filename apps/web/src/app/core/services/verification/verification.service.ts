@@ -380,9 +380,9 @@ export class VerificationService implements OnDestroy {
         // 401: intentar refresh de sesión una sola vez
         if (action === 'refresh_and_retry' && !tokenRefreshed) {
           this.logger.warn(`${operationName}: HTTP ${statusCode} (Invalid JWT), refreshing session`);
-          const { error: refreshError } = await this.supabase.auth.refreshSession();
-          if (refreshError) {
-            this.logger.error(`${operationName}: Session refresh failed, aborting`, refreshError);
+          const refreshedSession = await this.authService.refreshSession();
+          if (!refreshedSession) {
+            this.logger.error(`${operationName}: Session refresh failed, aborting`);
             return null;
           }
           tokenRefreshed = true;
@@ -534,14 +534,19 @@ export class VerificationService implements OnDestroy {
 
     const result = await this.retryWithBackoff(
       async () => {
+        const session = await this.authService.ensureSession();
+        const headers = session?.access_token
+          ? { Authorization: `Bearer ${session.access_token}` }
+          : undefined;
+
         const { data, error } = await this.supabase.functions.invoke('verify-document', {
           body: {
             image_base64: imageBase64,
             document_type: documentType,
             side,
             country,
-            user_id: userId,
           },
+          ...(headers ? { headers } : {}),
         });
 
         if (error) {

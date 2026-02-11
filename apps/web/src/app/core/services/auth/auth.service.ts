@@ -304,9 +304,15 @@ export class AuthService implements OnDestroy {
   async refreshSession(): Promise<Session | null> {
     this.logger.debug('refreshSession called', 'AuthService');
     const { data, error } = await this.supabase.auth.refreshSession();
-    if (error) {
-      this.logger.warn('Failed to refresh session', 'AuthService', error);
-      this.logger.debug('refreshSession failed', 'AuthService', { message: error.message });
+    if (error || !data.session) {
+      if (error) {
+        this.logger.warn('Failed to refresh session', 'AuthService', error);
+      } else {
+        this.logger.warn('refreshSession returned no session', 'AuthService');
+      }
+      this.logger.debug('refreshSession failed', 'AuthService', {
+        message: error?.message ?? 'refresh returned null session',
+      });
       // ✅ FIX: Clear stale session if refresh fails (token expired)
       await this.clearStaleSession();
 
@@ -319,10 +325,8 @@ export class AuthService implements OnDestroy {
       }
       return null;
     }
-    if (data.session) {
-      this.logger.debug('refreshSession success', 'AuthService');
-      this.state.set({ session: data.session, loading: false });
-    }
+    this.logger.debug('refreshSession success', 'AuthService');
+    this.state.set({ session: data.session, loading: false });
     return data.session;
   }
 

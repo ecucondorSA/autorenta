@@ -78,3 +78,8 @@ verify_jwt = false
 # Public webhook endpoint for MercadoPago notifications.
 # Security is enforced by HMAC validation (x-signature + x-request-id).
 verify_jwt = false
+
+[functions.verify-document]
+# Disable gateway JWT verification. The function validates user tokens internally
+# with requireAuth() and enforces ownership using the authenticated user id.
+verify_jwt = false
