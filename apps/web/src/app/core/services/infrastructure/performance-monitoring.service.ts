@@ -189,7 +189,7 @@ export class PerformanceMonitoringService {
           if (fps < threshold) {
             this.lowFpsStreak++;
             if (this.lowFpsStreak >= warnAfterConsecutive) {
-              console.warn(`⚠️ Low FPS detected: ${fps}fps`);
+              this.logger.warn(`Low FPS detected: ${fps}fps`);
               this.lowFpsStreak = 0;
             }
           } else {
