@@ -1,3 +1,7 @@
+## <small>3.80.18 (2026-02-11)</small>
+
+* refactor: migrate remaining *ngIf/*ngFor to @if/@for block syntax ([5d87735](https://github.com/ecucondorSA/autorenta/commit/5d87735))
+
 ## <small>3.80.17 (2026-02-11)</small>
 
 * refactor(shared): migrate *ngIf/*ngFor to @if/@for in shared components ([6c2c886](https://github.com/ecucondorSA/autorenta/commit/6c2c886))
