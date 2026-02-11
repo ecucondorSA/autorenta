@@ -1,3 +1,7 @@
+## <small>3.80.12 (2026-02-11)</small>
+
+* fix(car-detail): improve hero carousel, data-driven specs grid, and SEO price ([0962cf7](https://github.com/ecucondorSA/autorenta/commit/0962cf7))
+
 ## <small>3.80.11 (2026-02-11)</small>
 
 * fix: improve RealtimeConnectionService resilience and conflict resolution ([722afbb](https://github.com/ecucondorSA/autorenta/commit/722afbb))
