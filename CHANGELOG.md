@@ -1,3 +1,7 @@
+## <small>3.88.2 (2026-02-11)</small>
+
+* fix(kyc): harden OCR auth flow and verification UX ([a913c10](https://github.com/ecucondorSA/autorenta/commit/a913c10))
+
 ## <small>3.88.1 (2026-02-11)</small>
 
 * fix(mp-oauth): add missing MP columns to profiles + simplify drop migration ([413621f](https://github.com/ecucondorSA/autorenta/commit/413621f))
