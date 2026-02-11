@@ -1,3 +1,8 @@
+## 3.85.0 (2026-02-11)
+
+* fix(lint): fix unused import and import order in wallet/portfolio ([6934dc0](https://github.com/ecucondorSA/autorenta/commit/6934dc0))
+* feat(investments): Phase 2 — NAV snapshots, per-booking distributions, wallet portfolio tab ([55f993e](https://github.com/ecucondorSA/autorenta/commit/55f993e))
+
 ## <small>3.84.5 (2026-02-11)</small>
 
 * fix(edge): OWASP A04 error leakage + CORS whitelist hardening ([8aa0517](https://github.com/ecucondorSA/autorenta/commit/8aa0517))
