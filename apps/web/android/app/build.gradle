@@ -8,8 +8,8 @@ android {
         applicationId "app.autorentar"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 350
-        versionName "3.80.10"
+        versionCode 351
+        versionName "3.80.11"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.

@@ -1,3 +1,7 @@
+## <small>3.80.11 (2026-02-11)</small>
+
+* fix: improve RealtimeConnectionService resilience and conflict resolution ([722afbb](https://github.com/ecucondorSA/autorenta/commit/722afbb))
+
 ## <small>3.80.10 (2026-02-11)</small>
 
 * refactor: centralize Realtime subscriptions + slim down AppComponent ([75b27ef](https://github.com/ecucondorSA/autorenta/commit/75b27ef))
