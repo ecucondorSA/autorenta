@@ -2,6 +2,10 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
+import { safeErrorResponse } from '../_shared/safe-error.ts';
+import { createChildLogger } from '../_shared/logger.ts';
+
+const log = createChildLogger('RevokeToken');
 
 const MP_OAUTH_REVOKE_URL = 'https://api.mercadopago.com/oauth/token/revoke';
 
@@ -38,7 +42,7 @@ serve(async (req) => {
       if (error instanceof RateLimitError) {
         return error.toResponse();
       }
-      console.error('[RateLimit] Service unavailable:', error);
+      log.error('Rate limiter service unavailable', error);
       return new Response(
         JSON.stringify({ error: 'Service temporarily unavailable', code: 'RATE_LIMITER_UNAVAILABLE' }),
         { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -48,7 +52,7 @@ serve(async (req) => {
     // Validate environment
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-    const MP_CLIENT_ID = Deno.env.get('MERCADOPAGO_CLIENT_ID');
+    const MP_CLIENT_ID = Deno.env.get('MERCADOPAGO_APPLICATION_ID');
     const MP_CLIENT_SECRET = Deno.env.get('MERCADOPAGO_CLIENT_SECRET');
 
     if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
@@ -56,7 +60,7 @@ serve(async (req) => {
     }
 
     if (!MP_CLIENT_ID || !MP_CLIENT_SECRET) {
-      console.warn('[mercadopago-revoke-token] Missing MP OAuth credentials, skipping token revocation');
+      log.warn('Missing MP OAuth credentials, skipping token revocation');
       return new Response(
         JSON.stringify({
           success: true,
@@ -112,7 +116,7 @@ serve(async (req) => {
       .single();
 
     if (profileError || !profile?.mercadopago_access_token) {
-      console.log('[mercadopago-revoke-token] No access token found for user:', user_id);
+      log.info(`No access token found for user: ${user_id}`);
       return new Response(
         JSON.stringify({
           success: true,
@@ -138,11 +142,11 @@ serve(async (req) => {
       }
     } catch {
       // Decryption not available, try with raw token
-      console.warn('[mercadopago-revoke-token] Could not decrypt token, using raw value');
+      log.warn('Could not decrypt token, using raw value');
     }
 
     // Call MercadoPago OAuth revocation endpoint
-    console.log('[mercadopago-revoke-token] Revoking token for user:', user_id);
+    log.info(`Revoking token for user: ${user_id}`);
 
     const revokeResponse = await fetch(MP_OAUTH_REVOKE_URL, {
       method: 'POST',
@@ -160,11 +164,11 @@ serve(async (req) => {
     const revokeResult = await revokeResponse.json().catch(() => ({}));
 
     if (!revokeResponse.ok) {
-      console.error('[mercadopago-revoke-token] MP API error:', revokeResult);
+      log.error('MP API revocation error', revokeResult);
       // Log error but don't fail - we still want to clear local tokens
       // Some errors are expected (e.g., token already revoked)
     } else {
-      console.log('[mercadopago-revoke-token] Token revoked successfully for user:', user_id);
+      log.info(`Token revoked successfully for user: ${user_id}`);
     }
 
     return new Response(
@@ -175,14 +179,7 @@ serve(async (req) => {
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
-  } catch (error) {
-    console.error('[mercadopago-revoke-token] Fatal error:', error);
-    return new Response(
-      JSON.stringify({
-        success: false,
-        error: error instanceof Error ? error.message : String(error),
-      }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+  } catch (error: unknown) {
+    return safeErrorResponse(error, corsHeaders, 'mercadopago-revoke-token');
   }
 });

@@ -7,6 +7,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { createChildLogger } from '../_shared/logger.ts';
+import { safeErrorResponse } from '../_shared/safe-error.ts';
 
 const log = createChildLogger('OAuthCallback');
 
@@ -108,7 +109,6 @@ serve(async (req) => {
         JSON.stringify({
           success: false,
           error: 'Parámetros faltantes',
-          details: 'Se requiere code y state',
         }),
         {
           status: 400,
@@ -142,7 +142,6 @@ serve(async (req) => {
         JSON.stringify({
           success: false,
           error: 'State inválido',
-          details: 'No se pudo decodificar el state',
         }),
         {
           status: 400,
@@ -167,13 +166,6 @@ serve(async (req) => {
         JSON.stringify({
           success: false,
           error: 'State expirado',
-          details: `El proceso tomó ${(stateAge / 60000).toFixed(1)} minutos (máximo: 60)`,
-          debug: {
-            state_timestamp: stateData.timestamp,
-            current_time: Date.now(),
-            age_ms: stateAge,
-            age_minutes: (stateAge / 60000).toFixed(2),
-          }
         }),
         {
           status: 400,
@@ -236,11 +228,6 @@ serve(async (req) => {
         JSON.stringify({
           success: false,
           error: 'State no coincide',
-          details: 'Posible ataque CSRF detectado',
-          debug: {
-            expected_length: expectedState.length,
-            received_length: receivedState.length,
-          }
         }),
         {
           status: 400,
@@ -449,19 +436,8 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
-  } catch (error: any) {
-    log.error('[OAuth Callback Error]', error);
-
-    return new Response(
-      JSON.stringify({
-        success: false,
-        error: 'Error procesando callback de MercadoPago',
-      }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+  } catch (error: unknown) {
+    return safeErrorResponse(error, corsHeaders, 'mercadopago-oauth-callback');
   }
 });
 

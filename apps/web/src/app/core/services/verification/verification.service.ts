@@ -223,7 +223,7 @@ export class VerificationService implements OnDestroy {
 
     // SECURITY FIX #2: Rollback - eliminar archivo si el registro en DB falla
     if (upsertError) {
-      console.error('Error creating document record, rolling back file upload:', upsertError);
+      this.logger.error('uploadDocument: failed to create document record, rolling back file upload', upsertError);
 
       // Intentar eliminar el archivo subido para mantener consistencia
       try {
@@ -231,7 +231,7 @@ export class VerificationService implements OnDestroy {
         this.logger.debug('Rollback successful: file removed from storage');
       } catch (rollbackError) {
         // Log pero no fallar - el archivo huérfano se puede limpiar después
-        console.error('Rollback failed: could not remove uploaded file:', rollbackError);
+        this.logger.warn('uploadDocument: rollback failed, uploaded file could not be removed', rollbackError);
       }
 
       throw new Error(
@@ -407,7 +407,15 @@ export class VerificationService implements OnDestroy {
           this.logger.warn(`${operationName}: HTTP ${statusCode} (Invalid JWT), refreshing session`);
           const refreshedSession = await this.authService.refreshSession();
           if (!refreshedSession) {
-            this.logger.error(`${operationName}: Session refresh failed, aborting`);
+            this.logger.warn(`${operationName}: session refresh failed, aborting`);
+            const sessionError = new EdgeFunctionUserError(
+              'Tu sesión expiró. Vuelve a iniciar sesión e intenta nuevamente.',
+              401,
+              'AUTH_INVALID',
+            );
+            if (throwLastError) {
+              throw sessionError;
+            }
             return null;
           }
           tokenRefreshed = true;
@@ -418,10 +426,12 @@ export class VerificationService implements OnDestroy {
 
         // Error no-retryable (4xx o 401 después de refresh fallido)
         if (action === 'abort' || (action === 'refresh_and_retry' && tokenRefreshed)) {
-          this.logger.error(
-            `${operationName}: Non-retryable error (HTTP ${statusCode ?? 'unknown'})`,
-            error,
-          );
+          const message = `${operationName}: Non-retryable error (HTTP ${statusCode ?? 'unknown'})`;
+          if (statusCode !== null && statusCode < 500) {
+            this.logger.warn(message, error);
+          } else {
+            this.logger.error(message, error);
+          }
           if (throwLastError) {
             throw error;
           }
@@ -550,6 +560,10 @@ export class VerificationService implements OnDestroy {
       return 'Tu sesión expiró. Vuelve a iniciar sesión e intenta nuevamente.';
     }
 
+    if (info.status === 403 || info.code === 'FORBIDDEN') {
+      return 'Tu sesión no tiene permisos para esta operación. Cierra sesión, vuelve a ingresar e intenta nuevamente.';
+    }
+
     if (info.code === 'OCR_PROVIDER_UNAVAILABLE' || info.status === 503) {
       return 'El servicio de verificación está temporalmente no disponible. Intenta de nuevo en unos minutos.';
     }
@@ -655,11 +669,18 @@ export class VerificationService implements OnDestroy {
 
         if (error) {
           const info = await this.extractEdgeFunctionErrorInfo(error);
-          this.logger.error('verifyDocumentOcr: Edge Function Error', {
+          const logMessage = 'verifyDocumentOcr: Edge Function Error';
+          const logPayload = {
             status: info.status,
             code: info.code,
             message: info.message,
-          });
+          };
+
+          if (info.status !== null && info.status < 500) {
+            this.logger.warn(logMessage, logPayload);
+          } else {
+            this.logger.error(logMessage, logPayload);
+          }
           throw new EdgeFunctionUserError(this.getOcrUserMessage(info), info.status, info.code);
         }
         return data;
@@ -786,6 +807,15 @@ export class VerificationService implements OnDestroy {
       }
     } else {
       this.logger.info(`Skipping OCR for unsupported country: ${country}`);
+    }
+
+    try {
+      await this.triggerVerification();
+    } catch (verificationError) {
+      this.logger.warn('Post-upload verification refresh failed', {
+        docType,
+        error: verificationError,
+      });
     }
 
     return { storagePath, ocrWarning, ocrResult };

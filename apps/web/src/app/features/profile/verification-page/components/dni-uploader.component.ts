@@ -1,16 +1,16 @@
 import {
-  Component,
-  inject,
-  signal,
-  computed,
   ChangeDetectionStrategy,
+  Component,
   HostListener,
+  computed,
+  inject,
+  output,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
-
-import { VerificationService } from '@core/services/verification/verification.service';
 import { FormsModule } from '@angular/forms';
+import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
+import { VerificationService } from '@core/services/verification/verification.service';
 
 const COUNTRIES = [
   { code: 'AR', name: 'Argentina', flag: '🇦🇷', docName: 'DNI' },
@@ -41,7 +41,7 @@ interface ExtractedField {
   verified: boolean;
 }
 
-const MAX_UPLOAD_BYTES = 50 * 1024 * 1024; // 50MB (handled by service compression)
+const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
 
 @Component({
   selector: 'app-dni-uploader',
@@ -49,419 +49,264 @@ const MAX_UPLOAD_BYTES = 50 * 1024 * 1024; // 50MB (handled by service compressi
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
-    <!-- Screen Reader Announcements -->
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcements">
       {{ getStatusMessage() }}
     </div>
     <div aria-live="assertive" aria-atomic="true" class="sr-only" id="paste-announcements"></div>
 
-    <div class="space-y-6">
+    <div class="space-y-5">
+      <section class="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
+        <header class="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h4 class="text-sm font-semibold text-slate-900">Documento de identidad</h4>
+            <p class="text-xs text-slate-500">
+              Sube frente y dorso completos, sin reflejos y con texto legible.
+            </p>
+          </div>
+
+          <div class="relative">
+            <select
+              [ngModel]="selectedCountry()"
+              (ngModelChange)="selectCountry($event)"
+              aria-label="Seleccionar país de emisión"
+              class="appearance-none rounded-xl border border-slate-300 bg-white pl-9 pr-8 py-2 text-sm font-semibold text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+            >
+              @for (country of countries; track country.code) {
+                <option [value]="country.code">{{ country.name }}</option>
+              }
+            </select>
+            <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base">
+              {{ getSelectedCountryFlag() }}
+            </span>
+            <svg
+              class="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </header>
+
+        <div class="space-y-3">
+          <article
+            class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white"
+            [class.ring-2]="isDraggingFront()"
+            [class.ring-emerald-400]="isDraggingFront()"
+            (dragover)="onDragOver($event, 'front')"
+            (dragleave)="onDragLeave('front')"
+            (drop)="onDrop($event, 'dni_front')"
+          >
+            <div class="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
+              <div
+                class="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100"
+              >
+                @if (frontPreview()) {
+                  <img
+                    [src]="frontPreview()"
+                    alt="Frente del documento"
+                    class="h-full w-full object-cover"
+                  />
+                  <div class="absolute inset-0 bg-black/10"></div>
+                } @else {
+                  <div class="flex h-full w-full items-center justify-center text-slate-500">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M4 7h16M4 17h16M7 4v16M17 4v16"
+                      />
+                    </svg>
+                  </div>
+                }
+              </div>
+
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-semibold text-slate-900">Frente del documento</p>
+                <p class="text-xs text-slate-500">
+                  @if (frontUploaded()) {
+                    Cargado correctamente
+                  } @else {
+                    Foto clara del lado con datos personales.
+                  }
+                </p>
+              </div>
+
+              <div class="shrink-0">
+                <input
+                  #frontInput
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  class="hidden"
+                  (change)="onFileSelected($event, 'dni_front')"
+                />
+                @if (uploadingFront()) {
+                  <div class="h-8 w-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></div>
+                } @else {
+                  <button
+                    (click)="frontInput.click()"
+                    class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-200"
+                  >
+                    {{ frontPreview() ? 'Cambiar' : 'Subir' }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            @if (uploadingFront()) {
+              <div class="h-1 bg-emerald-500 transition-all" [style.width.%]="frontProgress()"></div>
+            }
+          </article>
+
+          <article
+            class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white"
+            [class.ring-2]="isDraggingBack()"
+            [class.ring-emerald-400]="isDraggingBack()"
+            (dragover)="onDragOver($event, 'back')"
+            (dragleave)="onDragLeave('back')"
+            (drop)="onDrop($event, 'dni_back')"
+          >
+            <div class="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
+              <div
+                class="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100"
+              >
+                @if (backPreview()) {
+                  <img
+                    [src]="backPreview()"
+                    alt="Dorso del documento"
+                    class="h-full w-full object-cover"
+                  />
+                  <div class="absolute inset-0 bg-black/10"></div>
+                } @else {
+                  <div class="flex h-full w-full items-center justify-center text-slate-500">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M4 12h16M8 8l-4 4 4 4"
+                      />
+                    </svg>
+                  </div>
+                }
+              </div>
+
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-semibold text-slate-900">Dorso del documento</p>
+                <p class="text-xs text-slate-500">
+                  @if (backUploaded()) {
+                    Cargado correctamente
+                  } @else {
+                    Foto completa donde se vea código o información secundaria.
+                  }
+                </p>
+              </div>
+
+              <div class="shrink-0">
+                <input
+                  #backInput
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  class="hidden"
+                  (change)="onFileSelected($event, 'dni_back')"
+                />
+                @if (uploadingBack()) {
+                  <div class="h-8 w-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></div>
+                } @else {
+                  <button
+                    (click)="backInput.click()"
+                    class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-200"
+                  >
+                    {{ backPreview() ? 'Cambiar' : 'Subir' }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            @if (uploadingBack()) {
+              <div class="h-1 bg-emerald-500 transition-all" [style.width.%]="backProgress()"></div>
+            }
+          </article>
+        </div>
+      </section>
+
       @if (uploadError()) {
-        <div
-          class="rounded-xl border border-error-border bg-error-bg/60 px-4 py-3 text-sm text-error-strong"
-          role="alert"
-          aria-live="polite"
-        >
+        <div class="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900" role="alert">
           {{ uploadError() }}
         </div>
       }
-      <!-- Country Selector (Compact) -->
-      <div class="flex items-center justify-between p-1">
-        <label for="country-select" class="text-sm font-medium text-text-secondary"
-          >País de emisión</label
-        >
-        <div class="relative group">
-          <select
-            id="country-select"
-            [ngModel]="selectedCountry()"
-            (ngModelChange)="selectCountry($event)"
-            aria-label="Seleccionar país de emisión del documento de identidad"
-            class="appearance-none bg-transparent pl-8 pr-8 py-1.5 text-right font-semibold text-text-primary focus:ring-0 cursor-pointer hover:text-cta-default transition-colors border-none focus:outline-none"
-          >
-            @for (country of countries; track country.code) {
-              <option [value]="country.code">
-                {{ country.name }}
-              </option>
-            }
-          </select>
-          <div
-            class="absolute left-0 top-1/2 -translate-y-1/2 text-lg pointer-events-none"
-            aria-hidden="true"
-          >
-            {{ getSelectedCountryFlag() }}
-          </div>
-          <div
-            class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted group-hover:text-cta-default transition-colors"
-            aria-hidden="true"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
 
-      <!-- Compact Upload Rows -->
-      <div class="space-y-3">
-        <!-- FRONT ROW -->
-        <div
-          class="relative group rounded-2xl border border-border-default bg-surface-base hover:border-cta-default/30 hover:shadow-sm transition-all duration-300 overflow-hidden"
-          [class.ring-2]="isDraggingFront()"
-          [class.ring-cta-default]="isDraggingFront()"
-          (dragover)="onDragOver($event, 'front')"
-          (dragleave)="onDragLeave('front')"
-          (drop)="onDrop($event, 'dni_front')"
-          role="region"
-          aria-labelledby="front-label"
-          aria-describedby="front-desc"
-        >
-          <div class="flex flex-col sm:flex-row sm:items-center p-3 sm:p-4 gap-4">
-            <!-- Icon / Preview Thumbnail -->
-            <div
-              class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative"
-              aria-hidden="true"
-            >
-              @if (frontPreview()) {
-                <img
-                  [src]="frontPreview()"
-                  class="w-full h-full object-cover"
-                  alt="Vista previa del frente del documento"
-                />
-                <div class="absolute inset-0 bg-black/10"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <div
-                    class="w-5 h-5 bg-success-500 rounded-full text-white flex items-center justify-center shadow-sm"
-                  >
-                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              } @else {
-                <svg
-                  class="w-6 h-6 text-text-muted"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-                  />
-                </svg>
-              }
-            </div>
-
-            <!-- Text Content -->
-            <div class="flex-grow min-w-0">
-              <h4 id="front-label" class="font-semibold text-text-primary text-sm sm:text-base">
-                Frente del documento
-              </h4>
-              <p id="front-desc" class="text-xs text-text-secondary truncate">
-                @if (frontUploaded()) {
-                  Foto cargada correctamente
-                } @else {
-                  Foto clara y legible. Puedes arrastrar y soltar o usar pegar desde el
-                  portapapeles.
-                }
-              </p>
-            </div>
-
-            <!-- Actions -->
-            <div class="flex-shrink-0">
-              <input
-                #frontInput
-                type="file"
-                accept="image/*"
-                capture="environment"
-                class="hidden"
-                (change)="onFileSelected($event, 'dni_front')"
-                aria-label="Seleccionar archivo de imagen para el frente del documento"
-              />
-              @if (uploadingFront()) {
-                <div
-                  class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin"
-                  role="progressbar"
-                  aria-label="Subiendo imagen del frente del documento"
-                  [attr.aria-valuenow]="frontProgress()"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                ></div>
-              } @else {
-                <button
-                  (click)="frontInput.click()"
-                  [attr.aria-label]="
-                    frontPreview()
-                      ? 'Cambiar imagen del frente del documento'
-                      : 'Subir imagen del frente del documento'
-                  "
-                  class="w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-medium transition-colors"
-                  [class]="
-                    frontPreview()
-                      ? 'text-text-primary hover:bg-surface-hover'
-                      : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'
-                  "
-                >
-                  {{ frontPreview() ? 'Cambiar' : 'Tomar foto' }}
-                </button>
-              }
-            </div>
-          </div>
-
-          <!-- Progress Bar (Absolute bottom) -->
-          @if (uploadingFront()) {
-            <div
-              class="absolute bottom-0 left-0 h-1 bg-cta-default transition-all duration-300"
-              [style.width.%]="frontProgress()"
-            ></div>
-          }
-        </div>
-
-        <!-- BACK ROW -->
-        <div
-          class="relative group rounded-2xl border border-border-default bg-surface-base hover:border-cta-default/30 hover:shadow-sm transition-all duration-300 overflow-hidden"
-          [class.ring-2]="isDraggingBack()"
-          [class.ring-cta-default]="isDraggingBack()"
-          (dragover)="onDragOver($event, 'back')"
-          (dragleave)="onDragLeave('back')"
-          (drop)="onDrop($event, 'dni_back')"
-          role="region"
-          aria-labelledby="back-label"
-          aria-describedby="back-desc"
-        >
-          <div class="flex flex-col sm:flex-row sm:items-center p-3 sm:p-4 gap-4">
-            <!-- Icon / Preview -->
-            <div
-              class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden border border-border-subtle relative"
-            >
-              @if (backPreview()) {
-                <img
-                  [src]="backPreview()"
-                  class="w-full h-full object-cover"
-                  alt="Vista previa del dorso del documento"
-                />
-                <div class="absolute inset-0 bg-black/10"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <div
-                    class="w-5 h-5 bg-success-500 rounded-full text-white flex items-center justify-center shadow-sm"
-                  >
-                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              } @else {
-                <svg
-                  class="w-6 h-6 text-text-muted"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
-                </svg>
-              }
-            </div>
-
-            <!-- Text Content -->
-            <div class="flex-grow min-w-0">
-              <h4 id="back-label" class="font-semibold text-text-primary text-sm sm:text-base">
-                Dorso del documento
-              </h4>
-              <p id="back-desc" class="text-xs text-text-secondary truncate">
-                @if (backUploaded()) {
-                  Foto cargada correctamente
-                } @else {
-                  Código de barras visible. Puedes arrastrar y soltar o usar pegar desde el
-                  portapapeles.
-                }
-              </p>
-            </div>
-
-            <!-- Actions -->
-            <div class="flex-shrink-0">
-              <input
-                #backInput
-                type="file"
-                accept="image/*"
-                capture="environment"
-                class="hidden"
-                (change)="onFileSelected($event, 'dni_back')"
-                aria-label="Seleccionar archivo de imagen para el dorso del documento"
-              />
-              @if (uploadingBack()) {
-                <div
-                  class="w-8 h-8 rounded-full border-2 border-cta-default border-t-transparent animate-spin"
-                  role="progressbar"
-                  aria-label="Subiendo imagen del dorso del documento"
-                  [attr.aria-valuenow]="backProgress()"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                ></div>
-              } @else {
-                <button
-                  (click)="backInput.click()"
-                  [attr.aria-label]="
-                    backPreview()
-                      ? 'Cambiar imagen del dorso del documento'
-                      : 'Subir imagen del dorso del documento'
-                  "
-                  class="w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-medium transition-colors"
-                  [class]="
-                    backPreview()
-                      ? 'text-text-primary hover:bg-surface-hover'
-                      : 'bg-surface-secondary text-text-primary hover:bg-surface-hover'
-                  "
-                >
-                  {{ backPreview() ? 'Cambiar' : 'Tomar foto' }}
-                </button>
-              }
-            </div>
-          </div>
-
-          <!-- Progress Bar -->
-          @if (uploadingBack()) {
-            <div
-              class="absolute bottom-0 left-0 h-1 bg-cta-default transition-all duration-300"
-              [style.width.%]="backProgress()"
-            ></div>
-          }
-        </div>
-      </div>
-
-      <!-- OCR Results (Minimalist) -->
       @if (frontOcrResult() || backOcrResult()) {
-        <div
-          class="rounded-2xl bg-surface-secondary/30 border border-border-default overflow-hidden"
-          role="region"
-          aria-live="polite"
-          aria-labelledby="ocr-header"
-        >
-          <!-- Header -->
-          <div
-            class="px-4 py-3 border-b border-border-default/50 flex items-center justify-between"
-          >
-            <div class="flex items-center gap-2">
-              <svg
-                class="w-4 h-4 text-text-secondary"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              <span
-                id="ocr-header"
-                class="text-xs font-semibold text-text-secondary uppercase tracking-wide"
-                >Datos Extraídos</span
-              >
-            </div>
-            @if (isAutoVerified()) {
-              <span class="text-xs font-bold text-success-600 bg-success-50 px-2 py-0.5 rounded"
-                >AUTO VERIFICADO</span
-              >
-            }
-          </div>
+        <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+          <header class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+            <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Extracción de datos</p>
+            <span class="rounded-full px-2 py-1 text-xs font-semibold" [class]="statusToneClass()">
+              {{ isAutoVerified() ? 'Auto validado' : 'Revisión asistida' }}
+            </span>
+          </header>
 
-          <!-- Data Grid -->
-          <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="grid gap-4 px-4 py-4 sm:grid-cols-2">
             @for (field of extractedFields(); track field.key) {
-              <div>
-                <span class="text-[10px] text-text-muted uppercase tracking-wider block mb-0.5">{{
-                  field.label
-                }}</span>
-                <div class="flex items-center gap-1.5">
-                  <span class="font-medium text-text-primary text-sm">{{ field.value }}</span>
-                  @if (field.verified) {
-                    <svg class="w-3 h-3 text-success-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  }
-                </div>
-              </div>
+              <article>
+                <p class="text-[11px] uppercase tracking-wide text-slate-500">{{ field.label }}</p>
+                <p class="mt-1 text-sm font-semibold text-slate-900">{{ field.value }}</p>
+              </article>
             }
           </div>
 
-          <!-- Warning Footer -->
           @if (hasWarnings()) {
-            <div class="px-4 py-2 bg-warning-50 border-t border-warning-100">
+            <div class="border-t border-amber-200 bg-amber-50 px-4 py-3">
               @for (warning of getAllWarnings(); track $index) {
-                <p class="text-xs text-warning-700 flex items-center gap-1">
-                  <span>⚠️</span> {{ warning }}
-                </p>
+                <p class="text-xs text-amber-800">{{ warning }}</p>
               }
             </div>
           }
+        </section>
+      }
+
+      @if (allSidesUploaded() && !isAutoVerified()) {
+        <div class="rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+          Documentos recibidos. Si la validación automática no alcanza confianza alta, tu caso pasa
+          a revisión manual sin perder el avance.
         </div>
       }
     </div>
   `,
 })
 export class DniUploaderComponent {
-  private verificationService = inject(VerificationService);
+  private readonly verificationService = inject(VerificationService);
 
+  readonly documentsUpdated = output<void>();
   readonly countries = COUNTRIES;
 
-  // Country selection
   selectedCountry = signal<string>('AR');
 
-  // Upload states
   uploadingFront = signal(false);
   uploadingBack = signal(false);
 
-  // Previews
   frontPreview = signal<string | null>(null);
   backPreview = signal<string | null>(null);
 
-  // Upload status
   frontUploaded = signal(false);
   backUploaded = signal(false);
 
-  // Progress (simulated for UX)
   frontProgress = signal(0);
   backProgress = signal(0);
 
-  // Drag states
   isDraggingFront = signal(false);
   isDraggingBack = signal(false);
 
-  // OCR Results
   frontOcrResult = signal<OcrResultDisplay | null>(null);
   backOcrResult = signal<OcrResultDisplay | null>(null);
   uploadError = signal<string | null>(null);
 
-  // Computed: Extracted fields for display
-  extractedFields = computed<ExtractedField[]>(() => {
+  readonly allSidesUploaded = computed(() => this.frontUploaded() && this.backUploaded());
+
+  readonly extractedFields = computed<ExtractedField[]>(() => {
     const fields: ExtractedField[] = [];
     const front = this.frontOcrResult();
     const back = this.backOcrResult();
@@ -491,7 +336,6 @@ export class DniUploaderComponent {
 
   selectCountry(country: string): void {
     this.selectedCountry.set(country);
-    // Reset state when country changes
     this.frontPreview.set(null);
     this.backPreview.set(null);
     this.frontUploaded.set(false);
@@ -503,62 +347,48 @@ export class DniUploaderComponent {
     this.uploadError.set(null);
   }
 
-  // Paste Support
   @HostListener('document:paste', ['$event'])
   onPaste(event: ClipboardEvent): void {
     const items = event.clipboardData?.items;
     if (!items) return;
 
     for (let i = 0; i < items.length; i++) {
-      if (items[i].type.indexOf('image') !== -1) {
-        const file = items[i].getAsFile();
-        if (file) {
-          // Validate file size (max 2MB)
-          if (file.size > MAX_UPLOAD_BYTES) {
-            this.setUploadError('Imagen demasiado grande. Máximo 2MB.');
-            event.preventDefault();
-            break;
-          }
+      if (!items[i].type.includes('image')) continue;
 
-          if (!this.validateSelectedFile(file)) {
-            event.preventDefault();
-            break;
-          }
+      const file = items[i].getAsFile();
+      if (!file) continue;
 
-          // Smart assignment: Fill front first, then back
-          let targetType: 'dni_front' | 'dni_back' | null = null;
-          if (!this.frontUploaded() && !this.frontPreview()) {
-            targetType = 'dni_front';
-          } else if (!this.backUploaded() && !this.backPreview()) {
-            targetType = 'dni_back';
-          }
-          if (targetType) {
-            this.processFile(file, targetType);
-            // Announce paste action
-            const side = targetType === 'dni_front' ? 'frente' : 'dorso';
-            this.announcePaste(`Imagen pegada para el ${side} del documento`);
-          }
-          // Prevent pasting into other inputs if an image was captured
-          event.preventDefault();
-          break; // Handle one image per paste for simplicity
-        }
+      if (file.size > MAX_UPLOAD_BYTES) {
+        this.setUploadError(
+          `Imagen demasiado grande. Máximo ${this.maxUploadMegabytes()}MB por archivo.`,
+        );
+        event.preventDefault();
+        break;
       }
+
+      if (!this.validateSelectedFile(file)) {
+        event.preventDefault();
+        break;
+      }
+
+      let targetType: 'dni_front' | 'dni_back' | null = null;
+      if (!this.frontUploaded() && !this.frontPreview()) {
+        targetType = 'dni_front';
+      } else if (!this.backUploaded() && !this.backPreview()) {
+        targetType = 'dni_back';
+      }
+
+      if (targetType) {
+        void this.processFile(file, targetType);
+        const side = targetType === 'dni_front' ? 'frente' : 'dorso';
+        this.announcePaste(`Imagen pegada para el ${side} del documento`);
+      }
+
+      event.preventDefault();
+      break;
     }
   }
 
-  private announcePaste(message: string): void {
-    // Update the paste announcements div
-    const announcementDiv = document.getElementById('paste-announcements');
-    if (announcementDiv) {
-      announcementDiv.textContent = message;
-      // Clear after a short delay
-      setTimeout(() => {
-        announcementDiv.textContent = '';
-      }, 1000);
-    }
-  }
-
-  // Drag & Drop handlers
   onDragOver(event: DragEvent, zone: 'front' | 'back'): void {
     event.preventDefault();
     event.stopPropagation();
@@ -586,55 +416,16 @@ export class DniUploaderComponent {
 
     const file = event.dataTransfer?.files[0];
     if (file && file.type.startsWith('image/') && this.validateSelectedFile(file)) {
-      this.processFile(file, type);
+      void this.processFile(file, type);
     }
   }
 
-  // Zone class getters
-  getFrontZoneClass(): string {
-    if (this.isDraggingFront()) {
-      return 'border-2 border-dashed border-cta-default bg-cta-default/10 ring-4 ring-cta-default/20';
-    }
-    if (this.frontPreview()) {
-      return 'border-2 border-solid border-success-400 bg-success-50/30';
-    }
-    return 'border-2 border-dashed border-border-default bg-gradient-to-br from-surface-secondary/50 to-surface-elevated/30 hover:border-cta-default hover:from-cta-default/5 hover:to-cta-default/10';
-  }
-
-  getBackZoneClass(): string {
-    if (this.isDraggingBack()) {
-      return 'border-2 border-dashed border-cta-default bg-cta-default/10 ring-4 ring-cta-default/20';
-    }
-    if (this.backPreview()) {
-      return 'border-2 border-solid border-success-400 bg-success-50/30';
-    }
-    return 'border-2 border-dashed border-border-default bg-gradient-to-br from-surface-secondary/50 to-surface-elevated/30 hover:border-cta-default hover:from-cta-default/5 hover:to-cta-default/10';
-  }
-
-  /**
-   * Determina si el documento está verificado automáticamente
-   */
   isAutoVerified(): boolean {
     const frontConf = this.frontOcrResult()?.confidence || 0;
     const frontSuccess = this.frontOcrResult()?.success;
     const profileUpdated = this.frontOcrResult()?.profileUpdated;
 
     return profileUpdated === true || frontConf >= 70 || frontSuccess === true;
-  }
-
-  isProfileLocked(): boolean {
-    return this.frontOcrResult()?.profileUpdated === true;
-  }
-
-  getConfidence(): number {
-    return this.frontOcrResult()?.confidence || this.backOcrResult()?.confidence || 0;
-  }
-
-  getConfidenceIconClass(): string {
-    if (this.isAutoVerified()) {
-      return 'bg-success-100 text-success-600';
-    }
-    return 'bg-warning-100 text-warning-600';
   }
 
   hasWarnings(): boolean {
@@ -654,42 +445,32 @@ export class DniUploaderComponent {
     return warnings;
   }
 
-  getStatusClass(): string {
-    if (this.isAutoVerified()) {
-      return 'bg-success-50 border border-success-200 text-success-700';
-    }
-    if (this.frontOcrResult() || this.backOcrResult()) {
-      return 'bg-warning-50 border border-warning-200 text-warning-700';
-    }
-    return 'bg-info-50 border border-info-200 text-info-700';
-  }
-
   getStatusMessage(): string {
     const docName = this.getDocumentName();
     const frontConf = this.frontOcrResult()?.confidence || 0;
     const backConf = this.backOcrResult()?.confidence || 0;
     const frontSuccess = this.frontOcrResult()?.success;
     const backSuccess = this.backOcrResult()?.success;
-    const profileLocked = this.isProfileLocked();
+    const profileLocked = this.frontOcrResult()?.profileUpdated === true;
 
     if (profileLocked) {
       if (!this.backOcrResult()) {
-        return `Identidad verificada. Falta subir el dorso.`;
+        return 'Identidad validada. Falta cargar el dorso del documento.';
       }
       if (backSuccess === true || backConf >= 70) {
-        return `Identidad verificada y protegida.`;
+        return 'Identidad validada y protegida.';
       }
-      return `Identidad verificada. Dorso requiere mejor foto.`;
+      return 'Identidad validada. El dorso requiere mejor calidad.';
     }
 
     if (frontSuccess === true || frontConf >= 70) {
       if (!this.backOcrResult()) {
-        return `${docName} verificado. Falta subir el dorso.`;
+        return `${docName} validado. Falta subir el dorso.`;
       }
       if (backSuccess === true || backConf >= 70) {
-        return `${docName} verificado correctamente.`;
+        return `${docName} validado correctamente.`;
       }
-      return `${docName} frente verificado. Mejora la foto del dorso.`;
+      return `${docName} frente validado. Mejora la foto del dorso.`;
     }
 
     if (this.frontOcrResult() && frontConf > 0 && frontConf < 70) {
@@ -697,19 +478,25 @@ export class DniUploaderComponent {
     }
 
     if (this.backOcrResult() && !this.frontOcrResult()) {
-      return `Dorso procesado. Falta subir el frente.`;
+      return 'Dorso procesado. Falta subir el frente.';
     }
 
-    return `Procesando verificación...`;
+    return 'Esperando imágenes del documento.';
   }
 
   getDocumentName(): string {
-    const c = this.countries.find((c) => c.code === this.selectedCountry());
-    return c ? `${c.docName} ${c.name}` : 'Documento';
+    const country = this.countries.find((c) => c.code === this.selectedCountry());
+    return country ? `${country.docName} ${country.name}` : 'Documento';
   }
 
   getSelectedCountryFlag(): string {
     return this.countries.find((c) => c.code === this.selectedCountry())?.flag || '🌍';
+  }
+
+  statusToneClass(): string {
+    return this.isAutoVerified()
+      ? 'bg-emerald-100 text-emerald-700'
+      : 'bg-amber-100 text-amber-700';
   }
 
   async onFileSelected(event: Event, type: 'dni_front' | 'dni_back'): Promise<void> {
@@ -724,7 +511,6 @@ export class DniUploaderComponent {
 
     await this.processFile(file, type);
 
-    // Clear input for re-selection of same file
     if (input) input.value = '';
   }
 
@@ -734,18 +520,19 @@ export class DniUploaderComponent {
 
     this.uploadError.set(null);
 
-    // Preview local inmediata
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result;
+    reader.onload = (event) => {
+      const result = event.target?.result;
       if (typeof result !== 'string') return;
 
-      if (isFront) this.frontPreview.set(result);
-      else this.backPreview.set(result);
+      if (isFront) {
+        this.frontPreview.set(result);
+      } else {
+        this.backPreview.set(result);
+      }
     };
     reader.readAsDataURL(file);
 
-    // Set uploading state
     if (isFront) {
       this.uploadingFront.set(true);
       this.frontProgress.set(0);
@@ -754,30 +541,32 @@ export class DniUploaderComponent {
       this.backProgress.set(0);
     }
 
-    // UX OPTIMISTA: Progreso falso rápido para dar sensación de velocidad
     const progressInterval = setInterval(() => {
       const current = isFront ? this.frontProgress() : this.backProgress();
-      // Ir muy rápido hasta 80%
       if (current < 80) {
         const increment = Math.random() * 25 + 10;
         const newProgress = Math.min(current + increment, 85);
-        if (isFront) this.frontProgress.set(Math.round(newProgress));
-        else this.backProgress.set(Math.round(newProgress));
+        if (isFront) {
+          this.frontProgress.set(Math.round(newProgress));
+        } else {
+          this.backProgress.set(Math.round(newProgress));
+        }
       }
     }, 150);
 
     try {
-      // Hacemos que el proceso parezca completarse antes para el usuario
       const result = await this.verificationService.uploadAndVerifyDocument(
         file,
         docType,
         this.selectedCountry(),
       );
 
-      // Complete progress
       clearInterval(progressInterval);
-      if (isFront) this.frontProgress.set(100);
-      else this.backProgress.set(100);
+      if (isFront) {
+        this.frontProgress.set(100);
+      } else {
+        this.backProgress.set(100);
+      }
 
       if (result.ocrWarning) {
         this.setUploadError(result.ocrWarning);
@@ -785,13 +574,12 @@ export class DniUploaderComponent {
         this.uploadError.set(null);
       }
 
-      // Mark as uploaded
       if (isFront) {
         this.frontUploaded.set(true);
         if (result.ocrResult) {
           const profileUpdated =
-            result.ocrResult.warnings?.some((w: string) =>
-              w.includes('Identidad verificada automaticamente'),
+            result.ocrResult.warnings?.some((warning: string) =>
+              warning.includes('Identidad verificada automaticamente'),
             ) || false;
 
           this.frontOcrResult.set({
@@ -802,7 +590,7 @@ export class DniUploaderComponent {
             errors: result.ocrResult.errors,
             warnings:
               result.ocrResult.warnings?.filter(
-                (w: string) => !w.includes('Identidad verificada automaticamente'),
+                (warning: string) => !warning.includes('Identidad verificada automaticamente'),
               ) || [],
             profileUpdated,
           });
@@ -820,16 +608,16 @@ export class DniUploaderComponent {
           });
         }
       }
+
+      this.documentsUpdated.emit();
     } catch (error) {
       clearInterval(progressInterval);
-      console.error('Error uploading document:', error);
       const message =
         error instanceof Error
           ? error.message
           : 'No pudimos subir la foto. Intenta nuevamente con mejor luz.';
       this.setUploadError(message);
 
-      // Clear preview on error
       if (isFront) {
         this.frontPreview.set(null);
         this.frontProgress.set(0);
@@ -838,8 +626,11 @@ export class DniUploaderComponent {
         this.backProgress.set(0);
       }
     } finally {
-      if (isFront) this.uploadingFront.set(false);
-      else this.uploadingBack.set(false);
+      if (isFront) {
+        this.uploadingFront.set(false);
+      } else {
+        this.uploadingBack.set(false);
+      }
     }
   }
 
@@ -858,8 +649,22 @@ export class DniUploaderComponent {
     return true;
   }
 
+  private maxUploadMegabytes(): number {
+    return Math.round(MAX_UPLOAD_BYTES / (1024 * 1024));
+  }
+
   private setUploadError(message: string): void {
     this.uploadError.set(message);
     this.announcePaste(message);
+  }
+
+  private announcePaste(message: string): void {
+    const announcementDiv = document.getElementById('paste-announcements');
+    if (!announcementDiv) return;
+
+    announcementDiv.textContent = message;
+    setTimeout(() => {
+      announcementDiv.textContent = '';
+    }, 1000);
   }
 }

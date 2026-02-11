@@ -6,6 +6,10 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { createChildLogger } from '../_shared/logger.ts';
+import { safeErrorResponse } from '../_shared/safe-error.ts';
+
+const log = createChildLogger('OAuthConnect');
 
 
 interface ConnectRequest {
@@ -58,7 +62,7 @@ serve(async (req) => {
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      console.error('[Auth Error]', authError);
+      log.error('Auth error', authError);
       return new Response(
         JSON.stringify({ error: 'Usuario no autenticado' }),
         {
@@ -68,7 +72,7 @@ serve(async (req) => {
       );
     }
 
-    console.log(`[OAuth Connect] User: ${user.id}`);
+    log.info(`User: ${user.id}`);
 
     // ============================================
     // 2. OBTENER CREDENCIALES DE MERCADOPAGO
@@ -78,7 +82,7 @@ serve(async (req) => {
     const MP_CLIENT_SECRET = Deno.env.get('MERCADOPAGO_CLIENT_SECRET');
 
     if (!MP_CLIENT_ID) {
-      console.error('[Config Error] MERCADOPAGO_APPLICATION_ID not set');
+      log.error('MERCADOPAGO_APPLICATION_ID not set');
       return new Response(
         JSON.stringify({
           error: 'Configuración de MercadoPago incompleta',
@@ -90,7 +94,7 @@ serve(async (req) => {
       );
     }
 
-    console.log(`[MP Config] Client ID: ${MP_CLIENT_ID}`);
+    log.info(`Client ID: ${MP_CLIENT_ID}`);
 
     // ============================================
     // 3. PARSEAR REQUEST BODY (OPCIONAL)
@@ -102,7 +106,7 @@ serve(async (req) => {
         requestData = await req.json();
       } catch (e) {
         // No body, usar defaults
-        console.log('[OAuth Connect] No request body, using defaults');
+        log.info('No request body, using defaults');
       }
     }
 
@@ -124,8 +128,8 @@ serve(async (req) => {
     const redirectUri = requestData.redirect_uri ||
       (isProduction ? PRODUCTION_REDIRECT : DEV_REDIRECT);
 
-    console.log(`[OAuth] Redirect URI: ${redirectUri}`);
-    console.log(`[OAuth] Environment: ${isProduction ? 'production' : 'development'}`);
+    log.info(`Redirect URI: ${redirectUri}`);
+    log.info(`Environment: ${isProduction ? 'production' : 'development'}`);
 
     // ============================================
     // 5. GENERAR STATE (SEGURIDAD)
@@ -148,9 +152,7 @@ serve(async (req) => {
       .replace(/\//g, '_')
       .replace(/=+$/, '');
 
-    console.log(`[OAuth] Generated state for user: ${user.id}`);
-    console.log(`[OAuth] State value: ${state}`);
-    console.log(`[OAuth] State length: ${state.length}`);
+    log.info(`Generated state for user: ${user.id}`);
 
     // Guardar state en profiles (temporal, para validar en callback)
     const { error: updateError } = await supabase
@@ -164,8 +166,7 @@ serve(async (req) => {
       .eq('id', user.id);
 
     if (updateError) {
-      console.error('[DB Error] Could not save state:', updateError);
-      // DEBUG: Retornar error detallado para diagnóstico
+      log.error('Could not save state', updateError);
       return new Response(
         JSON.stringify({
           error: 'Error guardando state en DB',
@@ -190,8 +191,7 @@ serve(async (req) => {
 
     const authorizationUrl = authUrl.toString();
 
-    console.log(`[OAuth] Authorization URL generated`);
-    console.log(`[OAuth] URL length: ${authorizationUrl.length} chars`);
+    log.info('Authorization URL generated');
 
     // ============================================
     // 7. RETORNAR RESPONSE
@@ -210,18 +210,8 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
-  } catch (error: any) {
-    console.error('[OAuth Connect Error]', error);
-
-    return new Response(
-      JSON.stringify({
-        error: 'Error al iniciar conexión con MercadoPago',
-      }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+  } catch (error: unknown) {
+    return safeErrorResponse(error, corsHeaders, 'mercadopago-oauth-connect');
   }
 });
 

@@ -1,12 +1,17 @@
 // ============================================
 // EDGE FUNCTION: mercadopago-refresh-token
 // Propósito: Refrescar tokens de OAuth de MercadoPago
-// Llamado por: Cron job o before token expiry
+// Llamado por: Cron job (cada 4 horas) o manualmente
+// Source of truth: profiles table (tokens guardados por mercadopago-oauth-callback)
 // ============================================
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { createChildLogger } from '../_shared/logger.ts';
+import { safeErrorResponse } from '../_shared/safe-error.ts';
+
+const log = createChildLogger('RefreshToken');
 
 interface RefreshRequest {
   user_id?: string; // Specific user, or all expiring if not provided
@@ -39,7 +44,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('[Refresh Token] Starting token refresh process');
+    log.info('Starting token refresh process');
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -50,7 +55,7 @@ serve(async (req) => {
 
     if (!MP_CLIENT_SECRET) {
       return new Response(
-        JSON.stringify({ error: 'MERCADOPAGO_CLIENT_SECRET not configured' }),
+        JSON.stringify({ error: 'Configuration incomplete' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -69,20 +74,21 @@ serve(async (req) => {
     const expiryThreshold = new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString();
 
     let query = supabase
-      .from('mercadopago_accounts')
-      .select('user_id, access_token, refresh_token, expires_at')
-      .not('refresh_token', 'is', null);
+      .from('profiles')
+      .select('id, mercadopago_access_token, mercadopago_refresh_token, mercadopago_access_token_expires_at')
+      .eq('mercadopago_connected', true)
+      .not('mercadopago_refresh_token', 'is', null);
 
     if (body.user_id) {
-      query = query.eq('user_id', body.user_id);
+      query = query.eq('id', body.user_id);
     } else if (!body.force) {
-      query = query.lt('expires_at', expiryThreshold);
+      query = query.lt('mercadopago_access_token_expires_at', expiryThreshold);
     }
 
     const { data: accounts, error: queryError } = await query;
 
     if (queryError) {
-      console.error('[Refresh Token] Query error:', queryError);
+      log.error('Query error', queryError);
       return new Response(
         JSON.stringify({ error: 'Database query failed' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -90,20 +96,20 @@ serve(async (req) => {
     }
 
     if (!accounts || accounts.length === 0) {
-      console.log('[Refresh Token] No tokens need refresh');
+      log.info('No tokens need refresh');
       return new Response(
         JSON.stringify({ success: true, message: 'No tokens need refresh', refreshed: 0 }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log(`[Refresh Token] Found ${accounts.length} tokens to refresh`);
+    log.info(`Found ${accounts.length} tokens to refresh`);
 
     const results: RefreshResult[] = [];
 
     for (const account of accounts) {
       try {
-        console.log(`[Refresh Token] Refreshing token for user ${account.user_id}`);
+        log.info(`Refreshing token for user ${account.id}`);
 
         const tokenResponse = await fetch('https://api.mercadopago.com/oauth/token', {
           method: 'POST',
@@ -115,36 +121,33 @@ serve(async (req) => {
             grant_type: 'refresh_token',
             client_id: MP_CLIENT_ID,
             client_secret: MP_CLIENT_SECRET,
-            refresh_token: account.refresh_token,
+            refresh_token: account.mercadopago_refresh_token,
           }),
         });
 
         if (!tokenResponse.ok) {
           const errorData = await tokenResponse.json().catch(() => ({}));
-          console.error(`[Refresh Token] MP error for ${account.user_id}:`, errorData);
+          log.error(`MP error for ${account.id}: HTTP ${tokenResponse.status}`, errorData);
 
           results.push({
-            user_id: account.user_id,
+            user_id: account.id,
             success: false,
             error: `Token refresh failed (HTTP ${tokenResponse.status})`,
           });
 
-          // Mark account as disconnected if refresh failed permanently
+          // TODO(human): Define retry/disconnect strategy for permanent refresh failures
+          // Currently: immediately disconnect on 401/400
+          // Consider: retry count, grace period, or user notification before disconnect
           if (tokenResponse.status === 401 || tokenResponse.status === 400) {
             await supabase
-              .from('mercadopago_accounts')
-              .update({
-                status: 'disconnected',
-                disconnected_at: new Date().toISOString(),
-                disconnection_reason: 'refresh_token_invalid',
-              })
-              .eq('user_id', account.user_id);
-
-            // Update profile
-            await supabase
               .from('profiles')
-              .update({ mercadopago_connected: false })
-              .eq('id', account.user_id);
+              .update({
+                mercadopago_connected: false,
+                updated_at: new Date().toISOString(),
+              })
+              .eq('id', account.id);
+
+            log.warn(`Marked user ${account.id} as disconnected (refresh token invalid)`);
           }
           continue;
         }
@@ -152,39 +155,39 @@ serve(async (req) => {
         const tokenData: MercadoPagoTokenResponse = await tokenResponse.json();
         const newExpiresAt = new Date(Date.now() + tokenData.expires_in * 1000);
 
-        // Update tokens in database
+        // Update tokens in profiles table
         const { error: updateError } = await supabase
-          .from('mercadopago_accounts')
+          .from('profiles')
           .update({
-            access_token: tokenData.access_token,
-            refresh_token: tokenData.refresh_token,
-            public_key: tokenData.public_key,
-            expires_at: newExpiresAt.toISOString(),
+            mercadopago_access_token: tokenData.access_token,
+            mercadopago_refresh_token: tokenData.refresh_token,
+            mercadopago_public_key: tokenData.public_key,
+            mercadopago_access_token_expires_at: newExpiresAt.toISOString(),
             updated_at: new Date().toISOString(),
           })
-          .eq('user_id', account.user_id);
+          .eq('id', account.id);
 
         if (updateError) {
-          console.error(`[Refresh Token] DB update error for ${account.user_id}:`, updateError);
+          log.error(`DB update error for ${account.id}`, updateError);
           results.push({
-            user_id: account.user_id,
+            user_id: account.id,
             success: false,
             error: 'Database update failed',
           });
           continue;
         }
 
-        console.log(`[Refresh Token] Successfully refreshed token for ${account.user_id}`);
+        log.info(`Successfully refreshed token for ${account.id}`);
         results.push({
-          user_id: account.user_id,
+          user_id: account.id,
           success: true,
           new_expires_at: newExpiresAt.toISOString(),
         });
       } catch (err: unknown) {
         const errorMessage = err instanceof Error ? err.message : String(err);
-        console.error(`[Refresh Token] Error for ${account.user_id}:`, errorMessage);
+        log.error(`Unexpected error for ${account.id}: ${errorMessage}`, err);
         results.push({
-          user_id: account.user_id,
+          user_id: account.id,
           success: false,
           error: 'Unexpected error during token refresh',
         });
@@ -194,7 +197,7 @@ serve(async (req) => {
     const successCount = results.filter((r) => r.success).length;
     const failCount = results.filter((r) => !r.success).length;
 
-    console.log(`[Refresh Token] Complete: ${successCount} success, ${failCount} failed`);
+    log.info(`Complete: ${successCount} success, ${failCount} failed`);
 
     return new Response(
       JSON.stringify({
@@ -209,47 +212,6 @@ serve(async (req) => {
       }
     );
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error('[Refresh Token] Error:', errorMessage);
-
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return safeErrorResponse(error, corsHeaders, 'mercadopago-refresh-token');
   }
 });
-
-/* ============================================
- * DOCUMENTACIÓN
- * ============================================
- *
- * ## Uso
- *
- * POST /functions/v1/mercadopago-refresh-token
- * Body (opcional):
- * {
- *   "user_id": "uuid",  // Refrescar solo este usuario
- *   "force": true       // Forzar refresh aunque no expire pronto
- * }
- *
- * ## Cron Job (pg_cron)
- *
- * SELECT cron.schedule(
- *   'refresh-mercadopago-tokens',
- *   '0 * * * *', -- Cada hora
- *   $$
- *   SELECT net.http_post(
- *     url := 'https://YOUR_PROJECT.supabase.co/functions/v1/mercadopago-refresh-token',
- *     headers := '{"Authorization": "Bearer SERVICE_ROLE_KEY"}'::jsonb
- *   )
- *   $$
- * );
- *
- * ## Variables de Entorno
- *
- * - SUPABASE_URL
- * - SUPABASE_SERVICE_ROLE_KEY
- * - MERCADOPAGO_APPLICATION_ID
- * - MERCADOPAGO_CLIENT_SECRET
- *
- * ============================================ */
