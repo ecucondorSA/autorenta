@@ -1,3 +1,7 @@
+## <small>3.80.13 (2026-02-11)</small>
+
+* fix(security): add Realtime channel cleanup to prevent zombie subscriptions ([8491969](https://github.com/ecucondorSA/autorenta/commit/8491969))
+
 ## <small>3.80.12 (2026-02-11)</small>
 
 * fix(car-detail): improve hero carousel, data-driven specs grid, and SEO price ([0962cf7](https://github.com/ecucondorSA/autorenta/commit/0962cf7))
