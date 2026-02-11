@@ -127,13 +127,15 @@ import { ScoutService, Bounty } from '@core/services/scout/scout.service';
           [disabled]="isUploading()"
           class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-700 h-16 rounded-2xl font-bold text-lg shadow-2xl flex items-center justify-center gap-3 transition-all active:scale-95"
         >
-          <i *ngIf="!isUploading()" class="fas fa-camera text-2xl"></i>
-          <span *ngIf="!isUploading()">CONFIRMAR HALLAZGO</span>
-          <span *ngIf="isUploading()">VERIFICANDO...</span>
-          <div
-            *ngIf="isUploading()"
-            class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
-          ></div>
+          @if (isUploading()) {
+            <span>VERIFICANDO...</span>
+            <div
+              class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+            ></div>
+          } @else {
+            <i class="fas fa-camera text-2xl"></i>
+            <span>CONFIRMAR HALLAZGO</span>
+          }
         </button>
       </div>
     </div>

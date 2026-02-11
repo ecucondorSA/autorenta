@@ -58,10 +58,12 @@ interface InvestorStats {
           </div>
         } @else {
           <div class="card-grid skeleton">
-            <div class="info-card" *ngFor="let i of [1, 2, 3, 4]">
-              <h3>...</h3>
-              <p>Cargando métricas...</p>
-            </div>
+            @for (i of [1, 2, 3, 4]; track i) {
+              <div class="info-card">
+                <h3>...</h3>
+                <p>Cargando métricas...</p>
+              </div>
+            }
           </div>
         }
 

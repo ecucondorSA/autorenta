@@ -42,10 +42,13 @@
     <div class="header-content">
       <div class="header-left">
         <h1 class="page-title font-bold font-satoshi">Notificaciones</h1>
-        <p class="page-subtitle" *ngIf="hasUnread()">
-          Tienes {{ unreadCount() }} notificación{{ unreadCount() > 1 ? 'es' : '' }} sin leer
-        </p>
-        <p class="page-subtitle" *ngIf="!hasUnread()">Todas las notificaciones están al día</p>
+        @if (hasUnread()) {
+          <p class="page-subtitle">
+            Tienes {{ unreadCount() }} notificación{{ unreadCount() > 1 ? 'es' : '' }} sin leer
+          </p>
+        } @else {
+          <p class="page-subtitle">Todas las notificaciones están al día</p>
+        }
       </div>
 
       <div class="header-actions">
@@ -93,15 +96,16 @@
     <div class="filter-group">
       <label class="filter-label">Tipo:</label>
       <div class="filter-buttons">
-        <button
-          *ngFor="let type of notificationTypes"
-          class="filter-btn"
-          [class.active]="filterType() === type.value"
-          (click)="setFilterType(type.value)"
-        >
-          <span class="filter-icon">{{ type.icon }}</span>
-          {{ type.label }}
-        </button>
+        @for (type of notificationTypes; track type.value) {
+          <button
+            class="filter-btn"
+            [class.active]="filterType() === type.value"
+            (click)="setFilterType(type.value)"
+          >
+            <span class="filter-icon">{{ type.icon }}</span>
+            {{ type.label }}
+          </button>
+        }
       </div>
     </div>
 
@@ -109,75 +113,83 @@
     <div class="filter-group">
       <label class="filter-label">Estado:</label>
       <div class="filter-buttons">
-        <button
-          *ngFor="let status of statusFilters"
-          class="filter-btn"
-          [class.active]="filterStatus() === status.value"
-          (click)="setFilterStatus(status.value)"
-        >
-          {{ status.label }}
-        </button>
+        @for (status of statusFilters; track status.value) {
+          <button
+            class="filter-btn"
+            [class.active]="filterStatus() === status.value"
+            (click)="setFilterStatus(status.value)"
+          >
+            {{ status.label }}
+          </button>
+        }
       </div>
     </div>
   </div>
 
   <!-- Notifications List -->
   <div class="notifications-container">
-    <!-- Empty state -->
-    <div *ngIf="!hasNotifications()" class="empty-state">
-      <img
-        src="/assets/images/empty-states/empty-notifications.svg"
-        alt="No hay notificaciones"
-        class="w-48 h-48 mx-auto mb-4"
-        width="192"
-        height="192"
-      />
-      <h3 class="empty-title font-bold font-satoshi">No hay notificaciones</h3>
-      <p class="empty-description">
-        No tienes notificaciones que coincidan con los filtros seleccionados
-      </p>
-    </div>
+    @if (hasNotifications()) {
+      <!-- Notifications list -->
+      <div class="notifications-list">
+        @for (notification of filteredNotifications(); track notification.id) {
+          <div
+            class="notification-card"
+            [class.unread]="!notification.read"
+            (click)="handleNotificationClick(notification)"
+          >
+            <!-- Icon -->
+            <div class="notification-icon-wrapper" [ngClass]="getNotificationColor(notification.type)">
+              <span class="notification-icon-emoji">{{ getNotificationIcon(notification.type) }}</span>
+            </div>
 
-    <!-- Notifications list -->
-    <div class="notifications-list" *ngIf="hasNotifications()">
-      <div
-        *ngFor="let notification of filteredNotifications()"
-        class="notification-card"
-        [class.unread]="!notification.read"
-        (click)="handleNotificationClick(notification)"
-      >
-        <!-- Icon -->
-        <div class="notification-icon-wrapper" [ngClass]="getNotificationColor(notification.type)">
-          <span class="notification-icon-emoji">{{ getNotificationIcon(notification.type) }}</span>
-        </div>
+            <!-- Content -->
+            <div class="notification-content">
+              <div class="notification-header">
+                <h3 class="notification-title font-bold font-satoshi">{{ notification.title }}</h3>
+                <span class="notification-time">{{ getTimeAgo(notification.createdAt) }}</span>
+              </div>
 
-        <!-- Content -->
-        <div class="notification-content">
-          <div class="notification-header">
-            <h3 class="notification-title font-bold font-satoshi">{{ notification.title }}</h3>
-            <span class="notification-time">{{ getTimeAgo(notification.createdAt) }}</span>
+              <p class="notification-message">{{ notification.message }}</p>
+
+              @if (notification.actionText) {
+                <div class="notification-action">
+                  <span class="action-text">{{ notification.actionText }}</span>
+                  <svg class="action-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
+              }
+            </div>
+
+            <!-- Unread indicator -->
+            @if (!notification.read) {
+              <div class="unread-indicator">
+                <div class="unread-dot"></div>
+              </div>
+            }
           </div>
-
-          <p class="notification-message">{{ notification.message }}</p>
-
-          <div *ngIf="notification.actionText" class="notification-action">
-            <span class="action-text">{{ notification.actionText }}</span>
-            <svg class="action-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </div>
-        </div>
-
-        <!-- Unread indicator -->
-        <div *ngIf="!notification.read" class="unread-indicator">
-          <div class="unread-dot"></div>
-        </div>
+        }
       </div>
-    </div>
+    } @else {
+      <!-- Empty state -->
+      <div class="empty-state">
+        <img
+          src="/assets/images/empty-states/empty-notifications.svg"
+          alt="No hay notificaciones"
+          class="w-48 h-48 mx-auto mb-4"
+          width="192"
+          height="192"
+        />
+        <h3 class="empty-title font-bold font-satoshi">No hay notificaciones</h3>
+        <p class="empty-description">
+          No tienes notificaciones que coincidan con los filtros seleccionados
+        </p>
+      </div>
+    }
   </div>
 </div>

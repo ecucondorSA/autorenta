@@ -25,12 +25,13 @@ type LocationStatus = 'pending' | 'ready' | 'unavailable';
       <div class="panic-dimmer"></div>
 
       <!-- BOTÓN DE SALIDA RÁPIDA (Solo visible si no hay blackout o al tocar) -->
-      <button
-        type="button"
-        class="panic-exit-hitbox"
-        (click)="handleScreenTouch()"
-        *ngIf="isBroadcasting()"
-      ></button>
+      @if (isBroadcasting()) {
+        <button
+          type="button"
+          class="panic-exit-hitbox"
+          (click)="handleScreenTouch()"
+        ></button>
+      }
 
       <div class="panic-content" [class.panic-content--hidden]="isBlackout()">
         <div class="panic-header">
@@ -53,16 +54,18 @@ type LocationStatus = 'pending' | 'ready' | 'unavailable';
           emisión.
         </p>
 
-        <div class="panic-metrics" *ngIf="countdown() === 0">
-          <div class="panic-metric">
-            <span>Señal</span>
-            <strong>{{ isBroadcasting() ? 'ACTIVA' : 'EN ESPERA' }}</strong>
+        @if (countdown() === 0) {
+          <div class="panic-metrics">
+            <div class="panic-metric">
+              <span>Señal</span>
+              <strong>{{ isBroadcasting() ? 'ACTIVA' : 'EN ESPERA' }}</strong>
+            </div>
+            <div class="panic-metric">
+              <span>Ubicación</span>
+              <strong>{{ locationLabel() }}</strong>
+            </div>
           </div>
-          <div class="panic-metric">
-            <span>Ubicación</span>
-            <strong>{{ locationLabel() }}</strong>
-          </div>
-        </div>
+        }
 
         @if (errorMessage()) {
           <div class="panic-error" role="alert">{{ errorMessage() }}</div>
@@ -90,10 +93,12 @@ type LocationStatus = 'pending' | 'ready' | 'unavailable';
       </div>
 
       <!-- INDICADOR DE BLACKOUT (Mínimo consumo) -->
-      <div class="panic-blackout-indicator" *ngIf="isBlackout()" (click)="handleScreenTouch()">
-        <span class="panic-dot panic-dot--active"></span>
-        <span>SOS EMITIENDO · TOCA PARA VER</span>
-      </div>
+      @if (isBlackout()) {
+        <div class="panic-blackout-indicator" (click)="handleScreenTouch()">
+          <span class="panic-dot panic-dot--active"></span>
+          <span>SOS EMITIENDO · TOCA PARA VER</span>
+        </div>
+      }
     </div>
   `,
   styles: [

@@ -33,12 +33,13 @@
   </div>
 
   <!-- Notificación flotante -->
-  <div
-    *ngIf="notification()"
-    class="absolute left-1/2 top-16 z-10 mx-auto w-[90%] max-w-md -translate-x-1/2 transform animate-slide-down rounded-lg bg-whatsapp-teal-light px-4 py-2 text-center text-sm text-text-inverse shadow-lg"
-  >
-    {{ notification() }}
-  </div>
+  @if (notification()) {
+    <div
+      class="absolute left-1/2 top-16 z-10 mx-auto w-[90%] max-w-md -translate-x-1/2 transform animate-slide-down rounded-lg bg-whatsapp-teal-light px-4 py-2 text-center text-sm text-text-inverse shadow-lg"
+    >
+      {{ notification() }}
+    </div>
+  }
 
   <!-- Fondo estilo WhatsApp -->
   <div
@@ -48,149 +49,152 @@
       background-size: 400px 400px;
     "
   >
-    <!-- Loading -->
-    <div *ngIf="loading()" class="flex h-full items-center justify-center">
-      <div class="text-center">
-        <div
-          class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-muted border-t-whatsapp-teal"
-        ></div>
-        <p class="text-sm text-text-secondary">Cargando mensajes...</p>
-      </div>
-    </div>
-
-    <!-- Error -->
-    <div
-      *ngIf="error()"
-      class="mx-4 mt-4 rounded-lg bg-error-bg-hover p-3 text-sm text-error-strong"
-    >
-      ⚠️ {{ error() }}
-    </div>
-
-    <!-- Empty state -->
-    <div
-      *ngIf="!loading() && messages().length === 0"
-      class="flex h-full flex-col items-center justify-center px-4 text-center"
-    >
-      <div
-        class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-surface-raised/70"
-      >
-        <svg
-          class="h-10 w-10 text-whatsapp-teal"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-          />
-        </svg>
-      </div>
-      <p class="mb-2 text-base font-medium text-text-primary">No hay mensajes todavía</p>
-      <p class="text-sm text-text-secondary">Envía un mensaje para empezar la conversación</p>
-    </div>
-
-    <!-- Messages -->
-    <div *ngIf="!loading() && messages().length > 0" class="space-y-2 px-4 py-4">
-      <div
-        *ngFor="let message of messages()"
-        [class.justify-end]="isOwnMessage(message)"
-        [class.justify-start]="!isOwnMessage(message)"
-        class="flex"
-      >
-        <!-- Mensaje recibido (izquierda) -->
-        <div
-          *ngIf="!isOwnMessage(message)"
-          class="message-received relative max-w-[75%] rounded-lg rounded-tl-none bg-surface-raised px-3 py-2 shadow-sm"
-        >
-          <p class="break-words text-sm text-text-primary">
-            {{ message.body }}
-          </p>
-          <div class="mt-1 flex items-center justify-end gap-1">
-            <span class="text-xs text-text-secondary">{{ formatTime(message.created_at) }}</span>
-          </div>
-          <!-- Tail izquierdo -->
+    @if (loading()) {
+      <!-- Loading -->
+      <div class="flex h-full items-center justify-center">
+        <div class="text-center">
           <div
-            class="absolute -left-2 top-0 h-0 w-0 border-r-8 border-t-8 border-r-transparent border-t-white"
+            class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-muted border-t-whatsapp-teal"
           ></div>
+          <p class="text-sm text-text-secondary">Cargando mensajes...</p>
         </div>
-
-        <!-- Mensaje enviado (derecha) -->
+      </div>
+    } @else if (error()) {
+      <!-- Error -->
+      <div
+        class="mx-4 mt-4 rounded-lg bg-error-bg-hover p-3 text-sm text-error-strong"
+      >
+        ⚠️ {{ error() }}
+      </div>
+    } @else if (messages().length === 0) {
+      <!-- Empty state -->
+      <div
+        class="flex h-full flex-col items-center justify-center px-4 text-center"
+      >
         <div
-          *ngIf="isOwnMessage(message)"
-          class="message-sent relative max-w-[75%] rounded-lg rounded-tr-none bg-whatsapp-green-sent px-3 py-2 shadow-sm"
+          class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-surface-raised/70"
         >
-          <p class="break-words text-sm text-text-primary">
-            {{ message.body }}
-          </p>
-          <div class="mt-1 flex items-center justify-end gap-1">
-            <span class="text-xs text-text-secondary">{{ formatTime(message.created_at) }}</span>
-
-            <!-- Check marks - Single check (sent) -->
-            <svg
-              *ngIf="getMessageStatus(message) === 'sent'"
-              class="h-4 w-4 text-text-secondary"
-              fill="currentColor"
-              viewBox="0 0 16 15"
-            >
-              <path
-                d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512z"
-              />
-            </svg>
-
-            <!-- Double check (delivered) -->
-            <svg
-              *ngIf="getMessageStatus(message) === 'delivered'"
-              class="h-4 w-4 text-text-secondary"
-              fill="currentColor"
-              viewBox="0 0 16 15"
-            >
-              <path
-                d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
-              />
-            </svg>
-
-            <!-- Double check blue (read) -->
-            <svg
-              *ngIf="getMessageStatus(message) === 'read'"
-              class="h-4 w-4 text-cta-default"
-              fill="currentColor"
-              viewBox="0 0 16 15"
-            >
-              <path
-                d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
-              />
-            </svg>
-          </div>
-          <!-- Tail derecho -->
+          <svg
+            class="h-10 w-10 text-whatsapp-teal"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+            />
+          </svg>
+        </div>
+        <p class="mb-2 text-base font-medium text-text-primary">No hay mensajes todavía</p>
+        <p class="text-sm text-text-secondary">Envía un mensaje para empezar la conversación</p>
+      </div>
+    } @else {
+      <!-- Messages -->
+      <div class="space-y-2 px-4 py-4">
+        @for (message of messages(); track message.id) {
           <div
-            class="absolute -right-2 top-0 h-0 w-0 border-l-8 border-t-8 border-l-transparent border-t-whatsapp-green-sent"
-          ></div>
-        </div>
-      </div>
+            [class.justify-end]="isOwnMessage(message)"
+            [class.justify-start]="!isOwnMessage(message)"
+            class="flex"
+          >
+            @if (!isOwnMessage(message)) {
+              <!-- Mensaje recibido (izquierda) -->
+              <div
+                class="message-received relative max-w-[75%] rounded-lg rounded-tl-none bg-surface-raised px-3 py-2 shadow-sm"
+              >
+                <p class="break-words text-sm text-text-primary">
+                  {{ message.body }}
+                </p>
+                <div class="mt-1 flex items-center justify-end gap-1">
+                  <span class="text-xs text-text-secondary">{{ formatTime(message.created_at) }}</span>
+                </div>
+                <!-- Tail izquierdo -->
+                <div
+                  class="absolute -left-2 top-0 h-0 w-0 border-r-8 border-t-8 border-r-transparent border-t-white"
+                ></div>
+              </div>
+            } @else {
+              <!-- Mensaje enviado (derecha) -->
+              <div
+                class="message-sent relative max-w-[75%] rounded-lg rounded-tr-none bg-whatsapp-green-sent px-3 py-2 shadow-sm"
+              >
+                <p class="break-words text-sm text-text-primary">
+                  {{ message.body }}
+                </p>
+                <div class="mt-1 flex items-center justify-end gap-1">
+                  <span class="text-xs text-text-secondary">{{ formatTime(message.created_at) }}</span>
 
-      <!-- Typing indicator -->
-      <div *ngIf="recipientTyping()" class="flex justify-start px-4 py-2">
-        <div class="rounded-lg rounded-tl-none bg-surface-raised px-4 py-3 shadow-sm">
-          <div class="flex items-center gap-1">
-            <div
-              class="h-2 w-2 animate-bounce rounded-full bg-gray-400"
-              style="animation-delay: 0ms"
-            ></div>
-            <div
-              class="h-2 w-2 animate-bounce rounded-full bg-gray-400"
-              style="animation-delay: 150ms"
-            ></div>
-            <div
-              class="h-2 w-2 animate-bounce rounded-full bg-gray-400"
-              style="animation-delay: 300ms"
-            ></div>
+                  <!-- Check marks -->
+                  @if (getMessageStatus(message) === 'sent') {
+                    <!-- Single check (sent) -->
+                    <svg
+                      class="h-4 w-4 text-text-secondary"
+                      fill="currentColor"
+                      viewBox="0 0 16 15"
+                    >
+                      <path
+                        d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512z"
+                      />
+                    </svg>
+                  } @else if (getMessageStatus(message) === 'delivered') {
+                    <!-- Double check (delivered) -->
+                    <svg
+                      class="h-4 w-4 text-text-secondary"
+                      fill="currentColor"
+                      viewBox="0 0 16 15"
+                    >
+                      <path
+                        d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
+                      />
+                    </svg>
+                  } @else if (getMessageStatus(message) === 'read') {
+                    <!-- Double check blue (read) -->
+                    <svg
+                      class="h-4 w-4 text-cta-default"
+                      fill="currentColor"
+                      viewBox="0 0 16 15"
+                    >
+                      <path
+                        d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
+                      />
+                    </svg>
+                  }
+                </div>
+                <!-- Tail derecho -->
+                <div
+                  class="absolute -right-2 top-0 h-0 w-0 border-l-8 border-t-8 border-l-transparent border-t-whatsapp-green-sent"
+                ></div>
+              </div>
+            }
           </div>
-        </div>
+        }
+
+        <!-- Typing indicator -->
+        @if (recipientTyping()) {
+          <div class="flex justify-start px-4 py-2">
+            <div class="rounded-lg rounded-tl-none bg-surface-raised px-4 py-3 shadow-sm">
+              <div class="flex items-center gap-1">
+                <div
+                  class="h-2 w-2 animate-bounce rounded-full bg-gray-400"
+                  style="animation-delay: 0ms"
+                ></div>
+                <div
+                  class="h-2 w-2 animate-bounce rounded-full bg-gray-400"
+                  style="animation-delay: 150ms"
+                ></div>
+                <div
+                  class="h-2 w-2 animate-bounce rounded-full bg-gray-400"
+                  style="animation-delay: 300ms"
+                ></div>
+              </div>
+            </div>
+          </div>
+        }
       </div>
-    </div>
+    }
   </div>
 
   <!-- Input estilo WhatsApp -->
@@ -227,24 +231,27 @@
         [disabled]="!draftMessage.trim() || sending()"
         class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-whatsapp-teal-light text-text-inverse transition-all hover:bg-whatsapp-teal disabled:opacity-50"
       >
-        <svg *ngIf="!sending()" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-        </svg>
-        <svg *ngIf="sending()" class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
+        @if (sending()) {
+          <svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+        } @else {
+          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+          </svg>
+        }
       </button>
     </form>
 
