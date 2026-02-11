@@ -1,3 +1,7 @@
+## <small>3.84.5 (2026-02-11)</small>
+
+* fix(edge): OWASP A04 error leakage + CORS whitelist hardening ([8aa0517](https://github.com/ecucondorSA/autorenta/commit/8aa0517))
+
 ## <small>3.84.4 (2026-02-11)</small>
 
 * fix: disable gateway jwt check for fragment checkout endpoints ([af37d0c](https://github.com/ecucondorSA/autorenta/commit/af37d0c))
