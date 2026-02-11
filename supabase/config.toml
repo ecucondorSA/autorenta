@@ -68,3 +68,13 @@ entrypoint = "./functions/lead-welcome-notification/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/lead-welcome-notification/*.html" ]
+
+[functions.create-fragment-preference]
+# Gateway JWT verification is disabled because this function validates user tokens
+# manually with supabase.auth.getUser() and returns controlled auth errors.
+verify_jwt = false
+
+[functions.fragment-purchase-webhook]
+# Public webhook endpoint for MercadoPago notifications.
+# Security is enforced by HMAC validation (x-signature + x-request-id).
+verify_jwt = false
