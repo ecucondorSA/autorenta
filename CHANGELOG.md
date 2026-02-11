@@ -1,3 +1,7 @@
+## <small>3.80.17 (2026-02-11)</small>
+
+* refactor(shared): migrate *ngIf/*ngFor to @if/@for in shared components ([6c2c886](https://github.com/ecucondorSA/autorenta/commit/6c2c886))
+
 ## <small>3.80.16 (2026-02-11)</small>
 
 * fix(car-detail): clean up error handling and fix loading/error state order ([40e98cd](https://github.com/ecucondorSA/autorenta/commit/40e98cd)), closes [#errorTpl](https://github.com/ecucondorSA/autorenta/issues/errorTpl)
