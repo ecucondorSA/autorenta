@@ -1,3 +1,7 @@
+## <small>3.84.4 (2026-02-11)</small>
+
+* fix: disable gateway jwt check for fragment checkout endpoints ([af37d0c](https://github.com/ecucondorSA/autorenta/commit/af37d0c))
+
 ## <small>3.84.3 (2026-02-11)</small>
 
 * fix: guard byd pitch checkout when opened from file protocol ([03c2ac9](https://github.com/ecucondorSA/autorenta/commit/03c2ac9))
