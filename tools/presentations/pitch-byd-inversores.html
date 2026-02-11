@@ -6,6 +6,7 @@
   <title>AutoRentar × BYD | Propiedad Fraccionada · USD $12.50 por Fragmento</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
@@ -91,6 +92,22 @@
     .profile-tab:hover { color: #94a3b8; }
     .profile-content { display: none; }
     .profile-content.active { display: block; }
+
+    /* Auth & Purchase Modals */
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 70; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: rgba(15,23,42,0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; padding: 2rem; width: 90%; max-width: 440px; max-height: 90vh; overflow-y: auto; }
+    .modal-input { width: 100%; padding: 0.75rem 1rem; background: rgba(30,41,59,0.8); border: 1px solid rgba(100,116,139,0.3); border-radius: 0.75rem; color: white; font-size: 0.875rem; outline: none; transition: border-color 0.2s; }
+    .modal-input:focus { border-color: #06b6d4; }
+    .modal-btn { width: 100%; padding: 0.75rem; border-radius: 0.75rem; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; border: none; }
+    .modal-btn-primary { background: linear-gradient(135deg, #06b6d4, #10b981); color: #0f172a; }
+    .modal-btn-primary:hover { box-shadow: 0 0 20px rgba(6,182,212,0.3); }
+    .modal-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .modal-btn-mp { background: #009ee3; color: white; }
+    .modal-btn-mp:hover { background: #0086c3; }
+    .toast { position: fixed; top: 40px; left: 50%; transform: translateX(-50%); z-index: 80; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 600; transition: opacity 0.3s; }
+    .toast-success { background: rgba(0,217,95,0.9); color: #0f172a; }
+    .toast-error { background: rgba(239,68,68,0.9); color: white; }
   </style>
 </head>
 <body class="bg-slate-900 text-white grid-bg antialiased">
@@ -114,9 +131,14 @@
         <a href="#ciclo" class="hover:text-cyan-400 transition-colors">Ciclo</a>
         <a href="#faq" class="hover:text-cyan-400 transition-colors">FAQ</a>
       </div>
-      <a href="#invertir" class="text-sm px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-slate-900 font-bold hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
-        Quiero saber mas
-      </a>
+      <div class="flex items-center gap-3">
+        <button id="nav-auth-btn" onclick="openAuthModal()" class="text-sm px-4 py-2 rounded-full border border-slate-600 text-slate-300 hover:border-cyan-500 hover:text-cyan-400 transition-all">
+          Iniciar Sesion
+        </button>
+        <a href="#invertir" class="text-sm px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-slate-900 font-bold hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
+          Invertir
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -224,6 +246,41 @@
           2,000 personas participan de un BYD eléctrico que opera en Buenos Aires.
           <span class="text-white">Sin promesas de retorno fijo</span> — los escenarios dependen de km, ocupacion y costos reales.
         </p>
+      </div>
+
+      <!-- Founder story -->
+      <div class="reveal reveal-delay-1 mt-12 glass-strong rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 via-emerald-400 to-cyan-500"></div>
+        <div class="flex flex-col sm:flex-row items-start gap-6">
+          <div class="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 border border-cyan-500/30 flex items-center justify-center text-3xl">
+            🎓
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">Democratizar el acceso a bienes reales</h3>
+            <p class="text-slate-400 leading-relaxed">
+              Un alumno de la <span class="text-white font-semibold">Universidad de Buenos Aires — Medicina</span> se propuso algo simple:
+              que cualquier persona pueda participar de activos reales que antes solo estaban al alcance de quienes tenian capital.
+            </p>
+            <p class="text-slate-400 mt-3 leading-relaxed">
+              <span class="neon-electric font-semibold">Desde MercadoPago podes comprar una participacion en un BYD por solo USD $12.50.</span>
+              Sin intermediarios financieros, sin montos minimos inalcanzables. Un bien real, un auto que opera, kilometros que se verifican.
+            </p>
+            <div class="flex flex-wrap items-center gap-3 mt-4">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-300">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>
+                UBA Medicina
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>
+                MercadoPago Integrado
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>
+                Desde $12.50 USD
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -976,6 +1033,20 @@
           <br>
           <span class="text-white">Escenarios transparentes, costos reales, KPIs publicos.</span>
         </p>
+
+        <!-- MercadoPago CTA highlight -->
+        <div class="inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-[#009ee3]/10 border border-[#009ee3]/30 mb-6">
+          <svg class="w-7 h-7 flex-shrink-0" viewBox="0 0 48 48" fill="none">
+            <rect width="48" height="48" rx="12" fill="#009ee3"/>
+            <path d="M14 28c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="24" cy="28" r="3" fill="#fff"/>
+          </svg>
+          <div class="text-left">
+            <div class="text-[#00b1ff] font-bold text-sm">Pagá con MercadoPago</div>
+            <div class="text-slate-400 text-xs">Compra fragmentos desde tu cuenta de MP · Sin bancos · Inmediato</div>
+          </div>
+        </div>
+
         <p class="text-sm text-amber-300/70 mb-8">
           Inversion de alto riesgo. Las distribuciones dependen de km, ocupacion y costos. No hay retorno garantizado.
         </p>
@@ -993,7 +1064,11 @@
         </div>
 
         <!-- Trust signals -->
-        <div class="grid grid-cols-3 gap-4 text-center text-xs">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-xs">
+          <div class="p-3 rounded-xl glass">
+            <div class="text-cyan-400 font-bold mb-1">🎓 UBA Medicina</div>
+            <div class="text-slate-500">Fundador · Universidad de Buenos Aires</div>
+          </div>
           <div class="p-3 rounded-xl glass">
             <div class="text-cyan-400 font-bold mb-1">ECUCONDOR SAS</div>
             <div class="text-slate-500">Sociedad constituida en Argentina</div>
