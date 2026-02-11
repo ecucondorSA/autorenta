@@ -8,7 +8,7 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 // UI 2026 Directives
@@ -264,10 +264,18 @@ export class WalletPage implements OnInit {
     }
   });
 
+  private readonly route = inject(ActivatedRoute);
+
   constructor(
     private withdrawalService: WithdrawalService,
     private metaService: MetaService,
   ) {
+    // Read ?tab= query param for deep linking (e.g. from notifications)
+    const tabParam = this.route.snapshot.queryParamMap.get('tab');
+    if (tabParam === 'investments' || tabParam === 'transactions' || tabParam === 'withdrawals' || tabParam === 'transfers' || tabParam === 'coverage') {
+      this.activeTab.set(tabParam);
+    }
+
     // Update SEO meta tags (private page)
     this.metaService.updateWalletMeta();
 
