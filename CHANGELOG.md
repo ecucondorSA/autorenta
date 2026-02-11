@@ -1,3 +1,7 @@
+## 3.83.0 (2026-02-11)
+
+* feat(investment): fragment purchase system with MercadoPago Checkout Pro ([6c89669](https://github.com/ecucondorSA/autorenta/commit/6c89669))
+
 ## 3.82.0 (2026-02-11)
 
 * feat(tools): BYD investor pitch updates + email campaign script ([8264a7e](https://github.com/ecucondorSA/autorenta/commit/8264a7e))
