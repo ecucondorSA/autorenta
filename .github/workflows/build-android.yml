@@ -45,11 +45,19 @@ jobs:
         run: |
           echo "🔄 Auto-bumping versionCode..."
 
-          # Get current version
+          # Current value from build.gradle
           CURRENT_CODE=$(grep 'versionCode' app/build.gradle | grep -o '[0-9]\+' | head -1)
           NEXT_CODE=$((CURRENT_CODE + 1))
 
+          # Use epoch seconds as a monotonic fallback.
+          # This prevents Google Play collisions when previous upload failed before auto-commit.
+          EPOCH_CODE=$(date -u +%s)
+          if [ "$EPOCH_CODE" -gt "$NEXT_CODE" ]; then
+            NEXT_CODE=$EPOCH_CODE
+          fi
+
           echo "Current versionCode: $CURRENT_CODE"
+          echo "Epoch candidate: $EPOCH_CODE"
           echo "Next versionCode: $NEXT_CODE"
 
           # Update build.gradle
