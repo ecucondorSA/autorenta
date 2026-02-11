@@ -1,3 +1,7 @@
+## <small>3.81.3 (2026-02-11)</small>
+
+* fix(cars-map): remove mediaQuery event listener on cleanup to prevent memory leak ([4fbd245](https://github.com/ecucondorSA/autorenta/commit/4fbd245))
+
 ## <small>3.81.2 (2026-02-11)</small>
 
 * refactor: migrate console.warn to LoggerService in performance-monitoring ([2aa57cf](https://github.com/ecucondorSA/autorenta/commit/2aa57cf))
