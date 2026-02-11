@@ -79,7 +79,7 @@ interface CarData {
   year: number;
   color?: string;
   daily_price: number;
-  images?: string[];
+  photo_url?: string;
   city?: string;
 }
 
@@ -896,9 +896,9 @@ async function generateMarketingImage(
   carData: CarData | null,
   contentType: ContentType
 ): Promise<{ content?: { url?: string; base64?: string }; debug?: string } | undefined> {
-  // If car has existing images and it's car_spotlight, use them (50% chance to still generate AI art for variety)
-  if (carData?.images && carData.images.length > 0 && contentType === 'car_spotlight' && Math.random() > 0.5) {
-    return { content: { url: carData.images[0] }, debug: 'Used existing car image' };
+  // If car has a photo and it's car_spotlight, use it (50% chance to still generate AI art for variety)
+  if (carData?.photo_url && contentType === 'car_spotlight' && Math.random() > 0.5) {
+    return { content: { url: carData.photo_url }, debug: 'Used existing car image' };
   }
 
   // Generate with Gemini 2.5 Flash Image
@@ -1407,7 +1407,7 @@ async function getCarData(
 
   const { data, error } = await supabase
     .from('cars')
-    .select('id, brand, model, year, color, daily_price, images, city')
+    .select('id, brand, model, year, color, daily_price, city')
     .eq('id', carId)
     .single();
 
@@ -1416,7 +1416,15 @@ async function getCarData(
     return null;
   }
 
-  return data as CarData;
+  const { data: photoData } = await supabase
+    .from('car_photos')
+    .select('url')
+    .eq('car_id', carId)
+    .order('sort_order', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  return { ...data, photo_url: photoData?.url ?? undefined } as CarData;
 }
 
 async function getRandomAvailableCar(
@@ -1424,7 +1432,7 @@ async function getRandomAvailableCar(
 ): Promise<CarData | null> {
   const { data, error } = await supabase
     .from('cars')
-    .select('id, brand, model, year, color, daily_price, images, city')
+    .select('id, brand, model, year, color, daily_price, city')
     .eq('status', 'active')
     .eq('is_available', true)
     .limit(10);
@@ -1436,7 +1444,17 @@ async function getRandomAvailableCar(
 
   // Return random car from results
   const randomIndex = Math.floor(Math.random() * data.length);
-  return data[randomIndex] as CarData;
+  const car = data[randomIndex];
+
+  const { data: photoData } = await supabase
+    .from('car_photos')
+    .select('url')
+    .eq('car_id', car.id)
+    .order('sort_order', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  return { ...car, photo_url: photoData?.url ?? undefined } as CarData;
 }
 
 // ============================================================================

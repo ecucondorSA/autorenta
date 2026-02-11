@@ -286,15 +286,32 @@ serve(async (req) => {
 
     if (!tokenResponse.ok) {
       const errorData = await tokenResponse.json().catch(() => ({}));
-      log.error('[MP Token Error]', tokenResponse.status, errorData);
+      log.error('[MP Token Error]', tokenResponse.status, JSON.stringify(errorData));
+
+      // Guardar error en DB para diagnóstico (en el campo state, que ya no se necesita)
+      await supabase
+        .from('profiles')
+        .update({
+          mercadopago_oauth_state: JSON.stringify({
+            error_at: new Date().toISOString(),
+            mp_status: tokenResponse.status,
+            mp_error: errorData.error || 'unknown',
+            mp_cause: Array.isArray(errorData.cause) ? errorData.cause : [],
+          }),
+        })
+        .eq('id', stateData.user_id);
 
       // Propagar el status real de MercadoPago para evitar 500 genérico en frontend
       const status = tokenResponse.status === 400 ? 400 : tokenResponse.status || 500;
+
+      // Exponer OAuth error code estándar (RFC 6749 §5.2) — seguro, no es info interna
+      const mpErrorCode = errorData.error || 'unknown_error';
 
       return new Response(
         JSON.stringify({
           success: false,
           error: 'Error obteniendo token de MercadoPago',
+          mp_error_code: mpErrorCode,
           status: tokenResponse.status,
         }),
         {
