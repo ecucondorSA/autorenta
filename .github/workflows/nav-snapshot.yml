@@ -1,0 +1,43 @@
+name: NAV Snapshot (Fragment Investments)
+
+on:
+  schedule:
+    # Every 3 days at 06:00 UTC (03:00 ART)
+    - cron: '0 6 */3 * *'
+  workflow_dispatch: {}
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check prerequisites
+        id: check
+        run: |
+          if [ -z "${{ secrets.SUPABASE_URL }}" ] || [ -z "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Supabase secrets not configured, skipping"
+          fi
+
+      - name: Snapshot all vehicle NAVs
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          RESPONSE=$(curl -sf -X POST \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/rpc/snapshot_all_vehicle_navs" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{}')
+
+          echo "Response: $RESPONSE"
+
+          SUCCESS=$(echo "$RESPONSE" | jq -r '.success')
+          PROCESSED=$(echo "$RESPONSE" | jq -r '.vehicles_processed')
+          PERIOD=$(echo "$RESPONSE" | jq -r '.period')
+
+          if [ "$SUCCESS" != "true" ]; then
+            echo "::error::NAV snapshot failed: $RESPONSE"
+            exit 1
+          fi
+
+          echo "✅ NAV snapshot complete: $PROCESSED vehicles for period $PERIOD"
