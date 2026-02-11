@@ -1,3 +1,8 @@
+## 3.84.0 (2026-02-11)
+
+* fix: handle expired auth in BYD pitch checkout ([f15fc09](https://github.com/ecucondorSA/autorenta/commit/f15fc09))
+* feat: integrate BYD fragment investment flow end-to-end ([040ea70](https://github.com/ecucondorSA/autorenta/commit/040ea70))
+
 ## 3.83.0 (2026-02-11)
 
 * feat(investment): fragment purchase system with MercadoPago Checkout Pro ([6c89669](https://github.com/ecucondorSA/autorenta/commit/6c89669))
