@@ -135,9 +135,8 @@ serve(async (req) => {
             error: `Token refresh failed (HTTP ${tokenResponse.status})`,
           });
 
-          // TODO(human): Define retry/disconnect strategy for permanent refresh failures
-          // Currently: immediately disconnect on 401/400
-          // Consider: retry count, grace period, or user notification before disconnect
+          // 401/400 = refresh_token permanently invalid (user revoked, password changed, etc.)
+          // Retrying won't help — disconnect immediately so UI reflects reality
           if (tokenResponse.status === 401 || tokenResponse.status === 400) {
             await supabase
               .from('profiles')
