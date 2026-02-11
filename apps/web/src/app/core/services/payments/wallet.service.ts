@@ -1,5 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { PostgrestSingleResponse, RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
+import { PostgrestSingleResponse, SupabaseClient } from '@supabase/supabase-js';
+import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import { firstValueFrom, from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import type {
@@ -56,7 +57,8 @@ export class WalletService {
 
   readonly pendingDepositsCount = signal(0);
 
-  private walletChannel: RealtimeChannel | null = null;
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
+  private walletChannelName: string | null = null;
 
   // 🚀 PERF: Request deduplication to prevent multiple parallel fetches
   // Before: 8 components calling fetchBalance() = 8 API requests
@@ -556,15 +558,14 @@ export class WalletService {
   async subscribeToWalletChanges(
     onTransaction: (transaction: WalletTransaction) => void,
     onBalanceChange: (balance: WalletBalance) => void,
-  ): Promise<RealtimeChannel> {
+  ): Promise<void> {
     const session = await this.authService.ensureSession();
     const user = session?.user;
     if (!user) throw new Error('No autenticado');
 
     // Cleanup any previous channel to avoid duplicate callbacks
-    if (this.walletChannel) {
-      await this.supabase.removeChannel(this.walletChannel);
-      this.walletChannel = null;
+    if (this.walletChannelName) {
+      this.realtimeConnection.unsubscribe(this.walletChannelName);
     }
 
     const normalizeTransaction = (row: Record<string, unknown>): WalletTransaction => {
@@ -619,51 +620,49 @@ export class WalletService {
       };
     };
 
-    this.walletChannel = this.supabase
-      .channel(`wallet:${user.id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'wallet_transactions',
-          filter: `user_id=eq.${user.id}`,
-        },
-        async (payload) => {
-          const tx = payload.new as unknown as Record<string, unknown>;
-          const type = String(tx['type'] ?? '');
-          const status = String(tx['status'] ?? '');
-          const prev = payload.old as unknown as Record<string, unknown> | null;
-          const prevStatus = prev ? String(prev['status'] ?? '') : '';
+    this.walletChannelName = `wallet-transactions-${user.id}`;
 
-          // Only notify the "deposit confirmed" callback for completed deposits.
-          if (type === 'deposit' && status === 'completed' && prevStatus !== 'completed') {
-            onTransaction(normalizeTransaction(tx));
-          }
-          try {
-            const balance = await this.fetchBalance(true);
-            onBalanceChange(balance);
-          } catch (error) {
-            this.logger.warn(
-              'Failed to refresh wallet balance after transaction',
-              error instanceof Error ? error.message : String(error),
-            );
-          }
-        },
-      )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.debug('[Wallet] Realtime subscription active');
+    this.realtimeConnection.subscribeWithRetry(
+      this.walletChannelName,
+      {
+        event: '*',
+        schema: 'public',
+        table: 'wallet_transactions',
+        filter: `user_id=eq.${user.id}`,
+      },
+      async (payload) => {
+        const tx = payload.new as unknown as Record<string, unknown>;
+        const type = String(tx['type'] ?? '');
+        const status = String(tx['status'] ?? '');
+        const prev = payload.old as unknown as Record<string, unknown> | null;
+        const prevStatus = prev ? String(prev['status'] ?? '') : '';
+
+        // Only notify the "deposit confirmed" callback for completed deposits.
+        if (type === 'deposit' && status === 'completed' && prevStatus !== 'completed') {
+          onTransaction(normalizeTransaction(tx));
         }
-      });
-
-    return this.walletChannel;
+        try {
+          const balance = await this.fetchBalance(true);
+          onBalanceChange(balance);
+        } catch (error) {
+          this.logger.warn(
+            'Failed to refresh wallet balance after transaction',
+            error instanceof Error ? error.message : String(error),
+          );
+        }
+      },
+      (status) => {
+        if (status === 'connected') {
+          this.logger.debug('Wallet realtime subscription active');
+        }
+      },
+    );
   }
 
   async unsubscribeFromWalletChanges(): Promise<void> {
-    if (!this.walletChannel) return;
-    await this.supabase.removeChannel(this.walletChannel);
-    this.walletChannel = null;
+    if (!this.walletChannelName) return;
+    this.realtimeConnection.unsubscribe(this.walletChannelName);
+    this.walletChannelName = null;
   }
 
   // ============================================================================

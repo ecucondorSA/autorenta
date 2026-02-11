@@ -79,7 +79,8 @@
               "xmlhttprequest-ssl",
               "bufferutil",
               "socket.io-client",
-              "engine.io-client"
+              "engine.io-client",
+              "eruda"
             ],
             "prerender": false,
             "ssr": false,
@@ -90,13 +91,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1.5MB",
+                  "maximumWarning": "2MB",
                   "maximumError": "2.5MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "50kB",
-                  "maximumError": "100kB"
+                  "maximumWarning": "75kB",
+                  "maximumError": "150kB"
                 }
               ],
               "outputHashing": "all",

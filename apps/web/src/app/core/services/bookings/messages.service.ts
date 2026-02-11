@@ -471,6 +471,42 @@ export class MessagesService implements OnDestroy {
   }
 
   /**
+   * Subscribe to presence for a conversation context.
+   * Returns the channel and an unsubscribe function for cleanup.
+   */
+  subscribeToPresence(
+    contextId: string,
+    currentUserId: string,
+    onPresenceSync: (onlineUserIds: string[]) => void,
+  ): { unsubscribe: () => void } {
+    const channelName = `presence-online-${contextId}`;
+
+    const channel = this.supabase
+      .channel(channelName, {
+        config: {
+          presence: {
+            key: currentUserId,
+          },
+        },
+      })
+      .on('presence', { event: 'sync' }, () => {
+        const state = channel.presenceState() || {};
+        onPresenceSync(Object.keys(state));
+      })
+      .subscribe(async (status: string) => {
+        if (status === 'SUBSCRIBED' && currentUserId) {
+          await channel.track({ user_id: currentUserId });
+        }
+      });
+
+    return {
+      unsubscribe: () => {
+        this.supabase.removeChannel(channel);
+      },
+    };
+  }
+
+  /**
    * Lista conversaciones con paginación usando MessagesRepository
    */
   async listConversations(

@@ -60,6 +60,7 @@ export class VerificationStateService implements OnDestroy {
   private realtimeChannel?: RealtimeChannel;
   private lastFetchTime = 0;
   private readonly CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes
+  private refreshDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   /**
    * Initialize Realtime subscriptions
@@ -142,11 +143,17 @@ export class VerificationStateService implements OnDestroy {
           table: 'user_identity_levels',
           filter: `user_id=eq.${userId}`,
         },
-        async (payload: RealtimePostgresChangesPayload<VerificationStatusRow>) => {
-          // Refresh progress when changes detected
-          await this.refreshProgress(true);
+        (payload: RealtimePostgresChangesPayload<VerificationStatusRow>) => {
+          // Debounce refresh to avoid multiple RPCs when admin updates rapidly
+          if (this.refreshDebounceTimer) {
+            clearTimeout(this.refreshDebounceTimer);
+          }
+          this.refreshDebounceTimer = setTimeout(async () => {
+            this.refreshDebounceTimer = null;
+            await this.refreshProgress(true);
+          }, 500);
 
-          // Emit event for notifications
+          // Emit event for notifications immediately
           this.emitVerificationEvent(payload);
         },
       )
@@ -161,6 +168,10 @@ export class VerificationStateService implements OnDestroy {
    * Unsubscribe from Realtime channel
    */
   unsubscribe(): void {
+    if (this.refreshDebounceTimer) {
+      clearTimeout(this.refreshDebounceTimer);
+      this.refreshDebounceTimer = null;
+    }
     if (this.realtimeChannel) {
       this.supabase.removeChannel(this.realtimeChannel);
       this.realtimeChannel = undefined;

@@ -98,6 +98,7 @@ serve(async (req) => {
         client_secret: TIKTOK_CLIENT_SECRET,
         code: code,
         grant_type: 'authorization_code',
+        redirect_uri: 'https://autorentar.com/auth/callback',
       }),
     });
 

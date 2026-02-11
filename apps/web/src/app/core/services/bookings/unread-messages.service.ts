@@ -1,6 +1,7 @@
 import { Injectable, signal, inject, computed, effect, Injector } from '@angular/core';
-import type { RealtimeChannel } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
@@ -16,7 +17,9 @@ export interface UnreadConversation {
   otherUserName?: string;
 }
 
-interface MessageRow {
+// Use `type` instead of `interface` for implicit index signature compatibility
+// with subscribeWithRetry<T extends DatabaseRecord>
+type MessageRow = {
   id: string;
   booking_id: string | null;
   car_id: string | null;
@@ -25,7 +28,7 @@ interface MessageRow {
   body: string;
   created_at: string;
   read_at: string | null;
-}
+};
 
 interface AudioContextWindow extends Window {
   webkitAudioContext?: typeof AudioContext;
@@ -40,12 +43,14 @@ interface AudioContextWindow extends Window {
 })
 export class UnreadMessagesService {
   private readonly supabase = injectSupabase();
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
+  private readonly logger = inject(LoggerService).createChildLogger('UnreadMessagesService');
   private readonly authService = inject(AuthService);
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
   private readonly carsService = inject(CarsService);
   private readonly profileService = inject(ProfileService);
 
-  private realtimeChannel?: RealtimeChannel;
+  private realtimeChannelName: string | null = null;
   private initializedForUser: string | null = null;
 
   // Signals for reactivity
@@ -88,7 +93,8 @@ export class UnreadMessagesService {
     try {
       await this.fetchUnreadConversations(user.id);
       this.subscribeToNewMessages(user.id);
-    } catch {
+    } catch (err) {
+      this.logger.error('Failed to initialize', { error: err });
       // Reset so next attempt can retry
       this.initializedForUser = null;
     } finally {
@@ -150,52 +156,44 @@ export class UnreadMessagesService {
       }
 
       this.unreadConversations.set(Array.from(conversationsMap.values()));
-    } catch {
-      // Silent fail
+    } catch (err) {
+      this.logger.error('Failed to fetch unread conversations', { error: err });
     }
   }
 
   /**
-   * Subscribe to real-time new messages
+   * Subscribe to real-time new messages via RealtimeConnectionService
+   * Uses event: '*' to capture both INSERT (new messages) and UPDATE (read receipts)
    */
   private subscribeToNewMessages(userId: string): void {
     // Unsubscribe from any existing channel
-    if (this.realtimeChannel) {
-      this.supabase.removeChannel(this.realtimeChannel);
+    if (this.realtimeChannelName) {
+      this.realtimeConnection.unsubscribe(this.realtimeChannelName);
     }
 
-    // Subscribe to messages table for new messages where user is recipient
-    this.realtimeChannel = this.supabase
-      .channel('unread-messages')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'messages',
-          filter: `recipient_id=eq.${userId}`,
-        },
-        (payload) => {
+    this.realtimeChannelName = `unread-messages-${userId}`;
+
+    this.realtimeConnection.subscribeWithRetry<MessageRow>(
+      this.realtimeChannelName,
+      {
+        event: '*',
+        schema: 'public',
+        table: 'messages',
+        filter: `recipient_id=eq.${userId}`,
+      },
+      (payload) => {
+        if (payload.eventType === 'INSERT') {
           this.handleNewMessage(payload.new as MessageRow);
-        },
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'messages',
-          filter: `recipient_id=eq.${userId}`,
-        },
-        (payload) => {
+        } else if (payload.eventType === 'UPDATE') {
           this.handleMessageUpdate(payload.new as MessageRow);
-        },
-      )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.debug('[UnreadMessages] Realtime subscription active');
         }
-      });
+      },
+      (status) => {
+        if (status === 'connected') {
+          this.logger.debug('Realtime subscription active');
+        }
+      },
+    );
   }
 
   /**
@@ -236,7 +234,7 @@ export class UnreadMessagesService {
     // Play notification sound
     this.playNotificationSound();
 
-    // ✅ NUEVO: Mostrar notificación profesional si es un mensaje sobre un auto
+    // Mostrar notificación profesional si es un mensaje sobre un auto
     // Solo si el usuario actual es el dueño del auto (recipient)
     const currentUser = this.authService.session$()?.user;
     if (currentUser && message.recipient_id === currentUser.id) {
@@ -333,8 +331,8 @@ export class UnreadMessagesService {
         (c) => !(c.conversationId === conversationId && c.type === type),
       );
       this.unreadConversations.set(conversations);
-    } catch {
-      // Silent fail
+    } catch (err) {
+      this.logger.error('Failed to mark conversation as read', { error: err });
     }
   }
 
@@ -374,9 +372,9 @@ export class UnreadMessagesService {
    * Clean up subscriptions
    */
   private cleanup(): void {
-    if (this.realtimeChannel) {
-      this.supabase.removeChannel(this.realtimeChannel);
-      this.realtimeChannel = undefined;
+    if (this.realtimeChannelName) {
+      this.realtimeConnection.unsubscribe(this.realtimeChannelName);
+      this.realtimeChannelName = null;
     }
     this.initializedForUser = null;
     this.unreadConversations.set([]);

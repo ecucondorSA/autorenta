@@ -124,10 +124,14 @@
           <!-- Language Selector -->
           <app-language-selector></app-language-selector>
           <!-- Help Button -->
-          <app-help-button></app-help-button>
+          @defer (on idle) {
+            <app-help-button></app-help-button>
+          }
           <!-- Notifications -->
           @if (isAuthenticatedSig()) {
-            <app-notifications></app-notifications>
+            @defer (on idle) {
+              <app-notifications></app-notifications>
+            }
           }
           <!-- Share App Button -->
           <app-share-button
@@ -304,14 +308,18 @@
 
   <!-- Verification Prompt Banner (hidden on full-bleed layouts) -->
   @if (isAuthenticatedSig() && !isOnVerificationPage() && !fullBleedLayout()) {
-    <app-verification-prompt-banner></app-verification-prompt-banner>
+    @defer (on idle) {
+      <app-verification-prompt-banner></app-verification-prompt-banner>
+    }
   }
 
   <!-- Pending Reviews Banner (hidden on full-bleed layouts) -->
   @if (isAuthenticatedSig() && !fullBleedLayout()) {
-    <app-pending-reviews-banner
-      class="block mx-auto max-w-7xl w-full px-4"
-    ></app-pending-reviews-banner>
+    @defer (on idle) {
+      <app-pending-reviews-banner
+        class="block mx-auto max-w-7xl w-full px-4"
+      ></app-pending-reviews-banner>
+    }
   }
 
   <!-- Main Content Area -->
@@ -360,8 +368,10 @@
 
   <!-- Footer Profesional (oculto en móvil, visible en desktop) -->
   @if (!hideFooter()) {
-    <app-seo-footer class="hidden md:block"></app-seo-footer>
-    <app-footer class="hidden md:block"></app-footer>
+    @defer (on idle) {
+      <app-seo-footer class="hidden md:block"></app-seo-footer>
+      <app-footer class="hidden md:block"></app-footer>
+    }
   }
 
   <!-- Mobile Bottom Navigation se renderiza via Portal Service (app.component.ts) -->
@@ -372,18 +382,22 @@
 
 <!-- Mobile Menu Drawer - Bottom Sheet Style -->
 @if (isAuthenticatedSig()) {
-  <app-mobile-menu-drawer
-    [open]="mobileMenuDrawerOpen()"
-    [userProfile]="userProfile()"
-    [pendingApprovalCount]="pendingApprovalCount()"
-    [unreadNotificationsCount]="unreadNotificationsCount()"
-    (closeDrawer)="closeMobileMenuDrawer()"
-  >
-  </app-mobile-menu-drawer>
+  @defer (on idle) {
+    <app-mobile-menu-drawer
+      [open]="mobileMenuDrawerOpen()"
+      [userProfile]="userProfile()"
+      [pendingApprovalCount]="pendingApprovalCount()"
+      [unreadNotificationsCount]="unreadNotificationsCount()"
+      (closeDrawer)="closeMobileMenuDrawer()"
+    >
+    </app-mobile-menu-drawer>
+  }
 }
 
 <!-- PWA Install Banner - Minimalista y menos intrusivo que pwa-install-prompt -->
 <app-pwa-install-banner></app-pwa-install-banner>
 
 <!-- Debug Panel - Activated via Ctrl+Shift+D or ?debug=1 -->
-<app-debug-panel></app-debug-panel>
+@defer (on idle) {
+  <app-debug-panel></app-debug-panel>
+}

@@ -1,6 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
 import { computed, DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
-import { RealtimeChannel } from '@supabase/supabase-js';
 import {
   CreateFeatureFlagDto,
   CreateFeatureFlagOverrideDto,
@@ -13,6 +12,7 @@ import {
   UserSegment,
 } from '@core/models';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 @Injectable({
@@ -23,6 +23,7 @@ export class FeatureFlagService {
   private readonly logger = inject(LoggerService).createChildLogger('FeatureFlagService');
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
 
   // Local cache of feature flags
   private readonly flagsSignal = signal<Map<string, FeatureFlag>>(new Map());
@@ -38,8 +39,7 @@ export class FeatureFlagService {
   // User context for evaluation
   private contextSignal = signal<FeatureFlagContext>({});
 
-  // Realtime subscription
-  private realtimeChannel: RealtimeChannel | null = null;
+  private static readonly REALTIME_CHANNEL = 'feature_flags_changes';
 
   // Cache TTL (5 minutes)
   private readonly CACHE_TTL = 5 * 60 * 1000;
@@ -50,9 +50,7 @@ export class FeatureFlagService {
 
     // Cleanup realtime subscription on destroy
     this.destroyRef.onDestroy(() => {
-      if (this.realtimeChannel) {
-        this.supabase.removeChannel(this.realtimeChannel);
-      }
+      this.realtimeConnection.unsubscribe(FeatureFlagService.REALTIME_CHANNEL);
     });
   }
 
@@ -121,31 +119,29 @@ export class FeatureFlagService {
   }
 
   /**
-   * Subscribe to realtime updates for feature flags
+   * Subscribe to realtime updates for feature flags via RealtimeConnectionService
    */
   private subscribeToRealtime(): void {
-    this.realtimeChannel = this.supabase
-      .channel('feature_flags_changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'feature_flags',
-        },
-        (payload) => {
-          this.handleRealtimeUpdate({
-            eventType: payload.eventType,
-            new: payload.new as FeatureFlag | null,
-            old: payload.old as { id: string; name?: string } | null,
-          });
-        },
-      )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
+    this.realtimeConnection.subscribeWithRetry<FeatureFlag>(
+      FeatureFlagService.REALTIME_CHANNEL,
+      {
+        event: '*',
+        schema: 'public',
+        table: 'feature_flags',
+      },
+      (payload) => {
+        this.handleRealtimeUpdate({
+          eventType: payload.eventType,
+          new: payload.new as FeatureFlag | null,
+          old: payload.old as { id: string; name?: string } | null,
+        });
+      },
+      (status) => {
+        if (status === 'connected') {
           this.logger.debug('Feature flags realtime subscription active');
         }
-      });
+      },
+    );
   }
 
   /**

@@ -128,7 +128,10 @@ export class BookingRealtimeService implements OnDestroy {
         },
         (payload) => {
           this.logger.debug('[BookingRealtime] Confirmation changed:', payload.eventType);
-          handlers.onConfirmationChange?.(payload.new as BookingConfirmationRow);
+          const row = payload.new as BookingConfirmationRow;
+          if (row?.booking_id) {
+            handlers.onConfirmationChange?.(row);
+          }
         },
       );
       this.channels.push(channel);

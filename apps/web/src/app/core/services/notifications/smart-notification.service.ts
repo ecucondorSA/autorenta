@@ -2,6 +2,7 @@ import { inject, Injectable, signal, computed } from '@angular/core';
 import { AuthService } from '@core/services/auth/auth.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import { PushNotificationService } from '@core/services/infrastructure/push-notification.service';
 
 /**
@@ -96,7 +97,10 @@ export class SmartNotificationService {
   private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly authService = inject(AuthService);
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
   private readonly pushService = inject(PushNotificationService);
+
+  private notificationChannelName: string | null = null;
 
   // State signals
   private readonly _preferences = signal<NotificationPreferences | null>(null);
@@ -481,31 +485,34 @@ export class SmartNotificationService {
     this.authService.getCurrentUser().then((user) => {
       if (!user) return;
 
-      // Subscribe to new notifications in history
-      this.supabase
-        .channel('notifications')
-        .on(
-          'postgres_changes',
-          {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'notification_history',
-            filter: `user_id=eq.${user.id}`,
-          },
-          (payload) => {
-            this.logger.debug('[SmartNotification] New notification received:', payload.new);
+      // Unsubscribe from previous channel if exists (prevents duplicates)
+      if (this.notificationChannelName) {
+        this.realtimeConnection.unsubscribe(this.notificationChannelName);
+      }
 
-            // Update unread count
-            this._unreadCount.update((count) => count + 1);
+      this.notificationChannelName = `notifications-${user.id}`;
 
-            // Add to recent notifications
-            this._recentNotifications.update((notifications) => [
-              payload.new as NotificationHistoryEntry,
-              ...notifications.slice(0, 19),
-            ]);
-          },
-        )
-        .subscribe();
+      this.realtimeConnection.subscribeWithRetry(
+        this.notificationChannelName,
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notification_history',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          this.logger.debug('[SmartNotification] New notification received:', payload.new);
+
+          // Update unread count
+          this._unreadCount.update((count) => count + 1);
+
+          // Add to recent notifications
+          this._recentNotifications.update((notifications) => [
+            payload.new as NotificationHistoryEntry,
+            ...notifications.slice(0, 19),
+          ]);
+        },
+      );
     });
   }
 
@@ -513,6 +520,10 @@ export class SmartNotificationService {
    * Clean up on logout
    */
   async cleanup(): Promise<void> {
+    if (this.notificationChannelName) {
+      this.realtimeConnection.unsubscribe(this.notificationChannelName);
+      this.notificationChannelName = null;
+    }
     this._preferences.set(null);
     this._unreadCount.set(0);
     this._recentNotifications.set([]);

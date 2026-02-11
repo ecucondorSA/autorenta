@@ -992,7 +992,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
   protected notificationTimeout: ReturnType<typeof setTimeout> | null = null;
   protected typingTimeout: ReturnType<typeof setTimeout> | null = null;
   protected typingChannel?: RealtimeChannel;
-  protected presenceChannel?: RealtimeChannel;
+  private presenceUnsubscribe?: () => void;
 
   constructor() {
     // Update current user ID when session changes
@@ -1021,11 +1021,11 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
   ngOnDestroy(): void {
     this.messagesService.unsubscribe();
     if (this.typingChannel) {
-      this.typingChannel.unsubscribe();
+      this.supabase.removeChannel(this.typingChannel);
+      this.typingChannel = undefined;
     }
-    if (this.presenceChannel) {
-      this.presenceChannel.unsubscribe();
-    }
+    this.presenceUnsubscribe?.();
+    this.presenceUnsubscribe = undefined;
     if (this.notificationTimeout) {
       clearTimeout(this.notificationTimeout);
     }
@@ -1206,38 +1206,17 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
    */
   protected subscribeToPresence(): void {
     const ctx = this.context();
-    const channelName = `presence-online-${ctx.contextId}`;
+    const userId = this.currentUserId() || 'anonymous';
 
-    this.presenceChannel = this.messagesService['supabase']
-      .channel(channelName, {
-        config: {
-          presence: {
-            key: this.currentUserId() || 'anonymous',
-          },
-        },
-      })
-      .on('presence', { event: 'sync' }, () => {
-        const state = this.presenceChannel?.presenceState() || {};
-        // Check if recipient is in the presence state
-        const onlineUsers = Object.keys(state);
-        this.recipientOnline.set(onlineUsers.includes(ctx.recipientId));
-      })
-      .on('presence', { event: 'join' }, ({ key }: { key: string }) => {
-        if (key === ctx.recipientId) {
-          this.recipientOnline.set(true);
-        }
-      })
-      .on('presence', { event: 'leave' }, ({ key }: { key: string }) => {
-        if (key === ctx.recipientId) {
-          this.recipientOnline.set(false);
-        }
-      })
-      .subscribe(async (status: string) => {
-        if (status === 'SUBSCRIBED' && this.currentUserId()) {
-          // Track our own presence
-          await this.presenceChannel?.track({ user_id: this.currentUserId() });
-        }
-      });
+    const { unsubscribe } = this.messagesService.subscribeToPresence(
+      ctx.contextId,
+      userId,
+      (onlineUserIds) => {
+        this.recipientOnline.set(onlineUserIds.includes(ctx.recipientId));
+      },
+    );
+
+    this.presenceUnsubscribe = unsubscribe;
   }
 
   /**

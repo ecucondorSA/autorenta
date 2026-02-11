@@ -1,36 +1,25 @@
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { computed, effect, Injectable, signal, inject, OnDestroy } from '@angular/core';
-import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
+import { computed, Injectable, signal, inject, OnDestroy } from '@angular/core';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
- * 🔄 REAL-TIME PRICING SERVICE (ECUCONDOR08122023 Pattern)
+ * REAL-TIME PRICING SERVICE
  *
- * Sistema de precios dinámicos con WebSocket pooling usando Supabase Realtime
+ * Sistema de precios dinámicos con WebSocket pooling usando RealtimeConnectionService
  *
  * Features:
- * - 🔴 WebSocket subscription a exchange_rates (tasas de Binance)
- * - 🔴 WebSocket subscription a pricing_demand_snapshots (demanda)
- * - 🔴 WebSocket subscription a pricing_special_events (eventos)
- * - ⚡ Updates instantáneos sin polling
- * - 🎯 Signal-based reactivity
- * - 🧹 Auto-cleanup on destroy
- *
- * Uso:
- * ```typescript
- * // En componente
- * private realtimePricing = inject(RealtimePricingService);
- *
- * ngOnInit() {
- *   // Suscribirse a updates
- *   this.realtimePricing.subscribeToExchangeRates(() => {
- *     this.logger.debug('Nueva tasa de cambio:', this.realtimePricing.latestExchangeRate());
- *   });
- * }
- * ```
+ * - WebSocket subscription a exchange_rates (tasas de Binance)
+ * - WebSocket subscription a pricing_demand_snapshots (demanda)
+ * - WebSocket subscription a pricing_special_events (eventos)
+ * - Retry automático y deduplicación via RCS
+ * - Signal-based reactivity
+ * - Auto-cleanup on destroy
  */
 
-export interface ExchangeRateUpdate {
+// Use `type` instead of `interface` so TypeScript infers implicit index signatures,
+// required by subscribeWithRetry<T extends DatabaseRecord>
+export type ExchangeRateUpdate = {
   id: string;
   pair: string;
   source: string;
@@ -39,9 +28,9 @@ export interface ExchangeRateUpdate {
   margin_percent: number;
   last_updated: string;
   is_active: boolean;
-}
+};
 
-export interface DemandSnapshot {
+export type DemandSnapshot = {
   id: string;
   region_id: string;
   created_at: string;
@@ -50,9 +39,9 @@ export interface DemandSnapshot {
   pending_requests: number;
   demand_ratio: number;
   surge_factor: number;
-}
+};
 
-export interface SpecialEvent {
+export type SpecialEvent = {
   id: string;
   region_id: string;
   name: string;
@@ -60,7 +49,7 @@ export interface SpecialEvent {
   end_date: string;
   factor: number;
   active: boolean;
-}
+};
 
 type PricingUpdateCallbacks = {
   onExchangeRateUpdate?: () => void;
@@ -68,17 +57,23 @@ type PricingUpdateCallbacks = {
   onEventUpdate?: () => void;
 };
 
+// Channel names managed by RealtimeConnectionService
+const CHANNEL_EXCHANGE_RATES = 'pricing-exchange-rates';
+const CHANNEL_DEMAND_SNAPSHOTS = 'pricing-demand-snapshots';
+const CHANNEL_SPECIAL_EVENTS = 'pricing-special-events';
+
 @Injectable({
   providedIn: 'root',
 })
 export class RealtimePricingService implements OnDestroy {
-  private readonly logger = inject(LoggerService);
+  private readonly logger = inject(LoggerService).createChildLogger('RealtimePricingService');
   private readonly supabase = injectSupabase();
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
 
-  // Realtime channels
-  private exchangeRatesChannel: RealtimeChannel | null = null;
-  private demandChannel: RealtimeChannel | null = null;
-  private eventsChannel: RealtimeChannel | null = null;
+  // Track which channels are active
+  private exchangeRatesActive = false;
+  private demandActive = false;
+  private eventsActive = false;
 
   private readonly sharedSubscribers = new Set<PricingUpdateCallbacks>();
   private sharedSubscriptionsActive = false;
@@ -92,7 +87,6 @@ export class RealtimePricingService implements OnDestroy {
 
   // Computed signals
   readonly currentSurgeFactor = computed(() => {
-    // Retorna el factor de surge promedio de todas las regiones
     const demands = Array.from(this.demandByRegion().values());
     if (demands.length === 0) return 0;
     return demands.reduce((acc, d) => acc + d.surge_factor, 0) / demands.length;
@@ -100,131 +94,111 @@ export class RealtimePricingService implements OnDestroy {
 
   readonly hasActiveEvents = computed(() => this.activeEvents().length > 0);
 
-  constructor() {
-    // Effect para log de debug (opcional)
-    effect(() => {});
-  }
-
   ngOnDestroy(): void {
     this.cleanup();
   }
 
   /**
-   * 🔴 Suscribirse a actualizaciones de tasas de cambio (Binance)
-   * Se actualiza cada vez que la Edge Function actualiza exchange_rates
+   * Suscribirse a actualizaciones de tasas de cambio (Binance)
    */
   subscribeToExchangeRates(onChange?: () => void): () => void {
-    this.exchangeRatesChannel = this.supabase
-      .channel('exchange_rates_changes')
-      .on(
-        'postgres_changes',
+    if (!this.exchangeRatesActive) {
+      this.exchangeRatesActive = true;
+      this.realtimeConnection.subscribeWithRetry<ExchangeRateUpdate>(
+        CHANNEL_EXCHANGE_RATES,
         {
-          event: '*', // INSERT, UPDATE, DELETE
+          event: '*',
           schema: 'public',
           table: 'exchange_rates',
-          filter: 'is_active=eq.true', // Solo tasas activas
+          filter: 'is_active=eq.true',
         },
-        (payload: RealtimePostgresChangesPayload<ExchangeRateUpdate>) => {
+        (payload) => {
           if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
             this.latestExchangeRate.set(payload.new as ExchangeRateUpdate);
             onChange?.();
           }
         },
-      )
-      .subscribe((status) => {
-        this.connectionStatus.set(status);
-        this.isConnected.set(status === 'SUBSCRIBED');
-      });
+        (status) => {
+          this.connectionStatus.set(status);
+          this.isConnected.set(status === 'connected');
+        },
+      );
 
-    // Cargar tasa inicial
-    void this.loadInitialExchangeRate();
+      void this.loadInitialExchangeRate();
+    }
 
-    // Return unsubscribe function
     return () => {
-      this.exchangeRatesChannel?.unsubscribe();
-      this.exchangeRatesChannel = null;
+      this.realtimeConnection.unsubscribe(CHANNEL_EXCHANGE_RATES);
+      this.exchangeRatesActive = false;
     };
   }
 
   /**
-   * 🔴 Suscribirse a actualizaciones de demanda por región
-   * Se actualiza cada 15 minutos por cron job
+   * Suscribirse a actualizaciones de demanda por región
    */
   subscribeToDemandSnapshots(onChange?: (regionId: string) => void): () => void {
-    this.demandChannel = this.supabase
-      .channel('demand_snapshots_changes')
-      .on(
-        'postgres_changes',
+    if (!this.demandActive) {
+      this.demandActive = true;
+      this.realtimeConnection.subscribeWithRetry<DemandSnapshot>(
+        CHANNEL_DEMAND_SNAPSHOTS,
         {
           event: '*',
           schema: 'public',
           table: 'pricing_demand_snapshots',
         },
-        (payload: RealtimePostgresChangesPayload<DemandSnapshot>) => {
+        (payload) => {
           if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
             const snapshot = payload.new as DemandSnapshot;
-
-            // Actualizar map de demanda por región
             this.demandByRegion.update((map) => {
               const newMap = new Map(map);
               newMap.set(snapshot.region_id, snapshot);
               return newMap;
             });
-
             onChange?.(snapshot.region_id);
           }
         },
-      )
-      .subscribe((_status) => {
-        // Status handled by isConnected and connectionStatus signals
-        // No specific action needed here
-      });
+      );
 
-    // Cargar snapshots iniciales
-    void this.loadInitialDemandSnapshots();
+      void this.loadInitialDemandSnapshots();
+    }
 
     return () => {
-      this.demandChannel?.unsubscribe();
-      this.demandChannel = null;
+      this.realtimeConnection.unsubscribe(CHANNEL_DEMAND_SNAPSHOTS);
+      this.demandActive = false;
     };
   }
 
   /**
-   * 🔴 Suscribirse a eventos especiales (conciertos, feriados, etc)
+   * Suscribirse a eventos especiales (conciertos, feriados, etc)
    */
   subscribeToSpecialEvents(onChange?: () => void): () => void {
-    this.eventsChannel = this.supabase
-      .channel('special_events_changes')
-      .on(
-        'postgres_changes',
+    if (!this.eventsActive) {
+      this.eventsActive = true;
+      this.realtimeConnection.subscribeWithRetry<SpecialEvent>(
+        CHANNEL_SPECIAL_EVENTS,
         {
           event: '*',
           schema: 'public',
           table: 'pricing_special_events',
           filter: 'active=eq.true',
         },
-        (_payload: RealtimePostgresChangesPayload<SpecialEvent>) => {
-          // Recargar todos los eventos activos
+        () => {
           void this.loadActiveEvents();
           onChange?.();
         },
-      )
-      .subscribe((_status) => {
-        // Status handled by isConnected and connectionStatus signals
-        // No specific action needed here
-      });
+      );
 
-    // Cargar eventos iniciales
-    void this.loadActiveEvents();
+      void this.loadActiveEvents();
+    }
 
     return () => {
-      this.eventsChannel?.unsubscribe();
-      this.eventsChannel = null;
+      this.realtimeConnection.unsubscribe(CHANNEL_SPECIAL_EVENTS);
+      this.eventsActive = false;
     };
   }
 
   /**
-   * 🔴 Suscribirse a TODO (exchange rates + demand + events)
+   * Suscribirse a TODO (exchange rates + demand + events)
    * Un solo método para activar todas las subscriptions
    */
   subscribeToAllPricingUpdates(callbacks?: PricingUpdateCallbacks): () => void {
@@ -240,96 +214,90 @@ export class RealtimePricingService implements OnDestroy {
       this.sharedSubscribers.delete(subscriber);
       if (this.sharedSubscribers.size === 0) {
         this.cleanup();
-        this.sharedSubscriptionsActive = false;
       }
     };
   }
 
   private startSharedSubscriptions(): void {
-    if (!this.exchangeRatesChannel) {
-      this.exchangeRatesChannel = this.supabase
-        .channel('exchange_rates_changes')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'exchange_rates',
-            filter: 'is_active=eq.true',
-          },
-          (payload: RealtimePostgresChangesPayload<ExchangeRateUpdate>) => {
-            if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
-              this.latestExchangeRate.set(payload.new as ExchangeRateUpdate);
-              for (const sub of this.sharedSubscribers) {
-                sub.onExchangeRateUpdate?.();
-              }
+    if (!this.exchangeRatesActive) {
+      this.exchangeRatesActive = true;
+      this.realtimeConnection.subscribeWithRetry<ExchangeRateUpdate>(
+        CHANNEL_EXCHANGE_RATES,
+        {
+          event: '*',
+          schema: 'public',
+          table: 'exchange_rates',
+          filter: 'is_active=eq.true',
+        },
+        (payload) => {
+          if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+            this.latestExchangeRate.set(payload.new as ExchangeRateUpdate);
+            for (const sub of this.sharedSubscribers) {
+              sub.onExchangeRateUpdate?.();
             }
-          },
-        )
-        .subscribe((status) => {
+          }
+        },
+        (status) => {
           this.connectionStatus.set(status);
-          this.isConnected.set(status === 'SUBSCRIBED');
-        });
+          this.isConnected.set(status === 'connected');
+        },
+      );
 
       void this.loadInitialExchangeRate();
     }
 
-    if (!this.demandChannel) {
-      this.demandChannel = this.supabase
-        .channel('demand_snapshots_changes')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'pricing_demand_snapshots',
-          },
-          (payload: RealtimePostgresChangesPayload<DemandSnapshot>) => {
-            if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
-              const snapshot = payload.new as DemandSnapshot;
-              this.demandByRegion.update((map) => {
-                const newMap = new Map(map);
-                newMap.set(snapshot.region_id, snapshot);
-                return newMap;
-              });
+    if (!this.demandActive) {
+      this.demandActive = true;
+      this.realtimeConnection.subscribeWithRetry<DemandSnapshot>(
+        CHANNEL_DEMAND_SNAPSHOTS,
+        {
+          event: '*',
+          schema: 'public',
+          table: 'pricing_demand_snapshots',
+        },
+        (payload) => {
+          if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+            const snapshot = payload.new as DemandSnapshot;
+            this.demandByRegion.update((map) => {
+              const newMap = new Map(map);
+              newMap.set(snapshot.region_id, snapshot);
+              return newMap;
+            });
 
-              for (const sub of this.sharedSubscribers) {
-                sub.onDemandUpdate?.(snapshot.region_id);
-              }
+            for (const sub of this.sharedSubscribers) {
+              sub.onDemandUpdate?.(snapshot.region_id);
             }
-          },
-        )
-        .subscribe();
+          }
+        },
+      );
 
       void this.loadInitialDemandSnapshots();
     }
 
-    if (!this.eventsChannel) {
-      this.eventsChannel = this.supabase
-        .channel('special_events_changes')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'pricing_special_events',
-            filter: 'active=eq.true',
-          },
-          (_payload: RealtimePostgresChangesPayload<SpecialEvent>) => {
-            void this.loadActiveEvents();
-            for (const sub of this.sharedSubscribers) {
-              sub.onEventUpdate?.();
-            }
-          },
-        )
-        .subscribe();
+    if (!this.eventsActive) {
+      this.eventsActive = true;
+      this.realtimeConnection.subscribeWithRetry<SpecialEvent>(
+        CHANNEL_SPECIAL_EVENTS,
+        {
+          event: '*',
+          schema: 'public',
+          table: 'pricing_special_events',
+          filter: 'active=eq.true',
+        },
+        () => {
+          void this.loadActiveEvents();
+          for (const sub of this.sharedSubscribers) {
+            sub.onEventUpdate?.();
+          }
+        },
+      );
 
       void this.loadActiveEvents();
     }
   }
 
   /**
-   * 📊 Obtener factor de surge para una región específica
+   * Obtener factor de surge para una región específica
    */
   getSurgeFactorForRegion(regionId: string): number {
     const snapshot = this.demandByRegion().get(regionId);
@@ -337,7 +305,7 @@ export class RealtimePricingService implements OnDestroy {
   }
 
   /**
-   * 💱 Obtener la tasa de cambio actual (platform_rate)
+   * Obtener la tasa de cambio actual (platform_rate)
    */
   getCurrentPlatformRate(): number {
     const rate = this.latestExchangeRate()?.rate;
@@ -345,7 +313,7 @@ export class RealtimePricingService implements OnDestroy {
   }
 
   /**
-   * 🎉 Obtener eventos activos para una región
+   * Obtener eventos activos para una región
    */
   getActiveEventsForRegion(regionId: string): SpecialEvent[] {
     return this.activeEvents().filter((e) => e.region_id === regionId);
@@ -370,15 +338,12 @@ export class RealtimePricingService implements OnDestroy {
         this.latestExchangeRate.set(data as ExchangeRateUpdate);
       }
     } catch (error) {
-      // Silently ignore error to prevent app crash if initial rate fails to load.
-      // The service will still attempt to connect to the real-time channel.
-      console.error('Failed to load initial exchange rate', error);
+      this.logger.error('Failed to load initial exchange rate', { error });
     }
   }
 
   private async loadInitialDemandSnapshots(): Promise<void> {
     try {
-      // Obtener el snapshot más reciente de cada región
       const { data, error } = await this.supabase
         .from('pricing_demand_snapshots')
         .select('*')
@@ -386,7 +351,6 @@ export class RealtimePricingService implements OnDestroy {
 
       if (error) throw error;
       if (data) {
-        // Agrupar por región (mantener solo el más reciente)
         const snapshotsByRegion = new Map<string, DemandSnapshot>();
         (data as DemandSnapshot[]).forEach((snapshot) => {
           if (!snapshotsByRegion.has(snapshot.region_id)) {
@@ -396,8 +360,8 @@ export class RealtimePricingService implements OnDestroy {
 
         this.demandByRegion.set(snapshotsByRegion);
       }
-    } catch {
-      // Silently ignore demand by region errors
+    } catch (err) {
+      this.logger.error('Failed to load initial demand snapshots', { error: err });
     }
   }
 
@@ -425,25 +389,27 @@ export class RealtimePricingService implements OnDestroy {
   }
 
   /**
-   * 🧹 Cleanup - desuscribirse de todo y remover canales
-   * Se llama automáticamente en ngOnDestroy
+   * Cleanup - desuscribirse de todo via RealtimeConnectionService
    */
   cleanup(): void {
-    // Usar removeChannel que es más completo que unsubscribe
-    if (this.exchangeRatesChannel) {
-      this.supabase.removeChannel(this.exchangeRatesChannel);
-      this.exchangeRatesChannel = null;
+    if (this.exchangeRatesActive) {
+      this.realtimeConnection.unsubscribe(CHANNEL_EXCHANGE_RATES);
+      this.exchangeRatesActive = false;
     }
 
-    if (this.demandChannel) {
-      this.supabase.removeChannel(this.demandChannel);
-      this.demandChannel = null;
+    if (this.demandActive) {
+      this.realtimeConnection.unsubscribe(CHANNEL_DEMAND_SNAPSHOTS);
+      this.demandActive = false;
     }
 
-    if (this.eventsChannel) {
-      this.supabase.removeChannel(this.eventsChannel);
-      this.eventsChannel = null;
+    if (this.eventsActive) {
+      this.realtimeConnection.unsubscribe(CHANNEL_SPECIAL_EVENTS);
+      this.eventsActive = false;
     }
+
+    // Clear shared subscribers to prevent stale references on re-subscribe
+    this.sharedSubscribers.clear();
+    this.sharedSubscriptionsActive = false;
 
     // Reset state
     this.isConnected.set(false);

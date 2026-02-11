@@ -32,9 +32,10 @@ export interface ConnectionMetrics {
   uptimeMs: number;
 }
 
-// Type for database records compatible with Supabase Realtime
-// Using unknown instead of any for type safety while maintaining flexibility
-export type DatabaseRecord = Record<string, unknown>;
+// Align with Supabase RealtimePostgresChangesPayload constraint: { [key: string]: any }
+// Interfaces without index signatures don't satisfy Record<string, unknown> in strict TS
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type DatabaseRecord = Record<string, any>;
 
 /**
  * Service for resilient Realtime connections with automatic reconnection

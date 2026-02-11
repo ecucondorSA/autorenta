@@ -25,15 +25,11 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { filter } from 'rxjs';
-import { AssetPreloaderService } from '@core/services/ui/asset-preloader.service';
+import { AppShellDataService } from '@core/services/infrastructure/app-shell-data.service';
 import { AuthService } from '@core/services/auth/auth.service';
-import { BookingApprovalService } from '@core/services/bookings/booking-approval.service';
-import { BookingsStore } from '@core/stores/bookings.store';
 import { CarsCompareService } from '@core/services/cars/cars-compare.service';
-import { DebugService } from '@core/services/admin/debug.service';
 import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 import { LocaleManagerService } from '@core/services/ui/locale-manager.service';
-import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';
 import { MobileBottomNavPortalService } from '@core/services/ui/mobile-bottom-nav-portal.service';
 import { ProfileService, UserProfile } from '@core/services/auth/profile.service';
 import { PushNotificationService } from '@core/services/infrastructure/push-notification.service';
@@ -49,7 +45,6 @@ import {
   ResolvedProfileNavSection,
   resolveProfileNavSections,
 } from '@core/ui/navigation/profile-menu';
-import { GuidedTourService } from './core/guided-tour';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { SeoFooterComponent } from './core/components/seo-footer/seo-footer.component';
 import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
@@ -261,17 +256,12 @@ export class AppComponent implements OnInit {
 
   private readonly authService = inject(AuthService);
   private readonly profileService = inject(ProfileService);
-  private readonly assetPreloader = inject(AssetPreloaderService);
-  private readonly mapboxPreloader = inject(MapboxPreloaderService);
-  private readonly debugService = inject(DebugService); // Initialize early for e2e tests
+  private readonly appShellData = inject(AppShellDataService);
   private readonly logger = inject(LoggerService).createChildLogger('AppComponent');
-  private readonly bookingApprovalService = inject(BookingApprovalService);
-  private readonly bookingsStore = inject(BookingsStore);
 
   readonly userEmail = this.authService.userEmail;
   private readonly compareService = inject(CarsCompareService);
   private readonly pwaService = inject(PwaService);
-  private readonly guidedTour = inject(GuidedTourService);
   private readonly localeManager = inject(LocaleManagerService);
   private readonly pushNotificationService = inject(PushNotificationService);
   private readonly deepLinkService = inject(DeepLinkService);
@@ -311,7 +301,7 @@ export class AppComponent implements OnInit {
   readonly isLoginPage = signal(false); // Ocultar botón "Ingresar" en login
   readonly isRegisterPage = signal(false); // Ocultar botón "Registrar" en registro
   readonly isPanicMode = signal(false);
-  readonly pendingApprovalCount = signal(0); // Contador de solicitudes pendientes para propietarios
+  readonly pendingApprovalCount = this.appShellData.pendingApprovalCount;
   readonly profileNavToneClasses = PROFILE_NAV_TONE_CLASSES;
   readonly profileNavSections = computed<ResolvedProfileNavSection[]>(() =>
     resolveProfileNavSections({
@@ -321,9 +311,7 @@ export class AppComponent implements OnInit {
   );
 
   /** SOS button only visible during active trips (in_progress bookings) */
-  readonly hasActiveTrip = computed(() =>
-    this.bookingsStore.activeBookings().some((b) => b.status === 'in_progress'),
-  );
+  readonly hasActiveTrip = this.appShellData.hasActiveTrip;
 
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
   @ViewChild('sidebarPanel', { read: ElementRef }) sidebarPanel?: ElementRef<HTMLElement>;
@@ -399,8 +387,7 @@ export class AppComponent implements OnInit {
     this.initializeTheme();
     this.initializeLayoutWatcher();
     this.loadUserProfile();
-    this.loadPendingApprovalCount();
-    this.loadActiveBookings();
+    this.loadShellData();
     this.deepLinkService.initialize();
     this.pushNotificationService.initializePushNotifications();
     this.initializeLocalNotificationListeners();
@@ -575,27 +562,6 @@ export class AppComponent implements OnInit {
     ).filter((element) => !element.hasAttribute('disabled') && element.tabIndex !== -1);
   }
 
-  private initializeWelcomeTour(): void {
-    // NEW TOUR SYSTEM: Tours with autoStart: true will start automatically
-    // No manual initialization needed! TourOrchestrator handles it.
-
-    // Enable debug mode in development
-    if (!this.isBrowser) {
-      return;
-    }
-
-    const isDev = !window.location.hostname.includes('autorentar.com');
-    if (isDev) {
-      this.guidedTour.enableDebug();
-    }
-
-    // Tours are now managed by TourOrchestrator based on:
-    // - autoStart flag in TourDefinition
-    // - Guards (isHomePage, hasInventory, etc.)
-    // - Triggers (route patterns, custom events)
-    // - Throttle periods (won't show if already completed recently)
-  }
-
   private async loadUserProfile(): Promise<void> {
     if (!this.isAuthenticatedSig()) {
       return;
@@ -609,32 +575,9 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private async loadPendingApprovalCount(): Promise<void> {
-    if (!this.isAuthenticatedSig()) {
-      this.pendingApprovalCount.set(0);
-      return;
-    }
-
-    try {
-      const pendingApprovals = await this.bookingApprovalService.getPendingApprovals();
-      this.pendingApprovalCount.set(pendingApprovals.length);
-    } catch {
-      // Silently fail - badge will not show
-      this.pendingApprovalCount.set(0);
-    }
-  }
-
-  /**
-   * Load active bookings to determine if SOS button should be visible
-   * SOS is only shown during active trips (in_progress status)
-   */
-  private loadActiveBookings(): void {
-    if (!this.isAuthenticatedSig()) {
-      return;
-    }
-
-    // Load bookings - the store handles caching and updates
-    void this.bookingsStore.loadMyBookings();
+  private loadShellData(): void {
+    if (!this.isAuthenticatedSig()) return;
+    void this.appShellData.loadShellData();
   }
 
   private checkVerificationPage(url: string): void {
