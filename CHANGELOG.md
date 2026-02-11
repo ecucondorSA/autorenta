@@ -1,3 +1,7 @@
+## 3.89.0 (2026-02-11)
+
+* feat: harden kyc document verification and update guarantee plans UI ([96bb072](https://github.com/ecucondorSA/autorenta/commit/96bb072))
+
 ## <small>3.88.7 (2026-02-11)</small>
 
 * fix: align guarantee tiers with plans and harden kyc cors ([7c14212](https://github.com/ecucondorSA/autorenta/commit/7c14212))
