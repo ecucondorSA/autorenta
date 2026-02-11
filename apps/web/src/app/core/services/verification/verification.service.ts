@@ -555,7 +555,7 @@ export class VerificationService implements OnDestroy {
     }
 
     if (info.code === 'OCR_REQUEST_INVALID') {
-      return 'No pudimos procesar la foto. Intenta con una imagen JPG o PNG, bien enfocada y completa.';
+      return 'No pudimos procesar la foto. Usa JPG o PNG, evita capturas de pantalla y sube la imagen completa del documento.';
     }
 
     if (info.code === 'OCR_NO_TEXT') {
@@ -563,7 +563,7 @@ export class VerificationService implements OnDestroy {
     }
 
     if (info.code === 'OCR_FAILED') {
-      return 'No pudimos verificar tu documento con esa foto. Intenta nuevamente con el documento completo, bien iluminado y sin reflejos.';
+      return 'No pudimos validar esa foto. Reintenta con: documento completo, buena luz natural, sin reflejos y texto bien enfocado.';
     }
 
     return 'No pudimos verificar tu documento en este momento. Por favor, intenta de nuevo en unos segundos.';
