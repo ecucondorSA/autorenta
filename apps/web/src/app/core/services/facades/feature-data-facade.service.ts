@@ -276,7 +276,7 @@ export class FeatureDataFacadeService {
   async listOwnerCarsForDocuments(ownerId: string): Promise<Array<Record<string, unknown>>> {
     const { data, error } = await this.supabase
       .from('cars')
-      .select('id, title, brand, model, images')
+      .select('id, title, brand, model')
       .eq('owner_id', ownerId)
       .order('created_at', { ascending: false });
 

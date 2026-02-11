@@ -5,6 +5,7 @@ import { FileUploadService } from '@core/services/infrastructure/file-upload.ser
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { VerificationService } from '@core/services/verification/verification.service';
+import { environment } from '@environment';
 
 interface MockSession {
   access_token: string;
@@ -16,6 +17,14 @@ interface MockSession {
 const createEdgeFunctionError = (status: number, body: Record<string, unknown>): { context: Response } => ({
   context: new Response(JSON.stringify(body), { status }),
 });
+
+const encodeBase64Url = (value: string): string =>
+  globalThis.btoa(value).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+const buildJwt = (payload: Record<string, unknown>): string =>
+  `${encodeBase64Url('{"alg":"HS256","typ":"JWT"}')}.${encodeBase64Url(JSON.stringify(payload))}.signature`;
+
+const EXPECTED_ISSUER = `${environment.supabaseUrl.replace(/\/+$/, '')}/auth/v1`;
 
 const ocrSuccessResponse = {
   success: true,
@@ -149,6 +158,111 @@ describe('VerificationService', () => {
       expect(error instanceof Error).toBeTrue();
       expect((error as Error).message).toContain('No pudimos validar esa foto');
     }
+  });
+
+  it('normaliza Invalid JWT para no exponer mensaje técnico al usuario', async () => {
+    invokeSpy.and.resolveTo({
+      data: null,
+      error: createEdgeFunctionError(401, { code: 401, message: 'Invalid JWT' }),
+    });
+
+    try {
+      await service.verifyDocumentOcr('base64-image', 'dni', 'front', 'AR');
+      fail('Expected verifyDocumentOcr to throw for Invalid JWT');
+    } catch (error) {
+      expect(error instanceof Error).toBeTrue();
+      expect((error as Error).message).toContain('Tu sesión expiró');
+      expect((error as Error).message).not.toContain('Invalid JWT');
+    }
+  });
+
+  it('aborta si el issuer del JWT no coincide con el entorno activo', async () => {
+    const mismatchedIssuerToken = buildJwt({
+      iss: 'https://otro-proyecto.supabase.co/auth/v1',
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 3600,
+    });
+
+    authServiceMock.ensureSession.and.resolveTo({
+      access_token: mismatchedIssuerToken,
+      user: { id: 'user-test' },
+    });
+
+    try {
+      await service.verifyDocumentOcr('base64-image', 'dni', 'front', 'AR');
+      fail('Expected verifyDocumentOcr to throw on issuer mismatch');
+    } catch (error) {
+      expect(error instanceof Error).toBeTrue();
+      expect((error as Error).message).toContain('entorno actual');
+      expect(invokeSpy).not.toHaveBeenCalled();
+    }
+  });
+
+  it('refresca token preventivamente cuando el access token está viejo', async () => {
+    const staleToken = buildJwt({
+      iss: EXPECTED_ISSUER,
+      iat: Math.floor(Date.now() / 1000) - 600,
+      exp: Math.floor(Date.now() / 1000) + 3600,
+    });
+    const freshToken = buildJwt({
+      iss: EXPECTED_ISSUER,
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 3600,
+    });
+
+    authServiceMock.ensureSession.and.resolveTo({
+      access_token: staleToken,
+      user: { id: 'user-test' },
+    });
+    authServiceMock.refreshSession.and.resolveTo({
+      access_token: freshToken,
+      user: { id: 'user-test' },
+    });
+
+    invokeSpy.and.resolveTo({
+      data: ocrSuccessResponse,
+      error: null,
+    });
+
+    await service.verifyDocumentOcr('base64-image', 'dni', 'front', 'AR');
+
+    expect(authServiceMock.refreshSession).toHaveBeenCalledTimes(1);
+    const invokeArgs = invokeSpy.calls.mostRecent().args[1] as { headers?: Record<string, string> };
+    expect(invokeArgs.headers?.Authorization).toBe(`Bearer ${freshToken}`);
+  });
+
+  it('evita loop de OCR_FAILED aplicando cooldown corto por imagen/lado', async () => {
+    const validToken = buildJwt({
+      iss: EXPECTED_ISSUER,
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 3600,
+    });
+    authServiceMock.ensureSession.and.resolveTo({
+      access_token: validToken,
+      user: { id: 'user-test' },
+    });
+
+    invokeSpy.and.resolveTo({
+      data: null,
+      error: createEdgeFunctionError(400, { error: 'OCR_FAILED' }),
+    });
+
+    try {
+      await service.verifyDocumentOcr('base64-image', 'dni', 'front', 'AR');
+      fail('Expected first OCR attempt to fail');
+    } catch {
+      // expected
+    }
+
+    try {
+      await service.verifyDocumentOcr('base64-image', 'dni', 'front', 'AR');
+      fail('Expected second OCR attempt to be blocked by cooldown');
+    } catch (error) {
+      expect(error instanceof Error).toBeTrue();
+      expect((error as Error).message).toContain('Espera unos segundos');
+    }
+
+    expect(invokeSpy).toHaveBeenCalledTimes(1);
   });
 
   it('devuelve ocrWarning cuando OCR falla pero mantiene upload exitoso', async () => {

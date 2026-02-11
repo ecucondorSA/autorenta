@@ -59,6 +59,13 @@ export class MercadoPagoOAuthService {
    * @returns Promise que se resuelve cuando se redirige a MercadoPago
    */
   async connectMercadoPago(redirectUri?: string): Promise<void> {
+    // Asegurar sesión fresca antes de invocar edge function
+    const { error: refreshError } = await this.supabase.auth.refreshSession();
+    if (refreshError) {
+      this.logger.error('[OAuth] Session refresh failed', refreshError);
+      throw new Error('Sesión expirada. Por favor, iniciá sesión nuevamente.');
+    }
+
     // Usar redirect URI personalizada o default
     const callbackUri = redirectUri || window.location.origin + '/auth/mercadopago/callback';
 

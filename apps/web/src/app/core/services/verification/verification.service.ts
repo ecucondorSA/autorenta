@@ -7,6 +7,7 @@ import { FileUploadService } from '@core/services/infrastructure/file-upload.ser
 import { AuthService } from '@core/services/auth/auth.service';
 import type { Database } from '@core/types/database.types';
 import { DEFAULT_IMAGE_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
+import { environment } from '@environment';
 
 export interface DetailedVerificationStatus {
   status: 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO';
@@ -39,12 +40,22 @@ const MAX_ORIGINAL_BYTES = 15 * 1024 * 1024; // 15MB pre-compression (mobile cam
 const MAX_COMPRESSED_BYTES = 2 * 1024 * 1024; // 2MB post-compression target
 const IDENTITY_BUCKETS = ['identity-documents', 'documents'] as const;
 const ACCESS_TOKEN_MIN_TTL_SECONDS = 30;
+const ACCESS_TOKEN_MAX_AGE_SECONDS = 5 * 60;
 const OCR_TRACE_HEADER = 'x-kyc-trace-id';
+const OCR_FAILURE_COOLDOWN_MS = 12_000;
+const AUTH_ERROR_CODES = new Set(['401', 'AUTH_INVALID', 'AUTH_REQUIRED', 'INVALID_JWT']);
+const TECHNICAL_AUTH_HINTS = ['invalid jwt', 'jwt expired', 'jwt malformed', 'auth session missing'];
 
 interface EdgeFunctionErrorInfo {
   status: number | null;
   code: string | null;
   message: string | null;
+}
+
+interface AccessTokenPayload {
+  exp: number | null;
+  iat: number | null;
+  iss: string | null;
 }
 
 class EdgeFunctionUserError extends Error {
@@ -92,6 +103,7 @@ export class VerificationService implements OnDestroy {
 
   /** In-flight deduplication for loadDocuments() */
   private documentsRequest: Promise<UserDocument[]> | null = null;
+  private readonly ocrFailureCooldownByKey = new Map<string, number>();
 
   constructor() {
     // Auto-subscribe to realtime when user is authenticated
@@ -524,6 +536,8 @@ export class VerificationService implements OnDestroy {
 
       if (typeof err.code === 'string') {
         code = err.code;
+      } else if (typeof err.code === 'number' && Number.isFinite(err.code)) {
+        code = String(err.code);
       }
 
       if (typeof err.message === 'string' && err.message.trim().length > 0) {
@@ -539,6 +553,8 @@ export class VerificationService implements OnDestroy {
             const parsedCode = parsed['error'] ?? parsed['code'];
             if (typeof parsedCode === 'string') {
               code = parsedCode;
+            } else if (typeof parsedCode === 'number' && Number.isFinite(parsedCode)) {
+              code = String(parsedCode);
             }
 
             const parsedMessage = parsed['message'];
@@ -556,16 +572,16 @@ export class VerificationService implements OnDestroy {
   }
 
   private getOcrUserMessage(info: EdgeFunctionErrorInfo): string {
-    if (info.message) {
-      return info.message;
-    }
-
-    if (info.status === 401 || info.code === 'AUTH_INVALID' || info.code === 'AUTH_REQUIRED') {
+    if (this.isAuthErrorInfo(info)) {
       return 'Tu sesión expiró. Vuelve a iniciar sesión e intenta nuevamente.';
     }
 
     if (info.status === 403 || info.code === 'FORBIDDEN') {
       return 'Tu sesión no tiene permisos para esta operación. Cierra sesión, vuelve a ingresar e intenta nuevamente.';
+    }
+
+    if (info.status === 404) {
+      return 'El servicio de verificación no está disponible en este entorno. Intenta nuevamente en unos minutos.';
     }
 
     if (info.code === 'OCR_PROVIDER_UNAVAILABLE' || info.status === 503) {
@@ -584,7 +600,28 @@ export class VerificationService implements OnDestroy {
       return 'No pudimos validar esa foto. Reintenta con: documento completo, buena luz natural, sin reflejos y texto bien enfocado.';
     }
 
+    if (info.message && !this.isTechnicalAuthMessage(info.message)) {
+      return info.message;
+    }
+
     return 'No pudimos verificar tu documento en este momento. Por favor, intenta de nuevo en unos segundos.';
+  }
+
+  private isAuthErrorInfo(info: EdgeFunctionErrorInfo): boolean {
+    if (info.status === 401) return true;
+    if (this.isAuthErrorCode(info.code)) return true;
+    if (info.message && this.isTechnicalAuthMessage(info.message)) return true;
+    return false;
+  }
+
+  private isAuthErrorCode(code: string | null): boolean {
+    if (!code) return false;
+    return AUTH_ERROR_CODES.has(code.toUpperCase());
+  }
+
+  private isTechnicalAuthMessage(message: string): boolean {
+    const normalized = message.toLowerCase();
+    return TECHNICAL_AUTH_HINTS.some((hint) => normalized.includes(hint));
   }
 
   /**
@@ -653,6 +690,15 @@ export class VerificationService implements OnDestroy {
   }> {
     const userId = await this.authService.getCachedUserId();
     if (!userId) throw new Error('No autenticado');
+    const cooldownKey = this.buildOcrCooldownKey(userId, documentType, side, country, imageBase64);
+
+    if (this.isOcrInCooldown(cooldownKey)) {
+      throw new EdgeFunctionUserError(
+        'Estamos procesando tu último intento. Espera unos segundos antes de reintentar.',
+        429,
+        'OCR_COOLDOWN',
+      );
+    }
 
     const result = await this.retryWithBackoff(
       async () => {
@@ -682,6 +728,10 @@ export class VerificationService implements OnDestroy {
           } else {
             this.logger.error(logMessage, logPayload);
           }
+
+          if (this.shouldStartOcrCooldown(info)) {
+            this.markOcrCooldown(cooldownKey);
+          }
           throw new EdgeFunctionUserError(this.getOcrUserMessage(info), info.status, info.code);
         }
         return data;
@@ -706,7 +756,47 @@ export class VerificationService implements OnDestroy {
       );
     }
 
+    this.clearOcrCooldown(cooldownKey);
     return result;
+  }
+
+  private buildOcrCooldownKey(
+    userId: string,
+    documentType: 'dni' | 'license',
+    side: 'front' | 'back',
+    country: string,
+    imageBase64: string,
+  ): string {
+    const fingerprint = `${imageBase64.length}:${imageBase64.slice(0, 64)}`;
+    return `${userId}:${documentType}:${side}:${country}:${fingerprint}`;
+  }
+
+  private isOcrInCooldown(key: string): boolean {
+    const expiresAt = this.ocrFailureCooldownByKey.get(key);
+    if (!expiresAt) return false;
+
+    if (Date.now() >= expiresAt) {
+      this.ocrFailureCooldownByKey.delete(key);
+      return false;
+    }
+
+    return true;
+  }
+
+  private markOcrCooldown(key: string): void {
+    this.ocrFailureCooldownByKey.set(key, Date.now() + OCR_FAILURE_COOLDOWN_MS);
+  }
+
+  private clearOcrCooldown(key: string): void {
+    this.ocrFailureCooldownByKey.delete(key);
+  }
+
+  private shouldStartOcrCooldown(info: EdgeFunctionErrorInfo): boolean {
+    if (info.status !== 400) return false;
+
+    return (
+      info.code === 'OCR_FAILED' || info.code === 'OCR_REQUEST_INVALID' || info.code === 'OCR_NO_TEXT'
+    );
   }
 
   /**
@@ -857,7 +947,16 @@ export class VerificationService implements OnDestroy {
       );
     }
 
-    if (this.shouldRefreshAccessToken(session.access_token)) {
+    let tokenPayload = this.extractAccessTokenPayload(session.access_token);
+    if (this.isTokenIssuerMismatch(tokenPayload.iss)) {
+      throw new EdgeFunctionUserError(
+        'Tu sesión no coincide con el entorno actual. Cierra sesión, vuelve a ingresar e intenta nuevamente.',
+        401,
+        'AUTH_ENV_MISMATCH',
+      );
+    }
+
+    if (this.shouldRefreshAccessToken(session.access_token, tokenPayload)) {
       const refreshedSession = await this.authService.refreshSession();
       if (!refreshedSession?.access_token) {
         throw new EdgeFunctionUserError(
@@ -867,6 +966,15 @@ export class VerificationService implements OnDestroy {
         );
       }
       session = refreshedSession;
+      tokenPayload = this.extractAccessTokenPayload(session.access_token);
+
+      if (this.isTokenIssuerMismatch(tokenPayload.iss)) {
+        throw new EdgeFunctionUserError(
+          'Tu sesión no coincide con el entorno actual. Cierra sesión, vuelve a ingresar e intenta nuevamente.',
+          401,
+          'AUTH_ENV_MISMATCH',
+        );
+      }
     }
 
     return {
@@ -875,32 +983,61 @@ export class VerificationService implements OnDestroy {
     };
   }
 
-  private shouldRefreshAccessToken(accessToken: string): boolean {
-    const expiryEpochSeconds = this.extractAccessTokenExpiry(accessToken);
-    if (!expiryEpochSeconds) {
-      return false;
+  private shouldRefreshAccessToken(accessToken: string, payload?: AccessTokenPayload): boolean {
+    const tokenPayload = payload ?? this.extractAccessTokenPayload(accessToken);
+
+    if (tokenPayload.exp) {
+      const ttlMs = tokenPayload.exp * 1000 - Date.now();
+      if (ttlMs <= ACCESS_TOKEN_MIN_TTL_SECONDS * 1000) {
+        return true;
+      }
     }
-    const ttlMs = expiryEpochSeconds * 1000 - Date.now();
-    return ttlMs <= ACCESS_TOKEN_MIN_TTL_SECONDS * 1000;
+
+    if (tokenPayload.iat) {
+      const ageMs = Date.now() - tokenPayload.iat * 1000;
+      if (ageMs >= ACCESS_TOKEN_MAX_AGE_SECONDS * 1000) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
-  private extractAccessTokenExpiry(accessToken: string): number | null {
+  private extractAccessTokenPayload(accessToken: string): AccessTokenPayload {
     const tokenParts = accessToken.split('.');
     if (tokenParts.length < 2) {
-      return null;
+      return { exp: null, iat: null, iss: null };
     }
 
     const payloadRaw = this.decodeBase64Url(tokenParts[1]);
     if (!payloadRaw) {
-      return null;
+      return { exp: null, iat: null, iss: null };
     }
 
     try {
-      const payload = JSON.parse(payloadRaw) as { exp?: unknown };
-      return typeof payload.exp === 'number' ? payload.exp : null;
+      const payload = JSON.parse(payloadRaw) as { exp?: unknown; iat?: unknown; iss?: unknown };
+      return {
+        exp: typeof payload.exp === 'number' ? payload.exp : null,
+        iat: typeof payload.iat === 'number' ? payload.iat : null,
+        iss: typeof payload.iss === 'string' ? payload.iss : null,
+      };
     } catch {
+      return { exp: null, iat: null, iss: null };
+    }
+  }
+
+  private isTokenIssuerMismatch(issuer: string | null): boolean {
+    if (!issuer) return false;
+    const expectedIssuer = this.getExpectedTokenIssuer();
+    if (!expectedIssuer) return false;
+    return issuer.replace(/\/+$/, '') !== expectedIssuer.replace(/\/+$/, '');
+  }
+
+  private getExpectedTokenIssuer(): string | null {
+    if (!environment.supabaseUrl) {
       return null;
     }
+    return `${environment.supabaseUrl.replace(/\/+$/, '')}/auth/v1`;
   }
 
   private decodeBase64Url(input: string): string | null {
