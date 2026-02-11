@@ -1,3 +1,7 @@
+## <small>3.81.4 (2026-02-11)</small>
+
+* refactor(admin): migrate last *ngIf/*ngFor to @if/@for in social-campaigns ([b28a4cb](https://github.com/ecucondorSA/autorenta/commit/b28a4cb))
+
 ## <small>3.81.3 (2026-02-11)</small>
 
 * fix(cars-map): remove mediaQuery event listener on cleanup to prevent memory leak ([4fbd245](https://github.com/ecucondorSA/autorenta/commit/4fbd245))
