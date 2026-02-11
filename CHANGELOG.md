@@ -1,3 +1,7 @@
+## <small>3.85.1 (2026-02-11)</small>
+
+* fix(security): prevent IDOR in verify-document + harden auth refresh ([03b1cc2](https://github.com/ecucondorSA/autorenta/commit/03b1cc2))
+
 ## 3.85.0 (2026-02-11)
 
 * fix(lint): fix unused import and import order in wallet/portfolio ([6934dc0](https://github.com/ecucondorSA/autorenta/commit/6934dc0))
