@@ -91,7 +91,7 @@ async function main() {
 ║     - https://autorentar.com                                    ║
 ║     - http://localhost:4200                                     ║
 ║  5. Authorized redirect URIs:                                   ║
-║     - https://pisqjmoklivzpwufhscx.supabase.co/auth/v1/callback ║
+║     - https://aceacpaockyxgogxsfyc.supabase.co/auth/v1/callback ║
 ║  6. Click "Create"                                              ║
 ║  7. COPIA el Client ID y Client Secret                          ║
 ║                                                                  ║
@@ -101,7 +101,7 @@ async function main() {
 
   // Paso 5: Configurar Supabase
   console.log('\n💾 PASO 5: Configurar Google en Supabase\n');
-  await page.goto('https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/auth/providers', { waitUntil: 'domcontentloaded' });
+  await page.goto('https://supabase.com/dashboard/project/aceacpaockyxgogxsfyc/auth/providers', { waitUntil: 'domcontentloaded' });
 
   await waitForUser(`
 ╔══════════════════════════════════════════════════════════════════╗

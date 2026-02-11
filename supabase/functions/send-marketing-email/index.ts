@@ -103,7 +103,7 @@ serve(async (req) => {
       });
 
       return new Response(
-        JSON.stringify({ error: 'Failed to send email', details: errorData }),
+        JSON.stringify({ error: 'Failed to send email' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -138,7 +138,6 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : String(error),
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

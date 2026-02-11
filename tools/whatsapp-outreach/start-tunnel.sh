@@ -68,7 +68,7 @@ SQL
 
 echo "🔄 Applying to Supabase..."
 # Note: This requires supabase CLI to be linked
-supabase db execute --file /tmp/update-trigger.sql --project-ref pisqjmoklivzpwufhscx 2>/dev/null || \
+supabase db execute --file /tmp/update-trigger.sql --project-ref aceacpaockyxgogxsfyc 2>/dev/null || \
     echo "⚠️  Run manually: supabase db execute --file /tmp/update-trigger.sql"
 
 echo ""

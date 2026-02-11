@@ -17,7 +17,7 @@ services:
       - WHATSAPP_RESTART_ALL_SESSIONS=true
       - WHATSAPP_START_SESSION=default
       # Webhooks para Supabase Edge Function
-      - WHATSAPP_HOOK_URL=https://pisqjmoklivzpwufhscx.supabase.co/functions/v1/whatsapp-webhook
+      - WHATSAPP_HOOK_URL=https://aceacpaockyxgogxsfyc.supabase.co/functions/v1/whatsapp-webhook
       - WHATSAPP_HOOK_EVENTS=message,message.ack,session.status
       # Keep session alive
       - WHATSAPP_MARK_ONLINE=true

@@ -15,7 +15,7 @@
 # Esto ejecutará el cleanup todos los días a las 2:00 AM (hora local)
 #
 
-DB_URL="postgresql://postgres.pisqjmoklivzpwufhscx:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
+DB_URL="postgresql://postgres.aceacpaockyxgogxsfyc:ECUCONDOR08122023@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
 PGPASSWORD="ECUCONDOR08122023"
 
 # Timestamp para logging

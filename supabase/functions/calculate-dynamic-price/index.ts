@@ -102,7 +102,7 @@ Deno.serve(async (req) => {
     if (pricingError) {
       console.error('Pricing calculation error:', pricingError);
       return new Response(
-        JSON.stringify({ error: 'Failed to calculate pricing', details: pricingError.message }),
+        JSON.stringify({ error: 'Failed to calculate pricing' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -160,7 +160,6 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error',
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

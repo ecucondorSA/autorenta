@@ -271,7 +271,6 @@ $$;
 
 -- ============================================================================
 -- 7. RPC: confirm_fragment_purchase
--- TODO(human): Implement the atomic confirmation logic
 -- Called by fragment-purchase-webhook when MercadoPago confirms payment
 -- ============================================================================
 CREATE OR REPLACE FUNCTION public.confirm_fragment_purchase(

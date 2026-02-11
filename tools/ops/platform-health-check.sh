@@ -60,7 +60,7 @@ echo "════════════════════════�
 echo "2. SUPABASE EDGE FUNCTIONS"
 echo "════════════════════════════════════════════════════════════"
 
-npx supabase functions list --project-ref pisqjmoklivzpwufhscx 2>/dev/null | head -20
+npx supabase functions list --project-ref aceacpaockyxgogxsfyc 2>/dev/null | head -20
 
 echo ""
 echo "════════════════════════════════════════════════════════════"

@@ -5,7 +5,7 @@
 
 import { chromium } from 'patchright';
 
-const SUPABASE_PROJECT_ID = 'pisqjmoklivzpwufhscx';
+const SUPABASE_PROJECT_ID = 'aceacpaockyxgogxsfyc';
 const SUPABASE_AUTH_URL = `https://supabase.com/dashboard/project/${SUPABASE_PROJECT_ID}/auth/providers`;
 const SUPABASE_URL_CONFIG = `https://supabase.com/dashboard/project/${SUPABASE_PROJECT_ID}/auth/url-configuration`;
 

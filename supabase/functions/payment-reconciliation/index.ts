@@ -170,7 +170,7 @@ serve(async (req: Request) => {
 
     return new Response(
       JSON.stringify({
-        error: error instanceof Error ? error.message : 'Internal server error',
+        error: 'Internal server error',
         timestamp: new Date().toISOString(),
         duration_ms: Date.now() - startTime,
       }),
@@ -293,7 +293,7 @@ async function checkPendingBookingsWithApprovedPayments(
       status: 'error',
       issues_count: 0,
       fixed_count: 0,
-      details: [{ error: e instanceof Error ? e.message : 'Unknown error' }],
+      details: [],
     };
   }
 }
@@ -391,7 +391,7 @@ async function checkUnconfirmedPayments(
       status: 'error',
       issues_count: 0,
       fixed_count: 0,
-      details: [{ error: e instanceof Error ? e.message : 'Unknown error' }],
+      details: [],
     };
   }
 }
@@ -465,7 +465,7 @@ async function checkExpiredPreauthorizations(
       status: 'error',
       issues_count: 0,
       fixed_count: 0,
-      details: [{ error: e instanceof Error ? e.message : 'Unknown error' }],
+      details: [],
     };
   }
 }
@@ -553,7 +553,7 @@ async function checkWalletIntegrity(supabase: any): Promise<ReconciliationResult
       status: 'error',
       issues_count: 0,
       fixed_count: 0,
-      details: [{ error: e instanceof Error ? e.message : 'Unknown error' }],
+      details: [],
     };
   }
 }
@@ -609,7 +609,7 @@ async function checkDLQBacklog(supabase: any): Promise<ReconciliationResult> {
       status: 'error',
       issues_count: 0,
       fixed_count: 0,
-      details: [{ error: e instanceof Error ? e.message : 'Unknown error' }],
+      details: [],
     };
   }
 }
@@ -737,7 +737,7 @@ async function checkCommissionPercentage(
       status: 'error',
       issues_count: 0,
       fixed_count: 0,
-      details: [{ error: e instanceof Error ? e.message : 'Unknown error' }],
+      details: [],
     };
   }
 }

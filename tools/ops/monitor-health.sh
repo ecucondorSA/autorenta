@@ -9,7 +9,7 @@ set -euo pipefail
 
 # Configuration
 PRODUCTION_URL="${PRODUCTION_URL:-https://autorenta.com}"
-SUPABASE_URL="${SUPABASE_URL:-https://pisqjmoklivzpwufhscx.supabase.co}"
+SUPABASE_URL="${SUPABASE_URL:-https://aceacpaockyxgogxsfyc.supabase.co}"
 SUPABASE_SERVICE_ROLE_KEY="${SUPABASE_SERVICE_ROLE_KEY:-}"
 WORKER_URL="${WORKER_URL:-}"
 LOG_FILE="logs/health-check-$(date +%Y%m%d_%H%M%S).log"

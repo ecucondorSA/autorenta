@@ -84,7 +84,7 @@ serve(async (req) => {
     if (queryError) {
       console.error('[Refresh Token] Query error:', queryError);
       return new Response(
-        JSON.stringify({ error: 'Database query failed', details: queryError.message }),
+        JSON.stringify({ error: 'Database query failed' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -126,7 +126,7 @@ serve(async (req) => {
           results.push({
             user_id: account.user_id,
             success: false,
-            error: errorData.message || `HTTP ${tokenResponse.status}`,
+            error: `Token refresh failed (HTTP ${tokenResponse.status})`,
           });
 
           // Mark account as disconnected if refresh failed permanently
@@ -169,7 +169,7 @@ serve(async (req) => {
           results.push({
             user_id: account.user_id,
             success: false,
-            error: updateError.message,
+            error: 'Database update failed',
           });
           continue;
         }
@@ -186,7 +186,7 @@ serve(async (req) => {
         results.push({
           user_id: account.user_id,
           success: false,
-          error: errorMessage,
+          error: 'Unexpected error during token refresh',
         });
       }
     }
@@ -213,7 +213,7 @@ serve(async (req) => {
     console.error('[Refresh Token] Error:', errorMessage);
 
     return new Response(
-      JSON.stringify({ error: 'Internal server error', details: errorMessage }),
+      JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

@@ -284,8 +284,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: false,
-        error: normalizedError,
-        details: error instanceof Error ? error.stack : undefined,
+        error: 'Reconciliation failed',
       }),
       {
         status: 500,

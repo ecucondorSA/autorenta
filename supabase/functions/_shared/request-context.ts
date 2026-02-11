@@ -155,14 +155,14 @@ export function errorResponse(
   code?: string,
   details?: unknown,
 ): Response {
+  // Log full details server-side only — NEVER send to client (OWASP A04)
   ctx.log.error(message, details);
 
   return ctx.jsonResponse(
     {
       error: code || 'INTERNAL_ERROR',
-      message,
+      message: status >= 500 ? 'Internal server error' : message,
       trace_id: ctx.traceId,
-      ...(details && typeof details === 'object' ? { details } : {}),
     },
     status,
   );

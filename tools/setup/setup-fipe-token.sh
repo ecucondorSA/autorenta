@@ -5,8 +5,8 @@
 
 set -e
 
-FIPE_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzZDEyZTA0Yi0yMGZmLTRjMzctODU0OC1kNjU1YTA3MmM4MDYiLCJlbWFpbCI6InJlaW5hbW9zcXVlcmEyMDAzQGdtYWlsLmNvbSIsImlhdCI6MTc2Mjg1MTI3Mn0.uBliNlAtyuPgvNzVazvkeWXzkO3_5h6gN1EPsWK6miU"
-PROJECT_REF="pisqjmoklivzpwufhscx"
+FIPE_TOKEN="${FIPE_TOKEN:?FIPE_TOKEN env var is required}"
+PROJECT_REF="aceacpaockyxgogxsfyc"
 
 echo "🔐 Setting up FIPE API token for project $PROJECT_REF..."
 

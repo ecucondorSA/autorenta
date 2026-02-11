@@ -101,7 +101,7 @@ async function testLogout(test: AutoRentaTest): Promise<void> {
 
   // Verify session is cleared
   const hasSession = await test['page'].evaluate(() => {
-    return !!localStorage.getItem('sb-pisqjmoklivzpwufhscx-auth-token');
+    return !!localStorage.getItem('sb-aceacpaockyxgogxsfyc-auth-token');
   });
 
   if (hasSession) {

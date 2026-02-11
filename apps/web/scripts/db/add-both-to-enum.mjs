@@ -75,7 +75,7 @@ async function addBothToEnum() {
       console.log('\n⚠️  Cannot execute SQL directly via REST API.');
       console.log('Error:', errorText);
       console.log('\n📝 Manual steps required:');
-      console.log('\n1. Go to: https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/sql/new');
+      console.log('\n1. Go to: https://supabase.com/dashboard/project/aceacpaockyxgogxsfyc/sql/new');
       console.log('2. Run this SQL:\n');
       console.log("   ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'both';");
       console.log('\n3. Then run: node scripts/check-enum-values.mjs\n');
@@ -97,7 +97,7 @@ async function addBothToEnum() {
     console.error('\n❌ Error:', error.message);
     console.log('\n📝 Please execute this SQL manually in Supabase Dashboard:');
     console.log('\n   ALTER TYPE user_role ADD VALUE IF NOT EXISTS \'both\';\n');
-    console.log('🔗 URL: https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/sql/new\n');
+    console.log('🔗 URL: https://supabase.com/dashboard/project/aceacpaockyxgogxsfyc/sql/new\n');
     process.exit(1);
   }
 }

@@ -82,7 +82,6 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({
           error: 'Configuración de MercadoPago incompleta',
-          details: 'MERCADOPAGO_APPLICATION_ID no configurado',
         }),
         {
           status: 500,
@@ -170,9 +169,6 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({
           error: 'Error guardando state en DB',
-          details: updateError.message,
-          code: updateError.code,
-          hint: updateError.hint,
         }),
         {
           status: 500,
@@ -220,7 +216,6 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         error: 'Error al iniciar conexión con MercadoPago',
-        details: error.message,
       }),
       {
         status: 500,

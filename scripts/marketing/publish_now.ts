@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
 // Configuration
-const SUPABASE_URL = "https://pisqjmoklivzpwufhscx.supabase.co";
+const SUPABASE_URL = "https://aceacpaockyxgogxsfyc.supabase.co";
 const SERVICE_KEY = "sb_secret_qRFh5RZGAEyJgVf9B4HwQQ_91fSDRoF";
 
 if (!SERVICE_KEY || !SUPABASE_URL) {

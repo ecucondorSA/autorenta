@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Call Edge Function with region configuration
         env:
-          SUPABASE_URL: https://pisqjmoklivzpwufhscx.supabase.co
+          SUPABASE_URL: https://aceacpaockyxgogxsfyc.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           set -e
@@ -64,7 +64,7 @@ jobs:
 
       - name: Verify update
         env:
-          SUPABASE_URL: https://pisqjmoklivzpwufhscx.supabase.co
+          SUPABASE_URL: https://aceacpaockyxgogxsfyc.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           echo "🔍 Verifying database update..."

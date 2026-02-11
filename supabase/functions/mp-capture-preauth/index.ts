@@ -159,7 +159,6 @@ serve(async (req) => {
         JSON.stringify({
           success: false,
           error: 'Payment capture failed',
-          details: errorData,
         }),
         {
           status: mpResponse.status,
@@ -226,7 +225,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: 'Internal server error',
       }),
       {
         status: 500,

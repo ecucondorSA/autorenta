@@ -103,7 +103,7 @@ serve(async (req) => {
     if (queryError) {
       console.error('Query error:', queryError);
       return new Response(
-        JSON.stringify({ error: 'Failed to fetch documents', details: queryError.message }),
+        JSON.stringify({ error: 'Failed to fetch documents' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -187,7 +187,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Unexpected error:', error);
     return new Response(
-      JSON.stringify({ error: 'Internal server error', details: error.message }),
+      JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

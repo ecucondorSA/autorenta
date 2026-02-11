@@ -243,7 +243,7 @@ serve(async (req: Request) => {
     if (geminiData.error) {
       console.error('[gemini-analyze-frame] Gemini error:', geminiData.error);
       return new Response(
-        JSON.stringify({ error: geminiData.error.message }),
+        JSON.stringify({ error: 'Analysis failed' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

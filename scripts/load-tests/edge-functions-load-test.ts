@@ -13,7 +13,7 @@
  *   - SUPABASE_URL and SUPABASE_ANON_KEY env vars
  */
 
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://pisqjmoklivzpwufhscx.supabase.co';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://aceacpaockyxgogxsfyc.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || '';
 
 interface LoadTestResult {

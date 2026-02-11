@@ -17,11 +17,9 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://pisqjmoklivzpwufhscx.supabase.co';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://aceacpaockyxgogxsfyc.supabase.co';
 const SUPABASE_ANON_KEY =
-  process.env.SUPABASE_ANON_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.9EtMHXlpxCyZBMmlMYxYMjS3H7wjZ2M4M9p8gIqVb3I';
+  process.env.SUPABASE_ANON_KEY || (() => { throw new Error('SUPABASE_ANON_KEY env var is required'); })();
 
 // Test configuration
 const CONCURRENCY = parseInt(process.env.CONCURRENCY || '50', 10);

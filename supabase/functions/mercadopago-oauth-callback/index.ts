@@ -272,7 +272,6 @@ serve(async (req) => {
         JSON.stringify({
           success: false,
           error: 'Configuración incompleta',
-          details: 'MERCADOPAGO_CLIENT_SECRET no configurado',
         }),
         {
           status: 500,
@@ -309,9 +308,6 @@ serve(async (req) => {
         JSON.stringify({
           success: false,
           error: 'Error obteniendo token de MercadoPago',
-          details: errorData.message || `HTTP ${tokenResponse.status}`,
-          mp_error: errorData.error,
-          mp_error_description: errorData.error_description,
           status: tokenResponse.status,
         }),
         {
@@ -373,7 +369,6 @@ serve(async (req) => {
         JSON.stringify({
           success: false,
           error: 'Error guardando datos de MercadoPago',
-          details: collectorError.message,
         }),
         {
           status: 500,
@@ -422,7 +417,6 @@ serve(async (req) => {
         JSON.stringify({
           success: false,
           error: 'Error guardando datos de MercadoPago',
-          details: updateError.message,
         }),
         {
           status: 500,
@@ -462,7 +456,6 @@ serve(async (req) => {
       JSON.stringify({
         success: false,
         error: 'Error procesando callback de MercadoPago',
-        details: error.message,
       }),
       {
         status: 500,

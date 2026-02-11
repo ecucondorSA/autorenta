@@ -18,7 +18,7 @@ async def main():
     """Main MCP server for Supabase"""
 
     # Configuration
-    supabase_url = os.getenv("SUPABASE_URL", "https://pisqjmoklivzpwufhscx.supabase.co")
+    supabase_url = os.getenv("SUPABASE_URL", "https://aceacpaockyxgogxsfyc.supabase.co")
     supabase_key = os.getenv("SUPABASE_ANON_KEY", "")
 
     print(f"🚀 Supabase MCP Server Starting")

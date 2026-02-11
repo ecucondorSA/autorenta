@@ -135,7 +135,7 @@ echo "gcloud run deploy video-processing-service \\"
 echo "  --source ./functions/gcp/video-processing-service \\"
 echo "  --region $REGION \\"
 echo "  --platform managed \\"
-echo "  --set-env-vars PROJECT_ID=$PROJECT_ID,SUPABASE_URL=https://pisqjmoklivzpwufhscx.supabase.co"
+echo "  --set-env-vars PROJECT_ID=$PROJECT_ID,SUPABASE_URL=https://aceacpaockyxgogxsfyc.supabase.co"
 echo ""
 
 # ============================================

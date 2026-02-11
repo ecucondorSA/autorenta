@@ -1,0 +1,74 @@
+[
+  {
+    "company": "Murchison Ventures",
+    "email": "info@murchisonventures.com.ar",
+    "vertical": "vc",
+    "tier": 1,
+    "subject": "AutoRentar: Propiedad fraccionada de EVs en LATAM",
+    "status": "dry-run",
+    "timestamp": "2026-02-11T10:46:24.730Z"
+  },
+  {
+    "company": "Autonomy",
+    "email": "jose@autonomy.com.ar",
+    "vertical": "competidor",
+    "tier": 1,
+    "subject": "Sinergia en movilidad: AutoRentar + Autonomy",
+    "status": "dry-run",
+    "timestamp": "2026-02-11T10:46:24.730Z"
+  },
+  {
+    "company": "DeRentas",
+    "email": "info@derentas.io",
+    "vertical": "competidor",
+    "tier": 1,
+    "subject": "Sinergia en movilidad: AutoRentar + DeRentas",
+    "status": "dry-run",
+    "timestamp": "2026-02-11T10:46:24.730Z"
+  },
+  {
+    "company": "Crowdium",
+    "email": "hola@crowdium.com.ar",
+    "vertical": "crowdfunding",
+    "tier": 1,
+    "subject": "Partnership: Infraestructura de crowdfunding para flota EV",
+    "status": "dry-run",
+    "timestamp": "2026-02-11T10:46:24.730Z"
+  },
+  {
+    "company": "Bricksave",
+    "email": "sales@bricksave.com",
+    "vertical": "crowdfunding",
+    "tier": 1,
+    "subject": "Partnership: Infraestructura de crowdfunding para flota EV",
+    "status": "dry-run",
+    "timestamp": "2026-02-11T10:46:24.730Z"
+  },
+  {
+    "company": "Kaszek Ventures",
+    "email": "pitch@kaszek.com",
+    "vertical": "vc",
+    "tier": 1,
+    "subject": "AutoRentar: Propiedad fraccionada de EVs en LATAM",
+    "status": "dry-run",
+    "timestamp": "2026-02-11T10:46:24.730Z"
+  },
+  {
+    "company": "FAEVYT",
+    "email": "info@faevyt.org.ar",
+    "vertical": "turismo",
+    "tier": 1,
+    "subject": "Alquiler de autos para tus huéspedes — partnership AutoRentar",
+    "status": "dry-run",
+    "timestamp": "2026-02-11T10:46:24.730Z"
+  },
+  {
+    "company": "Adduntia Family Office",
+    "email": "info@adduntia.com",
+    "vertical": "family_office",
+    "tier": 1,
+    "subject": "Activos reales con renta desde USD $12.50 — AutoRentar",
+    "status": "dry-run",
+    "timestamp": "2026-02-11T10:46:24.730Z"
+  }
+]

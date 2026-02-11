@@ -21,6 +21,7 @@ const ALLOWED_ORIGINS = [
   'http://localhost:4200',
   'http://127.0.0.1:4200',
   'http://localhost:8787', // Worker local
+  'http://localhost:9123', // Pitch page local
 ];
 
 // Cloudflare Pages generates unique subdomains for each deployment

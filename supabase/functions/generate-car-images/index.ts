@@ -104,9 +104,9 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error en function:", error);
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: 'Failed to generate images' }),
       {
-        status: 400,
+        status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );

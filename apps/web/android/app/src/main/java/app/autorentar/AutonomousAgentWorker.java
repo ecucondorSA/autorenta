@@ -49,11 +49,11 @@ public class AutonomousAgentWorker extends Worker {
     private boolean checkMarketplaceHealth() {
         try {
             // URL real de tu proyecto Supabase (tomada de environment.ts)
-            java.net.URL url = new java.net.URL("https://pisqjmoklivzpwufhscx.supabase.co/rest/v1/cars?select=id&status=eq.active&limit=1");
+            java.net.URL url = new java.net.URL("https://aceacpaockyxgogxsfyc.supabase.co/rest/v1/cars?select=id&status=eq.active&limit=1");
             java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("apikey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.wE2jTut2JSexoKFtHdEaIpl9MZ0sOHy9zMYBbhFbzt4"); // Anon key real
-            conn.setRequestProperty("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.wE2jTut2JSexoKFtHdEaIpl9MZ0sOHy9zMYBbhFbzt4");
+            conn.setRequestProperty("apikey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjZWFjcGFvY2t5eGdvZ3hzZnljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNzM4NDQsImV4cCI6MjA4NTY0OTg0NH0._Vzv8a97DskL7y-D6ngSFl1GRXgwBlJA6_daTJ01oqU");
+            conn.setRequestProperty("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjZWFjcGFvY2t5eGdvZ3hzZnljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNzM4NDQsImV4cCI6MjA4NTY0OTg0NH0._Vzv8a97DskL7y-D6ngSFl1GRXgwBlJA6_daTJ01oqU");
             conn.setConnectTimeout(10000); // 10s timeout
             conn.setReadTimeout(10000);
 

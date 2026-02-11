@@ -10,7 +10,7 @@ jobs:
     
     env:
       # Mock env vars para build
-      NG_APP_SUPABASE_URL: https://pisqjmoklivzpwufhscx.supabase.co
+      NG_APP_SUPABASE_URL: https://aceacpaockyxgogxsfyc.supabase.co
       NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
       NG_APP_MAPBOX_ACCESS_TOKEN: pk.mock-token
       

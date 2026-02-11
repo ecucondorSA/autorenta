@@ -203,7 +203,7 @@ async function testLoginFlow(ctx: TestContext): Promise<void> {
 
   // Verify session exists
   const hasSession = await ctx.page.evaluate(() => {
-    const session = localStorage.getItem('sb-pisqjmoklivzpwufhscx-auth-token');
+    const session = localStorage.getItem('sb-aceacpaockyxgogxsfyc-auth-token');
     return !!session;
   });
 
@@ -296,9 +296,9 @@ async function testSearchFilters(ctx: TestContext): Promise<void> {
  */
 async function testApiHealth(ctx: TestContext): Promise<void> {
   // Test Supabase REST API
-  const supabaseUrl = 'https://pisqjmoklivzpwufhscx.supabase.co';
+  const supabaseUrl = 'https://aceacpaockyxgogxsfyc.supabase.co';
   const anonKey =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.9EtMHXlpxCyZBMmlMYxYMjS3H7wjZ2M4M9p8gIqVb3I';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjZWFjcGFvY2t5eGdvZ3hzZnljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNzM4NDQsImV4cCI6MjA4NTY0OTg0NH0._Vzv8a97DskL7y-D6ngSFl1GRXgwBlJA6_daTJ01oqU';
 
   const response = await ctx.page.evaluate(
     async ({ url, key }) => {

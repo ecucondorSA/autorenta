@@ -112,7 +112,7 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     log.error('Failed to generate sitemap', error instanceof Error ? error : new Error(String(error)));
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 500,
     });

@@ -168,7 +168,6 @@ serve(async (req: Request) => {
           success: false,
           error: 'OCR_FAILED',
           message: 'No se pudo procesar la imagen después de varios intentos. Por favor, intenta con una foto más clara y asegúrate de que el documento esté completo y bien iluminado.',
-          details: errorMessage,
           retries: maxRetries
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -320,8 +319,7 @@ serve(async (req: Request) => {
       JSON.stringify({
         success: false,
         error: 'INTERNAL_ERROR',
-        message: 'Error interno del servidor',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        message: 'Error interno del servidor'
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

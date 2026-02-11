@@ -15,10 +15,13 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Supabase config
-const SUPABASE_URL = 'https://pisqjmoklivzpwufhscx.supabase.co';
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjQ4Mjc4MywiZXhwIjoyMDc4MDU4NzgzfQ.SiACo6rXnbu0B091FZEgmyoXK0-EzxKd9YeO4pls0eQ';
+// Supabase config — from env vars, never hardcode keys
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://aceacpaockyxgogxsfyc.supabase.co';
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+if (!SUPABASE_SERVICE_KEY) {
+  console.error('SUPABASE_SERVICE_KEY env var is required. Set it in your MCP server config.');
+  process.exit(1);
+}
 
 // Notification types available
 const NOTIFICATION_TYPES = [

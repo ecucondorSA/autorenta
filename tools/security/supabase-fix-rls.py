@@ -14,9 +14,9 @@ import subprocess
 from pathlib import Path
 
 # Supabase Configuration
-SUPABASE_URL = "https://pisqjmoklivzpwufhscx.supabase.co"
-SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.wE2jTut2JSexoKFtHdEaIpl9MZ0sOHy9zMYBbhFbzt4"
-PROJECT_ID = "pisqjmoklivzpwufhscx"
+SUPABASE_URL = "https://aceacpaockyxgogxsfyc.supabase.co"
+SUPABASE_ANON_KEY = os.environ["SUPABASE_ANON_KEY"]
+PROJECT_ID = "aceacpaockyxgogxsfyc"
 DB_HOST = "aws-0-us-east-1.pooler.supabase.com"
 DB_PORT = "6543"
 DB_NAME = "postgres"
@@ -157,7 +157,7 @@ class SupabaseRLSFixer:
 
         print("""
 1. Go to Supabase Dashboard:
-   https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/sql
+   https://supabase.com/dashboard/project/aceacpaockyxgogxsfyc/sql
 
 2. Create a new query and copy this SQL:
 
@@ -176,7 +176,7 @@ class SupabaseRLSFixer:
    - No errors should appear
 
 5. Re-run Supabase Linter to confirm:
-   https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/
+   https://supabase.com/dashboard/project/aceacpaockyxgogxsfyc/
 """)
 
     def run(self):

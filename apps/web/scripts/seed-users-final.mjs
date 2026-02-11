@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = 'https://pisqjmoklivzpwufhscx.supabase.co';
-const SERVICE_KEY = 'sb_secret_qRFh5RZGAEyJgVf9B4HwQQ_91fSDRoF';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://aceacpaockyxgogxsfyc.supabase.co';
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+if (!SERVICE_KEY) { console.error('SUPABASE_SERVICE_KEY env var required'); process.exit(1); }
 
 const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false }

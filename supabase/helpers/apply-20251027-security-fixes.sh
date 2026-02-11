@@ -49,7 +49,7 @@ else
   echo "📝 INSTRUCCIONES MANUALES:"
   echo ""
   echo "1. Abre Supabase Dashboard:"
-  echo "   https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx/sql"
+  echo "   https://supabase.com/dashboard/project/aceacpaockyxgogxsfyc/sql"
   echo ""
   echo "2. En SQL Editor, ejecuta el archivo:"
   echo "   supabase/migrations/20251027_security_fixes_p0_critical.sql"

@@ -197,7 +197,7 @@ serve(async (req) => {
     console.error('[Delete Account Request] Error:', errorMessage);
 
     return new Response(
-      JSON.stringify({ error: 'Failed to process request', details: errorMessage }),
+      JSON.stringify({ error: 'Failed to process request' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

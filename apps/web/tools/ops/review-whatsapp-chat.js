@@ -1,7 +1,8 @@
 import https from 'https';
 
-const SUPABASE_URL = process.env.NG_APP_SUPABASE_URL || 'https://pisqjmoklivzpwufhscx.supabase.co';
-const SUPABASE_ANON_KEY = process.env.NG_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.wE2jTut2JSexoKFtHdEaIpl9MZ0sOHy9zMYBbhFbzt4';
+const SUPABASE_URL = process.env.NG_APP_SUPABASE_URL || 'https://aceacpaockyxgogxsfyc.supabase.co';
+const SUPABASE_ANON_KEY = process.env.NG_APP_SUPABASE_ANON_KEY;
+if (!SUPABASE_ANON_KEY) { console.error('NG_APP_SUPABASE_ANON_KEY env var required'); process.exit(1); }
 
 const QUERY_URL = `${SUPABASE_URL}/rest/v1/outreach_messages?select=content,direction,created_at,outreach_contacts(phone)&order=created_at.desc&limit=200`;
 

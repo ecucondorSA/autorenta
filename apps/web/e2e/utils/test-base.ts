@@ -182,7 +182,7 @@ export class AutoRentaTest {
   async isLoggedIn(): Promise<boolean> {
     try {
       return await this.page.evaluate(() => {
-        const session = localStorage.getItem('sb-pisqjmoklivzpwufhscx-auth-token');
+        const session = localStorage.getItem('sb-aceacpaockyxgogxsfyc-auth-token');
         return !!session;
       });
     } catch {

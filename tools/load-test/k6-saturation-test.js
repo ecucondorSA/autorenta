@@ -23,8 +23,9 @@ import { randomItem, randomIntBetween } from 'https://jslib.k6.io/k6-utils/1.4.0
 // CONFIGURACIÓN
 // ============================================================================
 
-const BASE_URL = __ENV.SUPABASE_URL || 'https://pisqjmoklivzpwufhscx.supabase.co';
-const ANON_KEY = __ENV.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0ODI3ODMsImV4cCI6MjA3ODA1ODc4M30.wE2jTut2JSexoKFtHdEaIpl9MZ0sOHy9zMYBbhFbzt4';
+const BASE_URL = __ENV.SUPABASE_URL || 'https://aceacpaockyxgogxsfyc.supabase.co';
+const ANON_KEY = __ENV.SUPABASE_ANON_KEY;
+if (!ANON_KEY) throw new Error('SUPABASE_ANON_KEY env var is required');
 
 // Headers base para todas las requests
 const BASE_HEADERS = {

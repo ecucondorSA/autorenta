@@ -29,7 +29,7 @@ else
 fi
 
 # Reemplazar placeholders
-sed -i "s|\${NG_APP_SUPABASE_URL}|${NG_APP_SUPABASE_URL:-https://pisqjmoklivzpwufhscx.supabase.co}|g" "$ENV_FILE"
+sed -i "s|\${NG_APP_SUPABASE_URL}|${NG_APP_SUPABASE_URL:-https://aceacpaockyxgogxsfyc.supabase.co}|g" "$ENV_FILE"
 sed -i "s|\${NG_APP_SUPABASE_ANON_KEY}|${NG_APP_SUPABASE_ANON_KEY}|g" "$ENV_FILE"
 sed -i "s|\${NG_APP_MAPBOX_ACCESS_TOKEN}|${NG_APP_MAPBOX_ACCESS_TOKEN}|g" "$ENV_FILE"
 sed -i "s|\${NG_APP_MERCADOPAGO_PUBLIC_KEY}|${NG_APP_MERCADOPAGO_PUBLIC_KEY}|g" "$ENV_FILE"

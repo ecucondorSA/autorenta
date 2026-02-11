@@ -246,7 +246,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('[renew-preauth] Fatal error:', error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
+      JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

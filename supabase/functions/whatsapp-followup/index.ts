@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
 
     if (error) {
       console.error('[DB] Error fetching contacts:', error)
-      return new Response(JSON.stringify({ error: error.message }), { status: 500 })
+      return new Response(JSON.stringify({ error: 'Failed to fetch contacts' }), { status: 500 })
     }
 
     if (!contacts || contacts.length === 0) {

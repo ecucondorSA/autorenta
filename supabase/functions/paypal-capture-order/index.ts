@@ -308,13 +308,11 @@ serve(async (req: Request) => {
     console.error('Error capturing PayPal order:', error);
 
     const statusCode = error instanceof PayPalAPIError ? error.statusCode : 500;
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
     return new Response(
       JSON.stringify({
         success: false,
-        error: errorMessage,
-        details: error instanceof PayPalAPIError ? error.details : undefined,
+        error: 'Payment capture failed',
       }),
       {
         status: statusCode,

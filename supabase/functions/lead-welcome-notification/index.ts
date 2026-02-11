@@ -75,6 +75,6 @@ Quedo atento a tus dudas.`;
 
   } catch (error) {
     console.error('[LeadWelcome] Error:', error);
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500 });
   }
 });

@@ -47,7 +47,7 @@ else
   PGPASSWORD='Ab.12345' psql \
     -h aws-1-sa-east-1.pooler.supabase.com \
     -p 6543 \
-    -U postgres.pisqjmoklivzpwufhscx \
+    -U postgres.aceacpaockyxgogxsfyc \
     -d postgres \
     -f supabase/migrations/20251214000000_enhance_booking_contracts.sql
 

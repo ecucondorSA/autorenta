@@ -9,7 +9,7 @@ fi
 echo "🔍 [TEST] Probando flujo completo de depósito de wallet"
 echo ""
 
-SUPABASE_URL="https://pisqjmoklivzpwufhscx.supabase.co"
+SUPABASE_URL="${SUPABASE_URL:-https://aceacpaockyxgogxsfyc.supabase.co}"
 ANON_KEY="${SUPABASE_ANON_KEY}"
 EMAIL="test-wallet@autorenta.com"
 PASSWORD="TestWallet123!"

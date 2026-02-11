@@ -2,8 +2,8 @@
 # Apply security migration to Supabase
 # P0-SECURITY: Atomic damage deduction + claim locking + anti-fraud
 
-PROJECT_REF="pisqjmoklivzpwufhscx"
-SERVICE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjQ4Mjc4MywiZXhwIjoyMDc4MDU4NzgzfQ.SiACo6rXnbu0B091FZEgmyoXK0-EzxKd9YeO4pls0eQ"
+PROJECT_REF="aceacpaockyxgogxsfyc"
+SERVICE_KEY="${SUPABASE_SERVICE_ROLE_KEY:?SUPABASE_SERVICE_ROLE_KEY env var is required}"
 SUPABASE_URL="https://${PROJECT_REF}.supabase.co"
 
 echo "🔐 Applying P0-SECURITY migration..."
