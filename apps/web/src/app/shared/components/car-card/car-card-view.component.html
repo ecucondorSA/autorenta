@@ -16,7 +16,9 @@
   <!-- Image Container -->
   <div class="relative w-full aspect-[4/3] overflow-hidden bg-zinc-900">
     <!-- Skeleton / Loading State -->
-    <div class="absolute inset-0 bg-zinc-800 animate-pulse" *ngIf="!displayImage()"></div>
+    @if (!displayImage()) {
+      <div class="absolute inset-0 bg-zinc-800 animate-pulse"></div>
+    }
 
     <!-- Real Image -->
     @if (displayImage(); as img) {

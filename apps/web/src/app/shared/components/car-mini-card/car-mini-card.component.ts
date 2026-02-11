@@ -42,7 +42,9 @@ import { CarMapLocation } from '@core/services/cars/car-locations.service';
         <!-- Photo with Parallax + Blur Placeholder -->
         <div class="w-24 h-24 rounded-lg overflow-hidden shrink-0 relative bg-zinc-950">
           <!-- Skeleton Placeholder -->
-          <div class="absolute inset-0 bg-zinc-800 animate-pulse" *ngIf="!imageLoaded"></div>
+          @if (!imageLoaded) {
+            <div class="absolute inset-0 bg-zinc-800 animate-pulse"></div>
+          }
 
           <img
             [src]="car.photoUrl || '/assets/images/car-placeholder.svg'"

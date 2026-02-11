@@ -15,16 +15,16 @@ export interface SmartTag {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
-    <div class="smart-tags-container" *ngIf="activeTags.length > 0">
-      <div
-        *ngFor="let tag of activeTags; let i = index"
-        [@tagEnter]="i"
-        [class]="getTagClasses(tag)"
-      >
-        <span class="tag-icon">{{ tag.icon }}</span>
-        <span class="tag-label">{{ tag.label }}</span>
+    @if (activeTags.length > 0) {
+      <div class="smart-tags-container">
+        @for (tag of activeTags; track tag.label; let i = $index) {
+          <div [@tagEnter]="i" [class]="getTagClasses(tag)">
+            <span class="tag-icon">{{ tag.icon }}</span>
+            <span class="tag-label">{{ tag.label }}</span>
+          </div>
+        }
       </div>
-    </div>
+    }
   `,
   styles: [
     `
