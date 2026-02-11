@@ -1,3 +1,10 @@
+## 3.82.0 (2026-02-11)
+
+* feat(tools): BYD investor pitch updates + email campaign script ([8264a7e](https://github.com/ecucondorSA/autorenta/commit/8264a7e))
+* refactor(edge): add structured logger + migrate MP retry to fetch API ([17d3dd9](https://github.com/ecucondorSA/autorenta/commit/17d3dd9))
+* refactor(web): remove dead Mapbox preloader + implement verification realtime ([8a23470](https://github.com/ecucondorSA/autorenta/commit/8a23470))
+* fix(db): fix cron jobs pointing to deprecated project + fragment investment system ([c8094b8](https://github.com/ecucondorSA/autorenta/commit/c8094b8))
+
 ## <small>3.81.6 (2026-02-11)</small>
 
 * fix: skip protector audit when addons table is unavailable ([6dc952f](https://github.com/ecucondorSA/autorenta/commit/6dc952f))
