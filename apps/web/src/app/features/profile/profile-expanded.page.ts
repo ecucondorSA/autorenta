@@ -21,6 +21,8 @@ import { ReviewsService } from '@core/services/cars/reviews.service';
 import { TrustService } from '@core/services/verification/trust.service';
 import { DocumentUploadModalComponent } from '../../shared/components/document-upload-modal/document-upload-modal.component';
 import { VerifiedBadgeComponent } from '../../shared/components/verified-badge/verified-badge.component';
+import { HoverLiftDirective } from '../../shared/directives/hover-lift.directive';
+import { StaggerEnterDirective } from '../../shared/directives/stagger-enter.directive';
 import { KycStatus } from '../../core/models';
 
 /**
@@ -37,7 +39,7 @@ import { KycStatus } from '../../core/models';
 @Component({
   standalone: true,
   selector: 'app-profile-expanded-page',
-  imports: [CommonModule, RouterLink, DocumentUploadModalComponent, VerifiedBadgeComponent],
+  imports: [CommonModule, RouterLink, DocumentUploadModalComponent, VerifiedBadgeComponent, HoverLiftDirective, StaggerEnterDirective],
   templateUrl: './profile-expanded.page.html',
   styleUrls: ['./profile-expanded.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

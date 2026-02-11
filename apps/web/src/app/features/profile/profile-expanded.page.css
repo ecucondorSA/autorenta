@@ -115,14 +115,9 @@ select.input-premium:focus {
 }
 
 /* Menu item press effect */
-.bg-surface-raised:active {
+.glass-card:active {
   transform: scale(0.98);
   transition: transform 0.1s ease;
-}
-
-/* Quick action cards hover lift */
-.grid a:hover {
-  transform: translateY(-2px);
 }
 
 /* Banner subtle animation */
@@ -171,27 +166,27 @@ a:focus-visible {
 }
 
 /* Stagger animation for menu sections */
-.bg-surface-raised > a {
+.glass-card > a {
   animation: slideIn 0.3s ease forwards;
   opacity: 0;
 }
 
-.bg-surface-raised > a:nth-child(1) {
+.glass-card > a:nth-child(1) {
   animation-delay: 0.05s;
 }
-.bg-surface-raised > a:nth-child(2) {
+.glass-card > a:nth-child(2) {
   animation-delay: 0.1s;
 }
-.bg-surface-raised > a:nth-child(3) {
+.glass-card > a:nth-child(3) {
   animation-delay: 0.15s;
 }
-.bg-surface-raised > a:nth-child(4) {
+.glass-card > a:nth-child(4) {
   animation-delay: 0.2s;
 }
-.bg-surface-raised > a:nth-child(5) {
+.glass-card > a:nth-child(5) {
   animation-delay: 0.25s;
 }
-.bg-surface-raised > a:nth-child(6) {
+.glass-card > a:nth-child(6) {
   animation-delay: 0.3s;
 }
 

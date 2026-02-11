@@ -28,17 +28,16 @@
       <!-- ═══════════════════════════════════════════════════════════
            HEADER: Avatar + Nombre + Nivel
            ═══════════════════════════════════════════════════════════ -->
-      <div class="bg-surface-raised rounded-2xl p-4 mb-4 border border-border-default">
+      <div class="glass-card-elevated rounded-2xl p-5 mb-4 bg-gradient-to-br from-cta-default/5 to-transparent">
         <div class="flex items-center gap-4">
           <!-- Avatar -->
           <div class="relative group">
-            <!-- P1 FIX: Use fallback when avatarUrl is null, undefined, or empty string -->
             <img
               [src]="avatarUrl()?.trim() || '/assets/avatar-placeholder.png'"
               alt="Foto de perfil"
-              class="h-16 w-16 rounded-full object-cover bg-surface-secondary ring-2 ring-border-default"
-              width="64"
-              height="64"
+              class="h-20 w-20 rounded-full object-cover bg-surface-secondary ring-4 ring-cta-default/30 shadow-lg"
+              width="80"
+              height="80"
               loading="eager"
               (error)="onAvatarLoadError($event)"
             />
@@ -115,16 +114,15 @@
            TRUST & REPUTATION CARD
            ═══════════════════════════════════════════════════════════ -->
       @if (trustStatus()) {
-        <div class="bg-surface-raised rounded-2xl p-4 mb-4 border border-border-default">
+        <div class="glass-card rounded-2xl p-4 mb-4">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider">
               Nivel de Confianza
             </h2>
             <span
-              class="text-xs font-bold px-2 py-1 rounded-full border flex items-center gap-1"
+              class="glass-badge text-xs font-bold px-2 py-1 rounded-full border flex items-center gap-1"
               [ngClass]="getRiskLevelProps(trustStatus()?.risk_level).color"
             >
-              <!-- Icon handling logic for dynamic icon name could be complex, simplifying -->
               <span class="text-[10px] uppercase">{{
                 getRiskLevelProps(trustStatus()?.risk_level).label
               }}</span>
@@ -132,20 +130,16 @@
           </div>
 
           <div class="flex items-center gap-6">
-            <!-- Circular Score (Simplistic implementation with CSS Conic Gradient) -->
-            <div
-              class="relative h-20 w-20 flex items-center justify-center rounded-full bg-surface-secondary"
-            >
-              <div class="absolute inset-0 rounded-full border-4 border-surface-base"></div>
-              <div
-                class="absolute inset-0 rounded-full border-4 border-cta-default"
-                style="
-                  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-                  transform: rotate(-90deg);
-                "
-              >
-                <!-- This requires a more complex component for true gauge, using text for now -->
-              </div>
+            <!-- Circular Score (SVG Gauge) -->
+            <div class="relative h-20 w-20 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 80 80" class="absolute inset-0 w-full h-full -rotate-90">
+                <circle cx="40" cy="40" r="36" fill="none" stroke-width="6"
+                  class="stroke-surface-secondary" />
+                <circle cx="40" cy="40" r="36" fill="none" stroke-width="6"
+                  class="stroke-cta-default" stroke-linecap="round"
+                  [attr.stroke-dasharray]="226"
+                  [attr.stroke-dashoffset]="226 - (226 * (trustStatus()?.score ?? 0) / 100)" />
+              </svg>
               <div class="text-center z-10">
                 <span class="block text-2xl font-bold text-text-primary">{{
                   trustStatus()?.score
@@ -206,6 +200,7 @@
       @if (verificationProgressPercent() < 100) {
         <a
           routerLink="/profile/verification"
+          appHoverLift [liftAmount]="3"
           class="group block mb-4 p-4 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 rounded-2xl border border-amber-500/30 hover:border-amber-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10"
         >
           <div class="flex items-center gap-4">
@@ -255,6 +250,7 @@
            ═══════════════════════════════════════════════════════════ -->
       <a
         routerLink="/referrals"
+        appHoverLift [liftAmount]="3"
         class="group block mb-4 p-4 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 rounded-2xl border border-emerald-500/30 hover:border-emerald-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/10 relative overflow-hidden"
       >
         <!-- Decorative elements -->
@@ -310,7 +306,8 @@
       <div class="grid grid-cols-3 gap-3 mb-4">
         <a
           routerLink="/finanzas"
-          class="group flex flex-col items-center p-3 bg-surface-raised rounded-xl border border-border-default hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/5 transition-all"
+          appHoverLift [liftAmount]="6" appStaggerEnter [staggerIndex]="0"
+          class="group flex flex-col items-center p-3 glass-card rounded-xl transition-all"
         >
           <div
             class="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform"
@@ -333,7 +330,8 @@
         </a>
         <a
           routerLink="/bookings"
-          class="group flex flex-col items-center p-3 bg-surface-raised rounded-xl border border-border-default hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/5 transition-all"
+          appHoverLift [liftAmount]="6" appStaggerEnter [staggerIndex]="1"
+          class="group flex flex-col items-center p-3 glass-card rounded-xl transition-all"
         >
           <div
             class="h-10 w-10 rounded-xl bg-purple-500/10 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform"
@@ -356,7 +354,8 @@
         </a>
         <a
           routerLink="/profile/verification"
-          class="group flex flex-col items-center p-3 bg-surface-raised rounded-xl border border-border-default hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/5 transition-all"
+          appHoverLift [liftAmount]="6" appStaggerEnter [staggerIndex]="2"
+          class="group flex flex-col items-center p-3 glass-card rounded-xl transition-all"
         >
           <div
             class="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform"
@@ -387,7 +386,7 @@
           Mis Actividades
         </h2>
         <div
-          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default"
+          class="glass-card rounded-2xl overflow-hidden divide-y divide-border-default"
         >
           <a
             routerLink="/cars/my"
@@ -474,7 +473,7 @@
           Mi Cuenta
         </h2>
         <div
-          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default"
+          class="glass-card rounded-2xl overflow-hidden divide-y divide-border-default"
         >
           <a
             routerLink="/profile/personal"
@@ -604,7 +603,7 @@
           Seguridad
         </h2>
         <div
-          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default"
+          class="glass-card rounded-2xl overflow-hidden divide-y divide-border-default"
         >
           <a
             routerLink="/profile/security"
@@ -717,7 +716,7 @@
           Preferencias
         </h2>
         <div
-          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default"
+          class="glass-card rounded-2xl overflow-hidden divide-y divide-border-default"
         >
           <a
             routerLink="/profile/preferences"
@@ -773,7 +772,7 @@
           Herramientas
         </h2>
         <div
-          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default"
+          class="glass-card rounded-2xl overflow-hidden divide-y divide-border-default"
         >
           <a
             routerLink="/rentarfast"
@@ -857,7 +856,7 @@
           Ayuda
         </h2>
         <div
-          class="bg-surface-raised rounded-2xl border border-border-default overflow-hidden divide-y divide-border-default"
+          class="glass-card rounded-2xl overflow-hidden divide-y divide-border-default"
         >
           <a
             routerLink="/help"
@@ -943,7 +942,7 @@
         <button
           type="button"
           (click)="signOut()"
-          class="w-full flex items-center justify-center gap-2 p-4 bg-surface-raised rounded-2xl border border-border-default hover:bg-red-50 hover:border-red-200 transition-colors group"
+          class="w-full flex items-center justify-center gap-2 p-4 glass-card rounded-2xl hover:bg-red-50 hover:border-red-200 transition-colors group"
         >
           <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
