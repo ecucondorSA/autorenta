@@ -56,11 +56,14 @@
   <section class="max-w-7xl mx-auto px-0 sm:px-6 mb-8 sm:mb-12">
     <div
       class="hero-carousel relative w-full aspect-[4/3] sm:aspect-video lg:aspect-[21/9] bg-surface-secondary sm:rounded-3xl overflow-hidden group shadow-xl"
+      (touchstart)="onHeroTouchStart($event)"
+      (touchmove)="onHeroTouchMove($event)"
+      (touchend)="onHeroTouchEnd($event)"
     >
-      <!-- Main Carousel Container -->
+      <!-- Main Carousel Container (proper slide) -->
       <div
-        class="absolute inset-0 flex transition-transform duration-500 ease-out"
-        [style.transform]="'translateX(' + -currentPhotoIndex() * 100 + '%)'"
+        class="absolute inset-0 flex transition-transform duration-500 ease-out will-change-transform"
+        [style.transform]="'translateX(-' + currentPhotoIndex() * 100 + '%)'"
       >
         @if (allPhotos().length === 0) {
           <img
@@ -68,19 +71,19 @@
             [alt]="displayTitle() + ' - Foto'"
             fill
             priority
-            class="object-cover flex-shrink-0"
+            class="object-cover"
           />
         } @else {
           @for (photo of allPhotos(); track photo.id; let i = $index) {
-            <img
-              [ngSrc]="heroPhotoUrls()[i] || defaultCarPlaceholderUrl"
-              [alt]="displayTitle() + ' - Foto ' + (i + 1)"
-              fill
-              [priority]="i === 0"
-              class="object-cover flex-shrink-0"
-              [class.opacity-0]="currentPhotoIndex() !== i"
-              [class.opacity-100]="currentPhotoIndex() === i"
-            />
+            <div class="relative w-full h-full flex-shrink-0">
+              <img
+                [ngSrc]="heroPhotoUrls()[i] || defaultCarPlaceholderUrl"
+                [alt]="displayTitle() + ' - Foto ' + (i + 1)"
+                fill
+                [priority]="i === 0"
+                class="object-cover"
+              />
+            </div>
           }
         }
       </div>
@@ -164,6 +167,30 @@
         </div>
       </div>
     </div>
+
+    <!-- Thumbnail Strip -->
+    @if (allPhotos().length > 1) {
+      <div class="flex gap-2 mt-3 overflow-x-auto pb-1 px-1 scrollbar-hide">
+        @for (photo of allPhotos(); track photo.id; let i = $index) {
+          <button
+            (click)="goToPhoto(i)"
+            class="relative flex-shrink-0 w-16 h-12 sm:w-20 sm:h-14 rounded-lg overflow-hidden transition-all duration-200"
+            [class.ring-2]="currentPhotoIndex() === i"
+            [class.ring-cta-default]="currentPhotoIndex() === i"
+            [class.opacity-50]="currentPhotoIndex() !== i"
+            [class.hover:opacity-80]="currentPhotoIndex() !== i"
+            [attr.aria-label]="'Ver foto ' + (i + 1)"
+          >
+            <img
+              [src]="heroPhotoUrls()[i] || defaultCarPlaceholderUrl"
+              [alt]="'Miniatura ' + (i + 1)"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </button>
+        }
+      </div>
+    }
   </section>
 
   <!-- ✅ MOBILE DATE PICKER -->
@@ -201,62 +228,22 @@
             Especificaciones
           </h2>
 
-          <div class="grid grid-cols-2 gap-y-6 gap-x-4">
-            <div class="flex items-center gap-3">
-              <div
-                class="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center"
-              >
-                <app-icon name="settings" [size]="20" cssClass="text-cta-default" />
+          <div class="grid grid-cols-2 gap-y-5 gap-x-4">
+            @for (spec of specsData(); track spec.label) {
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center"
+                >
+                  <app-icon [name]="spec.icon" [size]="20" cssClass="text-cta-default" />
+                </div>
+                <div>
+                  <p class="text-[10px] uppercase font-bold text-text-muted leading-none mb-1">
+                    {{ spec.label }}
+                  </p>
+                  <p class="text-sm font-bold text-text-primary capitalize">{{ spec.value }}</p>
+                </div>
               </div>
-              <div>
-                <p class="text-[10px] uppercase font-bold text-text-muted leading-none mb-1">
-                  Caja
-                </p>
-                <p class="text-sm font-bold text-text-primary">{{ car()?.transmission }}</p>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <div
-                class="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center"
-              >
-                <app-icon name="lightning" [size]="20" cssClass="text-cta-default" />
-              </div>
-              <div>
-                <p class="text-[10px] uppercase font-bold text-text-muted leading-none mb-1">
-                  Motor
-                </p>
-                <p class="text-sm font-bold text-text-primary">Nafta</p>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <div
-                class="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center"
-              >
-                <app-icon name="users" [size]="20" cssClass="text-cta-default" />
-              </div>
-              <div>
-                <p class="text-[10px] uppercase font-bold text-text-muted leading-none mb-1">
-                  Asientos
-                </p>
-                <p class="text-sm font-bold text-text-primary">{{ car()?.seats || 5 }} plazas</p>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <div
-                class="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center"
-              >
-                <app-icon name="document" [size]="20" cssClass="text-cta-default" />
-              </div>
-              <div>
-                <p class="text-[10px] uppercase font-bold text-text-muted leading-none mb-1">
-                  Puertas
-                </p>
-                <p class="text-sm font-bold text-text-primary">{{ car()?.doors || 4 }} puertas</p>
-              </div>
-            </div>
+            }
           </div>
 
           <!-- AI Actionable Buttons -->

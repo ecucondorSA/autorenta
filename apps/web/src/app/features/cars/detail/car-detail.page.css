@@ -2,12 +2,13 @@
   display: block;
 }
 
-/* Ensure hero images always cover the mobile viewport container */
-.hero-carousel img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* Thumbnail strip: hide scrollbar across browsers */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 .hero-carousel {

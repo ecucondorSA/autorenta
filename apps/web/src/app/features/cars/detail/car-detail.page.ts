@@ -453,6 +453,57 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   readonly currentPhoto = computed(() => this.allPhotos()[this.currentPhotoIndex()]);
   readonly hasMultiplePhotos = computed(() => this.allPhotos().length > 1);
 
+  /**
+   * Data-driven specs: consolidated array of car specs + features for the specs grid.
+   * Renders with @for instead of hardcoded template blocks.
+   */
+  readonly specsData = computed<Array<{ icon: string; label: string; value: string }>>(() => {
+    const c = this.car();
+    if (!c) return [];
+
+    // Core specs (always shown if available)
+    const specs: Array<{ icon: string; label: string; value: string }> = [
+      { icon: 'settings', label: 'Caja', value: c.transmission || '—' },
+      { icon: 'fuel', label: 'Motor', value: c.fuel_type || '—' },
+      { icon: 'users', label: 'Asientos', value: c.seats ? `${c.seats} plazas` : '—' },
+      { icon: 'document', label: 'Puertas', value: c.doors ? `${c.doors} puertas` : '—' },
+      { icon: 'calendar', label: 'Año', value: c.year ? `${c.year}` : '—' },
+    ];
+
+    if (c.mileage) {
+      specs.push({ icon: 'speedometer', label: 'Kilometraje', value: `${c.mileage.toLocaleString('en-US')} km` });
+    }
+    if (c.color) {
+      specs.push({ icon: 'eye', label: 'Color', value: c.color });
+    }
+
+    // Map enabled car features to spec items
+    const featureMap: Record<string, { icon: string; label: string }> = {
+      ac: { icon: 'ac', label: 'Aire Acondicionado' },
+      abs: { icon: 'abs', label: 'Frenos ABS' },
+      bluetooth: { icon: 'bluetooth', label: 'Bluetooth' },
+      gps: { icon: 'gps', label: 'GPS' },
+      usb: { icon: 'usb', label: 'Puerto USB' },
+      wifi: { icon: 'wifi', label: 'WiFi' },
+      sunroof: { icon: 'sunroof', label: 'Techo Solar' },
+      airbag: { icon: 'airbag', label: 'Airbags' },
+      camera: { icon: 'camera', label: 'Cámara Trasera' },
+      sensors: { icon: 'sensors', label: 'Sensores' },
+    };
+
+    if (c.features && typeof c.features === 'object') {
+      for (const [key, enabled] of Object.entries(c.features)) {
+        if (!enabled) continue;
+        const meta = featureMap[key];
+        if (meta) {
+          specs.push({ icon: meta.icon, label: meta.label, value: 'Sí' });
+        }
+      }
+    }
+
+    return specs;
+  });
+
   readonly heroPhotoUrls = computed<string[]>(() => {
     const photos = this.allPhotos();
     // Always return 5 URLs (with fallback) to avoid broken hero grid
@@ -1063,6 +1114,41 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       // Resetear fechas y precio por hora
       this.dateRange.set({ from: null, to: null });
       this.dynamicHourlyRate.set(null);
+    }
+  }
+
+  // Touch swipe state for hero carousel
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private isSwiping = false;
+
+  onHeroTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.touches[0].clientX;
+    this.touchStartY = event.touches[0].clientY;
+    this.isSwiping = false;
+  }
+
+  onHeroTouchMove(event: TouchEvent): void {
+    if (!this.hasMultiplePhotos()) return;
+    const deltaX = event.touches[0].clientX - this.touchStartX;
+    const deltaY = event.touches[0].clientY - this.touchStartY;
+
+    // Lock to horizontal swipe if dominant axis is X
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+      this.isSwiping = true;
+      event.preventDefault(); // Prevent vertical scroll during horizontal swipe
+    }
+  }
+
+  onHeroTouchEnd(event: TouchEvent): void {
+    if (!this.isSwiping || !this.hasMultiplePhotos()) return;
+    const deltaX = event.changedTouches[0].clientX - this.touchStartX;
+    const threshold = 50;
+
+    if (deltaX < -threshold) {
+      this.nextPhoto();
+    } else if (deltaX > threshold) {
+      this.previousPhoto();
     }
   }
 

@@ -159,7 +159,7 @@ export class MetaService {
     currency: string;
     id: string;
   }): void {
-    const priceFormatted = (car.price_per_day / 100).toFixed(0);
+    const priceFormatted = Math.round(car.price_per_day).toString();
 
     this.updateMeta({
       title: `${car.title} - Desde $${priceFormatted}/día | AutoRenta`,
@@ -317,7 +317,7 @@ export class MetaService {
       productionDate: car.year,
       offers: {
         '@type': 'Offer',
-        price: (car.price_per_day / 100).toFixed(2),
+        price: car.price_per_day.toFixed(2),
         priceCurrency: car.currency,
         availability: 'https://schema.org/InStock',
         url: `https://autorentar.com/cars/${car.id}`,
