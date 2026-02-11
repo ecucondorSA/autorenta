@@ -1,3 +1,7 @@
+## <small>3.80.10 (2026-02-11)</small>
+
+* refactor: centralize Realtime subscriptions + slim down AppComponent ([75b27ef](https://github.com/ecucondorSA/autorenta/commit/75b27ef))
+
 ## <small>3.80.9 (2026-02-10)</small>
 
 * perf: lazy-load browser-image-compression to reduce initial bundle by 140 kB ([65c6bd1](https://github.com/ecucondorSA/autorenta/commit/65c6bd1))
