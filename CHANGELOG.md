@@ -1,3 +1,7 @@
+## <small>3.81.1 (2026-02-11)</small>
+
+* refactor: replace console.warn with LoggerService in performance monitoring ([1fd52c9](https://github.com/ecucondorSA/autorenta/commit/1fd52c9))
+
 ## 3.81.0 (2026-02-11)
 
 * fix(map-filters): update template to use priceStep computed signal ([016c772](https://github.com/ecucondorSA/autorenta/commit/016c772))
