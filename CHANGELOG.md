@@ -1,3 +1,7 @@
+## <small>3.88.1 (2026-02-11)</small>
+
+* fix(mp-oauth): add missing MP columns to profiles + simplify drop migration ([413621f](https://github.com/ecucondorSA/autorenta/commit/413621f))
+
 ## 3.88.0 (2026-02-11)
 
 * feat(investments): distribution notification trigger + link BYD-001 to car ([57a7537](https://github.com/ecucondorSA/autorenta/commit/57a7537))
