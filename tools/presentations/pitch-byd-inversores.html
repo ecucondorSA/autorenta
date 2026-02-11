@@ -1573,6 +1573,12 @@
       errEl.classList.add('hidden');
 
       try {
+        if (window.location.protocol === 'file:') {
+          throw new Error(
+            'Esta pagina abierta como archivo local bloquea pagos por CORS. Usa https://autorentar.com/pitch-byd-inversores o http://localhost:9123/pitch-byd-inversores.html'
+          );
+        }
+
         var sessionResp = await sb.auth.getSession();
         var session = sessionResp.data ? sessionResp.data.session : null;
         if (!session) {
