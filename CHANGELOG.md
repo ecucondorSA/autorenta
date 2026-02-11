@@ -1,3 +1,8 @@
+## <small>3.84.2 (2026-02-11)</small>
+
+* fix: use live USDTARS rate for BYD checkout and pitch display ([6d6ccc8](https://github.com/ecucondorSA/autorenta/commit/6d6ccc8))
+* fix(investment): add apikey header to Edge Function fetch call ([e67c492](https://github.com/ecucondorSA/autorenta/commit/e67c492))
+
 ## <small>3.84.1 (2026-02-11)</small>
 
 * fix: enforce token refresh before BYD checkout request ([2501a15](https://github.com/ecucondorSA/autorenta/commit/2501a15))
