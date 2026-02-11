@@ -1,3 +1,8 @@
+## 3.87.0 (2026-02-11)
+
+* fix(mp-oauth): finalize refresh-token disconnect strategy ([419795c](https://github.com/ecucondorSA/autorenta/commit/419795c))
+* feat: overhaul verification UX and harden auth flows ([3eb294e](https://github.com/ecucondorSA/autorenta/commit/3eb294e))
+
 ## 3.86.0 (2026-02-11)
 
 * chore: checkpoint current state ([5a20d02](https://github.com/ecucondorSA/autorenta/commit/5a20d02))
