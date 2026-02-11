@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -53,7 +52,6 @@ interface CampaignSchedule {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     IonHeader,
@@ -157,7 +155,9 @@ interface CampaignSchedule {
               expand="block"
               [disabled]="!campaignForm.valid || isSubmitting()"
             >
-              <ion-spinner *ngIf="isSubmitting()" name="crescent" slot="start"></ion-spinner>
+              @if (isSubmitting()) {
+                <ion-spinner name="crescent" slot="start"></ion-spinner>
+              }
               {{ isSubmitting() ? 'Guardando...' : '🚀 Programar Publicación' }}
             </ion-button>
           </form>
@@ -170,33 +170,34 @@ interface CampaignSchedule {
           <ion-card-title>Campañas Programadas</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <div *ngIf="upcomingCampaigns().length === 0" class="text-center">
-            <p>No hay campañas programadas próximamente</p>
-          </div>
-
-          <div
-            *ngFor="let campaign of upcomingCampaigns(); trackBy: trackByCampaignId"
-            class="campaign-item ion-margin-bottom"
-          >
-            <h3>{{ campaign.name }}</h3>
-            <p>{{ campaign.title }}</p>
-            <div class="campaign-meta">
-              <span>📅 {{ campaign.time_until_publish }}</span>
-              <span>📱 {{ campaign.platforms.join(', ') }}</span>
-              <span>{{ campaign.status }}</span>
+          @if (upcomingCampaigns().length === 0) {
+            <div class="text-center">
+              <p>No hay campañas programadas próximamente</p>
             </div>
-            <ion-button fill="outline" size="small" (click)="publishNow(campaign.id)">
-              Publicar Ahora
-            </ion-button>
-            <ion-button
-              fill="outline"
-              size="small"
-              color="danger"
-              (click)="deleteCampaign(campaign.id)"
-            >
-              Cancelar
-            </ion-button>
-          </div>
+          }
+
+          @for (campaign of upcomingCampaigns(); track campaign.id) {
+            <div class="campaign-item ion-margin-bottom">
+              <h3>{{ campaign.name }}</h3>
+              <p>{{ campaign.title }}</p>
+              <div class="campaign-meta">
+                <span>📅 {{ campaign.time_until_publish }}</span>
+                <span>📱 {{ campaign.platforms.join(', ') }}</span>
+                <span>{{ campaign.status }}</span>
+              </div>
+              <ion-button fill="outline" size="small" (click)="publishNow(campaign.id)">
+                Publicar Ahora
+              </ion-button>
+              <ion-button
+                fill="outline"
+                size="small"
+                color="danger"
+                (click)="deleteCampaign(campaign.id)"
+              >
+                Cancelar
+              </ion-button>
+            </div>
+          }
         </ion-card-content>
       </ion-card>
 
@@ -206,55 +207,62 @@ interface CampaignSchedule {
           <ion-card-title>Campañas Publicadas</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <div *ngIf="recentlyPublished().length === 0" class="text-center">
-            <p>No hay campañas publicadas recientemente</p>
-          </div>
+          @if (recentlyPublished().length === 0) {
+            <div class="text-center">
+              <p>No hay campañas publicadas recientemente</p>
+            </div>
+          }
 
-          <div
-            *ngFor="let campaign of recentlyPublished(); trackBy: trackByCampaignId"
-            class="campaign-item ion-margin-bottom"
-          >
-            <h3>{{ campaign.name }}</h3>
-            <p>{{ campaign.title }}</p>
-            <div class="campaign-meta">
-              <span>✅ {{ campaign.status }}</span>
-              <span>⏰ {{ campaign.time_since_publish }}</span>
+          @for (campaign of recentlyPublished(); track campaign.id) {
+            <div class="campaign-item ion-margin-bottom">
+              <h3>{{ campaign.name }}</h3>
+              <p>{{ campaign.title }}</p>
+              <div class="campaign-meta">
+                <span>✅ {{ campaign.status }}</span>
+                <span>⏰ {{ campaign.time_since_publish }}</span>
+              </div>
+              @if (campaign.post_ids) {
+                <div class="post-links">
+                  @if (campaign.post_ids.facebook) {
+                    <a
+                      href="{{ 'https://facebook.com/' + campaign.post_ids.facebook }}"
+                      target="_blank"
+                      class="post-link"
+                    >
+                      📘 Facebook
+                    </a>
+                  }
+                  @if (campaign.post_ids.instagram) {
+                    <a
+                      href="{{ 'https://instagram.com/p/' + campaign.post_ids.instagram }}"
+                      target="_blank"
+                      class="post-link"
+                    >
+                      📷 Instagram
+                    </a>
+                  }
+                  @if (campaign.post_ids.linkedin) {
+                    <a
+                      href="{{ 'https://linkedin.com/feed/update/' + campaign.post_ids.linkedin }}"
+                      target="_blank"
+                      class="post-link"
+                    >
+                      💼 LinkedIn
+                    </a>
+                  }
+                  @if (campaign.post_ids.tiktok) {
+                    <a
+                      href="{{ 'https://tiktok.com/@auto.rentar/video/' + campaign.post_ids.tiktok }}"
+                      target="_blank"
+                      class="post-link"
+                    >
+                      🎵 TikTok
+                    </a>
+                  }
+                </div>
+              }
             </div>
-            <div *ngIf="campaign.post_ids" class="post-links">
-              <a
-                *ngIf="campaign.post_ids.facebook"
-                href="{{ 'https://facebook.com/' + campaign.post_ids.facebook }}"
-                target="_blank"
-                class="post-link"
-              >
-                📘 Facebook
-              </a>
-              <a
-                *ngIf="campaign.post_ids.instagram"
-                href="{{ 'https://instagram.com/p/' + campaign.post_ids.instagram }}"
-                target="_blank"
-                class="post-link"
-              >
-                📷 Instagram
-              </a>
-              <a
-                *ngIf="campaign.post_ids.linkedin"
-                href="{{ 'https://linkedin.com/feed/update/' + campaign.post_ids.linkedin }}"
-                target="_blank"
-                class="post-link"
-              >
-                💼 LinkedIn
-              </a>
-              <a
-                *ngIf="campaign.post_ids.tiktok"
-                href="{{ 'https://tiktok.com/@auto.rentar/video/' + campaign.post_ids.tiktok }}"
-                target="_blank"
-                class="post-link"
-              >
-                🎵 TikTok
-              </a>
-            </div>
-          </div>
+          }
         </ion-card-content>
       </ion-card>
     </ion-content>
@@ -317,10 +325,6 @@ export class SocialCampaignsPage implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.loadCampaigns();
-  }
-
-  trackByCampaignId(_index: number, campaign: CampaignSchedule): string {
-    return campaign.id;
   }
 
   private initForm(): void {
