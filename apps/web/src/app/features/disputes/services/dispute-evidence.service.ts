@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
+import { StorageFacadeService } from '@core/services/facades/storage-facade.service';
 import { DEFAULT_DOCUMENT_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 
 const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB
@@ -9,7 +9,8 @@ const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2MB
   providedIn: 'root',
 })
 export class DisputeEvidenceService {
-  private supabase = inject(SupabaseClientService).getClient();
+  private readonly featureData = inject(FeatureDataFacadeService);
+  private readonly storageFacade = inject(StorageFacadeService);
 
   // Simple typed view of evidence rows we use in UI
   async getEvidence(disputeId: string): Promise<EvidenceItem[]> {
@@ -21,11 +22,7 @@ export class DisputeEvidenceService {
       created_at?: string | null;
     };
 
-    const { data, error } = await this.supabase
-      .from('dispute_evidence')
-      .select('id, dispute_id, path, note, created_at')
-      .eq('dispute_id', disputeId);
-    if (error) throw error;
+    const data = await this.featureData.listDisputeEvidence(disputeId);
     return (data ?? []).map((row) => {
       const safe = row as EvidenceRow;
       return {
@@ -51,20 +48,14 @@ export class DisputeEvidenceService {
     const filePath = `disputes/${disputeId}/${Date.now()}_${file.name}`;
 
     // 1. Subir archivo al Storage
-    const { error: uploadError } = await this.supabase.storage
-      .from('evidence') // Asumiendo bucket 'evidence'
-      .upload(filePath, file);
-
-    if (uploadError) throw uploadError;
+    await this.storageFacade.upload('evidence', filePath, file);
 
     // 2. Registrar en BD
-    const { error: dbError } = await this.supabase.from('dispute_evidence').insert({
+    await this.featureData.insertDisputeEvidence({
       dispute_id: disputeId,
       path: filePath,
       note: note,
     });
-
-    if (dbError) throw dbError;
 
     return filePath;
   }

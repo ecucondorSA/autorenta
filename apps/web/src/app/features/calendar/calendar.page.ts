@@ -12,8 +12,7 @@ import {
   CarAvailabilityService,
   DetailedBlockedRange,
 } from '@core/services/cars/car-availability.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
 import { Car } from '../../core/models';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 
@@ -39,7 +38,7 @@ interface CalendarDay {
 export class CalendarPage implements OnInit {
   private readonly carsService = inject(CarsService);
   private readonly availabilityService = inject(CarAvailabilityService);
-  private readonly supabaseClient = inject(SupabaseClientService);
+  private readonly featureData = inject(FeatureDataFacadeService);
 
   // State signals
   readonly currentDate = signal(new Date());
@@ -215,16 +214,12 @@ export class CalendarPage implements OnInit {
       const endsAt = dates[dates.length - 1];
       const reason = this.blackoutReason().trim() || 'Bloqueado manualmente';
 
-      const supabase = this.supabaseClient.getClient();
-      // Persist bloqueo manual en car_blocked_dates (tabla vigente en Supabase)
-      const { error } = await supabase.from('car_blocked_dates').insert({
-        car_id: carId,
-        blocked_from: startsAt,
-        blocked_to: endsAt,
+      await this.featureData.createManualCarBlock({
+        carId,
+        blockedFrom: startsAt,
+        blockedTo: endsAt,
         reason,
       });
-
-      if (error) throw error;
 
       // Refresh data
       await this.loadBlockedDates();
@@ -245,10 +240,7 @@ export class CalendarPage implements OnInit {
     try {
       this.loading.set(true);
 
-      const supabase = this.supabaseClient.getClient();
-      const { error } = await supabase.from('car_blocked_dates').delete().eq('id', blockId);
-
-      if (error) throw error;
+      await this.featureData.deleteManualCarBlock(blockId);
 
       await this.loadBlockedDates();
     } catch (err) {

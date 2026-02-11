@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -230,7 +229,7 @@ interface TikTokWindow extends Window {
 })
 export class LeadCaptureFormComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly supabase = inject(SupabaseClientService);
+  private readonly featureDataFacade = inject(FeatureDataFacadeService);
   private readonly toast = inject(ToastService);
 
   @Input() carContext: {
@@ -270,7 +269,7 @@ export class LeadCaptureFormComponent {
     const rawData = this.leadForm.value;
 
     try {
-      const { error } = await this.supabase.from('marketing_leads').insert({
+      await this.featureDataFacade.insertMarketingLead({
         platform: 'web_landing',
         lead_type: 'web_form',
         full_name: rawData.full_name,
@@ -288,8 +287,6 @@ export class LeadCaptureFormComponent {
           is_mobile: /iPhone|Android/i.test(navigator.userAgent),
         },
       });
-
-      if (error) throw error;
 
       // 🎯 TikTok Pixel Tracking
       const win = window as unknown as TikTokWindow;

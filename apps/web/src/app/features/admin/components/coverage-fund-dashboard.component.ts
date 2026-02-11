@@ -1,6 +1,6 @@
-import { Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
 
 interface CoverageFund {
   id: string;
@@ -269,7 +269,7 @@ interface WalletLedgerEntry {
   styles: [],
 })
 export class CoverageFundDashboardComponent implements OnInit {
-  private readonly supabase = injectSupabase();
+  private readonly adminFacade = inject(AdminFeatureFacadeService);
 
   // State
   readonly loading = signal(false);
@@ -296,14 +296,8 @@ export class CoverageFundDashboardComponent implements OnInit {
 
     try {
       // Load coverage fund
-      const { data: fundData, error: fundError } = await this.supabase
-        .from('coverage_fund')
-        .select('*')
-        .single();
-
-      if (fundError) throw fundError;
-
-      this.fund.set(fundData as CoverageFund);
+      const fundData = await this.adminFacade.getCoverageFund();
+      this.fund.set((fundData as unknown as CoverageFund | null) ?? null);
 
       // Load statistics
       await this.loadStats();
@@ -317,14 +311,11 @@ export class CoverageFundDashboardComponent implements OnInit {
 
   async loadStats(): Promise<void> {
     try {
-      const { data, error } = await this.supabase
-        .from('wallet_ledger')
-        .select('kind, amount_cents')
-        .in('kind', ['franchise_user', 'franchise_fund']);
+      const data = await this.adminFacade.listWalletLedgerByKinds({
+        kinds: ['franchise_user', 'franchise_fund'],
+      });
 
-      if (error) throw error;
-
-      const entries = data || [];
+      const entries = ((data as unknown as WalletLedgerEntry[]) || []);
 
       const collected = entries.filter((e) => e.kind === 'franchise_fund');
       const disbursed = entries.filter((e) => e.kind === 'franchise_user');
@@ -349,16 +340,13 @@ export class CoverageFundDashboardComponent implements OnInit {
     this.loadingActivity.set(true);
 
     try {
-      const { data, error } = await this.supabase
-        .from('wallet_ledger')
-        .select('*')
-        .in('kind', ['franchise_user', 'franchise_fund'])
-        .order('ts', { ascending: false })
-        .limit(20);
+      const data = await this.adminFacade.listWalletLedgerByKinds({
+        kinds: ['franchise_user', 'franchise_fund'],
+        orderBy: 'ts',
+        limit: 20,
+      });
 
-      if (error) throw error;
-
-      this.recentActivity.set(data || []);
+      this.recentActivity.set((data as unknown as WalletLedgerEntry[]) || []);
     } catch {
       /* Silenced */
     } finally {

@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 
 // Window Controls Overlay API types
 interface WindowControlsOverlay extends EventTarget {
@@ -44,7 +44,8 @@ interface UserProfile {
 export class PwaTitlebarComponent implements OnInit, OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
-  private readonly supabase = injectSupabase();
+  private readonly sessionFacade = inject(SessionFacadeService);
+  private readonly featureDataFacade = inject(FeatureDataFacadeService);
   private readonly router = inject(Router);
 
   readonly isWCOSupported = signal(false);
@@ -100,18 +101,11 @@ export class PwaTitlebarComponent implements OnInit, OnDestroy {
   }
 
   private async loadUserProfile(): Promise<void> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
-    if (user) {
-      const { data: profile } = await this.supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
+    const userId = await this.sessionFacade.getCurrentUserId();
+    if (!userId) return;
 
-      this.userProfile.set(profile);
-    }
+    const profile = await this.featureDataFacade.getProfileById(userId);
+    this.userProfile.set((profile as UserProfile | null) ?? null);
   }
 
   navigateToSearch(): void {

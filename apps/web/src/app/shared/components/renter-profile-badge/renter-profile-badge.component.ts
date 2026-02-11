@@ -1,7 +1,5 @@
 import { Component, Input, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
 
 export interface RenterProfileBadge {
   renter_id: string;
@@ -173,7 +171,7 @@ export interface RenterProfileBadge {
 export class RenterProfileBadgeComponent implements OnInit {
   @Input({ required: true }) renterId!: string;
 
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly featureDataFacade = inject(FeatureDataFacadeService);
 
   readonly profile = signal<RenterProfileBadge | null>(null);
   readonly loading = signal(true);
@@ -187,13 +185,8 @@ export class RenterProfileBadgeComponent implements OnInit {
     try {
       this.loading.set(true);
 
-      const { data, error } = await this.supabase.rpc('get_renter_profile_badge', {
-        p_renter_id: this.renterId,
-      });
-
-      if (error) throw error;
-
-      this.profile.set(data as RenterProfileBadge);
+      const data = await this.featureDataFacade.getRenterProfileBadge(this.renterId);
+      this.profile.set((data as RenterProfileBadge | null) ?? null);
     } catch (err) {
       console.error('Error loading renter profile badge:', err);
       this.error.set('Error al cargar perfil');

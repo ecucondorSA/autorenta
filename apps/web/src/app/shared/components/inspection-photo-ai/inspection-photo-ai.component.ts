@@ -16,8 +16,8 @@ import {
   CosmeticConditionService,
   CosmeticIssue,
 } from '@core/services/ai/cosmetic-condition.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
+import { StorageFacadeService } from '@core/services/facades/storage-facade.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { IconComponent } from '../icon/icon.component';
 
@@ -589,7 +589,8 @@ export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
   // SERVICES
   // ============================================================================
 
-  private readonly supabase = injectSupabase();
+  private readonly sessionFacade = inject(SessionFacadeService);
+  private readonly storageFacade = inject(StorageFacadeService);
   private readonly photoQuality = inject(PhotoQualityService);
   private readonly cosmeticCondition = inject(CosmeticConditionService);
   private readonly logger = inject(LoggerService);
@@ -886,30 +887,19 @@ export class InspectionPhotoAIComponent implements OnInit, OnDestroy {
 
   /** Upload image temporarily for AI analysis */
   private async uploadTempImage(file: File): Promise<string> {
-    const user = await this.supabase.auth.getUser();
-    const userId = user.data.user?.id || 'anonymous';
+    const userId = (await this.sessionFacade.getCurrentUserId()) || 'anonymous';
 
     const timestamp = Date.now();
     const extension = file.name.split('.').pop() || 'jpg';
     const fileName = `temp_${timestamp}.${extension}`;
     const filePath = `${userId}/temp/${fileName}`;
 
-    const { error: uploadError } = await this.supabase.storage
-      .from('car-images')
-      .upload(filePath, file, {
-        cacheControl: '300', // 5 min cache
-        upsert: true,
-      });
+    await this.storageFacade.upload('car-images', filePath, file, {
+      cacheControl: '300', // 5 min cache
+      upsert: true,
+    });
 
-    if (uploadError) {
-      throw uploadError;
-    }
-
-    const {
-      data: { publicUrl },
-    } = this.supabase.storage.from('car-images').getPublicUrl(filePath);
-
-    return publicUrl;
+    return this.storageFacade.getPublicUrl('car-images', filePath);
   }
 
   /** Emit photos change event */

@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {
-  VehicleDocumentsService,
-  VehicleDocument,
-} from '@core/services/verification/vehicle-documents.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
+import { VehicleDocument } from '@core/services/verification/vehicle-documents.service';
 
 interface CarDocStatus {
   carId: string;
@@ -17,6 +14,23 @@ interface CarDocStatus {
   vtvExpiringSoon: boolean;
   insuranceExpiringSoon: boolean;
   missingCount: number;
+}
+
+interface OwnerCarSummaryRow {
+  id: string;
+  title: string | null;
+  brand: string | null;
+  model: string | null;
+  images: string[] | null;
+}
+
+interface VehicleDocumentSummaryRow {
+  vehicle_id: string;
+  green_card_verified_at: string | null;
+  vtv_verified_at: string | null;
+  vtv_expiry: string | null;
+  insurance_verified_at: string | null;
+  insurance_expiry: string | null;
 }
 
 @Component({
@@ -226,8 +240,8 @@ interface CarDocStatus {
   `,
 })
 export class VehicleDocsSummaryWidgetComponent implements OnInit {
-  private readonly supabase = injectSupabase();
-  private readonly vehicleDocsService = inject(VehicleDocumentsService);
+  private readonly sessionFacade = inject(SessionFacadeService);
+  private readonly featureDataFacade = inject(FeatureDataFacadeService);
 
   readonly loading = signal(true);
   readonly cars = signal<CarDocStatus[]>([]);
@@ -239,37 +253,29 @@ export class VehicleDocsSummaryWidgetComponent implements OnInit {
 
   private async loadCarsWithDocStatus(): Promise<void> {
     try {
-      const {
-        data: { user },
-      } = await this.supabase.auth.getUser();
-      if (!user) {
+      const userId = await this.sessionFacade.getCurrentUserId();
+      if (!userId) {
         this.loading.set(false);
         return;
       }
 
       // Get user's cars
-      const { data: userCars, error: carsError } = await this.supabase
-        .from('cars')
-        .select('id, title, brand, model, images')
-        .eq('owner_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (carsError || !userCars?.length) {
+      const userCars = (await this.featureDataFacade.listOwnerCarsForDocuments(
+        userId,
+      )) as unknown as OwnerCarSummaryRow[];
+      if (!userCars.length) {
         this.loading.set(false);
         return;
       }
 
       // Get documents for all cars
       const carIds = userCars.map((c) => c.id);
-      const { data: docs } = await this.supabase
-        .from('vehicle_documents')
-        .select(
-          'vehicle_id, green_card_verified_at, vtv_verified_at, vtv_expiry, insurance_verified_at, insurance_expiry',
-        )
-        .in('vehicle_id', carIds);
+      const docs = (await this.featureDataFacade.listVehicleDocumentsByCarIds(
+        carIds,
+      )) as unknown as VehicleDocumentSummaryRow[];
 
       const docsMap = new Map<string, VehicleDocument>();
-      docs?.forEach((d) => docsMap.set(d.vehicle_id, d as VehicleDocument));
+      docs.forEach((d) => docsMap.set(d.vehicle_id, d as unknown as VehicleDocument));
 
       const now = new Date();
       const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);

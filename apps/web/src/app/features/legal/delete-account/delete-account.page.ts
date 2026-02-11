@@ -3,8 +3,7 @@ import { Component, ChangeDetectionStrategy, signal, inject, computed } from '@a
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import { Router } from '@angular/router';
 import { environment } from '@environment';
@@ -21,7 +20,7 @@ type DeleteStep = 'confirm' | 'processing' | 'success' | 'error';
 })
 export class DeleteAccountPage {
   private readonly authService = inject(AuthService);
-  private readonly supabase = injectSupabase();
+  private readonly sessionFacade = inject(SessionFacadeService);
   private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
 
@@ -56,12 +55,12 @@ export class DeleteAccountPage {
 
     try {
       // Call Edge Function to delete account
-      const session = await this.supabase.auth.getSession();
+      const accessToken = await this.sessionFacade.getSessionAccessToken();
       const response = await fetch(`${environment.supabaseUrl}/functions/v1/delete-account`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.data.session?.access_token}`,
+          Authorization: `Bearer ${accessToken ?? ''}`,
         },
         body: JSON.stringify({
           confirm: true,

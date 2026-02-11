@@ -24,9 +24,8 @@ import {
   VideoInspectionAIService,
   VideoInspectionResult,
 } from '@core/services/ai/video-inspection-ai.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { firstValueFrom } from 'rxjs';
 import { IconComponent } from '../icon/icon.component';
@@ -62,7 +61,7 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
 
   private readonly videoInspectionService = inject(VideoInspectionAIService);
   private readonly fgoService = inject(FgoV1_1Service);
-  private readonly supabaseService = inject(SupabaseClientService);
+  private readonly sessionFacade = inject(SessionFacadeService);
   private readonly logger = inject(LoggerService);
 
   private mediaStream: MediaStream | null = null;
@@ -366,12 +365,9 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
     this.error.set(null);
 
     try {
-      const supabase = this.supabaseService.getClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = await this.sessionFacade.getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         throw new Error('Usuario no autenticado');
       }
 
@@ -393,7 +389,7 @@ export class VideoInspectionAIComponent implements OnInit, OnDestroy {
         this.fgoService.createInspection({
           bookingId: this.bookingId,
           stage: this.stage,
-          inspectorId: user.id,
+          inspectorId: userId,
           photos,
           odometer: this.editableOdometer(),
           fuelLevel: this.editableFuelLevel(),

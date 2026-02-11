@@ -52,13 +52,11 @@ export default [
   },
   // Restrict direct Supabase access in features/ and shared/ (CLAUDE.md §4)
   // Supabase must be accessed through core/services/ facades only
-  // Admin pages are excluded — internal tools with legitimate direct DB access
   {
     files: ['src/app/features/**/*.ts', 'src/app/shared/**/*.ts'],
-    ignores: ['src/app/features/admin/**/*.ts', 'src/app/features/dashboard/**/*.ts'],
     rules: {
       'no-restricted-imports': [
-        'warn',
+        'error',
         {
           patterns: [
             {

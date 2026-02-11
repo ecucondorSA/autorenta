@@ -16,9 +16,8 @@ import { Subject, firstValueFrom } from 'rxjs';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BookingWalletService } from '@core/services/bookings/booking-wallet.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
 import { FxService } from '@core/services/payments/fx.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { MessagesService } from '@core/services/bookings/messages.service';
 import { WalletService } from '@core/services/payments/wallet.service';
@@ -101,7 +100,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   private emailVerificationService = inject(EmailVerificationService);
   private distanceCalculator = inject(DistanceCalculatorService);
   private riskCalculatorV2 = inject(DynamicRiskCalculatorService);
-  private supabaseClient = inject(SupabaseClientService).getClient();
+  private featureData = inject(FeatureDataFacadeService);
   private logger = inject(LoggerService).createChildLogger('BookingRequestPage');
 
   // State
@@ -445,16 +444,20 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
     if (bookingIdParam) {
       try {
-        const { data: booking, error } = await this.supabaseClient
-          .from('bookings')
-          .select(
-            'id, car_id, start_at, end_at, status, payment_mode, wallet_lock_id, authorized_payment_id, paid_at',
-          )
-          .eq('id', bookingIdParam)
-          .single();
+        const booking = (await this.featureData.getBookingRequestById(bookingIdParam)) as {
+          id: string;
+          car_id: string;
+          start_at: string;
+          end_at: string;
+          status: string;
+          payment_mode: 'wallet' | 'card' | null;
+          wallet_lock_id: string | null;
+          authorized_payment_id: string | null;
+          paid_at: string | null;
+        } | null;
 
-        if (error || !booking) {
-          this.logger.error('Error loading booking', { bookingId: bookingIdParam, error });
+        if (!booking) {
+          this.logger.error('Error loading booking', { bookingId: bookingIdParam });
           this.error.set(
             'No se encontró la reserva. Puede que haya sido cancelada o el enlace sea incorrecto.',
           );
@@ -527,14 +530,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     if (!input) return;
 
     try {
-      const { data, error } = await this.supabaseClient
-        .from('cars')
-        .select('*')
-        .eq('id', input.carId)
-        .single();
-
-      if (error) throw error;
-      if (data) this.car.set(data as Car);
+      const data = await this.featureData.getCarById(input.carId);
+      if (data) this.car.set(data as unknown as Car);
     } catch (err) {
       this.logger.error('Error loading car', { error: err });
       this.error.set('Error al cargar información del vehículo');
@@ -716,40 +713,26 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
       if (mode === 'card') {
         const depositAmountCents = Math.max(0, Math.round((authorization?.amountArs ?? 0) * 100));
-        const { error: updateError } = await this.supabaseClient
-          .from('bookings')
-          .update({
-            status: 'pending',
-            payment_mode: 'card',
-            currency: 'ARS',
-            deposit_amount_cents: depositAmountCents > 0 ? depositAmountCents : null,
-            wallet_lock_id: null,
-          })
-          .eq('id', bookingId);
-
-        if (updateError) {
-          throw updateError;
-        }
+        await this.featureData.updateBooking(bookingId, {
+          status: 'pending',
+          payment_mode: 'card',
+          currency: 'ARS',
+          deposit_amount_cents: depositAmountCents > 0 ? depositAmountCents : null,
+          wallet_lock_id: null,
+        });
       } else {
         const walletLockId = await this.ensureWalletLock(bookingId!);
 
         const requiredUsd = this.walletRequiredUsd();
         const guaranteeAmountCents = Math.round(requiredUsd * 100);
 
-        const { error: updateError } = await this.supabaseClient
-          .from('bookings')
-          .update({
-            status: 'pending',
-            payment_mode: 'wallet',
-            currency: 'USD',
-            deposit_amount_cents: guaranteeAmountCents > 0 ? guaranteeAmountCents : null,
-            wallet_lock_id: walletLockId,
-          })
-          .eq('id', bookingId);
-
-        if (updateError) {
-          throw updateError;
-        }
+        await this.featureData.updateBooking(bookingId, {
+          status: 'pending',
+          payment_mode: 'wallet',
+          currency: 'USD',
+          deposit_amount_cents: guaranteeAmountCents > 0 ? guaranteeAmountCents : null,
+          wallet_lock_id: walletLockId,
+        });
       }
 
       const message = this.messageToHost.trim();

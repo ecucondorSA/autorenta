@@ -9,7 +9,9 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
+import { StorageFacadeService } from '@core/services/facades/storage-facade.service';
 import { ToastService } from '@core/services/ui/toast.service';
 
 interface QueueItem {
@@ -53,7 +55,9 @@ type ContentType = 'tip' | 'promo' | 'car_spotlight' | 'testimonial' | 'seasonal
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminMarketingPage implements OnInit {
-  private readonly supabase = injectSupabase();
+  private readonly adminFacade = inject(AdminFeatureFacadeService);
+  private readonly sessionFacade = inject(SessionFacadeService);
+  private readonly storageFacade = inject(StorageFacadeService);
   private readonly toast = inject(ToastService);
 
   // State
@@ -133,25 +137,13 @@ export class AdminMarketingPage implements OnInit {
   }
 
   private async loadQueue(): Promise<void> {
-    const { data, error } = await this.supabase
-      .from('marketing_content_queue')
-      .select('*')
-      .order('scheduled_for', { ascending: true })
-      .limit(100);
-
-    if (error) throw error;
-    this.queueItems.set((data as QueueItem[]) || []);
+    const data = await this.adminFacade.listMarketingQueue(100);
+    this.queueItems.set((data as unknown as QueueItem[]) || []);
   }
 
   private async loadPublished(): Promise<void> {
-    const { data, error } = await this.supabase
-      .from('marketing_posts_log')
-      .select('*')
-      .order('published_at', { ascending: false })
-      .limit(50);
-
-    if (error) throw error;
-    this.publishedPosts.set((data as PostLog[]) || []);
+    const data = await this.adminFacade.listMarketingPosts(50);
+    this.publishedPosts.set((data as unknown as PostLog[]) || []);
   }
 
   setTab(tab: TabType): void {
@@ -165,7 +157,23 @@ export class AdminMarketingPage implements OnInit {
 
     try {
       const form = this.generateForm();
-      const response = await this.supabase.functions.invoke('generate-marketing-content', {
+      const result = await this.adminFacade.invokeFunction<{
+        success: boolean;
+        error?: string;
+        text: {
+          caption: string;
+          hashtags: string[];
+          call_to_action: string;
+        };
+        image?: { url?: string; base64?: string };
+        video?: {
+          url?: string;
+          status?: 'generating' | 'ready' | 'failed';
+          error?: string;
+          model_used?: string;
+        };
+      }>({
+        name: 'generate-marketing-content',
         body: {
           content_type: form.content_type,
           platform: form.platform,
@@ -174,10 +182,6 @@ export class AdminMarketingPage implements OnInit {
           generate_image: form.generate_image,
         },
       });
-
-      if (response.error) throw response.error;
-
-      const result = response.data;
       if (!result.success) {
         throw new Error(result.error || 'Error al generar contenido');
       }
@@ -264,7 +268,7 @@ export class AdminMarketingPage implements OnInit {
       scheduledFor.setDate(scheduledFor.getDate() + 1);
       scheduledFor.setHours(12, 0, 0, 0);
 
-      const { error } = await this.supabase.from('marketing_content_queue').insert({
+      await this.adminFacade.insertMarketingQueue({
         content_type: form.content_type,
         platform: form.platform,
         text_content: content.caption,
@@ -275,8 +279,6 @@ export class AdminMarketingPage implements OnInit {
         scheduled_for: scheduledFor.toISOString(),
         status: 'pending',
       });
-
-      if (error) throw error;
 
       this.toast.success('Programado', 'Post programado para mañana 12:00');
       this.generatedContent.set(null);
@@ -307,15 +309,10 @@ export class AdminMarketingPage implements OnInit {
     if (!item) return;
 
     try {
-      const { error } = await this.supabase
-        .from('marketing_content_queue')
-        .update({
-          text_content: form.text_content,
-          scheduled_for: new Date(form.scheduled_for).toISOString(),
-        })
-        .eq('id', item.id);
-
-      if (error) throw error;
+      await this.adminFacade.updateMarketingQueue(item.id, {
+        text_content: form.text_content,
+        scheduled_for: new Date(form.scheduled_for).toISOString(),
+      });
 
       this.toast.success('Actualizado', 'Post actualizado correctamente');
       this.closeEdit();
@@ -331,12 +328,7 @@ export class AdminMarketingPage implements OnInit {
     if (!confirm(`¿Eliminar post para ${item.platform}?`)) return;
 
     try {
-      const { error } = await this.supabase
-        .from('marketing_content_queue')
-        .delete()
-        .eq('id', item.id);
-
-      if (error) throw error;
+      await this.adminFacade.deleteMarketingQueue(item.id);
 
       this.toast.success('Eliminado', 'Post eliminado de la cola');
       await this.loadQueue();
@@ -349,16 +341,11 @@ export class AdminMarketingPage implements OnInit {
   // Retry failed post
   async retryItem(item: QueueItem): Promise<void> {
     try {
-      const { error } = await this.supabase
-        .from('marketing_content_queue')
-        .update({
-          status: 'pending',
-          attempts: 0,
-          error_message: null,
-        })
-        .eq('id', item.id);
-
-      if (error) throw error;
+      await this.adminFacade.updateMarketingQueue(item.id, {
+        status: 'pending',
+        attempts: 0,
+        error_message: null,
+      });
 
       this.toast.success('Reencolado', 'El post se reintentará');
       await this.loadQueue();
@@ -387,13 +374,17 @@ export class AdminMarketingPage implements OnInit {
       if (mediaUrl && this.isDataUrl(mediaUrl)) {
         mediaUrl = await this.uploadMarketingImage(mediaUrl);
         mediaType = 'image';
-        await this.supabase
-          .from('marketing_content_queue')
-          .update({ media_url: mediaUrl, media_type: mediaType })
-          .eq('id', item.id);
+        await this.adminFacade.updateMarketingQueue(item.id, {
+          media_url: mediaUrl,
+          media_type: mediaType,
+        });
       }
 
-      const response = await this.supabase.functions.invoke('social-media-publisher', {
+      const result = await this.adminFacade.invokeFunction<{
+        success: boolean;
+        error?: string;
+      }>({
+        name: 'social-media-publisher',
         body: {
           platform: item.platform,
           content: {
@@ -405,27 +396,6 @@ export class AdminMarketingPage implements OnInit {
           queue_id: item.id,
         },
       });
-
-      if (response.error) {
-        const err = response.error as { message?: string; context?: { body?: unknown } };
-        let message = err.message || 'Error al publicar';
-        const body = err.context?.body;
-        if (body) {
-          try {
-            const parsed = typeof body === 'string' ? JSON.parse(body) : body;
-            if (parsed && typeof parsed === 'object' && 'error' in parsed) {
-              message = String((parsed as { error?: string }).error || message);
-            } else if (typeof body === 'string') {
-              message = body;
-            }
-          } catch {
-            if (typeof body === 'string') message = body;
-          }
-        }
-        throw new Error(message);
-      }
-
-      const result = response.data;
       if (!result.success) {
         throw new Error(result.error || 'Error al publicar');
       }
@@ -443,9 +413,8 @@ export class AdminMarketingPage implements OnInit {
   }
 
   private async uploadMarketingImage(dataUrl: string): Promise<string> {
-    const { data: authData, error: authError } = await this.supabase.auth.getUser();
-    if (authError) throw authError;
-    const userId = authData.user?.id;
+    const user = await this.sessionFacade.getCurrentUser();
+    const userId = user?.id;
     if (!userId) throw new Error('Usuario no autenticado');
 
     const response = await fetch(dataUrl);
@@ -453,30 +422,26 @@ export class AdminMarketingPage implements OnInit {
     const extension = blob.type.split('/')[1] || 'png';
     const filePath = `${userId}/marketing/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
 
-    const { error: uploadError } = await this.supabase.storage
-      .from('car-images')
-      .upload(filePath, blob, { contentType: blob.type, upsert: false });
+    await this.storageFacade.upload('car-images', filePath, blob, {
+      contentType: blob.type,
+      upsert: false,
+    });
 
-    if (uploadError) throw uploadError;
-
-    const { data: publicUrlData } = this.supabase.storage.from('car-images').getPublicUrl(filePath);
-    if (!publicUrlData?.publicUrl) {
+    const publicUrl = this.storageFacade.getPublicUrl('car-images', filePath);
+    if (!publicUrl) {
       throw new Error('No se pudo obtener la URL publica de la imagen');
     }
 
-    return publicUrlData.publicUrl;
+    return publicUrl;
   }
 
   // Run scheduler manually
   async runScheduler(): Promise<void> {
     try {
-      const response = await this.supabase.functions.invoke('marketing-scheduler', {
+      const result = await this.adminFacade.invokeFunction<{ published?: number; failed?: number }>({
+        name: 'marketing-scheduler',
         body: { max_posts: 10 },
       });
-
-      if (response.error) throw response.error;
-
-      const result = response.data;
       this.toast.success(
         'Scheduler',
         `${result.published || 0} publicados, ${result.failed || 0} fallidos`,

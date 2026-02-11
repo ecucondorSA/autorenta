@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
+import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 
 export interface SecurityDevice {
   id: string;
@@ -23,7 +23,8 @@ export interface SecurityAlert {
   providedIn: 'root',
 })
 export class SecurityService {
-  private supabase = injectSupabase();
+  private readonly featureData = inject(FeatureDataFacadeService);
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
   private readonly logger = inject(LoggerService).createChildLogger('SecurityService');
 
   // State Signals
@@ -31,27 +32,17 @@ export class SecurityService {
   readonly activeAlerts = signal<SecurityAlert[]>([]);
   readonly mapCenter = signal<[number, number] | null>(null);
 
-  private realtimeSubscription?: RealtimeChannel;
+  private realtimeTopics: string[] = [];
 
-  async loadDashboardData(carId: string, bookingId?: string) {
+  async loadDashboardData(carId: string, bookingId?: string): Promise<void> {
     // 1. Cargar Dispositivos
-    const { data: devices } = await this.supabase
-      .from('car_security_devices')
-      .select('*')
-      .eq('car_id', carId);
-
-    if (devices) this.devices.set(devices as SecurityDevice[]);
+    const devices = await this.featureData.listSecurityDevices(carId);
+    this.devices.set(devices as unknown as SecurityDevice[]);
 
     // 2. Cargar Alertas Activas (solo si hay un booking activo)
     if (bookingId) {
-      const { data: alerts } = await this.supabase
-        .from('security_alerts')
-        .select('*')
-        .eq('booking_id', bookingId)
-        .eq('resolved', false)
-        .order('created_at', { ascending: false });
-
-      if (alerts) this.activeAlerts.set(alerts as SecurityAlert[]);
+      const alerts = await this.featureData.listActiveSecurityAlerts(bookingId);
+      this.activeAlerts.set(alerts as unknown as SecurityAlert[]);
     } else {
       // Sin booking activo, no hay alertas que mostrar
       this.activeAlerts.set([]);
@@ -61,48 +52,47 @@ export class SecurityService {
     this.subscribeToRealtime(carId);
   }
 
-  private subscribeToRealtime(carId: string) {
+  private subscribeToRealtime(carId: string): void {
     // Cleanup previous subscription to avoid zombie channels
     this.cleanupRealtime();
 
-    this.realtimeSubscription = this.supabase
-      .channel(`security-${carId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_alerts' },
-        (payload) => {
-          const newAlert = payload.new as SecurityAlert;
-          this.activeAlerts.update((current) => [newAlert, ...current]);
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
-        (payload) => {
-          this.logger.warn('Bounty claimed', payload.new);
-        },
-      )
-      .subscribe();
+    const alertsChannel = this.realtimeConnection.subscribeWithRetry<Record<string, unknown>>(
+      `security-alerts-${carId}`,
+      { event: 'INSERT', schema: 'public', table: 'security_alerts' },
+      (payload) => {
+        const newAlert = payload.new as SecurityAlert;
+        this.activeAlerts.update((current) => [newAlert, ...current]);
+      },
+    );
+
+    const bountyChannel = this.realtimeConnection.subscribeWithRetry<Record<string, unknown>>(
+      `security-bounty-${carId}`,
+      { event: 'INSERT', schema: 'public', table: 'bounty_claims' },
+      (payload) => {
+        this.logger.warn('Bounty claimed', payload.new);
+      },
+    );
+
+    this.realtimeTopics.push(alertsChannel.topic, bountyChannel.topic);
   }
 
   cleanupRealtime(): void {
-    if (this.realtimeSubscription) {
-      this.supabase.removeChannel(this.realtimeSubscription);
-      this.realtimeSubscription = undefined;
-    }
+    this.realtimeTopics.forEach((topic) => this.realtimeConnection.unsubscribe(topic));
+    this.realtimeTopics = [];
   }
 
   // Acciones Tácticas
-  async triggerBounty(carId: string, location: { lat: number; lng: number }) {
-    return await this.supabase.from('bounties').insert({
-      car_id: carId,
-      target_location: `POINT(${location.lng} ${location.lat})`,
-      status: 'ACTIVE',
+  async triggerBounty(carId: string, location: { lat: number; lng: number }): Promise<void> {
+    await this.featureData.triggerBounty({
+      carId,
+      lat: location.lat,
+      lng: location.lng,
     });
   }
 
-  async generateDossier(claimId: string) {
-    return await this.supabase.functions.invoke('generate-recovery-dossier', {
+  async generateDossier(claimId: string): Promise<unknown> {
+    return this.featureData.invokeFunction({
+      name: 'generate-recovery-dossier',
       body: { claim_id: claimId },
     });
   }

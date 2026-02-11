@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { WalletLedgerService } from '@core/services/payments/wallet-ledger.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 
 @Component({
   selector: 'app-wallet-transfers',
@@ -68,7 +67,7 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
 })
 export class WalletTransfersComponent implements OnInit {
   private readonly ledger = inject(WalletLedgerService);
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly sessionFacade = inject(SessionFacadeService);
 
   readonly transfers = this.ledger.transfers;
   readonly loading = this.ledger.loading;
@@ -81,8 +80,8 @@ export class WalletTransfersComponent implements OnInit {
   }
 
   private async loadUserAndTransfers(): Promise<void> {
-    const { data } = await this.supabase.auth.getUser();
-    this.currentUserId.set(data.user?.id ?? null);
+    const user = await this.sessionFacade.getCurrentUser();
+    this.currentUserId.set(user?.id ?? null);
     await this.ledger.loadTransfers(30);
   }
 

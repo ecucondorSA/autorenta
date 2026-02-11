@@ -14,10 +14,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { CarsService } from '@core/services/cars/cars.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { PricingService } from '@core/services/payments/pricing.service';
 import { VerificationStateService } from '@core/services/verification/verification-state.service';
 import { VehicleDocumentsService } from '@core/services/verification/vehicle-documents.service';
@@ -158,7 +157,7 @@ export class PublishCarV2Page implements OnInit {
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
   private readonly authService = inject(AuthService);
   private readonly verificationState = inject(VerificationStateService);
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly featureData = inject(FeatureDataFacadeService);
   private readonly destroyRef = inject(DestroyRef);
 
   // Component state
@@ -511,13 +510,8 @@ export class PublishCarV2Page implements OnInit {
 
   private async loadPricingOverrides(carId: string): Promise<void> {
     try {
-      const { data, error } = await this.supabase
-        .from('pricing_overrides')
-        .select('day, price_per_day')
-        .eq('car_id', carId)
-        .order('day', { ascending: true });
-      if (error) throw error;
-      this.pricingOverrides.set((data as { day: string; price_per_day: number }[]) || []);
+      const data = await this.featureData.getPricingOverrides(carId);
+      this.pricingOverrides.set(data);
     } catch (err) {
       this.logger.warn('[PublishCarV2] pricing-overrides-load', err);
     }

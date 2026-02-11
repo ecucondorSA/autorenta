@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
 import {
   AnalyticsService,
   ConversionEventType,
 } from '@core/services/infrastructure/analytics.service';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 interface EventStats {
   event_type: ConversionEventType;
@@ -45,7 +45,7 @@ interface AnalyticsEvent {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminAnalyticsPage implements OnInit {
-  private readonly supabase = injectSupabase();
+  private readonly adminFacade = inject(AdminFeatureFacadeService);
   private readonly analyticsService = inject(AnalyticsService);
 
   protected readonly overview = signal<AnalyticsOverview | null>(null);
@@ -64,13 +64,7 @@ export class AdminAnalyticsPage implements OnInit {
       this.error.set(null);
 
       // Load overview stats
-      const { data: events, error: eventsError } = await this.supabase
-        .from('conversion_events')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(1000);
-
-      if (eventsError) throw eventsError;
+      const events = (await this.adminFacade.listConversionEvents(1000)) as unknown as AnalyticsEvent[];
 
       // Calculate overview
       const totalEvents = events?.length || 0;
@@ -111,12 +105,13 @@ export class AdminAnalyticsPage implements OnInit {
 
       // Top cars
       const carCounts = new Map<string, number>();
-      events
-        ?.filter((e) => e.event_data?.car_id)
-        .forEach((event) => {
-          const carId = event.event_data.car_id;
-          carCounts.set(carId, (carCounts.get(carId) || 0) + 1);
-        });
+      events?.forEach((event) => {
+        const carId = event.event_data?.car_id;
+        if (!carId) {
+          return;
+        }
+        carCounts.set(carId, (carCounts.get(carId) || 0) + 1);
+      });
 
       const topCarsArray = Array.from(carCounts.entries())
         .map(([car_id, count]) => ({ car_id, count }))

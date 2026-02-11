@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoRentar × BYD | Propiedad Fraccionada · USD $12.50 por Fragmento</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            electric: { 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2' },
+            byd: { 400: '#34d399', 500: '#10b981', 600: '#059669' },
+            neon: { green: '#00D95F', blue: '#06b6d4' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(6, 182, 212, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(6, 182, 212, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .glass { background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+    .glass-strong { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.12); }
+
+    .neon-electric { color: #22d3ee; text-shadow: 0 0 10px rgba(34,211,238,0.5), 0 0 40px rgba(34,211,238,0.15); }
+    .neon-green { color: #00D95F; text-shadow: 0 0 10px rgba(0,217,95,0.5), 0 0 40px rgba(0,217,95,0.15); }
+    .neon-gold { color: #f59e0b; text-shadow: 0 0 10px rgba(245,158,11,0.5), 0 0 40px rgba(245,158,11,0.15); }
+    .glow-electric { box-shadow: 0 0 20px rgba(6,182,212,0.2), 0 0 60px rgba(6,182,212,0.05); }
+    .glow-green { box-shadow: 0 0 20px rgba(0,217,95,0.2), 0 0 60px rgba(0,217,95,0.05); }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, #0f172a 0%, #083344 25%, #0f172a 50%, #064e3b 75%, #0f172a 100%);
+      background-size: 400% 400%;
+      animation: gradient-shift 20s ease infinite;
+    }
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      25% { background-position: 100% 0%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
+    }
+
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.animate-in { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+    .reveal-delay-3 { transition-delay: 0.45s; }
+
+    .hero-fade { animation: fadeUp 0.8s ease forwards; }
+    .hero-fade-2 { animation: fadeUp 0.8s ease 0.3s forwards; opacity: 0; }
+    .hero-fade-3 { animation: fadeUp 0.8s ease 0.6s forwards; opacity: 0; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .deal-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .deal-card:hover { transform: translateY(-8px); }
+    .neon-line { height: 1px; background: linear-gradient(90deg, transparent, rgba(6,182,212,0.4), rgba(0,217,95,0.3), transparent); }
+
+    input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; background: linear-gradient(90deg, #06b6d4, #00D95F); border-radius: 3px; outline: none; cursor: pointer; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; background: radial-gradient(circle, #22d3ee 40%, #0891b2 100%); border-radius: 50%; cursor: pointer; box-shadow: 0 0 15px rgba(6,182,212,0.6); }
+    input[type="range"]::-moz-range-thumb { width: 28px; height: 28px; background: radial-gradient(circle, #22d3ee 40%, #0891b2 100%); border-radius: 50%; border: none; cursor: pointer; box-shadow: 0 0 15px rgba(6,182,212,0.6); }
+
+    .energy-bar { height: 28px; border-radius: 14px; background: rgba(30,41,59,0.8); overflow: hidden; position: relative; }
+    .energy-fill { height: 100%; border-radius: 14px; transition: width 0.6s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 11px; font-weight: 700; }
+
+    .fragment-grid { display: grid; grid-template-columns: repeat(40, 1fr); gap: 1px; }
+    .fragment-dot { width: 100%; aspect-ratio: 1; border-radius: 2px; background: rgba(6,182,212,0.15); transition: background 0.3s; }
+    .fragment-dot.filled { background: #06b6d4; box-shadow: 0 0 3px rgba(6,182,212,0.5); }
+
+    .pulse-ring { animation: pulseRing 2s infinite; }
+    @keyframes pulseRing {
+      0% { box-shadow: 0 0 0 0 rgba(6,182,212,0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(6,182,212,0); }
+      100% { box-shadow: 0 0 0 0 rgba(6,182,212,0); }
+    }
+
+    .scenario-btn { transition: all 0.2s ease; cursor: pointer; }
+    .scenario-btn.active { transform: scale(1.05); }
+    .scenario-btn:hover { transform: scale(1.02); }
+
+    .profile-tab { transition: all 0.2s ease; cursor: pointer; border-bottom: 2px solid transparent; }
+    .profile-tab.active { border-bottom-color: #06b6d4; color: #22d3ee; }
+    .profile-tab:hover { color: #94a3b8; }
+    .profile-content { display: none; }
+    .profile-content.active { display: block; }
+  </style>
+</head>
+<body class="bg-slate-900 text-white grid-bg antialiased">
+
+  <!-- ======== RISK DISCLOSURE (always visible) ======== -->
+  <div class="bg-amber-500/10 border-b border-amber-500/20 py-2 px-4 text-center text-xs text-amber-300/90 fixed top-0 left-0 right-0 z-[60]">
+    <strong>Alto riesgo.</strong> Las distribuciones dependen de km recorridos, ocupación y costos operativos. No hay retorno garantizado.
+  </div>
+
+  <!-- ======== NAVIGATION ======== -->
+  <nav class="fixed top-[28px] left-0 right-0 z-50 glass-strong">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-xl">⚡</span>
+        <span class="font-bold text-lg tracking-tight">Auto<span class="neon-green">Rentar</span> <span class="text-slate-500">×</span> <span class="neon-electric">BYD</span></span>
+      </div>
+      <div class="hidden sm:flex items-center gap-4 text-xs text-slate-400">
+        <a href="#modelo" class="hover:text-cyan-400 transition-colors">Modelo</a>
+        <a href="#mercado" class="hover:text-cyan-400 transition-colors">Mercado</a>
+        <a href="#simulador" class="hover:text-cyan-400 transition-colors">Simulador</a>
+        <a href="#ciclo" class="hover:text-cyan-400 transition-colors">Ciclo</a>
+        <a href="#faq" class="hover:text-cyan-400 transition-colors">FAQ</a>
+      </div>
+      <a href="#invertir" class="text-sm px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-slate-900 font-bold hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
+        Quiero saber mas
+      </a>
+    </div>
+  </nav>
+
+  <!-- ======== PROFILE SELECTOR ======== -->
+  <div class="fixed top-[72px] left-0 right-0 z-40 glass border-b border-slate-700/30">
+    <div class="max-w-6xl mx-auto px-6 flex items-center gap-6 text-xs">
+      <span class="text-slate-500 py-2">Soy:</span>
+      <button class="profile-tab active py-2 text-cyan-400 font-medium" data-profile="inversor">Inversor</button>
+      <button class="profile-tab py-2 text-slate-500 font-medium" data-profile="chofer">Chofer</button>
+      <button class="profile-tab py-2 text-slate-500 font-medium" data-profile="flota">Flota</button>
+    </div>
+  </div>
+
+  <!-- ======== HERO ======== -->
+  <section class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-500/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl"></div>
+
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10 pt-28">
+      <div class="hero-fade inline-block mb-6">
+        <span class="text-xs font-semibold tracking-widest uppercase text-cyan-400/80 px-4 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5">
+          Propiedad Fraccionada · BYD Dolphin Mini EV · Ciclo 1M km
+        </span>
+      </div>
+
+      <!-- Profile: Inversor (default) -->
+      <div class="profile-content active" data-profile="inversor">
+        <h1 class="hero-fade text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-6">
+          Participacion fraccionada en<br><span class="neon-electric">movilidad electrica</span>
+        </h1>
+        <p class="hero-fade-2 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-6 leading-relaxed">
+          2,000 fragmentos. 1 BYD Dolphin Mini. Cada fragmento recibe distribuciones proporcionales al neto generado
+          cuando un chofer de apps de movilidad alquila el auto. <span class="text-white font-medium">Escenarios: Conservador 8% · Base 14% · Optimista 19%.</span>
+        </p>
+      </div>
+
+      <!-- Profile: Chofer -->
+      <div class="profile-content" data-profile="chofer">
+        <h1 class="hero-fade text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-6">
+          Manejá un <span class="neon-electric">BYD electrico</span><br>
+          <span class="text-slate-300 text-3xl sm:text-4xl">y ahorrá $100+/mes en combustible</span>
+        </h1>
+        <p class="hero-fade-2 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-6 leading-relaxed">
+          Alquilá un BYD Dolphin Mini 100% eléctrico para Uber, Cabify o DiDi.
+          <span class="text-white font-medium">Carga eléctrica desde $0.67/100km vs GNC $3.50/100km.</span>
+        </p>
+      </div>
+
+      <!-- Profile: Flota -->
+      <div class="profile-content" data-profile="flota">
+        <h1 class="hero-fade text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-6">
+          Sumá <span class="neon-electric">BYD eléctricos</span><br>
+          <span class="text-slate-300 text-3xl sm:text-4xl">a tu flota sin CAPEX</span>
+        </h1>
+        <p class="hero-fade-2 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-6 leading-relaxed">
+          Operá vehículos eléctricos financiados por inversores fraccionados.
+          <span class="text-white font-medium">Vos gestionás, ellos financian.</span>
+        </p>
+      </div>
+
+      <!-- Fragment counter -->
+      <div class="hero-fade-2 glass rounded-2xl p-4 max-w-md mx-auto mb-8">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-slate-400">Fragmentos disponibles</span>
+          <span class="text-xs text-cyan-400 font-mono">BYD-001</span>
+        </div>
+        <div class="energy-bar mb-2">
+          <div class="energy-fill bg-gradient-to-r from-cyan-500 to-emerald-400" style="width: 12%">
+            <span class="text-slate-900">240</span>
+          </div>
+        </div>
+        <div class="flex justify-between text-xs">
+          <span class="text-cyan-400 font-semibold">240 / 2,000 vendidos</span>
+          <span class="text-slate-500">USD $24,490 objetivo</span>
+        </div>
+      </div>
+
+      <div class="hero-fade-3 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#simulador" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-900 font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
+          Ver Simulador de Escenarios
+        </a>
+        <a href="#modelo" class="px-8 py-3.5 rounded-full border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-white transition-all">
+          Como funciona
+        </a>
+      </div>
+
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+        <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== LA TESIS ======== -->
+  <section class="py-24 px-6 relative">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal">
+        <p class="text-2xl sm:text-3xl text-slate-300 leading-relaxed font-light">
+          Hoy, ser "dueño de un auto de app" requiere <span class="text-white font-semibold">USD $25,000</span>.
+          Solo los que tienen ese capital acceden al negocio.
+        </p>
+        <p class="text-xl text-slate-400 mt-6 leading-relaxed">
+          <span class="neon-electric">La propiedad fraccionada cambia eso.</span>
+          2,000 personas participan de un BYD eléctrico que opera en Buenos Aires.
+          <span class="text-white">Sin promesas de retorno fijo</span> — los escenarios dependen de km, ocupacion y costos reales.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== EL MODELO (NETO DISTRIBUIBLE) ======== -->
+  <section id="modelo" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Asi <span class="neon-electric">funciona</span> el modelo</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">La distribucion se calcula sobre el <strong class="text-white">neto distribuible</strong>, no sobre el bruto.</p>
+      </div>
+
+      <!-- Flow diagram -->
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10 relative overflow-hidden mb-12">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 via-emerald-400 to-cyan-500"></div>
+
+        <div class="grid sm:grid-cols-5 gap-4 text-center items-start">
+          <div class="p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/10">
+            <div class="text-2xl mb-2">👤</div>
+            <div class="font-bold text-cyan-400 text-sm mb-1">2,000 Inversores</div>
+            <div class="text-xs text-slate-400">Max 10% por wallet (200 frags)</div>
+          </div>
+          <div class="hidden sm:flex items-center justify-center text-cyan-500/30 text-2xl pt-8">→</div>
+          <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 glow-green">
+            <div class="text-2xl mb-2">⚡</div>
+            <div class="font-bold text-emerald-400 text-sm mb-1">BYD Dolphin Mini</div>
+            <div class="text-xs text-slate-400">$24,490 · Ciclo 1M km (~8 años)</div>
+          </div>
+          <div class="hidden sm:flex items-center justify-center text-cyan-500/30 text-2xl pt-8">→</div>
+          <div class="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10">
+            <div class="text-2xl mb-2">🚗</div>
+            <div class="font-bold text-amber-400 text-sm mb-1">Chofer de Apps</div>
+            <div class="text-xs text-slate-400">Uber/Cabify/DiDi · Paga $/KM</div>
+          </div>
+        </div>
+
+        <!-- NET formula -->
+        <div class="mt-8 p-6 rounded-xl bg-slate-800/80 border border-slate-600/30">
+          <h4 class="text-center text-sm font-semibold text-white mb-4">Formula de distribucion</h4>
+          <div class="text-center mb-4">
+            <code class="text-cyan-300 text-sm bg-cyan-500/10 px-4 py-2 rounded-lg inline-block">
+              Neto Distribuible = Ingreso Cobrado − Costos Operativos Reales − Reservas
+            </code>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+            <div class="p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+              <div class="text-2xl font-black neon-electric">60%</div>
+              <div class="text-xs text-slate-400 mt-1">Pool Inversores</div>
+              <div class="text-xs text-cyan-400/60">Proporcional a fragmentos</div>
+            </div>
+            <div class="p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
+              <div class="text-2xl font-black neon-green">15%</div>
+              <div class="text-xs text-slate-400 mt-1">FGO</div>
+              <div class="text-xs text-emerald-400/60">Fondo de Garantia</div>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-700/30 border border-slate-600/30">
+              <div class="text-2xl font-black text-slate-300">15%</div>
+              <div class="text-xs text-slate-400 mt-1">Plataforma</div>
+              <div class="text-xs text-slate-500">Gestion AutoRentar</div>
+            </div>
+            <div class="p-3 rounded-lg bg-amber-500/5 border border-amber-500/10">
+              <div class="text-2xl font-black neon-gold">10%</div>
+              <div class="text-xs text-slate-400 mt-1">Reposicion</div>
+              <div class="text-xs text-amber-400/60">Renovacion al fin de ciclo</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Protections — updated language -->
+        <div class="mt-6 grid sm:grid-cols-4 gap-3 text-center text-xs">
+          <div class="p-3 rounded-lg bg-slate-800/30 border border-slate-700/30">
+            <span class="text-cyan-400">🛡</span> Siniestro → <span class="text-cyan-400">Seguro + FGO</span>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-800/30 border border-slate-700/30">
+            <span class="text-cyan-400">🔒</span> Mora → <span class="text-cyan-400">Controles operativos (geocerca/alertas)</span>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-800/30 border border-slate-700/30">
+            <span class="text-cyan-400">🔄</span> Fin de ciclo → <span class="text-cyan-400">Fondo Reposicion + liquidacion</span>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-800/30 border border-slate-700/30">
+            <span class="text-cyan-400">📊</span> KM verificados → <span class="text-cyan-400">Log auditable OBD2</span>
+          </div>
+        </div>
+
+        <!-- Anti-whale rule -->
+        <div class="mt-4 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10 text-center">
+          <p class="text-xs text-cyan-300/80">
+            <strong>Regla anti-concentracion:</strong> Ningun wallet puede tener mas del 10% de los fragmentos (200 max).
+            Protege la descentralizacion y evita manipulacion del mercado secundario.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== POR QUE BYD ELECTRICO ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Por que un <span class="neon-electric">BYD electrico</span>?</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">El costo de energia es la ventaja competitiva que hace viable el modelo.</p>
+      </div>
+
+      <!-- Cost comparison bars -->
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10 mb-8">
+        <h3 class="text-lg font-semibold text-slate-300 mb-6">Costo por 100 km recorridos</h3>
+        <div class="space-y-5">
+          <div>
+            <div class="flex justify-between text-sm mb-2">
+              <span class="text-slate-400">⛽ Nafta Super (7.5L/100km)</span>
+              <span class="text-red-400 font-bold">USD $8.71</span>
+            </div>
+            <div class="energy-bar">
+              <div class="energy-fill bg-gradient-to-r from-red-500 to-red-400" style="width: 100%">
+                <span class="text-white">$10,455 ARS</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2">
+              <span class="text-slate-400">🔵 GNC (6m³/100km)</span>
+              <span class="text-amber-400 font-bold">USD $3.50</span>
+            </div>
+            <div class="energy-bar">
+              <div class="energy-fill bg-gradient-to-r from-amber-500 to-amber-400" style="width: 40%">
+                <span class="text-slate-900">$4,200 ARS</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2">
+              <span class="text-slate-400">⚡ BYD electrico (membresia carga)</span>
+              <span class="neon-electric font-bold">USD $1.39</span>
+            </div>
+            <div class="energy-bar">
+              <div class="energy-fill bg-gradient-to-r from-cyan-500 to-emerald-400" style="width: 16%">
+                <span class="text-slate-900">$1,667</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2">
+              <span class="text-slate-400">⚡ BYD electrico (carga domiciliaria)</span>
+              <span class="neon-green font-bold">USD $0.67-1.00</span>
+            </div>
+            <div class="energy-bar">
+              <div class="energy-fill bg-gradient-to-r from-emerald-500 to-emerald-400" style="width: 10%">
+                <span class="text-slate-900">~$1K</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/10 text-center">
+          <p class="text-cyan-300 text-sm">
+            <strong>El BYD ahorra 60-85% en energia vs GNC.</strong> El chofer paga menos, trabaja mas horas, genera mas ingresos para el pool.
+          </p>
+        </div>
+      </div>
+
+      <!-- BYD Specs -->
+      <div class="reveal grid sm:grid-cols-4 gap-4">
+        <div class="glass rounded-xl p-4 text-center">
+          <div class="text-2xl mb-2">🔋</div>
+          <div class="text-white font-bold">43.2 kWh</div>
+          <div class="text-xs text-slate-400">Blade Battery</div>
+        </div>
+        <div class="glass rounded-xl p-4 text-center">
+          <div class="text-2xl mb-2">🛣</div>
+          <div class="text-white font-bold">380 km</div>
+          <div class="text-xs text-slate-400">Autonomia NEDC</div>
+        </div>
+        <div class="glass rounded-xl p-4 text-center">
+          <div class="text-2xl mb-2">⚡</div>
+          <div class="text-white font-bold">30 min</div>
+          <div class="text-xs text-slate-400">Carga rapida 10→80%</div>
+        </div>
+        <div class="glass rounded-xl p-4 text-center">
+          <div class="text-2xl mb-2">💲</div>
+          <div class="text-white font-bold">$24,490</div>
+          <div class="text-xs text-slate-400">Precio Argentina (GS)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== MERCADO REAL ======== -->
+  <section id="mercado" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">El mercado <span class="neon-electric">ya existe</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Miles de choferes alquilan autos para apps de movilidad HOY en Buenos Aires. No estamos inventando la demanda.</p>
+      </div>
+
+      <!-- Competitor landscape -->
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10 mb-8">
+        <h3 class="text-lg font-semibold text-slate-300 mb-6">Mercado de alquiler vehicular para apps (Buenos Aires)</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-slate-700/50">
+                <th class="text-left py-3 text-slate-400 font-medium">Plataforma</th>
+                <th class="text-left py-3 text-slate-400 font-medium">Modelo</th>
+                <th class="text-right py-3 text-slate-400 font-medium">Cobra al chofer</th>
+                <th class="text-right py-3 text-slate-400 font-medium">Dueno recibe neto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-slate-800/50">
+                <td class="py-3 text-white font-medium">deRentas</td>
+                <td class="py-3 text-slate-400">Renta fija semanal</td>
+                <td class="py-3 text-right text-slate-300">~$417 USD/mes</td>
+                <td class="py-3 text-right text-slate-300">~$183 USD/mes</td>
+              </tr>
+              <tr class="border-b border-slate-800/50">
+                <td class="py-3 text-white font-medium">Uber Match</td>
+                <td class="py-3 text-slate-400">40% del facturado</td>
+                <td class="py-3 text-right text-slate-300">~$488 USD/mes</td>
+                <td class="py-3 text-right text-slate-300">~$300 USD/mes</td>
+              </tr>
+              <tr class="border-b border-slate-800/50">
+                <td class="py-3 text-white font-medium">Enchulame</td>
+                <td class="py-3 text-slate-400">Renta fija semanal</td>
+                <td class="py-3 text-right text-slate-300">~$500 USD/mes</td>
+                <td class="py-3 text-right text-slate-300">~$200 USD/mes</td>
+              </tr>
+              <tr class="bg-cyan-500/5">
+                <td class="py-3 text-cyan-400 font-bold">AutoRentar × BYD</td>
+                <td class="py-3 neon-electric">$/KM + piso diario</td>
+                <td class="py-3 text-right neon-electric font-semibold">Variable (ver simulador)</td>
+                <td class="py-3 text-right neon-electric font-semibold">Proporcional a 2,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Key numbers -->
+      <div class="reveal grid sm:grid-cols-4 gap-4">
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-3xl font-black neon-electric mb-1">400+</div>
+          <div class="text-xs text-slate-400">Autos en plataformas de alquiler para apps en CABA</div>
+        </div>
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-3xl font-black neon-green mb-1">10,000</div>
+          <div class="text-xs text-slate-400">Choferes registrados solo en deRentas</div>
+        </div>
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-3xl font-black neon-gold mb-1">$4M</div>
+          <div class="text-xs text-slate-400">Inversion de Uber en deRentas (partnership)</div>
+        </div>
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-3xl font-black text-white mb-1">5,000</div>
+          <div class="text-xs text-slate-400">Meta de flota de deRentas (sin electricos)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== SIMULADOR (NETO DISTRIBUIBLE + 3 ESCENARIOS) ======== -->
+  <section id="simulador" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Simulador de <span class="neon-electric">Escenarios</span></h2>
+        <p class="text-slate-400">Bruto → Costos → Neto Distribuible → Split. Tres escenarios con un click.</p>
+      </div>
+
+      <div class="reveal glass-strong rounded-3xl p-8 sm:p-10 glow-electric">
+        <!-- Scenario buttons -->
+        <div class="grid grid-cols-3 gap-3 mb-8">
+          <button id="btn-conservador" class="scenario-btn p-3 rounded-xl border-2 border-amber-500/30 bg-amber-500/5 text-center" data-scenario="conservador">
+            <div class="text-amber-400 font-bold text-sm">Conservador</div>
+            <div class="text-xs text-slate-400 mt-1">Mas downtime, mas costos</div>
+          </button>
+          <button id="btn-base" class="scenario-btn active p-3 rounded-xl border-2 border-cyan-500/50 bg-cyan-500/10 text-center" data-scenario="base">
+            <div class="text-cyan-400 font-bold text-sm">Base</div>
+            <div class="text-xs text-slate-400 mt-1">Valores medios</div>
+          </button>
+          <button id="btn-optimista" class="scenario-btn p-3 rounded-xl border-2 border-emerald-500/30 bg-emerald-500/5 text-center" data-scenario="optimista">
+            <div class="text-emerald-400 font-bold text-sm">Optimista</div>
+            <div class="text-xs text-slate-400 mt-1">Alto uso, bajos costos</div>
+          </button>
+        </div>
+
+        <!-- Manual sliders -->
+        <div class="grid sm:grid-cols-2 gap-6 mb-6">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-slate-400 text-sm">KM diarios del chofer</span>
+              <span id="km-display" class="text-2xl font-black neon-electric">200</span>
+            </div>
+            <input type="range" id="km-slider" min="100" max="350" value="200" class="w-full">
+            <div class="flex justify-between text-xs text-slate-600 mt-1">
+              <span>100 km</span>
+              <span>200 km</span>
+              <span>350 km</span>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-slate-400 text-sm">Dias activos / mes</span>
+              <span id="days-display" class="text-2xl font-black neon-electric">26</span>
+            </div>
+            <input type="range" id="days-slider" min="15" max="30" value="26" class="w-full">
+            <div class="flex justify-between text-xs text-slate-600 mt-1">
+              <span>15 dias</span>
+              <span>26 dias</span>
+              <span>30 dias</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cost parameters (visible, editable) -->
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-600/30 mb-6">
+          <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Costos operativos mensuales (incluidos en calculo)</h4>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center text-xs">
+            <div class="p-2 rounded-lg bg-slate-700/30">
+              <div class="text-slate-500">Seguro</div>
+              <div id="cost-insurance" class="font-bold text-red-400">$85</div>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-700/30">
+              <div class="text-slate-500">Neumaticos</div>
+              <div id="cost-tires" class="font-bold text-red-400">$26</div>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-700/30">
+              <div class="text-slate-500">Mantenimiento</div>
+              <div id="cost-maintenance" class="font-bold text-red-400">$31</div>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-700/30">
+              <div class="text-slate-500">Overhaul</div>
+              <div id="cost-overhaul" class="font-bold text-red-400">$16</div>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-700/30">
+              <div class="text-slate-500">Telematica</div>
+              <div id="cost-telematics" class="font-bold text-red-400">$15</div>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-700/30">
+              <div class="text-slate-500 font-semibold">Total costos</div>
+              <div id="cost-total" class="font-bold text-red-300">$173</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fixed params -->
+        <div class="grid grid-cols-3 gap-3 mb-6 text-center text-xs">
+          <div class="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div class="text-slate-400">Tarifa por KM</div>
+            <div class="text-white font-bold">$0.12 USD</div>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div class="text-slate-400">Piso diario</div>
+            <div class="text-white font-bold">$15 USD</div>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div class="text-slate-400">Fragmentos</div>
+            <div class="text-white font-bold">2,000 × $12.50</div>
+          </div>
+        </div>
+
+        <!-- Results: Bruto → Costos → Neto → Split -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <div class="bg-slate-800/50 rounded-xl p-4 text-center border border-slate-700/50">
+            <div class="text-xs text-slate-400 mb-1">Ingreso bruto mensual</div>
+            <div id="sim-gross" class="text-xl font-bold text-white">$624</div>
+          </div>
+          <div class="bg-slate-800/50 rounded-xl p-4 text-center border border-red-500/20">
+            <div class="text-xs text-slate-400 mb-1">Costos operativos</div>
+            <div id="sim-costs" class="text-xl font-bold text-red-400">-$173</div>
+          </div>
+          <div class="bg-slate-800/50 rounded-xl p-4 text-center border border-cyan-500/30 glow-electric">
+            <div class="text-xs text-white font-semibold mb-1">NETO DISTRIBUIBLE</div>
+            <div id="sim-net" class="text-xl font-bold neon-electric">$451</div>
+          </div>
+          <div class="bg-slate-800/50 rounded-xl p-4 text-center border border-amber-500/20">
+            <div class="text-xs text-slate-400 mb-1">Tu fragmento / mes</div>
+            <div id="sim-fragment-month" class="text-xl font-bold neon-gold">$0.135</div>
+          </div>
+        </div>
+
+        <!-- Split breakdown -->
+        <div class="grid grid-cols-4 gap-2 text-center text-xs mb-4">
+          <div class="p-2 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+            <div class="text-slate-400">Inversores 60%</div>
+            <div id="split-investors" class="font-bold text-cyan-400">$271</div>
+          </div>
+          <div class="p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
+            <div class="text-slate-400">FGO 15%</div>
+            <div id="split-fgo" class="font-bold text-emerald-400">$68</div>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-700/30 border border-slate-600/30">
+            <div class="text-slate-400">Plataforma 15%</div>
+            <div id="split-platform" class="font-bold text-slate-300">$68</div>
+          </div>
+          <div class="p-2 rounded-lg bg-amber-500/5 border border-amber-500/10">
+            <div class="text-slate-400">Reposicion 10%</div>
+            <div id="split-repo" class="font-bold text-amber-400">$45</div>
+          </div>
+        </div>
+
+        <!-- Annual return + accumulation -->
+        <div class="grid sm:grid-cols-3 gap-3 mb-6">
+          <div class="p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/20 text-center">
+            <div class="text-xs text-slate-400">Retorno anual estimado</div>
+            <div id="sim-annual" class="text-2xl font-black neon-electric">~13%</div>
+            <div class="text-xs text-slate-500">sobre $12.50 invertido</div>
+          </div>
+          <div class="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 text-center">
+            <div class="text-xs text-slate-400">Fondo Reposicion acumulado</div>
+            <div id="sim-repo-accum" class="text-2xl font-black neon-gold">$541</div>
+            <div class="text-xs text-slate-500">por ano (hacia 1M km)</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-600/30 text-center">
+            <div class="text-xs text-slate-400">Reposicion en USD/km</div>
+            <div id="sim-repo-per-km" class="text-2xl font-black text-slate-300">$0.0087</div>
+            <div class="text-xs text-slate-500">acumula hacia renovacion</div>
+          </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="p-3 rounded-lg bg-amber-500/5 border border-amber-500/10">
+          <p class="text-xs text-amber-300/80 text-center">
+            <strong>Escenarios, no promesas.</strong> Depende de ocupacion, km reales, costos operativos y condiciones del mercado.
+            Las distribuciones se calculan sobre el neto despues de costos. No es retorno garantizado.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== CICLO DE VIDA BYD-001 ======== -->
+  <section id="ciclo" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Ciclo de vida <span class="neon-electric">BYD-001</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">1 millon de km. ~8 años. Al fin de ciclo: liquidacion o rollover a BYD-002.</p>
+      </div>
+
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10">
+        <div class="grid sm:grid-cols-4 gap-4">
+          <div class="p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/10 text-center">
+            <div class="text-3xl mb-2">🚀</div>
+            <div class="text-sm font-bold text-cyan-400 mb-1">Lanzamiento</div>
+            <div class="text-xs text-slate-400">2,000 frags vendidos → compra BYD → asignacion a chofer verificado</div>
+          </div>
+          <div class="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10 text-center">
+            <div class="text-3xl mb-2">📊</div>
+            <div class="text-sm font-bold text-emerald-400 mb-1">Operacion</div>
+            <div class="text-xs text-slate-400">KPIs mensuales publicos. Distribuciones al neto. Fondo reposicion crece</div>
+          </div>
+          <div class="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 text-center">
+            <div class="text-3xl mb-2">🔄</div>
+            <div class="text-sm font-bold text-amber-400 mb-1">Fin de ciclo</div>
+            <div class="text-xs text-slate-400">1M km alcanzado → retiro del vehiculo → liquidacion final</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-700/30 border border-slate-600/30 text-center">
+            <div class="text-3xl mb-2">🔮</div>
+            <div class="text-sm font-bold text-slate-300 mb-1">Decision</div>
+            <div class="text-xs text-slate-400">Holders votan: distribuir residual + reposicion o rollover a BYD-002</div>
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 rounded-xl bg-slate-800/50 border border-slate-600/30">
+          <h4 class="text-sm font-semibold text-slate-300 mb-3">Que pasa al fin de ciclo?</h4>
+          <div class="grid sm:grid-cols-2 gap-4 text-xs text-slate-400">
+            <div>
+              <span class="text-cyan-400 font-bold">Opcion A — Liquidacion:</span>
+              <br>Se vende el vehiculo (valor residual) + fondo de reposicion acumulado.
+              Se distribuye proporcional a fragmentos. Fin del ciclo BYD-001.
+            </div>
+            <div>
+              <span class="text-emerald-400 font-bold">Opcion B — Rollover:</span>
+              <br>El fondo de reposicion + residual se aplica a la compra de un BYD-002.
+              Los holders mantienen sus fragmentos. Nuevo ciclo de 1M km.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== KPIs PUBLICOS MENSUALES ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">KPIs <span class="neon-electric">publicos</span> mensuales</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Todos los holders ven los mismos numeros. Sin cajas negras.</p>
+      </div>
+
+      <div class="reveal grid sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-2xl mb-2">🛣</div>
+          <div class="text-xs text-slate-400 mb-1">KM verificados</div>
+          <div class="text-white font-bold">OBD2 auditable</div>
+        </div>
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-2xl mb-2">📅</div>
+          <div class="text-xs text-slate-400 mb-1">Dias activos / downtime</div>
+          <div class="text-white font-bold">Transparente</div>
+        </div>
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-2xl mb-2">💵</div>
+          <div class="text-xs text-slate-400 mb-1">Ingreso bruto</div>
+          <div class="text-white font-bold">Mensual</div>
+        </div>
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-2xl mb-2">📊</div>
+          <div class="text-xs text-slate-400 mb-1">Neto distribuible</div>
+          <div class="text-white font-bold">Despues de costos</div>
+        </div>
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-2xl mb-2">💰</div>
+          <div class="text-xs text-slate-400 mb-1">Payout total</div>
+          <div class="text-white font-bold">A holders</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== CHOFER TAMBIEN GANA ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">El chofer tambien <span class="neon-green">gana</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Ahorra $100+ USD/mes en combustible vs un auto a GNC. El BYD es negocio para todos.</p>
+      </div>
+
+      <div class="reveal grid sm:grid-cols-2 gap-6">
+        <div class="glass rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500/50 to-transparent"></div>
+          <h3 class="font-bold text-lg mb-4 text-amber-400">🔵 Chofer con auto GNC (deRentas)</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Facturacion neta apps</span>
+              <span class="text-white font-semibold">$1,220 USD</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Alquiler del auto</span>
+              <span class="text-red-400">-$417</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Combustible GNC</span>
+              <span class="text-red-400">-$125</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Peajes + lavado + comida</span>
+              <span class="text-red-400">-$108</span>
+            </div>
+            <div class="flex justify-between pt-2">
+              <span class="text-white font-bold">Neto chofer</span>
+              <span class="text-amber-400 font-bold text-lg">$570 USD/mes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass rounded-2xl p-6 relative overflow-hidden glow-electric">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-emerald-400"></div>
+          <h3 class="font-bold text-lg mb-4 neon-electric">⚡ Chofer con BYD (AutoRentar)</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Facturacion neta apps</span>
+              <span class="text-white font-semibold">$1,220 USD</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Alquiler del BYD</span>
+              <span class="text-red-400">-$500</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Carga electrica</span>
+              <span class="neon-green font-bold">-$7 a -$42</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Peajes + lavado + comida</span>
+              <span class="text-red-400">-$108</span>
+            </div>
+            <div class="flex justify-between pt-2">
+              <span class="text-white font-bold">Neto chofer</span>
+              <span class="neon-electric font-bold text-lg">$570-605 USD/mes</span>
+            </div>
+          </div>
+          <div class="mt-4 p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-center">
+            <span class="text-xs text-emerald-300">Iguala o supera su neto actual, con auto nuevo y sin GNC</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== WALLET & FRAGMENTOS ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Todo desde tu <span class="neon-electric">Wallet</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Compra fragmentos, segui los KM en tiempo real, recibi distribuciones mensuales.</p>
+      </div>
+
+      <div class="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="deal-card glass rounded-2xl p-6 text-center hover:glow-electric">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-2xl">🪙</div>
+          <h3 class="font-bold mb-2">Compra Fragmentos</h3>
+          <p class="text-slate-400 text-xs">Desde $12.50. Carga tu wallet con MercadoPago o transferencia.</p>
+        </div>
+        <div class="deal-card glass rounded-2xl p-6 text-center hover:glow-electric">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl">📊</div>
+          <h3 class="font-bold mb-2">Segui los KM</h3>
+          <p class="text-slate-400 text-xs">Dashboard con KM verificados por OBD2, log auditable y estado del auto.</p>
+        </div>
+        <div class="deal-card glass rounded-2xl p-6 text-center hover:glow-electric">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl">💰</div>
+          <h3 class="font-bold mb-2">Cobra Distribuciones</h3>
+          <p class="text-slate-400 text-xs">Distribucion mensual proporcional a tus fragmentos. Directo a tu wallet.</p>
+        </div>
+        <div class="deal-card glass rounded-2xl p-6 text-center hover:glow-electric">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-2xl">🔄</div>
+          <h3 class="font-bold mb-2">Mercado Secundario</h3>
+          <p class="text-slate-400 text-xs">Vende fragmentos a otros holders. La liquidez depende de la demanda del mercado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== ROADMAP ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Roadmap <span class="neon-electric">operativo</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">El cuello de botella es operacion, no marketing. Crecimiento responsable.</p>
+      </div>
+
+      <div class="reveal grid sm:grid-cols-4 gap-4">
+        <div class="glass rounded-xl p-5 text-center relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-cyan-500 text-slate-900 text-xs font-bold">Hoy</div>
+          <div class="text-3xl font-black neon-electric mt-4 mb-1">1</div>
+          <div class="text-sm font-bold text-slate-300">auto</div>
+          <div class="text-xs text-slate-400 mt-2">BYD-001. Validar modelo. KPIs reales.</div>
+        </div>
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-xs text-slate-500 mb-2">6 meses</div>
+          <div class="text-3xl font-black text-slate-300 mb-1">10</div>
+          <div class="text-sm font-bold text-slate-300">autos</div>
+          <div class="text-xs text-slate-400 mt-2">Operacion probada. Procesos estandarizados.</div>
+        </div>
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-xs text-slate-500 mb-2">12 meses</div>
+          <div class="text-3xl font-black neon-green mb-1">30</div>
+          <div class="text-sm font-bold text-slate-300">autos</div>
+          <div class="text-xs text-slate-400 mt-2">Equipo de operaciones dedicado. Serios.</div>
+        </div>
+        <div class="glass rounded-xl p-5 text-center">
+          <div class="text-xs text-slate-500 mb-2">24 meses</div>
+          <div class="text-3xl font-black neon-gold mb-1">100</div>
+          <div class="text-sm font-bold text-slate-300">autos</div>
+          <div class="text-xs text-slate-400 mt-2">Empresa. Escala con datos reales.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== FAQ (OPERATIVAS) ======== -->
+  <section id="faq" class="py-24 px-6">
+    <div class="max-w-3xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Preguntas <span class="neon-electric">operativas</span></h2>
+      </div>
+
+      <div class="reveal space-y-4">
+        <details class="glass rounded-xl p-5 group cursor-pointer">
+          <summary class="font-semibold text-white flex justify-between items-center">
+            Siniestro: que pasa si el chofer choca el auto?
+            <span class="text-cyan-400 group-open:rotate-45 transition-transform text-xl">+</span>
+          </summary>
+          <p class="text-slate-400 text-sm mt-3">El auto tiene seguro todo riesgo obligatorio. El FGO (15% del neto distribuible mensual) acumula un fondo colectivo para cubrir deducibles y situaciones no cubiertas. Si el siniestro es total, el FGO + seguro cubren la reposicion. Los holders no pierden su participacion.</p>
+        </details>
+
+        <details class="glass rounded-xl p-5 group cursor-pointer">
+          <summary class="font-semibold text-white flex justify-between items-center">
+            Mora: que pasa si el chofer no paga?
+            <span class="text-cyan-400 group-open:rotate-45 transition-transform text-xl">+</span>
+          </summary>
+          <p class="text-slate-400 text-sm mt-3">El BYD tiene controles operativos integrados: geocerca, alertas y bloqueo si corresponde. Hay un proceso de aviso (24h, 48h, 72h) antes de cualquier accion restrictiva. Si el chofer no regulariza, se reasigna el vehiculo a otro chofer de la lista de espera.</p>
+        </details>
+
+        <details class="glass rounded-xl p-5 group cursor-pointer">
+          <summary class="font-semibold text-white flex justify-between items-center">
+            Fin de ciclo: que pasa cuando el auto llega a 1M km?
+            <span class="text-cyan-400 group-open:rotate-45 transition-transform text-xl">+</span>
+          </summary>
+          <p class="text-slate-400 text-sm mt-3">El vehiculo se retira de operacion. Los holders votan entre: (A) liquidar — vender el auto + distribuir fondo reposicion + residual proporcional, o (B) rollover — aplicar los fondos a un BYD-002 y continuar el ciclo con los mismos fragmentos.</p>
+        </details>
+
+        <details class="glass rounded-xl p-5 group cursor-pointer">
+          <summary class="font-semibold text-white flex justify-between items-center">
+            Mercado secundario: puedo vender mis fragmentos?
+            <span class="text-cyan-400 group-open:rotate-45 transition-transform text-xl">+</span>
+          </summary>
+          <p class="text-slate-400 text-sm mt-3">Si. Podes listar tus fragmentos en el mercado secundario dentro de la app. Otro usuario los compra y el saldo se acredita en tu wallet. <strong class="text-white">La liquidez depende de la demanda</strong> — no hay garantia de venta inmediata, pero es mas agil que vender un auto entero.</p>
+        </details>
+
+        <details class="glass rounded-xl p-5 group cursor-pointer">
+          <summary class="font-semibold text-white flex justify-between items-center">
+            Verificacion: como se que los KM son reales?
+            <span class="text-cyan-400 group-open:rotate-45 transition-transform text-xl">+</span>
+          </summary>
+          <p class="text-slate-400 text-sm mt-3">Los KM se verifican con telematica OBD2 del BYD. Los datos se registran en un log auditable append-only (no se pueden borrar ni editar). Todos los holders ven los mismos KPIs en el dashboard mensual.</p>
+        </details>
+
+        <details class="glass rounded-xl p-5 group cursor-pointer">
+          <summary class="font-semibold text-white flex justify-between items-center">
+            Limite por wallet: por que maximo 10%?
+            <span class="text-cyan-400 group-open:rotate-45 transition-transform text-xl">+</span>
+          </summary>
+          <p class="text-slate-400 text-sm mt-3">La regla de maximo 200 fragmentos (10%) por wallet protege la descentralizacion del pool. Evita que un solo actor pueda manipular el mercado secundario o tener influencia desproporcionada en decisiones de fin de ciclo.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== CTA ======== -->
+  <section id="invertir" class="py-24 px-6 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent"></div>
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+      <div class="reveal">
+        <div class="mb-8">
+          <span class="text-6xl font-black neon-electric">$12.50</span>
+          <div class="text-slate-400 text-lg mt-2">por fragmento · 2,000 disponibles · BYD Dolphin Mini EV</div>
+        </div>
+
+        <p class="text-xl text-slate-300 leading-relaxed mb-4">
+          Participacion fraccionada en movilidad electrica.
+          <br>
+          <span class="text-white">Escenarios transparentes, costos reales, KPIs publicos.</span>
+        </p>
+        <p class="text-sm text-amber-300/70 mb-8">
+          Inversion de alto riesgo. Las distribuciones dependen de km, ocupacion y costos. No hay retorno garantizado.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+          <a href="https://wa.me/5491166599559?text=Quiero%20saber%20mas%20sobre%20los%20fragmentos%20BYD%20en%20AutoRentar" target="_blank"
+             class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-900 font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/30 transition-all pulse-ring">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.352 0-4.55-.694-6.396-1.882l-.42-.27-2.633.883.883-2.633-.27-.42A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            Quiero saber mas — WhatsApp
+          </a>
+          <a href="mailto:adm@autorentar.com?subject=Fragmentos%20BYD%20-%20Quiero%20saber%20mas"
+             class="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-white transition-all">
+            ✉️ Enviar Email
+          </a>
+        </div>
+
+        <!-- Trust signals -->
+        <div class="grid grid-cols-3 gap-4 text-center text-xs">
+          <div class="p-3 rounded-xl glass">
+            <div class="text-cyan-400 font-bold mb-1">ECUCONDOR SAS</div>
+            <div class="text-slate-500">Sociedad constituida en Argentina</div>
+          </div>
+          <div class="p-3 rounded-xl glass">
+            <div class="text-cyan-400 font-bold mb-1">Wallet Verificada</div>
+            <div class="text-slate-500">KYC + MercadoPago integrado</div>
+          </div>
+          <div class="p-3 rounded-xl glass">
+            <div class="text-cyan-400 font-bold mb-1">Log Auditable</div>
+            <div class="text-slate-500">KM verificables append-only</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="py-8 px-6 border-t border-slate-800/50">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+        <div class="text-slate-500 text-sm">
+          &copy; 2026 AutoRentar &middot; ECUCONDOR SAS &middot; Buenos Aires, Argentina
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="https://autorentar.com" target="_blank" class="text-slate-600 hover:text-cyan-400 text-sm transition-colors">autorentar.com</a>
+        </div>
+      </div>
+      <div class="text-center text-xs text-slate-600 max-w-2xl mx-auto">
+        <strong>Disclaimer:</strong> Las estimaciones presentadas son escenarios basados en supuestos.
+        No constituyen una oferta de inversion ni garantia de retorno.
+        Los resultados reales dependen de la ocupacion, km recorridos, costos operativos y condiciones del mercado.
+        Los fragmentos representan participacion en el pool de ingresos del vehiculo, no propiedad legal del activo.
+        Inversion de alto riesgo — documento informativo, no asesoramiento financiero.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======== SCRIPTS ======== -->
+  <script>
+    // === SCENARIO PRESETS ===
+    var scenarios = {
+      conservador: { km: 150, days: 22, insurance: 95, tires: 0.006, maintenance: 0.008, overhaul: 0.004, telematics: 20 },
+      base:        { km: 200, days: 26, insurance: 85, tires: 0.005, maintenance: 0.006, overhaul: 0.003, telematics: 15 },
+      optimista:   { km: 280, days: 28, insurance: 80, tires: 0.004, maintenance: 0.005, overhaul: 0.002, telematics: 12 }
+    };
+    var currentScenario = 'base';
+
+    // === ELEMENTS ===
+    var kmSlider = document.getElementById('km-slider');
+    var daysSlider = document.getElementById('days-slider');
+
+    // === CONSTANTS ===
+    var ratePerKm = 0.12;
+    var floorPerDay = 15;
+    var totalFragments = 2000;
+    var fragmentPrice = 12.50;
+    var investorPct = 0.60;
+    var fgoPct = 0.15;
+    var platformPct = 0.15;
+    var repoPct = 0.10;
+
+    function formatUSD(n) {
+      if (Math.abs(n) < 1) return '$' + n.toFixed(3);
+      return '$' + Math.round(n).toLocaleString('en-US');
+    }
+
+    function updateSimulator() {
+      var kmPerDay = parseInt(kmSlider.value);
+      var daysPerMonth = parseInt(daysSlider.value);
+      var sc = scenarios[currentScenario];
+
+      document.getElementById('km-display').textContent = kmPerDay;
+      document.getElementById('days-display').textContent = daysPerMonth;
+
+      var totalKmMonth = kmPerDay * daysPerMonth;
+
+      // GROSS: daily revenue = max(km*rate, floor)
+      var dailyRevenue = Math.max(kmPerDay * ratePerKm, floorPerDay);
+      var monthlyGross = dailyRevenue * daysPerMonth;
+
+      // COSTS (real, per-km where applicable)
+      var costInsurance = sc.insurance;
+      var costTires = sc.tires * totalKmMonth;
+      var costMaintenance = sc.maintenance * totalKmMonth;
+      var costOverhaul = sc.overhaul * totalKmMonth;
+      var costTelematics = sc.telematics;
+      var totalCosts = costInsurance + costTires + costMaintenance + costOverhaul + costTelematics;
+
+      // NET DISTRIBUTABLE
+      var netDistributable = Math.max(0, monthlyGross - totalCosts);
+
+      // SPLIT (on net, not gross!)
+      var poolInvestors = netDistributable * investorPct;
+      var poolFGO = netDistributable * fgoPct;
+      var poolPlatform = netDistributable * platformPct;
+      var poolRepo = netDistributable * repoPct;
+
+      var perFragment = poolInvestors / totalFragments;
+      var annualPerFragment = perFragment * 12;
+      var annualReturn = Math.round((annualPerFragment / fragmentPrice) * 100);
+
+      // Replacement fund analysis
+      var annualRepo = poolRepo * 12;
+      var repoPerKm = totalKmMonth > 0 ? poolRepo / totalKmMonth : 0;
+
+      // Update costs display
+      document.getElementById('cost-insurance').textContent = formatUSD(costInsurance);
+      document.getElementById('cost-tires').textContent = formatUSD(costTires);
+      document.getElementById('cost-maintenance').textContent = formatUSD(costMaintenance);
+      document.getElementById('cost-overhaul').textContent = formatUSD(costOverhaul);
+      document.getElementById('cost-telematics').textContent = formatUSD(costTelematics);
+      document.getElementById('cost-total').textContent = formatUSD(totalCosts);
+
+      // Update results
+      document.getElementById('sim-gross').textContent = formatUSD(monthlyGross);
+      document.getElementById('sim-costs').textContent = '-' + formatUSD(totalCosts);
+      document.getElementById('sim-net').textContent = formatUSD(netDistributable);
+      document.getElementById('sim-fragment-month').textContent = '$' + perFragment.toFixed(3);
+      document.getElementById('sim-annual').textContent = '~' + annualReturn + '%';
+
+      // Split
+      document.getElementById('split-investors').textContent = formatUSD(poolInvestors);
+      document.getElementById('split-fgo').textContent = formatUSD(poolFGO);
+      document.getElementById('split-platform').textContent = formatUSD(poolPlatform);
+      document.getElementById('split-repo').textContent = formatUSD(poolRepo);
+
+      // Replacement accumulation
+      document.getElementById('sim-repo-accum').textContent = formatUSD(annualRepo);
+      document.getElementById('sim-repo-per-km').textContent = '$' + repoPerKm.toFixed(4);
+    }
+
+    function setScenario(name) {
+      currentScenario = name;
+      var sc = scenarios[name];
+      kmSlider.value = sc.km;
+      daysSlider.value = sc.days;
+
+      // Update button styles
+      document.querySelectorAll('.scenario-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+        btn.style.borderWidth = '2px';
+        if (btn.dataset.scenario === name) {
+          btn.classList.add('active');
+        }
+      });
+      var activeBtn = document.getElementById('btn-' + name);
+      if (activeBtn) {
+        var colors = { conservador: 'border-amber-400', base: 'border-cyan-400', optimista: 'border-emerald-400' };
+      }
+
+      updateSimulator();
+    }
+
+    // Event listeners
+    kmSlider.addEventListener('input', function() { currentScenario = 'custom'; updateSimulator(); });
+    daysSlider.addEventListener('input', function() { currentScenario = 'custom'; updateSimulator(); });
+
+    document.querySelectorAll('.scenario-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() { setScenario(this.dataset.scenario); });
+    });
+
+    // Initialize
+    updateSimulator();
+
+    // === PROFILE SELECTOR ===
+    document.querySelectorAll('.profile-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var profile = this.dataset.profile;
+        document.querySelectorAll('.profile-tab').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('.profile-content').forEach(function(c) { c.classList.remove('active'); });
+        this.classList.add('active');
+        document.querySelectorAll('[data-profile="' + profile + '"].profile-content').forEach(function(c) { c.classList.add('active'); });
+      });
+    });
+
+    // === SCROLL REVEAL ===
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+    // === SMOOTH SCROLL ===
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>

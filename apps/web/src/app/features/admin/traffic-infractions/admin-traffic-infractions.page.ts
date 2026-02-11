@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
 
@@ -219,7 +219,7 @@ import type { TrafficInfraction } from '@core/models/traffic-infraction.model';
   `,
 })
 export class AdminTrafficInfractionsPage implements OnInit {
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly adminFacade = inject(AdminFeatureFacadeService);
   private readonly toast = inject(NotificationManagerService);
 
   readonly loading = signal(true);
@@ -259,18 +259,7 @@ export class AdminTrafficInfractionsPage implements OnInit {
   async loadInfractions(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase
-        .from('traffic_infractions')
-        .select(
-          `
-          *,
-          renter:profiles!traffic_infractions_renter_id_fkey(full_name),
-          owner:profiles!traffic_infractions_owner_id_fkey(full_name)
-        `,
-        )
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
+      const data = await this.adminFacade.listTrafficInfractions();
 
       const mapped = (data || []).map(
         (
@@ -353,13 +342,11 @@ ${infraction.resolution_notes ? `\nNotas de resolución: ${infraction.resolution
     const notes = prompt('Notas de resolución (opcional):') || '';
 
     try {
-      const { error } = await this.supabase.rpc('resolve_traffic_infraction_dispute', {
-        p_infraction_id: infraction.id,
-        p_in_favor_of_renter: inFavorOfRenter,
-        p_resolution_notes: notes,
+      await this.adminFacade.resolveTrafficInfractionDispute({
+        infractionId: infraction.id,
+        inFavorOfRenter,
+        resolutionNotes: notes,
       });
-
-      if (error) throw error;
 
       this.toast.success(
         'Disputa resuelta',

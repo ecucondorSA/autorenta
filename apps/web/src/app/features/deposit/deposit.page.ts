@@ -12,9 +12,9 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { PaymentsFeatureFacadeService } from '@core/services/facades/payments-feature-facade.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 import { WalletService } from '@core/services/payments/wallet.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
@@ -48,7 +48,8 @@ export class DepositPage implements OnInit {
   private readonly toastService = inject(NotificationManagerService);
   private readonly analyticsService = inject(AnalyticsService);
   private readonly authService = inject(AuthService);
-  private readonly supabase = injectSupabase();
+  private readonly paymentsFacade = inject(PaymentsFeatureFacadeService);
+  private readonly sessionFacade = inject(SessionFacadeService);
 
   // Form state (usuario ingresa en USD, convertimos a ARS para MP)
   usdAmountValue = 0;
@@ -127,19 +128,9 @@ export class DepositPage implements OnInit {
   async loadExchangeRate(): Promise<void> {
     this.loadingRate.set(true);
     try {
-      const { data, error } = await this.supabase
-        .from('exchange_rates')
-        .select('rate, last_updated')
-        .eq('pair', 'USDARS')
-        .eq('is_active', true)
-        .order('last_updated', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      if (data?.rate) {
-        this.platformRate.set(Number(data.rate));
+      const rate = await this.paymentsFacade.getLatestUsdArsRate();
+      if (rate) {
+        this.platformRate.set(rate);
       } else {
         this.platformRate.set(null);
         this.toastService.warning(
@@ -237,19 +228,11 @@ export class DepositPage implements OnInit {
       // p_amount es en centavos USD (bigint)
       const amountCentsUsd = this.usdAmount(); // centavos USD
 
-      const { data: txData, error: txError } = await this.supabase.rpc('wallet_initiate_deposit', {
-        p_user_id: userId,
-        p_amount: amountCentsUsd,
-        p_provider: 'mercadopago',
+      const transactionId = await this.paymentsFacade.initiateWalletDeposit({
+        userId,
+        amountCentsUsd,
+        provider: 'mercadopago',
       });
-
-      if (txError) {
-        console.error('Error creating deposit transaction:', txError);
-        throw new Error('No pudimos iniciar el depósito. Intenta de nuevo.');
-      }
-
-      // La función retorna el transaction_id directamente (UUID)
-      const transactionId = txData as string;
       this.transactionId.set(transactionId);
       this.logger.debug('✅ Deposit transaction created:', transactionId);
 
@@ -258,30 +241,31 @@ export class DepositPage implements OnInit {
       let initPoint: string | null = null;
 
       // Get session token for Edge Function auth
-      const { data: sessionData } = await this.supabase.auth.getSession();
-      const accessToken = sessionData?.session?.access_token;
+      const accessToken = await this.sessionFacade.getSessionAccessToken();
 
       try {
-        const { data: prefData, error: prefError } = await this.supabase.functions.invoke(
-          'mercadopago-create-preference',
-          {
-            body: {
-              transaction_id: transactionId,
-              amount: this.arsAmount(), // Monto en ARS para MercadoPago
-              description: this.description() || 'Depósito a wallet AutoRentar',
-            },
-            headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+        const prefData = await this.paymentsFacade.invokeFunction<{
+          preference_id?: string;
+          init_point?: string;
+          sandbox_init_point?: string;
+        }>({
+          name: 'mercadopago-create-preference',
+          body: {
+            transaction_id: transactionId,
+            amount: this.arsAmount(), // Monto en ARS para MercadoPago
+            description: this.description() || 'Depósito a wallet AutoRentar',
           },
-        );
+          accessToken,
+        });
 
-        if (!prefError && prefData?.preference_id) {
+        if (prefData?.preference_id) {
           preferenceId = prefData.preference_id;
           initPoint = prefData.init_point || prefData.sandbox_init_point || null;
           this.preferenceId.set(preferenceId);
           this.initPoint.set(initPoint);
           this.logger.debug('✅ MercadoPago preference created:', preferenceId);
         } else {
-          console.warn('⚠️ Could not create preference, continuing without it:', prefError);
+          console.warn('⚠️ Could not create preference, continuing without it');
         }
       } catch (prefErr) {
         console.warn('⚠️ Preference creation failed, continuing without it:', prefErr);
@@ -419,7 +403,8 @@ export class DepositPage implements OnInit {
   private async sendFeedback(payload: Record<string, unknown>): Promise<void> {
     const resolvedPayload = await this.resolveAsyncFields(payload);
     try {
-      await this.supabase.functions.invoke('incident-webhook', {
+      await this.paymentsFacade.invokeFunction({
+        name: 'incident-webhook',
         body: {
           source: 'custom',
           severity: 'high',

@@ -19,7 +19,6 @@ import {
 import { CarBlockingService } from '@core/services/cars/car-blocking.service';
 import { CarsService } from '@core/services/cars/cars.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { Car } from '../../../../core/models';
 import {
   BlockDateModalComponent,
@@ -50,7 +49,6 @@ export class MultiCarCalendarComponent implements OnInit {
   private readonly blockingService = inject(CarBlockingService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly authService = inject(AuthService);
-  private readonly supabase = inject(SupabaseClientService).getClient();
 
   readonly cars = signal<CarCalendarData[]>([]);
   readonly loading = signal(true);

@@ -20,9 +20,8 @@ import {
 } from '@core/services/admin/disputes.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
 import { AuthService } from '@core/services/auth/auth.service';
+import { StorageFacadeService } from '@core/services/facades/storage-facade.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import { DEFAULT_DOCUMENT_MIME_TYPES, validateFile } from '@core/utils/file-validation.util';
 import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
@@ -41,7 +40,7 @@ export class DisputesManagementPage implements OnInit, OnDestroy {
   private readonly bookingsService = inject(BookingsService);
   private readonly authService = inject(AuthService);
   private readonly toastService = inject(NotificationManagerService);
-  private readonly supabaseService = inject(SupabaseClientService);
+  private readonly storageFacade = inject(StorageFacadeService);
   private readonly realtimeConnection = inject(RealtimeConnectionService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -238,7 +237,6 @@ export class DisputesManagementPage implements OnInit, OnDestroy {
     if (this.evidenceFiles().length === 0) return;
 
     this.uploadingEvidence.set(true);
-    const supabase = this.supabaseService.getClient();
 
     try {
       for (const file of this.evidenceFiles()) {
@@ -254,22 +252,20 @@ export class DisputesManagementPage implements OnInit, OnDestroy {
 
         // Upload to storage
         const filePath = `disputes/${disputeId}/${Date.now()}_${file.name}`;
-        const { error: uploadError } = await supabase.storage
-          .from('documents')
-          .upload(filePath, file);
-
-        if (uploadError) {
-          console.error('Error uploading file:', uploadError);
+        try {
+          await this.storageFacade.upload('documents', filePath, file);
+        } catch (error) {
+          console.error('Error uploading file:', error);
           continue;
         }
 
         // Get public URL
-        const { data: urlData } = supabase.storage.from('documents').getPublicUrl(filePath);
+        const publicUrl = this.storageFacade.getPublicUrl('documents', filePath);
 
         // Add evidence record
         await this.disputesService.addEvidence(
           disputeId,
-          urlData.publicUrl,
+          publicUrl,
           this.evidenceNote() || undefined,
         );
       }

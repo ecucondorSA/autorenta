@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil, interval, firstValueFrom } from 'rxjs';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import {
   FgoStatus,
   SubfundBalance,
@@ -32,7 +32,8 @@ import { FgoStatusV1_1 } from '@core/models/fgo-v1-1.model';
 })
 export class FgoOverviewPage implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  private realtimeChannel: RealtimeChannel | null = null;
+  private realtimeMovementsChannel: RealtimeChannel | null = null;
+  private realtimeMetricsChannel: RealtimeChannel | null = null;
 
   // Estado del FGO
   fgoStatus: FgoStatus | null = null;
@@ -54,7 +55,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
 
   constructor(
     private readonly fgoService: FgoV1_1Service,
-    private readonly supabaseService: SupabaseClientService,
+    private readonly realtimeConnection: RealtimeConnectionService,
   ) {}
 
   ngOnInit(): void {
@@ -76,8 +77,13 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
     this.destroy$.complete();
 
     // Cleanup realtime subscription
-    if (this.realtimeChannel) {
-      this.supabaseService.getClient().removeChannel(this.realtimeChannel);
+    if (this.realtimeMovementsChannel) {
+      this.realtimeConnection.unsubscribe(this.realtimeMovementsChannel.topic);
+      this.realtimeMovementsChannel = null;
+    }
+    if (this.realtimeMetricsChannel) {
+      this.realtimeConnection.unsubscribe(this.realtimeMetricsChannel.topic);
+      this.realtimeMetricsChannel = null;
     }
   }
 
@@ -85,42 +91,33 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
    * Configura suscripción a cambios en tiempo real
    */
   private setupRealtimeSubscription(): void {
-    const supabase = this.supabaseService.getClient();
+    this.realtimeMovementsChannel = this.realtimeConnection.subscribeWithRetry<
+      Record<string, unknown>
+    >(
+      'fgo-movements-changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'fgo_movements',
+      },
+      () => {
+        this.refreshData();
+      },
+    );
 
-    // Suscribirse a cambios en fgo_movements
-    this.realtimeChannel = supabase
-      .channel('fgo-movements-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*', // INSERT, UPDATE, DELETE
-          schema: 'public',
-          table: 'fgo_movements',
-        },
-        (_payload) => {
-          // Recargar todos los datos cuando hay un cambio
-          this.refreshData();
-        },
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'fgo_metrics',
-        },
-        (_payload) => {
-          // Recargar estado cuando cambian las métricas
-          this.loadFgoStatus();
-        },
-      )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          // Placeholder for any logic to run on successful subscription
-        } else if (status === 'CHANNEL_ERROR') {
-          // Placeholder for handling channel errors, e.g., by logging
-        }
-      });
+    this.realtimeMetricsChannel = this.realtimeConnection.subscribeWithRetry<
+      Record<string, unknown>
+    >(
+      'fgo-metrics-changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'fgo_metrics',
+      },
+      () => {
+        this.loadFgoStatus();
+      },
+    );
   }
 
   /**

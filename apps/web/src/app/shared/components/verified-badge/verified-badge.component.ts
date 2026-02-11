@@ -7,12 +7,24 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 import { IdentityLevelService } from '@core/services/verification/identity-level.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 type BadgeSize = 'xs' | 'sm' | 'md' | 'lg';
 type BadgeVariant = 'default' | 'minimal' | 'detailed';
+
+interface OwnerCarIdRow {
+  id: string;
+}
+
+interface VehicleDocumentStatusRow {
+  green_card_verified_at: string | null;
+  vtv_verified_at: string | null;
+  vtv_expiry: string | null;
+  insurance_verified_at: string | null;
+  insurance_expiry: string | null;
+}
 
 /**
  * Verified Badge Component
@@ -161,7 +173,8 @@ type BadgeVariant = 'default' | 'minimal' | 'detailed';
 })
 export class VerifiedBadgeComponent implements OnInit {
   private readonly identityLevelService = inject(IdentityLevelService);
-  private readonly supabase = injectSupabase();
+  private readonly sessionFacade = inject(SessionFacadeService);
+  private readonly featureDataFacade = inject(FeatureDataFacadeService);
 
   /** Override level (optional - defaults to current user's level) */
   @Input() level?: number;
@@ -407,20 +420,16 @@ export class VerifiedBadgeComponent implements OnInit {
       // Get user ID
       let targetUserId = this.userId;
       if (!targetUserId) {
-        const {
-          data: { user },
-        } = await this.supabase.auth.getUser();
-        if (!user) return;
-        targetUserId = user.id;
+        const currentUserId = await this.sessionFacade.getCurrentUserId();
+        if (!currentUserId) return;
+        targetUserId = currentUserId;
       }
 
       // Get user's cars
-      const { data: cars, error: carsError } = await this.supabase
-        .from('cars')
-        .select('id')
-        .eq('owner_id', targetUserId);
-
-      if (carsError || !cars?.length) {
+      const cars = (await this.featureDataFacade.listOwnerCarsForDocuments(
+        targetUserId,
+      )) as unknown as OwnerCarIdRow[];
+      if (!cars.length) {
         this._isLocadorSenior.set(false);
         this._verifiedCarsCount.set(0);
         return;
@@ -428,14 +437,10 @@ export class VerifiedBadgeComponent implements OnInit {
 
       // Get vehicle documents for all cars
       const carIds = cars.map((c) => c.id);
-      const { data: docs, error: docsError } = await this.supabase
-        .from('vehicle_documents')
-        .select(
-          'vehicle_id, green_card_verified_at, vtv_verified_at, vtv_expiry, insurance_verified_at, insurance_expiry',
-        )
-        .in('vehicle_id', carIds);
-
-      if (docsError || !docs?.length) {
+      const docs = (await this.featureDataFacade.listVehicleDocumentsByCarIds(
+        carIds,
+      )) as unknown as VehicleDocumentStatusRow[];
+      if (!docs.length) {
         this._isLocadorSenior.set(false);
         this._verifiedCarsCount.set(0);
         return;

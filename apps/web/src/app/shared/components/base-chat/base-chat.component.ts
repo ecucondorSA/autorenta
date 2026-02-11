@@ -18,12 +18,11 @@ import {
 import { FormsModule } from '@angular/forms';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { AuthService } from '@core/services/auth/auth.service';
+import { StorageFacadeService } from '@core/services/facades/storage-facade.service';
 import { GeminiService } from '@core/services/ai/gemini.service';
 import { Message, MessagesService } from '@core/services/bookings/messages.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { NotificationSoundService } from '@core/services/infrastructure/notification-sound.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { ToastService } from '@core/services/ui/toast.service';
 import type { AiBookingContext, ChatSuggestion } from '../../../core/models';
 
@@ -926,7 +925,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
   // Services
   protected readonly messagesService = inject(MessagesService);
   protected readonly authService = inject(AuthService);
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly storageFacade = inject(StorageFacadeService);
   private readonly logger = inject(LoggerService).createChildLogger('BaseChatComponent');
   protected readonly notificationSound = inject(NotificationSoundService);
   protected readonly toastService = inject(ToastService);
@@ -1022,7 +1021,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
     this.messagesService.unsubscribe();
     // Use removeChannel (not just unsubscribe) to fully clean up WebSocket resources
     if (this.typingChannel) {
-      this.supabase.removeChannel(this.typingChannel);
+      this.messagesService.unsubscribeTypingChannel(this.typingChannel);
       this.typingChannel = undefined;
     }
     this.presenceUnsubscribe?.();
@@ -1371,18 +1370,13 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
       this.logger.debug('Subiendo archivo', { fileName, bucket });
       this.toastService.info('Subiendo archivo', file.name);
 
-      const { error } = await this.supabase.storage.from(bucket).upload(filePath, file, {
+      await this.storageFacade.upload(bucket, filePath, file, {
         cacheControl: '3600',
         upsert: false,
         contentType: file.type,
       });
 
-      if (error) {
-        throw new Error(error.message || 'Error al subir archivo');
-      }
-
-      const { data: urlData } = this.supabase.storage.from(bucket).getPublicUrl(filePath);
-      const publicUrl = urlData.publicUrl;
+      const publicUrl = this.storageFacade.getPublicUrl(bucket, filePath);
 
       const messageBody = `Archivo: ${file.name}\n${publicUrl}`;
       await this.messagesService.sendMessage({

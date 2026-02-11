@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 
 interface InsuranceCarRow {
   id: string;
@@ -22,7 +23,8 @@ interface InsuranceCarRow {
   styleUrls: ['./insurance.page.css'],
 })
 export class InsurancePage implements OnInit {
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly sessionFacade = inject(SessionFacadeService);
+  private readonly featureData = inject(FeatureDataFacadeService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -37,22 +39,13 @@ export class InsurancePage implements OnInit {
     this.error.set(null);
 
     try {
-      const user = await this.supabase.auth.getUser();
-      if (!user.data.user) {
+      const user = await this.sessionFacade.getCurrentUser();
+      if (!user) {
         throw new Error('Usuario no autenticado');
       }
 
-      const { data, error: carsError } = await this.supabase
-        .from('cars')
-        .select('id, brand, model, year, status, insurance_policy_number, insurance_expires_at')
-        .eq('owner_id', user.data.user.id)
-        .order('created_at', { ascending: false });
-
-      if (carsError) {
-        throw carsError;
-      }
-
-      this.cars.set(data || []);
+      const data = await this.featureData.getInsuranceCarsByOwner(user.id);
+      this.cars.set((data as unknown as InsuranceCarRow[]) || []);
     } catch (err) {
       this.error.set('No pudimos cargar los autos. Intentá de nuevo.');
       console.error('Error loading cars:', err);

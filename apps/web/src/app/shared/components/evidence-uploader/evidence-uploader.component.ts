@@ -9,10 +9,9 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 import { FileUploadService } from '@core/services/infrastructure/file-upload.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 type UploadedEvidence = {
   name: string;
@@ -64,7 +63,7 @@ export class EvidenceUploaderComponent {
 
   private readonly fileUploadService = inject(FileUploadService);
   private readonly logger = inject(LoggerService);
-  private readonly supabaseService = inject(SupabaseClientService);
+  private readonly sessionFacade = inject(SessionFacadeService);
 
   readonly uploading = signal(false);
   readonly error = signal<string | null>(null);
@@ -88,9 +87,7 @@ export class EvidenceUploaderComponent {
     this.uploading.set(true);
     try {
       // Get authenticated user
-      const {
-        data: { user },
-      } = await this.supabaseService.getClient().auth.getUser();
+      const user = await this.sessionFacade.getCurrentUser();
       if (!user) throw new Error('Usuario no autenticado');
 
       for (const file of filesToUpload) {

@@ -8,7 +8,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
 
 interface ExchangeRate {
   id: string;
@@ -68,7 +68,7 @@ export class ExchangeRatesPage implements OnInit, OnDestroy {
   });
 
   constructor(
-    private supabase: SupabaseClientService,
+    private adminFacade: AdminFeatureFacadeService,
     private router: Router,
   ) {}
 
@@ -103,19 +103,8 @@ export class ExchangeRatesPage implements OnInit, OnDestroy {
   }
 
   private async loadCurrentRates(): Promise<void> {
-    const { data, error } = await this.supabase
-      .getClient()
-      .from('exchange_rates')
-      .select('*')
-      .eq('is_active', true)
-      .order('pair', { ascending: true });
-
-    if (error) {
-      console.error('Error fetching exchange rates:', error);
-      throw error;
-    }
-
-    this.rates.set((data as ExchangeRate[]) || []);
+    const data = await this.adminFacade.listActiveExchangeRates();
+    this.rates.set((data as unknown as ExchangeRate[]) || []);
   }
 
   private async calculateStats(): Promise<void> {
@@ -158,17 +147,8 @@ export class ExchangeRatesPage implements OnInit, OnDestroy {
     this.selectedPair.set(pair);
 
     try {
-      const { data, error } = await this.supabase
-        .getClient()
-        .from('exchange_rates')
-        .select('*')
-        .eq('pair', pair)
-        .order('created_at', { ascending: false })
-        .limit(24); // Last 24 records
-
-      if (error) throw error;
-
-      this.rateHistory.set((data as ExchangeRate[]) || []);
+      const data = await this.adminFacade.listExchangeRateHistory(pair, 24);
+      this.rateHistory.set((data as unknown as ExchangeRate[]) || []);
     } catch (err) {
       console.error('Error loading rate history:', err);
     }
@@ -262,16 +242,10 @@ export class ExchangeRatesPage implements OnInit, OnDestroy {
     try {
       this.loading.set(true);
 
-      const client = this.supabase.getClient();
-      const { data, error } = await client.functions.invoke('sync-binance-rates', {
+      const result = await this.adminFacade.invokeFunction<{ success: boolean; message?: string }>({
+        name: 'sync-binance-rates',
         body: {},
       });
-
-      if (error) {
-        throw new Error(error.message || 'Error al sincronizar tipos de cambio');
-      }
-
-      const result = data as { success: boolean; message?: string };
 
       if (result.success) {
         alert(`✅ Sincronización exitosa\n\n${result.message}`);

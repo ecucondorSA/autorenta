@@ -11,9 +11,9 @@ import {
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { BookingInspection, InspectionPhoto, InspectionStage } from '@core/models/fgo-v1-1.model';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
+import { StorageFacadeService } from '@core/services/facades/storage-facade.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { FileUploadService } from '@core/services/infrastructure/file-upload.service';
 import {
   validateFiles,
@@ -60,7 +60,8 @@ export class InspectionUploaderComponent implements OnInit {
   @Output() inspectionCancelled = new EventEmitter<void>();
 
   private readonly fgoService = inject(FgoV1_1Service);
-  private readonly supabaseService = inject(SupabaseClientService);
+  private readonly sessionFacade = inject(SessionFacadeService);
+  private readonly storageFacade = inject(StorageFacadeService);
   private readonly fileUploadService = inject(FileUploadService);
 
   // Estado del componente
@@ -170,8 +171,7 @@ export class InspectionUploaderComponent implements OnInit {
    */
   private async uploadPhotoWithCompression(file: File): Promise<InspectionPhoto | null> {
     try {
-      const supabase = this.supabaseService.getClient();
-      const userId = (await supabase.auth.getUser()).data.user?.id;
+      const userId = await this.sessionFacade.getCurrentUserId();
 
       if (!userId) {
         throw new Error('Usuario no autenticado');
@@ -215,8 +215,7 @@ export class InspectionUploaderComponent implements OnInit {
    */
   private async uploadPhoto(file: File): Promise<InspectionPhoto | null> {
     try {
-      const supabase = this.supabaseService.getClient();
-      const userId = (await supabase.auth.getUser()).data.user?.id;
+      const userId = await this.sessionFacade.getCurrentUserId();
 
       if (!userId) {
         throw new Error('Usuario no autenticado');
@@ -229,21 +228,11 @@ export class InspectionUploaderComponent implements OnInit {
       const filePath = `${userId}/inspections/${fileName}`;
 
       // Subir a bucket 'car-images' (reutilizamos el bucket existente)
-      const { error: uploadError } = await supabase.storage
-        .from('car-images')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false,
-        });
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      // Obtener URL pública
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from('car-images').getPublicUrl(filePath);
+      await this.storageFacade.upload('car-images', filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+      const publicUrl = this.storageFacade.getPublicUrl('car-images', filePath);
 
       return {
         url: publicUrl,
@@ -275,12 +264,9 @@ export class InspectionUploaderComponent implements OnInit {
 
     try {
       // 1. Obtener ID del usuario actual (inspector)
-      const supabase = this.supabaseService.getClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = await this.sessionFacade.getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         throw new Error('Usuario no autenticado');
       }
 
@@ -289,7 +275,7 @@ export class InspectionUploaderComponent implements OnInit {
         this.fgoService.createInspection({
           bookingId: this.bookingId,
           stage: this.stage,
-          inspectorId: user.id,
+          inspectorId: userId,
           photos: this.photos(),
           odometer: this.odometer(),
           fuelLevel: this.fuelLevel(),

@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environment';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
 
 interface DepositStats {
   total_deposits: number;
@@ -100,7 +100,7 @@ export class DepositsMonitoringPage implements OnInit, OnDestroy {
   });
 
   constructor(
-    private supabase: SupabaseClientService,
+    private adminFacade: AdminFeatureFacadeService,
     private router: Router,
   ) {}
 
@@ -139,15 +139,8 @@ export class DepositsMonitoringPage implements OnInit, OnDestroy {
   }
 
   private async loadStats(): Promise<void> {
-    const { data, error } = await this.supabase
-      .getClient()
-      .from('wallet_transactions')
-      .select('status, amount, created_at, completed_at')
-      .eq('type', 'deposit');
-
-    if (error) throw error;
-
-    const transactions = data || [];
+    const data = await this.adminFacade.listAllDepositTransactionsForStats();
+    const transactions = ((data as unknown as DatabaseTransactionRow[]) || []);
 
     const stats: DepositStats = {
       total_deposits: transactions.length,
@@ -184,18 +177,12 @@ export class DepositsMonitoringPage implements OnInit, OnDestroy {
   }
 
   private async loadPendingDeposits(): Promise<void> {
-    const { data, error } = await this.supabase
-      .getClient()
-      .from('wallet_transactions')
-      .select('*, profiles!wallet_transactions_user_id_fkey(first_name, last_name)')
-      .eq('type', 'deposit')
-      .eq('status', 'pending')
-      .order('created_at', { ascending: false })
-      .limit(20);
+    const data = await this.adminFacade.listDepositTransactions({
+      status: 'pending',
+      limit: 20,
+    });
 
-    if (error) throw error;
-
-    const deposits: DepositTransaction[] = ((data as DatabaseTransactionRow[]) || []).map((t) => {
+    const deposits: DepositTransaction[] = ((data as unknown as DatabaseTransactionRow[]) || []).map((t) => {
       const profile = t.profiles;
       return {
         id: t.id,
@@ -218,18 +205,12 @@ export class DepositsMonitoringPage implements OnInit, OnDestroy {
   }
 
   private async loadRecentDeposits(): Promise<void> {
-    const { data, error } = await this.supabase
-      .getClient()
-      .from('wallet_transactions')
-      .select('*, profiles!wallet_transactions_user_id_fkey(first_name, last_name)')
-      .eq('type', 'deposit')
-      .eq('status', 'completed')
-      .order('completed_at', { ascending: false })
-      .limit(20);
+    const data = await this.adminFacade.listDepositTransactions({
+      status: 'completed',
+      limit: 20,
+    });
 
-    if (error) throw error;
-
-    const deposits: DepositTransaction[] = ((data as DatabaseTransactionRow[]) || []).map((t) => {
+    const deposits: DepositTransaction[] = ((data as unknown as DatabaseTransactionRow[]) || []).map((t) => {
       const profile = t.profiles;
       const created = new Date(t.created_at).getTime();
       const completed = t.completed_at ? new Date(t.completed_at).getTime() : null;
@@ -256,18 +237,12 @@ export class DepositsMonitoringPage implements OnInit, OnDestroy {
   }
 
   private async loadFailedDeposits(): Promise<void> {
-    const { data, error } = await this.supabase
-      .getClient()
-      .from('wallet_transactions')
-      .select('*, profiles!wallet_transactions_user_id_fkey(first_name, last_name)')
-      .eq('type', 'deposit')
-      .eq('status', 'failed')
-      .order('updated_at', { ascending: false })
-      .limit(20);
+    const data = await this.adminFacade.listDepositTransactions({
+      status: 'failed',
+      limit: 20,
+    });
 
-    if (error) throw error;
-
-    const deposits: DepositTransaction[] = ((data as DatabaseTransactionRow[]) || []).map((t) => {
+    const deposits: DepositTransaction[] = ((data as unknown as DatabaseTransactionRow[]) || []).map((t) => {
       const profile = t.profiles;
       return {
         id: t.id,
@@ -325,10 +300,7 @@ export class DepositsMonitoringPage implements OnInit, OnDestroy {
       try {
         this.loading.set(true);
 
-        const {
-          data: { session },
-        } = await this.supabase.getClient().auth.getSession();
-        const accessToken = session?.access_token;
+        const accessToken = await this.adminFacade.getSessionAccessToken();
 
         if (!accessToken) {
           alert('Error: No hay sesión activa');

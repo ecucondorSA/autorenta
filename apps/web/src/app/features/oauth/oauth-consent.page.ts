@@ -3,8 +3,7 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 
 interface OAuthClientInfo {
   name: string;
@@ -242,7 +241,7 @@ interface AuthorizationDetails {
 export class OAuthConsentPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly supabaseClient = inject(SupabaseClientService);
+  private readonly sessionFacade = inject(SessionFacadeService);
   private readonly auth = inject(AuthService);
   private readonly logger = inject(LoggerService);
 
@@ -291,32 +290,7 @@ export class OAuthConsentPage implements OnInit {
 
   private async loadAuthorizationDetails(): Promise<void> {
     if (!this.authorizationId) return;
-
-    const client = this.supabaseClient.getClient();
-
-    // Llamar al método de OAuth Server de Supabase
-    const oauth = (
-      client.auth as unknown as {
-        oauth?: {
-          getAuthorizationDetails?: (
-            id: string,
-          ) => Promise<{ data?: AuthorizationDetails; error?: { message?: string } }>;
-        };
-      }
-    ).oauth;
-    if (!oauth?.getAuthorizationDetails) {
-      throw new Error('OAuth get authorization details not available');
-    }
-    const { data, error } = await oauth.getAuthorizationDetails(this.authorizationId);
-
-    if (error) {
-      throw new Error(error.message || 'No se pudo obtener la información de autorización.');
-    }
-
-    if (!data) {
-      throw new Error('La solicitud de autorización no existe o expiró.');
-    }
-
+    const data = await this.sessionFacade.getAuthorizationDetails(this.authorizationId);
     this.authDetails.set(data as AuthorizationDetails);
   }
 
@@ -339,29 +313,11 @@ export class OAuthConsentPage implements OnInit {
     this.processing.set(true);
 
     try {
-      const client = this.supabaseClient.getClient();
-
-      const oauth = (
-        client.auth as unknown as {
-          oauth?: {
-            approveAuthorization?: (
-              id: string,
-            ) => Promise<{ data?: { redirect_to?: string }; error?: { message?: string } }>;
-          };
-        }
-      ).oauth;
-      if (!oauth?.approveAuthorization) {
-        throw new Error('OAuth approve authorization not available');
-      }
-      const { data, error } = await oauth.approveAuthorization(this.authorizationId);
-
-      if (error) {
-        throw new Error(error.message || 'Error al aprobar la autorización.');
-      }
+      const redirectTo = await this.sessionFacade.approveAuthorization(this.authorizationId);
 
       // Redirigir a la URL proporcionada por Supabase
-      if (data?.redirect_to) {
-        window.location.href = data.redirect_to;
+      if (redirectTo) {
+        window.location.href = redirectTo;
       } else {
         throw new Error('No se recibió URL de redirección.');
       }
@@ -378,29 +334,11 @@ export class OAuthConsentPage implements OnInit {
     this.processing.set(true);
 
     try {
-      const client = this.supabaseClient.getClient();
-
-      const oauth = (
-        client.auth as unknown as {
-          oauth?: {
-            denyAuthorization?: (
-              id: string,
-            ) => Promise<{ data?: { redirect_to?: string }; error?: { message?: string } }>;
-          };
-        }
-      ).oauth;
-      if (!oauth?.denyAuthorization) {
-        throw new Error('OAuth deny authorization not available');
-      }
-      const { data, error } = await oauth.denyAuthorization(this.authorizationId);
-
-      if (error) {
-        throw new Error(error.message || 'Error al denegar la autorización.');
-      }
+      const redirectTo = await this.sessionFacade.denyAuthorization(this.authorizationId);
 
       // Redirigir a la URL proporcionada por Supabase
-      if (data?.redirect_to) {
-        window.location.href = data.redirect_to;
+      if (redirectTo) {
+        window.location.href = redirectTo;
       } else {
         // Si no hay redirect_to, volver al inicio
         await this.router.navigate(['/']);

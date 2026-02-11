@@ -1,7 +1,14 @@
-import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
 import { IconComponent } from '../icon/icon.component';
 
 interface RenterAnalysis {
@@ -765,7 +772,7 @@ interface RenterAnalysis {
   ],
 })
 export class RenterAnalysisPanelComponent {
-  private readonly supabase = injectSupabase();
+  private readonly featureDataFacade = inject(FeatureDataFacadeService);
 
   // Inputs
   readonly renterId = input.required<string>();
@@ -799,17 +806,16 @@ export class RenterAnalysisPanelComponent {
     this.error.set(null);
 
     try {
-      const { data, error } = await this.supabase.rpc('get_renter_analysis', {
-        p_renter_id: this.renterId(),
-        p_booking_id: this.bookingId() || null,
+      const data = await this.featureDataFacade.getRenterAnalysis({
+        renterId: this.renterId(),
+        bookingId: this.bookingId() || null,
       });
+      const analysisData = data as (RenterAnalysis & { error?: string }) | null;
 
-      if (error) throw error;
-
-      if (data?.error) {
-        this.error.set(data.error);
+      if (analysisData?.error) {
+        this.error.set(String(analysisData.error));
       } else {
-        this.analysis.set(data as RenterAnalysis);
+        this.analysis.set((analysisData as unknown as RenterAnalysis | null) ?? null);
       }
     } catch (err) {
       this.error.set('Error al cargar el analisis del locatario');

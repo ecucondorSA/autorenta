@@ -16,9 +16,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { BookingInspection, InspectionPhoto, InspectionStage } from '@core/models/fgo-v1-1.model';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {
   GeminiLiveService,
@@ -66,7 +65,7 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
 
   protected readonly geminiLive = inject(GeminiLiveService);
   private readonly fgoService = inject(FgoV1_1Service);
-  private readonly supabaseService = inject(SupabaseClientService);
+  private readonly sessionFacade = inject(SessionFacadeService);
   private readonly logger = inject(LoggerService);
 
   private mediaStream: MediaStream | null = null;
@@ -393,12 +392,9 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
     this.error.set(null);
 
     try {
-      const supabase = this.supabaseService.getClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = await this.sessionFacade.getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         throw new Error('Usuario no autenticado');
       }
 
@@ -421,7 +417,7 @@ export class VideoInspectionLiveComponent implements OnInit, OnDestroy {
         this.fgoService.createInspection({
           bookingId: this.bookingId,
           stage: this.stage,
-          inspectorId: user.id,
+          inspectorId: userId,
           photos,
           odometer: this.editableOdometer(),
           fuelLevel: this.editableFuelLevel(),

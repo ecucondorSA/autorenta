@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
 import { Claim, SettlementService } from '@core/services/payments/settlement.service';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * Admin Settlements Page
@@ -23,7 +23,7 @@ import { SupabaseClientService } from '@core/services/infrastructure/supabase-cl
 })
 export class AdminSettlementsPage implements OnInit {
   private readonly settlementService = inject(SettlementService);
-  private readonly supabase = inject(SupabaseClientService);
+  private readonly adminFacade = inject(AdminFeatureFacadeService);
 
   // State
   readonly loading = signal(false);
@@ -90,13 +90,12 @@ export class AdminSettlementsPage implements OnInit {
 
   private async generateMockClaims(): Promise<Claim[]> {
     // Get some recent bookings to attach claims to
-    const { data: bookings } = await this.supabase
-      .getClient()
-      .from('bookings')
-      .select('id, car_id, renter_id, owner_id')
-      .eq('status', 'completed')
-      .limit(10)
-      .order('created_at', { ascending: false });
+    const bookings = (await this.adminFacade.listCompletedBookings(10)) as Array<{
+      id: string;
+      car_id: string;
+      renter_id: string;
+      owner_id: string;
+    }>;
 
     if (!bookings || bookings.length === 0) {
       return [];

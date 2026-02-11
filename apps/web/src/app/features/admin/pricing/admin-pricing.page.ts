@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, OnInit, signal, inject } from '@ang
 
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
 import { PricingService } from '@core/services/payments/pricing.service';
 import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 interface PricingRule {
   id: string;
@@ -33,7 +33,7 @@ interface DeliveryPricingConfig {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminPricingPage implements OnInit {
-  private readonly supabase = injectSupabase();
+  private readonly adminFacade = inject(AdminFeatureFacadeService);
   private readonly pricingService = inject(PricingService);
   private readonly dynamicPricingService = inject(DynamicPricingService);
 
@@ -69,24 +69,13 @@ export class AdminPricingPage implements OnInit {
       this.error.set(null);
 
       // Load pricing rules
-      const { data: rules, error: rulesError } = await this.supabase
-        .from('pricing_rules')
-        .select('*')
-        .order('priority', { ascending: true });
-
-      if (rulesError) throw rulesError;
-
-      this.pricingRules.set(rules || []);
+      const rules = await this.adminFacade.listPricingRules();
+      this.pricingRules.set((rules as unknown as PricingRule[]) || []);
 
       // Load delivery config (from config table or defaults)
-      const { data: config, error: configError } = await this.supabase
-        .from('app_config')
-        .select('config_value')
-        .eq('config_key', 'delivery_pricing')
-        .single();
-
-      if (!configError && config) {
-        this.deliveryConfig.set(JSON.parse(config.config_value));
+      const configValue = await this.adminFacade.getAppConfig('delivery_pricing');
+      if (configValue) {
+        this.deliveryConfig.set(JSON.parse(configValue));
       }
     } catch (err) {
       console.error('Error loading pricing data:', err);
@@ -110,7 +99,7 @@ export class AdminPricingPage implements OnInit {
         return;
       }
 
-      const { error } = await this.supabase.from('pricing_rules').insert({
+      await this.adminFacade.createPricingRule({
         name: rule.name,
         rule_type: rule.rule_type,
         value: rule.value,
@@ -118,8 +107,6 @@ export class AdminPricingPage implements OnInit {
         priority: rule.priority,
         conditions: {},
       });
-
-      if (error) throw error;
 
       this.successMessage.set('Regla creada exitosamente');
       this.newRule.set({
@@ -141,12 +128,7 @@ export class AdminPricingPage implements OnInit {
 
   protected async toggleRule(ruleId: string, isActive: boolean): Promise<void> {
     try {
-      const { error } = await this.supabase
-        .from('pricing_rules')
-        .update({ is_active: !isActive })
-        .eq('id', ruleId);
-
-      if (error) throw error;
+      await this.adminFacade.updatePricingRule(ruleId, { is_active: !isActive });
 
       await this.loadPricingData();
       this.successMessage.set('Regla actualizada');
@@ -160,9 +142,7 @@ export class AdminPricingPage implements OnInit {
     if (!confirm('¿Estás seguro de eliminar esta regla?')) return;
 
     try {
-      const { error } = await this.supabase.from('pricing_rules').delete().eq('id', ruleId);
-
-      if (error) throw error;
+      await this.adminFacade.deletePricingRule(ruleId);
 
       await this.loadPricingData();
       this.successMessage.set('Regla eliminada');
@@ -178,15 +158,10 @@ export class AdminPricingPage implements OnInit {
       this.error.set(null);
       this.successMessage.set(null);
 
-      const { error } = await this.supabase
-        .from('app_config')
-        .upsert({
-          config_key: 'delivery_pricing',
-          config_value: JSON.stringify(this.deliveryConfig()),
-        })
-        .eq('config_key', 'delivery_pricing');
-
-      if (error) throw error;
+      await this.adminFacade.upsertAppConfig(
+        'delivery_pricing',
+        JSON.stringify(this.deliveryConfig()),
+      );
 
       this.successMessage.set('Configuración de delivery guardada');
     } catch (err) {

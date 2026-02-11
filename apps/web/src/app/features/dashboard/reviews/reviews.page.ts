@@ -1,8 +1,9 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import type { Review } from '@core/models';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { PendingReviewsListComponent } from '../../../shared/components/pending-reviews-list/pending-reviews-list.component';
 import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
 
@@ -16,7 +17,8 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
 })
 export class ReviewsPage implements OnInit {
   private readonly reviewsService = inject(ReviewsService);
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly sessionFacade = inject(SessionFacadeService);
+  private readonly featureData = inject(FeatureDataFacadeService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -42,20 +44,11 @@ export class ReviewsPage implements OnInit {
 
   async loadUserData(): Promise<void> {
     try {
-      const user = await this.supabase.auth.getUser();
-      if (user.data.user) {
-        this.userId.set(user.data.user.id);
-
-        // Get user profile to determine role
-        const { data: profile } = await this.supabase
-          .from('profiles')
-          .select('user_role')
-          .eq('id', user.data.user.id)
-          .single();
-
-        if (profile) {
-          this.userRole.set(profile.user_role as 'owner' | 'renter' | 'both');
-        }
+      const user = await this.sessionFacade.getCurrentUser();
+      if (user) {
+        this.userId.set(user.id);
+        const role = await this.featureData.getUserRole(user.id);
+        this.userRole.set(role);
       }
     } catch (err) {
       console.error('Error loading user data:', err);

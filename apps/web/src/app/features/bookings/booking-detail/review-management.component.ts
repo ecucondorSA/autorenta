@@ -12,9 +12,8 @@ import {
 
 import { ReviewsService } from '@core/services/cars/reviews.service';
 import { AuthService } from '@core/services/auth/auth.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
 import { ReviewFormComponent } from '../../../shared/components/review-form/review-form.component';
 import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
@@ -103,7 +102,7 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
 
   private readonly reviewsService = inject(ReviewsService);
   private readonly authService = inject(AuthService);
-  private readonly supabase = injectSupabase();
+  private readonly featureData = inject(FeatureDataFacadeService);
   private readonly logger = inject(LoggerService).createChildLogger('ReviewManagement');
 
   private dataLoaded = false;
@@ -180,23 +179,17 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
       const currentUser = this.authService.session$()?.user;
       if (!currentUser) return;
 
-      const { data: car } = await this.supabase
-        .from('cars')
-        .select('id, owner_id')
-        .eq('id', this.booking.car_id)
-        .single();
+      const car = await this.featureData.getCarOwner(this.booking.car_id);
 
       if (!car) return;
 
-      const { data: review } = await this.supabase
-        .from('reviews')
-        .select('*')
-        .eq('booking_id', this.booking.id)
-        .eq('reviewer_id', currentUser.id)
-        .maybeSingle();
+      const review = await this.featureData.getReviewByBookingAndReviewer({
+        bookingId: this.booking.id,
+        reviewerId: currentUser.id,
+      });
 
       if (review) {
-        this.existingReview.set(review as Review);
+        this.existingReview.set(review as unknown as Review);
         this.canReview.set(false);
       }
     } catch {
@@ -248,16 +241,7 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
         return;
       }
 
-      const { data: car, error: carError } = await this.supabase
-        .from('cars')
-        .select('id, title, owner_id')
-        .eq('id', this.booking.car_id)
-        .single();
-
-      if (carError) {
-        this.logger.error('Car query error', carError);
-        return;
-      }
+      const car = await this.featureData.getCarReviewInfo(this.booking.car_id);
 
       if (!car) {
         this.logger.error('Car not found');
@@ -289,33 +273,14 @@ export class ReviewManagementComponent implements OnInit, OnChanges {
       if (isRenter) {
         // Renter reviews the owner
         revieweeId = car.owner_id;
-        const { data: ownerProfile } = await this.supabase
-          .from('profiles')
-          .select('full_name')
-          .eq('id', car.owner_id)
-          .single();
-        revieweeName = ownerProfile?.full_name || 'Propietario';
+        const ownerName = await this.featureData.getProfileNameById(car.owner_id);
+        revieweeName = ownerName || 'Propietario';
         reviewType = 'renter_to_owner';
       } else {
         // Owner reviews the renter
-        const { data: renter, error: renterError } = await this.supabase
-          .from('profiles')
-          .select('id, full_name')
-          .eq('id', this.booking.renter_id)
-          .single();
-
-        if (renterError) {
-          this.logger.error('Renter profile query error', renterError);
-          return;
-        }
-
-        if (!renter) {
-          this.logger.error('Renter profile not found');
-          return;
-        }
-
-        revieweeId = renter.id;
-        revieweeName = renter.full_name || 'Arrendatario';
+        const renterName = await this.featureData.getProfileNameById(this.booking.renter_id);
+        revieweeId = this.booking.renter_id;
+        revieweeName = renterName || 'Arrendatario';
         reviewType = 'owner_to_renter';
       }
 

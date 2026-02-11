@@ -22,7 +22,8 @@ import {
   IonToolbar,
   IonCheckbox,
 } from '@ionic/angular/standalone';
-import { injectSupabase } from '../../../core/services/infrastructure/supabase-client.service';
+import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 import { ToastService } from '../../../core/services/ui/toast.service';
 import { environment } from '../../../../environments/environment';
 
@@ -313,7 +314,8 @@ interface CampaignSchedule {
 })
 export class SocialCampaignsPage implements OnInit {
   private readonly fb = inject(FormBuilder);
-  private readonly supabase = injectSupabase();
+  private readonly adminFacade = inject(AdminFeatureFacadeService);
+  private readonly sessionFacade = inject(SessionFacadeService);
   private readonly toastService = inject(ToastService);
 
   campaignForm!: FormGroup;
@@ -345,18 +347,18 @@ export class SocialCampaignsPage implements OnInit {
   private async loadCampaigns(): Promise<void> {
     try {
       // Cargar campañas próximas
-      const { data: upcoming } = (await this.supabase
-        .from('upcoming_scheduled_campaigns')
-        .select('*')) as { data: CampaignSchedule[] | null };
+      const upcoming = (await this.adminFacade.listUpcomingCampaigns()) as unknown as
+        | CampaignSchedule[]
+        | null;
 
       if (upcoming) {
         this.upcomingCampaigns.set(upcoming);
       }
 
       // Cargar campañas recientes
-      const { data: recent } = (await this.supabase
-        .from('recently_published_campaigns')
-        .select('*')) as { data: CampaignSchedule[] | null };
+      const recent = (await this.adminFacade.listRecentlyPublishedCampaigns()) as unknown as
+        | CampaignSchedule[]
+        | null;
 
       if (recent) {
         this.recentlyPublished.set(recent);
@@ -382,7 +384,7 @@ export class SocialCampaignsPage implements OnInit {
         this.campaignForm.get('tiktok')?.value && 'tiktok',
       ].filter(Boolean);
 
-      const { error } = await this.supabase.from('campaign_schedules').insert({
+      await this.adminFacade.createCampaignSchedule({
         name: this.campaignForm.get('title')?.value,
         title: this.campaignForm.get('title')?.value,
         description_content: this.campaignForm.get('description')?.value,
@@ -393,8 +395,6 @@ export class SocialCampaignsPage implements OnInit {
         scheduled_for: this.campaignForm.get('scheduledFor')?.value,
         status: 'scheduled',
       });
-
-      if (error) throw error;
 
       this.toastService.success('Éxito', 'Campaña programada exitosamente');
       this.campaignForm.reset();
@@ -412,11 +412,9 @@ export class SocialCampaignsPage implements OnInit {
 
   async publishNow(campaignId: string): Promise<void> {
     try {
-      const { data: campaign } = (await this.supabase
-        .from('campaign_schedules')
-        .select('*')
-        .eq('id', campaignId)
-        .single()) as { data: CampaignSchedule };
+      const campaign = (await this.adminFacade.getCampaignScheduleById(campaignId)) as
+        | CampaignSchedule
+        | null;
 
       if (!campaign) {
         this.toastService.error('Error', 'Campaña no encontrada');
@@ -424,14 +422,14 @@ export class SocialCampaignsPage implements OnInit {
       }
 
       // Llamar a Edge Function
-      const { data: sessionData } = await this.supabase.auth.getSession();
+      const accessToken = await this.sessionFacade.getSessionAccessToken();
       const response = await fetch(
         `${environment.supabaseUrl}/functions/v1/social-media-publisher`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${sessionData?.session?.access_token ?? ''}`,
+            Authorization: `Bearer ${accessToken ?? ''}`,
           },
           body: JSON.stringify({
             campaignId,
@@ -460,12 +458,7 @@ export class SocialCampaignsPage implements OnInit {
 
   async deleteCampaign(campaignId: string): Promise<void> {
     try {
-      const { error } = await this.supabase
-        .from('campaign_schedules')
-        .update({ status: 'cancelled' })
-        .eq('id', campaignId);
-
-      if (error) throw error;
+      await this.adminFacade.updateCampaignSchedule(campaignId, { status: 'cancelled' });
 
       this.toastService.success('Éxito', 'Campaña cancelada');
       await this.loadCampaigns();

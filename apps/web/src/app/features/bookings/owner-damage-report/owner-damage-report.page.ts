@@ -11,9 +11,9 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { BookingsService } from '@core/services/bookings/bookings.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
+import { StorageFacadeService } from '@core/services/facades/storage-facade.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { IonicModule } from '@ionic/angular';
 import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 import { v4 as uuidv4 } from 'uuid';
@@ -41,8 +41,9 @@ import { formatDate } from '../../../shared/utils/date.utils';
 export class OwnerDamageReportPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);
   private readonly authService = inject(AuthService);
+  private readonly featureData = inject(FeatureDataFacadeService);
+  private readonly storageFacade = inject(StorageFacadeService);
   private readonly toastService = inject(NotificationManagerService);
-  private readonly supabase = injectSupabase();
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -217,15 +218,13 @@ export class OwnerDamageReportPage implements OnInit {
         const filename = `${uuidv4()}.${extension}`;
         const filePath = `${currentUserId}/damage-reports/${booking.id}/${filename}`;
 
-        const { error: uploadError } = await this.supabase.storage
-          .from('documents')
-          .upload(filePath, file, {
+        try {
+          await this.storageFacade.upload('documents', filePath, file, {
             cacheControl: '3600',
             upsert: false,
           });
-
-        if (uploadError) {
-          console.error('Error uploading photo:', uploadError);
+        } catch (error) {
+          console.error('Error uploading photo:', error);
           throw new Error(`Error al subir la foto ${file.name}`);
         }
 
@@ -277,7 +276,7 @@ export class OwnerDamageReportPage implements OnInit {
   private async sendRenterNotification(booking: Booking, damageAmountCents: number) {
     const damageAmountUsd = damageAmountCents / 100;
 
-    await this.supabase.from('notifications').insert({
+    await this.featureData.insertNotification({
       user_id: booking.renter_id,
       type: 'damage_reported',
       title: 'Reporte de daños en tu reserva',

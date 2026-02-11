@@ -2,8 +2,7 @@ import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@ang
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ContractsService, BookingContract } from '@core/services/bookings/contracts.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
 import { formatDate } from '../../shared/utils/date.utils';
 import { ContractPdfViewerComponent } from './components/contract-pdf-viewer.component';
 
@@ -42,7 +41,7 @@ interface Booking {
 export class BookingContractPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly contractsService = inject(ContractsService);
-  private readonly supabase = inject(SupabaseClientService);
+  private readonly featureData = inject(FeatureDataFacadeService);
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -96,15 +95,8 @@ export class BookingContractPage implements OnInit {
 
     try {
       // Load booking
-      const { data: bookingData, error: bookingError } = await this.supabase
-        .getClient()
-        .from('bookings')
-        .select('*')
-        .eq('id', this.bookingId())
-        .single();
-
-      if (bookingError) throw bookingError;
-      this.booking.set(bookingData as Booking);
+      const bookingData = await this.featureData.getBookingById(this.bookingId());
+      this.booking.set(bookingData as unknown as Booking);
 
       // Load contract
       const contract = await this.contractsService.getContractByBooking(this.bookingId());

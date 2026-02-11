@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 interface Accident {
@@ -274,7 +274,7 @@ interface Accident {
   `,
 })
 export class AdminAccidentsPage implements OnInit {
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly adminFacade = inject(AdminFeatureFacadeService);
   private readonly toast = inject(NotificationManagerService);
 
   readonly loading = signal(true);
@@ -318,20 +318,7 @@ export class AdminAccidentsPage implements OnInit {
   async loadAccidents(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase
-        .from('accidents')
-        .select(
-          `
-          *,
-          reporter:profiles!accidents_reporter_id_fkey(full_name),
-          booking:bookings!accidents_booking_id_fkey(
-            car:cars(brand, model, year)
-          )
-        `,
-        )
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
+      const data = await this.adminFacade.listAccidents();
 
       const mapped = (data || []).map(
         (
@@ -410,12 +397,10 @@ ${accident.evidence_urls?.length ? `\nEvidencias: ${accident.evidence_urls.lengt
 
   async updateStatus(accident: Accident, newStatus: string): Promise<void> {
     try {
-      const { error } = await this.supabase
-        .from('accidents')
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
-        .eq('id', accident.id);
-
-      if (error) throw error;
+      await this.adminFacade.updateAccident(accident.id, {
+        status: newStatus,
+        updated_at: new Date().toISOString(),
+      });
 
       this.toast.success(
         'Estado actualizado',
@@ -432,16 +417,11 @@ ${accident.evidence_urls?.length ? `\nEvidencias: ${accident.evidence_urls.lengt
     const notes = prompt('Notas de resolución:') || '';
 
     try {
-      const { error } = await this.supabase
-        .from('accidents')
-        .update({
-          status: 'resolved',
-          resolution_notes: notes,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', accident.id);
-
-      if (error) throw error;
+      await this.adminFacade.updateAccident(accident.id, {
+        status: 'resolved',
+        resolution_notes: notes,
+        updated_at: new Date().toISOString(),
+      });
 
       this.toast.success('Accidente resuelto', 'El accidente ha sido marcado como resuelto');
       await this.loadAccidents();

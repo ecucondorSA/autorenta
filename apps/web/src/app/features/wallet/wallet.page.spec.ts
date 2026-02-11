@@ -10,8 +10,6 @@ import { WithdrawalService } from '@core/services/payments/withdrawal.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { MetaService } from '@core/services/ui/meta.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { testProviders } from '@app/testing/test-providers';
 import { WalletPage } from './wallet.page';
 
@@ -31,7 +29,6 @@ describe('WalletPage', () => {
     pendingDepositsCount: WritableSignal<number>;
     error: WritableSignal<string | null>;
   };
-  let supabaseClientServiceMock: jasmine.SpyObj<SupabaseClientService>;
   let notificationManagerService: jasmine.SpyObj<NotificationManagerService>;
   let withdrawalServiceMock: {
     getBankAccounts: jasmine.Spy;
@@ -80,18 +77,6 @@ describe('WalletPage', () => {
       pendingDepositsCount: signal(0),
       error: signal(null),
     };
-
-    supabaseClientServiceMock = jasmine.createSpyObj('SupabaseClientService', ['getClient'], {
-      isConfigured: true,
-    });
-    supabaseClientServiceMock.getClient.and.returnValue({
-      auth: { getUser: () => Promise.resolve({ data: { user: null }, error: null }) },
-      from: () => ({
-        select: () => ({
-          eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) }),
-        }),
-      }),
-    } as any);
 
     withdrawalServiceMock = {
       getBankAccounts: jasmine.createSpy('getBankAccounts').and.returnValue(Promise.resolve()),
@@ -153,7 +138,6 @@ describe('WalletPage', () => {
         { provide: ProfileService, useValue: profileService },
         { provide: AnalyticsService, useValue: analyticsService },
         { provide: MetaService, useValue: metaService },
-        { provide: SupabaseClientService, useValue: supabaseClientServiceMock },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })

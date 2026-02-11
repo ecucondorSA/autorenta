@@ -16,8 +16,8 @@ import {
   LockType,
 } from '@core/services/infrastructure/advisory-lock.service';
 import { CircuitBreakerService } from '@core/services/infrastructure/circuit-breaker.service';
+import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
 import { PaymentMetricsService } from '@core/services/payments/payment-metrics.service';
-import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 interface DatabaseLock {
@@ -306,7 +306,7 @@ export class SystemMonitoringPage implements OnInit, OnDestroy {
   private readonly advisoryLockService = inject(AdvisoryLockService);
   private readonly circuitBreakerService = inject(CircuitBreakerService);
   private readonly paymentMetricsService = inject(PaymentMetricsService);
-  private readonly supabaseService = inject(SupabaseClientService);
+  private readonly adminFacade = inject(AdminFeatureFacadeService);
   private readonly logger = inject(LoggerService);
 
   private refreshInterval: ReturnType<typeof setInterval> | null = null;
@@ -433,18 +433,8 @@ export class SystemMonitoringPage implements OnInit, OnDestroy {
 
   private async loadDatabaseLocks(): Promise<void> {
     try {
-      const supabase = this.supabaseService.getClient();
-
-      // Query the advisory locks view
-      const { data, error } = await supabase.from('v_advisory_locks_held').select('*');
-
-      if (error) {
-        this.logger.warn('Failed to load database locks', { error: error.message });
-        this.databaseLocks.set([]);
-        return;
-      }
-
-      this.databaseLocks.set(data || []);
+      const data = await this.adminFacade.listAdvisoryLocksHeld();
+      this.databaseLocks.set((data as unknown as DatabaseLock[]) || []);
     } catch (err) {
       this.logger.error('Exception loading database locks', err);
       this.databaseLocks.set([]);

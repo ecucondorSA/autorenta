@@ -1,11 +1,9 @@
 import { Injectable, OnDestroy, computed, inject, signal } from '@angular/core';
-import type {
-  RealtimeChannel,
-  RealtimePostgresChangesPayload,
-  SupabaseClient,
-} from '@supabase/supabase-js';
+import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import type { VerificationProgress } from '@core/services/verification/identity-level.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { AuthService } from '@core/services/auth/auth.service';
 
 type VerificationStatusRow = {
@@ -28,8 +26,10 @@ type VerificationStatusRow = {
   providedIn: 'root',
 })
 export class VerificationStateService implements OnDestroy {
-  private readonly supabase: SupabaseClient = injectSupabase();
+  private readonly supabase = injectSupabase();
   private readonly authService = inject(AuthService);
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
+  private readonly logger = inject(LoggerService).createChildLogger('VerificationStateService');
 
   // Reactive state
   readonly verificationProgress = signal<VerificationProgress | null>(null);
@@ -57,7 +57,7 @@ export class VerificationStateService implements OnDestroy {
     () => this.verificationProgress()?.requirements?.level_3?.completed ?? false,
   );
 
-  private realtimeChannel?: RealtimeChannel;
+  private realtimeChannelName: string | null = null;
   private lastFetchTime = 0;
   private readonly CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes
   private refreshDebounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -126,55 +126,53 @@ export class VerificationStateService implements OnDestroy {
   }
 
   /**
-   * Subscribe to user_identity_levels changes via Realtime
+   * Subscribe to user_identity_levels changes via RealtimeConnectionService
+   *
+   * TODO(human): Implement the onStatusChange callback logic below.
    */
   private subscribeToChanges(userId: string): void {
     // Unsubscribe from previous channel if exists
     this.unsubscribe();
 
-    // Create new channel
-    this.realtimeChannel = this.supabase
-      .channel(`verification_state:${userId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'user_identity_levels',
-          filter: `user_id=eq.${userId}`,
-        },
-        (payload: RealtimePostgresChangesPayload<VerificationStatusRow>) => {
-          // Debounce refresh to avoid multiple RPCs when admin updates rapidly
-          if (this.refreshDebounceTimer) {
-            clearTimeout(this.refreshDebounceTimer);
-          }
-          this.refreshDebounceTimer = setTimeout(async () => {
-            this.refreshDebounceTimer = null;
-            await this.refreshProgress(true);
-          }, 500);
+    this.realtimeChannelName = `verification_state:${userId}`;
 
-          // Emit event for notifications immediately
-          this.emitVerificationEvent(payload);
-        },
-      )
-      .subscribe((status) => {
-        if (status === 'CHANNEL_ERROR') {
-          this.error.set('Error en sincronización en tiempo real');
+    this.realtimeConnection.subscribeWithRetry<VerificationStatusRow>(
+      this.realtimeChannelName,
+      {
+        event: '*',
+        schema: 'public',
+        table: 'user_identity_levels',
+        filter: `user_id=eq.${userId}`,
+      },
+      (payload) => {
+        // Debounce refresh to avoid multiple RPCs when admin updates rapidly
+        if (this.refreshDebounceTimer) {
+          clearTimeout(this.refreshDebounceTimer);
         }
-      });
+        this.refreshDebounceTimer = setTimeout(async () => {
+          this.refreshDebounceTimer = null;
+          await this.refreshProgress(true);
+        }, 500);
+
+        // Emit event for notifications immediately
+        this.emitVerificationEvent(payload);
+      },
+      // TODO(human): implement onStatusChange callback
+      undefined,
+    );
   }
 
   /**
-   * Unsubscribe from Realtime channel
+   * Unsubscribe from Realtime channel via RCS
    */
   unsubscribe(): void {
     if (this.refreshDebounceTimer) {
       clearTimeout(this.refreshDebounceTimer);
       this.refreshDebounceTimer = null;
     }
-    if (this.realtimeChannel) {
-      this.supabase.removeChannel(this.realtimeChannel);
-      this.realtimeChannel = undefined;
+    if (this.realtimeChannelName) {
+      this.realtimeConnection.unsubscribe(this.realtimeChannelName);
+      this.realtimeChannelName = null;
     }
   }
 

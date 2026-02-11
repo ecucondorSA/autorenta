@@ -14,8 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@core/services/auth/auth.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
-// eslint-disable-next-line no-restricted-imports -- TODO: migrate to service facade
-import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 import { MobileBottomNavPortalService } from '@core/services/ui/mobile-bottom-nav-portal.service';
 import { environment } from '@environment';
 
@@ -34,7 +33,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly analytics = inject(AnalyticsService);
   private readonly tiktokEvents = inject(TikTokEventsService);
-  private readonly supabase = injectSupabase();
+  private readonly sessionFacade = inject(SessionFacadeService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -115,13 +114,11 @@ export class RegisterPage implements OnInit, OnDestroy {
 
     try {
       const redirectTo = this.isBrowser ? `${window.location.origin}/explore` : undefined;
-      const { error } = await this.supabase.auth.signInWithOtp({
+      const { error } = await this.sessionFacade.signInWithOtp({
         email,
-        options: {
-          emailRedirectTo: redirectTo,
-          data: {
-            full_name: this.form.controls.fullName.value || email.split('@')[0],
-          },
+        emailRedirectTo: redirectTo,
+        data: {
+          full_name: this.form.controls.fullName.value || email.split('@')[0],
         },
       });
 

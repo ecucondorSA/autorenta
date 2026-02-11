@@ -412,6 +412,15 @@ export class MessagesService implements OnDestroy {
     return channel;
   }
 
+  unsubscribeTypingChannel(channel: RealtimeChannel): void {
+    for (const [channelName, activeChannel] of this.typingChannels.entries()) {
+      if (activeChannel === channel) {
+        this.typingChannels.delete(channelName);
+      }
+    }
+    this.supabase.removeChannel(channel);
+  }
+
   /**
    * Sync offline messages when connection is restored
    */
