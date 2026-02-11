@@ -1,3 +1,10 @@
+## 3.81.0 (2026-02-11)
+
+* fix(map-filters): update template to use priceStep computed signal ([016c772](https://github.com/ecucondorSA/autorenta/commit/016c772))
+* perf: remove unused CommonModule imports, cache Intl.NumberFormat in map-filters ([441f411](https://github.com/ecucondorSA/autorenta/commit/441f411))
+* feat(profile): upgrade UI to glass design system with SVG trust gauge ([a998f3b](https://github.com/ecucondorSA/autorenta/commit/a998f3b))
+* chore: remove 14 dead code files (0 importers verified) ([a07bb2a](https://github.com/ecucondorSA/autorenta/commit/a07bb2a))
+
 ## <small>3.80.19 (2026-02-11)</small>
 
 * perf: cache Intl.NumberFormat in wallet balance card + remove dead code ([f970523](https://github.com/ecucondorSA/autorenta/commit/f970523))
