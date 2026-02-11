@@ -1,4 +1,4 @@
-import { Component, Input, output, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DisputesService } from '@core/services/admin/disputes.service';
@@ -6,6 +6,7 @@ import { DisputesService } from '@core/services/admin/disputes.service';
 @Component({
   selector: 'app-dispute-resolution-form',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
     <div class="bg-surface-raised border border-border-default rounded-2xl p-6 shadow-sm">

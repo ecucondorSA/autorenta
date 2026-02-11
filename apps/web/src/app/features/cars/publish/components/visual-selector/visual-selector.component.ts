@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, forwardRef, signal, Pipe, PipeTransform, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, forwardRef, signal, Pipe, PipeTransform, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -24,6 +24,7 @@ export interface VisualOption<T = unknown> {
 @Component({
   selector: 'app-visual-selector',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, SafeHtmlPipe],
   providers: [
     {

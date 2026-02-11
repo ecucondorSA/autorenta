@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 
 interface ParticipationPeriodData {
@@ -18,6 +18,7 @@ interface FgoStatusData {
 @Component({
   selector: 'app-network-participation-widget',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MoneyPipe],
   template: `
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
