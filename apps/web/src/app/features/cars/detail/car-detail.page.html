@@ -367,18 +367,13 @@
             <h3 class="font-black text-sm uppercase tracking-widest text-text-muted mb-4">
               Sobre este vehículo
             </h3>
-            <p class="text-text-primary leading-relaxed text-base sm:text-lg">
-              Este {{ car()?.brand }} {{ car()?.model }} {{ car()?.year }} se encuentra en
-              excelentes condiciones, ideal para
-              {{
-                car()?.fuel_type === 'electrico'
-                  ? 'una experiencia silenciosa y sustentable'
-                  : 'tu próximo viaje'
-              }}.
-              {{
-                car()?.description || 'No hay una descripción detallada para este vehículo todavía.'
-              }}
-            </p>
+            @if (car()?.description) {
+              <p class="text-text-primary leading-relaxed text-base sm:text-lg whitespace-pre-line">{{ car()!.description }}</p>
+            } @else {
+              <p class="text-text-secondary leading-relaxed text-base italic">
+                El propietario no agregó una descripción para este vehículo todavía.
+              </p>
+            }
           </div>
 
           <div class="pt-8 border-t border-border-default/50">
@@ -730,6 +725,21 @@
       </div>
     </div>
   </div>
+} @else if (error()) {
+  <div
+    class="max-w-2xl mx-auto mt-12 p-8 bg-error-bg/10 border border-error-border/50 rounded-2xl text-center"
+  >
+    <h3 class="text-lg font-bold text-error-strong">No pudimos encontrar este auto</h3>
+    <p class="text-text-secondary mt-2">
+      {{ error() }}
+    </p>
+    <a
+      routerLink="/cars/list"
+      class="mt-4 inline-block px-6 py-2 bg-surface-raised border border-border-default rounded-lg font-medium hover:bg-surface-base"
+    >
+      Volver al catálogo
+    </a>
+  </div>
 } @else {
   <div class="flex flex-col items-center justify-center py-32 space-y-6">
     <div class="relative">
@@ -742,23 +752,6 @@
     </div>
   </div>
 }
-
-<ng-template #errorTpl>
-  <div
-    class="max-w-2xl mx-auto mt-12 p-8 bg-error-bg/10 border border-error-border/50 rounded-2xl text-center"
-  >
-    <h3 class="text-lg font-bold text-error-strong">No pudimos encontrar este auto</h3>
-    <p class="text-text-secondary mt-2">
-      {{ error() ?? 'El vehículo no existe o fue eliminado.' }}
-    </p>
-    <a
-      routerLink="/cars"
-      class="mt-4 inline-block px-6 py-2 bg-surface-raised border border-border-default rounded-lg font-medium hover:bg-surface-base"
-    >
-      Volver al catálogo
-    </a>
-  </div>
-</ng-template>
 
 <!-- Sticky CTA Mobile -->
 @if (authService.isAuthenticated() && car()) {
