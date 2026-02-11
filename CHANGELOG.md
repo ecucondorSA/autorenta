@@ -1,3 +1,10 @@
+## 3.86.0 (2026-02-11)
+
+* chore: checkpoint current state ([5a20d02](https://github.com/ecucondorSA/autorenta/commit/5a20d02))
+* feat(investments): add NAV snapshot cron (every 3 days) + wrapper RPC ([7092471](https://github.com/ecucondorSA/autorenta/commit/7092471))
+* feat(verification): Gemini Vision OCR fallback + structured error UX ([d385531](https://github.com/ecucondorSA/autorenta/commit/d385531))
+* fix(verification): improve OCR error messages for better user guidance ([82a74e7](https://github.com/ecucondorSA/autorenta/commit/82a74e7))
+
 ## <small>3.85.1 (2026-02-11)</small>
 
 * fix(security): prevent IDOR in verify-document + harden auth refresh ([03b1cc2](https://github.com/ecucondorSA/autorenta/commit/03b1cc2))
