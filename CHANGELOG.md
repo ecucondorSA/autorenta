@@ -1,3 +1,8 @@
+## <small>3.81.2 (2026-02-11)</small>
+
+* refactor: migrate console.warn to LoggerService in performance-monitoring ([2aa57cf](https://github.com/ecucondorSA/autorenta/commit/2aa57cf))
+* refactor: migrate console.warn/debug to LoggerService across 40 core services ([5f229dd](https://github.com/ecucondorSA/autorenta/commit/5f229dd))
+
 ## <small>3.81.1 (2026-02-11)</small>
 
 * refactor: replace console.warn with LoggerService in performance monitoring ([1fd52c9](https://github.com/ecucondorSA/autorenta/commit/1fd52c9))
