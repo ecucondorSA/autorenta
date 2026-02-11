@@ -1546,8 +1546,21 @@
       errEl.classList.add('hidden');
 
       try {
-        var session = (await sb.auth.getSession()).data.session;
-        if (!session) throw new Error('Sesion expirada. Volve a iniciar sesion.');
+        var sessionResp = await sb.auth.getSession();
+        var session = sessionResp.data ? sessionResp.data.session : null;
+        if (!session) {
+          throw new Error('Sesion expirada. Volve a iniciar sesion.');
+        }
+
+        // Force token refresh before invoking protected Edge Function to avoid stale JWT (401).
+        var refreshResp = await sb.auth.refreshSession();
+        if (!refreshResp.error && refreshResp.data && refreshResp.data.session) {
+          session = refreshResp.data.session;
+        }
+
+        if (!session || !session.access_token) {
+          throw new Error('Sesion expirada. Volve a iniciar sesion.');
+        }
 
         var resp = await fetch(SUPABASE_URL + '/functions/v1/create-fragment-preference', {
           method: 'POST',
@@ -1558,10 +1571,20 @@
           body: JSON.stringify({
             vehicle_asset_code: ASSET_CODE,
             quantity: qty,
+            return_url: window.location.origin + window.location.pathname,
           }),
         });
 
         var data = await resp.json();
+
+        if (resp.status === 401) {
+          await sb.auth.signOut();
+          currentUser = null;
+          updateAuthUI();
+          closePurchaseModal();
+          openAuthModal();
+          throw new Error('Tu sesion expiro. Inicia sesion nuevamente.');
+        }
 
         if (!resp.ok) {
           throw new Error(data.error || 'Error al crear preferencia');
@@ -1625,6 +1648,8 @@
 
     // === INIT ===
     async function initAuth() {
+      updateAuthUI();
+
       try {
         var resp = await sb.auth.getSession();
         if (resp.data.session) {
@@ -1634,6 +1659,11 @@
       } catch (e) {
         // No session, that's fine
       }
+
+      sb.auth.onAuthStateChange(function(_event, session) {
+        currentUser = session ? session.user : null;
+        updateAuthUI();
+      });
 
       // Load fragment stats on page load
       loadFragmentsAvailable();
