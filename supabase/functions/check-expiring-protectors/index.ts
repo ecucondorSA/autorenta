@@ -56,6 +56,20 @@ function normalizeError(error: unknown): string {
   }
 }
 
+function isMissingProtectorTableError(error: {
+  code?: string;
+  message?: string;
+  hint?: string | null;
+}): boolean {
+  const code = error.code ?? '';
+  const text = `${error.message ?? ''} ${error.hint ?? ''}`.toLowerCase();
+
+  return code === '42P01' ||
+    code === 'PGRST205' ||
+    text.includes('driver_protection_addons') ||
+    text.includes('bonus_protector_options');
+}
+
 serve(async (req) => {
   // ✅ SECURITY: CORS con whitelist de dominios permitidos
   const corsHeaders = getCorsHeaders(req);
@@ -88,7 +102,7 @@ serve(async (req) => {
 
     if (fetchError) {
       // En entornos donde la tabla aún no está desplegada, no romper el cron.
-      if (fetchError.code === '42P01') {
+      if (isMissingProtectorTableError(fetchError)) {
         console.warn('[check-expiring-protectors] driver_protection_addons not found, skipping');
         return new Response(
           JSON.stringify({ message: 'Protection addon table not available', sent: 0, skipped: true }),
