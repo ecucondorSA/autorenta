@@ -1,3 +1,7 @@
+## <small>3.87.2 (2026-02-11)</small>
+
+* fix: increase code coverage workflow timeout ([6702450](https://github.com/ecucondorSA/autorenta/commit/6702450))
+
 ## <small>3.87.1 (2026-02-11)</small>
 
 * fix: stabilize CI pipelines and verification tests ([ccab752](https://github.com/ecucondorSA/autorenta/commit/ccab752))
