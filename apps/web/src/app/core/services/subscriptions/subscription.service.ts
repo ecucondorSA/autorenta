@@ -658,9 +658,7 @@ export class SubscriptionService {
         discountReason: data.discount_reason ?? undefined,
         requiredTier: data.required_tier as SubscriptionTier,
         fgoCap: data.fgo_cap_usd,
-        formula: data.discount_applied
-          ? `Hold reducido con suscripción ${data.user_tier}`
-          : `Hold = ${vehicleValueUsd} × 5%`,
+        formula: data.formula ?? `Garantía estándar USD ${data.hold_amount_usd}`,
       };
     } catch (err) {
       this.logger.error('Error calculating preauthorization from server', err);
@@ -687,7 +685,7 @@ export class SubscriptionService {
       discountReason: calculation.discountApplied
         ? `Descuento ${calculation.membershipPlan}`
         : undefined,
-      requiredTier: this.tier() || 'club_standard', // Fallback
+      requiredTier: getRequiredTierByVehicleValue(vehicleValueUsd),
       fgoCap: calculation.buyDownFgoUsd,
       formula: calculation.formula,
     };
@@ -810,7 +808,7 @@ export class SubscriptionService {
   getAllTiersWithPreauth() {
     return Object.values(SUBSCRIPTION_TIERS).map((tier) => ({
       ...tier,
-      savingsMessage: 'Preautorización: 5% del valor del auto',
+      savingsMessage: 'Garantía dinámica según valor del auto y plan',
     }));
   }
 

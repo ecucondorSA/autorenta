@@ -3,14 +3,19 @@
  * Interfaces para el sistema de membresía Autorentar Club
  *
  * Created: 2026-01-06
- * Updated: 2026-02-01 (Tiered Guarantee Model)
+ * Updated: 2026-02-11 (Aligned with 6-tier guarantee matrix)
  *
  * Tiers basados en valor del vehículo:
- * - Club Access ($14.99/mes) - Autos < $20,000
- * - Silver Access ($29.99/mes) - Autos $20,000 - $40,000
- * - Black Access ($59.99/mes) - Autos > $40,000
+ * - Club Access ($19.99/mes) - Autos hasta USD 25,000
+ * - Silver Access ($34.99/mes) - Autos hasta USD 70,000
+ * - Black Access ($69.99/mes) - Toda la flota (incluye luxury)
  */
 
+import {
+  calcHoldAndBuydown,
+  getVehicleTierByValue,
+  type MembershipPlan,
+} from '@core/models/guarantee-tiers.model';
 import type { Database } from '@core/types/database.types';
 
 // ============================================================================
@@ -152,9 +157,8 @@ export interface SubscriptionTierConfig {
  * Vehicle value tier thresholds
  */
 export const VEHICLE_VALUE_THRESHOLDS = {
-  ECONOMY_MAX: 20000, // < $20,000
-  STANDARD_MAX: 40000, // $20,000 - $40,000
-  LUXURY_MIN: 40000, // > $40,000
+  CLUB_MAX: 25000, // <= USD 25,000
+  SILVER_MAX: 70000, // <= USD 70,000
 } as const;
 
 /**
@@ -182,7 +186,7 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
   club_standard: {
     tier: 'club_standard',
     name: 'Club Access',
-    description: 'Para autos económicos (valor < $20,000 USD)',
+    description: 'Hasta autos Standard (USD 25,000)',
     price_cents: 1999, // USD 19.99/mes
     price_usd: 19.99,
     coverage_limit_cents: 300000, // USD 3,000 cobertura membresía
@@ -190,71 +194,67 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
     fgo_cap_cents: 150000, // USD 1,500 FGO cap
     fgo_cap_usd: 1500,
     min_vehicle_value_usd: 0,
-    max_vehicle_value_usd: 20000,
+    max_vehicle_value_usd: 25000,
     preauth_hold_cents: 80000, // USD 800 sin suscripción
     preauth_hold_usd: 800,
-    preauth_with_subscription_cents: 40000, // USD 400 con suscripción (50% OFF)
-    preauth_with_subscription_usd: 400,
-    target_segment: 'Autos con valor < $20,000 USD',
+    preauth_with_subscription_cents: 60000, // USD 600 con suscripción (25% OFF)
+    preauth_with_subscription_usd: 600,
+    target_segment: 'Autos con valor <= USD 25,000',
     features: [
-      'Garantía reducida 50% (USD 400)',
-      'Cobertura de seguro USD 3,000',
-      'FGO protection USD 1,500',
-      'Protección total: USD 4,900',
-      'Válido por 1 mes renovable',
-      'Soporte prioritario 24/7',
+      '25% OFF en Garantía',
+      'Acceso a autos hasta USD 25,000',
+      'Soporte prioritario',
+      'FGO buy-down incluido',
     ],
   },
   club_black: {
     tier: 'club_black',
     name: 'Silver Access',
-    description: 'Para autos de gama media (valor $20,000 - $40,000 USD)',
+    description: 'Hasta autos Premium (USD 70,000)',
     price_cents: 3499, // USD 34.99/mes
     price_usd: 34.99,
     coverage_limit_cents: 600000, // USD 6,000 cobertura membresía
     coverage_limit_usd: 6000,
     fgo_cap_cents: 250000, // USD 2,500 FGO cap
     fgo_cap_usd: 2500,
-    min_vehicle_value_usd: 20000,
-    max_vehicle_value_usd: 40000,
-    preauth_hold_cents: 150000, // USD 1,500 sin suscripción
-    preauth_hold_usd: 1500,
-    preauth_with_subscription_cents: 75000, // USD 750 con suscripción (50% OFF)
-    preauth_with_subscription_usd: 750,
-    target_segment: 'Autos con valor $20,000 - $40,000 USD',
+    min_vehicle_value_usd: 25000,
+    max_vehicle_value_usd: 70000,
+    preauth_hold_cents: 250000, // USD 2,500 sin suscripción (premium)
+    preauth_hold_usd: 2500,
+    preauth_with_subscription_cents: 150000, // USD 1,500 con suscripción (40% OFF)
+    preauth_with_subscription_usd: 1500,
+    target_segment: 'Autos con valor <= USD 70,000',
     features: [
-      'Garantía reducida 50% (USD 750)',
-      'Cobertura de seguro USD 6,000',
-      'FGO protection USD 2,500',
-      'Protección total: USD 9,250',
-      'Acceso a autos económicos y gama media',
-      'Soporte VIP prioritario 24/7',
+      '40% OFF en Garantía',
+      'Acceso a autos hasta USD 70,000',
+      'Soporte VIP 24/7',
+      'FGO buy-down incluido',
+      'Cancelación flexible',
     ],
   },
   club_luxury: {
     tier: 'club_luxury',
     name: 'Black Access',
-    description: 'Para autos premium y de lujo (valor > $40,000 USD)',
+    description: 'Hasta autos Luxury (toda la flota)',
     price_cents: 6999, // USD 69.99/mes
     price_usd: 69.99,
     coverage_limit_cents: 1500000, // USD 15,000 cobertura membresía
     coverage_limit_usd: 15000,
     fgo_cap_cents: 500000, // USD 5,000 FGO cap
     fgo_cap_usd: 5000,
-    min_vehicle_value_usd: 40000,
+    min_vehicle_value_usd: 70000,
     max_vehicle_value_usd: null, // Sin límite superior
-    preauth_hold_cents: 300000, // USD 3,000 sin suscripción
-    preauth_hold_usd: 3000,
-    preauth_with_subscription_cents: 150000, // USD 1,500 con suscripción (50% OFF)
-    preauth_with_subscription_usd: 1500,
-    target_segment: 'Autos con valor > $40,000 USD',
+    preauth_hold_cents: 400000, // USD 4,000 sin suscripción
+    preauth_hold_usd: 4000,
+    preauth_with_subscription_cents: 200000, // USD 2,000 con suscripción (50% OFF)
+    preauth_with_subscription_usd: 2000,
+    target_segment: 'Autos de lujo y premium',
     features: [
-      'Garantía reducida 50% (USD 1,500)',
-      'Cobertura de seguro USD 15,000',
-      'FGO protection USD 5,000',
-      'Protección total: USD 21,500',
-      'Acceso a TODA la flota (incluyendo lujo)',
+      '50% OFF en Garantía',
+      'Acceso a TODA la flota',
       'Soporte VIP exclusivo 24/7',
+      'FGO buy-down incluido',
+      'Cancelación flexible',
       'Prioridad en reservas premium',
     ],
   },
@@ -307,15 +307,20 @@ export function getUpgradeRecommendation(
   currentTier: SubscriptionTier | null,
 ): UpgradeRecommendation {
   const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
+  const vehicleTier = getVehicleTierByValue(vehicleValueUsd);
+  const baseHold = calcHoldAndBuydown(vehicleTier, 'none').holdUsd;
+  const requiredTierHold = calcHoldAndBuydown(
+    vehicleTier,
+    mapSubscriptionTierToMembershipPlan(requiredTier),
+  ).holdUsd;
+  const savings = Math.max(0, baseHold - requiredTierHold);
 
   // If no tier, always recommend relevant tier
   if (!currentTier) {
-    const config = SUBSCRIPTION_TIERS[requiredTier];
-    const savings = config.preauth_hold_usd - config.preauth_with_subscription_usd;
     return {
       recommended: true,
       upgradeTo: requiredTier,
-      reason: 'Reducir garantía al 50%',
+      reason: 'Reducir garantía con membresía',
       savingsUsd: savings,
     };
   }
@@ -327,8 +332,6 @@ export function getUpgradeRecommendation(
     club_luxury: 3,
   };
   if (hierarchy[currentTier] < hierarchy[requiredTier]) {
-    const config = SUBSCRIPTION_TIERS[requiredTier];
-    const savings = config.preauth_hold_usd - config.preauth_with_subscription_usd;
     return {
       recommended: true,
       upgradeTo: requiredTier,
@@ -468,12 +471,9 @@ export const SUBSCRIPTION_USAGE_REASON_LABELS: Record<SubscriptionUsageReason, s
  * @returns The minimum required tier to rent this vehicle
  */
 export function getRequiredTierByVehicleValue(vehicleValueUsd: number): SubscriptionTier {
-  if (vehicleValueUsd > VEHICLE_VALUE_THRESHOLDS.LUXURY_MIN) {
-    return 'club_luxury';
-  }
-  if (vehicleValueUsd > VEHICLE_VALUE_THRESHOLDS.ECONOMY_MAX) {
-    return 'club_black';
-  }
+  const vehicleTier = getVehicleTierByValue(vehicleValueUsd);
+  if (vehicleTier === 'luxury') return 'club_luxury';
+  if (vehicleTier === 'silver' || vehicleTier === 'premium') return 'club_black';
   return 'club_standard';
 }
 
@@ -568,38 +568,18 @@ export function calculatePreauthorization(
   userTier: SubscriptionTier | null,
 ): PreauthorizationCalculation {
   const requiredTier = getRequiredTierByVehicleValue(vehicleValueUsd);
+  const vehicleTier = getVehicleTierByValue(vehicleValueUsd);
   const tierConfig = SUBSCRIPTION_TIERS[requiredTier];
-
-  // 1. Calculate Base Hold (Non-Subscriber Price)
-  // We use the fixed value from configuration, which is designed to be the "Liquid Guarantee"
-  const baseHoldUsd = tierConfig.preauth_hold_usd;
-  const baseHoldCents = tierConfig.preauth_hold_cents;
-
-  let holdAmountUsd = baseHoldUsd;
-  let holdAmountCents = baseHoldCents;
-  let discountApplied = false;
-  let discountReason: string | undefined = undefined;
-
-  // 2. Check for Subscription Discount
-  if (userTier) {
-    // Check if user's tier is high enough for this car
-    const accessCheck = canAccessVehicle(userTier, vehicleValueUsd);
-
-    if (accessCheck.allowed && accessCheck.userTier) {
-      // Verify hierarchy is sufficient
-      const hierarchy: Record<SubscriptionTier, number> = {
-        club_standard: 1,
-        club_black: 2,
-        club_luxury: 3,
-      };
-      if (hierarchy[userTier] >= hierarchy[requiredTier]) {
-        holdAmountUsd = tierConfig.preauth_with_subscription_usd;
-        holdAmountCents = tierConfig.preauth_with_subscription_cents;
-        discountApplied = true;
-        discountReason = `Beneficio Suscriptor ${SUBSCRIPTION_TIERS[userTier].name}`;
-      }
-    }
-  }
+  const membershipPlan = mapSubscriptionTierToMembershipPlan(userTier);
+  const hold = calcHoldAndBuydown(vehicleTier, membershipPlan);
+  const holdAmountUsd = hold.holdUsd;
+  const holdAmountCents = hold.holdUsd * 100;
+  const baseHoldUsd = hold.baseHoldUsd;
+  const baseHoldCents = hold.baseHoldUsd * 100;
+  const discountApplied = hold.discountApplied && Boolean(userTier);
+  const discountReason = discountApplied && userTier
+    ? `Beneficio Suscriptor ${SUBSCRIPTION_TIERS[userTier].name}`
+    : undefined;
 
   return {
     holdAmountCents,
@@ -610,8 +590,13 @@ export function calculatePreauthorization(
     discountReason,
     requiredTier,
     fgoCap: tierConfig.fgo_cap_usd,
-    formula: discountApplied
-      ? `Garantía Reducida (${SUBSCRIPTION_TIERS[userTier!].name})`
-      : `Garantía Estándar (${tierConfig.name})`,
+    formula: hold.formula,
   };
+}
+
+function mapSubscriptionTierToMembershipPlan(tier: SubscriptionTier | null): MembershipPlan {
+  if (!tier) return 'none';
+  if (tier === 'club_standard') return 'club';
+  if (tier === 'club_black') return 'silver';
+  return 'black';
 }

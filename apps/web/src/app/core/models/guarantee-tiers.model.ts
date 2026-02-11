@@ -258,7 +258,7 @@ export function getVehicleTierByValue(valueUsd: number | null | undefined): Vehi
   if (valueUsd < 15000) return 'economy';
   if (valueUsd < 25000) return 'standard';
   if (valueUsd < 40000) return 'silver';
-  if (valueUsd < 70000) return 'premium';
+  if (valueUsd <= 70000) return 'premium';
   return 'luxury';
 }
 
