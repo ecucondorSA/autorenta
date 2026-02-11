@@ -404,21 +404,43 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Formatea un número como moneda
-   * El valor ya viene en unidades (no centavos) desde wallet_get_balance()
-   * Usa la moneda del balance actual o USD por defecto
+   * Cached Intl.NumberFormat — only recreated when currency changes.
    */
-  formatCurrency(amount: number): string {
-    const balance = this.balance() as { currency?: string } | null;
-    const currency = balance?.currency || 'USD';
-
+  private readonly currencyFormatter = computed(() => {
+    const bal = this.balance() as { currency?: string } | null;
+    const currency = bal?.currency || 'USD';
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',
-      currency: currency,
-      currencyDisplay: 'symbol', // Usa solo el símbolo (US$) sin label adicional
+      currency,
+      currencyDisplay: 'symbol',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(amount);
+    });
+  });
+
+  /** Pre-computed formatted balance values (avoid Intl.NumberFormat in template) */
+  readonly formattedTotalBalance = computed(() => this.currencyFormatter().format(this.totalBalance()));
+  readonly formattedAvailableBalance = computed(() =>
+    this.currencyFormatter().format(this.availableBalance()),
+  );
+  readonly formattedWithdrawableBalance = computed(() =>
+    this.currencyFormatter().format(this.withdrawableBalance()),
+  );
+  readonly formattedNonWithdrawableBalance = computed(() =>
+    this.currencyFormatter().format(this.nonWithdrawableBalance()),
+  );
+  readonly formattedLockedBalance = computed(() =>
+    this.currencyFormatter().format(this.lockedBalance()),
+  );
+  readonly formattedExpiringAmount = computed(() =>
+    this.currencyFormatter().format(this.totalExpiringAmount() / 100),
+  );
+
+  /**
+   * Formatea un número como moneda (for dynamic values like @for loop items)
+   */
+  formatCurrency(amount: number): string {
+    return this.currencyFormatter().format(amount);
   }
 
   /**
@@ -451,16 +473,8 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
           ? Number(rawAmount)
           : 0;
     const amount = Number.isFinite(amountCents) ? amountCents / 100 : 0;
-    const currency = (transaction['currency'] as string) || 'USD';
 
-    // Format amount
-    const formattedAmount = new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: currency,
-      currencyDisplay: 'symbol',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(amount);
+    const formattedAmount = this.currencyFormatter().format(amount);
 
     // Mostrar notificación toast de confirmación
     this.toastService.success(

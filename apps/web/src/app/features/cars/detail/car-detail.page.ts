@@ -537,31 +537,6 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
     return publicUrl ?? null;
   }
 
-  /**
-   * Helper: Obtiene la etiqueta legible para la política de combustible
-   */
-  getFuelPolicyLabel(policy: string | null | undefined): string {
-    const labels: Record<string, string> = {
-      full_to_full: 'Lleno a lleno',
-      same_to_same: 'Igual a igual',
-      prepaid: 'Prepago',
-      free_tank: 'Tanque incluido',
-    };
-    return labels[policy || ''] || 'Lleno a lleno';
-  }
-
-  /**
-   * Helper: Obtiene la etiqueta legible para la política de cancelación
-   */
-  getCancelPolicyLabel(policy: string | undefined): string {
-    const labels: Record<string, string> = {
-      flexible: 'Flexible - 100% reembolso hasta 24h antes del inicio',
-      moderate: 'Moderada - 50% reembolso hasta 48h antes del inicio',
-      strict: 'Estricta - Sin reembolso en los 7 días previos',
-    };
-    return labels[policy || 'moderate'] || 'Moderada';
-  }
-
   onImgError(event: Event, fallbackUrl: string = this.defaultCarPlaceholderUrl): void {
     const el = event.target as HTMLImageElement | null;
     if (!el) return;

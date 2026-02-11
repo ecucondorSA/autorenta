@@ -79,7 +79,7 @@
               'text-warning-strong': !hasUrgentExpiringCredits(),
             }"
           >
-            Tienes {{ formatCurrency(totalExpiringAmount() / 100) }} en créditos que vencerán
+            Tienes {{ formattedExpiringAmount() }} en créditos que vencerán
             pronto. ¡Úsalos antes de que expiren!
           </p>
           <div class="mt-2 space-y-1">
@@ -221,7 +221,7 @@
       >
         <p class="text-sm text-text-secondary font-medium mb-1">Balance Total</p>
         <p class="h3 text-text-primary wallet-balance balance-amount" data-testid="wallet-balance">
-          {{ formatCurrency(totalBalance()) }}
+          {{ formattedTotalBalance() }}
         </p>
       </div>
       <!-- Available & Locked Balance -->
@@ -248,7 +248,7 @@
               </svg>
             </div>
             <p class="h4 text-error-strong" data-testid="available-balance">
-              {{ formatCurrency(availableBalance()) }}
+              {{ formattedAvailableBalance() }}
             </p>
             <p class="text-xs text-error-strong mt-1">Saldo negativo a cubrir</p>
             <button
@@ -278,14 +278,14 @@
               </svg>
             </div>
             <p class="h4 text-success-strong" data-testid="available-balance">
-              {{ formatCurrency(availableBalance()) }}
+              {{ formattedAvailableBalance() }}
             </p>
             <p class="text-xs text-success-strong mt-1">Fondos totales listos para usar</p>
             <div class="mt-3 space-y-2">
               <div class="flex items-center justify-between text-xs text-success-strong">
                 <span>Retirable</span>
                 <span class="font-semibold text-success-strong">{{
-                  formatCurrency(withdrawableBalance())
+                  formattedWithdrawableBalance()
                 }}</span>
               </div>
               @if (nonWithdrawableBalance() > 0) {
@@ -304,7 +304,7 @@
                     </svg>
                     Crédito Autorentar
                   </span>
-                  <span class="font-semibold">{{ formatCurrency(nonWithdrawableBalance()) }}</span>
+                  <span class="font-semibold">{{ formattedNonWithdrawableBalance() }}</span>
                 </div>
               }
             </div>
@@ -332,7 +332,7 @@
             </svg>
           </div>
           <p class="h4 text-warning-strong" data-testid="locked-balance">
-            {{ formatCurrency(lockedBalance()) }}
+            {{ formattedLockedBalance() }}
           </p>
           <p class="text-sm text-warning-strong mt-1 font-medium">En reservas</p>
         </div>
