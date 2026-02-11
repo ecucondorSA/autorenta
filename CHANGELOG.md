@@ -1,3 +1,7 @@
+## <small>3.88.4 (2026-02-11)</small>
+
+* fix: harden auth and verification flows ([81dce7b](https://github.com/ecucondorSA/autorenta/commit/81dce7b))
+
 ## <small>3.88.3 (2026-02-11)</small>
 
 * fix(ci): prevent Android versionCode collisions on Play upload ([7d0a3f2](https://github.com/ecucondorSA/autorenta/commit/7d0a3f2))
