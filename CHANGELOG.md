@@ -1,3 +1,8 @@
+## <small>3.81.5 (2026-02-11)</small>
+
+* fix: stabilize scheduled wallet and protector audits ([4a54ce3](https://github.com/ecucondorSA/autorenta/commit/4a54ce3))
+* refactor: enforce supabase facades in features and shared ([9ea3e2d](https://github.com/ecucondorSA/autorenta/commit/9ea3e2d))
+
 ## <small>3.81.4 (2026-02-11)</small>
 
 * refactor(admin): migrate last *ngIf/*ngFor to @if/@for in social-campaigns ([b28a4cb](https://github.com/ecucondorSA/autorenta/commit/b28a4cb))
