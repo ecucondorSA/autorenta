@@ -1,3 +1,8 @@
+## <small>3.88.3 (2026-02-11)</small>
+
+* fix(ci): prevent Android versionCode collisions on Play upload ([7d0a3f2](https://github.com/ecucondorSA/autorenta/commit/7d0a3f2))
+* chore(db): align missing remote migration versions ([e5eccfc](https://github.com/ecucondorSA/autorenta/commit/e5eccfc))
+
 ## <small>3.88.2 (2026-02-11)</small>
 
 * fix(kyc): harden OCR auth flow and verification UX ([a913c10](https://github.com/ecucondorSA/autorenta/commit/a913c10))
