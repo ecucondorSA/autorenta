@@ -115,7 +115,10 @@ jobs:
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
 
       - name: Deploy Supabase Edge Functions
-        run: supabase functions deploy create-subscription-wallet
+        run: |
+          supabase functions deploy create-subscription-wallet
+          supabase functions deploy create-fragment-preference
+          supabase functions deploy fragment-purchase-webhook
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}

@@ -33,6 +33,31 @@ declare const Deno: any;
 interface CreateFragmentRequest {
   vehicle_asset_code: string;
   quantity: number;
+  return_url?: string;
+}
+
+function resolveSafeReturnUrl(candidateUrl: string | undefined, fallbackUrl: string): string {
+  if (!candidateUrl) return fallbackUrl;
+
+  const trimmed = candidateUrl.trim();
+  if (!trimmed) return fallbackUrl;
+
+  const normalized = trimmed.startsWith('/') ? `https://autorentar.com${trimmed}` : trimmed;
+
+  try {
+    const parsed = new URL(normalized);
+    const isHttps = parsed.protocol === 'https:';
+    const isAutorentarHost =
+      parsed.hostname === 'autorentar.com' || parsed.hostname.endsWith('.autorentar.com');
+
+    if (!isHttps || !isAutorentarHost) {
+      return fallbackUrl;
+    }
+
+    return parsed.toString();
+  } catch {
+    return fallbackUrl;
+  }
 }
 
 serve(async (req: Request) => {
@@ -91,6 +116,7 @@ serve(async (req: Request) => {
     // ========================================
     const body: CreateFragmentRequest = await req.json();
     const { vehicle_asset_code, quantity } = body;
+    const returnUrl = resolveSafeReturnUrl(body.return_url, PITCH_URL);
 
     if (!vehicle_asset_code || !quantity) {
       return new Response(
@@ -271,9 +297,9 @@ serve(async (req: Request) => {
         last_name: lastName,
       },
       back_urls: {
-        success: `${PITCH_URL}?payment=success&purchase_id=${purchaseId}`,
-        failure: `${PITCH_URL}?payment=failure&purchase_id=${purchaseId}`,
-        pending: `${PITCH_URL}?payment=pending&purchase_id=${purchaseId}`,
+        success: `${returnUrl}?payment=success&purchase_id=${purchaseId}`,
+        failure: `${returnUrl}?payment=failure&purchase_id=${purchaseId}`,
+        pending: `${returnUrl}?payment=pending&purchase_id=${purchaseId}`,
       },
       auto_return: 'approved',
       external_reference: `fragment_${purchaseId}`,

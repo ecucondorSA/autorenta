@@ -114,6 +114,8 @@ jobs:
       - name: Deploy Supabase Edge Functions
         run: |
           supabase functions deploy create-subscription-wallet
+          supabase functions deploy create-fragment-preference
+          supabase functions deploy fragment-purchase-webhook
           supabase functions deploy process-payment-queue
           supabase functions deploy release-expired-deposits
           supabase functions deploy ai-vision-service

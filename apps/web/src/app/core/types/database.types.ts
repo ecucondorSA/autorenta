@@ -906,6 +906,7 @@ export type Database = {
       }
       bookings: {
         Row: {
+          actual_return_at: string | null
           auto_release_at: string | null
           cancellation_reason: string | null
           cancelled_at: string | null
@@ -930,6 +931,7 @@ export type Database = {
           insurance_fee: number | null
           is_instant_booking: boolean | null
           notes: string | null
+          overdue_hours: number | null
           owner_confirmed_delivery: boolean | null
           owner_fee: number | null
           owner_id: string
@@ -937,6 +939,7 @@ export type Database = {
           pickup_location_id: string | null
           renter_confirmed_payment: boolean | null
           renter_id: string
+          return_status: string
           returned_at: string | null
           service_fee: number | null
           start_at: string
@@ -950,6 +953,7 @@ export type Database = {
           wallet_status: string | null
         }
         Insert: {
+          actual_return_at?: string | null
           auto_release_at?: string | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
@@ -974,6 +978,7 @@ export type Database = {
           insurance_fee?: number | null
           is_instant_booking?: boolean | null
           notes?: string | null
+          overdue_hours?: number | null
           owner_confirmed_delivery?: boolean | null
           owner_fee?: number | null
           owner_id: string
@@ -981,6 +986,7 @@ export type Database = {
           pickup_location_id?: string | null
           renter_confirmed_payment?: boolean | null
           renter_id: string
+          return_status?: string
           returned_at?: string | null
           service_fee?: number | null
           start_at: string
@@ -994,6 +1000,7 @@ export type Database = {
           wallet_status?: string | null
         }
         Update: {
+          actual_return_at?: string | null
           auto_release_at?: string | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
@@ -1018,6 +1025,7 @@ export type Database = {
           insurance_fee?: number | null
           is_instant_booking?: boolean | null
           notes?: string | null
+          overdue_hours?: number | null
           owner_confirmed_delivery?: boolean | null
           owner_fee?: number | null
           owner_id?: string
@@ -1025,6 +1033,7 @@ export type Database = {
           pickup_location_id?: string | null
           renter_confirmed_payment?: boolean | null
           renter_id?: string
+          return_status?: string
           returned_at?: string | null
           service_fee?: number | null
           start_at?: string
@@ -2216,6 +2225,36 @@ export type Database = {
           job_name?: string
           response?: Json | null
           status?: string | null
+        }
+        Relationships: []
+      }
+      cron_execution_logs: {
+        Row: {
+          created_at: string | null
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          job_name: string
+          result: Json | null
+          success: boolean
+        }
+        Insert: {
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          job_name: string
+          result?: Json | null
+          success?: boolean
+        }
+        Update: {
+          created_at?: string | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          job_name?: string
+          result?: Json | null
+          success?: boolean
         }
         Relationships: []
       }
@@ -3468,31 +3507,46 @@ export type Database = {
       }
       exchange_rates: {
         Row: {
+          binance_rate: number | null
           id: number
           is_active: boolean | null
           last_updated: string | null
+          margin_absolute: number | null
+          margin_percent: number | null
           pair: string
+          platform_rate: number | null
           rate: number
           source: string | null
           updated_at: string | null
+          volatility_24h: number | null
         }
         Insert: {
+          binance_rate?: number | null
           id?: number
           is_active?: boolean | null
           last_updated?: string | null
+          margin_absolute?: number | null
+          margin_percent?: number | null
           pair: string
+          platform_rate?: number | null
           rate: number
           source?: string | null
           updated_at?: string | null
+          volatility_24h?: number | null
         }
         Update: {
+          binance_rate?: number | null
           id?: number
           is_active?: boolean | null
           last_updated?: string | null
+          margin_absolute?: number | null
+          margin_percent?: number | null
           pair?: string
+          platform_rate?: number | null
           rate?: number
           source?: string | null
           updated_at?: string | null
+          volatility_24h?: number | null
         }
         Relationships: []
       }
@@ -4124,6 +4178,114 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      fragment_holdings: {
+        Row: {
+          created_at: string
+          id: string
+          quantity: number
+          updated_at: string
+          user_id: string
+          vehicle_asset_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          quantity: number
+          updated_at?: string
+          user_id: string
+          vehicle_asset_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          quantity?: number
+          updated_at?: string
+          user_id?: string
+          vehicle_asset_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fragment_holdings_vehicle_asset_id_fkey"
+            columns: ["vehicle_asset_id"]
+            isOneToOne: false
+            referencedRelation: "v_vehicle_fragment_stats"
+            referencedColumns: ["vehicle_asset_id"]
+          },
+          {
+            foreignKeyName: "fragment_holdings_vehicle_asset_id_fkey"
+            columns: ["vehicle_asset_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fragment_purchases: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          mp_payment_id: string | null
+          mp_preference_id: string | null
+          price_per_fragment_cents: number
+          quantity: number
+          status: string
+          total_ars_cents: number
+          total_usd_cents: number
+          usd_ars_rate: number
+          user_id: string
+          vehicle_asset_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          mp_payment_id?: string | null
+          mp_preference_id?: string | null
+          price_per_fragment_cents: number
+          quantity: number
+          status?: string
+          total_ars_cents: number
+          total_usd_cents: number
+          usd_ars_rate: number
+          user_id: string
+          vehicle_asset_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          mp_payment_id?: string | null
+          mp_preference_id?: string | null
+          price_per_fragment_cents?: number
+          quantity?: number
+          status?: string
+          total_ars_cents?: number
+          total_usd_cents?: number
+          usd_ars_rate?: number
+          user_id?: string
+          vehicle_asset_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fragment_purchases_vehicle_asset_id_fkey"
+            columns: ["vehicle_asset_id"]
+            isOneToOne: false
+            referencedRelation: "v_vehicle_fragment_stats"
+            referencedColumns: ["vehicle_asset_id"]
+          },
+          {
+            foreignKeyName: "fragment_purchases_vehicle_asset_id_fkey"
+            columns: ["vehicle_asset_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_assets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       fx_rates: {
         Row: {
@@ -5593,6 +5755,118 @@ export type Database = {
             columns: ["car_id"]
             isOneToOne: false
             referencedRelation: "v_instant_booking_cars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      monitoring_alert_notifications: {
+        Row: {
+          alert_id: string
+          created_at: string | null
+          error_message: string | null
+          id: string
+          notification_channel: string
+          notification_status: string
+          sent_at: string | null
+        }
+        Insert: {
+          alert_id: string
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          notification_channel: string
+          notification_status?: string
+          sent_at?: string | null
+        }
+        Update: {
+          alert_id?: string
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          notification_channel?: string
+          notification_status?: string
+          sent_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monitoring_alert_notifications_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "monitoring_alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      monitoring_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string | null
+          id: string
+          message: string
+          metadata: Json | null
+          severity: string
+          status: string
+          title: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string | null
+          id?: string
+          message: string
+          metadata?: Json | null
+          severity?: string
+          status?: string
+          title: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string | null
+          id?: string
+          message?: string
+          metadata?: Json | null
+          severity?: string
+          status?: string
+          title?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      monitoring_sla_metrics: {
+        Row: {
+          alert_id: string
+          created_at: string | null
+          detection_time_ms: number | null
+          id: string
+          notification_time_ms: number | null
+          providers_notified: string[] | null
+        }
+        Insert: {
+          alert_id: string
+          created_at?: string | null
+          detection_time_ms?: number | null
+          id?: string
+          notification_time_ms?: number | null
+          providers_notified?: string[] | null
+        }
+        Update: {
+          alert_id?: string
+          created_at?: string | null
+          detection_time_ms?: number | null
+          id?: string
+          notification_time_ms?: number | null
+          providers_notified?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monitoring_sla_metrics_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "monitoring_alerts"
             referencedColumns: ["id"]
           },
         ]
@@ -8030,6 +8304,68 @@ export type Database = {
           },
         ]
       }
+      return_protocol_events: {
+        Row: {
+          booking_id: string
+          created_at: string | null
+          event_type: string
+          executed_at: string | null
+          id: string
+          result: Json | null
+          scheduled_for: string
+          status: string
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string | null
+          event_type: string
+          executed_at?: string | null
+          id?: string
+          result?: Json | null
+          scheduled_for: string
+          status?: string
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string | null
+          event_type?: string
+          executed_at?: string | null
+          id?: string
+          result?: Json | null
+          scheduled_for?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "return_protocol_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "return_protocol_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "return_protocol_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "return_protocol_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+        ]
+      }
       reviews: {
         Row: {
           booking_id: string | null
@@ -9683,6 +10019,92 @@ export type Database = {
         }
         Relationships: []
       }
+      vehicle_assets: {
+        Row: {
+          asset_code: string
+          car_id: string | null
+          created_at: string
+          current_km: number
+          fragment_price_cents: number
+          id: string
+          make: string
+          max_fragments_per_wallet: number
+          metadata: Json | null
+          model: string
+          purchase_price_cents: number
+          status: string
+          target_km: number
+          total_fragments: number
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          asset_code: string
+          car_id?: string | null
+          created_at?: string
+          current_km?: number
+          fragment_price_cents: number
+          id?: string
+          make: string
+          max_fragments_per_wallet?: number
+          metadata?: Json | null
+          model: string
+          purchase_price_cents: number
+          status?: string
+          target_km?: number
+          total_fragments: number
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          asset_code?: string
+          car_id?: string | null
+          created_at?: string
+          current_km?: number
+          fragment_price_cents?: number
+          id?: string
+          make?: string
+          max_fragments_per_wallet?: number
+          metadata?: Json | null
+          model?: string
+          purchase_price_cents?: number
+          status?: string
+          target_km?: number
+          total_fragments?: number
+          updated_at?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_assets_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_assets_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "v_cars_with_guarantee"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_assets_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "v_cars_with_main_photo"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_assets_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "v_instant_booking_cars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vehicle_categories: {
         Row: {
           active: boolean
@@ -10613,6 +11035,48 @@ export type Database = {
           pending_balance?: number | null
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      webhook_dead_letter: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          event_id: string
+          event_type: string
+          id: string
+          max_retries: number
+          next_retry_at: string
+          payload: Json
+          resolved_at: string | null
+          retry_count: number
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          event_id: string
+          event_type: string
+          id?: string
+          max_retries?: number
+          next_retry_at?: string
+          payload?: Json
+          resolved_at?: string | null
+          retry_count?: number
+          status?: string
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          event_id?: string
+          event_type?: string
+          id?: string
+          max_retries?: number
+          next_retry_at?: string
+          payload?: Json
+          resolved_at?: string | null
+          retry_count?: number
+          status?: string
         }
         Relationships: []
       }
@@ -11991,6 +12455,18 @@ export type Database = {
         }
         Relationships: []
       }
+      v_vehicle_fragment_stats: {
+        Row: {
+          asset_code: string | null
+          fragment_price_cents: number | null
+          fragments_available: number | null
+          fragments_sold: number | null
+          status: string | null
+          total_fragments: number | null
+          vehicle_asset_id: string | null
+        }
+        Relationships: []
+      }
       v_wallet_history: {
         Row: {
           amount_cents: number | null
@@ -12278,6 +12754,10 @@ export type Database = {
       admin_request_additional_documents: {
         Args: { p_requested_docs: string; p_user_id: string }
         Returns: Json
+      }
+      admin_resolve_review: {
+        Args: { p_resolution?: string; p_review_id: string }
+        Returns: undefined
       }
       admin_wallet_health_check: { Args: never; Returns: Json }
       advance_playbook_step: {
@@ -12674,6 +13154,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      confirm_fragment_purchase: {
+        Args: { p_mp_payment_id: string; p_purchase_id: string }
+        Returns: Json
+      }
       connect_mercadopago: {
         Args: {
           p_access_token: string
@@ -12874,6 +13358,10 @@ export type Database = {
         Returns: Json
       }
       execute_period_closure: { Args: { p_period_end: string }; Returns: Json }
+      execute_protocol_event: {
+        Args: { p_event_id: string }
+        Returns: undefined
+      }
       expire_subscriptions: { Args: never; Returns: number }
       extend_autorentar_credit_for_good_history: {
         Args: { p_user_id: string }
@@ -12894,6 +13382,10 @@ export type Database = {
           renewed_amount_cents: number
           renewed_amount_usd: number
         }[]
+      }
+      fail_fragment_purchase: {
+        Args: { p_purchase_id: string; p_reason?: string }
+        Returns: undefined
       }
       fgo_assess_eligibility: {
         Args: { p_booking_id: string; p_claim_amount_cents: number }
@@ -13095,6 +13587,10 @@ export type Database = {
           updated_at: string
           year: number
         }[]
+      }
+      get_available_fragments: {
+        Args: { p_asset_code: string }
+        Returns: number
       }
       get_booking_distance: { Args: { p_booking_id: string }; Returns: number }
       get_buckets_without_policies: {
@@ -13778,6 +14274,15 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: string
       }
+      initiate_fragment_purchase: {
+        Args: {
+          p_asset_code: string
+          p_quantity: number
+          p_usd_ars_rate: number
+          p_user_id: string
+        }
+        Returns: string
+      }
       is_admin: { Args: { check_user_id?: string }; Returns: boolean }
       is_car_available: {
         Args: { p_car_id: string; p_end_date: string; p_start_date: string }
@@ -14197,6 +14702,7 @@ export type Database = {
         | {
             Args: { p_car_id: string; p_end: string; p_start: string }
             Returns: {
+              actual_return_at: string | null
               auto_release_at: string | null
               cancellation_reason: string | null
               cancelled_at: string | null
@@ -14221,6 +14727,7 @@ export type Database = {
               insurance_fee: number | null
               is_instant_booking: boolean | null
               notes: string | null
+              overdue_hours: number | null
               owner_confirmed_delivery: boolean | null
               owner_fee: number | null
               owner_id: string
@@ -14228,6 +14735,7 @@ export type Database = {
               pickup_location_id: string | null
               renter_confirmed_payment: boolean | null
               renter_id: string
+              return_status: string
               returned_at: string | null
               service_fee: number | null
               start_at: string
@@ -14393,6 +14901,10 @@ export type Database = {
           p_trigger_reason: string
         }
         Returns: string
+      }
+      start_return_protocol: {
+        Args: { p_booking_id: string }
+        Returns: undefined
       }
       submit_insurance_verification: {
         Args: {
