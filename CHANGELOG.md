@@ -1,3 +1,7 @@
+## <small>3.93.5 (2026-02-12)</small>
+
+* fix(edge): correct manual review action url normalization ([dc8a05b](https://github.com/ecucondorSA/autorenta/commit/dc8a05b))
+
 ## <small>3.93.4 (2026-02-12)</small>
 
 * fix(web): allow document reupload while verification is pending ([4f43300](https://github.com/ecucondorSA/autorenta/commit/4f43300))
