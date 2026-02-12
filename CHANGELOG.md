@@ -1,3 +1,7 @@
+## <small>3.90.4 (2026-02-12)</small>
+
+* fix(repo): restore unit gates, harden repo hygiene docs, and remove stray artifacts ([c23d015](https://github.com/ecucondorSA/autorenta/commit/c23d015))
+
 ## <small>3.90.3 (2026-02-12)</small>
 
 * refactor(web): group shared map components under maps domain ([2bed3a3](https://github.com/ecucondorSA/autorenta/commit/2bed3a3))
