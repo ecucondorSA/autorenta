@@ -13,6 +13,7 @@
     ],
     "rpcFunctions": [
       "add_to_waitlist",
+      "process_manual_identity_review_email",
       "admin_get_refund_requests",
       "admin_process_refund",
       "apply_referral_code",
@@ -129,6 +130,7 @@
       "update_ev_protocol_checklist",
       "update_payment_intent_status",
       "update_payment_intents_updated_at",
+      "update_profile_from_ocr",
       "update_updated_at_column",
       "wallet_charge_subscription",
       "wallet_confirm_deposit_admin",
