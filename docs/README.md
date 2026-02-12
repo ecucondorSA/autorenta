@@ -126,13 +126,27 @@ autorenta/
 
 ## 📚 Documentación
 
-Para profundizar en áreas específicas del sistema, consulta las guías en la carpeta `docs/`:
+Para mantener orden y descubribilidad, la documentación principal quedó agrupada por dominio:
 
--   [**Sistema de Reservas**](./BOOKING_SYSTEM.md): Flujos de estados, máquinas de estados finitos.
--   [**Pagos y Billetera**](./PAYMENT_FLOWS.md): Integración con MercadoPago, lógica de bloqueo de fondos.
--   [**Base de Datos**](./DATABASE_SCHEMA.md): Diagramas ER, políticas RLS, triggers.
--   [**Edge Functions**](./EDGE_FUNCTIONS.md): Lógica de servidor, webhooks.
--   [**Despliegue**](./DEPLOYMENT.md): Guía de CI/CD y publicación.
+- `docs/engineering/`: backend, arquitectura técnica, despliegue, testing y troubleshooting.
+- `docs/operations/`: operación del sistema, runbooks y seguimiento operativo.
+- `docs/product/`: flujos funcionales de reservas y pagos.
+- `docs/security/`: políticas y auditorías de seguridad.
+- `docs/business/`: documentación ejecutiva e inversores.
+- `docs/mobile/`: guías Android/Play Store y optimización móvil.
+- `docs/marketing/`: playbooks de contenido, social y campañas.
+- `docs/strategy/`: roadmap, manifiesto y planes de implementación.
+- `docs/compliance/`: material regulatorio y contractual.
+
+Entradas recomendadas:
+
+- [**Sistema de Reservas**](./product/BOOKING_SYSTEM.md): Flujos de estados y ciclo de reserva.
+- [**Pagos y Billetera**](./product/PAYMENT_FLOWS.md): Integración de pagos y garantías.
+- [**Base de Datos**](./engineering/DATABASE_SCHEMA.md): Modelo de datos, RLS y triggers.
+- [**Edge Functions**](./engineering/EDGE_FUNCTIONS.md): Lógica de servidor y webhooks.
+- [**Despliegue**](./engineering/DEPLOYMENT.md): CI/CD y publicación.
+- [**Roadmap General**](./strategy/ROADMAP-2026.md): prioridades y secuencia de entrega.
+- [**Guía Mobile**](./mobile/ANDROID_OPTIMIZATION_GUIDE.md): optimizaciones para Android.
 
 ---
 

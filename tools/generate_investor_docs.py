@@ -8,7 +8,7 @@ INVESTORS = [
     { "name": "AngelHub", "contact": "José Luis Cimental", "filename": "AutoRenta_OnePager_AngelHub.html", "color": "#2563eb" }
 ]
 
-SOURCE_FILE = "autorenta/docs/ONE_PAGER_INVESTOR_FINAL.md"
+SOURCE_FILE = "autorenta/docs/business/ONE_PAGER_INVESTOR_FINAL.md"
 OUTPUT_DIR = "autorenta/docs/investors"
 
 def simple_markdown(text):

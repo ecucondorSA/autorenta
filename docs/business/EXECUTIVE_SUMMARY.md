@@ -197,9 +197,9 @@ Código muerto que:
 
 - [AUTORENTA_CORE_MANIFESTO.md](../AUTORENTA_CORE_MANIFESTO.md) - Filosofía de negocio
 - [GEMINI.md](../GEMINI.md) - Reglas para el agente
-- [API_REFERENCE.md](./API_REFERENCE.md) - Endpoints documentados
-- [FGO_GUIDE.md](./FGO_GUIDE.md) - Sistema de garantías
-- [SECURITY.md](./SECURITY.md) - Políticas de seguridad
+- [API_REFERENCE.md](../engineering/API_REFERENCE.md) - Endpoints documentados
+- [FGO_GUIDE.md](../product/FGO_GUIDE.md) - Sistema de garantías
+- [SECURITY.md](../security/SECURITY.md) - Políticas de seguridad
 
 ---
 

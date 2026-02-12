@@ -288,7 +288,7 @@ PASO 5: GUARDAR EN SUPABASE
 
   log(colors.magenta, `
 📖 Documentación:
-   • /home/edu/autorentar/docs/MARKETING_CAMPAIGNS_GUIDE.md
+   • /home/edu/autorenta/docs/marketing/MARKETING_CAMPAIGNS_GUIDE.md
    • /home/edu/autorentar/INSTAGRAM_QUICK_START.md
 
 ⏰ Token expira en: 60 días

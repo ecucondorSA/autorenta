@@ -213,5 +213,5 @@ HAVING SUM(...) < 0;
 ## Referencias
 
 - [RPC Functions Reference](../../../../../docs/RPC_FUNCTIONS_REFERENCE.md)
-- [Troubleshooting Guide](../../../../../docs/TROUBLESHOOTING.md)
+- [Troubleshooting Guide](../../../../../docs/engineering/TROUBLESHOOTING.md)
 - [Data Retention Policy](../../../../../docs/DATA_RETENTION_POLICY.md)

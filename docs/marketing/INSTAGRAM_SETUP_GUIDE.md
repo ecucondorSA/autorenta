@@ -230,7 +230,6 @@ bun scripts/setup-instagram-credentials.ts
 ---
 
 **¿Necesitas ayuda?**
-- Lee `/home/edu/autorentar/docs/MARKETING_CAMPAIGNS_GUIDE.md`
+- Lee `docs/marketing/MARKETING_CAMPAIGNS_GUIDE.md`
 - Revisa los logs: `gh run view --log <run-id>`
 - Consulta Meta Developer Docs
-
