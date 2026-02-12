@@ -1,3 +1,7 @@
+## <small>3.95.1 (2026-02-12)</small>
+
+* fix(ci): add OCR and review RPCs to guardrails baseline ([4881179](https://github.com/ecucondorSA/autorenta/commit/4881179))
+
 ## 3.95.0 (2026-02-12)
 
 * feat(ui): redesign verification flow with brand-aligned visuals ([2416b11](https://github.com/ecucondorSA/autorenta/commit/2416b11))
