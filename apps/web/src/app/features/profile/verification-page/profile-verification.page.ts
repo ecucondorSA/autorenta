@@ -27,6 +27,13 @@ interface StepIndicator {
   state: StepState;
 }
 
+interface VerificationVisualSlot {
+  id: string;
+  title: string;
+  hint: string;
+  imageUrl: string | null;
+}
+
 @Component({
   selector: 'app-profile-verification',
   standalone: true,
@@ -40,111 +47,151 @@ interface StepIndicator {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#f4f7fb] pb-20">
-      <nav class="fixed left-0 top-0 z-50 h-16 w-full border-b border-slate-200 bg-white/95 backdrop-blur">
+    <div class="min-h-screen bg-[#f4f6ef] pb-20">
+      <nav class="fixed left-0 top-0 z-50 h-16 w-full border-b border-black/10 bg-[#0f0f0f] text-white shadow-sm backdrop-blur">
         <div class="mx-auto flex h-full max-w-5xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <a
             [routerLink]="returnUrl() || '/profile'"
-            class="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
+            class="inline-flex h-10 w-10 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-[#b8ff20]"
             aria-label="Volver"
           >
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
           </a>
-          <span class="text-sm font-semibold text-slate-900">Verificación de Cuenta</span>
+          <span class="text-sm font-semibold tracking-wide text-[#b8ff20]">Verificación de Cuenta</span>
           <div class="w-10"></div>
         </div>
       </nav>
 
       <main class="mx-auto max-w-5xl px-4 pb-16 pt-24 sm:px-6 lg:px-8">
         @if (dataLoading()) {
-          <div class="space-y-6 animate-pulse">
-            <div class="h-40 rounded-3xl bg-slate-200"></div>
+          <div class="animate-pulse space-y-6">
+            <div class="h-44 rounded-3xl bg-black/10"></div>
             <div class="grid gap-4 md:grid-cols-3">
-              <div class="h-24 rounded-2xl bg-slate-200"></div>
-              <div class="h-24 rounded-2xl bg-slate-200"></div>
-              <div class="h-24 rounded-2xl bg-slate-200"></div>
+              <div class="h-24 rounded-2xl bg-black/10"></div>
+              <div class="h-24 rounded-2xl bg-black/10"></div>
+              <div class="h-24 rounded-2xl bg-black/10"></div>
             </div>
-            <div class="h-72 rounded-3xl bg-slate-200"></div>
+            <div class="h-72 rounded-3xl bg-black/10"></div>
           </div>
         } @else {
           <section
-            class="relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 text-white shadow-xl"
+            class="relative overflow-hidden rounded-3xl border border-black bg-[#0f0f0f] p-6 text-white shadow-2xl"
           >
-            <div class="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-emerald-400/20 blur-3xl"></div>
-            <div class="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-cyan-400/20 blur-3xl"></div>
+            <div class="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-[#b8ff20]/30 blur-3xl"></div>
+            <div class="pointer-events-none absolute -bottom-20 left-10 h-56 w-56 rounded-full bg-[#b8ff20]/18 blur-3xl"></div>
 
-            <div class="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-              <div class="max-w-2xl space-y-2">
-                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300">
-                  Proceso KYC
+            <div class="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div class="max-w-2xl space-y-3">
+                <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#b8ff20]">
+                  Avance de verificación
                 </p>
-                <h1 class="text-2xl font-semibold leading-tight md:text-3xl">
-                  Verificación bancaria de identidad
+                <h1 class="text-2xl font-black leading-tight md:text-3xl">
+                  {{ momentumTitle() }}
                 </h1>
-                <p class="text-sm text-slate-200 md:text-base">
-                  Protegemos tus reservas y pagos validando identidad, licencia y prueba de vida con
-                  trazabilidad completa.
+                <p class="text-sm text-white/80 md:text-base">
+                  {{ momentumHint() }}
+                </p>
+                <p class="text-xs font-semibold uppercase tracking-wide text-[#b8ff20]/90">
+                  {{ nextStepHeadline() }}
                 </p>
               </div>
 
-              <div class="inline-flex items-center gap-4 rounded-2xl border border-white/20 bg-white/5 px-4 py-3">
+              <div class="inline-flex items-center gap-4 rounded-2xl border border-[#b8ff20]/40 bg-black/30 px-4 py-3">
                 <div class="relative h-14 w-14 shrink-0">
                   <svg class="h-14 w-14 -rotate-90" viewBox="0 0 36 36">
                     <path
                       d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       fill="none"
-                      stroke="rgba(255,255,255,0.2)"
+                      stroke="rgba(255,255,255,0.15)"
                       stroke-width="3"
                     />
                     <path
                       d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       fill="none"
-                      stroke="rgb(52 211 153)"
+                      stroke="#b8ff20"
                       stroke-width="3"
                       stroke-linecap="round"
                       [attr.stroke-dasharray]="progressPercentage() + ', 100'"
                     />
                   </svg>
-                  <span class="absolute inset-0 flex items-center justify-center text-xs font-semibold">
+                  <span class="absolute inset-0 flex items-center justify-center text-xs font-black text-[#b8ff20]">
                     {{ progressPercentage() }}%
                   </span>
                 </div>
                 <div>
-                  <p class="text-xs font-medium uppercase tracking-wide text-slate-300">Estado actual</p>
-                  <p class="text-sm font-semibold text-white">Paso {{ currentStepNumber() }} de 3</p>
+                  <p class="text-xs font-medium uppercase tracking-wide text-white/60">Estado actual</p>
+                  <p class="text-sm font-black text-white">Paso {{ currentStepNumber() }} de 3</p>
+                  <p class="text-xs text-[#b8ff20]">{{ completedSteps() }} de 3 completos</p>
                 </div>
               </div>
             </div>
           </section>
 
+          <section class="mt-6 grid gap-4 md:grid-cols-3">
+            @for (slot of visualSlots; track slot.id) {
+              <article
+                class="group overflow-hidden rounded-2xl border border-black/10 bg-white p-2 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
+              >
+                @if (slot.imageUrl) {
+                  <img [src]="slot.imageUrl" [alt]="slot.title" class="h-28 w-full rounded-xl object-cover" />
+                } @else {
+                  <div
+                    class="relative h-28 overflow-hidden rounded-xl border border-dashed border-black/20 bg-[linear-gradient(180deg,#f9ffe8_0%,#eef6d8_100%)]"
+                  >
+                    <div
+                      class="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#b8ff20]/30 blur-2xl"
+                    ></div>
+                    <div
+                      class="absolute bottom-2 left-3 h-1.5 w-20 rounded-full bg-black/20"
+                    ></div>
+                    <div
+                      class="absolute bottom-6 left-3 h-1.5 w-14 rounded-full bg-black/15"
+                    ></div>
+                    <p class="absolute right-3 top-3 text-[10px] font-semibold uppercase tracking-wide text-black/50">
+                      Espacio visual
+                    </p>
+                  </div>
+                }
+                <div class="px-1 pb-1 pt-2">
+                  <p class="text-xs font-semibold text-black">{{ slot.title }}</p>
+                  <p class="text-[11px] text-black/60">{{ slot.hint }}</p>
+                </div>
+              </article>
+            }
+          </section>
+
           <section class="mt-6 grid gap-3 md:grid-cols-3">
             @for (step of stepIndicators(); track step.id) {
               <article
-                class="rounded-2xl border p-4 transition-all"
+                class="rounded-2xl border p-4 transition-all duration-200"
                 [class]="stepCardClass(step.state)"
                 [attr.aria-current]="step.state === 'active' ? 'step' : null"
               >
                 <div class="flex items-center justify-between">
                   <h2 class="text-sm font-semibold">{{ step.title }}</h2>
-                  <span class="inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold"
+                  <span
+                    class="inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold"
                     [class]="stepBadgeClass(step.state)"
                   >
                     {{ step.id }}
                   </span>
                 </div>
-                <p class="mt-2 text-xs leading-relaxed text-slate-500">{{ step.detail }}</p>
+                <p class="mt-2 text-xs leading-relaxed">{{ step.detail }}</p>
+                <p class="mt-2 text-[11px] font-semibold uppercase tracking-wide">
+                  {{ stepStateLabel(step.state) }}
+                </p>
               </article>
             }
           </section>
 
           <section class="mt-8 space-y-6">
-            <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <article class="rounded-3xl border border-black/10 bg-white p-6 shadow-sm">
               <div class="mb-4 flex items-center justify-between">
                 <div>
-                  <h3 class="text-lg font-semibold text-slate-900">1. Contacto</h3>
-                  <p class="text-sm text-slate-500">Confirmamos email y teléfono para alertas de seguridad.</p>
+                  <h3 class="text-lg font-semibold text-black">1. Contacto</h3>
+                  <p class="text-sm text-black/60">Confirmamos email y teléfono para alertas de seguridad.</p>
                 </div>
                 <span class="rounded-full px-3 py-1 text-xs font-semibold" [class]="statusPillClass(isLevelComplete(1))">
                   {{ isLevelComplete(1) ? 'Completado' : 'Pendiente' }}
@@ -157,17 +204,17 @@ interface StepIndicator {
                   <app-phone-verification></app-phone-verification>
                 </div>
               } @else {
-                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                <div class="rounded-2xl border border-[#b8ff20] bg-[#f3ffd0] px-4 py-3 text-sm text-black">
                   Contacto verificado para <strong>{{ userEmail() }}</strong>.
                 </div>
               }
             </article>
 
-            <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <article class="rounded-3xl border border-black/10 bg-white p-6 shadow-sm">
               <div class="mb-4 flex items-center justify-between">
                 <div>
-                  <h3 class="text-lg font-semibold text-slate-900">2. Identidad y licencia</h3>
-                  <p class="text-sm text-slate-500">
+                  <h3 class="text-lg font-semibold text-black">2. Identidad y licencia</h3>
+                  <p class="text-sm text-black/60">
                     Recolección documental con revisión automática y respaldo para validación manual.
                   </p>
                 </div>
@@ -177,20 +224,20 @@ interface StepIndicator {
               </div>
 
               @if (!isLevelComplete(1)) {
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                <div class="rounded-2xl border border-black/10 bg-black/[0.03] px-4 py-3 text-sm text-black/70">
                   Completa primero el paso 1 para continuar.
                 </div>
               } @else {
                 <div class="mb-5 grid gap-3 sm:grid-cols-2">
                   <div class="rounded-2xl border p-3" [class]="documentCardClass(dniState())">
-                    <p class="text-xs uppercase tracking-wide text-slate-500">Documento de identidad</p>
-                    <p class="mt-1 text-sm font-semibold text-slate-900">{{ dniLabel() }}</p>
-                    <p class="mt-1 text-xs text-slate-600">{{ dniHint() }}</p>
+                    <p class="text-xs uppercase tracking-wide text-black/55">Documento de identidad</p>
+                    <p class="mt-1 text-sm font-semibold text-black">{{ dniLabel() }}</p>
+                    <p class="mt-1 text-xs text-black/70">{{ dniHint() }}</p>
                   </div>
                   <div class="rounded-2xl border p-3" [class]="documentCardClass(licenseState())">
-                    <p class="text-xs uppercase tracking-wide text-slate-500">Licencia de conducir</p>
-                    <p class="mt-1 text-sm font-semibold text-slate-900">{{ licenseLabel() }}</p>
-                    <p class="mt-1 text-xs text-slate-600">{{ licenseHint() }}</p>
+                    <p class="text-xs uppercase tracking-wide text-black/55">Licencia de conducir</p>
+                    <p class="mt-1 text-sm font-semibold text-black">{{ licenseLabel() }}</p>
+                    <p class="mt-1 text-xs text-black/70">{{ licenseHint() }}</p>
                   </div>
                 </div>
 
@@ -199,7 +246,7 @@ interface StepIndicator {
                 } @else if (!isLevelComplete(2)) {
                   <div class="space-y-4">
                     <div
-                      class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-700"
+                      class="rounded-2xl border border-black/10 bg-black/[0.03] px-4 py-3 text-xs text-black/70"
                     >
                       Puedes reemplazar fotos en cualquier momento mientras la revisión siga en proceso.
                     </div>
@@ -213,7 +260,7 @@ interface StepIndicator {
 
                 @if (showLevel2ManualReview()) {
                   <div
-                    class="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+                    class="mt-5 rounded-2xl border border-[#9be500] bg-[#f7ffd8] px-4 py-3 text-sm text-black"
                   >
                     Documentos cargados correctamente. Estamos terminando la revisión automática; si no
                     alcanza confianza alta, pasará a validación manual sin que pierdas el avance.
@@ -222,7 +269,7 @@ interface StepIndicator {
 
                 @if (isLevelComplete(2)) {
                   <div
-                    class="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
+                    class="mt-5 rounded-2xl border border-[#b8ff20] bg-[#f3ffd0] px-4 py-3 text-sm text-black"
                   >
                     Identidad y licencia verificadas. Puedes avanzar a prueba de vida.
                   </div>
@@ -230,11 +277,11 @@ interface StepIndicator {
               }
             </article>
 
-            <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <article class="rounded-3xl border border-black/10 bg-white p-6 shadow-sm">
               <div class="mb-4 flex items-center justify-between">
                 <div>
-                  <h3 class="text-lg font-semibold text-slate-900">3. Prueba de vida</h3>
-                  <p class="text-sm text-slate-500">Confirmamos que el titular está presente en tiempo real.</p>
+                  <h3 class="text-lg font-semibold text-black">3. Prueba de vida</h3>
+                  <p class="text-sm text-black/60">Confirmamos que el titular está presente en tiempo real.</p>
                 </div>
                 <span class="rounded-full px-3 py-1 text-xs font-semibold" [class]="statusPillClass(isLevelComplete(3))">
                   {{ isLevelComplete(3) ? 'Completado' : 'Pendiente' }}
@@ -242,13 +289,13 @@ interface StepIndicator {
               </div>
 
               @if (!canAccessLevel(3)) {
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                <div class="rounded-2xl border border-black/10 bg-black/[0.03] px-4 py-3 text-sm text-black/70">
                   Este paso se habilita al completar la verificación documental.
                 </div>
               } @else if (!isLevelComplete(3)) {
                 <app-selfie-capture></app-selfie-capture>
               } @else {
-                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                <div class="rounded-2xl border border-[#b8ff20] bg-[#f3ffd0] px-4 py-3 text-sm text-black">
                   Biometría validada exitosamente.
                 </div>
               }
@@ -256,20 +303,20 @@ interface StepIndicator {
           </section>
 
           @if (progressPercentage() === 100) {
-            <section class="mt-8 rounded-3xl border border-emerald-300 bg-white p-6 shadow-lg">
+            <section class="mt-8 rounded-3xl border border-[#b8ff20] bg-[#0f0f0f] p-6 text-white shadow-2xl">
               <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p class="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-600">
+                  <p class="text-xs font-semibold uppercase tracking-[0.16em] text-[#b8ff20]">
                     Cuenta verificada
                   </p>
-                  <h3 class="mt-1 text-2xl font-semibold text-slate-900">KYC completado con éxito</h3>
-                  <p class="mt-2 text-sm text-slate-600">
+                  <h3 class="mt-1 text-2xl font-black text-white">Verificación completada</h3>
+                  <p class="mt-2 text-sm text-white/80">
                     Tu perfil ya cumple el nivel de seguridad requerido para publicar y reservar.
                   </p>
                 </div>
                 <a
                   [routerLink]="returnUrl() || '/cars'"
-                  class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
+                  class="inline-flex items-center justify-center rounded-2xl bg-[#b8ff20] px-5 py-3 text-sm font-black text-black transition hover:bg-[#cbff57]"
                 >
                   Continuar
                 </a>
@@ -298,12 +345,88 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
   readonly documents = this.verificationService.documents;
 
   readonly progressPercentage = computed(() => this.verificationProgress()?.progress_percentage ?? 0);
+  readonly completedSteps = computed(() => {
+    let total = 0;
+    if (this.isLevelComplete(1)) total += 1;
+    if (this.isLevelComplete(2)) total += 1;
+    if (this.isLevelComplete(3)) total += 1;
+    return total;
+  });
 
   readonly currentStepNumber = computed(() => {
     if (!this.isLevelComplete(1)) return 1;
     if (!this.isLevelComplete(2)) return 2;
     return 3;
   });
+
+  readonly momentumTitle = computed(() => {
+    if (this.progressPercentage() >= 100) {
+      return 'Cuenta lista para publicar y reservar';
+    }
+    if (!this.isLevelComplete(1)) {
+      return 'Arranca fuerte: valida tu contacto';
+    }
+    if (!this.isLevelComplete(2) && (this.hasDniPair() || this.hasLicensePair())) {
+      return 'Buen avance: tus documentos están en revisión';
+    }
+    if (!this.isLevelComplete(2)) {
+      return 'Siguiente objetivo: identidad y licencia';
+    }
+    if (!this.isLevelComplete(3)) {
+      return 'Último sprint: completa la prueba de vida';
+    }
+    return 'Tu verificación está progresando';
+  });
+
+  readonly momentumHint = computed(() => {
+    if (this.progressPercentage() >= 100) {
+      return 'Completaste el proceso de seguridad. Ya puedes operar sin bloqueos en AutoRentar.';
+    }
+    if (!this.isLevelComplete(1)) {
+      return 'Con email y teléfono verificados activas notificaciones críticas y proteges tu cuenta.';
+    }
+    if (!this.isLevelComplete(2)) {
+      return 'Sube DNI y licencia con buena luz. Si la IA no alcanza confianza alta, pasa a revisión manual.';
+    }
+    if (!this.isLevelComplete(3)) {
+      return 'La selfie final confirma presencia real del titular y cierra el proceso.';
+    }
+    return 'Sigue así, estás cerca de completar todo.';
+  });
+
+  readonly nextStepHeadline = computed(() => {
+    if (this.progressPercentage() >= 100) {
+      return 'Objetivo cumplido';
+    }
+    if (!this.isLevelComplete(1)) {
+      return 'Próximo paso: confirmar contacto';
+    }
+    if (!this.isLevelComplete(2)) {
+      return 'Próximo paso: cargar documentación';
+    }
+    return 'Próximo paso: prueba de vida';
+  });
+
+  readonly visualSlots: VerificationVisualSlot[] = [
+    {
+      id: 'security',
+      title: 'Identidad protegida',
+      hint: 'Tus datos se validan y protegen durante todo el proceso.',
+      imageUrl: '/assets/verification/identity-protected.jpg',
+    },
+    {
+      id: 'documents',
+      title: 'Validación documental',
+      hint: 'Frente y dorso pasan control automático con respaldo manual.',
+      imageUrl: '/assets/verification/document-validation.jpg',
+    },
+    {
+      id: 'trust',
+      title: 'Confianza activa',
+      hint: 'Al completar pasos, tu cuenta queda lista para operar.',
+      imageUrl: '/assets/verification/trust-active.jpg',
+    },
+  ];
 
   readonly hasDniFront = computed(() => this.hasDocument('gov_id_front'));
   readonly hasDniBack = computed(() => this.hasDocument('gov_id_back'));
@@ -420,44 +543,54 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
 
   stepCardClass(state: StepState): string {
     if (state === 'completed') {
-      return 'border-emerald-200 bg-emerald-50';
+      return 'border-[#b8ff20] bg-[#f3ffd0] text-black';
     }
 
     if (state === 'active') {
-      return 'border-slate-900 bg-slate-900 text-white';
+      return 'border-black bg-black text-white shadow-lg';
     }
 
-    return 'border-slate-200 bg-white';
+    return 'border-black/10 bg-white text-black/70';
   }
 
   stepBadgeClass(state: StepState): string {
     if (state === 'completed') {
-      return 'bg-emerald-600 text-white';
+      return 'bg-[#b8ff20] text-black';
     }
 
     if (state === 'active') {
-      return 'bg-white text-slate-900';
+      return 'bg-[#b8ff20] text-black';
     }
 
-    return 'bg-slate-100 text-slate-500';
+    return 'bg-black/10 text-black/60';
   }
 
   statusPillClass(completed: boolean): string {
     return completed
-      ? 'bg-emerald-100 text-emerald-700'
-      : 'bg-slate-100 text-slate-700';
+      ? 'bg-[#cfff69] text-black'
+      : 'bg-black/10 text-black/70';
   }
 
   documentCardClass(state: StepState): string {
     if (state === 'completed') {
-      return 'border-emerald-200 bg-emerald-50';
+      return 'border-[#b8ff20] bg-[#f3ffd0]';
     }
 
     if (state === 'active') {
-      return 'border-amber-200 bg-amber-50';
+      return 'border-black/30 bg-[#f7fce9]';
     }
 
-    return 'border-slate-200 bg-slate-50';
+    return 'border-black/10 bg-black/[0.03]';
+  }
+
+  stepStateLabel(state: StepState): string {
+    if (state === 'completed') {
+      return 'Completado';
+    }
+    if (state === 'active') {
+      return 'En curso';
+    }
+    return 'Bloqueado';
   }
 
   async onDocumentsUpdated(): Promise<void> {

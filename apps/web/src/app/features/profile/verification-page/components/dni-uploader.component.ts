@@ -58,11 +58,11 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
     <div aria-live="assertive" aria-atomic="true" class="sr-only" id="paste-announcements"></div>
 
     <div class="space-y-5">
-      <section class="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
+      <section class="rounded-3xl border border-black/10 bg-black/[0.03] p-4">
         <header class="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h4 class="text-sm font-semibold text-slate-900">Documento de identidad</h4>
-            <p class="text-xs text-slate-500">
+            <h4 class="text-sm font-semibold text-black">Documento de identidad</h4>
+            <p class="text-xs text-black/60">
               Sube frente y dorso completos, sin reflejos y con texto legible.
             </p>
           </div>
@@ -72,7 +72,7 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
               [ngModel]="selectedCountry()"
               (ngModelChange)="selectCountry($event)"
               aria-label="Seleccionar país de emisión"
-              class="appearance-none rounded-xl border border-slate-300 bg-white pl-9 pr-8 py-2 text-sm font-semibold text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+              class="appearance-none rounded-xl border border-black/20 bg-white py-2 pl-9 pr-8 text-sm font-semibold text-black focus:border-[#b8ff20] focus:outline-none focus:ring-2 focus:ring-[#b8ff20]/25"
             >
               @for (country of countries; track country.code) {
                 <option [value]="country.code">{{ country.name }}</option>
@@ -82,7 +82,7 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
               {{ getSelectedCountryFlag() }}
             </span>
             <svg
-              class="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+              class="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-black/40"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -94,16 +94,16 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
 
         <div class="space-y-3">
           <article
-            class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white"
+            class="relative overflow-hidden rounded-2xl border border-black/10 bg-white"
             [class.ring-2]="isDraggingFront()"
-            [class.ring-emerald-400]="isDraggingFront()"
+            [class.ring-[#b8ff20]]="isDraggingFront()"
             (dragover)="onDragOver($event, 'front')"
             (dragleave)="onDragLeave('front')"
             (drop)="onDrop($event, 'dni_front')"
           >
             <div class="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
               <div
-                class="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100"
+                class="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-black/10 bg-black/[0.04]"
               >
                 @if (frontPreview()) {
                   <img
@@ -113,7 +113,7 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
                   />
                   <div class="absolute inset-0 bg-black/10"></div>
                 } @else {
-                  <div class="flex h-full w-full items-center justify-center text-slate-500">
+                  <div class="flex h-full w-full items-center justify-center text-black/45">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
@@ -127,8 +127,8 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
               </div>
 
               <div class="min-w-0 flex-1">
-                <p class="text-sm font-semibold text-slate-900">Frente del documento</p>
-                <p class="text-xs text-slate-500">
+                <p class="text-sm font-semibold text-black">Frente del documento</p>
+                <p class="text-xs text-black/60">
                   @if (frontUploaded()) {
                     Cargado correctamente
                   } @else {
@@ -147,11 +147,11 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
                   (change)="onFileSelected($event, 'dni_front')"
                 />
                 @if (uploadingFront()) {
-                  <div class="h-8 w-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></div>
+                  <div class="h-8 w-8 animate-spin rounded-full border-2 border-[#b8ff20] border-t-transparent"></div>
                 } @else {
                   <button
                     (click)="frontInput.click()"
-                    class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-200"
+                    class="rounded-xl bg-black px-3 py-2 text-xs font-semibold text-[#b8ff20] transition hover:bg-black/85"
                   >
                     {{ frontPreview() ? 'Cambiar' : 'Subir' }}
                   </button>
@@ -160,21 +160,21 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
             </div>
 
             @if (uploadingFront()) {
-              <div class="h-1 bg-emerald-500 transition-all" [style.width.%]="frontProgress()"></div>
+              <div class="h-1 bg-[#b8ff20] transition-all" [style.width.%]="frontProgress()"></div>
             }
           </article>
 
           <article
-            class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white"
+            class="relative overflow-hidden rounded-2xl border border-black/10 bg-white"
             [class.ring-2]="isDraggingBack()"
-            [class.ring-emerald-400]="isDraggingBack()"
+            [class.ring-[#b8ff20]]="isDraggingBack()"
             (dragover)="onDragOver($event, 'back')"
             (dragleave)="onDragLeave('back')"
             (drop)="onDrop($event, 'dni_back')"
           >
             <div class="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
               <div
-                class="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100"
+                class="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-black/10 bg-black/[0.04]"
               >
                 @if (backPreview()) {
                   <img
@@ -184,7 +184,7 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
                   />
                   <div class="absolute inset-0 bg-black/10"></div>
                 } @else {
-                  <div class="flex h-full w-full items-center justify-center text-slate-500">
+                  <div class="flex h-full w-full items-center justify-center text-black/45">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
@@ -198,8 +198,8 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
               </div>
 
               <div class="min-w-0 flex-1">
-                <p class="text-sm font-semibold text-slate-900">Dorso del documento</p>
-                <p class="text-xs text-slate-500">
+                <p class="text-sm font-semibold text-black">Dorso del documento</p>
+                <p class="text-xs text-black/60">
                   @if (backUploaded()) {
                     Cargado correctamente
                   } @else {
@@ -218,11 +218,11 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
                   (change)="onFileSelected($event, 'dni_back')"
                 />
                 @if (uploadingBack()) {
-                  <div class="h-8 w-8 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></div>
+                  <div class="h-8 w-8 animate-spin rounded-full border-2 border-[#b8ff20] border-t-transparent"></div>
                 } @else {
                   <button
                     (click)="backInput.click()"
-                    class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-200"
+                    class="rounded-xl bg-black px-3 py-2 text-xs font-semibold text-[#b8ff20] transition hover:bg-black/85"
                   >
                     {{ backPreview() ? 'Cambiar' : 'Subir' }}
                   </button>
@@ -231,7 +231,7 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
             </div>
 
             @if (uploadingBack()) {
-              <div class="h-1 bg-emerald-500 transition-all" [style.width.%]="backProgress()"></div>
+              <div class="h-1 bg-[#b8ff20] transition-all" [style.width.%]="backProgress()"></div>
             }
           </article>
         </div>
@@ -250,9 +250,9 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
       }
 
       @if (frontOcrResult() || backOcrResult()) {
-        <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-          <header class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
-            <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Extracción de datos</p>
+        <section class="overflow-hidden rounded-2xl border border-black/10 bg-white">
+          <header class="flex items-center justify-between border-b border-black/10 px-4 py-3">
+            <p class="text-xs font-semibold uppercase tracking-[0.14em] text-black/55">Extracción de datos</p>
             <span class="rounded-full px-2 py-1 text-xs font-semibold" [class]="statusToneClass()">
               {{ isAutoVerified() ? 'Auto validado' : 'Revisión asistida' }}
             </span>
@@ -261,8 +261,8 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
           <div class="grid gap-4 px-4 py-4 sm:grid-cols-2">
             @for (field of extractedFields(); track field.key) {
               <article>
-                <p class="text-[11px] uppercase tracking-wide text-slate-500">{{ field.label }}</p>
-                <p class="mt-1 text-sm font-semibold text-slate-900">{{ field.value }}</p>
+                <p class="text-[11px] uppercase tracking-wide text-black/55">{{ field.label }}</p>
+                <p class="mt-1 text-sm font-semibold text-black">{{ field.value }}</p>
               </article>
             }
           </div>
@@ -278,7 +278,7 @@ const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
       }
 
       @if (allSidesUploaded() && !isAutoVerified()) {
-        <div class="rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+        <div class="rounded-2xl border border-[#9be500] bg-[#f7ffd8] px-4 py-3 text-sm text-black">
           Documentos recibidos. Si la validación automática no alcanza confianza alta, tu caso pasa
           a revisión manual sin perder el avance.
         </div>
@@ -527,7 +527,7 @@ export class DniUploaderComponent {
 
   statusToneClass(): string {
     return this.isAutoVerified()
-      ? 'bg-emerald-100 text-emerald-700'
+      ? 'border border-[#b8ff20] bg-[#f3ffd0] text-black'
       : 'bg-amber-100 text-amber-700';
   }
 
