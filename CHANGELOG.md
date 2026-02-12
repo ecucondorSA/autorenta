@@ -1,3 +1,7 @@
+## <small>3.92.1 (2026-02-12)</small>
+
+* fix(deploy): add /fragments/* SPA redirect for Cloudflare Pages ([46823ed](https://github.com/ecucondorSA/autorenta/commit/46823ed))
+
 ## 3.92.0 (2026-02-12)
 
 * docs: document gemini image generation ([0a662d9](https://github.com/ecucondorSA/autorenta/commit/0a662d9))
