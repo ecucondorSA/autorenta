@@ -1,3 +1,7 @@
+## 3.94.0 (2026-02-12)
+
+* feat(wallet): redesign club plans page with vehicle-tier carousel ([4a161e2](https://github.com/ecucondorSA/autorenta/commit/4a161e2))
+
 ## <small>3.93.7 (2026-02-12)</small>
 
 * fix(web): include auth headers in profile document verification trigger ([9659af4](https://github.com/ecucondorSA/autorenta/commit/9659af4))
