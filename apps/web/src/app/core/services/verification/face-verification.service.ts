@@ -1,11 +1,10 @@
 import { Injectable, inject, signal } from '@angular/core';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { environment } from '@environment';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
- * Face Verification Result from Cloudflare Worker
+ * Face Verification Result from Edge Function
  */
 export interface FaceVerificationResult {
   success: boolean;
@@ -89,8 +88,6 @@ export interface VideoUploadProgress {
 export class FaceVerificationService {
   private readonly supabase: SupabaseClient = injectSupabase();
   private readonly logger = inject(LoggerService);
-  private readonly DOC_VERIFIER_URL =
-    environment.docVerifierUrl || 'https://doc-verifier.autorentar.workers.dev';
   private readonly identityBuckets = IDENTITY_BUCKETS;
 
   // Reactive state
@@ -299,25 +296,25 @@ export class FaceVerificationService {
         ? documentUrl
         : await this.createSignedIdentityUrl(documentUrl);
 
-      // Call Cloudflare Worker for face verification
-      const response = await fetch(`${this.DOC_VERIFIER_URL}/verify-face`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Call Supabase Edge Function for face verification
+      const { data: result, error: invokeError } = await this.supabase.functions.invoke<FaceVerificationResult>(
+        'verify-face',
+        {
+          body: {
+            video_url: signedVideoUrl,
+            document_url: signedDocumentUrl,
+            user_id: user['id'],
+          },
         },
-        body: JSON.stringify({
-          video_url: signedVideoUrl,
-          document_url: signedDocumentUrl,
-          user_id: user['id'],
-        }),
-      });
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData['error'] || 'Error al verificar la identidad facial');
+      if (invokeError) {
+        throw new Error(invokeError.message || 'Error al verificar la identidad facial');
       }
 
-      const result: FaceVerificationResult = await response.json();
+      if (!result) {
+        throw new Error('No se recibió respuesta del servicio de verificación facial');
+      }
 
       // Check if user was blocked during this attempt
       if (result.is_blocked) {

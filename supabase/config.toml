@@ -89,6 +89,11 @@ verify_jwt = false
 # and needs to support Supabase Auth ES256 user JWTs passed from the web app.
 verify_jwt = false
 
+[functions.verify-face]
+# Face verification uses service_role internally — no user JWT needed at gateway.
+# Frontend calls this directly with user_id in body.
+verify_jwt = false
+
 [functions.manual-identity-review]
 # Public action links from email (SI/NO) must work without user session.
 # Security is enforced by signed token + expiry + one-time status transition in DB.
