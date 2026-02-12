@@ -1,3 +1,7 @@
+## <small>3.94.1 (2026-02-12)</small>
+
+* fix(auth): repair user registration + normalize verify-user-docs roles ([4b951e9](https://github.com/ecucondorSA/autorenta/commit/4b951e9))
+
 ## 3.94.0 (2026-02-12)
 
 * feat(wallet): redesign club plans page with vehicle-tier carousel ([4a161e2](https://github.com/ecucondorSA/autorenta/commit/4a161e2))
