@@ -196,11 +196,19 @@ interface StepIndicator {
 
                 @if (!canStartLicenseUpload()) {
                   <app-dni-uploader (documentsUpdated)="onDocumentsUpdated()"></app-dni-uploader>
-                } @else if (!hasLicensePair() && !isLevelComplete(2)) {
-                  <app-license-uploader
-                    [hideCountrySelector]="false"
-                    (verificationCompleted)="onLicenseVerificationComplete()"
-                  ></app-license-uploader>
+                } @else if (!isLevelComplete(2)) {
+                  <div class="space-y-4">
+                    <div
+                      class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-700"
+                    >
+                      Puedes reemplazar fotos en cualquier momento mientras la revisión siga en proceso.
+                    </div>
+                    <app-dni-uploader (documentsUpdated)="onDocumentsUpdated()"></app-dni-uploader>
+                    <app-license-uploader
+                      [hideCountrySelector]="false"
+                      (verificationCompleted)="onLicenseVerificationComplete()"
+                    ></app-license-uploader>
+                  </div>
                 }
 
                 @if (showLevel2ManualReview()) {
