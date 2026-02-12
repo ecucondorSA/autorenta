@@ -1,5 +1,5 @@
 import { Component, inject, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { SubscriptionService } from '@core/services/subscriptions/subscription.service';
@@ -8,18 +8,22 @@ import {
   MEMBERSHIP_CONFIG,
   VEHICLE_TIER_CONFIG,
   VEHICLE_TIER_ORDER,
-  getVehicleTierName,
+  VehicleTier,
+  MembershipPlan,
   MembershipPlanConfig,
+  getVehicleTierName,
+  calcHoldAndBuydown,
+  canAccessTierWithDiscount,
 } from '@core/models/guarantee-tiers.model';
 
 @Component({
   selector: 'app-club-plans',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule],
+  imports: [IonicModule, DecimalPipe],
   template: `
     <div class="min-h-screen bg-surface-base py-6 px-4 pb-24">
-      <div class="max-w-5xl mx-auto space-y-10">
+      <div class="max-w-6xl mx-auto space-y-10">
         <!-- Header -->
         <div class="text-center space-y-4">
           <button
@@ -40,43 +44,38 @@ import {
             AUTORENTAR <span class="text-cta-default">CLUB</span>
           </h1>
           <p class="text-lg text-text-secondary max-w-2xl mx-auto font-medium">
-            Olvidate de las garantías gigantes. Uníte al Club y alquilá con depósitos reducidos y
-            protección total de la comunidad.
+            Elegí tu tipo de auto y mirá cuánto ahorrás en garantía con cada plan.
           </p>
         </div>
 
-        <!-- NEW: Vehicle Tiers Education Section -->
-        <div class="bg-surface-secondary/50 rounded-3xl p-6 md:p-8 border border-border-default">
-          <div class="flex items-center gap-3 mb-6">
-            <div
-              class="w-10 h-10 rounded-xl bg-cta-default/10 flex items-center justify-center text-cta-default"
-            >
-              <ion-icon name="car-sport" class="text-xl"></ion-icon>
+        <!-- Cómo Funciona -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="flex items-center gap-4 bg-surface-secondary/50 rounded-2xl p-5 border border-border-default">
+            <div class="w-12 h-12 rounded-xl bg-cta-default/10 flex items-center justify-center flex-shrink-0">
+              <ion-icon name="ribbon" class="text-2xl text-cta-default"></ion-icon>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-text-primary italic uppercase tracking-tight">
-                Escala de Garantías
-              </h2>
-              <p class="text-xs text-text-secondary font-bold uppercase tracking-widest">
-                Hold base según el valor del vehículo
-              </p>
+              <p class="text-sm font-black text-text-primary uppercase tracking-tight">1. Elegí un plan</p>
+              <p class="text-xs text-text-secondary">Membresía mensual desde USD 19.99</p>
             </div>
           </div>
-
-          <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
-            @for (tier of vehicleTiers; track tier) {
-              <div
-                class="bg-surface-base p-4 rounded-2xl border border-border-default text-center space-y-1"
-              >
-                <p class="text-[10px] font-black uppercase text-text-muted">{{ tier }}</p>
-                <p class="text-lg font-black text-text-primary">
-                  \${{ vehicleConfigs[tier].holdBaseUsd }}
-                </p>
-                <p class="text-[9px] text-text-secondary leading-none">
-                  {{ formatTierRange(tier) }}
-                </p>
-              </div>
-            }
+          <div class="flex items-center gap-4 bg-surface-secondary/50 rounded-2xl p-5 border border-border-default">
+            <div class="w-12 h-12 rounded-xl bg-cta-default/10 flex items-center justify-center flex-shrink-0">
+              <ion-icon name="car-sport" class="text-2xl text-cta-default"></ion-icon>
+            </div>
+            <div>
+              <p class="text-sm font-black text-text-primary uppercase tracking-tight">2. Alquilá</p>
+              <p class="text-xs text-text-secondary">Reservá cualquier auto dentro de tu cobertura</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 bg-surface-secondary/50 rounded-2xl p-5 border border-border-default">
+            <div class="w-12 h-12 rounded-xl bg-cta-default/10 flex items-center justify-center flex-shrink-0">
+              <ion-icon name="wallet" class="text-2xl text-cta-default"></ion-icon>
+            </div>
+            <div>
+              <p class="text-sm font-black text-text-primary uppercase tracking-tight">3. Depositá menos</p>
+              <p class="text-xs text-text-secondary">Tu garantía se reduce, la plataforma cubre el resto</p>
+            </div>
           </div>
         </div>
 
@@ -97,8 +96,7 @@ import {
                 </h3>
                 <p class="text-sm text-text-secondary font-medium">
                   Tu protección está activa y cubre hasta vehículos nivel
-                  <strong>{{ currentMaxTier() }}</strong
-                  >.
+                  <strong>{{ currentMaxTier() }}</strong>.
                 </p>
               </div>
               <button
@@ -111,113 +109,163 @@ import {
           </div>
         }
 
-        <!-- Plans comparison -->
-        <div class="grid md:grid-cols-3 gap-8">
-          @for (plan of membershipPlans; track plan.plan) {
-            <div
-              [class]="getPlanCardClass(plan)"
-              class="relative rounded-[32px] p-8 space-y-8 transition-all hover:scale-[1.02] duration-300 shadow-sm"
-            >
-              <!-- Popular/Premium badge -->
-              @if (plan.plan === 'silver') {
-                <div class="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span
-                    class="px-6 py-1.5 rounded-full bg-cta-default text-cta-text text-[10px] font-black uppercase tracking-widest shadow-lg"
-                  >
-                    RECOMENDADO
-                  </span>
-                </div>
-              }
-              @if (plan.plan === 'black') {
-                <div class="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span
-                    class="px-6 py-1.5 rounded-full bg-black text-white text-[10px] font-black uppercase tracking-widest shadow-lg border border-white/20"
-                  >
-                    NIVEL ELITE
-                  </span>
-                </div>
-              }
+        <!-- Vehicle Tier Carousel -->
+        <div class="space-y-4">
+          <div class="text-center">
+            <h2 class="text-2xl font-black text-text-primary italic uppercase tracking-tighter">
+              Elegí tu vehículo
+            </h2>
+            <p class="text-sm text-text-secondary mt-1">
+              Deslizá para ver cada categoría y cuánto ahorrás por alquiler
+            </p>
+          </div>
 
-              <!-- Tier header -->
-              <div class="text-center space-y-3">
-                <h3 class="text-2xl font-black text-text-primary italic uppercase tracking-tighter">
-                  {{ plan.name }}
-                </h3>
-                <p class="text-xs font-bold text-text-secondary uppercase tracking-widest">
-                  Hasta autos {{ getVehicleTierName(plan.maxVehicleTier) }}
-                </p>
-              </div>
-
-              <!-- Price -->
-              <div
-                class="text-center py-4 bg-surface-secondary/30 rounded-2xl border border-border-default/50"
-              >
-                <div class="flex items-baseline justify-center gap-1">
-                  <span class="text-xs font-black text-text-muted">USD</span>
-                  <span class="text-5xl font-black text-text-primary tracking-tighter italic">{{
-                    plan.priceMonthlyUsd
-                  }}</span>
-                  <span class="text-xs font-bold text-text-muted">/mes</span>
-                </div>
-              </div>
-
-              <!-- Features list -->
-              <div class="space-y-4">
-                <p
-                  class="text-[10px] font-black text-text-muted uppercase tracking-widest text-center"
-                >
-                  Beneficios Exclusivos
-                </p>
-                <ul class="space-y-4">
-                  <li class="flex items-center gap-3">
-                    <div
-                      class="w-6 h-6 rounded-lg bg-cta-default text-cta-text flex items-center justify-center flex-shrink-0"
-                    >
-                      <ion-icon name="checkmark" class="text-sm font-bold"></ion-icon>
+          <div
+            class="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth
+                   [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5
+                   [&::-webkit-scrollbar-track]:bg-surface-secondary
+                   [&::-webkit-scrollbar-thumb]:bg-cta-default/40 [&::-webkit-scrollbar-thumb]:rounded-full"
+          >
+            @for (tier of vehicleTiers; track tier) {
+              <div class="snap-start flex-shrink-0 w-[85vw] md:w-[420px]">
+                <div class="rounded-3xl border-2 border-border-default bg-surface-raised p-6 space-y-5 h-full">
+                  <!-- Card Header -->
+                  <div class="text-center space-y-2">
+                    <div class="inline-flex items-center gap-2 bg-cta-default/10 rounded-full px-4 py-1">
+                      <ion-icon name="car-sport" class="text-sm text-cta-default"></ion-icon>
+                      <span class="text-[10px] font-black uppercase tracking-widest text-cta-default">
+                        {{ getVehicleTierName(tier) }}
+                      </span>
                     </div>
-                    <span class="text-sm font-bold text-text-primary"
-                      >{{ plan.holdDiscountPct * 100 }}% OFF en Garantía</span
-                    >
-                  </li>
-                  @for (feature of plan.features.slice(1); track feature) {
-                    <li class="flex items-center gap-3">
-                      <div
-                        class="w-6 h-6 rounded-lg bg-surface-secondary text-cta-default flex items-center justify-center flex-shrink-0"
-                      >
-                        <ion-icon name="checkmark" class="text-sm"></ion-icon>
-                      </div>
-                      <span class="text-sm font-medium text-text-secondary">{{ feature }}</span>
-                    </li>
-                  }
-                </ul>
-              </div>
+                    <p class="text-xs text-text-secondary">{{ formatTierRange(tier) }}</p>
+                  </div>
 
-              <!-- CTA -->
-              <button
-                (click)="selectPlan(plan.plan)"
-                [disabled]="isCurrentTierByPlan(plan.plan) || isDowngradeByPlan(plan.plan)"
-                [class]="getCtaButtonClassByPlan(plan)"
-                class="w-full py-5 rounded-2xl font-black uppercase tracking-widest text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xl"
-              >
-                @if (isCurrentTierByPlan(plan.plan)) {
-                  <span>Membresía Actual</span>
-                } @else if (isDowngradeByPlan(plan.plan)) {
-                  <span>Plan Inferior</span>
-                } @else {
-                  <span>Elegir {{ plan.name.split(' ')[0] }}</span>
-                }
-              </button>
-            </div>
-          }
+                  <!-- Base guarantee (anchor price) -->
+                  <div class="text-center bg-surface-secondary/40 rounded-2xl py-3 px-4">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">
+                      Sin membresía
+                    </p>
+                    <p class="text-2xl font-black text-text-primary">
+                      USD {{ vehicleConfigs[tier].holdBaseUsd | number }}
+                    </p>
+                    <p class="text-[10px] text-text-secondary">de garantía por alquiler</p>
+                  </div>
+
+                  <!-- Membership options -->
+                  <div class="space-y-3">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-text-muted text-center">
+                      Con membresía pagás menos
+                    </p>
+
+                    @for (plan of membershipPlans; track plan.plan) {
+                      @let calc = getCalc(tier, plan.plan);
+                      @let accessible = canAccess(plan.plan, tier);
+                      @let isSilver = plan.plan === 'silver';
+                      @let isBlack = plan.plan === 'black';
+
+                      <div
+                        class="relative rounded-2xl p-4 transition-all border-2"
+                        [class.border-cta-default]="isSilver && accessible"
+                        [class.border-border-default]="!isSilver || !accessible"
+                        [class.bg-cta-default/5]="isSilver && accessible"
+                        [class.bg-gradient-to-r]="isBlack && accessible"
+                        [class.from-gray-900]="isBlack && accessible"
+                        [class.to-gray-800]="isBlack && accessible"
+                        [class.opacity-40]="!accessible"
+                      >
+                        @if (isSilver && accessible) {
+                          <span class="absolute -top-2.5 left-4 px-3 py-0.5 bg-cta-default text-cta-text text-[8px] font-black uppercase tracking-widest rounded-full">
+                            Recomendado
+                          </span>
+                        }
+
+                        <div class="flex items-center justify-between gap-3">
+                          <!-- Plan info -->
+                          <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                              <p class="text-sm font-black uppercase tracking-tight"
+                                 [class.text-text-primary]="!isBlack || !accessible"
+                                 [class.text-white]="isBlack && accessible"
+                              >{{ plan.name }}</p>
+                              <span class="text-[10px] text-text-secondary font-medium"
+                                    [class.text-gray-400]="isBlack && accessible"
+                              >\${{ plan.priceMonthlyUsd }}/mes</span>
+                            </div>
+
+                            @if (accessible) {
+                              <div class="flex items-baseline gap-2 mt-1">
+                                <span class="text-xs text-text-muted line-through"
+                                      [class.text-gray-500]="isBlack"
+                                >USD {{ calc.baseHoldUsd | number }}</span>
+                                <span class="text-[10px] font-bold text-cta-default"
+                                      [class.text-emerald-400]="isBlack"
+                                >-{{ calc.discountPct * 100 }}%</span>
+                              </div>
+                            } @else {
+                              <p class="text-[10px] text-text-muted italic mt-1">
+                                Auto excede cobertura de este plan
+                              </p>
+                            }
+                          </div>
+
+                          <!-- Price + CTA -->
+                          @if (accessible) {
+                            <div class="text-right flex-shrink-0">
+                              <p class="text-xl font-black text-cta-default"
+                                 [class.text-emerald-400]="isBlack"
+                              >
+                                \${{ calc.holdUsd | number }}
+                              </p>
+                              <button
+                                (click)="selectPlan(plan.plan)"
+                                class="mt-1 px-4 py-1.5 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all active:scale-95"
+                                [class.bg-cta-default]="!isBlack"
+                                [class.text-cta-text]="!isBlack"
+                                [class.hover:bg-cta-hover]="!isBlack"
+                                [class.bg-white]="isBlack"
+                                [class.text-black]="isBlack"
+                                [class.hover:bg-gray-200]="isBlack"
+                              >
+                                Elegir
+                              </button>
+                            </div>
+                          } @else {
+                            <div class="text-right flex-shrink-0">
+                              <p class="text-sm font-bold text-text-muted">
+                                \${{ calc.holdUsd | number }}
+                              </p>
+                              <p class="text-[9px] text-text-muted">sin descuento</p>
+                            </div>
+                          }
+                        </div>
+
+                        @if (accessible && calc.buyDownFgoUsd > 0) {
+                          <div class="mt-2 bg-cta-default/10 rounded-lg px-3 py-1.5 text-center"
+                               [class.bg-emerald-400/10]="isBlack"
+                          >
+                            <span class="text-[10px] font-bold text-cta-default"
+                                  [class.text-emerald-400]="isBlack"
+                            >
+                              Ahorrás USD {{ calc.buyDownFgoUsd | number }} por alquiler
+                            </span>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
         </div>
 
         <!-- Trust & Security -->
         <div class="grid md:grid-cols-3 gap-6 pt-10 border-t border-border-default">
           <div class="flex flex-col items-center text-center space-y-2">
             <ion-icon name="shield-half" class="text-3xl text-cta-default"></ion-icon>
-            <h4 class="font-black text-sm uppercase tracking-tighter italic">Protección FGO</h4>
+            <h4 class="font-black text-sm uppercase tracking-tighter italic">Garantía Reducida</h4>
             <p class="text-xs text-text-secondary font-medium">
-              El Fondo de Garantía cubre la diferencia del depósito.
+              La plataforma cubre hasta el 50% de tu depósito de garantía.
             </p>
           </div>
           <div class="flex flex-col items-center text-center space-y-2">
@@ -233,7 +281,7 @@ import {
             <ion-icon name="infinite" class="text-3xl text-cta-default"></ion-icon>
             <h4 class="font-black text-sm uppercase tracking-tighter italic">Sin Compromiso</h4>
             <p class="text-xs text-text-secondary font-medium">
-              Cancelá o cambiá de plan en cualquier momento.
+              Cancelá o cambiá de plan en cualquier momento. Sin permanencia.
             </p>
           </div>
         </div>
@@ -256,14 +304,12 @@ export class ClubPlansPage implements OnInit {
   private readonly subscriptionService = inject(SubscriptionService);
   private readonly analytics = inject(AnalyticsService);
 
-  readonly plans = this.subscriptionService.plans;
   readonly hasActiveSubscription = this.subscriptionService.hasActiveSubscription;
   readonly subscription = this.subscriptionService.subscription;
 
-  // New Data Sources
   readonly vehicleTiers = VEHICLE_TIER_ORDER;
   readonly vehicleConfigs = VEHICLE_TIER_CONFIG;
-  readonly membershipPlans = [
+  readonly membershipPlans: MembershipPlanConfig[] = [
     MEMBERSHIP_CONFIG['club'],
     MEMBERSHIP_CONFIG['silver'],
     MEMBERSHIP_CONFIG['black'],
@@ -271,23 +317,59 @@ export class ClubPlansPage implements OnInit {
 
   getVehicleTierName = getVehicleTierName;
 
-  formatTierRange(tier: keyof typeof VEHICLE_TIER_CONFIG): string {
+  // DB tier → UI plan mapping (single source of truth)
+  private readonly DB_TO_UI: Record<string, MembershipPlan> = {
+    club_standard: 'club',
+    club_black: 'silver',
+    club_luxury: 'black',
+  };
+  private readonly UI_TO_DB: Record<string, string> = {
+    club: 'club_standard',
+    silver: 'club_black',
+    black: 'club_luxury',
+  };
+  private readonly TIER_NAMES: Record<string, string> = {
+    club_standard: 'Club Access',
+    club_black: 'Silver Access',
+    club_luxury: 'Black Access',
+  };
+  private readonly TIER_MAX_VEHICLE: Record<string, string> = {
+    club_standard: 'Standard',
+    club_black: 'Premium',
+    club_luxury: 'Luxury',
+  };
+
+  // Cache de cálculos para evitar recalcular en template
+  private readonly calcCache = new Map<string, ReturnType<typeof calcHoldAndBuydown>>();
+
+  getCalc(vehicleTier: VehicleTier, plan: MembershipPlan): ReturnType<typeof calcHoldAndBuydown> {
+    const key = `${vehicleTier}:${plan}`;
+    let result = this.calcCache.get(key);
+    if (!result) {
+      result = calcHoldAndBuydown(vehicleTier, plan);
+      this.calcCache.set(key, result);
+    }
+    return result;
+  }
+
+  canAccess(plan: MembershipPlan, vehicleTier: VehicleTier): boolean {
+    return canAccessTierWithDiscount(plan, vehicleTier);
+  }
+
+  formatTierRange(tier: VehicleTier): string {
     const config = this.vehicleConfigs[tier];
     const formatUsd = (value: number): string => value.toLocaleString('en-US');
 
     if (config.valueMinUsd === null && config.valueMaxUsd !== null) {
-      return `< USD ${formatUsd(config.valueMaxUsd)}`;
+      return `Hasta USD ${formatUsd(config.valueMaxUsd)}`;
     }
-
     if (config.valueMinUsd !== null && config.valueMaxUsd === null) {
-      return `> USD ${formatUsd(config.valueMinUsd)}`;
+      return `Desde USD ${formatUsd(config.valueMinUsd)}`;
     }
-
     if (config.valueMinUsd !== null && config.valueMaxUsd !== null) {
       return `USD ${formatUsd(config.valueMinUsd)} - ${formatUsd(config.valueMaxUsd)}`;
     }
-
-    return 'USD';
+    return '';
   }
 
   async ngOnInit() {
@@ -297,92 +379,17 @@ export class ClubPlansPage implements OnInit {
   currentTierName(): string {
     const sub = this.subscription();
     if (!sub) return '';
-    const mapping: Record<string, string> = {
-      club_standard: 'Club Access',
-      club_black: 'Silver Access',
-      club_luxury: 'Black Access',
-    };
-    return mapping[sub.tier] || sub.tier;
+    return this.TIER_NAMES[sub.tier] || sub.tier;
   }
 
   currentMaxTier(): string {
     const sub = this.subscription();
     if (!sub) return 'Standard';
-    const mapping: Record<string, string> = {
-      club_standard: 'Standard',
-      club_black: 'Premium',
-      club_luxury: 'Luxury',
-    };
-    return mapping[sub.tier] || 'Standard';
+    return this.TIER_MAX_VEHICLE[sub.tier] || 'Standard';
   }
 
-  subscriptionExpiry(): Date {
-    const sub = this.subscription();
-    return sub ? new Date(sub.expires_at) : new Date();
-  }
-
-  isCurrentTierByPlan(plan: string): boolean {
-    const sub = this.subscription();
-    if (!sub || sub.status !== 'active') return false;
-    const mapping: Record<string, string> = {
-      club_standard: 'club',
-      club_black: 'silver',
-      club_luxury: 'black',
-    };
-    return mapping[sub.tier] === plan;
-  }
-
-  isDowngradeByPlan(plan: string): boolean {
-    const sub = this.subscription();
-    if (!sub || sub.status !== 'active') return false;
-
-    const rank: Record<string, number> = { club: 1, silver: 2, black: 3 };
-    const currentRank = rank[this.mapDbTierToPlan(sub.tier)] || 0;
-    const targetRank = rank[plan] || 0;
-
-    return targetRank < currentRank;
-  }
-
-  private mapDbTierToPlan(dbTier: string): string {
-    const mapping: Record<string, string> = {
-      club_standard: 'club',
-      club_black: 'silver',
-      club_luxury: 'black',
-    };
-    return mapping[dbTier] || '';
-  }
-
-  getPlanCardClass(plan: MembershipPlanConfig): string {
-    const base = 'border-2';
-    if (plan.plan === 'black') {
-      return `${base} border-black bg-gradient-to-br from-gray-900 to-gray-800 text-white`;
-    }
-    if (plan.plan === 'silver') {
-      return `${base} border-border-default bg-surface-secondary/20 text-text-primary`;
-    }
-    return `${base} border-cta-default/30 bg-gradient-to-br from-cta-default/5 to-surface-raised text-text-primary`;
-  }
-
-  getCtaButtonClassByPlan(plan: MembershipPlanConfig): string {
-    if (this.isCurrentTierByPlan(plan.plan)) {
-      return 'bg-surface-secondary text-text-secondary border border-border-default';
-    }
-    if (this.isDowngradeByPlan(plan.plan)) {
-      return 'bg-surface-secondary text-text-secondary opacity-50 cursor-not-allowed';
-    }
-    if (plan.plan === 'black') {
-      return 'bg-white text-black hover:bg-gray-100';
-    }
-    return 'bg-cta-default text-cta-text font-black hover:bg-cta-hover shadow-lg shadow-cta-default/20 transition-all active:scale-95';
-  }
-
-  selectPlan(plan: string): void {
-    const dbMapping: Record<string, string> = {
-      club: 'club_standard',
-      silver: 'club_black',
-      black: 'club_luxury',
-    };
-    const tierSlug = dbMapping[plan];
+  selectPlan(plan: MembershipPlan): void {
+    const tierSlug = this.UI_TO_DB[plan];
     this.analytics.trackEvent('club_plan_selected', { tier: tierSlug });
     void this.router.navigate(['/wallet/club/subscribe'], { queryParams: { tier: tierSlug } });
   }
