@@ -167,6 +167,13 @@ Checklist de entrega:
 - Guía principal para agentes: `AGENTS.md`
 - Índice de anexos Claude: `docs/agents/claude/ANNEX_INDEX.md`
 
+### Gemini Image Generation
+- **Modelo**: `gemini-3-pro-image-preview` (Nano Banana Pro)
+- **Endpoint**: `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent`
+- **Config**: `"generationConfig": {"responseModalities": ["TEXT","IMAGE"]}`
+- **Output**: Base64 PNG en `candidates[0].content.parts[].inlineData`
+- **Key env var**: `GEMINI_API_KEY`
+
 ### Snapshot histórico completo
 - `docs/agents/claude/CLAUDE_REFERENCE_FULL_2026-02-12.md`
 

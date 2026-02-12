@@ -519,6 +519,22 @@ apps/web/src/app/core/services/pricing.service.ts
 
 ---
 
+## 14b. Gemini Image Generation
+
+**Modelo**: `gemini-3-pro-image-preview` (Nano Banana Pro)
+
+```bash
+curl -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=$GEMINI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"contents":[{"parts":[{"text":"PROMPT"}]}],"generationConfig":{"responseModalities":["TEXT","IMAGE"]}}'
+```
+
+- **Output**: Base64 PNG en `candidates[0].content.parts[].inlineData.data`
+- **Guardar en**: `apps/web/src/assets/images/` (subdirectorio según contexto)
+- **Key**: `GEMINI_API_KEY` (env var)
+
+---
+
 ## 15. Estructura del Proyecto
 
 ```

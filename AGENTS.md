@@ -207,6 +207,13 @@ const { data } = await supabase.rpc('public.get_user_bookings', { user_id });
 - Logging must include context (function + request scope).
 - Logs are viewed in the Supabase Dashboard, not via CLI.
 
+### Gemini Image Generation
+- **Model**: `gemini-3-pro-image-preview` (Nano Banana Pro)
+- **Endpoint**: `POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=$GEMINI_API_KEY`
+- **Config**: `"generationConfig": {"responseModalities": ["TEXT","IMAGE"]}`
+- **Output**: Base64 PNG in `candidates[0].content.parts[].inlineData.data`
+- **Save to**: `apps/web/src/assets/images/` (use descriptive subdirectories)
+
 ### Production DB Access (CLI)
 - The direct DB host (`db.<project_ref>.supabase.co`) may timeout in some environments (IPv6). Prefer the pooler for `psql`.
 - Template:
