@@ -17,7 +17,7 @@ import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { MetaService } from '@core/services/ui/meta.service';
 import { Car } from '@core/models';
 import { CarCardComponent } from '@shared/components/car-card/car-card.component';
-import { CarsMapComponent } from '@shared/components/cars-map/cars-map.component';
+import { CarsMapComponent } from '@shared/components/maps/cars-map/cars-map.component';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { CarCarouselComponent } from '@shared/components/car-carousel/car-carousel.component';
 import { BookingSheetComponent } from '@shared/components/booking-sheet/booking-sheet.component';

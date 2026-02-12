@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LiveTrackingMapComponent } from '@shared/components/live-tracking-map/live-tracking-map.component';
+import { LiveTrackingMapComponent } from '@shared/components/maps/live-tracking-map/live-tracking-map.component';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { locateOutline, scanOutline, alertCircle, closeOutline } from 'ionicons/icons';

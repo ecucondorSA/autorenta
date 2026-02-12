@@ -21,10 +21,10 @@ import { BookingsService } from '@core/services/bookings/bookings.service';
 import { PricingService } from '@core/services/payments/pricing.service';
 import { ProfileService } from '@core/services/auth/profile.service';
 import { NavigationService } from '@core/services/ui/navigation.service';
-import { MoneyPipe } from '../../pipes/money.pipe';
-import { getAgeFromProfile } from '../../utils/age-calculator';
-import { BirthDateModalComponent } from '../birth-date-modal/birth-date-modal.component';
-import { DynamicPricingBadgeComponent } from '../dynamic-pricing-badge/dynamic-pricing-badge.component';
+import { MoneyPipe } from '../../../pipes/money.pipe';
+import { getAgeFromProfile } from '../../../utils/age-calculator';
+import { BirthDateModalComponent } from '../../birth-date-modal/birth-date-modal.component';
+import { DynamicPricingBadgeComponent } from '../../dynamic-pricing-badge/dynamic-pricing-badge.component';
 
 export interface BookingFormData {
   startDate: string;

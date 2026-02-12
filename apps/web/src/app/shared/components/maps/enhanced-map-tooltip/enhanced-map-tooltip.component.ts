@@ -15,7 +15,7 @@ import {
 import type { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { CarLocationsService } from '@core/services/cars/car-locations.service';
 import { NavigationService } from '@core/services/ui/navigation.service';
-import { MoneyPipe } from '../../pipes/money.pipe';
+import { MoneyPipe } from '../../../pipes/money.pipe';
 
 /**
  * Enhanced Map Tooltip Component

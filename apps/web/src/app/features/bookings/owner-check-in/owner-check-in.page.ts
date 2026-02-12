@@ -22,7 +22,7 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
 import { IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
-import { LiveTrackingMapComponent } from '../../../shared/components/live-tracking-map/live-tracking-map.component';
+import { LiveTrackingMapComponent } from '../../../shared/components/maps/live-tracking-map/live-tracking-map.component';
 import { formatDate } from '../../../shared/utils/date.utils';
 
 /**

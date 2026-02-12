@@ -17,7 +17,7 @@ import { LocationService, type LocationCoordinates } from '@core/services/geo/lo
 import { ProfileService } from '@core/services/auth/profile.service';
 import { GeocodingService } from '@core/services/geo/geocoding.service';
 import { UserProfile } from '../../core/models';
-import { LocationMapPickerComponent } from '../../shared/components/location-map-picker/location-map-picker.component';
+import { LocationMapPickerComponent } from '../../shared/components/maps/location-map-picker/location-map-picker.component';
 
 @Component({
   standalone: true,
