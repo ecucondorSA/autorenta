@@ -1,3 +1,8 @@
+## 3.93.0 (2026-02-12)
+
+* feat(kyc): email manual review (yes/no) ([b130562](https://github.com/ecucondorSA/autorenta/commit/b130562))
+* fix(db): manual identity review email workflow ([6f68fb7](https://github.com/ecucondorSA/autorenta/commit/6f68fb7))
+
 ## <small>3.92.2 (2026-02-12)</small>
 
 * fix(db): add missing local migration 20260212065639 ([d977e9f](https://github.com/ecucondorSA/autorenta/commit/d977e9f))
