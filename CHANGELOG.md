@@ -1,3 +1,8 @@
+## 3.91.0 (2026-02-12)
+
+* feat(fragments): add BYD-001 page and harden investor stats ([c588c10](https://github.com/ecucondorSA/autorenta/commit/c588c10))
+* fix(web): add desktop user menu entrypoint on cars list ([9e87fc0](https://github.com/ecucondorSA/autorenta/commit/9e87fc0))
+
 ## <small>3.90.4 (2026-02-12)</small>
 
 * fix(repo): restore unit gates, harden repo hygiene docs, and remove stray artifacts ([c23d015](https://github.com/ecucondorSA/autorenta/commit/c23d015))
