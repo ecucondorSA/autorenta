@@ -572,7 +572,7 @@ async function requestManualDriverReviewByEmail(
       (await createSignedUrl(adminClient, doc.storage_path, 60 * 60));
   }
 
-  const actionBaseUrl = `${SUPABASE_URL.replace(/\\/$/, '')}/functions/v1/manual-identity-review`;
+  const actionBaseUrl = `${SUPABASE_URL.replace(/\/$/, '')}/functions/v1/manual-identity-review`;
   const approveUrl = `${actionBaseUrl}?token=${encodeURIComponent(token)}&decision=yes`;
   const rejectUrl = `${actionBaseUrl}?token=${encodeURIComponent(token)}&decision=no`;
 
