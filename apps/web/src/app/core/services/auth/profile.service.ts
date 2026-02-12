@@ -318,18 +318,43 @@ export class ProfileService {
     }
 
     try {
-      await this.supabase.functions.invoke('verify-user-docs', {
+      const headers = await this.buildEdgeFunctionAuthHeaders();
+      const { error: verificationInvokeError } = await this.supabase.functions.invoke(
+        'verify-user-docs',
+        {
         body: {
           document_id: data['id'],
           kind,
           trigger: 'document-upload',
         },
-      });
+          headers,
+        },
+      );
+
+      if (verificationInvokeError) {
+        throw verificationInvokeError;
+      }
     } catch (verificationError) {
       this.logger.warn(`Document verification failed (non-blocking): ${verificationError}`, 'ProfileService');
     }
 
     return data as UserDocument;
+  }
+
+  private async buildEdgeFunctionAuthHeaders(): Promise<Record<string, string>> {
+    let session = await this.authService.ensureSession();
+
+    if (!session?.access_token) {
+      session = await this.authService.refreshSession();
+    }
+
+    if (!session?.access_token) {
+      throw new Error('Tu sesión expiró. Por favor, iniciá sesión nuevamente.');
+    }
+
+    return {
+      Authorization: `Bearer ${session.access_token}`,
+    };
   }
 
   async getMyDocuments(): Promise<UserDocument[]> {
