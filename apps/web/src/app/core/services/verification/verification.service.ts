@@ -392,15 +392,48 @@ export class VerificationService implements OnDestroy {
 
     const result = await this.retryWithBackoff(
       async () => {
-        const { error } = await this.supabase.functions.invoke('verify-user-docs', { body });
-        if (error) throw error;
+        const headers = await this.buildEdgeFunctionAuthHeaders();
+        const { error } = await this.supabase.functions.invoke('verify-user-docs', {
+          body,
+          headers,
+        });
+
+        if (error) {
+          const info = await this.extractEdgeFunctionErrorInfo(error);
+          const logMessage = 'triggerVerification: Edge Function Error';
+          const logPayload = {
+            status: info.status,
+            code: info.code,
+            message: info.message,
+          };
+
+          if (info.status !== null && info.status < 500) {
+            this.logger.info(logMessage, logPayload);
+          } else {
+            this.logger.error(logMessage, logPayload);
+          }
+
+          throw new EdgeFunctionUserError(
+            this.getVerificationUserMessage(info),
+            info.status,
+            info.code,
+          );
+        }
+
         return true;
       },
-      { maxAttempts: 3, baseDelayMs: 200, operationName: 'triggerVerification' },
+      {
+        maxAttempts: 3,
+        baseDelayMs: 200,
+        operationName: 'triggerVerification',
+        throwLastError: true,
+      },
     );
 
     if (!result) {
-      throw new Error('Verificación fallida después de múltiples intentos');
+      throw new Error(
+        'No pudimos finalizar la revisión automática en este momento. Intenta nuevamente en unos segundos.',
+      );
     }
 
     await Promise.all([this.loadStatuses(), this.loadDocuments()]);
@@ -635,6 +668,30 @@ export class VerificationService implements OnDestroy {
     }
 
     return 'No pudimos verificar tu documento en este momento. Por favor, intenta de nuevo en unos segundos.';
+  }
+
+  private getVerificationUserMessage(info: EdgeFunctionErrorInfo): string {
+    if (this.isAuthErrorInfo(info)) {
+      return 'Tu sesión expiró. Vuelve a iniciar sesión e intenta nuevamente.';
+    }
+
+    if (info.status === 403 || info.code === 'FORBIDDEN') {
+      return 'Tu sesión no tiene permisos para esta operación. Cierra sesión, vuelve a ingresar e intenta nuevamente.';
+    }
+
+    if (info.status === 404) {
+      return 'El servicio de revisión automática no está disponible en este entorno. Intenta nuevamente en unos minutos.';
+    }
+
+    if (info.status === 429) {
+      return 'Estamos procesando tu última revisión. Espera unos segundos antes de reintentar.';
+    }
+
+    if (info.message && !this.isTechnicalAuthMessage(info.message)) {
+      return info.message;
+    }
+
+    return 'No pudimos finalizar la revisión automática en este momento. Intenta nuevamente en unos segundos.';
   }
 
   private isAuthErrorInfo(info: EdgeFunctionErrorInfo): boolean {
@@ -1010,10 +1067,12 @@ export class VerificationService implements OnDestroy {
   }
 
   /**
-   * Construye headers para verify-document con token de usuario vigente.
+   * Construye headers de autenticación para Edge Functions con token de usuario vigente.
    * Si el access token está por expirar, intenta refrescarlo antes del request.
    */
-  private async buildVerifyDocumentHeaders(): Promise<Record<string, string>> {
+  private async buildEdgeFunctionAuthHeaders(
+    options: { includeTraceHeader?: boolean } = {},
+  ): Promise<Record<string, string>> {
     let session = await this.authService.ensureSession();
 
     if (!session?.access_token) {
@@ -1059,11 +1118,18 @@ export class VerificationService implements OnDestroy {
     };
 
     // Avoid unnecessary preflight failures in production when custom CORS headers are restricted.
-    if (!environment.production) {
+    if (options.includeTraceHeader && !environment.production) {
       headers[OCR_TRACE_HEADER] = this.createOcrTraceId();
     }
 
     return headers;
+  }
+
+  /**
+   * Construye headers para verify-document (incluye trace opcional en dev).
+   */
+  private async buildVerifyDocumentHeaders(): Promise<Record<string, string>> {
+    return this.buildEdgeFunctionAuthHeaders({ includeTraceHeader: true });
   }
 
   private shouldRefreshAccessToken(accessToken: string, payload?: AccessTokenPayload): boolean {
