@@ -1,10 +1,27 @@
+import { Injector, runInInjectionContext } from '@angular/core';
+import { vi } from 'vitest';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { BeaconProtocol, BeaconMessageType } from './beacon-protocol';
 
 describe('BeaconProtocol', () => {
   let protocol: BeaconProtocol;
+  const loggerMock = {
+    warn: vi.fn(),
+  };
 
   beforeEach(() => {
-    protocol = new BeaconProtocol();
+    loggerMock.warn.mockReset();
+
+    const injector = Injector.create({
+      providers: [
+        {
+          provide: LoggerService,
+          useValue: loggerMock,
+        },
+      ],
+    });
+
+    protocol = runInInjectionContext(injector, () => new BeaconProtocol());
   });
 
   it('should encode and decode a valid SOS message correctly', () => {

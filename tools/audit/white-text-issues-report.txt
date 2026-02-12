@@ -262,32 +262,32 @@ Total de problemas: 66
    Contenido: background-color: #fff;
    Fix: Reemplazar color: white con color: var(--text-primary, #050505)
 
-53. apps/web/src/app/shared/components/cars-map/cars-map.component.css:240 [MEDIUM]
+53. apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css:240 [MEDIUM]
    Tipo: text-white
    Contenido: color: var(--text-white, #fefefe);
    Fix: Reemplazar text-white con text-primary o agregar dark:text-white
 
-54. apps/web/src/app/shared/components/cars-map/cars-map.component.css:371 [MEDIUM]
+54. apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css:371 [MEDIUM]
    Tipo: text-white
    Contenido: color: var(--text-white, #ffffff) !important; /* Texto blanco para contraste */
    Fix: Reemplazar text-white con text-primary o agregar dark:text-white
 
-55. apps/web/src/app/shared/components/cars-map/cars-map.component.css:434 [MEDIUM]
+55. apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css:434 [MEDIUM]
    Tipo: text-white
    Contenido: color: var(--text-white, #ffffff) !important; /* Color base blanco para dark mode */
    Fix: Reemplazar text-white con text-primary o agregar dark:text-white
 
-56. apps/web/src/app/shared/components/cars-map/cars-map.component.css:461 [MEDIUM]
+56. apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css:461 [MEDIUM]
    Tipo: text-white
    Contenido: color: var(--text-white, #ffffff) !important; /* Blanco para contraste en dark mode */
    Fix: Reemplazar text-white con text-primary o agregar dark:text-white
 
-57. apps/web/src/app/shared/components/cars-map/cars-map.component.css:609 [MEDIUM]
+57. apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css:609 [MEDIUM]
    Tipo: text-white
    Contenido: color: var(--text-white, #ffffff) !important;
    Fix: Reemplazar text-white con text-primary o agregar dark:text-white
 
-58. apps/web/src/app/shared/components/cars-map/cars-map.component.css:655 [MEDIUM]
+58. apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css:655 [MEDIUM]
    Tipo: text-white
    Contenido: color: var(--text-white, #ffffff) !important;
    Fix: Reemplazar text-white con text-primary o agregar dark:text-white

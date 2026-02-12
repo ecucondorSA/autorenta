@@ -416,7 +416,7 @@
     "fix": "Reemplazar color: white con color: var(--text-primary, #050505)"
   },
   {
-    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "file": "apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css",
     "line": 240,
     "content": "color: var(--text-white, #fefefe);",
     "type": "text-white",
@@ -424,7 +424,7 @@
     "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
   },
   {
-    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "file": "apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css",
     "line": 371,
     "content": "color: var(--text-white, #ffffff) !important; /* Texto blanco para contraste */",
     "type": "text-white",
@@ -432,7 +432,7 @@
     "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
   },
   {
-    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "file": "apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css",
     "line": 434,
     "content": "color: var(--text-white, #ffffff) !important; /* Color base blanco para dark mode */",
     "type": "text-white",
@@ -440,7 +440,7 @@
     "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
   },
   {
-    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "file": "apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css",
     "line": 461,
     "content": "color: var(--text-white, #ffffff) !important; /* Blanco para contraste en dark mode */",
     "type": "text-white",
@@ -448,7 +448,7 @@
     "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
   },
   {
-    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "file": "apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css",
     "line": 609,
     "content": "color: var(--text-white, #ffffff) !important;",
     "type": "text-white",
@@ -456,7 +456,7 @@
     "fix": "Reemplazar text-white con text-primary o agregar dark:text-white"
   },
   {
-    "file": "apps/web/src/app/shared/components/cars-map/cars-map.component.css",
+    "file": "apps/web/src/app/shared/components/maps/cars-map/cars-map.component.css",
     "line": 655,
     "content": "color: var(--text-white, #ffffff) !important;",
     "type": "text-white",

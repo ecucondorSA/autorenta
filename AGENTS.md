@@ -33,6 +33,31 @@
 
 ---
 
+## 1.1 Repository Hygiene (Non-Regressive)
+
+Root-cause context (2025-2026): the repo became noisy due to temporary artifacts, stale reports, generated outputs committed by mistake, and accidental renames.
+
+**Hard rules**
+- Root is for runtime/config/docs core only.
+- Never version temporary artifacts (`tmp-*`, logs, screenshots, `*.pid`, dumps, ad-hoc debug outputs).
+- Generated runtime outputs (for example `apps/web/public/env.js`, `apps/web/public/env.json`) are not commit targets unless the task explicitly modifies generation behavior.
+- Every technical report must have date/owner and TTL. Stale reports must be archived.
+- If a new local artifact pattern appears, `.gitignore` must be updated in the same commit.
+
+**Pre-commit hygiene checklist (mandatory)**
+1. `git status --short` and verify there is no out-of-place file.
+2. Run `pnpm lint && pnpm guardrails`.
+3. If files were moved/renamed, validate references using `rg`.
+4. If docs/reports were touched, run `pnpm docs:ttl:check`.
+5. If rename/copy looks suspicious (`C100` anomaly), inspect history with `git log --follow --name-status <file>`.
+
+**Operational references**
+- `docs/ROOT_HYGIENE.md`
+- `pnpm docs:ttl:check`
+- `pnpm docs:ttl:apply`
+
+---
+
 ## 2. Testing Commands
 
 ```bash

@@ -247,8 +247,39 @@ export class BookingDisputeService {
             },
           });
 
-          // Notify Admin (via internal channel or email)
-          // TODO: Add admin notification logic here
+          const { data: adminUsers, error: adminUsersError } = await this.supabase
+            .from('admin_users')
+            .select('user_id')
+            .is('revoked_at', null);
+
+          if (adminUsersError) {
+            throw adminUsersError;
+          }
+
+          const adminRecipientIds = Array.from(
+            new Set(
+              (adminUsers ?? [])
+                .map((adminUser) => adminUser.user_id)
+                .filter((adminUserId): adminUserId is string => typeof adminUserId === 'string')
+                .filter((adminUserId) => adminUserId !== recipientId),
+            ),
+          );
+
+          await Promise.all(
+            adminRecipientIds.map((adminUserId) =>
+              this.supabase.functions.invoke('notify-multi-channel', {
+                body: {
+                  user_id: adminUserId,
+                  channels: ['email'],
+                  template_code: 'dispute_opened',
+                  variables: {
+                    car_name: carName,
+                    booking_id: bookingId,
+                  },
+                },
+              }),
+            ),
+          );
         }
       } catch (notifyError) {
         this.logger.warn('Failed to send dispute notification', { error: notifyError });

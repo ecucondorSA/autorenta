@@ -611,8 +611,7 @@ export class WalletPage implements OnInit {
    */
   handleJoinClub(tier: SubscriptionTier): void {
     this.analyticsService.trackEvent('club_join_clicked', { tier });
-    // TODO: Implement subscription purchase flow
-    // For now, navigate to a future subscription page
+    // Route subscription purchase to the dedicated checkout page
     void this.router.navigate(['/wallet/club/subscribe'], { queryParams: { tier } });
   }
 

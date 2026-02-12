@@ -12,13 +12,12 @@ import {
   FragmentInvestmentService,
   type FragmentPortfolioItem,
 } from '@core/services/business/fragment-investment.service';
-import { IconComponent } from '@shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-fragment-portfolio',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, IconComponent],
+  imports: [CommonModule, RouterLink],
   templateUrl: './fragment-portfolio.component.html',
 })
 export class FragmentPortfolioComponent implements OnInit {

@@ -20,6 +20,7 @@ functions/workers/*/.wrangler
 .supabase
 apps/web/public/env.json
 apps/web/public/env.js
+apps/web/public/env.js.timestamp
 
 # MCP configuration
 .mcp.json
@@ -126,6 +127,7 @@ debug-artifacts/
 /interior-*.html
 /debug-*.png
 /gemini-*.txt
+/tmp-*.cjs
 /lint-output.txt
 /typecheck-output.log
 /build.log

@@ -26,7 +26,26 @@ export class PromotionService {
       return { valid: false, error: 'Código inválido' };
     }
 
-    // TODO: Validar fechas (valid_from, valid_to) aquí
-    return { valid: true, promo: data };
+    const nowMs = Date.now();
+    const validFromMs =
+      typeof data.valid_from === 'string' ? Date.parse(data.valid_from) : Number.NaN;
+    const validToMs = typeof data.valid_to === 'string' ? Date.parse(data.valid_to) : Number.NaN;
+
+    if (!Number.isNaN(validFromMs) && nowMs < validFromMs) {
+      return { valid: false, error: 'El código promocional aún no está vigente' };
+    }
+
+    if (!Number.isNaN(validToMs) && nowMs > validToMs) {
+      return { valid: false, error: 'El código promocional ya expiró' };
+    }
+
+    return {
+      valid: true,
+      promo: {
+        code: data.code,
+        percent_off: data.percent_off,
+        amount_off: data.amount_off,
+      },
+    };
   }
 }

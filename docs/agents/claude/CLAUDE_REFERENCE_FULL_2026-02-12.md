@@ -1,30 +1,73 @@
-# GEMINI.md: AutoRenta Core Intelligence
+# CLAUDE.md: AutoRenta Core Intelligence
 
-> **Fuente de Verdad para el Agente Gemini en AutoRenta.**
+> **Fuente de Verdad para el Agente Claude en AutoRenta.**
 > Este documento define el contexto, las reglas inquebrantables y los flujos de trabajo estándar.
 
-## 🚨 Regla de Higiene de Repo (NUNCA REGRESIVO)
+---
 
-Contexto: en 2025-2026 el repo acumuló ruido por artefactos temporales, reportes stale, outputs generados y renames accidentales versionados.
+## 🚨 REGLA #0: CERO CÓDIGO SIN INTEGRACIÓN
 
-**Invariantes**
-- Root solo contiene runtime/config/docs core.
-- Prohibido versionar `tmp-*`, logs, screenshots, `*.pid`, dumps y outputs locales de debugging.
-- Outputs generados (`apps/web/public/env.js`, `apps/web/public/env.json`, similares) no se comitean salvo cambio explícito del mecanismo.
-- Todo reporte técnico debe tener fecha/owner/TTL; reportes stale se archivan.
-- Si aparece un nuevo patrón de artefacto local, actualizar `.gitignore` en el mismo commit.
+> **PROHIBIDO generar código que no esté integrado de punta a punta.**
+>
+> En Febrero 2026 se descubrieron **19 Edge Functions** creadas pero NUNCA conectadas al frontend ni a ningún consumidor. Código muerto desde el día que se generó. Esto es un **desperdicio inadmisible** de tiempo, contexto y slots de infraestructura.
+>
+> **La regla es simple:** si generás una Edge Function, un servicio, un componente, o cualquier pieza de código, **DEBE quedar integrada en el mismo PR/commit**. No existe "lo conecto después". Una pieza suelta es peor que no haberla creado — ocupa espacio, confunde, y genera falsa sensación de progreso.
+>
+> **Checklist obligatorio antes de dar por terminada cualquier tarea:**
+> - [ ] ¿El código nuevo tiene al menos UN consumidor real? (frontend, cron, webhook, otro servicio)
+> - [ ] ¿Puedo trazar el flujo completo desde el trigger hasta el resultado visible?
+> - [ ] ¿Si elimino este código, algo se rompe? (Si la respuesta es "no", no debería existir)
+>
+> **Anti-patrón:** "Creo la Edge Function y después la integro" → NO. Se crea Y se integra en la misma tarea.
 
-**Checklist obligatorio**
-1. `git status --short` limpio de ruido.
+---
+
+## 🚨 REGLA #1: WORKFLOWS ORQUESTAN, EDGE FUNCTIONS EJECUTAN
+
+> **La lógica de negocio vive en Edge Functions. Los GitHub Actions solo las disparan.**
+>
+> En Febrero 2026 se descubrieron **5 workflows** que reimplementaban lógica ya existente en Edge Functions (reconciliación de pagos, detección de fraude, limpieza de depósitos, envío de emails, cálculo de comisiones). Cuando la tasa de comisión cambia de 15% a 12%, hay que actualizar 2 archivos en vez de 1. Esto es un vector de bugs silenciosos.
+>
+> **La separación es clara:**
+>
+> | Capa | Responsabilidad | Ejemplo |
+> |------|----------------|---------|
+> | **GitHub Actions** | Schedule, trigger, retry, alertar si falla | `cron: '0 * * * *'` → `curl Edge Function` |
+> | **Edge Functions** | Lógica de negocio, queries, cálculos, mutaciones | Calcular split, enviar email, detectar fraude |
+>
+> **Checklist para workflows:**
+> - [ ] ¿El workflow tiene lógica de negocio inline (queries SQL, cálculos, llamadas a APIs externas)? → **Mover a Edge Function**
+> - [ ] ¿El workflow hardcodea constantes de negocio (tasas, umbrales, porcentajes)? → **Leerlas desde `remote_config` en la Edge Function**
+> - [ ] ¿El workflow y una Edge Function hacen lo mismo? → **Eliminar la lógica del workflow, que solo invoque la función**
+>
+> **Anti-patrón:** Workflow con 200 líneas de JavaScript/SQL inline que replican lo que una Edge Function ya hace. El workflow debe ser ~10 líneas: curl + manejo de error + alerta.
+
+---
+
+## 🚨 REGLA #2: HIGIENE DE REPO (NUNCA REGRESIVO)
+
+> **El repositorio NO es un scratchpad.**  
+> En 2025-2026 hubo desorden severo por artefactos temporales, reportes stale, outputs de runtime y renames accidentales versionados.
+
+**Invariantes obligatorios:**
+- **Raíz minimalista:** en root solo runtime/config/docs core. Todo temporal va a `artifacts/` o `docs/archived-reports/`.
+- **Prohibido versionar ruido:** logs, screenshots, `tmp-*`, `*.pid`, dumps, outputs ad-hoc, timestamps de build, archivos de diagnóstico local.
+- **Outputs generados:** si un script genera archivos runtime (`public/env.js`, `public/env.json`, etc.), no se comitean cambios salvo que la tarea sea modificar explícitamente ese mecanismo.
+- **Reportes técnicos con ciclo de vida:** todo reporte debe tener fecha/owner y TTL; si queda stale, se archiva.
+- **No regresión de ignore:** si aparece una nueva clase de artefacto local, se actualiza `.gitignore` en el mismo commit que corrige el incidente.
+
+**Checklist pre-commit/pre-push de higiene (obligatorio):**
+1. `git status --short` sin archivos fuera de lugar.
 2. `pnpm lint && pnpm guardrails`.
-3. Validar rutas tras `git mv` con `rg`.
-4. Si se toca documentación/reportes: `pnpm docs:ttl:check`.
-5. Si hay rename/copy sospechoso (`C100`): `git log --follow --name-status <file>`.
+3. Si hubo movimiento de rutas (`git mv`): validar referencias con `rg`.
+4. Si se tocó documentación/reportes: correr `pnpm docs:ttl:check`.
+5. Si aparece rename sospechoso (`C100` no intencional): inspeccionar con `git log --follow --name-status <file>`.
 
-**Referencias**
-- `docs/ROOT_HYGIENE.md`
-- `pnpm docs:ttl:check`
-- `pnpm docs:ttl:apply`
+**Referencias operativas:**
+- Política: `docs/ROOT_HYGIENE.md`
+- TTL docs: `pnpm docs:ttl:check` / `pnpm docs:ttl:apply`
+
+---
 
 ## 1. Contexto & Memorias Activas
 
@@ -61,13 +104,7 @@ Configuración en:
 ## 2. Convenciones Técnicas
 
 - **Gestión de Paquetes:** Uso exclusivo de `pnpm`.
-- **TypeScript Estricto (ZERO TOLERANCE):**
-  - 🚫 **PROHIBIDO `any`:** Nunca usar `any` para silenciar errores. Es deuda técnica inaceptable.
-  - ✅ **Usar `unknown`:** Para datos inciertos (errores, API responses), usar `unknown` y validarlos con Type Guards (`instanceof Error`, `zod`, etc.).
-  - **Interfaces Explícitas:** Tipar siempre las respuestas de APIs y objetos globales (ej: `window.ethereum`, `window.ttq`).
-  - **Null vs Undefined:**
-    - Usar `undefined` para valores opcionales o aún no cargados.
-    - Usar `null` para valores explícitamente vacíos o reseteados (ej: `user = null` al logout).
+- **TypeScript Estricto:** No `any`. No `unknown` sin validación. Tipos explícitos en retornos de funciones públicas.
 - **Tailwind CSS:** Única fuente de estilos. No crear clases CSS personalizadas a menos que sea un componente de UI Kit reutilizable.
 - **Iconos:** Usar `<app-icon>`. Imports explícitos, nunca barrels.
 - **Sintaxis:** ESM y sintaxis moderna de Angular (`@if`, `@for`, `inject()`).
@@ -110,7 +147,7 @@ Configuración en:
 | **Subscriptions sin unsubscribe** | Memory leaks. Usar `takeUntilDestroyed()` o `async` pipe. |
 | **Hardcoded strings** | Usar constantes o i18n. |
 | **Términos técnicos en UI** | No mostrar "FIPE", "Binance", "API", "RPC", etc. Usar lenguaje amigable: "valor de mercado", "precio sugerido". |
-| **Supabase directo en UI** | Prohibido llamar `supabase.*` o importar `injectSupabase()` desde `features/` o `shared/`. Usar services/facades para evitar drift UI vs DB y endurecer reglas/test. |
+| **Supabase directo en UI** | Prohibido llamar `supabase.*` o importar `injectSupabase()` desde `features/` o `shared/`. Usar services/facades para evitar drift UI vs DB, endurecer reglas y testear. |
 | **`.toPromise()` en RxJS** | Deprecated en RxJS 7+. Usar `firstValueFrom()` de 'rxjs'. |
 
 ---
@@ -261,10 +298,533 @@ try {
 - **Ejecución:**
   - Unitarios: `pnpm test:unit` (Vitest)
   - E2E: `pnpm test:e2e` (Playwright)
-- **E2E interactivo (UI/UX + logs):** usar MCP `patchright-streaming` (Gemini en navegador). Por default NO es headless; headless solo si el usuario lo pide explícitamente. Mantener sesión persistente.
 - **Linting:** Código limpio es ley. `pnpm lint` debe pasar siempre.
 - **Proactividad:** Añade o actualiza tests cuando cambies el comportamiento de un servicio o componente.
 - **Commits:** Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`).
+
+---
+
+## 7.1 E2E Testing con AI (Claude in Chrome + Stagehand)
+
+> Nota: En AutoRenta, el browser interactivo se realiza via MCP `patchright-streaming` (Gemini en navegador).
+> Por default NO es headless; headless solo si el usuario lo pide explícitamente. Mantener sesión persistente (no reset/cerrar) salvo pedido.
+
+### Claude in Chrome — Setup & Capacidades
+
+**Qué es:** Extensión oficial de Anthropic que permite a Claude Code controlar Chrome directamente via MCP tools (`mcp__claude-in-chrome__*`).
+
+**Setup requerido:**
+1. Instalar extensión Claude in Chrome desde chrome.ai
+2. Estar logueado en **claude.ai** con la misma cuenta que Claude Code
+3. Completar el **onboarding de riesgos** (aceptar términos) — sin esto la extensión no conecta
+4. Si es primera vez, reiniciar Chrome después de instalar
+
+**Capacidades:**
+- Navegar a URLs (`navigate`)
+- Ejecutar JavaScript en contexto de página (`javascript_tool`)
+- Leer contenido de página (`read_page`, `get_page_text`)
+- Interactuar con formularios (`form_input`, `find`, `computer`)
+- Tomar screenshots y grabar GIFs (`upload_image`, `gif_creator`)
+- Leer consola y network (`read_console_messages`, `read_network_requests`)
+- Gestionar tabs (`tabs_context_mcp`, `tabs_create_mcp`)
+
+**Riesgos documentados (Anthropic):**
+- Sitios maliciosos pueden ocultar instrucciones (prompt injection) que engañen a la IA
+- Revisar siempre antes de acciones sensibles (financieras, datos personales)
+- Comenzar con sitios de confianza
+- Reportar comportamiento inesperado
+
+**Cuándo usar Claude in Chrome vs Patchright:**
+
+| Escenario | Herramienta |
+|-----------|-------------|
+| Verificación visual rápida (post-deploy) | Claude in Chrome |
+| Debug interactivo con el usuario mirando | Claude in Chrome |
+| Sitios con anti-bot (Facebook, MercadoPago) | Patchright Streaming |
+| Tests automatizados para CI | Stagehand |
+| Sesiones que necesitan cookies/login persistente | Patchright Streaming |
+
+### Shortcuts de Claude in Chrome (AutoRenta)
+
+Shortcuts configurados en la extensión para tareas recurrentes. **URL base:** `https://autorentar.com`
+
+| Shortcut | Comenzar desde | Propósito |
+|----------|---------------|-----------|
+| `post-deploy-check` | `/bookings` | Navegar a /bookings, /marketplace, /profile. Screenshot + verificar layouts y errores visibles. |
+| `smoke-test-booking` | `/marketplace` | Verificar flujo: marketplace → auto disponible → detalle con foto/precio/botón. NO reservar. |
+| `check-wallet` | `/wallet` | Verificar balance (no NaN), historial de transacciones, formato de moneda correcto. |
+| `console-error-scan` | `/bookings` | Recorrer páginas principales, leer console errors + HTTP 4xx/5xx. Reporte consolidado por página. |
+
+**Reglas para shortcuts:**
+- Nunca ejecutar acciones destructivas (reservar, pagar, eliminar) desde shortcuts
+- Siempre tomar screenshots como evidencia
+- Reportar resumen al finalizar
+
+**Features avanzadas de Claude in Chrome:**
+- **Scheduled Tasks:** Programar shortcuts con el ícono de reloj (⏰). Recomendado: `console-error-scan` diario, `post-deploy-check` después de cada deploy.
+- **Record Workflow:** Grabar pasos manuales y Claude aprende a repetirlos. Usar para flujos complejos en vez de escribir prompts largos.
+- **Ask Before Acting:** Claude crea plan → usuario aprueba → ejecuta independientemente. Ideal para smoke tests largos.
+- **Multi-tab:** Arrastrar tabs al grupo de Claude para que interactúe con varios simultáneamente (ej: comparar marketplace vs bookings).
+- **Model Selection (Max/Team/Enterprise):** Haiku 4.5 para checks rápidos, Sonnet 4.5 para flujos multi-step, Opus 4.5 para debugging complejo. Pro solo tiene Haiku 4.5.
+- **Claude Code Integration:** Flujo oficial: `pnpm build:web` en terminal → verificar en Chrome → debug con console logs desde la extensión.
+
+### Sugerencias Proactivas — Cuándo Ofrecer Claude in Chrome
+
+Claude Code DEBE sugerir usar el navegador Chrome en estos escenarios:
+
+| Situación | Sugerencia |
+|-----------|-----------|
+| Después de `git push` a `main` | "¿Querés que verifique el deploy en Chrome? (`post-deploy-check`)" |
+| Después de modificar componentes UI (templates, CSS, Tailwind) | "¿Verificamos visualmente en el browser cómo quedó?" |
+| Cuando un build pasa pero hay dudas sobre layout/responsive | "Puedo tomar screenshots en Chrome para comparar antes/después" |
+| Después de tocar bookings, wallet o marketplace | "¿Corremos un smoke test en Chrome para validar el flujo?" |
+| Cuando el usuario reporta un bug visual | "¿Puedo abrir Chrome para reproducirlo y leer los console errors?" |
+| Debugging de errores de red/API | "Puedo navegar en Chrome y leer los network requests para diagnosticar" |
+| Comparar diseño con Figma/mockup | "Subí el mockup y puedo compararlo side-by-side con la página real en Chrome" |
+| Después de cambios en Edge Functions o RPCs | "¿Verificamos en Chrome que las llamadas de red devuelven lo esperado?" |
+
+**Regla:** Solo sugerir, nunca ejecutar sin aprobación del usuario. Indicar el shortcut relevante si existe.
+
+### Flujo de Trabajo Obligatorio
+
+**REGLA:** Para todo test E2E nuevo, seguir este flujo de 2 fases:
+
+#### Fase 1: Desarrollo/Debug con Claude in Chrome
+```
+Usuario solicita test E2E → Claude usa Claude in Chrome →
+Debug interactivo en browser real → Validar flujo funciona
+```
+
+**Ventajas:**
+- Ver errores de consola en tiempo real
+- Diagnóstico inmediato de problemas
+- El usuario ve exactamente lo que Claude hace
+- Iteración rápida
+
+#### Fase 2: Automatización con Stagehand
+```
+Flujo validado → Claude crea archivo Stagehand →
+Test reproducible para CI/CD → Integrar en GitHub Actions
+```
+
+**Ventajas:**
+- Scripts reproducibles
+- Funciona sin supervisión humana
+- Integrable en CI/CD nightly
+- Captura de screenshots y logs automática
+
+### Estructura de Archivos
+
+```
+tools/stagehand-poc/
+├── .env                    # API keys (GEMINI_API_KEY)
+├── test-{feature}.ts       # Tests de Stagehand
+├── screenshots/            # Capturas por paso
+└── logs/
+    ├── console-logs.json   # Logs de consola capturados
+    └── network-errors.json # Errores de red
+```
+
+### Plantilla de Test Stagehand
+
+```typescript
+// tools/stagehand-poc/test-{feature}.ts
+import { Stagehand } from '@browserbasehq/stagehand';
+
+const stagehand = new Stagehand({
+  env: 'LOCAL',
+  model: 'google/gemini-2.5-flash',
+  headless: true,  // true para CI, false para debug
+  verbose: 1,
+});
+
+// Capturar console logs
+page.on('console', (msg) => {
+  if (msg.type() === 'error') {
+    console.log(`🔴 Console Error: ${msg.text()}`);
+  }
+});
+
+// Usar act() con lenguaje natural
+await stagehand.act('click the green "Ingresar" button');
+await stagehand.act('type "user@email.com" in the email field');
+
+// Extraer datos con schema
+const data = await stagehand.extract('get the price', PriceSchema);
+```
+
+### Ejecución
+
+```bash
+# Desarrollo (con browser visible)
+cd tools/stagehand-poc
+GEMINI_API_KEY=xxx bun test-{feature}.ts
+
+# CI/CD (headless)
+GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }} bun test-{feature}.ts
+```
+
+### Cuándo Usar Cada Herramienta
+
+| Situación | Herramienta |
+|-----------|-------------|
+| Nuevo flujo E2E, primera vez | Claude in Chrome |
+| Debug de test que falla | Claude in Chrome |
+| Test automatizado para CI | Stagehand |
+| Smoke tests nocturnos | Stagehand |
+| Demo para stakeholders | Claude in Chrome |
+
+### Costo Estimado Stagehand + Gemini
+
+- ~$0.006 por ejecución de test (~80k tokens)
+- ~$0.18/día si corres 30 tests diarios
+- ~$5.40/mes para suite completa
+
+### 7.2 Patchright Streaming (Browser sin detección anti-bot)
+
+Patchright es Playwright parchado para evitar detección de automatización (CDP leaks). Útil para sitios con protección anti-bot como MercadoPago.
+
+**REGLA CRÍTICA: Aprovechar sesiones abiertas**
+
+```typescript
+// ✅ CORRECTO: Usar perfil persistente existente
+const userDataDir = '/home/edu/.patchright-profile';
+const browser = await chromium.launchPersistentContext(userDataDir, {
+  headless: false,
+  channel: 'chrome',  // Usar Google Chrome instalado (no Chromium)
+  // ... opciones
+});
+
+// ❌ INCORRECTO: Crear perfil temporal cada vez
+const userDataDir = `/tmp/patchright-${Date.now()}`;  // Pierde sesión!
+```
+
+**Usar Google Chrome en lugar de Chromium:**
+```typescript
+// Opción 1: Google Chrome
+channel: 'chrome'
+
+// Opción 2: Chrome Beta
+channel: 'chrome-beta'
+
+// Opción 3: Microsoft Edge
+channel: 'msedge'
+```
+
+**Beneficios de sesiones persistentes:**
+- Mantiene cookies y localStorage (no necesita re-login)
+- Evita triggers de "nuevo dispositivo" en servicios como MercadoPago
+- Más rápido al no cargar configuración desde cero
+
+**Ubicación del perfil:** `/home/edu/.patchright-profile`
+
+**MCP Server:** `tools/patchright-streaming-mcp/server.js`
+- Herramientas: `stream_navigate`, `stream_click`, `stream_type`, `stream_screenshot`
+- Incluye movimiento de mouse humanizado (curvas Bezier)
+
+### 7.3 JavaScript Click Hacks (Anti-Bot Bypass)
+
+Sitios como Facebook detectan automatización verificando la propiedad `isTrusted` de eventos. Estas técnicas permiten forzar clicks cuando `stream_click` o `stream_act` fallan.
+
+**¿Por qué fallan los clicks normales?**
+- Facebook verifica `event.isTrusted === true` (solo eventos de usuario real)
+- Playwright/Patchright genera eventos sintéticos con `isTrusted: false`
+- React Fiber intercepta eventos antes del DOM nativo
+
+**Técnica 1: Click Nativo Directo (MÁS EFECTIVA)**
+```javascript
+// Usar con stream_evaluate - Funciona en Facebook
+var buttons = document.querySelectorAll('div[role="button"], span[role="button"]');
+var joined = 0;
+buttons.forEach(function(btn) {
+  if (btn.innerText.trim() === 'Participar' && joined < 10) {
+    btn.click();  // Llamada directa al método click()
+    joined++;
+  }
+});
+'Clicked ' + joined + ' buttons';
+```
+
+**Técnica 2: Simulación Completa de Eventos**
+```javascript
+// Cuando .click() no funciona, simular secuencia completa
+function fullClickSimulation(element) {
+  var rect = element.getBoundingClientRect();
+  var x = rect.left + rect.width / 2;
+  var y = rect.top + rect.height / 2;
+
+  var eventInit = {
+    bubbles: true,
+    cancelable: true,
+    view: window,
+    clientX: x,
+    clientY: y,
+    button: 0
+  };
+
+  // Secuencia completa: hover → mousedown → mouseup → click
+  element.dispatchEvent(new MouseEvent('mouseenter', eventInit));
+  element.dispatchEvent(new MouseEvent('mouseover', eventInit));
+  element.dispatchEvent(new MouseEvent('mousedown', eventInit));
+  element.dispatchEvent(new MouseEvent('mouseup', eventInit));
+  element.dispatchEvent(new MouseEvent('click', eventInit));
+}
+```
+
+**Técnica 3: React Fiber Hack (Último Recurso)**
+```javascript
+// Acceder directamente al onClick de React
+function reactFiberClick(element) {
+  var keys = Object.keys(element);
+  var reactKey = keys.find(function(k) {
+    return k.startsWith('__reactFiber$') || k.startsWith('__reactProps$');
+  });
+
+  if (reactKey && element[reactKey] && element[reactKey].onClick) {
+    element[reactKey].onClick({ preventDefault: function(){}, stopPropagation: function(){} });
+    return true;
+  }
+  return false;
+}
+```
+
+**Técnica 4: Focus + Enter (Para Botones Accesibles)**
+```javascript
+// Algunos botones responden a Enter después de focus
+element.focus();
+element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
+element.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', keyCode: 13, bubbles: true }));
+```
+
+**⚠️ IMPORTANTE: Usar `var` en lugar de `const`/`let`**
+```javascript
+// ❌ INCORRECTO - SyntaxError en algunos contextos de evaluate
+const buttons = document.querySelectorAll('button');
+
+// ✅ CORRECTO - Compatibilidad máxima
+var buttons = document.querySelectorAll('button');
+```
+
+**Orden de Prioridad:**
+1. `stream_act` con descripción natural (más humano)
+2. `stream_click` con selector CSS
+3. `stream_evaluate` con `.click()` directo
+4. `stream_evaluate` con simulación completa de eventos
+5. React Fiber hack (solo si nada más funciona)
+
+**Sitios Probados:**
+| Sitio | Técnica que Funciona |
+|-------|---------------------|
+| Facebook Groups | `.click()` directo via `stream_evaluate` |
+| MercadoPago | `stream_click` con perfil persistente |
+| Google Forms | `stream_act` natural |
+
+### 7.4 Técnicas Avanzadas de JavaScript para Automation
+
+#### Entendiendo isTrusted (Limitación Fundamental)
+
+**Fuente:** [MDN - Event.isTrusted](https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted)
+
+```javascript
+// isTrusted es READ-ONLY y no se puede falsificar
+event.isTrusted  // true = usuario real, false = script
+
+// EXCEPCIÓN: Si un click programático dispara un form submit,
+// el evento submit PUEDE tener isTrusted = true (bubbling)
+```
+
+**Implicación:** No hay forma de hacer que un evento sintético tenga `isTrusted = true`. Los sitios que verifican esto (como Facebook) detectarán automatización.
+
+#### Técnica 5: Typing en ContentEditable (Facebook, WhatsApp Web)
+
+**Fuente:** [MDN - Element: input event](https://developer.mozilla.org/en-US/docs/Web/API/Element/input_event)
+
+```javascript
+// Para campos contenteditable (como el composer de Facebook)
+function typeInContentEditable(element, text) {
+  element.focus();
+
+  // Opción 1: execCommand (deprecated pero funciona)
+  document.execCommand('insertText', false, text);
+
+  // Opción 2: Modificar innerHTML + disparar eventos
+  element.innerHTML = text;
+  element.dispatchEvent(new InputEvent('input', {
+    bubbles: true,
+    cancelable: true,
+    inputType: 'insertText',
+    data: text
+  }));
+
+  // Opción 3: Selection API para posición del cursor
+  var selection = window.getSelection();
+  var range = document.createRange();
+  range.selectNodeContents(element);
+  range.collapse(false);  // Cursor al final
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
+```
+
+#### Técnica 6: InputEvent para Campos de Formulario
+
+**Fuente:** [MDN - InputEvent](https://developer.mozilla.org/en-US/docs/Web/API/InputEvent)
+
+```javascript
+// Simular typing completo en un input
+function simulateTyping(input, text) {
+  input.focus();
+  input.value = '';
+
+  for (var i = 0; i < text.length; i++) {
+    var char = text[i];
+
+    // KeyDown
+    input.dispatchEvent(new KeyboardEvent('keydown', {
+      key: char,
+      code: 'Key' + char.toUpperCase(),
+      bubbles: true
+    }));
+
+    // Actualizar valor
+    input.value += char;
+
+    // Input event
+    input.dispatchEvent(new InputEvent('input', {
+      bubbles: true,
+      inputType: 'insertText',
+      data: char
+    }));
+
+    // KeyUp
+    input.dispatchEvent(new KeyboardEvent('keyup', {
+      key: char,
+      code: 'Key' + char.toUpperCase(),
+      bubbles: true
+    }));
+  }
+
+  // Change event al final
+  input.dispatchEvent(new Event('change', { bubbles: true }));
+}
+```
+
+#### Técnica 7: Acceso a React Internal State
+
+**Fuente:** [GitHub - browser-use issues](https://github.com/browser-use/browser-use/issues/3829)
+
+```javascript
+// Encontrar el React Fiber node de un elemento
+function getReactFiber(element) {
+  var key = Object.keys(element).find(function(k) {
+    return k.startsWith('__reactFiber$') ||
+           k.startsWith('__reactInternalInstance$');
+  });
+  return key ? element[key] : null;
+}
+
+// Obtener props de React
+function getReactProps(element) {
+  var key = Object.keys(element).find(function(k) {
+    return k.startsWith('__reactProps$');
+  });
+  return key ? element[key] : null;
+}
+
+// Disparar onChange de React directamente
+function triggerReactChange(element, value) {
+  var props = getReactProps(element);
+  if (props && props.onChange) {
+    props.onChange({ target: { value: value } });
+  }
+}
+```
+
+#### Técnica 8: Scroll con IntersectionObserver Trigger
+
+```javascript
+// Algunos sitios cargan contenido cuando elemento es visible
+function scrollIntoViewAndWait(element) {
+  return new Promise(function(resolve) {
+    var observer = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        observer.disconnect();
+        setTimeout(resolve, 500);  // Esperar carga
+      }
+    });
+    observer.observe(element);
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+}
+```
+
+#### Técnica 9: MutationObserver para Detectar Cambios de DOM
+
+```javascript
+// Esperar a que aparezca un elemento dinámico
+function waitForElement(selector, timeout) {
+  return new Promise(function(resolve, reject) {
+    var element = document.querySelector(selector);
+    if (element) return resolve(element);
+
+    var observer = new MutationObserver(function(mutations) {
+      element = document.querySelector(selector);
+      if (element) {
+        observer.disconnect();
+        resolve(element);
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    setTimeout(function() {
+      observer.disconnect();
+      reject(new Error('Element not found: ' + selector));
+    }, timeout || 10000);
+  });
+}
+```
+
+#### Técnica 10: Clipboard API para Paste
+
+```javascript
+// Simular Ctrl+V con texto personalizado
+async function simulatePaste(element, text) {
+  element.focus();
+
+  // Escribir al clipboard
+  await navigator.clipboard.writeText(text);
+
+  // Disparar evento paste
+  var pasteEvent = new ClipboardEvent('paste', {
+    bubbles: true,
+    cancelable: true,
+    clipboardData: new DataTransfer()
+  });
+  pasteEvent.clipboardData.setData('text/plain', text);
+  element.dispatchEvent(pasteEvent);
+}
+```
+
+#### Resumen de Técnicas por Caso de Uso
+
+| Caso de Uso | Técnica Recomendada |
+|-------------|---------------------|
+| Click en botón normal | `.click()` directo |
+| Click en React component | React Fiber hack |
+| Typing en `<input>` | `simulateTyping()` con InputEvent |
+| Typing en contenteditable | `execCommand('insertText')` |
+| Esperar elemento dinámico | MutationObserver |
+| Scroll infinito | IntersectionObserver |
+| Formularios React | `triggerReactChange()` |
+
+#### Referencias
+
+- [MDN - Creating and triggering events](https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events)
+- [MDN - MouseEvent](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent)
+- [MDN - InputEvent](https://developer.mozilla.org/en-US/docs/Web/API/InputEvent/inputType)
+- [GeeksforGeeks - Simulate Click](https://www.geeksforgeeks.org/how-to-simulate-a-click-with-javascript/)
+- [GitHub - Simulant](https://github.com/Rich-Harris/simulant)
 
 ---
 
@@ -305,17 +865,23 @@ try {
 | `supabase db diff -f <name>` | Generar migración desde cambios |
 | `supabase gen types typescript` | Regenerar tipos de DB |
 
-### CUIDADO: Comandos de Build en Monorepo
+### ⚠️ CUIDADO: Comandos de Build en Monorepo
 
 Este proyecto es un **monorepo con pnpm workspaces**. Usar el comando incorrecto puede colapsar la memoria del sistema.
 
 | Comando | Procesos | Memoria | Cuándo usar |
 |---------|----------|---------|-------------|
-| `pnpm build:web` | ~5 | ~2 GB | Siempre para compilar frontend |
-| `pnpm build` | ~17 | ~12 GB | Solo CI/CD o cuando necesites TODO |
+| `pnpm build:web` | ~5 | ~2 GB | ✅ **Siempre** para compilar frontend |
+| `pnpm build` | ~17 | ~12 GB | ⛔ Solo CI/CD o cuando necesites TODO |
+
+**¿Por qué?**
+- `pnpm build` compila **TODOS** los workspaces en paralelo (4 paquetes)
+- Cada `ng build` crea ~4-5 workers para compilación paralela
+- Efecto multiplicador: 4 paquetes × 4 workers = **16-20 procesos simultáneos**
 
 **Si el sistema se congela:**
 ```bash
+# Matar todos los procesos de build
 pkill -f "ng build"
 pkill -f "pnpm.*build"
 ```
@@ -434,18 +1000,7 @@ Si la respuesta a cualquiera es "no", **investigar primero, codear después**.
 
 ---
 
-## 13. Infraestructura de Automatización
-
-### Configuración del Navegador (Patchright/Puppeteer)
-Para mantener sesiones activas (TikTok, MercadoPago) y evitar bloqueos:
-
-- **Profile Path:** `/home/edu/.autorenta-bot-profile`
-- **Binary Path:** Dejar vacío (usar binario interno de Patchright para mejor anti-detect).
-- **CDP Port:** `9223` (evitar conflicto con puerto default 9222).
-
----
-
-## 14. Post-Implementation Review (OBLIGATORIO)
+## 13. Post-Implementation Review (OBLIGATORIO)
 
 Después de cada implementación de UI/UX, Claude DEBE ser autocrítico y verificar:
 
@@ -486,6 +1041,7 @@ supabase/functions/mercadopago-process-brick-payment/index.ts
 supabase/functions/mercadopago-process-deposit-payment/index.ts
 supabase/functions/mercadopago-create-preference/index.ts
 supabase/functions/mercadopago-create-booking-preference/index.ts
+supabase/functions/mercadopago-process-booking-payment/index.ts
 supabase/functions/mercadopago-process-booking-payment/index.ts
 supabase/functions/process-payment-queue/index.ts
 ```
@@ -626,6 +1182,17 @@ La aplicación está organizada en dominios de servicio bajo `core/services/`:
 | `wallet-balance-audit` | Diario | Auditoría de balances |
 | `payment-reconciliation` | Diario | Reconciliación de pagos |
 | `daily-metrics-report` | Diario | Reporte de métricas |
+
+### ⚠️ Workflows con Lógica Duplicada (Refactorizar → Regla #1)
+Estos workflows reimplementan lógica que debería vivir en Edge Functions:
+
+| Workflow | Edge Function duplicada | Acción pendiente |
+|----------|------------------------|-----------------|
+| `payment-reconciliation.yml` | `process-payment-split` | Mover lógica inline a la Edge Function |
+| `cleanup-expired-data.yml` | `expire-pending-deposits` | Que el workflow llame la función |
+| `commission-reconciliation.yml` | `distribute-monthly-rewards` | Eliminar cálculo inline, llamar función |
+| `send-email-demo.yml` + `send-community-email.yml` | `send-marketing-email` | Unificar en 1 workflow que llame la función |
+| `fraud-detection-alerts.yml` | `realtime-alerting` | Mover 8 patrones de fraude a la Edge Function |
 
 ---
 
@@ -971,17 +1538,33 @@ if (environment.features.enableP2P) {
 
 #### Paso 1: Base de Datos
 ```bash
+# Verificar migraciones pendientes
+ls -la supabase/migrations/*.sql | tail -5
+
+# Aplicar migraciones
 supabase db push
+
+# O manualmente en Supabase Dashboard > SQL Editor
 ```
 
 #### Paso 2: Edge Functions
 ```bash
+# Deploy todas las functions modificadas
 supabase functions deploy
+
+# O una específica
+supabase functions deploy nombre-funcion
 ```
 
 #### Paso 3: Build Frontend
 ```bash
-pnpm lint && pnpm build:web
+# Pre-check
+pnpm lint
+
+# Build
+pnpm build:web
+
+# Push (CI/CD hace deploy automático)
 git add . && git commit -m "feat: descripción" && git push
 ```
 
@@ -1274,4 +1857,4 @@ grep -r "sk_live\|APP_USR" .github/workflows/
 
 ---
 
-**© 2026 AutoRenta | Gemini Agent Configuration v3.3**
+**© 2026 AutoRenta | Claude Agent Configuration v3.3**

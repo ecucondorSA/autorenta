@@ -174,8 +174,8 @@
         <!-- Fuel -->
         <div class="flex items-center gap-1.5" title="Combustible">
           @if (
-            car.fuel_type?.toLowerCase()?.includes('electric') ||
-            car.fuel_type?.toLowerCase()?.includes('eléctrico')
+            car.fuel_type.toLowerCase().includes('electric') ||
+            car.fuel_type.toLowerCase().includes('eléctrico')
           ) {
             <svg
               class="w-4 h-4 text-brand-primary"

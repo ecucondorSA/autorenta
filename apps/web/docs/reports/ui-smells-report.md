@@ -1405,7 +1405,7 @@ Total problemas encontrados: 1227
 - 🟠 **Línea 81:** ⚠️ Grid sin "gap" detectado cerca. Elementos podrían estar pegados.
   `class="drawer-cards grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"`
 
-### 📄 app/shared/components/cars-map/cars-map.component.css
+### 📄 app/shared/components/maps/cars-map/cars-map.component.css
 - 🔵 **Línea 110:** ℹ️ Altura fija detectada. Si el texto crece, se cortará o romperá el layout.
   `height: 24px;`
 - 🔵 **Línea 130:** ℹ️ Texto posiblemente ilegible (tamaño hardcodeado o muy pequeño).
@@ -1655,7 +1655,7 @@ Total problemas encontrados: 1227
 - 🔵 **Línea 1536:** ℹ️ Altura fija detectada. Si el texto crece, se cortará o romperá el layout.
   `height: 18px;`
 
-### 📄 app/shared/components/cars-map/cars-map.component.ts
+### 📄 app/shared/components/maps/cars-map/cars-map.component.ts
 - 🔵 **Línea 1611:** ℹ️ Altura fija detectada. Si el texto crece, se cortará o romperá el layout.
   `<div style="width: 8px; height: 8px; background-color: var(--success-default, #10b981); border-radiu...`
 
@@ -2317,7 +2317,7 @@ Total problemas encontrados: 1227
 - 🔵 **Línea 136:** ℹ️ Altura fija detectada. Si el texto crece, se cortará o romperá el layout.
   `height: 20px;`
 
-### 📄 app/shared/components/review-card/review-card.component.html
+### 📄 app/shared/components/reviews/review-card/review-card.component.html
 - 🟠 **Línea 51:** ⚠️ Contenedor muy estrecho. Riesgo de que el texto se desborde o corte.
   `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">`
 - 🟠 **Línea 123:** ⚠️ Contenedor muy estrecho. Riesgo de que el texto se desborde o corte.
@@ -2335,7 +2335,7 @@ Total problemas encontrados: 1227
 - 🟠 **Línea 244:** ⚠️ Contenedor muy estrecho. Riesgo de que el texto se desborde o corte.
   `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">`
 
-### 📄 app/shared/components/review-radar-chart/review-radar-chart.component.css
+### 📄 app/shared/components/reviews/review-radar-chart/review-radar-chart.component.css
 - 🔵 **Línea 87:** ℹ️ Texto posiblemente ilegible (tamaño hardcodeado o muy pequeño).
   `font-size: 9px;`
 
