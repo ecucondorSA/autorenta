@@ -88,3 +88,8 @@ verify_jwt = false
 # Disable gateway JWT verification. This function validates user tokens internally
 # and needs to support Supabase Auth ES256 user JWTs passed from the web app.
 verify_jwt = false
+
+[functions.manual-identity-review]
+# Public action links from email (SI/NO) must work without user session.
+# Security is enforced by signed token + expiry + one-time status transition in DB.
+verify_jwt = false
