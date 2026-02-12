@@ -101,6 +101,7 @@ scripts/temp/
 database/temp/
 docs/archived/logs/
 docs/archived/screenshots/
+docs/archived-reports/root-cleanup-2026-02-12/runtime/
 .migration-backups/
 debug-artifacts/
 .wrangler/

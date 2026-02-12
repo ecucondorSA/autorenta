@@ -27,6 +27,7 @@
 6.  [Configuración y Desarrollo](#-configuración-y-desarrollo)
 7.  [Scripts y Herramientas](#-scripts-y-herramientas)
 8.  [Despliegue e Infraestructura](#-despliegue-e-infraestructura)
+9.  [Higiene de Raíz](#-higiene-de-raíz)
 
 ---
 
@@ -200,6 +201,18 @@ El frontend se compila y despliega en **Cloudflare Pages** o **Vercel**, aprovec
 
 ### Backend
 Supabase gestiona la base de datos y la autenticación. Las migraciones de base de datos se aplican automáticamente mediante CI/CD al fusionar en `main`.
+
+---
+
+## 🧹 Higiene de Raíz
+
+Para mantener el repositorio mantenible, la política de organización de la raíz está en:
+
+- `docs/ROOT_HYGIENE.md`
+
+Además, los artefactos históricos de limpieza se conservaron en:
+
+- `docs/archived-reports/root-cleanup-2026-02-12/`
 
 ---
 
