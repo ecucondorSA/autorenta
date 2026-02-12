@@ -247,6 +247,12 @@ export interface UserProfile {
   id_verified: boolean;
   is_admin?: boolean;
 
+  // Identity lock (set by OCR verification via update_profile_from_ocr RPC)
+  identity_locked?: boolean;
+  identity_verified_at?: string | null;
+  identity_document_number?: string | null;
+  identity_country?: string | null;
+
   // Permisos derivados (de la vista me_profile)
   can_publish_cars?: boolean;
   can_book_cars?: boolean;

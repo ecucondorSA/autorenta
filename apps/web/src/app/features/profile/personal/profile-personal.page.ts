@@ -23,6 +23,7 @@ import { IonicModule } from '@ionic/angular';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { ProfileStore } from '@core/stores/profile.store';
+import { IdentityLevelService } from '@core/services/verification/identity-level.service';
 import { SectionCardComponent } from '../components/shared/section-card/section-card.component';
 import type { UserProfile, Role } from '../../../core/models';
 
@@ -30,12 +31,9 @@ import type { UserProfile, Role } from '../../../core/models';
  * Profile Personal Page
  *
  * Dedicated page for managing personal information:
- * - Full name
- * - Date of birth
- * - Government ID (DNI/CUIT)
- * - User role (renter/owner/both)
- *
- * Uses auto-save with debounce
+ * - Full name, Date of birth, Government ID, User role
+ * - Shows verified data as read-only with badge when identity is locked by OCR
+ * - Displays driver license info from user_identity_levels when verified
  */
 @Component({
   selector: 'app-profile-personal',
@@ -115,106 +113,226 @@ import type { UserProfile, Role } from '../../../core/models';
                 <span>{{ saveStatus() === 'saving' ? 'Guardando...' : 'Guardado' }}</span>
               </div>
             }
+
+            <!-- Identity Verified Banner -->
+            @if (identityLocked()) {
+              <div class="flex items-center gap-3 px-4 py-3 rounded-lg bg-green-50 border border-green-200">
+                <svg class="h-5 w-5 text-green-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <div>
+                  <p class="text-sm font-medium text-green-800">Identidad Verificada</p>
+                  <p class="text-xs text-green-600">
+                    Tus datos fueron verificados por OCR y no pueden ser modificados.
+                    Si hay un error, contacta a soporte.
+                  </p>
+                </div>
+              </div>
+            }
+
             <!-- Basic Info Section -->
             <app-section-card title="Información Básica" icon="person">
               <div class="space-y-4">
                 <!-- Full Name -->
-                <div>
-                  <label for="full_name" class="block text-sm font-medium text-text-primary mb-1">
-                    Nombre Completo *
-                  </label>
-                  <input
-                    id="full_name"
-                    type="text"
-                    formControlName="full_name"
-                    class="w-full px-3 py-2 rounded-lg border bg-surface-base
-                         text-text-primary
-                         border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default
-                         placeholder:text-text-muted"
-                    placeholder="Ej: Juan Pérez"
-                  />
-                  @if (
-                    personalForm.get('full_name')?.invalid && personalForm.get('full_name')?.touched
-                  ) {
-                    <p class="mt-1 text-xs text-error-text">El nombre es requerido</p>
-                  }
-                </div>
+                @if (identityLocked()) {
+                  <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">
+                      Nombre Completo
+                      <span class="ml-2 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        Verificado
+                      </span>
+                    </label>
+                    <div class="w-full px-3 py-2 rounded-lg border bg-surface-subtle text-text-primary border-green-200">
+                      {{ profile()?.full_name }}
+                    </div>
+                  </div>
+                } @else {
+                  <div>
+                    <label for="full_name" class="block text-sm font-medium text-text-primary mb-1">
+                      Nombre Completo *
+                    </label>
+                    <input
+                      id="full_name"
+                      type="text"
+                      formControlName="full_name"
+                      class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                           text-text-primary
+                           border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default
+                           placeholder:text-text-muted"
+                      placeholder="Ej: Juan Pérez"
+                    />
+                    @if (
+                      personalForm.get('full_name')?.invalid && personalForm.get('full_name')?.touched
+                    ) {
+                      <p class="mt-1 text-xs text-error-text">El nombre es requerido</p>
+                    }
+                  </div>
+                }
                 <!-- Date of Birth -->
-                <div>
-                  <label
-                    for="date_of_birth"
-                    class="block text-sm font-medium text-text-primary mb-1"
-                  >
-                    Fecha de Nacimiento
-                  </label>
-                  <input
-                    id="date_of_birth"
-                    type="date"
-                    formControlName="date_of_birth"
-                    class="w-full px-3 py-2 rounded-lg border bg-surface-base
-                         text-text-primary
-                         border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default"
-                    [max]="maxBirthDate()"
-                  />
-                  <p class="mt-1 text-xs text-text-muted">
-                    Debes tener al menos 18 años para usar la plataforma
-                  </p>
-                  @if (ageError()) {
-                    <p class="mt-1 text-xs text-error-text">
-                      {{ ageError() }}
+                @if (identityLocked() && profile()?.date_of_birth) {
+                  <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">
+                      Fecha de Nacimiento
+                      <span class="ml-2 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        Verificado
+                      </span>
+                    </label>
+                    <div class="w-full px-3 py-2 rounded-lg border bg-surface-subtle text-text-primary border-green-200">
+                      {{ formatDate(profile()?.date_of_birth) }}
+                    </div>
+                  </div>
+                } @else {
+                  <div>
+                    <label
+                      for="date_of_birth"
+                      class="block text-sm font-medium text-text-primary mb-1"
+                    >
+                      Fecha de Nacimiento
+                    </label>
+                    <input
+                      id="date_of_birth"
+                      type="date"
+                      formControlName="date_of_birth"
+                      class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                           text-text-primary
+                           border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default"
+                      [max]="maxBirthDate()"
+                    />
+                    <p class="mt-1 text-xs text-text-muted">
+                      Debes tener al menos 18 años para usar la plataforma
                     </p>
-                  }
-                </div>
+                    @if (ageError()) {
+                      <p class="mt-1 text-xs text-error-text">
+                        {{ ageError() }}
+                      </p>
+                    }
+                  </div>
+                }
               </div>
             </app-section-card>
+
             <!-- Identity Documents Section -->
             <app-section-card title="Documentos de Identidad" icon="card">
               <div class="space-y-4">
-                <!-- Gov ID Type -->
-                <div>
-                  <label for="gov_id_type" class="block text-sm font-medium text-text-primary mb-1">
-                    Tipo de Documento
-                  </label>
-                  <select
-                    id="gov_id_type"
-                    formControlName="gov_id_type"
-                    class="w-full px-3 py-2 rounded-lg border bg-surface-base
-                         text-text-primary
-                         border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default"
-                  >
-                    <option value="">Seleccionar...</option>
-                    <option value="dni">DNI</option>
-                    <option value="cuit">CUIT</option>
-                    <option value="passport">Pasaporte</option>
-                  </select>
-                </div>
-                <!-- Gov ID Number -->
-                <div>
-                  <label
-                    for="gov_id_number"
-                    class="block text-sm font-medium text-text-primary mb-1"
-                  >
-                    Número de Documento
-                  </label>
-                  <input
-                    id="gov_id_number"
-                    type="text"
-                    formControlName="gov_id_number"
-                    class="w-full px-3 py-2 rounded-lg border bg-surface-base
-                         text-text-primary
-                         border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default
-                         placeholder:text-text-muted"
-                    placeholder="Ej: 12345678"
-                  />
-                  <p class="mt-1 text-xs text-text-muted">
-                    Este documento será verificado para habilitar ciertas funciones
-                  </p>
-                  @if (govIdError()) {
-                    <p class="mt-1 text-xs text-error-text">{{ govIdError() }}</p>
-                  }
-                </div>
+                @if (identityLocked()) {
+                  <!-- Gov ID Type - Verified -->
+                  <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">
+                      Tipo de Documento
+                      <span class="ml-2 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        Verificado
+                      </span>
+                    </label>
+                    <div class="w-full px-3 py-2 rounded-lg border bg-surface-subtle text-text-primary border-green-200 uppercase">
+                      {{ profile()?.gov_id_type || 'DNI' }}
+                    </div>
+                  </div>
+                  <!-- Gov ID Number - Verified -->
+                  <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">
+                      Número de Documento
+                    </label>
+                    <div class="w-full px-3 py-2 rounded-lg border bg-surface-subtle text-text-primary border-green-200">
+                      {{ profile()?.gov_id_number || profile()?.['identity_document_number'] || '—' }}
+                    </div>
+                  </div>
+                } @else {
+                  <!-- Gov ID Type - Editable -->
+                  <div>
+                    <label for="gov_id_type" class="block text-sm font-medium text-text-primary mb-1">
+                      Tipo de Documento
+                    </label>
+                    <select
+                      id="gov_id_type"
+                      formControlName="gov_id_type"
+                      class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                           text-text-primary
+                           border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default"
+                    >
+                      <option value="">Seleccionar...</option>
+                      <option value="dni">DNI</option>
+                      <option value="cuit">CUIT</option>
+                      <option value="passport">Pasaporte</option>
+                    </select>
+                  </div>
+                  <!-- Gov ID Number - Editable -->
+                  <div>
+                    <label
+                      for="gov_id_number"
+                      class="block text-sm font-medium text-text-primary mb-1"
+                    >
+                      Número de Documento
+                    </label>
+                    <input
+                      id="gov_id_number"
+                      type="text"
+                      formControlName="gov_id_number"
+                      class="w-full px-3 py-2 rounded-lg border bg-surface-base
+                           text-text-primary
+                           border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default
+                           placeholder:text-text-muted"
+                      placeholder="Ej: 12345678"
+                    />
+                    <p class="mt-1 text-xs text-text-muted">
+                      Este documento será verificado para habilitar ciertas funciones
+                    </p>
+                    @if (govIdError()) {
+                      <p class="mt-1 text-xs text-error-text">{{ govIdError() }}</p>
+                    }
+                  </div>
+                }
               </div>
             </app-section-card>
+
+            <!-- Driver License Section (read-only, from verification) -->
+            @if (licenseVerified()) {
+              <app-section-card title="Licencia de Conducir" icon="car">
+                @if (licenseData(); as lic) {
+                  @if (lic.isExpired) {
+                    <div class="mb-4 flex items-center gap-2 rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-700">
+                      <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                      </svg>
+                      Licencia Vencida
+                    </div>
+                  }
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <span class="block text-xs text-text-muted mb-1">Número</span>
+                      <span class="text-sm font-medium text-text-primary">{{ lic.number || '—' }}</span>
+                    </div>
+                    <div>
+                      <span class="block text-xs text-text-muted mb-1">Vencimiento</span>
+                      <span class="text-sm font-medium" [class.text-red-600]="lic.isExpired" [class.text-text-primary]="!lic.isExpired">
+                        {{ formatDate(lic.expiry) }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="mt-3 flex flex-wrap items-center gap-2">
+                    <span class="text-xs text-text-muted">Categorías:</span>
+                    @for (cat of lic.categories ?? []; track cat) {
+                      <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700">{{ cat }}</span>
+                    }
+                    @if (!lic.categories?.length) {
+                      <span class="text-xs text-text-muted">—</span>
+                    }
+                    @if (lic.professional) {
+                      <span class="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700">Profesional</span>
+                    }
+                  </div>
+                }
+              </app-section-card>
+            }
+
             <!-- Role Section -->
             <app-section-card title="Tipo de Usuario" icon="people">
               <div class="space-y-4">
@@ -300,21 +418,21 @@ import type { UserProfile, Role } from '../../../core/models';
               </h4>
               <ul class="text-xs text-info-text space-y-1.5">
                 <li class="flex gap-2">
-                  <span>•</span>
+                  <span>&bull;</span>
                   <span
                     >Tu <strong>fecha de nacimiento</strong> se usa para calcular tarifas de
                     seguro</span
                   >
                 </li>
                 <li class="flex gap-2">
-                  <span>•</span>
+                  <span>&bull;</span>
                   <span
                     >El <strong>documento de identidad</strong> es necesario para verificar tu
                     cuenta</span
                   >
                 </li>
                 <li class="flex gap-2">
-                  <span>•</span>
+                  <span>&bull;</span>
                   <span
                     >Cambiar tu <strong>rol</strong> puede afectar las funciones disponibles</span
                   >
@@ -342,12 +460,38 @@ import type { UserProfile, Role } from '../../../core/models';
 })
 export class ProfilePersonalPage implements OnInit {
   private readonly profileStore = inject(ProfileStore);
+  private readonly identityLevelService = inject(IdentityLevelService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly profile = this.profileStore.profile;
   readonly loading = this.profileStore.loading;
+
+  /** Identity is locked when OCR verification succeeded with >=70% confidence */
+  readonly identityLocked = computed(() => {
+    const p = this.profile();
+    return p?.['identity_locked'] === true;
+  });
+
+  /** Driver license verified when user_identity_levels has a verification timestamp */
+  readonly licenseVerified = computed(() => {
+    const il = this.identityLevelService.identityLevel();
+    return !!il?.driver_license_verified_at;
+  });
+
+  /** License data from user_identity_levels for display */
+  readonly licenseData = computed(() => {
+    const il = this.identityLevelService.identityLevel();
+    if (!il?.driver_license_verified_at) return null;
+    return {
+      number: il.driver_license_number,
+      expiry: il.driver_license_expiry,
+      categories: il.driver_license_categories,
+      professional: il.driver_license_professional,
+      isExpired: il.driver_license_expiry ? new Date(il.driver_license_expiry) < new Date() : false,
+    };
+  });
 
   personalForm!: FormGroup;
   saveStatus = signal<'saving' | 'saved' | null>(null);
@@ -380,8 +524,18 @@ export class ProfilePersonalPage implements OnInit {
       void this.profileStore.loadProfile();
     }
 
+    // Load identity level data (for license info)
+    void this.identityLevelService.loadIdentityLevel();
+
     // Setup auto-save
     this.setupAutoSave();
+  }
+
+  /** Format ISO date to human-readable DD/MM/YYYY */
+  formatDate(isoDate: string | null | undefined): string {
+    if (!isoDate) return '—';
+    const [y, m, d] = isoDate.split('-');
+    return `${d}/${m}/${y}`;
   }
 
   private initForm(): void {
@@ -493,6 +647,24 @@ export class ProfilePersonalPage implements OnInit {
   }
 
   private async validateAndSave(): Promise<void> {
+    // Skip saving identity fields if locked by OCR
+    if (this.identityLocked()) {
+      // Only save role (the only editable field when locked)
+      const formValue = this.personalForm.value;
+      this.saveStatus.set('saving');
+      try {
+        await this.profileStore.updateProfile({
+          role: formValue.role as Role,
+        });
+        this.saveStatus.set('saved');
+        setTimeout(() => this.saveStatus.set(null), 2000);
+      } catch (error) {
+        console.error('Error saving profile:', error);
+        this.saveStatus.set(null);
+      }
+      return;
+    }
+
     // Validate age if date_of_birth is set
     const dob = this.personalForm.get('date_of_birth')?.value;
     if (dob) {

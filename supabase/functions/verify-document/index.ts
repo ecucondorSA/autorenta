@@ -347,6 +347,7 @@ serve(async (req: Request) => {
         p_document_number: validation.extracted.documentNumber as string || null,
         p_country: country,
         p_ocr_confidence: validation.confidence,
+        p_gov_id_type: (validation.extracted.documentType as string || '').toLowerCase() || null,
       });
 
       if (profileUpdateResult.error) {

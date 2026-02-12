@@ -26,9 +26,12 @@ export interface UserIdentityLevel {
   driver_license_url: string | null;
   driver_license_number: string | null;
   driver_license_category: string | null;
+  driver_license_categories: string[] | null;
   driver_license_expiry: string | null;
   driver_license_verified_at: string | null;
   driver_license_ai_score: number | null;
+  driver_license_professional: boolean | null;
+  driver_license_points: number | null;
 
   // Level 3: Biometric (Selfie)
   selfie_url: string | null;
