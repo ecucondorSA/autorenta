@@ -1,3 +1,7 @@
+## <small>3.90.2 (2026-02-12)</small>
+
+* fix(db): drop 23 zombie crons + fix cars.images schema drift ([7a640d8](https://github.com/ecucondorSA/autorenta/commit/7a640d8))
+
 ## <small>3.90.1 (2026-02-11)</small>
 
 * fix: improve edge function robustness for media and oauth errors ([754a24c](https://github.com/ecucondorSA/autorenta/commit/754a24c))
