@@ -78,10 +78,10 @@ El script:
 
 ```bash
 # Abrir reporte HTML
-open audit-reports/mobile-*/lighthouse-report.html
+open artifacts/audit-reports/mobile-*/lighthouse-report.html
 
 # O en Linux
-xdg-open audit-reports/mobile-*/lighthouse-report.html
+xdg-open artifacts/audit-reports/mobile-*/lighthouse-report.html
 ```
 
 ## Troubleshooting Rápido

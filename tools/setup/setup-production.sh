@@ -186,7 +186,7 @@ Next steps:
 1. Verify deployment: https://autorenta.com
 2. Check worker logs: wrangler tail
 3. Monitor health: ./tools/monitor-health.sh
-4. View logs at: ./logs/
+4. View logs at: ./artifacts/logs/
 
 Documentation:
 - PRODUCTION_READINESS.md

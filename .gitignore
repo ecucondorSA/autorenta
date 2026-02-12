@@ -45,6 +45,7 @@ playwright-report/
 # Package manager lockfiles
 **/package-lock.json
 bun.lock
+*.tsbuildinfo
 
 # Android Build Artifacts (CRITICAL)
 apps/web/android/.gradle/
@@ -174,6 +175,7 @@ apps/web/tools/p2p-automation/**/*.log
 SUPABASE_ACCESS.md
 mcp_config.json
 mcp_config.*.json
+config/local/*.local.json
 *.local.json
 **/config.local.json
 gha-creds-*.json
@@ -207,3 +209,6 @@ tools/evolution-api/
 tools/whatsapp-context/extractor/
 tools/whatsapp-context/gdrive-backup/
 tools/whatsapp-context/wa-crypt-tools/
+
+# Local artifacts consolidation
+artifacts/

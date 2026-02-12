@@ -35,7 +35,7 @@
 ## 🔴 Hallazgos Críticos (Acción Inmediata)
 
 ### SEC-001: Secretos Expuestos en Repositorio
-**Archivo:** `mcp_config.json`
+**Archivo:** `config/local/mcp_config.local.json`
 **Impacto:** Acceso completo a MercadoPago y Gemini API
 
 | Secreto | Línea | Riesgo |
@@ -153,7 +153,7 @@ Código muerto que:
 ## 🛠️ Plan de Remediación Priorizado
 
 ### Fase 0: Emergencia (HOY)
-1. ✅ ~~Agregar `mcp_config.json` a `.gitignore`~~
+1. ✅ ~~Agregar `mcp_config.json` a `.gitignore`~~ (migrado a `config/local/mcp_config.local.json`)
 2. ⬜ Rotar MercadoPago Access Token
 3. ⬜ Rotar Gemini API Key
 4. ⬜ `pnpm update jspdf@4.0.0 @modelcontextprotocol/sdk@1.25.2`

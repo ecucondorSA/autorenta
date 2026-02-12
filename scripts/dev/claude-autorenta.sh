@@ -1,6 +1,6 @@
 #!/bin/bash
 # AutoRenta - Claude Code Launcher
-# Uso: ./claude-autorenta.sh [modo]
+# Uso: ./scripts/dev/claude-autorenta.sh [modo]
 #
 # Modos:
 #   dev       - Desarrollo con Chrome (default)

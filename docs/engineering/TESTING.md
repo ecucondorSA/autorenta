@@ -162,7 +162,7 @@ Para que un Pull Request (PR) se fusione en `main`:
 | :--- | :--- |
 | `pnpm test:unit` | Corre todos los tests unitarios una vez. |
 | `pnpm test:unit:watch` | Modo interactivo para desarrollo (TDD). |
-| `pnpm test:unit:coverage` | Genera reporte HTML de cobertura (`coverage/index.html`). |
+| `pnpm test:unit:coverage` | Genera reporte HTML de cobertura (`apps/web/coverage/index.html`). |
 | `pnpm test:e2e` | Corre tests E2E en modo headless. |
 | `pnpm test:e2e:ui` | Abre la UI de Playwright para depurar paso a paso. |
 | `supabase test db` | Ejecuta la suite de pruebas SQL pgTAP. |

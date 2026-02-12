@@ -20,7 +20,7 @@ BOLD='\033[1m'
 # Configuración
 DEV_SERVER_PORT=4200
 CDP_PORT=9222
-AUDIT_DIR="./audit-reports/mobile-$(date +%Y%m%d-%H%M%S)"
+AUDIT_DIR="./artifacts/audit-reports/mobile-$(date +%Y%m%d-%H%M%S)"
 LIGHTHOUSE_CONFIG=".lighthouserc.mobile.json"
 
 # Banner

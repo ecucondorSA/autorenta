@@ -12,7 +12,7 @@ PRODUCTION_URL="${PRODUCTION_URL:-https://autorenta.com}"
 SUPABASE_URL="${SUPABASE_URL:-https://aceacpaockyxgogxsfyc.supabase.co}"
 SUPABASE_SERVICE_ROLE_KEY="${SUPABASE_SERVICE_ROLE_KEY:-}"
 WORKER_URL="${WORKER_URL:-}"
-LOG_FILE="logs/health-check-$(date +%Y%m%d_%H%M%S).log"
+LOG_FILE="artifacts/logs/health-check-$(date +%Y%m%d_%H%M%S).log"
 SLACK_WEBHOOK="${SLACK_WEBHOOK:-}"
 ERROR_THRESHOLD=5
 PENDING_PAYMENT_THRESHOLD=120  # 2 hours in minutes
@@ -47,7 +47,7 @@ notify() {
 }
 
 # Setup
-mkdir -p logs
+mkdir -p artifacts/logs
 log "Starting health monitoring..."
 
 # Check 1: Production website

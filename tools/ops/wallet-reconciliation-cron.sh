@@ -130,7 +130,7 @@ else
 fi
 
 # Guardar reporte en directorio de logs
-LOGS_DIR="/home/edu/autorenta/logs/reconciliation"
+LOGS_DIR="/home/edu/autorenta/artifacts/logs/reconciliation"
 mkdir -p "$LOGS_DIR"
 cp "$REPORT_FILE" "$LOGS_DIR/latest.json"
 

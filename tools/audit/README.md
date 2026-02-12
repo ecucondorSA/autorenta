@@ -65,7 +65,7 @@ El script:
 
 Los reportes se guardan en:
 ```
-audit-reports/mobile-YYYYMMDD-HHMMSS/
+artifacts/audit-reports/mobile-YYYYMMDD-HHMMSS/
 ├── lighthouse-report.html    # Reporte visual interactivo
 ├── lighthouse-report.json     # Datos estructurados
 ├── performance-metrics.json  # Métricas de performance
