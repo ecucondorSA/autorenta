@@ -1,3 +1,8 @@
+## <small>3.94.3 (2026-02-12)</small>
+
+* fix(db): cast document_kind enum in manual review RPC ([bec4343](https://github.com/ecucondorSA/autorenta/commit/bec4343))
+* chore(supabase): pin manual review and verify-user-docs jwt settings ([14d048d](https://github.com/ecucondorSA/autorenta/commit/14d048d))
+
 ## <small>3.94.2 (2026-02-12)</small>
 
 * fix(db): align migration timestamp with remote (220000→220622) ([cd292f6](https://github.com/ecucondorSA/autorenta/commit/cd292f6))
