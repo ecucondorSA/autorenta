@@ -1,3 +1,7 @@
+## <small>3.93.3 (2026-02-12)</small>
+
+* fix(db): align local migration timestamps with remote ([7f9ae0c](https://github.com/ecucondorSA/autorenta/commit/7f9ae0c))
+
 ## <small>3.93.2 (2026-02-12)</small>
 
 * fix(ci): repair 2 failing cron workflows ([eafa896](https://github.com/ecucondorSA/autorenta/commit/eafa896))
