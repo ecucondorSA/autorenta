@@ -268,7 +268,7 @@ serve(async (req: Request) => {
       }
 
       return new Response(
-        JSON.stringify({ error: 'Error al iniciar compra', details: msg }),
+        JSON.stringify({ error: 'Error al iniciar compra' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -419,9 +419,7 @@ serve(async (req: Request) => {
     log.error('Error creating fragment preference', error);
 
     return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : 'Internal server error',
-      }),
+      JSON.stringify({ error: 'Internal server error' }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

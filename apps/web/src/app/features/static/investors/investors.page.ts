@@ -246,6 +246,12 @@ export class InvestorsPage implements OnInit {
         return 'Ronda abierta';
       case 'funded':
         return 'Pool completo';
+      case 'operational':
+        return 'Operativo';
+      case 'retiring':
+        return 'En retiro';
+      case 'closed':
+        return 'Cerrado';
       case 'retired':
         return 'Vehículo retirado';
       default:

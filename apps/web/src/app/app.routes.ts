@@ -895,6 +895,13 @@ export const routes: Routes = [
     ),
   },
   {
+    path: 'fragments/byd-001',
+    title: 'Inversión BYD Dolphin Mini - AutoRenta',
+    loadComponent: lazyRetry(() =>
+      import('./features/fragments/byd-001/byd-fragment.page').then((m) => m.BydFragmentPage),
+    ),
+  },
+  {
     path: 'sitemap',
     title: 'Mapa del Sitio',
     loadComponent: lazyRetry(() =>

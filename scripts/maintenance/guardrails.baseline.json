@@ -119,6 +119,7 @@
       "trigger_booking_notification",
       "trigger_booking_pricing",
       "trigger_check_fraud_on_booking",
+      "trigger_fragment_distribution",
       "trigger_marketing_scheduler",
       "unlock_expired_wallet_locks",
       "unsuspend_account",

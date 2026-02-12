@@ -2,6 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { fromRequest } from '../_shared/logger.ts';
+import { safeErrorResponse } from '../_shared/safe-error.ts';
 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
@@ -18,35 +19,38 @@ serve(async (req) => {
     );
 
     // Ejecutar queries en paralelo
-    const [carsRes, bookingsRes, usersRes, gmvRes] = await Promise.all([
+    const [carsRes, bookingsRes, usersRes, gmvRes, rateRes] = await Promise.all([
       supabase.from('cars').select('id', { count: 'exact', head: true }).eq('status', 'active'),
       supabase.from('bookings').select('id', { count: 'exact', head: true }).eq('status', 'completed'),
       supabase.from('profiles').select('id', { count: 'exact', head: true }),
-      supabase.rpc('calculate_total_gmv') // RPC optimizado si existe, o query manual
+      supabase.rpc('calculate_total_gmv'),
+      supabase.from('exchange_rates').select('platform_rate, rate').eq('pair', 'USDTARS').eq('is_active', true).order('last_updated', { ascending: false }).limit(1).maybeSingle(),
     ]);
 
     // Calcular GMV manualmente si no hay RPC (fallback seguro)
     let totalGmv = 0;
     if (gmvRes.error) {
-      // Fallback: Sumar bookings completados (limitado a últimos 1000 para performance)
       const { data: bookings } = await supabase
         .from('bookings')
         .select('total_amount')
         .in('status', ['completed', 'confirmed'])
         .order('created_at', { ascending: false })
         .limit(1000);
-      
+
       totalGmv = bookings?.reduce((sum, b) => sum + (Number(b.total_amount) || 0), 0) || 0;
     } else {
       totalGmv = gmvRes.data || 0;
     }
+
+    // USD/ARS rate: prefer platform_rate, fallback to rate, then 1200
+    const usdArsRate = parseFloat(String(rateRes.data?.platform_rate ?? rateRes.data?.rate ?? 0)) || 1200;
 
     const stats = {
       active_cars: carsRes.count || 0,
       completed_trips: bookingsRes.count || 0,
       total_users: usersRes.count || 0,
       total_gmv_ars: Math.round(totalGmv),
-      total_gmv_usd: Math.round(totalGmv / 1200), // Estimado USD
+      total_gmv_usd: Math.round(totalGmv / usdArsRate),
       generated_at: new Date().toISOString()
     };
 
@@ -60,9 +64,6 @@ serve(async (req) => {
 
   } catch (error) {
     log.error('Failed to compute investor stats', error instanceof Error ? error : new Error(String(error)));
-    return new Response(JSON.stringify({ error: String(error) }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return safeErrorResponse(error, corsHeaders, 'public-investor-stats');
   }
 });
