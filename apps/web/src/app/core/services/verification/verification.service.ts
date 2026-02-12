@@ -388,7 +388,7 @@ export class VerificationService implements OnDestroy {
    * Implementa exponential backoff: 200ms → 400ms → 800ms (max 3 reintentos).
    */
   async triggerVerification(role?: VerificationRole): Promise<void> {
-    const body = role ? { role } : {};
+    const body = { role: role ?? 'driver' };
 
     const result = await this.retryWithBackoff(
       async () => {
