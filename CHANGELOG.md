@@ -1,3 +1,7 @@
+## <small>3.94.4 (2026-02-12)</small>
+
+* fix(verification): route face verification to Supabase Edge Function ([af97695](https://github.com/ecucondorSA/autorenta/commit/af97695))
+
 ## <small>3.94.3 (2026-02-12)</small>
 
 * fix(db): cast document_kind enum in manual review RPC ([bec4343](https://github.com/ecucondorSA/autorenta/commit/bec4343))
