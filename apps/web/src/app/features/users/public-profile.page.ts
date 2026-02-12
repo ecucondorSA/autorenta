@@ -20,7 +20,7 @@ import type { Car, Review } from '../../core/models';
 import {
   ReviewRadarChartComponent,
   type RadarChartData,
-} from '../../shared/components/review-radar-chart/review-radar-chart.component';
+} from '../../shared/components/reviews/review-radar-chart/review-radar-chart.component';
 import { getCarImageUrl } from '../../shared/utils/car-placeholder.util';
 
 @Component({

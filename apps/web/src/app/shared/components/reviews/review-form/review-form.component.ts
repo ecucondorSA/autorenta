@@ -11,7 +11,7 @@ import {
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
-import type { CreateReviewParams, ReviewType } from '../../../core/models';
+import type { CreateReviewParams, ReviewType } from '../../../../core/models';
 
 interface RatingCategory {
   key: string;

@@ -50,7 +50,7 @@ import { SeoFooterComponent } from './core/components/seo-footer/seo-footer.comp
 import { HelpButtonComponent } from './shared/components/help-button/help-button.component';
 import { LanguageSelectorComponent } from './shared/components/language-selector/language-selector.component';
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
-import { PendingReviewsBannerComponent } from './shared/components/pending-reviews-banner/pending-reviews-banner.component';
+import { PendingReviewsBannerComponent } from './shared/components/reviews/pending-reviews-banner/pending-reviews-banner.component';
 import { PwaInstallBannerComponent } from './shared/components/pwa-install-banner/pwa-install-banner.component';
 import { PwaTitlebarComponent } from './shared/components/pwa-titlebar/pwa-titlebar.component';
 import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';

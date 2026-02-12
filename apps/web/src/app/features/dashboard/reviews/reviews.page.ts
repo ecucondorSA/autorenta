@@ -4,8 +4,8 @@ import type { Review } from '@core/models';
 import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
 import { SessionFacadeService } from '@core/services/facades/session-facade.service';
 import { ReviewsService } from '@core/services/cars/reviews.service';
-import { PendingReviewsListComponent } from '../../../shared/components/pending-reviews-list/pending-reviews-list.component';
-import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
+import { PendingReviewsListComponent } from '../../../shared/components/reviews/pending-reviews-list/pending-reviews-list.component';
+import { ReviewCardComponent } from '../../../shared/components/reviews/review-card/review-card.component';
 
 @Component({
   selector: 'app-reviews-page',

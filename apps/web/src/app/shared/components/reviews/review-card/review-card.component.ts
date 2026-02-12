@@ -9,8 +9,8 @@ import {
 
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import type { Review } from '../../../core/models';
-import { FlagReviewModalComponent } from '../flag-review-modal/flag-review-modal.component';
+import type { Review } from '../../../../core/models';
+import { FlagReviewModalComponent } from '../../flag-review-modal/flag-review-modal.component';
 
 @Component({
   selector: 'app-review-card',

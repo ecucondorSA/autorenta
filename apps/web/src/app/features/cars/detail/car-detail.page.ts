@@ -67,7 +67,7 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { type PaymentMethod } from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
 
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
-import { ReviewSummaryComponent } from '../../../shared/components/review-summary/review-summary.component';
+import { ReviewSummaryComponent } from '../../../shared/components/reviews/review-summary/review-summary.component';
 import { BookingLocationData } from '../../bookings/components/booking-location-form/booking-location-form.component';
 
 // Temporary interfaces until components are created

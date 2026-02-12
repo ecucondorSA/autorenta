@@ -15,8 +15,8 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { FeatureDataFacadeService } from '@core/services/facades/feature-data-facade.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
-import { ReviewFormComponent } from '../../../shared/components/review-form/review-form.component';
-import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
+import { ReviewFormComponent } from '../../../shared/components/reviews/review-form/review-form.component';
+import { ReviewCardComponent } from '../../../shared/components/reviews/review-card/review-card.component';
 
 /**
  * ReviewManagementComponent
