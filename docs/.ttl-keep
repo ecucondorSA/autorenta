@@ -1,0 +1,16 @@
+# Keep-list for docs TTL archive automation.
+# One path per line, relative to repository root.
+# Files listed here are never auto-archived by scripts/maintenance/archive-stale-docs.ts.
+
+docs/README.md
+docs/ROOT_HYGIENE.md
+docs/business/EXECUTIVE_SUMMARY.md
+docs/engineering/API_REFERENCE.md
+docs/engineering/DATABASE_SCHEMA.md
+docs/engineering/DEPLOYMENT.md
+docs/engineering/EDGE_FUNCTIONS.md
+docs/engineering/TESTING.md
+docs/engineering/TROUBLESHOOTING.md
+docs/product/BOOKING_SYSTEM.md
+docs/product/PAYMENT_FLOWS.md
+docs/security/SECURITY.md

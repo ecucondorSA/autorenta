@@ -27,3 +27,14 @@ Keep the repository root focused on runtime-critical files only.
 - New DB changes must be done through `supabase/migrations/*.sql`.
 - Keep local/runtime outputs ignored in `.gitignore`.
 - If a file is not used by CI, runtime, or onboarding, move it under `docs/` or remove it.
+
+## TTL Auto-Archive
+- Objective: prevent stale documents from accumulating in active documentation folders.
+- Policy: docs older than `180` days are candidates for archive unless explicitly allowlisted.
+- Keep-list file: `docs/.ttl-keep`.
+- Check mode (fails if stale docs are found):
+  - `pnpm docs:ttl:check`
+- Apply mode (archives with `git mv`):
+  - `pnpm docs:ttl:apply`
+- Archive destination pattern:
+  - `docs/archived-reports/ttl-archive-YYYY-MM-DD/`

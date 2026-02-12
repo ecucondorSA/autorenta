@@ -70,6 +70,8 @@
     "ci": "./tools/run.sh ci",
     "lint": "./tools/run.sh lint",
     "guardrails": "tsx scripts/maintenance/guardrails.ts",
+    "docs:ttl:check": "tsx scripts/maintenance/archive-stale-docs.ts --ttl-days 180 --fail-on-found",
+    "docs:ttl:apply": "tsx scripts/maintenance/archive-stale-docs.ts --ttl-days 180 --apply",
     "guardrails:strict": "npx tsx scripts/maintenance/guardrails.ts --strict",
     "guardrails:baseline": "npx tsx scripts/maintenance/guardrails.ts --update-baseline",
     "lint:fix": "./tools/run.sh lint:fix",
