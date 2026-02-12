@@ -1,3 +1,8 @@
+## 3.92.0 (2026-02-12)
+
+* docs: document gemini image generation ([0a662d9](https://github.com/ecucondorSA/autorenta/commit/0a662d9))
+* feat(fragments): add images for BYD-001 landing ([6de881b](https://github.com/ecucondorSA/autorenta/commit/6de881b))
+
 ## 3.91.0 (2026-02-12)
 
 * feat(fragments): add BYD-001 page and harden investor stats ([c588c10](https://github.com/ecucondorSA/autorenta/commit/c588c10))
