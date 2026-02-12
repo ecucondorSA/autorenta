@@ -103,6 +103,7 @@
 /about            /index.html   200
 /careers          /index.html   200
 /investors        /index.html   200
+/fragments/*      /index.html   200
 /sitemap          /index.html   200
 /company-data     /index.html   200
 
