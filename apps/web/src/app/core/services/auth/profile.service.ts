@@ -5,6 +5,7 @@ import {
   NotificationPrefs,
   ProfileAudit,
   Role,
+  VerificationRole,
   UserDocument,
   UserProfile,
 } from '@core/models';
@@ -318,15 +319,17 @@ export class ProfileService {
     }
 
     try {
+      const verificationRole = this.mapVerificationRoleFromDocumentKind(kind);
       const headers = await this.buildEdgeFunctionAuthHeaders();
       const { error: verificationInvokeError } = await this.supabase.functions.invoke(
         'verify-user-docs',
         {
-        body: {
-          document_id: data['id'],
-          kind,
-          trigger: 'document-upload',
-        },
+          body: {
+            document_id: data['id'],
+            kind,
+            trigger: 'document-upload',
+            ...(verificationRole ? { role: verificationRole } : {}),
+          },
           headers,
         },
       );
@@ -339,6 +342,25 @@ export class ProfileService {
     }
 
     return data as UserDocument;
+  }
+
+  private mapVerificationRoleFromDocumentKind(kind: DocumentKind): VerificationRole | null {
+    switch (kind) {
+      case 'gov_id_front':
+      case 'gov_id_back':
+      case 'driver_license':
+      case 'license_front':
+      case 'license_back':
+      case 'selfie':
+      case 'criminal_record':
+        return 'driver';
+      case 'vehicle_registration':
+      case 'vehicle_insurance':
+      case 'utility_bill':
+        return 'owner';
+      default:
+        return null;
+    }
   }
 
   private async buildEdgeFunctionAuthHeaders(): Promise<Record<string, string>> {
