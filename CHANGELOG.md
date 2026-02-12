@@ -1,3 +1,7 @@
+## <small>3.93.1 (2026-02-12)</small>
+
+* fix(db): lock down manual review rpc ([3e48556](https://github.com/ecucondorSA/autorenta/commit/3e48556))
+
 ## 3.93.0 (2026-02-12)
 
 * feat(kyc): email manual review (yes/no) ([b130562](https://github.com/ecucondorSA/autorenta/commit/b130562))
