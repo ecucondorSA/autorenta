@@ -84,6 +84,12 @@ tools/whatsapp-context/wa_backup_key.txt
 *.img
 apps/web/src/app/features/dump_analysis/
 dump_analysis/
+apps/web/src/app/features/view.xml
+apps/web/src/app/features/view_login.xml
+apps/web/src/app/features/window_dump.xml
+apps/web/src/app/features/dump_result.xml
+apps/web/src/app/features/SECURITY_AUDIT_REPORT.md
+apps/web/src/app/shared/components/car-card/CONTAINER_QUERIES_EXAMPLE.html
 
 # Marketing Demos & Heavy Assets (>50MB total ignored)
 marketing/demos/*.mp4

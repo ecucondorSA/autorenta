@@ -1,5 +1,6 @@
 #!/bin/bash
-# Fix all .from( and .rpc( calls to use .getClient()
+# Fix legacy .from() and .rpc() calls to use .getClient().
+# Run from the directory that contains target service files.
 
 echo "🔧 Fixing Supabase service calls..."
 
