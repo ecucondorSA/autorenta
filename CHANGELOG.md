@@ -1,3 +1,8 @@
+## 3.95.0 (2026-02-12)
+
+* feat(ui): redesign verification flow with brand-aligned visuals ([2416b11](https://github.com/ecucondorSA/autorenta/commit/2416b11))
+* feat(verification): extend OCR sync for profile identity data ([8cd6c25](https://github.com/ecucondorSA/autorenta/commit/8cd6c25))
+
 ## <small>3.94.4 (2026-02-12)</small>
 
 * fix(verification): route face verification to Supabase Edge Function ([af97695](https://github.com/ecucondorSA/autorenta/commit/af97695))
