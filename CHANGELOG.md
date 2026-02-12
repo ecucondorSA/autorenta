@@ -1,3 +1,7 @@
+## <small>3.92.2 (2026-02-12)</small>
+
+* fix(db): add missing local migration 20260212065639 ([d977e9f](https://github.com/ecucondorSA/autorenta/commit/d977e9f))
+
 ## <small>3.92.1 (2026-02-12)</small>
 
 * fix(deploy): add /fragments/* SPA redirect for Cloudflare Pages ([46823ed](https://github.com/ecucondorSA/autorenta/commit/46823ed))
