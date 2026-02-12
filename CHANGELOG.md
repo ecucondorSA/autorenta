@@ -1,3 +1,7 @@
+## <small>3.93.4 (2026-02-12)</small>
+
+* fix(web): allow document reupload while verification is pending ([4f43300](https://github.com/ecucondorSA/autorenta/commit/4f43300))
+
 ## <small>3.93.3 (2026-02-12)</small>
 
 * fix(db): align local migration timestamps with remote ([7f9ae0c](https://github.com/ecucondorSA/autorenta/commit/7f9ae0c))
