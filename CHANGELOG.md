@@ -1,3 +1,7 @@
+## <small>3.93.6 (2026-02-12)</small>
+
+* fix(web): send explicit auth header for verify-user-docs trigger ([176efac](https://github.com/ecucondorSA/autorenta/commit/176efac))
+
 ## <small>3.93.5 (2026-02-12)</small>
 
 * fix(edge): correct manual review action url normalization ([dc8a05b](https://github.com/ecucondorSA/autorenta/commit/dc8a05b))
