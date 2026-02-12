@@ -50,6 +50,29 @@ const mapStatusToKyc = (status: VerificationResult['status']): string => {
   }
 };
 
+type ProfileRole = 'driver' | 'owner' | 'both' | 'unknown';
+
+function normalizeProfileRole(value: unknown): ProfileRole {
+  if (typeof value !== 'string') {
+    return 'unknown';
+  }
+
+  const role = value.trim().toLowerCase();
+
+  // Support legacy/localized role values stored in production.
+  if (role === 'renter' || role === 'locatario' || role === 'driver') {
+    return 'driver';
+  }
+  if (role === 'owner' || role === 'locador') {
+    return 'owner';
+  }
+  if (role === 'both' || role === 'ambos') {
+    return 'both';
+  }
+
+  return 'unknown';
+}
+
 function base64Url(bytes: Uint8Array): string {
   // RFC 4648 base64url (no padding)
   const base64 = btoa(String.fromCharCode(...bytes));
@@ -181,17 +204,22 @@ serve(async (req) => {
   const docByKind = Object.fromEntries(documentList.map((doc) => [doc.kind, doc]));
 
   const rolesToEvaluate: ('driver' | 'owner')[] = [];
-  const profileRole = profile.role ?? 'renter';
+  const normalizedProfileRole = normalizeProfileRole(profile.role);
 
   if (requestedRole) {
     rolesToEvaluate.push(requestedRole);
   } else {
-    if (profileRole === 'renter' || profileRole === 'both') {
+    if (normalizedProfileRole === 'driver' || normalizedProfileRole === 'both') {
       rolesToEvaluate.push('driver');
     }
-    if (profileRole === 'owner' || profileRole === 'both') {
+    if (normalizedProfileRole === 'owner' || normalizedProfileRole === 'both') {
       rolesToEvaluate.push('owner');
     }
+  }
+
+  // Fallback for unexpected/legacy role values: always evaluate driver path.
+  if (rolesToEvaluate.length === 0) {
+    rolesToEvaluate.push('driver');
   }
 
   const signedDocuments = await buildSignedDocuments(adminClient, documentList);

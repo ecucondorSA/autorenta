@@ -1,4 +1,4 @@
 {
   "importMap": "../import_map.json",
-  "verify_jwt": true
+  "verify_jwt": false
 }

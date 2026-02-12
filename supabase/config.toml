@@ -83,3 +83,8 @@ verify_jwt = false
 # Disable gateway JWT verification. The function validates user tokens internally
 # with requireAuth() and enforces ownership using the authenticated user id.
 verify_jwt = false
+
+[functions.verify-user-docs]
+# Disable gateway JWT verification. This function validates user tokens internally
+# and needs to support Supabase Auth ES256 user JWTs passed from the web app.
+verify_jwt = false
