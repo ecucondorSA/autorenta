@@ -1,3 +1,7 @@
+## <small>3.93.2 (2026-02-12)</small>
+
+* fix(ci): repair 2 failing cron workflows ([eafa896](https://github.com/ecucondorSA/autorenta/commit/eafa896))
+
 ## <small>3.93.1 (2026-02-12)</small>
 
 * fix(db): lock down manual review rpc ([3e48556](https://github.com/ecucondorSA/autorenta/commit/3e48556))
