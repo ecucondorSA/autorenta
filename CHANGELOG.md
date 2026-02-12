@@ -1,3 +1,7 @@
+## <small>3.93.7 (2026-02-12)</small>
+
+* fix(web): include auth headers in profile document verification trigger ([9659af4](https://github.com/ecucondorSA/autorenta/commit/9659af4))
+
 ## <small>3.93.6 (2026-02-12)</small>
 
 * fix(web): send explicit auth header for verify-user-docs trigger ([176efac](https://github.com/ecucondorSA/autorenta/commit/176efac))
