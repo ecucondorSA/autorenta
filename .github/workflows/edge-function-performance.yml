@@ -34,8 +34,7 @@ jobs:
             // Critical edge functions to benchmark
             const functions = [
               { name: 'dashboard-stats', method: 'GET', critical: true },
-              { name: 'sync-binance-rates', method: 'POST', critical: true },
-              { name: 'update-exchange-rate', method: 'POST', critical: false },
+              { name: 'update-exchange-rates', method: 'POST', critical: true },
               { name: 'mercadopago-webhook', method: 'OPTIONS', critical: true },
               { name: 'verify-document', method: 'OPTIONS', critical: false },
               { name: 'send-push-notification', method: 'OPTIONS', critical: false },

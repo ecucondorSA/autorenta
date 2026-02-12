@@ -6,8 +6,8 @@ verify_jwt = false
 # This one needs JWT verification (user must be authenticated)
 verify_jwt = true
 
-[functions.sync-binance-rates]
-# Disable JWT verification (called by pg_cron internally)
+[functions.update-exchange-rates]
+# Disable JWT verification (called by cron workflow + pg_cron)
 verify_jwt = false
 
 [functions.mp-create-preauth]

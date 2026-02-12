@@ -243,7 +243,7 @@ export class ExchangeRatesPage implements OnInit, OnDestroy {
       this.loading.set(true);
 
       const result = await this.adminFacade.invokeFunction<{ success: boolean; message?: string }>({
-        name: 'sync-binance-rates',
+        name: 'update-exchange-rates',
         body: {},
       });
 

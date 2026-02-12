@@ -18,7 +18,7 @@ jobs:
         run: |
           set -e
 
-          echo "📊 Calling Edge Function sync-binance-rates..."
+          echo "📊 Calling Edge Function update-exchange-rates..."
           echo "🌍 Testing working regions to bypass Binance geo-blocking..."
 
           # Regiones verificadas que funcionan (sa-east-1 más cercana a Argentina/Brasil)
@@ -32,7 +32,7 @@ jobs:
             echo "🔄 Trying region: $REGION"
 
             RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-              "${SUPABASE_URL}/functions/v1/sync-binance-rates" \
+              "${SUPABASE_URL}/functions/v1/update-exchange-rates" \
               -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
               -H "Content-Type: application/json" \
               -H "x-region: ${REGION}")
