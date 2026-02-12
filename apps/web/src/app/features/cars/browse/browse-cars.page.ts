@@ -6,12 +6,14 @@ import {
   signal,
   ViewChild,
   ChangeDetectionStrategy,
+  HostListener,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { interval } from 'rxjs';
 import { CarsService } from '@core/services/cars/cars.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { LocationService, type LocationData } from '@core/services/geo/location.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { MetaService } from '@core/services/ui/meta.service';
@@ -104,6 +106,7 @@ export class BrowseCarsPage {
   @ViewChild(CarsMapComponent) carsMap!: CarsMapComponent;
 
   private carsService = inject(CarsService);
+  private readonly authService = inject(AuthService);
   private locationService = inject(LocationService);
   private readonly logger = inject(LoggerService).createChildLogger('BrowseCarsPage');
   private router = inject(Router);
@@ -131,6 +134,14 @@ export class BrowseCarsPage {
   private lastLocationAt = 0;
   private isFetching = false;
   readonly isLocating = signal(false);
+  readonly isAuthenticatedSig = this.authService.isAuthenticated;
+  readonly userEmail = this.authService.userEmail;
+  readonly desktopMenuOpen = signal(false);
+  readonly userMenuInitial = computed(() => {
+    const email = this.userEmail();
+    if (!email) return 'U';
+    return email.trim().charAt(0).toUpperCase() || 'U';
+  });
 
   readonly mapLocations = computed<CarMapLocation[]>(() => {
     // Use filteredCars so map updates with search query
@@ -429,5 +440,44 @@ export class BrowseCarsPage {
   onCarouselHoverChange(carId: string | null) {
     this.carouselHoveredId.set(carId);
     this.store.setHoveredCar(carId);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.desktopMenuOpen()) {
+      this.desktopMenuOpen.set(false);
+    }
+  }
+
+  toggleDesktopMenu(): void {
+    this.desktopMenuOpen.update((value) => !value);
+  }
+
+  closeDesktopMenu(): void {
+    this.desktopMenuOpen.set(false);
+  }
+
+  navigateFromDesktopMenu(route: string): void {
+    this.closeDesktopMenu();
+    void this.router.navigate([route]);
+  }
+
+  goToLogin(): void {
+    this.closeDesktopMenu();
+    void this.router.navigate(['/auth/login'], { queryParams: { returnUrl: '/cars/list' } });
+  }
+
+  goToRegister(): void {
+    this.closeDesktopMenu();
+    void this.router.navigate(['/auth/register'], { queryParams: { returnUrl: '/cars/list' } });
+  }
+
+  async signOutFromDesktopMenu(): Promise<void> {
+    this.closeDesktopMenu();
+    try {
+      await this.authService.signOut();
+    } catch (error) {
+      this.logger.error('Desktop menu sign out failed', error);
+    }
   }
 }

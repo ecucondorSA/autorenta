@@ -130,6 +130,15 @@
   <!-- ================================================================================== -->
   <!-- LAYER 10: TOP BAR (Controls & Toggle)                                             -->
   <!-- ================================================================================== -->
+  @if (desktopMenuOpen()) {
+    <button
+      type="button"
+      class="fixed inset-0 z-40 hidden md:block cursor-default"
+      aria-label="Cerrar menu de usuario"
+      (click)="closeDesktopMenu()"
+    ></button>
+  }
+
   <header class="absolute top-0 inset-x-0 z-50 p-4 pt-safe-top pointer-events-none">
     <div
       class="pointer-events-auto bg-black/80 backdrop-blur-xl border border-white/10 rounded-full px-2 py-2 shadow-2xl flex items-center justify-between max-w-4xl mx-auto"
@@ -162,44 +171,148 @@
         </div>
       </div>
 
-      <!-- View Toggle -->
-      <div class="bg-zinc-900 rounded-full p-1 flex items-center border border-zinc-800">
-        <button
-          (click)="toggleView()"
-          class="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300"
-          [class.bg-white]="viewMode() === 'map'"
-          [class.text-black]="viewMode() === 'map'"
-          [class.text-zinc-400]="viewMode() !== 'map'"
-          [class.hover:text-white]="viewMode() !== 'map'"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.806-.98l-4.553-2.276M15 7v13"
-            />
-          </svg>
-          <span class="hidden sm:inline">Mapa</span>
-        </button>
-        <button
-          (click)="toggleView()"
-          class="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300"
-          [class.bg-white]="viewMode() === 'list'"
-          [class.text-black]="viewMode() === 'list'"
-          [class.text-zinc-400]="viewMode() !== 'list'"
-          [class.hover:text-white]="viewMode() !== 'list'"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 10h16M4 14h16M4 18h16"
-            />
-          </svg>
-          <span class="hidden sm:inline">Lista</span>
-        </button>
+      <!-- View Toggle + Desktop User Menu -->
+      <div class="flex items-center gap-2">
+        <div class="bg-zinc-900 rounded-full p-1 flex items-center border border-zinc-800">
+          <button
+            (click)="toggleView()"
+            class="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300"
+            [class.bg-white]="viewMode() === 'map'"
+            [class.text-black]="viewMode() === 'map'"
+            [class.text-zinc-400]="viewMode() !== 'map'"
+            [class.hover:text-white]="viewMode() !== 'map'"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.806-.98l-4.553-2.276M15 7v13"
+              />
+            </svg>
+            <span class="hidden sm:inline">Mapa</span>
+          </button>
+          <button
+            (click)="toggleView()"
+            class="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300"
+            [class.bg-white]="viewMode() === 'list'"
+            [class.text-black]="viewMode() === 'list'"
+            [class.text-zinc-400]="viewMode() !== 'list'"
+            [class.hover:text-white]="viewMode() !== 'list'"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 10h16M4 14h16M4 18h16"
+              />
+            </svg>
+            <span class="hidden sm:inline">Lista</span>
+          </button>
+        </div>
+
+        <!-- Desktop menu trigger -->
+        <div class="relative hidden md:block">
+          <button
+            type="button"
+            class="h-10 w-10 rounded-full border border-zinc-700 bg-zinc-900 text-zinc-200 hover:text-white hover:bg-zinc-800 transition-colors flex items-center justify-center"
+            aria-label="Abrir menú de usuario"
+            [attr.aria-expanded]="desktopMenuOpen()"
+            data-testid="desktop-user-menu-trigger"
+            (click)="toggleDesktopMenu()"
+          >
+            @if (isAuthenticatedSig()) {
+              <span class="text-sm font-bold">{{ userMenuInitial() }}</span>
+            } @else {
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5.121 17.804A11.955 11.955 0 0112 16c2.537 0 4.89.785 6.879 2.124M15 10a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+            }
+          </button>
+
+          @if (desktopMenuOpen()) {
+            <div
+              class="absolute right-0 mt-3 w-64 rounded-2xl border border-zinc-800 bg-zinc-950/95 backdrop-blur-xl shadow-2xl overflow-hidden z-[60]"
+              role="menu"
+              aria-label="Menú principal desktop"
+            >
+              @if (isAuthenticatedSig()) {
+                <div class="px-4 py-3 border-b border-zinc-800">
+                  <p class="text-xs uppercase tracking-wide text-zinc-500">Cuenta</p>
+                  <p class="text-sm font-semibold text-zinc-100 truncate">{{ userEmail() }}</p>
+                </div>
+                <div class="p-2">
+                  <button
+                    type="button"
+                    class="w-full text-left px-3 py-2 rounded-xl text-sm text-zinc-200 hover:bg-zinc-800"
+                    (click)="navigateFromDesktopMenu('/profile')"
+                  >
+                    Perfil
+                  </button>
+                  <button
+                    type="button"
+                    class="w-full text-left px-3 py-2 rounded-xl text-sm text-zinc-200 hover:bg-zinc-800"
+                    (click)="navigateFromDesktopMenu('/bookings')"
+                  >
+                    Reservas
+                  </button>
+                  <button
+                    type="button"
+                    class="w-full text-left px-3 py-2 rounded-xl text-sm text-zinc-200 hover:bg-zinc-800"
+                    (click)="navigateFromDesktopMenu('/messages')"
+                  >
+                    Mensajes
+                  </button>
+                  <button
+                    type="button"
+                    class="w-full text-left px-3 py-2 rounded-xl text-sm text-zinc-200 hover:bg-zinc-800"
+                    (click)="navigateFromDesktopMenu('/cars/publish')"
+                  >
+                    Publicar
+                  </button>
+                  <button
+                    type="button"
+                    class="w-full text-left px-3 py-2 rounded-xl text-sm text-zinc-200 hover:bg-zinc-800"
+                    (click)="navigateFromDesktopMenu('/wallet')"
+                  >
+                    Wallet
+                  </button>
+                  <button
+                    type="button"
+                    class="w-full text-left px-3 py-2 rounded-xl text-sm text-rose-400 hover:bg-zinc-800"
+                    (click)="signOutFromDesktopMenu()"
+                  >
+                    Cerrar sesión
+                  </button>
+                </div>
+              } @else {
+                <div class="p-4 space-y-3">
+                  <p class="text-sm text-zinc-300">Accede para reservar, publicar y gestionar tu cuenta.</p>
+                  <button
+                    type="button"
+                    class="w-full px-3 py-2 rounded-xl text-sm font-semibold bg-white text-black hover:bg-zinc-200 transition-colors"
+                    (click)="goToLogin()"
+                  >
+                    Iniciar sesión
+                  </button>
+                  <button
+                    type="button"
+                    class="w-full px-3 py-2 rounded-xl text-sm font-semibold border border-zinc-700 text-zinc-200 hover:bg-zinc-800 transition-colors"
+                    (click)="goToRegister()"
+                  >
+                    Crear cuenta
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
       </div>
     </div>
   </header>
