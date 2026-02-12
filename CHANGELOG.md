@@ -1,3 +1,8 @@
+## <small>3.94.2 (2026-02-12)</small>
+
+* fix(db): align migration timestamp with remote (220000→220622) ([cd292f6](https://github.com/ecucondorSA/autorenta/commit/cd292f6))
+* fix(web): pass inferred verification role when uploading documents ([8631097](https://github.com/ecucondorSA/autorenta/commit/8631097))
+
 ## <small>3.94.1 (2026-02-12)</small>
 
 * fix(auth): repair user registration + normalize verify-user-docs roles ([4b951e9](https://github.com/ecucondorSA/autorenta/commit/4b951e9))
