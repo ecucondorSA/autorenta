@@ -102,10 +102,12 @@ function calculateProjections(
           Invertí desde USD $12.50 en un BYD Dolphin Mini y recibí ganancias por cada viaje completado.
           Propiedad fraccionada, transparente y 100% digital.
         </p>
-        <div class="hero-img-placeholder">
-          <!-- Reemplazar con imagen real del BYD Dolphin Mini -->
-          Foto BYD Dolphin Mini — 480×270
-        </div>
+        <img
+          src="assets/images/fragments/byd-dolphin-mini-hero.png"
+          alt="BYD Dolphin Mini — Inversión fraccionada AutoRenta"
+          style="max-width: 480px; width: 100%; margin: 0 auto; border-radius: 1rem; display: block;"
+          loading="eager"
+        />
       </section>
 
       <!-- ═══════════════════════════════════════════ -->
@@ -262,10 +264,13 @@ function calculateProjections(
         <!-- ═══════════════════════════════════════════ -->
         <h2>El Vehículo</h2>
         <div class="vehicle-showcase">
-          <div class="vehicle-img-placeholder">
-            <!-- Reemplazar con foto real -->
-            Foto BYD Dolphin Mini — lateral
-          </div>
+          <img
+            src="assets/images/fragments/byd-dolphin-mini-lateral.png"
+            alt="BYD Dolphin Mini — vista lateral en Buenos Aires"
+            class="vehicle-img"
+            loading="lazy"
+            style="width: 100%; border-radius: 1rem; object-fit: cover;"
+          />
           <div>
             <h3 style="color: #0f172a; margin-bottom: 1rem;">BYD Dolphin Mini 2025</h3>
             <dl class="vehicle-specs">
@@ -289,6 +294,12 @@ function calculateProjections(
         <!-- ROADMAP: 100 autos en 24 meses              -->
         <!-- ═══════════════════════════════════════════ -->
         <h2>Meta: 100 Autos en 24 Meses</h2>
+        <img
+          src="assets/images/fragments/fleet-roadmap.png"
+          alt="Flota de 100 vehículos eléctricos — visión AutoRenta 2028"
+          style="width: 100%; border-radius: 1rem; margin-bottom: 1.5rem;"
+          loading="lazy"
+        />
         <p>
           BYD-001 es solo el comienzo. Nuestra visión es construir una flota de 100 vehículos
           eléctricos fraccionados, democratizando la inversión en movilidad sustentable.
