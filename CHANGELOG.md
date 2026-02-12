@@ -1,3 +1,14 @@
+## <small>3.90.3 (2026-02-12)</small>
+
+* refactor(web): group shared map components under maps domain ([2bed3a3](https://github.com/ecucondorSA/autorenta/commit/2bed3a3))
+* refactor(web): group shared review components under reviews domain ([2460393](https://github.com/ecucondorSA/autorenta/commit/2460393))
+* chore: reorganize root files and archive legacy artifacts ([1581a1a](https://github.com/ecucondorSA/autorenta/commit/1581a1a))
+* chore(docs): add ttl-based stale docs archive automation ([5799c45](https://github.com/ecucondorSA/autorenta/commit/5799c45))
+* chore(docs): restructure documentation by domain ([88e73fb](https://github.com/ecucondorSA/autorenta/commit/88e73fb))
+* chore(repo): harden root layout and move local artifacts/config ([d50342f](https://github.com/ecucondorSA/autorenta/commit/d50342f))
+* chore(web): archive non-runtime files from src/app ([b4b5ada](https://github.com/ecucondorSA/autorenta/commit/b4b5ada))
+* fix(ci): repair orphan migration and add mp credential check utility ([dff10d1](https://github.com/ecucondorSA/autorenta/commit/dff10d1))
+
 ## <small>3.90.2 (2026-02-12)</small>
 
 * fix(db): drop 23 zombie crons + fix cars.images schema drift ([7a640d8](https://github.com/ecucondorSA/autorenta/commit/7a640d8))
