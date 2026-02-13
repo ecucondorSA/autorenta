@@ -1,3 +1,7 @@
+## <small>3.95.4 (2026-02-13)</small>
+
+* fix(verification): prevent camera auto-open and fix Level 3 progress RPC ([b8615fd](https://github.com/ecucondorSA/autorenta/commit/b8615fd))
+
 ## <small>3.95.3 (2026-02-13)</small>
 
 * fix(subscriptions): align pricing to monthly billing and add operational safeguards ([daaa80a](https://github.com/ecucondorSA/autorenta/commit/daaa80a))
