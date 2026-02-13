@@ -1,3 +1,9 @@
+## <small>3.97.1 (2026-02-13)</small>
+
+* fix(ops): remove redirect loop for tino static pages ([685b1ff](https://github.com/ecucondorSA/autorenta/commit/685b1ff))
+* docs: add auth diagnosis rule - blame token last ([3377faf](https://github.com/ecucondorSA/autorenta/commit/3377faf))
+* docs: upgrade agent instructions to senior professional mode ([f1e980f](https://github.com/ecucondorSA/autorenta/commit/f1e980f))
+
 ## 3.97.0 (2026-02-13)
 
 * chore(tools): update investor campaign script types ([1c6d386](https://github.com/ecucondorSA/autorenta/commit/1c6d386))
