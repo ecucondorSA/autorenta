@@ -1,6 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { fetchWithTimeout, fetchJsonWithTimeout } from '../_shared/fetch-utils.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 const BINANCE_API_BASE = 'https://api.binance.com/api/v3';
 const PLATFORM_MARGIN_PERCENT = 10.0; // 10% margin
@@ -21,12 +22,9 @@ interface RateUpdateResult {
   fallback_used?: boolean;
 }
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });

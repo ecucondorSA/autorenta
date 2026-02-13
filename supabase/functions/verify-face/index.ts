@@ -17,13 +17,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { callVisionApi } from "../_shared/vision-api.ts";
 import { fetchWithTimeout } from "../_shared/fetch-utils.ts";
 import { compareFaces, isRekognitionConfigured, detectFaces } from "../_shared/aws-rekognition.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, baggage, sentry-trace",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 interface VerifyFaceRequest {
   video_url: string;
@@ -175,6 +169,8 @@ async function verifyWithVisionHeuristic(
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -366,7 +362,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : "Internal server error",
+        error: "Internal server error",
       } as VerifyFaceResponse),
       {
         status: 500,

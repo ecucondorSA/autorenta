@@ -8,6 +8,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { sendReconciliationAlert } from '../_shared/alerts.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 interface ReconciliationResult {
   user_id: string;
@@ -36,10 +37,7 @@ interface WalletRow {
   locked_balance_cents: number;
 }
 
-const JSON_HEADERS = {
-  'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*',
-};
+const JSON_CONTENT_TYPE = { 'Content-Type': 'application/json' };
 
 function getRequiredEnv(name: string): string {
   const value = Deno.env.get(name);
@@ -66,15 +64,13 @@ function normalizeError(error: unknown): string {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-      },
+      headers: corsHeaders,
     });
   }
 
@@ -274,7 +270,7 @@ serve(async (req) => {
       }),
       {
         status: 200,
-        headers: JSON_HEADERS,
+        headers: { ...corsHeaders, ...JSON_CONTENT_TYPE },
       }
     );
   } catch (error) {
@@ -288,7 +284,7 @@ serve(async (req) => {
       }),
       {
         status: 500,
-        headers: JSON_HEADERS,
+        headers: { ...corsHeaders, ...JSON_CONTENT_TYPE },
       }
     );
   }
