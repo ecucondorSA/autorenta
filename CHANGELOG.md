@@ -1,3 +1,7 @@
+## 3.96.0 (2026-02-13)
+
+* feat(pitch): add static pitch pages for investor campaign ([1098206](https://github.com/ecucondorSA/autorenta/commit/1098206))
+
 ## <small>3.95.12 (2026-02-13)</small>
 
 * fix(db): align migration timestamps with remote schema_migrations ([c47e576](https://github.com/ecucondorSA/autorenta/commit/c47e576))
