@@ -1,3 +1,7 @@
+## <small>3.95.2 (2026-02-13)</small>
+
+* fix(verification): wire up selfie capture to face verification flow ([1b81074](https://github.com/ecucondorSA/autorenta/commit/1b81074))
+
 ## <small>3.95.1 (2026-02-12)</small>
 
 * fix(ci): add OCR and review RPCs to guardrails baseline ([4881179](https://github.com/ecucondorSA/autorenta/commit/4881179))
