@@ -63,50 +63,6 @@ jobs:
         env:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
-      - name: Repair Migration History (orphaned migrations)
-        run: |
-          # Mark old migrations with incomplete timestamps as reverted
-          supabase migration repair --status reverted 20251218 2>/dev/null || true
-          supabase migration repair --status reverted 20260116 2>/dev/null || true
-
-          # Mark migrations that exist ONLY in remote (not locally) as reverted
-          # These were applied directly to DB without being added to repo
-          supabase migration repair --status reverted 20260130220905 2>/dev/null || true
-          supabase migration repair --status reverted 20260130220936 2>/dev/null || true
-          supabase migration repair --status reverted 20260130221833 2>/dev/null || true
-          supabase migration repair --status reverted 20260130221944 2>/dev/null || true
-          supabase migration repair --status reverted 20260130222003 2>/dev/null || true
-          supabase migration repair --status reverted 20260130222022 2>/dev/null || true
-          supabase migration repair --status reverted 20260130222110 2>/dev/null || true
-          supabase migration repair --status reverted 20260130222331 2>/dev/null || true
-          supabase migration repair --status reverted 20260130222404 2>/dev/null || true
-
-          # Mark consolidated payment retry migrations as reverted (files deleted, superseded by 20260203221600)
-          supabase migration repair --status reverted 20260201230000 2>/dev/null || true
-          supabase migration repair --status reverted 20260203221500 2>/dev/null || true
-          supabase migration repair --status reverted 20260203222000 2>/dev/null || true
-          supabase migration repair --status reverted 20260203223300 2>/dev/null || true
-          supabase migration repair --status reverted 20260203223500 2>/dev/null || true
-
-          # Mark orphaned remote migrations as reverted (2026-02-03 batch - applied directly)
-          supabase migration repair --status reverted 20260203123235 2>/dev/null || true
-          supabase migration repair --status reverted 20260203123313 2>/dev/null || true
-          supabase migration repair --status reverted 20260203123330 2>/dev/null || true
-          supabase migration repair --status reverted 20260203123619 2>/dev/null || true
-          supabase migration repair --status reverted 20260203125501 2>/dev/null || true
-          supabase migration repair --status reverted 20260203130638 2>/dev/null || true
-          supabase migration repair --status reverted 20260203132332 2>/dev/null || true
-          supabase migration repair --status reverted 20260203132842 2>/dev/null || true
-          supabase migration repair --status reverted 20260203141128 2>/dev/null || true
-          supabase migration repair --status reverted 20260203141916 2>/dev/null || true
-          supabase migration repair --status reverted 20260203161408 2>/dev/null || true
-          supabase migration repair --status reverted 20260211141628 2>/dev/null || true
-          supabase migration repair --status reverted 20260211141632 2>/dev/null || true
-          supabase migration repair --status reverted 20260211235520 2>/dev/null || true
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-
       - name: Apply Migrations
         run: supabase db push --include-all
         env:
