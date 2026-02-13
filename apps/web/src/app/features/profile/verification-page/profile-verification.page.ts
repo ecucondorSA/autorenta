@@ -11,6 +11,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProfileStore } from '@core/stores/profile.store';
 import { IdentityLevelService } from '@core/services/verification/identity-level.service';
 import { VerificationService } from '@core/services/verification/verification.service';
+import { FaceVerificationService } from '@core/services/verification/face-verification.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { EmailVerificationComponent } from '../../../shared/components/email-verification/email-verification.component';
 import { PhoneVerificationComponent } from '../../../shared/components/phone-verification/phone-verification.component';
@@ -293,7 +294,23 @@ interface VerificationVisualSlot {
                   Este paso se habilita al completar la verificación documental.
                 </div>
               } @else if (!isLevelComplete(3)) {
-                <app-selfie-capture></app-selfie-capture>
+                @if (selfieProcessing()) {
+                  <div class="flex items-center gap-3 rounded-2xl border border-black/10 bg-[#f7fce9] px-4 py-4 text-sm text-black">
+                    <svg class="h-5 w-5 animate-spin text-black/60" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                    Analizando prueba de vida... Esto puede tardar unos segundos.
+                  </div>
+                } @else {
+                  @if (selfieError()) {
+                    <div class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                      {{ selfieError() }}
+                      <button class="ml-2 font-semibold underline" (click)="clearSelfieError()">Reintentar</button>
+                    </div>
+                  }
+                  <app-selfie-capture (completed)="onSelfieCaptured($event)"></app-selfie-capture>
+                }
               } @else {
                 <div class="rounded-2xl border border-[#b8ff20] bg-[#f3ffd0] px-4 py-3 text-sm text-black">
                   Biometría validada exitosamente.
@@ -332,6 +349,7 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
   private readonly profileStore = inject(ProfileStore);
   private readonly identityService = inject(IdentityLevelService);
   private readonly verificationService = inject(VerificationService);
+  private readonly faceService = inject(FaceVerificationService);
   private readonly analyticsService = inject(AnalyticsService);
   private readonly route = inject(ActivatedRoute);
 
@@ -339,6 +357,8 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
   readonly userEmail = this.profileStore.userEmail;
   readonly dataLoading = signal(true);
   readonly returnUrl = signal<string | null>(null);
+  readonly selfieProcessing = signal(false);
+  readonly selfieError = signal<string | null>(null);
 
   readonly verificationProgress = this.identityService.verificationProgress;
   readonly requirements = computed(() => this.verificationProgress()?.requirements);
@@ -601,6 +621,39 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
   async onLicenseVerificationComplete(): Promise<void> {
     await this.refreshVerificationContext();
     this.trackKycView('kyc_license_upload_completed');
+  }
+
+  async onSelfieCaptured(videoPath: string): Promise<void> {
+    this.selfieProcessing.set(true);
+    this.selfieError.set(null);
+
+    try {
+      // Find document front URL from loaded documents
+      const docFront = this.documents().find(
+        (d) => d.kind === 'gov_id_front' && d.storage_path,
+      );
+
+      if (!docFront?.storage_path) {
+        throw new Error('No se encontró la foto del documento de identidad. Verifica que hayas subido el DNI.');
+      }
+
+      await this.faceService.verifyFace(videoPath, docFront.storage_path);
+
+      // Success — refresh progress to show Level 3 complete
+      await this.refreshVerificationContext();
+      this.trackKycView('kyc_selfie_verified');
+    } catch (err) {
+      const message = err instanceof Error
+        ? err.message
+        : 'No pudimos verificar tu identidad facial. Intenta de nuevo.';
+      this.selfieError.set(message);
+    } finally {
+      this.selfieProcessing.set(false);
+    }
+  }
+
+  clearSelfieError(): void {
+    this.selfieError.set(null);
   }
 
   private getStepState(level: number): StepState {
