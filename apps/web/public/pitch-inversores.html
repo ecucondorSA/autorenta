@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoRentar | El Auto como Activo de Renta — Inversores</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            cyan: {
+              50: '#edfff4', 100: '#d5ffe6', 200: '#aeffcf', 300: '#6fffa8',
+              400: '#1adf70', 500: '#00D95F', 600: '#00BF54', 700: '#00A648',
+              800: '#008239', 900: '#006B30',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(0, 217, 95, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 95, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .glass {
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-strong {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .neon-cyan {
+      color: #00D95F;
+      text-shadow: 0 0 10px rgba(0, 217, 95, 0.5), 0 0 40px rgba(0, 217, 95, 0.15);
+    }
+    .neon-gold {
+      color: #f59e0b;
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.5), 0 0 40px rgba(245, 158, 11, 0.15);
+    }
+    .glow-cyan { box-shadow: 0 0 20px rgba(0, 217, 95, 0.2), 0 0 60px rgba(0, 217, 95, 0.05); }
+    .glow-gold { box-shadow: 0 0 20px rgba(245, 158, 11, 0.2), 0 0 60px rgba(245, 158, 11, 0.05); }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, #0f172a 0%, #1c1917 25%, #0f172a 50%, #004d25 75%, #0f172a 100%);
+      background-size: 400% 400%;
+      animation: gradient-shift 20s ease infinite;
+    }
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      25% { background-position: 100% 0%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.animate-in { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+    .reveal-delay-3 { transition-delay: 0.45s; }
+
+    .hero-fade { animation: fadeUp 0.8s ease forwards; }
+    .hero-fade-2 { animation: fadeUp 0.8s ease 0.3s forwards; opacity: 0; }
+    .hero-fade-3 { animation: fadeUp 0.8s ease 0.6s forwards; opacity: 0; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, #00D95F, #f59e0b);
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 28px; height: 28px;
+      background: radial-gradient(circle, #00D95F 40%, #00A648 100%);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0, 217, 95, 0.6), 0 0 30px rgba(0, 217, 95, 0.2);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 28px; height: 28px;
+      background: radial-gradient(circle, #00D95F 40%, #00A648 100%);
+      border-radius: 50%; border: none;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0, 217, 95, 0.6);
+    }
+
+    .deal-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .deal-card:hover { transform: translateY(-8px); }
+
+    .neon-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 217, 95, 0.4), rgba(245, 158, 11, 0.3), transparent);
+    }
+
+    .counter-value { transition: opacity 0.2s; }
+
+    .pulse-dot {
+      width: 8px; height: 8px;
+      background: #00D95F;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,217,95,0.4); }
+      50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(0,217,95,0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-white grid-bg antialiased">
+
+  <!-- ======== NAVIGATION ======== -->
+  <nav class="fixed top-0 left-0 right-0 z-50 glass-strong">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">🚗</span>
+        <span class="font-bold text-lg tracking-tight">Auto<span class="neon-cyan">Rentar</span></span>
+        <span class="text-slate-500 text-sm hidden sm:inline">para Inversores</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="pulse-dot hidden sm:block"></div>
+        <a href="#simulador" class="text-sm px-4 py-2 rounded-full border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 transition-all">
+          Simular Rendimiento
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======== HERO ======== -->
+  <section class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-500/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl"></div>
+
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10 pt-20">
+      <div class="hero-fade inline-block mb-6">
+        <span class="text-xs font-semibold tracking-widest uppercase text-cyan-400/80 px-4 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5">
+          Oportunidad de Inversión · Febrero 2026
+        </span>
+      </div>
+
+      <h1 class="hero-fade text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
+        Tu proximo activo rinde<br>
+        <span class="neon-cyan">15-25% anual.</span><br>
+        <span class="text-slate-300 text-3xl sm:text-4xl md:text-5xl">Sin pozo. Sin inquilinos. <span class="neon-gold">Desde $12.50.</span></span>
+      </h1>
+
+      <p class="hero-fade-2 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Un vehiculo en la plataforma AutoRentar genera <span class="text-white font-medium">renta mensual inmediata</span>,
+        con gestion 100% automatizada. <span class="text-white font-medium">Ahora tambien en participacion fraccionada desde USD $12.50.</span>
+      </p>
+
+      <div class="hero-fade-3 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#comparativa" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-slate-900 font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
+          Ver la Comparativa
+        </a>
+        <a href="#simulador" class="px-8 py-3.5 rounded-full border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-white transition-all">
+          Simular Rendimiento
+        </a>
+      </div>
+
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+        <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== EL CONTEXTO DEL MERCADO ======== -->
+  <section class="py-24 px-6 relative">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal">
+        <p class="text-2xl sm:text-3xl text-slate-300 leading-relaxed font-light">
+          El mercado de alquiler de autos en Argentina mueve <span class="text-white font-semibold">USD 800M+ anuales</span>.
+          Getaround cerró operaciones en EE.UU. en 2025.
+        </p>
+        <p class="text-xl text-slate-400 mt-6 leading-relaxed">
+          El P2P car-sharing está dejando un vacío global.
+          <span class="neon-cyan">AutoRentar es la plataforma que lo llena en LATAM.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== TABLA COMPARATIVA ======== -->
+  <section id="comparativa" class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Comparativa de <span class="neon-cyan">Activos de Renta</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Datos reales. Cotización de mercado argentino. Febrero 2026.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 items-stretch">
+        <!-- Plazo Fijo -->
+        <div class="reveal glass rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-slate-500/50 to-transparent"></div>
+          <div class="flex items-center gap-3 mb-6">
+            <span class="text-2xl">🏦</span>
+            <div>
+              <div class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Renta Fija</div>
+              <h3 class="text-lg font-bold">Plazo Fijo USD</h3>
+            </div>
+          </div>
+          <div class="space-y-4 text-sm">
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Rendimiento anual</span>
+              <span class="text-slate-500 font-bold">2-4%</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Liquidez</span>
+              <span class="text-slate-500">30-365 días</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Riesgo regulatorio</span>
+              <span class="text-amber-400">Medio</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Gestión</span>
+              <span class="text-slate-300">Nula</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real Estate -->
+        <div class="reveal reveal-delay-1 glass rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500/50 to-transparent"></div>
+          <div class="flex items-center gap-3 mb-6">
+            <span class="text-2xl">🏢</span>
+            <div>
+              <div class="text-amber-400/80 text-xs font-semibold uppercase tracking-wider">Real Estate</div>
+              <h3 class="text-lg font-bold">Depto en Alquiler</h3>
+            </div>
+          </div>
+          <div class="space-y-4 text-sm">
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Rendimiento anual</span>
+              <span class="text-amber-400 font-bold">3-5%</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Liquidez</span>
+              <span class="text-slate-500">Baja (meses)</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Ticket mínimo</span>
+              <span class="text-slate-300 font-bold">USD 80K+</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Gestión</span>
+              <span class="text-slate-300">Alta (inquilinos)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AutoRentar -->
+        <div class="reveal reveal-delay-2 glass rounded-2xl p-6 relative overflow-hidden glow-cyan">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-cyan-400"></div>
+          <div class="flex items-center gap-3 mb-6">
+            <span class="text-2xl">🚗</span>
+            <div>
+              <div class="neon-cyan text-xs font-semibold uppercase tracking-wider">Movilidad</div>
+              <h3 class="text-lg font-bold">Auto en AutoRentar</h3>
+            </div>
+          </div>
+          <div class="space-y-4 text-sm">
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Rendimiento anual</span>
+              <span class="neon-cyan font-bold text-lg">15-65%</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Liquidez</span>
+              <span class="text-cyan-400 font-semibold">Alta (días)</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-700/50 pb-2">
+              <span class="text-slate-400">Ticket mínimo</span>
+              <span class="neon-cyan font-bold">USD $12.50 (fraccionado)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Gestión</span>
+              <span class="neon-cyan font-bold">0% — AutoRentar</span>
+            </div>
+          </div>
+          <div class="mt-4 p-2 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+            <p class="text-xs text-cyan-300 text-center font-medium">
+              Cashflow desde el día 1. Gestión 100% automatizada.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal mt-6 text-center">
+        <p class="text-slate-500 text-xs max-w-2xl mx-auto">
+          * Rendimiento bruto antes de depreciación, mantenimiento y seguros. Basado en tarifa promedio USD 98/día con 50% ocupación para vehículo gama media. Resultados pueden variar.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== POR QUÉ AUTOS ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">¿Por qué <span class="neon-cyan">autos como activo</span>?</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Un vehículo no es un gasto. Es una máquina de generar flujo de caja.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="reveal glass rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">⚡</div>
+          <h3 class="font-bold text-lg mb-2">Cashflow Inmediato</h3>
+          <p class="text-slate-400 text-sm">Desde el primer día. Sin esperar construcción, entrega ni inquilinos.</p>
+        </div>
+        <div class="reveal reveal-delay-1 glass rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">📉</div>
+          <h3 class="font-bold text-lg mb-2">Ticket Accesible</h3>
+          <p class="text-slate-400 text-sm">Desde USD 15K. Diversificá sin concentrar riesgo en un solo activo.</p>
+        </div>
+        <div class="reveal reveal-delay-2 glass rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">🔄</div>
+          <h3 class="font-bold text-lg mb-2">Alta Liquidez</h3>
+          <p class="text-slate-400 text-sm">Un auto se vende en días, no en meses. Podés salir cuando quieras.</p>
+        </div>
+        <div class="reveal reveal-delay-3 glass rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">🛡</div>
+          <h3 class="font-bold text-lg mb-2">Activo Tangible</h3>
+          <p class="text-slate-400 text-sm">Con seguro, garantía y gestión profesional. No es crypto, no es promesa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== CÓMO FUNCIONA ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">El inversor <span class="neon-cyan">no hace nada</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Publicás tu auto en 10 minutos. AutoRentar gestiona todo el resto.</p>
+      </div>
+
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10">
+        <div class="grid sm:grid-cols-4 gap-6 text-center mb-8">
+          <div>
+            <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl">📱</div>
+            <div class="text-sm font-bold text-white mb-1">1. Publicá</div>
+            <p class="text-xs text-slate-400">Subí fotos y datos del vehículo desde la app en minutos</p>
+          </div>
+          <div>
+            <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-2xl">✅</div>
+            <div class="text-sm font-bold text-white mb-1">2. Verificamos</div>
+            <p class="text-xs text-slate-400">KYC con IA. Seguro obligatorio. Todo automatizado</p>
+          </div>
+          <div>
+            <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-2xl">🤝</div>
+            <div class="text-sm font-bold text-white mb-1">3. Alquilamos</div>
+            <p class="text-xs text-slate-400">Demanda orgánica. Cobro anticipado. Depósito de garantía</p>
+          </div>
+          <div>
+            <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-2xl glow-cyan">💸</div>
+            <div class="text-sm font-bold neon-cyan mb-1">4. Cobrá</div>
+            <p class="text-xs text-slate-400">Recibís tu renta cada mes. Automático. Sin gestión</p>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-4 text-center">
+          <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+            <div class="text-slate-400 text-xs mb-1">Necesitás</div>
+            <div class="text-white font-bold">Un auto y un celular</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+            <div class="text-slate-400 text-xs mb-1">Gestión operativa</div>
+            <div class="neon-cyan font-bold">100% AutoRentar</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+            <div class="text-slate-400 text-xs mb-1">Distribución</div>
+            <div class="text-white font-bold">Modelo Comodato 15-70-15</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== SIMULADOR ======== -->
+  <section id="simulador" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Simulador de <span class="neon-cyan">Rendimiento</span></h2>
+        <p class="text-slate-400">Ajustá la ocupación y el valor del vehículo. Mirá los números en tiempo real.</p>
+      </div>
+
+      <div class="reveal glass-strong rounded-3xl p-8 sm:p-10 glow-cyan mb-12">
+        <!-- Vehicle selector -->
+        <div class="grid sm:grid-cols-3 gap-4 mb-8">
+          <button onclick="setVehicle(15000, 65, 'Económico')" id="btn-eco" class="vehicle-btn p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-cyan-500/30 transition-all text-center">
+            <div class="text-lg font-bold text-slate-300">USD 15,000</div>
+            <div class="text-xs text-slate-500">Gama Económica</div>
+          </button>
+          <button onclick="setVehicle(27186, 98, 'Medio')" id="btn-mid" class="vehicle-btn p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/30 transition-all text-center">
+            <div class="text-lg font-bold neon-cyan">USD 27,186</div>
+            <div class="text-xs text-cyan-400/60">Gama Media (Ford Territory)</div>
+          </button>
+          <button onclick="setVehicle(45000, 140, 'Premium')" id="btn-prem" class="vehicle-btn p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-amber-500/30 transition-all text-center">
+            <div class="text-lg font-bold text-slate-300">USD 45,000</div>
+            <div class="text-xs text-slate-500">Gama Premium</div>
+          </button>
+        </div>
+
+        <div class="mb-8">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-slate-400 text-sm">Ocupación mensual</span>
+            <span id="occupancy-pct" class="text-3xl font-black neon-cyan">50%</span>
+          </div>
+          <input type="range" id="occupancy-slider" min="20" max="90" value="50" class="w-full">
+          <div class="flex justify-between text-xs text-slate-600 mt-1">
+            <span>20% (conservador)</span>
+            <span>50% (base)</span>
+            <span>90% (optimista)</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-slate-800/50 rounded-xl p-4 text-center border border-cyan-500/10">
+            <div class="text-sm text-slate-400 mb-1">Días alquilado/mes</div>
+            <div id="days-rented" class="text-2xl font-bold neon-cyan counter-value">15</div>
+          </div>
+          <div class="bg-slate-800/50 rounded-xl p-4 text-center border border-cyan-500/10">
+            <div class="text-sm text-slate-400 mb-1">Ingreso mensual bruto</div>
+            <div id="monthly-gross" class="text-2xl font-bold neon-cyan counter-value">$1,472</div>
+          </div>
+          <div class="bg-slate-800/50 rounded-xl p-4 text-center border border-cyan-500/10">
+            <div class="text-sm text-slate-400 mb-1">Tu ingreso neto (70%)</div>
+            <div id="monthly-net" class="text-2xl font-bold text-green-400 counter-value">$1,030</div>
+          </div>
+          <div class="bg-slate-800/50 rounded-xl p-4 text-center border border-amber-500/10">
+            <div class="text-sm text-slate-400 mb-1">Rendimiento anual</div>
+            <div id="annual-yield" class="text-2xl font-bold neon-gold counter-value">~45%</div>
+          </div>
+        </div>
+
+        <div id="payback-info" class="mt-6 text-center text-sm"></div>
+
+        <div class="mt-6 grid grid-cols-3 gap-3 text-center text-xs">
+          <div class="p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+            <div class="text-slate-400 mb-1">Plataforma (15%)</div>
+            <div id="platform-fee" class="font-bold text-cyan-400">$221</div>
+          </div>
+          <div class="p-3 rounded-lg bg-green-500/5 border border-green-500/10">
+            <div class="text-slate-400 mb-1">Tu ganancia (70%)</div>
+            <div id="owner-share" class="font-bold text-green-400">$1,030</div>
+          </div>
+          <div class="p-3 rounded-lg bg-amber-500/5 border border-amber-500/10">
+            <div class="text-slate-400 mb-1">Fondo Garantía (15%)</div>
+            <div id="fgo-share" class="font-bold text-amber-400">$221</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio view -->
+      <div class="reveal glass-strong rounded-3xl p-8 sm:p-10 glow-gold">
+        <h3 class="text-lg font-semibold text-slate-300 mb-2 flex items-center gap-2">
+          <span>📊</span> Vista Portafolio: <span class="text-amber-400">Flota de 5 vehículos</span>
+        </h3>
+        <p class="text-slate-500 text-sm mb-8">Diversificá con varios vehículos para maximizar tu rendimiento.</p>
+
+        <div class="grid sm:grid-cols-3 gap-6">
+          <div class="text-center p-6 rounded-2xl bg-gradient-to-b from-amber-500/5 to-transparent border border-amber-500/10">
+            <div class="text-slate-400 text-sm mb-2">Inversión total</div>
+            <div id="fleet-investment" class="text-3xl font-black text-white">$135,930</div>
+            <div class="text-xs text-slate-500 mt-1">5 vehículos gama media</div>
+          </div>
+          <div class="text-center p-6 rounded-2xl bg-gradient-to-b from-amber-500/5 to-transparent border border-amber-500/10">
+            <div class="text-slate-400 text-sm mb-2">Cashflow mensual</div>
+            <div id="fleet-monthly" class="text-3xl font-black neon-gold">$5,150</div>
+            <div class="text-xs text-slate-500 mt-1">ingreso neto</div>
+          </div>
+          <div class="text-center p-6 rounded-2xl bg-gradient-to-b from-amber-500/10 to-transparent border border-amber-500/20">
+            <div class="text-slate-400 text-sm mb-2">Cashflow anual</div>
+            <div id="fleet-annual" class="text-3xl font-black text-white">$61,800</div>
+            <div class="text-xs text-amber-400 mt-1">recurrente</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== REGULACIÓN - CNV 1069 ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 via-cyan-400 to-amber-500"></div>
+
+        <div class="text-center mb-8">
+          <div class="inline-block mb-4 px-4 py-1 rounded-full border border-amber-500/20 bg-amber-500/5">
+            <span class="text-amber-400 text-xs font-semibold uppercase tracking-wider">Regulación Argentina</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold mb-3">
+            Resolución CNV 1069 — <span class="neon-gold">Tokenización de Activos Reales</span>
+          </h2>
+          <p class="text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto">
+            Argentina aprobó en junio 2025 el primer marco regulatorio para tokenizar activos del mundo real (RWA).
+            Esto abre la puerta a <span class="text-white font-semibold">fraccionar flotas de autos como tokens de inversión</span>.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-6 text-center">
+          <div class="p-5 rounded-xl bg-amber-500/5 border border-amber-500/10">
+            <div class="text-3xl mb-3">📜</div>
+            <div class="font-bold text-amber-400 mb-1">Marco Legal</div>
+            <div class="text-sm text-slate-400">Primera regulación de RWA tokenizados en LATAM</div>
+          </div>
+          <div class="p-5 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+            <div class="text-3xl mb-3">🔗</div>
+            <div class="font-bold text-cyan-400 mb-1">Fraccionamiento</div>
+            <div class="text-sm text-slate-400">Invertí en fracciones de una flota desde montos accesibles</div>
+          </div>
+          <div class="p-5 rounded-xl bg-green-500/5 border border-green-500/10">
+            <div class="text-3xl mb-3">🌐</div>
+            <div class="font-bold text-green-400 mb-1">Mercado Secundario</div>
+            <div class="text-sm text-slate-400">Comprá y vendé tokens de flota con liquidez inmediata</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== PROTECCIÓN ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Tu activo está <span class="neon-cyan">protegido</span></h2>
+        <p class="text-slate-400 max-w-xl mx-auto">No pedimos confianza ciega. Mostramos cómo gestionamos el riesgo.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-6 mb-8">
+        <div class="reveal glass rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">🛡</div>
+          <h3 class="font-bold text-lg mb-2">Seguro Obligatorio</h3>
+          <p class="text-slate-400 text-sm">Sin póliza vigente, el auto no se publica. Cubre daños parciales, totales y robo.</p>
+        </div>
+        <div class="reveal reveal-delay-1 glass rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">🤖</div>
+          <h3 class="font-bold text-lg mb-2">Anti-Fraude con IA</h3>
+          <p class="text-slate-400 text-sm">Verificación de identidad (KYC), risk scoring, 10 patrones de fraude monitoreados 24/7.</p>
+        </div>
+        <div class="reveal reveal-delay-2 glass rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">💰</div>
+          <h3 class="font-bold text-lg mb-2">Cobro Anticipado</h3>
+          <p class="text-slate-400 text-sm">100% del alquiler + depósito de garantía cobrados ANTES de entregar el vehículo.</p>
+        </div>
+      </div>
+
+      <div class="reveal glass rounded-2xl p-6">
+        <div class="grid sm:grid-cols-2 gap-8">
+          <div>
+            <h4 class="font-semibold text-white mb-3 flex items-center gap-2">
+              <span class="text-cyan-400">⬡</span> Respaldo Legal
+            </h4>
+            <ul class="space-y-2 text-slate-400 text-sm">
+              <li>• <span class="text-slate-300">ECUCONDOR SAS</span> — Sociedad constituida en Argentina</li>
+              <li>• Contratos digitales con firma electrónica</li>
+              <li>• Inspección de video obligatoria (entrega y devolución)</li>
+              <li>• Protocolo de reclamos y arbitraje</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-white mb-3 flex items-center gap-2">
+              <span class="text-amber-400">⬡</span> Tecnología en Producción
+            </h4>
+            <ul class="space-y-2 text-slate-400 text-sm">
+              <li>• App web PWA operativa en <a href="https://autorentar.com" class="text-cyan-400 hover:underline" target="_blank">autorentar.com</a></li>
+              <li>• Pagos integrados con MercadoPago</li>
+              <li>• Análisis de daños con Gemini AI</li>
+              <li>• Fondo de Garantía de Owners (FGO) del 15%</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== MODELOS DE ALIANZA ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Modelos de <span class="neon-gold">Alianza</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Tres formas de participar, según tu perfil y capital disponible.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- NUEVO: Fraccionada BYD -->
+        <div class="reveal deal-card glass rounded-2xl p-8 text-center relative overflow-hidden group" style="box-shadow: 0 0 30px rgba(6,182,212,0.15), 0 0 60px rgba(6,182,212,0.05); border-color: rgba(6,182,212,0.25);">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400"></div>
+          <div class="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-500/30">
+            <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider">Nuevo</span>
+          </div>
+          <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-3xl">⚡</div>
+          <h3 class="text-xl font-bold mb-2">Participacion Fraccionada</h3>
+          <p class="text-sm text-cyan-400 font-semibold mb-3">BYD Dolphin Mini EV</p>
+          <p class="text-slate-400 leading-relaxed mb-4 text-sm">
+            <span class="text-white">2,000 fragmentos × $12.50</span> = 1 BYD electrico operando para apps de movilidad. Distribuciones mensuales sobre neto.
+          </p>
+          <div class="text-2xl font-black mb-1" style="color: #22d3ee; text-shadow: 0 0 10px rgba(34,211,238,0.5);">USD $12.50</div>
+          <div class="text-xs text-slate-500 mb-4">por fragmento</div>
+          <a href="pitch-byd-inversores.html" class="inline-block px-5 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-900 font-bold text-sm hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
+            Ver Escenarios →
+          </a>
+        </div>
+
+        <div class="reveal reveal-delay-1 deal-card glass rounded-2xl p-8 text-center relative overflow-hidden group hover:glow-cyan">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-cyan-400"></div>
+          <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-3xl">🚗</div>
+          <h3 class="text-xl font-bold mb-4">Inversor Individual</h3>
+          <p class="text-slate-400 leading-relaxed mb-4">
+            Comprá <span class="text-white">1 a 5 vehículos</span>, publicalos en AutoRentar y cobrá renta mensual.
+          </p>
+          <div class="text-sm text-cyan-400/80 font-medium">Desde USD 15K</div>
+        </div>
+
+        <div class="reveal reveal-delay-2 deal-card glass rounded-2xl p-8 text-center relative overflow-hidden group hover:glow-gold">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-amber-400"></div>
+          <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-3xl">🏢</div>
+          <h3 class="text-xl font-bold mb-4">Referidor / Canal</h3>
+          <p class="text-slate-400 leading-relaxed mb-4">
+            <span class="text-white">Referí inversores</span> a AutoRentar y cobrá una comisión recurrente por cada uno.
+          </p>
+          <div class="text-sm text-amber-400/80 font-medium">Sin inversión propia</div>
+        </div>
+
+        <div class="reveal reveal-delay-3 deal-card glass rounded-2xl p-8 text-center relative overflow-hidden group">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-green-400"></div>
+          <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-3xl">📈</div>
+          <h3 class="text-xl font-bold mb-4">Flota Institucional</h3>
+          <p class="text-slate-400 leading-relaxed mb-4">
+            <span class="text-white">Armá una flota de 10+ autos</span> y operá como unidad de negocio con rendimiento escalable.
+          </p>
+          <div class="text-sm text-green-400/80 font-medium">Desde USD 150K</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== CTA FINAL ======== -->
+  <section class="py-24 px-6 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent"></div>
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+      <div class="reveal">
+        <p class="text-2xl sm:text-3xl font-light text-slate-300 leading-relaxed mb-8">
+          "Un plazo fijo rinde 3%. Un depto en alquiler, 5%.
+          <br><br>
+          <span class="text-white font-semibold">Un auto en AutoRentar rinde 15-25% anual neto, con liquidez total.</span>"
+        </p>
+
+        <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+          ¿Coordinamos <span class="neon-cyan">10 minutos</span>?
+        </h2>
+        <p class="text-slate-400 mb-10 text-lg">
+          Sin presión, sin letra chica. Solo los números y cómo arrancar.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="https://wa.me/5491166599559?text=Hola%2C%20vi%20la%20propuesta%20de%20AutoRentar%20para%20inversores%20y%20me%20interesa%20saber%20más" target="_blank"
+             class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-slate-900 font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/30 transition-all">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.352 0-4.55-.694-6.396-1.882l-.42-.27-2.633.883.883-2.633-.27-.42A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            Hablemos por WhatsApp
+          </a>
+          <a href="mailto:adm@autorentar.com?subject=Inversión%20en%20AutoRentar%20-%20Quiero%20saber%20más"
+             class="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-white transition-all">
+            ✉️ Enviar Email
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="py-8 px-6 border-t border-slate-800/50">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="text-slate-500 text-sm">
+        &copy; 2026 AutoRentar &middot; ECUCONDOR SAS &middot; Operaciones LATAM
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://autorentar.com" target="_blank" class="text-slate-600 hover:text-cyan-400 text-sm transition-colors">autorentar.com</a>
+        <span class="text-slate-700">|</span>
+        <span class="text-slate-600 text-xs">Documento confidencial</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======== SCRIPTS ======== -->
+  <script>
+    var slider = document.getElementById('occupancy-slider');
+    var vehicleValue = 27186;
+    var dailyRate = 98;
+    var daysInMonth = 30;
+    var ownerPct = 0.70;
+    var platformPct = 0.15;
+    var fgoPct = 0.15;
+    var fleetSize = 5;
+
+    function formatMoney(n) {
+      return '$' + Math.round(n).toLocaleString('en-US');
+    }
+
+    function setVehicle(value, rate, label) {
+      vehicleValue = value;
+      dailyRate = rate;
+      // Update button styles
+      document.querySelectorAll('.vehicle-btn').forEach(function(btn) {
+        btn.classList.remove('bg-cyan-500/10', 'border-cyan-500/30');
+        btn.classList.add('bg-slate-800/50', 'border-slate-700/50');
+      });
+      event.currentTarget.classList.remove('bg-slate-800/50', 'border-slate-700/50');
+      event.currentTarget.classList.add('bg-cyan-500/10', 'border-cyan-500/30');
+      updateCalculator();
+    }
+
+    function updateCalculator() {
+      var occupancy = parseInt(slider.value);
+      var daysRented = Math.round(daysInMonth * occupancy / 100);
+      var monthlyGross = daysRented * dailyRate;
+      var monthlyNet = monthlyGross * ownerPct;
+      var platformFee = monthlyGross * platformPct;
+      var fgoShare = monthlyGross * fgoPct;
+      var annualNet = monthlyNet * 12;
+      var annualYield = Math.round((annualNet / vehicleValue) * 100);
+      var paybackMonths = Math.ceil(vehicleValue / monthlyNet);
+
+      document.getElementById('occupancy-pct').textContent = occupancy + '%';
+      document.getElementById('days-rented').textContent = daysRented;
+      document.getElementById('monthly-gross').textContent = formatMoney(monthlyGross);
+      document.getElementById('monthly-net').textContent = formatMoney(monthlyNet);
+      document.getElementById('annual-yield').textContent = '~' + annualYield + '%';
+      document.getElementById('platform-fee').textContent = formatMoney(platformFee);
+      document.getElementById('owner-share').textContent = formatMoney(monthlyNet);
+      document.getElementById('fgo-share').textContent = formatMoney(fgoShare);
+
+      var paybackEl = document.getElementById('payback-info');
+      if (occupancy >= 60) {
+        paybackEl.innerHTML = '<span class="text-green-400 font-semibold">Con ' + occupancy + '% ocupación, el auto se paga solo en <strong>' + paybackMonths + ' meses</strong>. Después es ganancia pura.</span>';
+      } else if (occupancy >= 40) {
+        paybackEl.innerHTML = '<span class="text-cyan-400">Payback del vehículo: <strong>' + paybackMonths + ' meses</strong>. Rendimiento neto: ' + formatMoney(annualNet) + '/año.</span>';
+      } else {
+        paybackEl.innerHTML = '<span class="text-slate-500">Escenario conservador: payback en ' + paybackMonths + ' meses. Rendimiento anual: ~' + annualYield + '%.</span>';
+      }
+
+      var fleetMonthly = monthlyNet * fleetSize;
+      var fleetAnnual = fleetMonthly * 12;
+      var fleetInvestment = vehicleValue * fleetSize;
+      document.getElementById('fleet-monthly').textContent = formatMoney(fleetMonthly);
+      document.getElementById('fleet-annual').textContent = formatMoney(fleetAnnual);
+      document.getElementById('fleet-investment').textContent = formatMoney(fleetInvestment);
+    }
+
+    slider.addEventListener('input', updateCalculator);
+    updateCalculator();
+
+    // Scroll reveal
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>

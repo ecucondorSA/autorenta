@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoRentar | Vendé Autos con Renta Incluida — Concesionarias</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            cyan: {
+              50: '#edfff4', 100: '#d5ffe6', 200: '#aeffcf', 300: '#6fffa8',
+              400: '#1adf70', 500: '#00D95F', 600: '#00BF54', 700: '#00A648',
+              800: '#008239', 900: '#006B30',
+            },
+            rose: {
+              400: '#fb7185', 500: '#f43f5e', 600: '#e11d48'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(244, 63, 94, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244, 63, 94, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .glass {
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-strong {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .neon-rose {
+      color: #fb7185;
+      text-shadow: 0 0 10px rgba(251, 113, 133, 0.5), 0 0 40px rgba(251, 113, 133, 0.15);
+    }
+    .neon-cyan {
+      color: #00D95F;
+      text-shadow: 0 0 10px rgba(0, 217, 95, 0.5), 0 0 40px rgba(0, 217, 95, 0.15);
+    }
+    .neon-gold {
+      color: #f59e0b;
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.5), 0 0 40px rgba(245, 158, 11, 0.15);
+    }
+    .glow-rose { box-shadow: 0 0 20px rgba(244, 63, 94, 0.2), 0 0 60px rgba(244, 63, 94, 0.05); }
+    .glow-cyan { box-shadow: 0 0 20px rgba(0, 217, 95, 0.2), 0 0 60px rgba(0, 217, 95, 0.05); }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, #0f172a 0%, #4c0519 25%, #0f172a 50%, #831843 75%, #0f172a 100%);
+      background-size: 400% 400%;
+      animation: gradient-shift 20s ease infinite;
+    }
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      25% { background-position: 100% 0%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.animate-in { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+    .reveal-delay-3 { transition-delay: 0.45s; }
+
+    .hero-fade { animation: fadeUp 0.8s ease forwards; }
+    .hero-fade-2 { animation: fadeUp 0.8s ease 0.3s forwards; opacity: 0; }
+    .hero-fade-3 { animation: fadeUp 0.8s ease 0.6s forwards; opacity: 0; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .deal-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .deal-card:hover { transform: translateY(-8px); }
+
+    .neon-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(244, 63, 94, 0.4), rgba(0, 217, 95, 0.3), transparent);
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-white grid-bg antialiased">
+
+  <!-- ======== NAVIGATION ======== -->
+  <nav class="fixed top-0 left-0 right-0 z-50 glass-strong">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">🚗</span>
+        <span class="font-bold text-lg tracking-tight">Auto<span class="neon-cyan">Rentar</span></span>
+        <span class="text-slate-500 text-sm hidden sm:inline">× Concesionarias</span>
+      </div>
+      <a href="#contacto" class="text-sm px-4 py-2 rounded-full border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 transition-all">
+        Ser Aliado
+      </a>
+    </div>
+  </nav>
+
+  <!-- ======== HERO ======== -->
+  <section class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div class="absolute top-20 left-10 w-72 h-72 bg-rose-500/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10 pt-20">
+      <div class="hero-fade inline-block mb-6">
+        <span class="text-xs font-semibold tracking-widest uppercase text-rose-400/80 px-4 py-1.5 rounded-full border border-rose-500/20 bg-rose-500/5">
+          Programa para Concesionarias · 2026
+        </span>
+      </div>
+
+      <h1 class="hero-fade text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
+        Vendé autos con<br>
+        <span class="neon-rose">renta garantizada.</span><br>
+        <span class="text-slate-300 text-3xl sm:text-4xl md:text-5xl">El cliente compra y <span class="neon-cyan">gana desde el día 1.</span></span>
+      </h1>
+
+      <p class="hero-fade-2 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Imaginá decirle a tu cliente: <span class="text-white font-medium">"Comprá este auto y generá USD 1,000+/mes en renta pasiva."</span>
+        Eso es vender más que un auto. Es vender un activo.
+      </p>
+
+      <div class="hero-fade-3 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#programa" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 text-white font-bold text-lg hover:shadow-lg hover:shadow-rose-500/25 transition-all">
+          Conocer el Programa
+        </a>
+        <a href="#pitch-cliente" class="px-8 py-3.5 rounded-full border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-white transition-all">
+          Ver el Pitch al Cliente
+        </a>
+      </div>
+
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+        <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== EL CONTEXTO ======== -->
+  <section class="py-24 px-6 relative">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal">
+        <p class="text-2xl sm:text-3xl text-slate-300 leading-relaxed font-light">
+          El mercado automotor argentino se desaceleró. El cliente duda.
+          <span class="text-white font-semibold">Necesitás un argumento nuevo para cerrar la venta.</span>
+        </p>
+        <p class="text-xl text-slate-400 mt-6 leading-relaxed">
+          ¿Y si pudieras decirle que el auto <span class="neon-rose">se paga solo</span>?
+          Que no es un gasto, sino una inversión que genera cashflow mensual.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== EL PROGRAMA ======== -->
+  <section id="programa" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Programa <span class="neon-rose">"Comprá y Rentá"</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Un programa exclusivo para concesionarias aliadas de AutoRentar.</p>
+      </div>
+
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10 relative overflow-hidden mb-12">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 via-cyan-400 to-rose-500"></div>
+
+        <div class="grid sm:grid-cols-3 gap-6 text-center mb-8">
+          <div class="p-5 rounded-xl bg-rose-500/5 border border-rose-500/10">
+            <div class="text-3xl mb-3">🏪</div>
+            <div class="font-bold text-rose-400 mb-1">El cliente viene a tu concesionaria</div>
+            <div class="text-sm text-slate-400">Busca un auto. Duda si es buen momento.</div>
+          </div>
+          <div class="p-5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 glow-cyan">
+            <div class="text-3xl mb-3">💡</div>
+            <div class="font-bold text-cyan-400 mb-1">Le mostrás AutoRentar</div>
+            <div class="text-sm text-slate-400">"Este auto genera USD 1,000+/mes en alquiler. Se paga solo."</div>
+          </div>
+          <div class="p-5 rounded-xl bg-green-500/5 border border-green-500/10">
+            <div class="text-3xl mb-3">🤝</div>
+            <div class="font-bold text-green-400 mb-1">Cierra la venta</div>
+            <div class="text-sm text-slate-400">El cliente compra convencido. Vos ganás la venta + comisión.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Benefits for dealer -->
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="reveal deal-card glass rounded-2xl p-8 text-center relative overflow-hidden hover:glow-rose">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 to-rose-400"></div>
+          <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-3xl">📈</div>
+          <h3 class="text-xl font-bold mb-4">Más Ventas</h3>
+          <p class="text-slate-400 leading-relaxed mb-4">
+            El argumento de renta elimina la objeción principal: <span class="text-white">"no es buen momento para comprar"</span>.
+          </p>
+          <div class="text-sm text-rose-400/80 font-medium">+30% conversión estimada</div>
+        </div>
+
+        <div class="reveal reveal-delay-1 deal-card glass rounded-2xl p-8 text-center relative overflow-hidden hover:glow-cyan">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-cyan-400"></div>
+          <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-3xl">💰</div>
+          <h3 class="text-xl font-bold mb-4">Comisión Recurrente</h3>
+          <p class="text-slate-400 leading-relaxed mb-4">
+            No solo ganás con la venta del auto. <span class="text-white">Cobrás comisión mensual</span> mientras ese auto esté en la plataforma.
+          </p>
+          <div class="text-sm text-cyan-400/80 font-medium">Ingreso pasivo post-venta</div>
+        </div>
+
+        <div class="reveal reveal-delay-2 deal-card glass rounded-2xl p-8 text-center relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-amber-400"></div>
+          <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-3xl">🔄</div>
+          <h3 class="text-xl font-bold mb-4">Recompra Acelerada</h3>
+          <p class="text-slate-400 leading-relaxed mb-4">
+            El cliente genera cashflow. En 18-24 meses <span class="text-white">vuelve a comprar otro auto</span> con la ganancia.
+          </p>
+          <div class="text-sm text-amber-400/80 font-medium">Ciclo de recompra 2x más rápido</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== EL PITCH AL CLIENTE ======== -->
+  <section id="pitch-cliente" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">El <span class="neon-rose">pitch</span> que le das al cliente</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Script listo para usar en el salón de ventas.</p>
+      </div>
+
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10 relative overflow-hidden glow-rose">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 to-rose-400"></div>
+
+        <div class="space-y-8">
+          <!-- Step 1 -->
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 font-bold">1</div>
+            <div>
+              <h4 class="font-bold text-white mb-1">Plantear la inversión</h4>
+              <p class="text-slate-300 text-sm italic">"¿Sabías que este auto puede generarte más de USD 1,000 por mes en renta? No es un gasto, es un activo que trabaja para vos."</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold">2</div>
+            <div>
+              <h4 class="font-bold text-white mb-1">Mostrar los números</h4>
+              <p class="text-slate-300 text-sm italic">"Con una ocupación del 50%, este Ford Territory genera USD 1,472/mes brutos. Te llevás el 70%: USD 1,030/mes netos. Eso es un rendimiento de ~45% anual."</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 font-bold">3</div>
+            <div>
+              <h4 class="font-bold text-white mb-1">Cerrar con seguridad</h4>
+              <p class="text-slate-300 text-sm italic">"El auto tiene seguro obligatorio, verificación de cada persona que lo alquila, y un Fondo de Garantía. Vos no hacés nada: publicás, y listo."</p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-bold">4</div>
+            <div>
+              <h4 class="font-bold text-white mb-1">El diferenciador</h4>
+              <p class="text-slate-300 text-sm italic">"Y cuando quieras venderlo, un auto se vende en días. No esperás meses como con un departamento. Tenés liquidez total."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== STOCK EN EXHIBICIÓN ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Bonus: <span class="neon-rose">Monetizá tu stock</span> en exhibición</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">¿Tenés autos 0km o usados que llevan semanas sin venderse? Ponelos a generar plata.</p>
+      </div>
+
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10">
+        <div class="grid sm:grid-cols-2 gap-8">
+          <div>
+            <h4 class="font-semibold text-rose-400 mb-4 text-lg">El problema</h4>
+            <ul class="space-y-3 text-slate-400 text-sm">
+              <li class="flex gap-2"><span class="text-rose-400">•</span> Autos en exhibición depreciándose cada día</li>
+              <li class="flex gap-2"><span class="text-rose-400">•</span> Capital inmovilizado sin generar retorno</li>
+              <li class="flex gap-2"><span class="text-rose-400">•</span> Costos de seguro y patente corriendo</li>
+              <li class="flex gap-2"><span class="text-rose-400">•</span> Presión por liquidar stock con descuento</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-cyan-400 mb-4 text-lg">La solución AutoRentar</h4>
+            <ul class="space-y-3 text-slate-300 text-sm">
+              <li class="flex gap-2"><span class="neon-cyan">✓</span> <span>Publicá el stock en AutoRentar mientras se vende</span></li>
+              <li class="flex gap-2"><span class="neon-cyan">✓</span> <span>Generá ingresos que compensen depreciación</span></li>
+              <li class="flex gap-2"><span class="neon-cyan">✓</span> <span><strong>"Probalo antes de comprarlo"</strong> — test drive extendido</span></li>
+              <li class="flex gap-2"><span class="neon-cyan">✓</span> <span>El renter lo prueba 3 días y decide comprarlo</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-8 p-4 rounded-xl bg-rose-500/5 border border-rose-500/10 text-center">
+          <p class="text-rose-300 text-sm">
+            <strong>Caso real:</strong> Un auto que lleva 45 días sin venderse genera ~USD 1,470/mes en alquiler.
+            Si se vende desde la plataforma, es una venta + ingresos de renta que ya cobraste.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== NÚMEROS RÁPIDOS ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Los <span class="neon-rose">números</span> para la concesionaria</h2>
+      </div>
+
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10">
+        <h3 class="text-lg font-semibold text-slate-300 mb-8 text-center">Ejemplo: 20 autos vendidos/mes con programa "Comprá y Rentá"</h3>
+
+        <div class="grid sm:grid-cols-4 gap-6 text-center">
+          <div class="p-4 rounded-xl bg-rose-500/5 border border-rose-500/10">
+            <div class="text-slate-400 text-xs mb-1">Autos vendidos/mes</div>
+            <div class="text-2xl font-bold text-white">20</div>
+          </div>
+          <div class="p-4 rounded-xl bg-rose-500/5 border border-rose-500/10">
+            <div class="text-slate-400 text-xs mb-1">Conversión extra estimada</div>
+            <div class="text-2xl font-bold neon-rose">+6 ventas</div>
+            <div class="text-xs text-slate-500">(+30%)</div>
+          </div>
+          <div class="p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/10">
+            <div class="text-slate-400 text-xs mb-1">Comisión referido/mes</div>
+            <div class="text-2xl font-bold neon-cyan">USD 2,000+</div>
+            <div class="text-xs text-slate-500">por autos en plataforma</div>
+          </div>
+          <div class="p-4 rounded-xl bg-green-500/10 border border-green-500/20">
+            <div class="text-slate-400 text-xs mb-1">Revenue extra anual</div>
+            <div class="text-2xl font-bold text-green-400">USD 24K+</div>
+            <div class="text-xs text-green-400">solo en comisiones</div>
+          </div>
+        </div>
+
+        <div class="mt-6 text-center text-xs text-slate-500">
+          * Sin contar el margen de las ventas adicionales generadas por el programa. Comisión calculada sobre autos activos en plataforma.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== PROTECCIÓN ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">¿Tu cliente se preocupa por el <span class="neon-cyan">auto</span>?</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Estas son las protecciones que le podés mostrar.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="reveal glass rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">🛡</div>
+          <h3 class="font-bold mb-2">Seguro Obligatorio</h3>
+          <p class="text-slate-400 text-xs">Cada operación tiene póliza vigente. Sin seguro, no se alquila.</p>
+        </div>
+        <div class="reveal reveal-delay-1 glass rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">🤖</div>
+          <h3 class="font-bold mb-2">KYC con IA</h3>
+          <p class="text-slate-400 text-xs">Verificación de identidad, scoring de riesgo, detección de fraude.</p>
+        </div>
+        <div class="reveal reveal-delay-2 glass rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">📹</div>
+          <h3 class="font-bold mb-2">Video Inspección</h3>
+          <p class="text-slate-400 text-xs">Grabación obligatoria en entrega y devolución. Evidencia completa.</p>
+        </div>
+        <div class="reveal reveal-delay-3 glass rounded-2xl p-6 text-center">
+          <div class="text-3xl mb-3">💰</div>
+          <h3 class="font-bold mb-2">Cobro Anticipado</h3>
+          <p class="text-slate-400 text-xs">100% del alquiler + depósito de garantía cobrados antes de entregar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== CÓMO EMPEZAR ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 via-cyan-400 to-rose-500"></div>
+
+        <div class="text-center mb-8">
+          <h2 class="text-2xl sm:text-3xl font-bold mb-3">
+            Arrancar es <span class="neon-rose">simple</span>
+          </h2>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-6 text-center">
+          <div class="p-5 rounded-xl bg-rose-500/5 border border-rose-500/10">
+            <div class="text-2xl font-bold neon-rose mb-2">1</div>
+            <div class="font-bold text-white mb-1">Firmamos acuerdo</div>
+            <div class="text-sm text-slate-400">Convenio de colaboración sin exclusividad. 10 minutos.</div>
+          </div>
+          <div class="p-5 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+            <div class="text-2xl font-bold neon-cyan mb-2">2</div>
+            <div class="font-bold text-white mb-1">Capacitamos vendedores</div>
+            <div class="text-sm text-slate-400">1 hora de training. Les damos el pitch, materiales y QRs.</div>
+          </div>
+          <div class="p-5 rounded-xl bg-green-500/5 border border-green-500/10">
+            <div class="text-2xl font-bold text-green-400 mb-2">3</div>
+            <div class="font-bold text-white mb-1">Empiezan a vender</div>
+            <div class="text-sm text-slate-400">El cliente compra, publica en AutoRentar, y todos ganan.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== CTA FINAL ======== -->
+  <section id="contacto" class="py-24 px-6 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-rose-500/5 to-transparent"></div>
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+      <div class="reveal">
+        <p class="text-2xl sm:text-3xl font-light text-slate-300 leading-relaxed mb-8">
+          Tu competencia vende autos.
+          <br><br>
+          <span class="text-white font-semibold">Vos vendés autos que generan ingresos.</span>
+        </p>
+
+        <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+          ¿Sumamos el programa <span class="neon-rose">"Comprá y Rentá"</span>?
+        </h2>
+        <p class="text-slate-400 mb-10 text-lg">
+          15 minutos. Te mostramos los materiales listos y cómo arrancar esta semana.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="https://wa.me/5491166599559?text=Hola%2C%20soy%20de%20una%20concesionaria%20y%20me%20interesa%20el%20programa%20Comprá%20y%20Rentá%20de%20AutoRentar" target="_blank"
+             class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 text-white font-bold text-lg hover:shadow-lg hover:shadow-rose-500/30 transition-all">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.352 0-4.55-.694-6.396-1.882l-.42-.27-2.633.883.883-2.633-.27-.42A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            Hablemos por WhatsApp
+          </a>
+          <a href="mailto:adm@autorentar.com?subject=Programa%20Comprá%20y%20Rentá%20-%20Concesionaria"
+             class="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-white transition-all">
+            ✉️ Enviar Email
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="py-8 px-6 border-t border-slate-800/50">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="text-slate-500 text-sm">
+        &copy; 2026 AutoRentar &middot; ECUCONDOR SAS &middot; Operaciones LATAM
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://autorentar.com" target="_blank" class="text-slate-600 hover:text-rose-400 text-sm transition-colors">autorentar.com</a>
+        <span class="text-slate-700">|</span>
+        <span class="text-slate-600 text-xs">Documento confidencial</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======== SCRIPTS ======== -->
+  <script>
+    // Scroll reveal
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>

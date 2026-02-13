@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoRentar | Movilidad para tus Huéspedes — Turismo & Hoteles</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            cyan: {
+              50: '#edfff4', 100: '#d5ffe6', 200: '#aeffcf', 300: '#6fffa8',
+              400: '#1adf70', 500: '#00D95F', 600: '#00BF54', 700: '#00A648',
+              800: '#008239', 900: '#006B30',
+            },
+            sky: {
+              400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(14, 165, 233, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14, 165, 233, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .glass {
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-strong {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .neon-sky {
+      color: #38bdf8;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.5), 0 0 40px rgba(56, 189, 248, 0.15);
+    }
+    .neon-cyan {
+      color: #00D95F;
+      text-shadow: 0 0 10px rgba(0, 217, 95, 0.5), 0 0 40px rgba(0, 217, 95, 0.15);
+    }
+    .neon-gold {
+      color: #f59e0b;
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.5), 0 0 40px rgba(245, 158, 11, 0.15);
+    }
+    .glow-sky { box-shadow: 0 0 20px rgba(56, 189, 248, 0.2), 0 0 60px rgba(56, 189, 248, 0.05); }
+    .glow-cyan { box-shadow: 0 0 20px rgba(0, 217, 95, 0.2), 0 0 60px rgba(0, 217, 95, 0.05); }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 25%, #0f172a 50%, #164e63 75%, #0f172a 100%);
+      background-size: 400% 400%;
+      animation: gradient-shift 20s ease infinite;
+    }
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      25% { background-position: 100% 0%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.animate-in { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+    .reveal-delay-3 { transition-delay: 0.45s; }
+
+    .hero-fade { animation: fadeUp 0.8s ease forwards; }
+    .hero-fade-2 { animation: fadeUp 0.8s ease 0.3s forwards; opacity: 0; }
+    .hero-fade-3 { animation: fadeUp 0.8s ease 0.6s forwards; opacity: 0; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .deal-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .deal-card:hover { transform: translateY(-8px); }
+
+    .neon-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), rgba(0, 217, 95, 0.3), transparent);
+    }
+
+    .step-connector {
+      position: relative;
+    }
+    .step-connector::after {
+      content: '→';
+      position: absolute;
+      right: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(56, 189, 248, 0.3);
+      font-size: 1.5rem;
+    }
+    @media (max-width: 640px) {
+      .step-connector::after { display: none; }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-white grid-bg antialiased">
+
+  <!-- ======== NAVIGATION ======== -->
+  <nav class="fixed top-0 left-0 right-0 z-50 glass-strong">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">🚗</span>
+        <span class="font-bold text-lg tracking-tight">Auto<span class="neon-cyan">Rentar</span></span>
+        <span class="text-slate-500 text-sm hidden sm:inline">× Turismo & Hospitalidad</span>
+      </div>
+      <a href="#contacto" class="text-sm px-4 py-2 rounded-full border border-sky-500/30 text-sky-400 hover:bg-sky-500/10 transition-all">
+        Sumar Movilidad
+      </a>
+    </div>
+  </nav>
+
+  <!-- ======== HERO ======== -->
+  <section class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div class="absolute top-20 left-10 w-72 h-72 bg-sky-500/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10 pt-20">
+      <div class="hero-fade inline-block mb-6">
+        <span class="text-xs font-semibold tracking-widest uppercase text-sky-400/80 px-4 py-1.5 rounded-full border border-sky-500/20 bg-sky-500/5">
+          Alianza Estratégica · Turismo & Movilidad
+        </span>
+      </div>
+
+      <h1 class="hero-fade text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
+        Ofrecé movilidad a<br>
+        <span class="neon-sky">tus huéspedes.</span><br>
+        <span class="text-slate-300 text-3xl sm:text-4xl md:text-5xl">Ganá comisión <span class="neon-cyan">por cada reserva.</span></span>
+      </h1>
+
+      <p class="hero-fade-2 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Tu huésped llega al hotel o al destino. Necesita un auto. Hoy lo busca en Google.
+        <span class="text-white font-medium">Mañana lo reserva directamente desde tu canal.</span>
+      </p>
+
+      <div class="hero-fade-3 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#como-funciona" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-sky-500 to-sky-600 text-slate-900 font-bold text-lg hover:shadow-lg hover:shadow-sky-500/25 transition-all">
+          Ver Cómo Funciona
+        </a>
+        <a href="#numeros" class="px-8 py-3.5 rounded-full border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-white transition-all">
+          Ver los Números
+        </a>
+      </div>
+
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+        <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== EL PROBLEMA ======== -->
+  <section class="py-24 px-6 relative">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal">
+        <p class="text-2xl sm:text-3xl text-slate-300 leading-relaxed font-light">
+          Cada huésped que alquila un auto por su cuenta es <span class="text-white font-semibold">una comisión que perdés</span>.
+        </p>
+        <p class="text-xl text-slate-400 mt-6 leading-relaxed">
+          Booking.com, Despegar y Kayak ya ofrecen autos junto con hoteles y vuelos.
+          <span class="neon-sky">Vos también podés, y quedarte con la comisión.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== CÓMO FUNCIONA ======== -->
+  <section id="como-funciona" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Así <span class="neon-sky">funciona</span> la alianza</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Sin inversión, sin gestión de flota, sin riesgos. Solo sumás un servicio que tus clientes necesitan.</p>
+      </div>
+
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10">
+        <div class="grid sm:grid-cols-4 gap-6 text-center mb-8">
+          <div class="step-connector">
+            <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-2xl">🏨</div>
+            <div class="text-sm font-bold text-white mb-1">1. Huésped llega</div>
+            <p class="text-xs text-slate-400">A tu hotel, agencia o destino turístico</p>
+          </div>
+          <div class="step-connector">
+            <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-2xl">📱</div>
+            <div class="text-sm font-bold text-white mb-1">2. Reserva un auto</div>
+            <p class="text-xs text-slate-400">Desde tu QR, tu link o tu app con marca blanca</p>
+          </div>
+          <div class="step-connector">
+            <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-2xl">🚗</div>
+            <div class="text-sm font-bold text-white mb-1">3. Retira el auto</div>
+            <p class="text-xs text-slate-400">AutoRentar gestiona verificación, seguro y entrega</p>
+          </div>
+          <div>
+            <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-2xl glow-cyan">💰</div>
+            <div class="text-sm font-bold neon-cyan mb-1">4. Cobrás comisión</div>
+            <p class="text-xs text-slate-400">Automático. Por cada reserva generada desde tu canal</p>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-4 text-center mt-6">
+          <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+            <div class="text-slate-400 text-xs mb-1">Inversión requerida</div>
+            <div class="neon-sky font-bold text-lg">$0</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+            <div class="text-slate-400 text-xs mb-1">Gestión operativa</div>
+            <div class="neon-cyan font-bold">100% AutoRentar</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+            <div class="text-slate-400 text-xs mb-1">Tu ganancia</div>
+            <div class="text-white font-bold">Comisión por referido</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== BENEFICIOS PARA CADA VERTICAL ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Beneficios por <span class="neon-sky">tipo de aliado</span></h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Hoteles -->
+        <div class="reveal deal-card glass rounded-2xl p-8 relative overflow-hidden hover:glow-sky">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-500 to-sky-400"></div>
+          <div class="flex items-center gap-3 mb-6">
+            <span class="text-3xl">🏨</span>
+            <div>
+              <h3 class="text-xl font-bold">Hoteles & Apart Hotels</h3>
+              <div class="text-sky-400/80 text-xs">Amerian, Rochester, Sheraton, boutiques</div>
+            </div>
+          </div>
+          <ul class="space-y-3 text-slate-400 text-sm">
+            <li class="flex gap-2"><span class="text-sky-400">✓</span> <span>Mejorá el NPS ofreciendo movilidad integrada</span></li>
+            <li class="flex gap-2"><span class="text-sky-400">✓</span> <span>QR en el lobby y en la habitación → reserva en 2 minutos</span></li>
+            <li class="flex gap-2"><span class="text-sky-400">✓</span> <span>Comisión por cada reserva de tus huéspedes</span></li>
+            <li class="flex gap-2"><span class="text-sky-400">✓</span> <span>Diferenciación vs competencia que no ofrece movilidad</span></li>
+            <li class="flex gap-2"><span class="text-sky-400">✓</span> <span>Autos disponibles en la puerta del hotel</span></li>
+          </ul>
+        </div>
+
+        <!-- Agencias -->
+        <div class="reveal reveal-delay-1 deal-card glass rounded-2xl p-8 relative overflow-hidden hover:glow-sky">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-cyan-400"></div>
+          <div class="flex items-center gap-3 mb-6">
+            <span class="text-3xl">✈️</span>
+            <div>
+              <h3 class="text-xl font-bold">Agencias de Viajes</h3>
+              <div class="text-cyan-400/80 text-xs">FAEVYT, Almundo, Despegar, agencias locales</div>
+            </div>
+          </div>
+          <ul class="space-y-3 text-slate-400 text-sm">
+            <li class="flex gap-2"><span class="text-cyan-400">✓</span> <span>Vendé paquetes completos: vuelo + hotel + auto</span></li>
+            <li class="flex gap-2"><span class="text-cyan-400">✓</span> <span>Precios competitivos vs rent-a-cars tradicionales</span></li>
+            <li class="flex gap-2"><span class="text-cyan-400">✓</span> <span>Más comisión por venta que con Avis/Hertz</span></li>
+            <li class="flex gap-2"><span class="text-cyan-400">✓</span> <span>Tecnología moderna: API o link de referido</span></li>
+            <li class="flex gap-2"><span class="text-cyan-400">✓</span> <span>Autos verificados con seguro incluido</span></li>
+          </ul>
+        </div>
+
+        <!-- Turismo Corporativo -->
+        <div class="reveal deal-card glass rounded-2xl p-8 relative overflow-hidden hover:glow-sky">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-amber-400"></div>
+          <div class="flex items-center gap-3 mb-6">
+            <span class="text-3xl">💼</span>
+            <div>
+              <h3 class="text-xl font-bold">Turismo Corporativo</h3>
+              <div class="text-amber-400/80 text-xs">BCD Travel, Carlson Wagonlit, empresas</div>
+            </div>
+          </div>
+          <ul class="space-y-3 text-slate-400 text-sm">
+            <li class="flex gap-2"><span class="text-amber-400">✓</span> <span>Movilidad para ejecutivos y equipos en viaje de negocios</span></li>
+            <li class="flex gap-2"><span class="text-amber-400">✓</span> <span>Facturación corporativa centralizada</span></li>
+            <li class="flex gap-2"><span class="text-amber-400">✓</span> <span>Reportes de uso y gasto por empleado</span></li>
+            <li class="flex gap-2"><span class="text-amber-400">✓</span> <span>Hasta 40% más económico que rent-a-car tradicional</span></li>
+            <li class="flex gap-2"><span class="text-amber-400">✓</span> <span>Vehículos disponibles en +50 ciudades de Argentina</span></li>
+          </ul>
+        </div>
+
+        <!-- Plataformas de turismo -->
+        <div class="reveal reveal-delay-1 deal-card glass rounded-2xl p-8 relative overflow-hidden hover:glow-sky">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-green-400"></div>
+          <div class="flex items-center gap-3 mb-6">
+            <span class="text-3xl">🌍</span>
+            <div>
+              <h3 class="text-xl font-bold">Plataformas & OTAs</h3>
+              <div class="text-green-400/80 text-xs">Airbnb Experiences, tours, wine routes</div>
+            </div>
+          </div>
+          <ul class="space-y-3 text-slate-400 text-sm">
+            <li class="flex gap-2"><span class="text-green-400">✓</span> <span>Upsell: "Agregá un auto a tu experiencia"</span></li>
+            <li class="flex gap-2"><span class="text-green-400">✓</span> <span>Ideal para turismo enológico, aventura, road trips</span></li>
+            <li class="flex gap-2"><span class="text-green-400">✓</span> <span>API de integración para reservas automáticas</span></li>
+            <li class="flex gap-2"><span class="text-green-400">✓</span> <span>Widget embebible en tu sitio web</span></li>
+            <li class="flex gap-2"><span class="text-green-400">✓</span> <span>Tracking y analytics de conversión</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== NÚMEROS ======== -->
+  <section id="numeros" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Los <span class="neon-sky">Números</span> del Turismo + Movilidad</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div class="reveal glass rounded-2xl p-6 text-center">
+          <div class="text-4xl font-black neon-sky mb-2">18M</div>
+          <div class="text-slate-400 text-sm">turistas internacionales en Argentina (2025)</div>
+        </div>
+        <div class="reveal reveal-delay-1 glass rounded-2xl p-6 text-center">
+          <div class="text-4xl font-black neon-cyan mb-2">65%</div>
+          <div class="text-slate-400 text-sm">prefieren auto propio vs tour grupal</div>
+        </div>
+        <div class="reveal reveal-delay-2 glass rounded-2xl p-6 text-center">
+          <div class="text-4xl font-black neon-gold mb-2">USD 98</div>
+          <div class="text-slate-400 text-sm">tarifa promedio/día en AutoRentar</div>
+        </div>
+        <div class="reveal reveal-delay-3 glass rounded-2xl p-6 text-center">
+          <div class="text-4xl font-black text-white mb-2">5.2</div>
+          <div class="text-slate-400 text-sm">días promedio de alquiler turístico</div>
+        </div>
+      </div>
+
+      <!-- Example calculation -->
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10 glow-sky">
+        <h3 class="text-lg font-semibold text-slate-300 mb-6 text-center">Ejemplo: Hotel con 100 habitaciones</h3>
+
+        <div class="grid sm:grid-cols-4 gap-6 text-center">
+          <div class="p-4 rounded-xl bg-sky-500/5 border border-sky-500/10">
+            <div class="text-slate-400 text-xs mb-1">Ocupación hotel</div>
+            <div class="text-2xl font-bold text-white">70%</div>
+          </div>
+          <div class="p-4 rounded-xl bg-sky-500/5 border border-sky-500/10">
+            <div class="text-slate-400 text-xs mb-1">Huéspedes que alquilan auto</div>
+            <div class="text-2xl font-bold neon-sky">15%</div>
+          </div>
+          <div class="p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/10">
+            <div class="text-slate-400 text-xs mb-1">Reservas/mes vía hotel</div>
+            <div class="text-2xl font-bold neon-cyan">~32</div>
+          </div>
+          <div class="p-4 rounded-xl bg-green-500/10 border border-green-500/20">
+            <div class="text-slate-400 text-xs mb-1">Comisión mensual estimada</div>
+            <div class="text-2xl font-bold text-green-400">USD 1,600+</div>
+          </div>
+        </div>
+
+        <div class="mt-6 text-center text-xs text-slate-500">
+          * Basado en tarifa USD 98/día × 5.2 días promedio × 10% comisión de referido. Resultados varían según destino y temporada.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== DIFERENCIAL VS RENT-A-CAR ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-4xl mx-auto">
+      <div class="reveal glass-strong rounded-2xl p-8 sm:p-10 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-500 via-cyan-400 to-sky-500"></div>
+
+        <div class="text-center mb-8">
+          <h2 class="text-2xl sm:text-3xl font-bold mb-3">
+            ¿Por qué AutoRentar y no un <span class="neon-sky">rent-a-car</span> tradicional?
+          </h2>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-8">
+          <div>
+            <h4 class="font-semibold text-slate-500 mb-4 flex items-center gap-2">
+              <span>❌</span> Rent-a-Car Tradicional
+            </h4>
+            <ul class="space-y-3 text-slate-500 text-sm">
+              <li>• Precios inflados (mark-up de 40-60%)</li>
+              <li>• Comisiones bajas para el hotel/agencia</li>
+              <li>• Flota limitada y estandarizada</li>
+              <li>• Proceso burocrático para el turista</li>
+              <li>• Sin tecnología de integración</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-sky-400 mb-4 flex items-center gap-2">
+              <span>✅</span> AutoRentar (P2P)
+            </h4>
+            <ul class="space-y-3 text-slate-300 text-sm">
+              <li>• <span class="neon-sky font-semibold">Hasta 40% más barato</span> para el turista</li>
+              <li>• <span class="text-white font-semibold">Mayor comisión</span> para el aliado</li>
+              <li>• Variedad de vehículos (desde económicos hasta premium)</li>
+              <li>• Reserva en 2 minutos desde el celular</li>
+              <li>• API, QR, widget embebible, link de referido</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== INTEGRACIONES ======== -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="reveal text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Opciones de <span class="neon-sky">Integración</span></h2>
+        <p class="text-slate-400">Elegí el nivel que mejor se adapte a tu operación.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="reveal deal-card glass rounded-2xl p-8 text-center relative overflow-hidden hover:glow-sky">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-500 to-sky-400"></div>
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-3xl">🔗</div>
+          <h3 class="text-lg font-bold mb-2">Link & QR</h3>
+          <div class="text-sky-400 text-xs font-medium mb-4">Setup: 5 minutos</div>
+          <p class="text-slate-400 text-sm mb-4">Link personalizado con tu código de referido. QR imprimible para lobby, habitaciones y materiales.</p>
+          <div class="text-sky-400/60 text-xs">Ideal para hoteles y agencias</div>
+        </div>
+
+        <div class="reveal reveal-delay-1 deal-card glass rounded-2xl p-8 text-center relative overflow-hidden glow-sky hover:glow-sky">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-cyan-400"></div>
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-3xl">🖥</div>
+          <h3 class="text-lg font-bold mb-2">Widget Web</h3>
+          <div class="text-cyan-400 text-xs font-medium mb-4">Setup: 1 hora</div>
+          <p class="text-slate-400 text-sm mb-4">Widget embebible en tu sitio web. El huésped busca y reserva sin salir de tu página.</p>
+          <div class="neon-cyan text-xs font-medium">Recomendado</div>
+        </div>
+
+        <div class="reveal reveal-delay-2 deal-card glass rounded-2xl p-8 text-center relative overflow-hidden hover:glow-sky">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-amber-400"></div>
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-3xl">⚡</div>
+          <h3 class="text-lg font-bold mb-2">API Completa</h3>
+          <div class="text-amber-400 text-xs font-medium mb-4">Setup: 1-2 semanas</div>
+          <p class="text-slate-400 text-sm mb-4">API REST para integración profunda. Búsqueda, reserva y gestión desde tu sistema.</p>
+          <div class="text-amber-400/60 text-xs">Ideal para OTAs y plataformas</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="neon-line max-w-lg mx-auto"></div>
+
+  <!-- ======== CTA FINAL ======== -->
+  <section id="contacto" class="py-24 px-6 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-sky-500/5 to-transparent"></div>
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+      <div class="reveal">
+        <p class="text-2xl sm:text-3xl font-light text-slate-300 leading-relaxed mb-8">
+          Cada huésped que alquila un auto por su cuenta
+          <br><br>
+          <span class="text-white font-semibold">es una comisión que podrías estar cobrando.</span>
+        </p>
+
+        <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+          ¿Sumamos <span class="neon-sky">movilidad</span> a tu oferta?
+        </h2>
+        <p class="text-slate-400 mb-10 text-lg">
+          10 minutos para contarte el modelo. Sin inversión, sin riesgo.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="https://wa.me/5491166599559?text=Hola%2C%20soy%20del%20sector%20turismo%2Fhotelería%20y%20me%20interesa%20la%20alianza%20con%20AutoRentar" target="_blank"
+             class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-sky-500 to-sky-600 text-slate-900 font-bold text-lg hover:shadow-lg hover:shadow-sky-500/30 transition-all">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.352 0-4.55-.694-6.396-1.882l-.42-.27-2.633.883.883-2.633-.27-.42A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            Hablemos por WhatsApp
+          </a>
+          <a href="mailto:adm@autorentar.com?subject=Alianza%20Turismo%20-%20AutoRentar"
+             class="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-white transition-all">
+            ✉️ Enviar Email
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="py-8 px-6 border-t border-slate-800/50">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="text-slate-500 text-sm">
+        &copy; 2026 AutoRentar &middot; ECUCONDOR SAS &middot; Operaciones LATAM
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://autorentar.com" target="_blank" class="text-slate-600 hover:text-sky-400 text-sm transition-colors">autorentar.com</a>
+        <span class="text-slate-700">|</span>
+        <span class="text-slate-600 text-xs">Documento confidencial</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======== SCRIPTS ======== -->
+  <script>
+    // Scroll reveal
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>
