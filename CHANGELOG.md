@@ -1,3 +1,9 @@
+## <small>3.97.2 (2026-02-13)</small>
+
+* fix(core): remove critical technical debt in wallet, auth and fgo ([4acee95](https://github.com/ecucondorSA/autorenta/commit/4acee95))
+* chore(functions): delete 5 dead edge functions (zombie code cleanup) ([ccf0984](https://github.com/ecucondorSA/autorenta/commit/ccf0984))
+* ci: remove legacy migration repair script (debt repayment) ([359d40a](https://github.com/ecucondorSA/autorenta/commit/359d40a))
+
 ## <small>3.97.1 (2026-02-13)</small>
 
 * fix(ops): remove redirect loop for tino static pages ([685b1ff](https://github.com/ecucondorSA/autorenta/commit/685b1ff))
