@@ -41,24 +41,28 @@ import { SUBSCRIPTION_STATUS_LABELS, type SubscriptionTier } from '@core/models/
           </div>
           <div>
             <h3 class="text-lg font-bold text-text-primary">Autorentar Club</h3>
-            <p class="text-sm text-text-secondary">Alquila sin depósito de garantía</p>
+            <p class="text-sm text-text-secondary">Alquilá con garantía reducida</p>
           </div>
         </div>
 
         <div class="space-y-2">
           <div class="flex items-center gap-2 text-sm text-text-secondary">
             <ion-icon name="checkmark-circle" class="text-cta-default"></ion-icon>
-            <span>Depósito $0 en la mayoría de autos</span>
+            <span>Hasta 50% menos en depósito de garantía</span>
           </div>
           <div class="flex items-center gap-2 text-sm text-text-secondary">
             <ion-icon name="checkmark-circle" class="text-cta-default"></ion-icon>
-            <span>Descuentos de hasta el 50% en garantía</span>
+            <span>Cobertura por daños incluida en tu plan</span>
           </div>
           <div class="flex items-center gap-2 text-sm text-text-secondary">
             <ion-icon name="checkmark-circle" class="text-cta-default"></ion-icon>
-            <span>FGO Buy-down incluido en todos los planes</span>
+            <span>Depósito se libera al devolver sin reclamos</span>
           </div>
         </div>
+
+        <p class="text-[11px] text-text-muted">
+          El depósito es un monto retenido en tu wallet durante el alquiler. Varía según categoría del auto y plan.
+        </p>
 
         <div class="flex gap-3">
           <button

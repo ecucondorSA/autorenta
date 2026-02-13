@@ -279,9 +279,9 @@ import {
           </div>
           <div class="flex flex-col items-center text-center space-y-2">
             <ion-icon name="infinite" class="text-3xl text-cta-default"></ion-icon>
-            <h4 class="font-black text-sm uppercase tracking-tighter italic">Sin Compromiso</h4>
+            <h4 class="font-black text-sm uppercase tracking-tighter italic">Flexible</h4>
             <p class="text-xs text-text-secondary font-medium">
-              Cancelá o cambiá de plan en cualquier momento. Sin permanencia.
+              Cambiá de plan o cancelá después del primer mes. Silver y Black sin permanencia.
             </p>
           </div>
         </div>
