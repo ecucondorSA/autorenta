@@ -1,3 +1,7 @@
+## <small>3.95.8 (2026-02-13)</small>
+
+* fix(pricing): increase Club Access from $19.99 → $24.99/mes ([ed8d76e](https://github.com/ecucondorSA/autorenta/commit/ed8d76e))
+
 ## <small>3.95.7 (2026-02-13)</small>
 
 * fix(db): add WHERE clause to marketing daily reset RPC ([73471a6](https://github.com/ecucondorSA/autorenta/commit/73471a6))
