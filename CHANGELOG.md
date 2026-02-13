@@ -1,3 +1,7 @@
+## <small>3.95.7 (2026-02-13)</small>
+
+* fix(db): add WHERE clause to marketing daily reset RPC ([73471a6](https://github.com/ecucondorSA/autorenta/commit/73471a6))
+
 ## <small>3.95.6 (2026-02-13)</small>
 
 * fix(db): activation lock release cron + fix dormant column name bugs in RPCs ([f6501a6](https://github.com/ecucondorSA/autorenta/commit/f6501a6))
