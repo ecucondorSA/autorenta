@@ -302,14 +302,32 @@ interface VerificationVisualSlot {
                     </svg>
                     Analizando prueba de vida... Esto puede tardar unos segundos.
                   </div>
+                } @else if (showSelfieCapture()) {
+                  <app-selfie-capture
+                    (cancelled)="showSelfieCapture.set(false)"
+                    (completed)="onSelfieCaptured($event)"
+                  ></app-selfie-capture>
                 } @else {
                   @if (selfieError()) {
                     <div class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
                       {{ selfieError() }}
-                      <button class="ml-2 font-semibold underline" (click)="clearSelfieError()">Reintentar</button>
                     </div>
                   }
-                  <app-selfie-capture (completed)="onSelfieCaptured($event)"></app-selfie-capture>
+                  <div class="space-y-3">
+                    <p class="text-sm text-black/70">
+                      Grabaremos un video corto de 3 segundos para confirmar tu identidad.
+                      Asegurate de tener buena iluminación.
+                    </p>
+                    <button
+                      (click)="showSelfieCapture.set(true)"
+                      class="inline-flex items-center gap-2 rounded-2xl bg-[#0f0f0f] px-5 py-3 text-sm font-bold text-white transition hover:bg-black/80"
+                    >
+                      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      Iniciar prueba de vida
+                    </button>
+                  </div>
                 }
               } @else {
                 <div class="rounded-2xl border border-[#b8ff20] bg-[#f3ffd0] px-4 py-3 text-sm text-black">
@@ -359,6 +377,7 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
   readonly returnUrl = signal<string | null>(null);
   readonly selfieProcessing = signal(false);
   readonly selfieError = signal<string | null>(null);
+  readonly showSelfieCapture = signal(false);
 
   readonly verificationProgress = this.identityService.verificationProgress;
   readonly requirements = computed(() => this.verificationProgress()?.requirements);
@@ -624,6 +643,7 @@ export class ProfileVerificationPage implements OnInit, OnDestroy {
   }
 
   async onSelfieCaptured(videoPath: string): Promise<void> {
+    this.showSelfieCapture.set(false);
     this.selfieProcessing.set(true);
     this.selfieError.set(null);
 

@@ -67,7 +67,7 @@ import { FaceVerificationService } from '@core/services/verification/face-verifi
 
         <!-- Oval Overlay (Mask) -->
         <div
-          class="absolute inset-0 pointer-events-none z-10 border-[50vw] border-black/50 rounded-[50%]"
+          class="absolute inset-0 pointer-events-none z-10 border-[50vw] border-black rounded-[50%]"
           style="border-width: 100vh 20vw;"
         >
           <!-- CSS Hack for inverted border radius hole? Tailwind might be cleaner with SVG mask -->
@@ -82,7 +82,7 @@ import { FaceVerificationService } from '@core/services/verification/face-verifi
                 <ellipse cx="50" cy="45" rx="35" ry="40" fill="black" />
               </mask>
             </defs>
-            <rect width="100%" height="100%" fill="rgba(0,0,0,0.85)" mask="url(#hole)" />
+            <rect width="100%" height="100%" fill="rgb(0,0,0)" mask="url(#hole)" />
 
             <!-- Guide Ring -->
             <ellipse
