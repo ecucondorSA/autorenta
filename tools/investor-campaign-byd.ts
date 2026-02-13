@@ -432,25 +432,45 @@ function getTemplate(vertical: Vertical): EmailTemplate {
   switch (vertical) {
     case "vc":
       return {
-        subject: "AutoRentar: Propiedad fraccionada de EVs en LATAM",
+        subject: "AutoRentar: Plataforma de movilidad P2P para LATAM",
         body: (lead) => `
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; line-height: 1.7; color: #1f2937;">
   <p>Estimados,</p>
 
-  <p>Me llamo <strong>Eduardo Marques</strong>, fundador de <strong>AutoRentar</strong>. Les escribo porque ${lead.note.toLowerCase()}.</p>
+  <p>Me llamo <strong>Eduardo Marques</strong>, fundador serial de <strong>AutoRentar</strong> (movilidad P2P), <strong>Ecucondor</strong> (pagos internacionales AR/BR/EC) y <strong>Autamedica</strong> (healthtech). Les escribo porque ${lead.note.toLowerCase()}.</p>
 
-  <p>Getaround cerró operaciones en USA tras levantar USD 750M. Turo no anunció expansión a LATAM. <strong>La ventana para liderar movilidad P2P en la región está abierta.</strong></p>
+  <p>Getaround cerró operaciones en USA tras levantar USD 750M. Turo no anunció expansión a LATAM. <strong>La ventana para liderar movilidad P2P en la región está abierta</strong> — y nosotros ya estamos operando.</p>
 
-  <p>AutoRentar opera un modelo de <strong>propiedad fraccionada de vehículos eléctricos</strong> (BYD Dolphin Mini) donde 2,000 inversores participan desde USD $12.50 por fragmento. El auto opera en Buenos Aires con choferes de Uber/Cabify, generando distribuciones mensuales proporcionales al neto.</p>
-
-  <h3 style="color: #0891b2; margin-top: 20px;">Por qué ahora</h3>
-  <ul>
-    <li><strong>CNV Resolución 1069 (Jun 2025):</strong> Primer marco regulatorio de tokenización de activos reales en Argentina</li>
-    <li><strong>Mercado validado:</strong> +400 autos en plataformas de alquiler para apps solo en CABA, +10,000 choferes registrados</li>
-    <li><strong>Ventaja eléctrica:</strong> 60-85% ahorro en energía vs GNC → más margen → mejor retorno</li>
-  </ul>
-
-  <p>Adjunto el deck con el modelo completo, escenarios y unit economics. Me encantaría coordinar 20 minutos para presentarles la oportunidad.</p>
+  <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border-left: 4px solid #2563eb; border-radius: 8px;">
+    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px;">
+      🚀 Propuesta 1 — Invertir en AutoRentar
+    </p>
+    <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      AutoRentar es la <strong>primera plataforma de alquiler de autos P2P en LATAM que no requiere tarjeta de crédito</strong>. Aceptamos MercadoPago, débito y transferencias — algo que <strong>ninguna rentadora en la región ofrece</strong>. El 70% de la población de LATAM no tiene tarjeta de crédito: ese es nuestro mercado.
+    </p>
+    <p style="margin: 0 0 10px 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      <strong>Modelo de revenue:</strong>
+    </p>
+    <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #374151; font-size: 14px;">
+      <li><strong>15% fee de plataforma</strong> sobre cada reserva</li>
+      <li><strong>Gestión de flota fraccionada:</strong> EVs financiados por micro-inversores, operados por nosotros</li>
+      <li><strong>Marketplace P2P:</strong> Dueños listan sus autos, nosotros gestionamos reservas + seguros</li>
+    </ul>
+    <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      <strong>Lo que nadie más hizo en LATAM:</strong>
+    </p>
+    <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #374151; font-size: 14px;">
+      <li>🏆 <strong>Primera rentadora sin tarjeta de crédito</strong> — inclusión financiera real</li>
+      <li>🏆 <strong>Primeros en fragmentar un activo físico (BYD) pagable desde billetera virtual</strong> — cualquier persona con MercadoPago puede ser dueño de una fracción de un auto eléctrico</li>
+      <li>🏆 <strong>Verificación biométrica + inspecciones AI</strong> — seguridad sin fricción</li>
+    </ul>
+    <p style="margin: 0 0 10px 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      <strong>Estado actual:</strong> Plataforma live en producción, operación lista para escalar, pipeline activo de incorporación de oferta (BYD + dueños particulares) y demanda en CABA, con regulación favorable (CNV 1069, Jun 2025).
+    </p>
+    <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      👉 <a href="https://autorentar.com/pitch-inversores" style="color: #2563eb; font-weight: 600;">Ver el deck completo del proyecto</a>
+    </p>
+  </div>
 
   ${signature()}
 </div>`,
@@ -459,28 +479,33 @@ function getTemplate(vertical: Vertical): EmailTemplate {
     case "inmobiliaria":
     case "family_office":
       return {
-        // TODO(human): Escribir el subject y body para la vertical inmobiliaria/family office
-        // Este template es el más importante porque estos inversores ya piensan en "yield sobre activos reales"
-        // pero necesitan entender por qué un auto eléctrico es comparable a un departamento en pozo
-        subject: "Activos reales con renta desde USD $12.50 — AutoRentar",
+        subject: "Nuevo activo real con renta mensual — AutoRentar",
         body: (lead) => `
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; line-height: 1.7; color: #1f2937;">
   <p>Estimados,</p>
 
-  <p>Me llamo <strong>Eduardo Marques</strong>, fundador de <strong>AutoRentar</strong>. Les escribo porque ${lead.note.toLowerCase()}.</p>
+  <p>Me llamo <strong>Eduardo Marques</strong>, fundador serial de <strong>AutoRentar</strong> (movilidad P2P), <strong>Ecucondor</strong> (pagos internacionales AR/BR/EC) y <strong>Autamedica</strong> (healthtech). Les escribo porque ${lead.note.toLowerCase()}.</p>
 
-  <!-- TODO(human): Completar el hook y body para inmobiliarias -->
-  <!-- La idea es conectar "yield sobre activos reales" (que ellos ya venden con departamentos)
-       con "participación fraccionada en vehículos eléctricos que generan renta mensual".
-       Puntos clave:
-       - Sus inversores ya buscan retorno en USD sobre activos tangibles
-       - Un BYD operando genera distribuciones mensuales (no hay que esperar 24 meses de obra)
-       - Desde USD $12.50 por MercadoPago (democratización radical vs mínimo de pozo)
-       - Escenarios: Conservador 8%, Base 14%, Optimista 19% anual
-       - No es retorno garantizado, son escenarios reales con costos transparentes
-  -->
+  <p>Ustedes ya le ofrecen a sus inversores <strong>retorno en USD sobre activos tangibles</strong>. Nosotros tenemos un activo nuevo que complementa su portfolio: <strong>vehículos eléctricos operativos</strong> que generan renta mensual desde el día 1.</p>
 
-  <p>Adjunto el deck con el modelo completo. Me encantaría coordinar una llamada breve para explorar sinergias.</p>
+  <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border-left: 4px solid #2563eb; border-radius: 8px;">
+    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px;">
+      🚀 Propuesta 1 — Co-inversión a nivel flota
+    </p>
+    <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      A diferencia de la participación abierta fraccionada (ver abajo), ofrecemos a inversores institucionales y family offices:
+    </p>
+    <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #374151; font-size: 14px;">
+      <li><strong>Inversión a nivel vehículo completo:</strong> USD $24,490 por unidad (vs $12.50 público)</li>
+      <li><strong>Portfolio de 5-10 EVs:</strong> Diversificación dentro del mismo activo, diferentes choferes y rutas</li>
+      <li><strong>Distribuciones mensuales:</strong> Proporcionales al neto operativo de cada vehículo</li>
+      <li><strong>Transparencia total:</strong> KM verificados por OBD2, dashboard en tiempo real, KPIs mensuales</li>
+      <li><strong>Regulación:</strong> CNV Resolución 1069 (Jun 2025) habilita activos reales tokenizados en Argentina</li>
+    </ul>
+    <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      👉 <a href="https://autorentar.com/pitch-inversores" style="color: #2563eb; font-weight: 600;">Ver el deck completo del modelo</a>
+    </p>
+  </div>
 
   ${signature()}
 </div>`,
@@ -488,26 +513,32 @@ function getTemplate(vertical: Vertical): EmailTemplate {
 
     case "crowdfunding":
       return {
-        subject: "Partnership: Infraestructura de crowdfunding para flota EV",
+        subject: "Partnership: Activo real con renta mensual para su plataforma",
         body: (lead) => `
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; line-height: 1.7; color: #1f2937;">
   <p>Estimados,</p>
 
-  <p>Me llamo <strong>Eduardo Marques</strong>, fundador de <strong>AutoRentar</strong>. Les escribo porque ${lead.note.toLowerCase()}.</p>
+  <p>Me llamo <strong>Eduardo Marques</strong>, fundador serial de <strong>AutoRentar</strong> (movilidad P2P), <strong>Ecucondor</strong> (pagos internacionales AR/BR/EC) y <strong>Autamedica</strong> (healthtech). Les escribo porque ${lead.note.toLowerCase()}.</p>
 
-  <p>Ustedes ya tienen la <strong>infraestructura de crowdfunding y la base de inversores</strong>. Nosotros tenemos un <strong>activo real que genera renta mensual</strong>: un BYD Dolphin Mini eléctrico que opera en Buenos Aires con choferes de apps de movilidad.</p>
+  <p>Ustedes ya tienen la <strong>infraestructura de crowdfunding y la base de inversores</strong>. Nosotros tenemos la operación: una plataforma de movilidad con vehículos eléctricos, choferes verificados, y tecnología de tracking en tiempo real.</p>
 
-  <h3 style="color: #0891b2; margin-top: 20px;">La propuesta</h3>
-  <ul>
-    <li><strong>El activo:</strong> BYD Dolphin Mini EV, USD $24,490, fraccionado en 2,000 participaciones de $12.50</li>
-    <li><strong>La operación:</strong> El auto se alquila a choferes verificados que operan Uber/Cabify/DiDi</li>
-    <li><strong>La distribución:</strong> 60% del neto mensual al pool de inversores, proporcional a participaciones</li>
-    <li><strong>Escenarios:</strong> Conservador 8% · Base 14% · Optimista 19% anual</li>
-  </ul>
-
-  <p>La CNV aprobó la Resolución 1069 (Jun 2025) habilitando tokenización de activos reales. <strong>Esto es un producto financiero legal hoy en Argentina.</strong></p>
-
-  <p>Adjunto el deck completo. ¿Podríamos coordinar una llamada para explorar cómo integrar este activo en su plataforma?</p>
+  <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border-left: 4px solid #2563eb; border-radius: 8px;">
+    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px;">
+      🚀 Propuesta 1 — Campaña de crowdfunding conjunta
+    </p>
+    <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      Buscamos un partner que nos provea la infraestructura de levantamiento de capital para escalar nuestra flota de EVs:
+    </p>
+    <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #374151; font-size: 14px;">
+      <li><strong>El activo:</strong> Vehículos eléctricos BYD que operan en Buenos Aires generando renta mensual</li>
+      <li><strong>El roadmap:</strong> 1 → 10 → 30 → 100 vehículos en 24 meses</li>
+      <li><strong>La regulación:</strong> CNV Resolución 1069 (Jun 2025) habilita tokenización de activos reales en Argentina</li>
+      <li><strong>El modelo:</strong> Ustedes manejan la captación de inversores + compliance, nosotros operamos los autos y distribuimos retornos</li>
+    </ul>
+    <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      👉 <a href="https://autorentar.com/pitch-inversores" style="color: #2563eb; font-weight: 600;">Ver el deck completo del proyecto</a>
+    </p>
+  </div>
 
   ${signature()}
 </div>`,
@@ -515,24 +546,32 @@ function getTemplate(vertical: Vertical): EmailTemplate {
 
     case "fintech":
       return {
-        subject: "Tokenización de flota vehicular — Resolución CNV 1069",
+        subject: "Partnership tecnológico: tokenización de activos reales — CNV 1069",
         body: (lead) => `
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; line-height: 1.7; color: #1f2937;">
   <p>Estimados,</p>
 
-  <p>Me llamo <strong>Eduardo Marques</strong>, fundador de <strong>AutoRentar</strong>. Les escribo porque ${lead.note.toLowerCase()}.</p>
+  <p>Me llamo <strong>Eduardo Marques</strong>, fundador serial de <strong>AutoRentar</strong> (movilidad P2P), <strong>Ecucondor</strong> (pagos internacionales AR/BR/EC) y <strong>Autamedica</strong> (healthtech). Les escribo porque ${lead.note.toLowerCase()}.</p>
 
-  <p>La CNV aprobó la <strong>Resolución 1069 (Junio 2025)</strong>, el primer marco regulatorio de tokenización de activos reales (RWA) en Argentina. AutoRentar tiene un caso de uso listo para producción: <strong>propiedad fraccionada de vehículos eléctricos</strong>.</p>
+  <p>La CNV aprobó la <strong>Resolución 1069 (Junio 2025)</strong>, el primer marco regulatorio de tokenización de activos reales (RWA) en Argentina. AutoRentar tiene un caso de uso listo para producción y buscamos partners tecnológicos.</p>
 
-  <h3 style="color: #0891b2; margin-top: 20px;">El producto</h3>
-  <ul>
-    <li><strong>Activo:</strong> BYD Dolphin Mini EV (USD $24,490) fraccionado en 2,000 participaciones</li>
-    <li><strong>Ticket:</strong> Desde USD $12.50 por MercadoPago</li>
-    <li><strong>Renta:</strong> Distribuciones mensuales del neto operativo (chofer de apps)</li>
-    <li><strong>Transparencia:</strong> KM verificados por OBD2, KPIs públicos mensuales</li>
-  </ul>
-
-  <p>Buscamos partners tecnológicos para la capa de tokenización ERC-3643 y compliance. ¿Podríamos coordinar una llamada?</p>
+  <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border-left: 4px solid #2563eb; border-radius: 8px;">
+    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px;">
+      🚀 Propuesta 1 — Partnership de infraestructura
+    </p>
+    <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      Nosotros tenemos el activo (vehículos eléctricos operativos) y la operación (plataforma, choferes, tracking). Necesitamos:
+    </p>
+    <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #374151; font-size: 14px;">
+      <li><strong>Tokenización ERC-3643:</strong> Capa de smart contracts para representar participaciones vehiculares</li>
+      <li><strong>Compliance automatizado:</strong> KYC/AML para inversores bajo el marco CNV 1069</li>
+      <li><strong>Payment rails:</strong> Ya integramos MercadoPago — buscamos complementar con crypto/stablecoins</li>
+      <li><strong>Roadmap:</strong> 1 → 10 → 100 vehículos, cada uno un activo tokenizable independiente</li>
+    </ul>
+    <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      👉 <a href="https://autorentar.com/pitch-inversores" style="color: #2563eb; font-weight: 600;">Ver el deck completo del proyecto</a>
+    </p>
+  </div>
 
   ${signature()}
 </div>`,
@@ -545,19 +584,24 @@ function getTemplate(vertical: Vertical): EmailTemplate {
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; line-height: 1.7; color: #1f2937;">
   <p>Estimados,</p>
 
-  <p>Me llamo <strong>Eduardo Marques</strong>, fundador de <strong>AutoRentar</strong>. Les escribo porque ${lead.note.toLowerCase()}.</p>
+  <p>Me llamo <strong>Eduardo Marques</strong>, fundador serial de <strong>AutoRentar</strong> (movilidad P2P), <strong>Ecucondor</strong> (pagos internacionales AR/BR/EC) y <strong>Autamedica</strong> (healthtech). Les escribo porque ${lead.note.toLowerCase()}.</p>
 
   <p>AutoRentar financia vehículos eléctricos BYD mediante <strong>inversores fraccionados</strong> — 2,000 personas ponen USD $12.50 cada uno para comprar el auto. <strong>El operador de flota gestiona el vehículo y cobra por la operación, sin poner capital.</strong></p>
 
-  <h3 style="color: #0891b2; margin-top: 20px;">Ventajas para el operador</h3>
-  <ul>
-    <li><strong>Cero CAPEX:</strong> El vehículo está financiado por inversores</li>
-    <li><strong>60-85% ahorro en energía:</strong> BYD eléctrico vs GNC/nafta</li>
-    <li><strong>Más margen por km:</strong> Costo de carga $0.67-1.39/100km vs $3.50 GNC</li>
-    <li><strong>Tecnología integrada:</strong> OBD2, geocerca, dashboard en tiempo real</li>
-  </ul>
-
-  <p>Adjunto la propuesta de partnership. ¿Podríamos agendar una llamada para explorar la integración con su flota?</p>
+  <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border-left: 4px solid #2563eb; border-radius: 8px;">
+    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px;">
+      🚀 Propuesta 1 — Sumá EVs a tu flota sin CAPEX
+    </p>
+    <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #374151; font-size: 14px;">
+      <li><strong>Cero CAPEX:</strong> El vehículo está financiado por inversores</li>
+      <li><strong>60-85% ahorro en energía:</strong> BYD eléctrico vs GNC/nafta</li>
+      <li><strong>Más margen por km:</strong> Costo de carga $0.67-1.39/100km vs $3.50 GNC</li>
+      <li><strong>Tecnología integrada:</strong> OBD2, geocerca, dashboard en tiempo real</li>
+    </ul>
+    <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      👉 <a href="https://autorentar.com/pitch-flotas" style="color: #2563eb; font-weight: 600;">Ver la propuesta de partnership completa</a>
+    </p>
+  </div>
 
   ${signature()}
 </div>`,
@@ -570,19 +614,24 @@ function getTemplate(vertical: Vertical): EmailTemplate {
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; line-height: 1.7; color: #1f2937;">
   <p>Estimados,</p>
 
-  <p>Me llamo <strong>Eduardo Marques</strong>, fundador de <strong>AutoRentar</strong>. Les escribo porque ${lead.note.toLowerCase()}.</p>
+  <p>Me llamo <strong>Eduardo Marques</strong>, fundador serial de <strong>AutoRentar</strong> (movilidad P2P), <strong>Ecucondor</strong> (pagos internacionales AR/BR/EC) y <strong>Autamedica</strong> (healthtech). Les escribo porque ${lead.note.toLowerCase()}.</p>
 
   <p>AutoRentar es una plataforma de alquiler de autos P2P que <strong>no requiere tarjeta de crédito</strong> — acepta débito, transferencias y MercadoPago. El 80% de los turistas argentinos no tiene tarjeta de crédito con cupo suficiente para el depósito tradicional de las rentadoras.</p>
 
-  <h3 style="color: #0891b2; margin-top: 20px;">Partnership para ${lead.company}</h3>
-  <ul>
-    <li><strong>Comisión:</strong> Por cada reserva originada desde su plataforma/hotel</li>
-    <li><strong>Cero inversión:</strong> No necesitan comprar autos ni gestionar flota</li>
-    <li><strong>Integración digital:</strong> Link personalizado o API para reservas directas</li>
-    <li><strong>Flota eléctrica:</strong> BYD Dolphin Mini disponibles en destinos turísticos</li>
-  </ul>
-
-  <p>Adjunto la propuesta. ¿Les interesaría una llamada para explorar la integración?</p>
+  <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border-left: 4px solid #2563eb; border-radius: 8px;">
+    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px;">
+      🚀 Propuesta 1 — Partnership para ${lead.company}
+    </p>
+    <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #374151; font-size: 14px;">
+      <li><strong>Comisión:</strong> Por cada reserva originada desde su plataforma/hotel</li>
+      <li><strong>Cero inversión:</strong> No necesitan comprar autos ni gestionar flota</li>
+      <li><strong>Integración digital:</strong> Link personalizado o API para reservas directas</li>
+      <li><strong>Flota eléctrica:</strong> BYD Dolphin Mini disponibles en destinos turísticos</li>
+    </ul>
+    <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      👉 <a href="https://autorentar.com/pitch-turismo" style="color: #2563eb; font-weight: 600;">Ver la propuesta de partnership completa</a>
+    </p>
+  </div>
 
   ${signature()}
 </div>`,
@@ -595,19 +644,24 @@ function getTemplate(vertical: Vertical): EmailTemplate {
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; line-height: 1.7; color: #1f2937;">
   <p>Estimados,</p>
 
-  <p>Me llamo <strong>Eduardo Marques</strong>, fundador de <strong>AutoRentar</strong>. Les escribo porque ${lead.note.toLowerCase()}.</p>
+  <p>Me llamo <strong>Eduardo Marques</strong>, fundador serial de <strong>AutoRentar</strong> (movilidad P2P), <strong>Ecucondor</strong> (pagos internacionales AR/BR/EC) y <strong>Autamedica</strong> (healthtech). Les escribo porque ${lead.note.toLowerCase()}.</p>
 
   <p>AutoRentar opera un modelo de <strong>propiedad fraccionada de vehículos eléctricos</strong> para plataformas de movilidad. Creemos que hay una oportunidad de <strong>sinergia estratégica</strong> entre lo que ustedes construyeron y lo que nosotros aportamos.</p>
 
-  <h3 style="color: #0891b2; margin-top: 20px;">Lo que traemos</h3>
-  <ul>
-    <li><strong>Financiamiento descentralizado:</strong> 2,000 micro-inversores financian cada vehículo</li>
-    <li><strong>Flota eléctrica:</strong> BYD Dolphin Mini con 60-85% ahorro en energía</li>
-    <li><strong>Plataforma tecnológica:</strong> Wallet, verificación biométrica, inspecciones AI, OBD2</li>
-    <li><strong>Modelo escalable:</strong> Sin depender de capital propio para crecer la flota</li>
-  </ul>
-
-  <p>Adjunto el deck. ¿Tendría sentido explorar una conversación?</p>
+  <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border-left: 4px solid #2563eb; border-radius: 8px;">
+    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px;">
+      🚀 Propuesta 1 — Sinergia estratégica
+    </p>
+    <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #374151; font-size: 14px;">
+      <li><strong>Financiamiento descentralizado:</strong> 2,000 micro-inversores financian cada vehículo</li>
+      <li><strong>Flota eléctrica:</strong> BYD Dolphin Mini con 60-85% ahorro en energía</li>
+      <li><strong>Plataforma tecnológica:</strong> Wallet, verificación biométrica, inspecciones AI, OBD2</li>
+      <li><strong>Modelo escalable:</strong> Sin depender de capital propio para crecer la flota</li>
+    </ul>
+    <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      👉 <a href="https://autorentar.com/pitch-inversores" style="color: #2563eb; font-weight: 600;">Ver el deck completo del proyecto</a>
+    </p>
+  </div>
 
   ${signature()}
 </div>`,
@@ -620,18 +674,23 @@ function getTemplate(vertical: Vertical): EmailTemplate {
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; line-height: 1.7; color: #1f2937;">
   <p>Estimados,</p>
 
-  <p>Me llamo <strong>Eduardo Marques</strong>, fundador de <strong>AutoRentar</strong>. Les escribo porque ${lead.note.toLowerCase()}.</p>
+  <p>Me llamo <strong>Eduardo Marques</strong>, fundador serial de <strong>AutoRentar</strong> (movilidad P2P), <strong>Ecucondor</strong> (pagos internacionales AR/BR/EC) y <strong>Autamedica</strong> (healthtech). Les escribo porque ${lead.note.toLowerCase()}.</p>
 
   <p>AutoRentar opera vehículos eléctricos BYD en Buenos Aires bajo un modelo de propiedad fraccionada. Cada auto tiene <strong>seguro todo riesgo obligatorio</strong> + un Fondo de Garantía complementario. Estamos buscando un partner asegurador digital para escalar la flota.</p>
 
-  <h3 style="color: #0891b2; margin-top: 20px;">Oportunidad</h3>
-  <ul>
-    <li><strong>Roadmap:</strong> 1 → 10 → 30 → 100 vehículos en 24 meses</li>
-    <li><strong>Perfil de riesgo:</strong> Choferes verificados, OBD2, geocerca, controles operativos</li>
-    <li><strong>Integración:</strong> API-first, cotización y emisión automatizada</li>
-  </ul>
-
-  <p>¿Podríamos agendar una llamada para explorar un producto de seguro para flota EV?</p>
+  <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border-left: 4px solid #2563eb; border-radius: 8px;">
+    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px;">
+      🚀 Propuesta 1 — Seguro para flota EV fraccionada
+    </p>
+    <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #374151; font-size: 14px;">
+      <li><strong>Roadmap:</strong> 1 → 10 → 30 → 100 vehículos en 24 meses</li>
+      <li><strong>Perfil de riesgo:</strong> Choferes verificados, OBD2, geocerca, controles operativos</li>
+      <li><strong>Integración:</strong> API-first, cotización y emisión automatizada</li>
+    </ul>
+    <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      👉 <a href="https://autorentar.com/pitch-inversores" style="color: #2563eb; font-weight: 600;">Ver el deck completo del proyecto</a>
+    </p>
+  </div>
 
   ${signature()}
 </div>`,
@@ -644,18 +703,23 @@ function getTemplate(vertical: Vertical): EmailTemplate {
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; line-height: 1.7; color: #1f2937;">
   <p>Estimados,</p>
 
-  <p>Me llamo <strong>Eduardo Marques</strong>, fundador de <strong>AutoRentar</strong>. Les escribo porque ${lead.note.toLowerCase()}.</p>
+  <p>Me llamo <strong>Eduardo Marques</strong>, fundador serial de <strong>AutoRentar</strong> (movilidad P2P), <strong>Ecucondor</strong> (pagos internacionales AR/BR/EC) y <strong>Autamedica</strong> (healthtech). Les escribo porque ${lead.note.toLowerCase()}.</p>
 
   <p>AutoRentar compra vehículos eléctricos BYD financiados por <strong>2,000 micro-inversores</strong>. Cada auto se fracciona en participaciones de USD $12.50. Nuestro roadmap incluye 10 autos en 6 meses y 100 en 24 meses. <strong>Necesitamos un proveedor de vehículos confiable.</strong></p>
 
-  <h3 style="color: #0891b2; margin-top: 20px;">Propuesta</h3>
-  <ul>
-    <li><strong>Volumen:</strong> 10-100 BYD Dolphin Mini en 24 meses</li>
-    <li><strong>Pago:</strong> Contado (los fragmentos se venden antes de la compra)</li>
-    <li><strong>Servicio:</strong> Mantenimiento incluido en el acuerdo</li>
-  </ul>
-
-  <p>Adjunto el deck del proyecto. ¿Podríamos coordinar una reunión?</p>
+  <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border-left: 4px solid #2563eb; border-radius: 8px;">
+    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px;">
+      🚀 Propuesta 1 — Canal de venta BYD
+    </p>
+    <ul style="margin: 0 0 12px 0; padding-left: 20px; color: #374151; font-size: 14px;">
+      <li><strong>Volumen:</strong> 10-100 BYD Dolphin Mini en 24 meses</li>
+      <li><strong>Pago:</strong> Contado (los fragmentos se venden antes de la compra)</li>
+      <li><strong>Servicio:</strong> Mantenimiento incluido en el acuerdo</li>
+    </ul>
+    <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      👉 <a href="https://autorentar.com/pitch-concesionarias" style="color: #2563eb; font-weight: 600;">Ver la propuesta completa para concesionarias</a>
+    </p>
+  </div>
 
   ${signature()}
 </div>`,
@@ -663,16 +727,38 @@ function getTemplate(vertical: Vertical): EmailTemplate {
   }
 }
 
+function bydFractionalPitch(): string {
+  return `
+  <div style="margin-top: 28px; padding: 20px; background: linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%); border-left: 4px solid #0891b2; border-radius: 8px;">
+    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: #0891b2; text-transform: uppercase; letter-spacing: 0.5px;">
+      ⚡ Propuesta 2 — Participación abierta desde USD $12.50
+    </p>
+    <p style="margin: 0 0 10px 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      Independientemente de lo anterior, quiero compartirles algo que estamos lanzando de forma pública: la <strong>primera ronda de propiedad fraccionada</strong> de un vehículo eléctrico BYD Dolphin Mini. Son 2,000 fragmentos de <strong>USD $12.50</strong> cada uno — cualquier persona puede participar directamente desde MercadoPago, sin tarjeta de crédito internacional ni trámites bancarios.
+    </p>
+    <p style="margin: 0 0 10px 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      El auto opera en Buenos Aires con choferes verificados de Uber, Cabify y DiDi, y genera distribuciones mensuales proporcionales al neto. Los escenarios proyectados: <strong>Conservador 8% · Base 14% · Optimista 19% anual</strong> — sin retorno garantizado, con costos 100% transparentes y KM verificados por OBD2.
+    </p>
+    <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">
+      👉 <a href="https://autorentar.com/pitch-byd-inversores" style="color: #0891b2; font-weight: 600;">Ver el modelo completo y simulador de escenarios</a>
+    </p>
+  </div>`;
+}
+
 function signature(): string {
   return `
+  ${bydFractionalPitch()}
   <p style="margin-top: 28px; border-top: 1px solid #e5e7eb; padding-top: 16px;">
     Saludos,<br><br>
     <strong>Eduardo Marques</strong><br>
-    Fundador, AutoRentar<br>
+    Fundador serial — <strong>AutoRentar</strong> (movilidad P2P) · <strong>Ecucondor</strong> (pagos AR/BR/EC) · <strong>Autamedica</strong> (healthtech)<br>
     Alumno, Universidad de Buenos Aires — Medicina<br>
     <a href="https://autorentar.com" style="color: #0891b2;">autorentar.com</a> |
     <a href="https://wa.me/5491166599559" style="color: #0891b2;">WhatsApp</a> |
-    <a href="mailto:adm@autorentar.com" style="color: #0891b2;">adm@autorentar.com</a>
+    <a href="mailto:admin@autorentar.com" style="color: #0891b2;">admin@autorentar.com</a>
+  </p>
+  <p style="margin-top: 16px; font-size: 12px; color: #9ca3af; line-height: 1.5;">
+    PD: Para cuidar la privacidad del grupo, si querés conversar respondeme en privado (sin "Responder a todos") o por <a href="https://wa.me/5491166599559" style="color: #9ca3af;">WhatsApp</a>.
   </p>`;
 }
 
