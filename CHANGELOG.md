@@ -1,3 +1,21 @@
+## <small>3.95.10 (2026-02-13)</small>
+
+* chore: add operational insights section to CLAUDE.md ([8bc53a5](https://github.com/ecucondorSA/autorenta/commit/8bc53a5))
+* chore: add REGLA #3 and #4 to CLAUDE.md for integration validation ([0805936](https://github.com/ecucondorSA/autorenta/commit/0805936)), closes [#3](https://github.com/ecucondorSA/autorenta/issues/3) [#4](https://github.com/ecucondorSA/autorenta/issues/4)
+* fix(db): add bookings.cancelled_by_role and fix orphan trigger functions ([420c825](https://github.com/ecucondorSA/autorenta/commit/420c825))
+* fix(db): add phantom booking columns used by v2 RPCs and automation ([d83d0a0](https://github.com/ecucondorSA/autorenta/commit/d83d0a0))
+* fix(db): fix referral system reward triggers and schema ([28ea9a9](https://github.com/ecucondorSA/autorenta/commit/28ea9a9))
+* fix(db): restore KYC blocking system and fix integration drift ([bf7cd07](https://github.com/ecucondorSA/autorenta/commit/bf7cd07))
+* fix(deposit): sync description property with signal for input binding ([9daf0d8](https://github.com/ecucondorSA/autorenta/commit/9daf0d8))
+* fix(enums): align frontend types with production DB enum values ([4712d4f](https://github.com/ecucondorSA/autorenta/commit/4712d4f))
+* fix(payments): add auth token refresh retry to Edge Function invocations ([c2eff6a](https://github.com/ecucondorSA/autorenta/commit/c2eff6a))
+* fix(payments): read payer email from auth.user instead of phantom profile column ([070b3ba](https://github.com/ecucondorSA/autorenta/commit/070b3ba))
+* fix(referrals): update reward amounts and add missing tracking columns ([f357520](https://github.com/ecucondorSA/autorenta/commit/f357520))
+* fix(scout): add cleanup for realtime channel to prevent memory leak ([53bad2f](https://github.com/ecucondorSA/autorenta/commit/53bad2f))
+* fix(security): migrate CORS wildcard to domain whitelist in 7 Edge Functions ([0a21ef7](https://github.com/ecucondorSA/autorenta/commit/0a21ef7))
+* fix(security): prevent IDOR in save-user-card by validating JWT identity ([24c3a7d](https://github.com/ecucondorSA/autorenta/commit/24c3a7d))
+* fix(security): stop leaking error.message in subscription Edge Function responses ([9d39045](https://github.com/ecucondorSA/autorenta/commit/9d39045))
+
 ## <small>3.95.9 (2026-02-13)</small>
 
 * fix(ci): add corrective RPC migrations to guardrails baseline + membership docs ([6bcdc0f](https://github.com/ecucondorSA/autorenta/commit/6bcdc0f))
