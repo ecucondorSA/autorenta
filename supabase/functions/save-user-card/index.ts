@@ -44,14 +44,36 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseAnon = Deno.env.get('SUPABASE_ANON_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const body: SaveCardRequest = await req.json();
-    const { user_id, card_token, set_as_default = true } = body;
-
-    if (!user_id || !card_token) {
+    // AUTH: Verify the caller's identity via JWT (OWASP A01 — prevent IDOR)
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
       return new Response(
-        JSON.stringify({ success: false, error: 'user_id y card_token son requeridos' }),
+        JSON.stringify({ success: false, error: 'Authentication required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    const userClient = createClient(supabaseUrl, supabaseAnon, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: { user: authUser }, error: authError } = await userClient.auth.getUser();
+    if (authError || !authUser) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Invalid or expired token' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const body: SaveCardRequest = await req.json();
+    const { card_token, set_as_default = true } = body;
+    // Use authenticated user ID, ignore any user_id from body
+    const user_id = authUser.id;
+
+    if (!card_token) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'card_token es requerido' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
