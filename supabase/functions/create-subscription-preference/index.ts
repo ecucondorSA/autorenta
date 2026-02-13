@@ -34,28 +34,29 @@ const getMercadoPagoAccessToken = (): string => {
   return cleaned;
 };
 
-// Subscription tier configurations - ALL 3 TIERS
+// Subscription tier configurations - MONTHLY billing
+// Source of truth: apps/web/src/app/core/models/subscription.model.ts
 const SUBSCRIPTION_TIERS = {
   club_standard: {
     name: 'Club Access',
-    price_cents: 30000,
-    price_usd: 300,
-    coverage_limit_cents: 80000,
-    coverage_limit_usd: 800,
+    price_cents: 1999,       // USD 19.99/mes
+    price_usd: 19.99,
+    coverage_limit_cents: 300000,  // USD 3,000
+    coverage_limit_usd: 3000,
   },
   club_black: {
     name: 'Silver Access',
-    price_cents: 60000,
-    price_usd: 600,
-    coverage_limit_cents: 120000,
-    coverage_limit_usd: 1200,
+    price_cents: 3499,       // USD 34.99/mes
+    price_usd: 34.99,
+    coverage_limit_cents: 600000,  // USD 6,000
+    coverage_limit_usd: 6000,
   },
   club_luxury: {
     name: 'Black Access',
-    price_cents: 120000,
-    price_usd: 1200,
-    coverage_limit_cents: 200000,
-    coverage_limit_usd: 2000,
+    price_cents: 6999,       // USD 69.99/mes
+    price_usd: 69.99,
+    coverage_limit_cents: 1500000, // USD 15,000
+    coverage_limit_usd: 15000,
   },
 } as const;
 
@@ -212,7 +213,7 @@ serve(async (req) => {
 
     const itemDescription = isUpgrade
       ? `Upgrade de ${upgradeInfo.current_tier} a ${tierConfig.name} - diferencia de suscripción`
-      : description || `Membresía anual ${tierConfig.name} con cobertura de $${tierConfig.coverage_limit_usd} USD`;
+      : description || `Membresía mensual ${tierConfig.name} con cobertura de $${tierConfig.coverage_limit_usd} USD`;
 
     const preferenceData = {
       purpose: 'wallet_purchase',

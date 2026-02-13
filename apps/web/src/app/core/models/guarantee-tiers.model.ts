@@ -164,6 +164,27 @@ export const MEMBERSHIP_CONFIG: Record<Exclude<MembershipPlan, 'none'>, Membersh
 };
 
 // ============================================================================
+// OPERATIONAL FLOOR — Minimum hold regardless of membership discount
+// Prevents holds from dropping below operational cost of a claim
+// ============================================================================
+export const OPERATIONAL_FLOOR: Record<VehicleTier, number> = {
+  starter: 150,
+  economy: 250,
+  standard: 400,
+  silver: 750,
+  premium: 1250,
+  luxury: 2500,  // Raised from $2,000 Black discount to $2,500
+};
+
+/**
+ * Activation lock: minimum wallet lock at subscription purchase.
+ * Acts as "skin in the game" — user commits starter floor ($150)
+ * when buying membership. Released when subscription expires.
+ * At booking time, the full guarantee locks separately.
+ */
+export const ACTIVATION_LOCK_USD = OPERATIONAL_FLOOR.starter; // $150
+
+// ============================================================================
 // CÁLCULO DE HOLD Y BUY-DOWN
 // ============================================================================
 
@@ -229,9 +250,11 @@ export function calcHoldAndBuydown(
     };
   }
 
-  // Calcular descuento
+  // Calcular descuento con operational floor
   const discount = memberConfig.holdDiscountPct;
-  const holdFinal = Math.round(baseHold * (1 - discount));
+  const holdDiscounted = Math.round(baseHold * (1 - discount));
+  const floor = OPERATIONAL_FLOOR[vehicleTier];
+  const holdFinal = Math.max(holdDiscounted, floor);
   const buyDown = baseHold - holdFinal;
 
   return {
