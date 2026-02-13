@@ -1,3 +1,7 @@
+## <small>3.95.9 (2026-02-13)</small>
+
+* fix(ci): add corrective RPC migrations to guardrails baseline + membership docs ([6bcdc0f](https://github.com/ecucondorSA/autorenta/commit/6bcdc0f))
+
 ## <small>3.95.8 (2026-02-13)</small>
 
 * fix(pricing): increase Club Access from $19.99 → $24.99/mes ([ed8d76e](https://github.com/ecucondorSA/autorenta/commit/ed8d76e))
