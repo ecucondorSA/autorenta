@@ -101,8 +101,11 @@ Para cualquier feature o bug de datos, analizar y validar siempre en dos niveles
 
 ---
 
-## 3. 🧠 Insights Operativos (Gotchas)
+### 3. 🧠 Insights Operativos (Gotchas)
 
+- **Payload Trust (Seguridad Crítica):** En Edge Functions, **NUNCA** confiar en `req.body.user_id`. Es input de usuario manipulable. La única fuente de verdad para la identidad es `auth.getUser()` (JWT).
+- **The "Hollow Backend" Risk:** Una función SQL o Servicio que retorna `true` hardcodeado (Stub) o Mock Data no es una "tarea pendiente", es un **BUG CRÍTICO DE PRIORIDAD 0**. Crea una falsa sensación de progreso y oculta fallos sistémicos.
+- **Atomicidad Financiera:** Toda operación de "Compra" o "Pago" DEBE incluir el descuento en `user_wallets` y el registro en `wallet_ledger` dentro de la misma transacción lógica. Si no mueve dinero, no es una compra.
 - **MCP Migration Drift:** Si los timestamps de migraciones locales difieren de `supabase_migrations.schema_migrations` en prod, `db push` fallará. Alinear manualmente si es necesario.
 - **PL/pgSQL Lazy Validation:** Postgres no valida nombres de columnas en el cuerpo de funciones hasta el tiempo de ejecución. **Siempre** verificar nombres de columnas contra la DB real antes de deployar.
 - **Supabase UPDATE:** Requiere `WHERE` explícito. Usar `WHERE true` si se desea afectar toda la tabla.
@@ -121,15 +124,16 @@ Para cualquier feature o bug de datos, analizar y validar siempre en dos niveles
   - **Estilos:** Tailwind CSS (Utility-first, sin SCSS complejos).
   - **Backend:** Supabase (PostgreSQL, Edge Functions, Auth, Storage).
   - **Automatización:** Python & TypeScript Scripts (`tools/`).
-- **Filosofía:** "Tabula Rasa" (Mantener limpio, refactorizar sin miedo, eliminar deuda técnica).
+- **Filosofía Actual:** "Excelencia Operacional" (Features completas -> Optimizar, Blindar, Escalar).
 
-### Estado Actual (Session Notes)
-- **CI/CD:** Web deploy funcionando. Android requiere verificación de `cordova.variables.gradle`.
-- **MercadoPago:** Integración P2P operativa pero requiere supervisión en selección de destinatarios.
+### Estado Actual (Phase 2: Optimization & Hardening)
+- **Foco:** Ya NO se implementan features básicas. El objetivo es refactorizar, mejorar performance y seguridad nivel Senior.
+- **Deuda Técnica:** Tolerancia Cero. Se eliminan stubs, `any` y TODOs.
+- **CI/CD:** Web deploy funcionando. Tests unitarios base pasando.
+- **MercadoPago:** Integración P2P y Split operativa y blindada.
+- **Identity:** Verificación (KYC) real y protegida contra fraude.
 - **Design:** EVITAR Wizards paso a paso y Modales intrusivos. Preferir navegación fluida y Bottom Sheets.
-- **Unit Tests:** deben pasar en CI (`pnpm test:unit:ci`). Si tocás lógica core, correr `pnpm test:unit` local.
-- **Supabase:** Proyecto activo `aceacpaockyxgogxsfyc`. Proyecto anterior `pisqjmoklivzpwufhscx` deprecado por quota exceeded.
-- **Autos (2026-02-08):** `pending` depende SOLO de verificación nivel 2 (`profiles.id_verified`). Marketplace muestra `active` + `pending`. La DB bloquea `active` sin `id_verified` (trigger). UI: `pending` visible con overlay gris y no reservable/no clickeable.
+
 
 ### Modelo de Negocio: Comodato 15-70-15
 Distribución de pagos de reservas:
