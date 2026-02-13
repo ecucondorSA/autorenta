@@ -1,3 +1,11 @@
+## <small>3.95.11 (2026-02-13)</small>
+
+* chore(cleanup): remove 10 additional orphan Edge Functions (-2,804 lines) ([b0926fd](https://github.com/ecucondorSA/autorenta/commit/b0926fd))
+* chore(cleanup): remove 5 orphan Edge Functions, 10 orphan RPCs, 2 dead model files ([2dc7ba2](https://github.com/ecucondorSA/autorenta/commit/2dc7ba2))
+* chore(types): regenerate database.types.ts after P0 migrations ([29bddab](https://github.com/ecucondorSA/autorenta/commit/29bddab))
+* fix(ux): replace internal jargon with user-friendly copy in Club membership ([cd34f1e](https://github.com/ecucondorSA/autorenta/commit/cd34f1e))
+* fix(security+stability): OWASP A04 error leakage in 64 Edge Functions + 3 memory/realtime fixes ([215cd25](https://github.com/ecucondorSA/autorenta/commit/215cd25)), closes [#5](https://github.com/ecucondorSA/autorenta/issues/5)
+
 ## <small>3.95.10 (2026-02-13)</small>
 
 * chore: add operational insights section to CLAUDE.md ([8bc53a5](https://github.com/ecucondorSA/autorenta/commit/8bc53a5))
