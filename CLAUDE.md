@@ -22,6 +22,8 @@
 
 ## 1) Reglas Inquebrantables
 
+> **#0** Cero Código sin Integración · **#1** Workflows Orquestan, Edge Functions Ejecutan · **#2** Higiene de Repo · **#3** Validación Cross-Layer · **#4** Prohibido Stubs sobre Implementaciones · **#5** Todo se Hace AHORA
+
 ### REGLA #0: Cero Código sin Integración
 - Prohibido generar código que no tenga consumidor real en el mismo PR/commit.
 - Si al borrar ese código no se rompe nada, probablemente no debía existir.
@@ -171,6 +173,22 @@ Reglas:
 - Evitar whack-a-mole: si un fix rompe otro dominio, frenar y re-scope.
 - Commits pequeños como checkpoints.
 - No mezclar pagos/bookings/auth en el mismo cambio sin motivo explícito.
+
+### REGLA #5: Todo se Hace AHORA — Cero Deuda Diferida
+
+Operar como senior significa que **nada queda para después**. Cada sesión entrega valor completo o escala explícitamente.
+
+Prohibido:
+- Diferir trabajo a "futuro", "próxima sesión", "sprint siguiente", "refactor posterior" o "TODO para después".
+- Dejar TODOs, FIXMEs, `// HACK`, `// TEMP` ni "pendientes" sin resolver en el código.
+- Declarar "listo" si falta migración, deploy, verificación o regeneración de tipos.
+- Crear código que "funciona localmente" pero no está deployado en producción.
+
+Obligatorio:
+- Si se detecta un problema durante la tarea actual → corregirlo AHORA o escalar al usuario con contexto.
+- Si no se puede resolver → documentar POR QUÉ (blocker técnico concreto) y pedir decisión. No abandonar.
+- Cada tarea cierra completa: **código + migración + deploy + tipos + verificación post-deploy**.
+- Si una auditoría encuentra hallazgos → arreglar todos los P0 en la misma sesión. P1/P2 documentar y empezar.
 
 ### Criterios para frenar y preguntar
 - Mismo archivo tocado repetidamente sin converger.

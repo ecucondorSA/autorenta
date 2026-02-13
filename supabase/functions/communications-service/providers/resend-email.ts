@@ -53,7 +53,7 @@ export class ResendProvider implements IEmailProvider {
       return { 
         success: false, 
         provider: 'resend', 
-        error: err instanceof Error ? err.message : String(err) 
+        error: 'Internal server error' 
       };
     }
   }

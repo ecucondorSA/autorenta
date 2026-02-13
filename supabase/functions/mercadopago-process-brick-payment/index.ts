@@ -385,7 +385,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error processing payment:', error);
 
-    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+    const errorMessage = 'Error desconocido';
 
     return new Response(
       JSON.stringify({

@@ -276,7 +276,7 @@ serve(async (req: Request) => {
       JSON.stringify({
         success: false,
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: 'Unknown error'
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

@@ -435,7 +435,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: 'Unknown error',
       }),
       {
         status: 400,
@@ -974,7 +974,7 @@ async function generateMarketingImage(
     return { content: { base64: base64Data }, debug: 'SUCCESS' };
   } catch (error) {
     console.error('[generate-marketing-content] Image generation error:', error);
-    return { debug: `EXCEPTION: ${error instanceof Error ? error.message : String(error)}` };
+    return { debug: `EXCEPTION: ${'Internal server error'}` };
   }
 }
 
@@ -1040,7 +1040,7 @@ async function uploadMarketingImageToStorage(params: {
     return { publicUrl, path: filePath };
   } catch (error) {
     console.error('[uploadMarketingImageToStorage] Exception:', error);
-    return { error: error instanceof Error ? error.message : 'Unknown storage error' };
+    return { error: 'Unknown storage error' };
   }
 }
 

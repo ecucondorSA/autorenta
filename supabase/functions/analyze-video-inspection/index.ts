@@ -527,7 +527,7 @@ serve(async (req: Request) => {
         },
         warnings: [],
         summary: 'Error al analizar',
-        error: error instanceof Error ? error.message : 'Error desconocido',
+        error: 'Error desconocido',
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

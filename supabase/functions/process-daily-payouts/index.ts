@@ -303,7 +303,7 @@ serve(async (req: Request) => {
         return new Response(
             JSON.stringify({
                 success: false,
-                error: error.message || 'Unknown error',
+                error: 'Unknown error',
                 duration_ms: Date.now() - startTime,
                 partial_results: results,
             }),

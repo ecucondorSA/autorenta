@@ -357,7 +357,7 @@ ${fixResponse.patches.map((p: Patch, i: number) =>
             console.error('[Edge Brain] Failed to create PR:', err);
             return new Response(JSON.stringify({
                 message: 'Failed to create PR',
-                error: err instanceof Error ? err.message : String(err)
+                error: 'Internal server error'
             }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
                 status: 500,
@@ -374,7 +374,7 @@ ${fixResponse.patches.map((p: Patch, i: number) =>
     } catch (error) {
         console.error('[Edge Brain] Fatal error:', error);
         return new Response(JSON.stringify({
-            error: error instanceof Error ? error.message : String(error)
+            error: 'Internal server error'
         }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             status: 500,

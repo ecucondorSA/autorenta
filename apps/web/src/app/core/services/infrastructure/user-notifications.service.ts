@@ -61,6 +61,8 @@ export class NotificationsService implements OnDestroy {
   private realtimeChannel: RealtimeChannel | null = null;
   private isSubscribed = false;
   private reconnectTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private reconnectAttempts = 0;
+  private readonly maxReconnectAttempts = 10;
 
   // Callbacks para notificar cambios a los componentes suscritos
   private onChangeCallbacks: Set<() => void> = new Set();
@@ -263,6 +265,7 @@ export class NotificationsService implements OnDestroy {
           if (status === 'SUBSCRIBED') {
             this.connectionStatus.set('connected');
             this.isSubscribed = true;
+            this.reconnectAttempts = 0;
             this.logger.debug(
               '[NotificationsService] ✅ Successfully subscribed to Realtime notifications',
             );
@@ -270,28 +273,12 @@ export class NotificationsService implements OnDestroy {
             this.connectionStatus.set('error');
             this.isSubscribed = false;
             this.logger.error('[NotificationsService] Realtime channel error', 'NotificationsService');
-
-            // Intentar reconectar después de 5 segundos
-            if (this.reconnectTimeoutId !== null) {
-              clearTimeout(this.reconnectTimeoutId);
-            }
-            this.reconnectTimeoutId = setTimeout(() => {
-              this.logger.debug('[NotificationsService] Attempting to reconnect...');
-              void this.subscribeToRealtime();
-            }, 5000);
+            this.scheduleReconnect();
           } else if (status === 'TIMED_OUT') {
             this.connectionStatus.set('error');
             this.isSubscribed = false;
             this.logger.warn('[NotificationsService] Realtime subscription timed out');
-
-            // Intentar reconectar después de 5 segundos
-            if (this.reconnectTimeoutId !== null) {
-              clearTimeout(this.reconnectTimeoutId);
-            }
-            this.reconnectTimeoutId = setTimeout(() => {
-              this.logger.debug('[NotificationsService] Attempting to reconnect after timeout...');
-              void this.subscribeToRealtime();
-            }, 5000);
+            this.scheduleReconnect();
           } else if (status === 'CLOSED') {
             this.connectionStatus.set('disconnected');
             this.isSubscribed = false;
@@ -302,16 +289,32 @@ export class NotificationsService implements OnDestroy {
       this.logger.error('[NotificationsService] Error subscribing to Realtime', 'NotificationsService', error);
       this.connectionStatus.set('error');
       this.isSubscribed = false;
-
-      // Intentar reconectar después de 5 segundos
-      if (this.reconnectTimeoutId !== null) {
-        clearTimeout(this.reconnectTimeoutId);
-      }
-      this.reconnectTimeoutId = setTimeout(() => {
-        this.logger.debug('[NotificationsService] Attempting to reconnect after error...');
-        void this.subscribeToRealtime();
-      }, 5000);
+      this.scheduleReconnect();
     }
+  }
+
+  private scheduleReconnect(): void {
+    if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+      this.logger.error(
+        `[NotificationsService] Max reconnection attempts (${this.maxReconnectAttempts}) exceeded. Giving up.`,
+        'NotificationsService',
+      );
+      return;
+    }
+
+    if (this.reconnectTimeoutId !== null) {
+      clearTimeout(this.reconnectTimeoutId);
+    }
+
+    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
+    this.reconnectAttempts++;
+    this.logger.debug(
+      `[NotificationsService] Reconnect attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts} in ${delay}ms`,
+    );
+
+    this.reconnectTimeoutId = setTimeout(() => {
+      void this.subscribeToRealtime();
+    }, delay);
   }
 
   /**

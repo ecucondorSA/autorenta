@@ -257,14 +257,14 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    const errorMessage = 'Internal server error';
     const errorStack = error instanceof Error ? error.stack : '';
     console.error('❌ Error in passkeys-authentication-verify:', errorMessage, errorStack);
     return new Response(
       JSON.stringify({
         success: false,
         error: errorMessage,
-        debug: errorStack?.substring(0, 500),
+        debug: undefined,
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

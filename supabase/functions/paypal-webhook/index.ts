@@ -223,7 +223,7 @@ serve(async (req: Request) => {
     return new Response(
       JSON.stringify({
         status: 'error',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: 'Unknown error',
       }),
       {
         status: 500,

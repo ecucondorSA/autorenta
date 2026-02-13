@@ -319,7 +319,7 @@ Deno.serve(async (req) => {
     );
 
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    const errorMessage = 'Internal server error';
     console.error('[get-fipe-catalog] Error:', error);
 
     // Check if it's a rate limiting error

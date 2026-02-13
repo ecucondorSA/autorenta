@@ -184,7 +184,7 @@ serve(async (req) => {
       timestamp: new Date().toISOString(),
       duration_ms: duration,
       stats,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: 'Unknown error',
     };
 
     return new Response(JSON.stringify(result), {

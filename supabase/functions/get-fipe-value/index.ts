@@ -522,7 +522,7 @@ async function getFipeValueRealtime(
     console.error('❌ Error in getFipeValueRealtime:', error);
     return {
       success: false,
-      error: `Error consultando FIPE: ${error.message}`,
+      error: 'Error consultando FIPE',
       errorCode: 'UNEXPECTED_ERROR',
       suggestions: [
         'Verifica tu conexión a internet',
@@ -584,7 +584,7 @@ Deno.serve(async (req) => {
       },
     );
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Error interno del servidor';
+    const errorMessage = 'Error interno del servidor';
     console.error('💥 Edge function error:', error);
     return new Response(
       JSON.stringify({

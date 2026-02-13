@@ -223,7 +223,7 @@ export async function detectPlatesHandler(req: Request): Promise<Response> {
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Error desconocido',
+        error: 'Error desconocido',
       }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );

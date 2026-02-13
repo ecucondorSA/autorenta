@@ -335,7 +335,7 @@ serve(async (req: Request) => {
       JSON.stringify({
         success: false,
         damages: [],
-        error: error instanceof Error ? error.message : 'Error desconocido',
+        error: 'Error desconocido',
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

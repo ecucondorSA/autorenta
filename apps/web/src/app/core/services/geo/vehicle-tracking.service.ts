@@ -166,6 +166,17 @@ export class VehicleTrackingService implements OnDestroy {
   // Battery monitoring
   private batteryLevel: number | null = null;
   private isCharging = false;
+  private batteryRef: BatteryManager | null = null;
+  private readonly onBatteryLevelChange = () => {
+    if (this.batteryRef) {
+      this.batteryLevel = Math.round(this.batteryRef.level * 100);
+    }
+  };
+  private readonly onBatteryChargingChange = () => {
+    if (this.batteryRef) {
+      this.isCharging = this.batteryRef.charging;
+    }
+  };
 
   // =============================================================================
   // PUBLIC METHODS
@@ -246,6 +257,9 @@ export class VehicleTrackingService implements OnDestroy {
       this.updateInterval.unsubscribe();
       this.updateInterval = null;
     }
+
+    // Stop battery monitoring
+    this.stopBatteryMonitoring();
 
     // Reset state
     this.activeBookingId = null;
@@ -576,26 +590,31 @@ export class VehicleTrackingService implements OnDestroy {
   }
 
   private startBatteryMonitoring(): void {
-    if (!this.isBrowser || !('getBattery' in navigator)) return;
+    if (!this.isBrowser || !('getBattery' in navigator) || this.batteryRef) return;
 
     (navigator as Navigator & { getBattery(): Promise<BatteryManager> })
       .getBattery()
       .then((battery: BatteryManager) => {
+        this.batteryRef = battery;
         this.batteryLevel = Math.round(battery.level * 100);
         this.isCharging = battery.charging;
 
-        battery.addEventListener('levelchange', () => {
-          this.batteryLevel = Math.round(battery.level * 100);
-        });
-        battery.addEventListener('chargingchange', () => {
-          this.isCharging = battery.charging;
-        });
+        battery.addEventListener('levelchange', this.onBatteryLevelChange);
+        battery.addEventListener('chargingchange', this.onBatteryChargingChange);
 
         this.updateStatus({ batteryLevel: this.batteryLevel });
       })
       .catch(() => {
         // Battery API not available
       });
+  }
+
+  private stopBatteryMonitoring(): void {
+    if (this.batteryRef) {
+      this.batteryRef.removeEventListener('levelchange', this.onBatteryLevelChange);
+      this.batteryRef.removeEventListener('chargingchange', this.onBatteryChargingChange);
+      this.batteryRef = null;
+    }
   }
 
   private getNetworkType(): string | undefined {
@@ -647,4 +666,5 @@ interface BatteryManager extends EventTarget {
   charging: boolean;
   level: number;
   addEventListener(type: 'levelchange' | 'chargingchange', listener: EventListener): void;
+  removeEventListener(type: 'levelchange' | 'chargingchange', listener: EventListener): void;
 }

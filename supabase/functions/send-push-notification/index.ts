@@ -266,7 +266,7 @@ async function sendFCMv1Notification(
     return { success: true };
   } catch (error) {
     console.error('FCM v1 request failed:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: 'Internal server error' };
   }
 }
 
@@ -539,7 +539,7 @@ serve(async (req) => {
     console.error('Edge function error:', error);
     return new Response(JSON.stringify({
       success: false,
-      error: error.message
+      error: 'Internal server error'
     }), {
       headers: { 'Content-Type': 'application/json' },
       status: 500,

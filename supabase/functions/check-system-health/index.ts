@@ -69,7 +69,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         status: 'critical',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: 'Unknown error',
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

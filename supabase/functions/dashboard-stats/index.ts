@@ -220,7 +220,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         error: 'Failed to fetch dashboard stats',
-        message: error instanceof Error ? error.message : String(error),
+        message: 'Internal server error',
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

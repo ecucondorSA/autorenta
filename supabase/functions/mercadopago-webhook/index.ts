@@ -1563,7 +1563,7 @@ serve(async (req: Request) => {
           .update({
             processed: false,
             processed_at: null,
-            processing_error: error instanceof Error ? error.message : String(error),
+            processing_error: 'Internal server error',
           })
           .eq('event_id', req.headers.get('x-request-id') || '');
       }
@@ -1573,8 +1573,8 @@ serve(async (req: Request) => {
 
     // ✅ CRITICAL FIX: Retornar 500 para que MercadoPago reintente
     log.error('❌ Critical error processing webhook - will be retried', {
-      error: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined,
+      error: 'Unknown error',
+      stack: undefined,
       timestamp: new Date().toISOString(),
     });
 
@@ -1584,7 +1584,7 @@ serve(async (req: Request) => {
       JSON.stringify({
         error: 'Internal server error processing webhook',
         retry: true,
-        details: error instanceof Error ? error.message : 'Unknown error',
+        details: 'Unknown error',
       }),
       {
         status: 500,

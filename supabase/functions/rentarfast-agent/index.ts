@@ -760,7 +760,7 @@ async function executeSearchCars(
 
   if (error) {
     console.error('[SEARCH] ERROR:', JSON.stringify(error));
-    return { error: `Error en búsqueda: ${error.message}` };
+    return { error: 'Error en búsqueda' };
   }
 
   console.log('[SEARCH] Raw data count:', data?.length || 0);
@@ -1436,7 +1436,7 @@ async function executeAnalyzeVehicleDamage(
     console.error('[AI VISION] Error:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error al analizar daños',
+      error: 'Error al analizar daños',
     };
   }
 }
@@ -1520,7 +1520,7 @@ async function executeSmartVerifyDocument(
     console.error('[AI VISION] Error:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error al verificar documento',
+      error: 'Error al verificar documento',
     };
   }
 }
@@ -1849,7 +1849,7 @@ serve(async (req) => {
       JSON.stringify({
         success: false,
         error: 'Failed to process message',
-        message: error instanceof Error ? error.message : String(error),
+        message: 'Internal server error',
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

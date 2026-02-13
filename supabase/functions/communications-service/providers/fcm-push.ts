@@ -90,7 +90,7 @@ export class FcmProvider implements IPushProvider {
       return { 
         success: false, 
         provider: 'fcm', 
-        error: err instanceof Error ? err.message : String(err) 
+        error: 'Internal server error' 
       };
     }
   }

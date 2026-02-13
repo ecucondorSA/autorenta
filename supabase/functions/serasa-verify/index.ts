@@ -324,7 +324,7 @@ serve(async (req: Request) => {
         success: false,
         error: 'INTERNAL_ERROR',
         message: 'Erro interno do servidor',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: 'Unknown error'
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

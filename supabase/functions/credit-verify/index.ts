@@ -153,7 +153,7 @@ serve(async (req: Request) => {
         has_issues: false,
         country: 'unknown',
         error: 'Error interno del servidor',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: 'Unknown error'
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

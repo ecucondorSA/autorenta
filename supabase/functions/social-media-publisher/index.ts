@@ -140,7 +140,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: 'Unknown error',
       }),
       {
         status: 400,
@@ -294,7 +294,7 @@ async function publishToTikTok(
     return {
       success: false,
       platform: 'tiktok',
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: 'Unknown error',
     };
   }
 }
@@ -413,7 +413,7 @@ async function publishToInstagram(
     return {
       success: false,
       platform: 'instagram',
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: 'Unknown error',
     };
   }
 }
@@ -532,7 +532,7 @@ async function publishToFacebook(
     return {
       success: false,
       platform: 'facebook',
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: 'Unknown error',
     };
   }
 }
@@ -599,7 +599,7 @@ async function publishToTwitter(
     return {
       success: false,
       platform: 'twitter',
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: 'Unknown error',
     };
   }
 }

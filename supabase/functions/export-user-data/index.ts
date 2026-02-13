@@ -254,7 +254,7 @@ serve(async (req) => {
       },
     });
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorMessage = 'Internal server error';
     console.error('[Export User Data] Error:', errorMessage);
 
     return new Response(

@@ -183,7 +183,7 @@ serve(async (req) => {
           new_expires_at: newExpiresAt.toISOString(),
         });
       } catch (err: unknown) {
-        const errorMessage = err instanceof Error ? err.message : String(err);
+        const errorMessage = 'Internal server error';
         log.error(`Unexpected error for ${account.id}: ${errorMessage}`, err);
         results.push({
           user_id: account.id,

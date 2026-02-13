@@ -205,7 +205,7 @@ async function sendTikTokEvent(
     console.error('Error sending TikTok event:', error);
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: 'Unknown error',
     };
   }
 }
@@ -326,7 +326,7 @@ serve(async (req) => {
       JSON.stringify({
         success: false,
         error: 'internal_error',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        message: 'Unknown error',
       }),
       {
         status: 200, // Avoid surfacing tracking errors to users

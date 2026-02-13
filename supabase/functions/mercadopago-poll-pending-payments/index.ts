@@ -212,7 +212,7 @@ serve(async (req: Request) => {
         results.push({
           transaction_id: deposit.id,
           status: 'not_found',
-          message: error instanceof Error ? error.message : 'Unknown error',
+          message: 'Unknown error',
         });
       }
     }
@@ -239,7 +239,7 @@ serve(async (req: Request) => {
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Internal server error',
+        error: 'Internal server error',
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

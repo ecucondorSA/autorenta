@@ -256,6 +256,7 @@ export class BookingRealtimeService implements OnDestroy {
   private currentUserId: string | null = null;
   private currentRole: 'owner' | 'renter' | null = null;
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private isUserBookingsDestroyed = false;
 
   /**
    * Subscribe to realtime updates for a user's bookings list.
@@ -278,12 +279,16 @@ export class BookingRealtimeService implements OnDestroy {
     const filterColumn = role === 'owner' ? 'owner_id' : 'renter_id';
     this.logger.debug(`[BookingRealtime] Subscribing to ${role} bookings for user: ${userId}`);
 
+    this.isUserBookingsDestroyed = false;
+
     // Debounced handler to avoid rapid-fire refreshes
     const debouncedHandler = () => {
+      if (this.isUserBookingsDestroyed) return;
       if (this.debounceTimer) {
         clearTimeout(this.debounceTimer);
       }
       this.debounceTimer = setTimeout(() => {
+        if (this.isUserBookingsDestroyed) return;
         this.logger.debug(`[BookingRealtime] User bookings changed (${role})`);
         handlers.onBookingsChange?.();
       }, 300); // 300ms debounce
@@ -310,6 +315,7 @@ export class BookingRealtimeService implements OnDestroy {
    * Unsubscribe from user bookings list channels
    */
   unsubscribeUserBookings(): void {
+    this.isUserBookingsDestroyed = true;
     if (this.userChannels.length === 0) return;
 
     this.logger.debug(

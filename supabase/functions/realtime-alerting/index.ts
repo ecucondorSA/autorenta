@@ -634,7 +634,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         error: 'Alert processing failed',
-        message: error instanceof Error ? error.message : String(error),
+        message: 'Internal server error',
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 },
     );

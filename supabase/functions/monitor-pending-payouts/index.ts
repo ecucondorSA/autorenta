@@ -224,15 +224,15 @@ Deno.serve(async (req) => {
       title: '🚨 Monitor Pending Payouts Function Failed',
       message: 'The payout monitoring function encountered an error',
       metadata: {
-        error_message: error instanceof Error ? error.message : String(error),
-        error_stack: error instanceof Error ? error.stack : undefined,
+        error_message: 'Internal server error',
+        error_stack: undefined,
       },
     });
 
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: 'Unknown error',
       }),
       {
         status: 500,

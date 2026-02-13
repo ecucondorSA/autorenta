@@ -63,7 +63,7 @@ serve(async (req: Request) => {
         duration_ms: Date.now() - stepStart,
       });
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
+      const message = 'Internal server error';
       console.error(`[antifraud] Step 1 FAILED:`, message);
       results.push({
         step: 'calculate_daily_points',
@@ -103,7 +103,7 @@ serve(async (req: Request) => {
         duration_ms: Date.now() - stepStart,
       });
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
+      const message = 'Internal server error';
       console.error(`[antifraud] Step 2 FAILED:`, message);
       results.push({
         step: 'detect_gaming_signals',
@@ -139,7 +139,7 @@ serve(async (req: Request) => {
         duration_ms: Date.now() - stepStart,
       });
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
+      const message = 'Internal server error';
       console.error(`[antifraud] Step 3 FAILED:`, message);
       results.push({
         step: 'update_monthly_summaries',
@@ -171,7 +171,7 @@ serve(async (req: Request) => {
         duration_ms: Date.now() - stepStart,
       });
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
+      const message = 'Internal server error';
       console.error(`[antifraud] Step 4 FAILED:`, message);
       results.push({
         step: 'expire_old_signals',

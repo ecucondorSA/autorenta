@@ -63,7 +63,7 @@ export class TwilioWhatsAppProvider implements IWhatsAppProvider {
       return { 
         success: false, 
         provider: 'twilio', 
-        error: err instanceof Error ? err.message : String(err) 
+        error: 'Internal server error' 
       };
     }
   }

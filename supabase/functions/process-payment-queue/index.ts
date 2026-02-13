@@ -43,7 +43,7 @@ async function capturePayment(paymentId: string, amount: number): Promise<{ succ
 
     return { success: true, data };
   } catch (err) {
-    return { success: false, error: err instanceof Error ? err.message : String(err) };
+    return { success: false, error: 'Internal server error' };
   }
 }
 
