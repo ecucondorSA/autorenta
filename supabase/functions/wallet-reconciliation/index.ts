@@ -6,7 +6,7 @@
 // ============================================================================
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { sendReconciliationAlert } from '../_shared/alerts.ts';
 import { getCorsHeaders } from '../_shared/cors.ts';
 
@@ -32,9 +32,30 @@ interface ReconciliationReport {
 
 interface WalletRow {
   user_id: string;
-  balance_cents: number;
+  balance_cents: number | null; // Can be null if using old system
   available_balance_cents: number;
   locked_balance_cents: number;
+}
+
+interface LedgerEntry {
+  kind:
+    | 'deposit'
+    | 'transfer_in'
+    | 'refund'
+    | 'rental_payment'
+    | 'bonus'
+    | 'transfer_out'
+    | 'rental_charge'
+    | 'franchise_user'
+    | 'franchise_fund'
+    | 'withdrawal'
+    | 'adjustment'
+    | 'fee';
+  amount_cents: number;
+}
+
+interface FundRow {
+  balance_cents: number;
 }
 
 const JSON_CONTENT_TYPE = { 'Content-Type': 'application/json' };
@@ -63,7 +84,7 @@ function normalizeError(error: unknown): string {
   }
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   const corsHeaders = getCorsHeaders(req);
 
   // CORS preflight
@@ -79,7 +100,7 @@ serve(async (req) => {
     const supabaseServiceRoleKey = getRequiredEnv('SUPABASE_SERVICE_ROLE_KEY');
 
     // Usar service role key directamente (función administrativa)
-    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+    const supabase: SupabaseClient = createClient(supabaseUrl, supabaseServiceRoleKey);
 
     console.log('[Reconciliation] Starting wallet reconciliation...');
 
@@ -88,21 +109,22 @@ serve(async (req) => {
     // ========================================
 
     // Obtener todos los usuarios con wallet
-    const { data: wallets, error: walletsError } = await supabase
+    const { data: walletsData, error: walletsError } = await supabase
       .from('user_wallets')
       .select('user_id, balance_cents, available_balance_cents, locked_balance_cents');
 
     if (walletsError) throw walletsError;
-    const typedWallets = (wallets ?? []) as WalletRow[];
+    // Explicit casting to ensure we handle the data structure correctly
+    const wallets = (walletsData ?? []) as unknown as WalletRow[];
 
-    console.log(`[Reconciliation] Found ${typedWallets.length} user wallets`);
+    console.log(`[Reconciliation] Found ${wallets.length} user wallets`);
 
     const discrepancies: ReconciliationResult[] = [];
     let totalDifference = 0;
 
     // Para cada usuario, calcular balance desde ledger
-    for (const wallet of typedWallets) {
-      const { data: ledgerEntries, error: ledgerError } = await supabase
+    for (const wallet of wallets) {
+      const { data: ledgerData, error: ledgerError } = await supabase
         .from('wallet_ledger')
         .select('kind, amount_cents')
         .eq('user_id', wallet.user_id);
@@ -111,6 +133,8 @@ serve(async (req) => {
         console.error(`Error fetching ledger for user ${wallet.user_id}:`, ledgerError);
         continue;
       }
+
+      const ledgerEntries = (ledgerData ?? []) as unknown as LedgerEntry[];
 
       // Calcular balance desde ledger
       let calculatedBalance = 0;
@@ -126,7 +150,7 @@ serve(async (req) => {
         }
       }
 
-      const storedBalance = typeof wallet.balance_cents === 'number'
+      const storedBalance = (wallet.balance_cents !== null && wallet.balance_cents !== undefined)
         ? wallet.balance_cents
         : wallet.available_balance_cents + wallet.locked_balance_cents;
       const difference = storedBalance - calculatedBalance;
@@ -167,10 +191,11 @@ serve(async (req) => {
     if (fundError) {
       console.warn('[Reconciliation] coverage_fund not available, skipping:', fundError.message);
     } else {
-      fundBalance = fundData.balance_cents;
+      const typedFundData = fundData as unknown as FundRow;
+      fundBalance = typedFundData.balance_cents;
 
       // Calcular balance del fondo desde ledger
-      const { data: fundLedger, error: fundLedgerError } = await supabase
+      const { data: fundLedgerData, error: fundLedgerError } = await supabase
         .from('wallet_ledger')
         .select('kind, amount_cents')
         .in('kind', ['franchise_user', 'franchise_fund']);
@@ -178,6 +203,7 @@ serve(async (req) => {
       if (fundLedgerError) {
         console.warn('[Reconciliation] Could not read fund ledger entries:', fundLedgerError.message);
       } else {
+        const fundLedger = (fundLedgerData ?? []) as unknown as LedgerEntry[];
         for (const entry of fundLedger) {
           if (entry.kind === 'franchise_fund') {
             calculatedFundBalance += entry.amount_cents;
@@ -205,8 +231,8 @@ serve(async (req) => {
 
     const report: ReconciliationReport = {
       timestamp: new Date().toISOString(),
-      total_users: typedWallets.length,
-      users_checked: typedWallets.length,
+      total_users: wallets.length,
+      users_checked: wallets.length,
       discrepancies_found: discrepancies.length,
       total_difference: totalDifference,
       users_with_issues: discrepancies,
@@ -239,7 +265,7 @@ serve(async (req) => {
       // Future: Integrar con Slack/Email cuando esté configurado
       try {
         await sendReconciliationAlert(
-          discrepancies.map(d => ({
+          discrepancies.map((d) => ({
             user_id: d.user_id,
             stored_balance: d.stored_balance,
             calculated_balance: d.calculated_balance,
@@ -281,6 +307,7 @@ serve(async (req) => {
       JSON.stringify({
         success: false,
         error: 'Reconciliation failed',
+        details: normalizedError,
       }),
       {
         status: 500,

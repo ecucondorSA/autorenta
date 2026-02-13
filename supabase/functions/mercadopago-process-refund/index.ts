@@ -18,7 +18,7 @@
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 
 // Tipos
@@ -29,8 +29,11 @@ interface ProcessRefundRequest {
   reason?: string;  // Motivo del reembolso
 }
 
+interface RefundPayload {
+  amount?: number;
+}
 
-serve(async (req) => {
+serve(async (req: Request) => {
   // ✅ SECURITY: CORS con whitelist de dominios permitidos
   const corsHeaders = getCorsHeaders(req);
 
@@ -75,7 +78,7 @@ serve(async (req) => {
     }
 
     // Crear cliente de Supabase
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+    const supabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
     // Obtener usuario autenticado
     const { data: { user }, error: authError } = await supabase.auth.getUser(
@@ -150,7 +153,9 @@ serve(async (req) => {
 
     // Validar ownership (solo renter, owner, o admin pueden procesar reembolsos)
     const isRenter = booking.renter_id === user.id;
-    const isOwner = booking.car?.owner_id === user.id;
+    // Explicit casting to handle potential 'any' type from join if not strictly typed
+    const carData = booking.car as unknown as { owner_id: string } | null;
+    const isOwner = carData?.owner_id === user.id;
     const { data: profile } = await supabase
       .from('profiles')
       .select('is_admin')
@@ -230,9 +235,10 @@ serve(async (req) => {
       refund_amount: refundAmount,
     });
 
-    const refundData: any = {
-      ...(refund_type === 'partial' && { amount: refundAmount }),
-    };
+    const refundData: RefundPayload = {};
+    if (refund_type === 'partial') {
+      refundData.amount = refundAmount;
+    }
 
     const mpResponse = await fetch(
       `https://api.mercadopago.com/v1/payments/${paymentId}/refunds`,
@@ -369,4 +375,5 @@ serve(async (req) => {
     );
   }
 });
+
 

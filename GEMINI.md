@@ -57,10 +57,18 @@ Contexto: en 2025-2026 el repo acumuló ruido por artefactos temporales, reporte
   2. Migraciones `DROP/CREATE TABLE` deben preservar TODAS las columnas existentes.
   3. Verificar post-deploy que la lógica crítica (ej: KYC) sigue activa.
 
-### REGLA #5: Todo se Hace AHORA (Cero Deuda Diferida)
-- Prohibido dejar TODOs, FIXMEs o "para el próximo sprint".
-- Si algo está roto, se arregla HOY o se escala como blocker.
-- Una tarea termina solo con: **código + migración + deploy + tipos + verificación**.
+### REGLA #5: Tolerancia Cero a TODOs (Zero Debt Policy)
+- **Prohibición Total:** Está terminantemente prohibido dejar `// TODO`, `// FIXME`, o comentarios tipo "optimizar luego" en el código entregado.
+- **Filosofía:** Si una tarea es necesaria, se implementa AHORA. Si no es necesaria, no se menciona.
+- **Excepciones Únicas:** Solo se permite un `TODO` en estos 3 casos extremos, y DEBE seguir el formato estricto: `// TODO(tipo): [Contexto] Razón detallada`.
+
+| Tipo | Uso Permitido | Ejemplo |
+|------|---------------|---------|
+| `blocked` | Bloqueo externo real (API de terceros caída o inexistente). | `// TODO(blocked): [MercadoPago] Esperando soporte para API v3 en Q4 2026` |
+| `risk` | La solución correcta requiere una migración de datos masiva y peligrosa que debe planificarse. | `// TODO(risk): [Ledger] Requiere migración de 1M de filas antes de activar constraint` |
+| `flag` | Código oculto detrás de un Feature Flag explícito para despliegue progresivo. | `// TODO(flag): [Biometría] Habilitar cuando AWS Rekognition suba cuota` |
+
+- **Cualquier otro TODO será considerado un error de compilación por el agente.**
 
 ---
 

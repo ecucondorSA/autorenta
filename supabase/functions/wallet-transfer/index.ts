@@ -6,7 +6,7 @@
 // ============================================================================
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
@@ -24,8 +24,14 @@ interface TransferRequest {
   meta?: Record<string, unknown>;
 }
 
+interface WalletTransferRpcResponse {
+  success: boolean;
+  transaction_id?: string;
+  error?: string;
+  message?: string;
+}
 
-serve(async (req) => {
+serve(async (req: Request) => {
   // ✅ SECURITY: CORS con whitelist de dominios permitidos
   const corsHeaders = getCorsHeaders(req);
 
@@ -63,10 +69,10 @@ serve(async (req) => {
     }
 
     // Use service role only for privileged reads (auth verification, recipient lookup, rate limit).
-    const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const supabaseAdmin: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // Use user JWT context for RPCs that enforce auth.uid() inside Postgres.
-    const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    const supabaseUser: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
 
@@ -165,7 +171,7 @@ serve(async (req) => {
     }
 
     // 6. EJECUTAR TRANSFERENCIA VÍA RPC
-    const { data: result, error: transferError } = await supabaseUser.rpc('wallet_transfer', {
+    const { data, error: transferError } = await supabaseUser.rpc('wallet_transfer', {
       p_from_user: user.id,
       p_to_user: body.to_user_id,
       p_amount_cents: body.amount_cents,
@@ -204,11 +210,13 @@ serve(async (req) => {
       );
     }
 
+    // Explicitly cast the RPC result
+    const result = data as WalletTransferRpcResponse;
+
     // RPC returns a JSON object even on business errors (success=false).
     if (!result || result.success !== true) {
-      const errCode = (result && typeof result.error === 'string' ? result.error : 'TRANSFER_FAILED') as string;
-      const message =
-        result && typeof result.message === 'string' ? result.message : 'Transfer failed';
+      const errCode = result?.error || 'TRANSFER_FAILED';
+      const message = result?.message || 'Transfer failed';
 
       const status = errCode === 'UNAUTHORIZED' ? 403 : 400;
       return new Response(
