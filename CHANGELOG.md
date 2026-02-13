@@ -1,3 +1,7 @@
+## <small>3.95.3 (2026-02-13)</small>
+
+* fix(subscriptions): align pricing to monthly billing and add operational safeguards ([daaa80a](https://github.com/ecucondorSA/autorenta/commit/daaa80a))
+
 ## <small>3.95.2 (2026-02-13)</small>
 
 * fix(verification): wire up selfie capture to face verification flow ([1b81074](https://github.com/ecucondorSA/autorenta/commit/1b81074))
