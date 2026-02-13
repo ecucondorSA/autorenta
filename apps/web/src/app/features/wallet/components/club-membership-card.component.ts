@@ -65,7 +65,7 @@ import { SUBSCRIPTION_STATUS_LABELS, type SubscriptionTier } from '@core/models/
             (click)="join.emit('club_standard')"
             class="flex-1 py-3 px-4 rounded-xl bg-cta-default text-cta-text font-bold text-sm hover:bg-cta-hover transition-all shadow-md shadow-cta-default/20 active:scale-95"
           >
-            Unirse por $19.99/mes
+            Unirse por $24.99/mes
           </button>
           <button
             (click)="viewPlans.emit()"

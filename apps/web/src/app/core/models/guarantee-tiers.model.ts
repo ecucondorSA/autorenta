@@ -122,7 +122,7 @@ export const MEMBERSHIP_CONFIG: Record<Exclude<MembershipPlan, 'none'>, Membersh
   club: {
     plan: 'club',
     name: 'Club Access',
-    priceMonthlyUsd: 19.99,
+    priceMonthlyUsd: 24.99,
     holdDiscountPct: 0.25, // 25% descuento
     maxVehicleTier: 'standard', // Hasta autos de USD 25,000
     features: [

@@ -6,7 +6,7 @@
  * Updated: 2026-02-11 (Aligned with 6-tier guarantee matrix)
  *
  * Tiers basados en valor del vehículo:
- * - Club Access ($19.99/mes) - Autos hasta USD 25,000
+ * - Club Access ($24.99/mes) - Autos hasta USD 25,000
  * - Silver Access ($34.99/mes) - Autos hasta USD 70,000
  * - Black Access ($69.99/mes) - Toda la flota (incluye luxury)
  */
@@ -187,8 +187,8 @@ export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, SubscriptionTierConfig
     tier: 'club_standard',
     name: 'Club Access',
     description: 'Hasta autos Standard (USD 25,000)',
-    price_cents: 1999, // USD 19.99/mes
-    price_usd: 19.99,
+    price_cents: 2499, // USD 24.99/mes
+    price_usd: 24.99,
     coverage_limit_cents: 300000, // USD 3,000 cobertura membresía
     coverage_limit_usd: 3000,
     fgo_cap_cents: 150000, // USD 1,500 FGO cap

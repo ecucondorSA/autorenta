@@ -56,7 +56,7 @@ import {
             </div>
             <div>
               <p class="text-sm font-black text-text-primary uppercase tracking-tight">1. Elegí un plan</p>
-              <p class="text-xs text-text-secondary">Membresía mensual desde USD 19.99</p>
+              <p class="text-xs text-text-secondary">Membresía mensual desde USD 24.99</p>
             </div>
           </div>
           <div class="flex items-center gap-4 bg-surface-secondary/50 rounded-2xl p-5 border border-border-default">
