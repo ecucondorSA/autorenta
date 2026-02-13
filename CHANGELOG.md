@@ -1,3 +1,7 @@
+## <small>3.95.12 (2026-02-13)</small>
+
+* fix(db): align migration timestamps with remote schema_migrations ([c47e576](https://github.com/ecucondorSA/autorenta/commit/c47e576))
+
 ## <small>3.95.11 (2026-02-13)</small>
 
 * chore(cleanup): remove 10 additional orphan Edge Functions (-2,804 lines) ([b0926fd](https://github.com/ecucondorSA/autorenta/commit/b0926fd))
