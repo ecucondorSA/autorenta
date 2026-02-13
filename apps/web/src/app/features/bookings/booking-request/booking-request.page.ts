@@ -48,7 +48,7 @@ import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skel
 // Components
 import { DateRangePickerComponent } from '@shared/components/date-range-picker/date-range-picker.component';
 import { DateRange } from '@core/models/marketplace.model';
-import { Car } from '../../../core/models';
+import { Car, subscriptionTierToMembershipPlan } from '../../../core/models';
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
 
 // Extended FxSnapshot with dual rates
@@ -781,7 +781,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     this.eligibilityReason.set(riskV2.eligibilityReason || '');
 
     // Construct RiskSnapshot for compatibility
-    const standardDeductibleUsd = calculateTierHoldUsd(vehicleValueUsd, false);
+    const membershipPlan = subscriptionTierToMembershipPlan(userTier);
+    const standardDeductibleUsd = calculateTierHoldUsd(vehicleValueUsd, membershipPlan);
 
     // We maintain 'holdEstimatedUsd' to drive the logic downstream
     const holdEstimatedUsd = riskV2.guaranteeAmountUsd;

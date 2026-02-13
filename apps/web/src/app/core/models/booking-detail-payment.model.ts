@@ -4,7 +4,7 @@
  */
 
 import type { CurrencyCode } from './fgo-v1-1.model';
-import { calcHoldAndBuydown, getVehicleTierByValue } from './guarantee-tiers.model';
+import { type MembershipPlan, calcHoldAndBuydown, getVehicleTierByValue } from './guarantee-tiers.model';
 
 // ============================================================================
 // TIPOS BASE
@@ -423,12 +423,11 @@ export function applyUpgradeToDeductible(baseDeductible: number, upgrade: Covera
 
 /**
  * Calcula hold basado en el modelo canónico de garantías (guarantee-tiers.model).
- * `hasSubscription=true` mantiene compatibilidad histórica aplicando referencia Black (50% OFF).
+ * Acepta MembershipPlan para aplicar el descuento correcto según la membresía del usuario.
  */
-export function calculateTierHoldUsd(vehicleValueUsd: number, hasSubscription = false): number {
+export function calculateTierHoldUsd(vehicleValueUsd: number, plan: MembershipPlan = 'none'): number {
   const vehicleTier = getVehicleTierByValue(vehicleValueUsd);
-  const membershipPlan = hasSubscription ? 'black' : 'none';
-  return calcHoldAndBuydown(vehicleTier, membershipPlan).holdUsd;
+  return calcHoldAndBuydown(vehicleTier, plan).holdUsd;
 }
 
 /**
@@ -440,7 +439,7 @@ export function calculateHoldEstimatedArs(
   bucket: PricingBucketType,
 ): number {
   void bucket; // deprecated: se mantiene solo para compatibilidad
-  const holdUsd = calculateTierHoldUsd(vehicleValueUsd, false);
+  const holdUsd = calculateTierHoldUsd(vehicleValueUsd);
   return Math.round(holdUsd * fxRate);
 }
 
@@ -448,7 +447,7 @@ export function calculateHoldEstimatedArs(
  * Calcula Crédito de Seguridad requerido (modalidad sin tarjeta) - USD
  */
 export function calculateCreditSecurityUsd(vehicleValueUsd: number): number {
-  return calculateTierHoldUsd(vehicleValueUsd, false);
+  return calculateTierHoldUsd(vehicleValueUsd);
 }
 
 /**

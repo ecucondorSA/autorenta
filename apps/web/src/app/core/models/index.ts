@@ -270,6 +270,10 @@ export interface UserProfile {
   mercadopago_site_id?: string | null;
   mercadopago_oauth_state?: string | null;
 
+  // Platform restrictions (set by damage waterfall when user has unpaid debt)
+  platform_blocked?: boolean;
+  pending_debt_cents?: number;
+
   // Timestamps
   created_at: string;
   updated_at?: string;

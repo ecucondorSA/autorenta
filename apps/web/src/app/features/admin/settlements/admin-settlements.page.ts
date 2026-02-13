@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AdminFeatureFacadeService } from '@core/services/facades/admin-feature-facade.service';
-import { Claim, SettlementService } from '@core/services/payments/settlement.service';
+import { type Claim, type DamageItem, SettlementService } from '@core/services/payments/settlement.service';
 
 /**
  * Admin Settlements Page
@@ -74,13 +74,10 @@ export class AdminSettlementsPage implements OnInit {
     this.error.set(null);
 
     try {
-      // TODO: En producción, estos claims vendrían de la base de datos
-      // Por ahora, generamos datos mock para demostración
-      const mockClaims = await this.generateMockClaims();
-      this.claims.set(mockClaims);
-
-      // Calculate stats
-      this.calculateStats(mockClaims);
+      const rawClaims = await this.adminFacade.listClaims();
+      const claims = this.mapDbClaims(rawClaims);
+      this.claims.set(claims);
+      this.calculateStats(claims);
     } catch {
       this.error.set('Error al cargar claims');
     } finally {
@@ -88,59 +85,21 @@ export class AdminSettlementsPage implements OnInit {
     }
   }
 
-  private async generateMockClaims(): Promise<Claim[]> {
-    // Get some recent bookings to attach claims to
-    const bookings = (await this.adminFacade.listCompletedBookings(10)) as Array<{
-      id: string;
-      car_id: string;
-      renter_id: string;
-      owner_id: string;
-    }>;
-
-    if (!bookings || bookings.length === 0) {
-      return [];
-    }
-
-    // Generate mock claims
-    const mockClaims: Claim[] = bookings.slice(0, 5).map((booking, index) => {
-      const statuses: Claim['status'][] = [
-        'submitted',
-        'under_review',
-        'approved',
-        'rejected',
-        'draft',
-      ];
-      const status = statuses[index % statuses.length];
-
-      return {
-        id: `claim_${crypto.randomUUID().substring(0, 8)}`,
-        bookingId: booking.id,
-        reportedBy: booking.owner_id,
-        damages: [
-          {
-            type: 'scratch',
-            description: 'Rayón en puerta delantera derecha',
-            estimatedCostUsd: 150,
-            photos: [],
-            severity: 'moderate',
-          },
-          {
-            type: 'dent',
-            description: 'Abolladura en capó',
-            estimatedCostUsd: 300,
-            photos: [],
-            severity: 'severe',
-          },
-        ],
-        totalEstimatedCostUsd: 450,
-        status,
-        notes: `Claim #${index + 1} - Daños reportados por el owner al finalizar la renta`,
-        createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
-        updatedAt: new Date(),
-      };
-    });
-
-    return mockClaims;
+  private mapDbClaims(rows: Array<Record<string, unknown>>): Claim[] {
+    return rows.map((row) => ({
+      id: row['id'] as string,
+      bookingId: row['booking_id'] as string,
+      reportedBy: row['reported_by'] as string,
+      damages: (row['damages'] as DamageItem[]) || [],
+      totalEstimatedCostUsd: Number(row['total_estimated_cost_usd']) || 0,
+      status: row['status'] as Claim['status'],
+      notes: (row['notes'] as string) || undefined,
+      createdAt: new Date(row['created_at'] as string),
+      updatedAt: new Date(row['updated_at'] as string),
+      lockedAt: row['locked_at'] ? new Date(row['locked_at'] as string) : undefined,
+      lockedBy: (row['locked_by'] as string) || undefined,
+      processedAt: row['processed_at'] ? new Date(row['processed_at'] as string) : undefined,
+    }));
   }
 
   private calculateStats(claims: Claim[]): void {

@@ -315,6 +315,26 @@ export class AdminFeatureFacadeService {
     return (data as Array<Record<string, unknown>>) || [];
   }
 
+  async listClaims(statusFilter?: string): Promise<Array<Record<string, unknown>>> {
+    let query = this.supabase
+      .from('claims')
+      .select('id, booking_id, reported_by, damages, total_estimated_cost_usd, status, notes, locked_at, locked_by, processed_at, created_at, updated_at')
+      .order('created_at', { ascending: false })
+      .limit(50);
+
+    if (statusFilter && statusFilter !== 'all') {
+      query = query.eq('status', statusFilter);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      throw error;
+    }
+
+    return (data as Array<Record<string, unknown>>) || [];
+  }
+
   async listUpcomingCampaigns(): Promise<Array<Record<string, unknown>>> {
     const { data, error } = await this.supabase.from('upcoming_scheduled_campaigns').select('*');
 

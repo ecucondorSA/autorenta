@@ -328,6 +328,21 @@ export function getMembershipPlanName(plan: MembershipPlan): string {
 }
 
 /**
+ * Convierte SubscriptionTier (DB/Edge) a MembershipPlan (modelo de garantías).
+ * club_standard → club, club_black → silver, club_luxury → black
+ */
+export function subscriptionTierToMembershipPlan(
+  tier: 'club_standard' | 'club_black' | 'club_luxury' | null | undefined,
+): MembershipPlan {
+  switch (tier) {
+    case 'club_standard': return 'club';
+    case 'club_black':    return 'silver';
+    case 'club_luxury':   return 'black';
+    default:              return 'none';
+  }
+}
+
+/**
  * Verifica si una membresía puede acceder a un tier de vehículo con descuento
  */
 export function canAccessTierWithDiscount(
