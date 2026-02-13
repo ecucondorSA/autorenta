@@ -1,3 +1,8 @@
+## <small>3.95.6 (2026-02-13)</small>
+
+* fix(db): activation lock release cron + fix dormant column name bugs in RPCs ([f6501a6](https://github.com/ecucondorSA/autorenta/commit/f6501a6))
+* fix(settlements+bookings): real claims data, correct hold calc, platform block guard ([4e1de3b](https://github.com/ecucondorSA/autorenta/commit/4e1de3b))
+
 ## <small>3.95.5 (2026-02-13)</small>
 
 * fix(verify-face): correct column names and CORS headers ([49b47db](https://github.com/ecucondorSA/autorenta/commit/49b47db))
