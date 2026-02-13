@@ -110,9 +110,5 @@
 # SEO landing pages
 /alquiler/*       /index.html   200
 
-# Tino Partnership
-/tino-partnership-pitch  /tino-partnership-pitch.html  200
-/tino-risk-mitigation    /tino-risk-mitigation.html    200
-
 # Error pages
 /error/*          /index.html   200
