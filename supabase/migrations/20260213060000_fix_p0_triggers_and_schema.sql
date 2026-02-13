@@ -36,6 +36,26 @@ WHERE b.cancelled_by_role IS NULL
   AND b.status IN ('cancelled_owner', 'cancelled_renter', 'cancelled_system', 'cancelled');
 
 -- ============================================================
+-- 1b. ADD phantom booking columns (used by booking_v2 RPCs)
+-- ============================================================
+-- These columns are referenced by booking_v2_submit_inspection,
+-- booking_v2_resolve_conclusion, automation_timeouts_v2 cron, and
+-- booking_completion_fix RPCs — all fail at runtime without them.
+
+ALTER TABLE public.bookings
+  ADD COLUMN IF NOT EXISTS has_damages BOOLEAN,
+  ADD COLUMN IF NOT EXISTS damage_amount_cents BIGINT,
+  ADD COLUMN IF NOT EXISTS damage_description TEXT,
+  ADD COLUMN IF NOT EXISTS owner_confirmed_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS renter_confirmed_at TIMESTAMPTZ;
+
+COMMENT ON COLUMN public.bookings.has_damages IS 'Whether owner reported damages during inspection';
+COMMENT ON COLUMN public.bookings.damage_amount_cents IS 'Damage amount in cents claimed by owner';
+COMMENT ON COLUMN public.bookings.damage_description IS 'Description of damages reported by owner';
+COMMENT ON COLUMN public.bookings.owner_confirmed_at IS 'When owner confirmed car delivery/return';
+COMMENT ON COLUMN public.bookings.renter_confirmed_at IS 'When renter confirmed damage payment acceptance';
+
+-- ============================================================
 -- 2. FIX notify_booking_status_change — vault instead of GUC
 -- ============================================================
 -- The GUC current_setting('app.settings.service_role_key', true) was never
