@@ -622,6 +622,33 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bank_accounts: {
         Row: {
           account_holder_id: string
@@ -911,12 +938,15 @@ export type Database = {
           cancellation_reason: string | null
           cancelled_at: string | null
           cancelled_by: string | null
+          cancelled_by_role: string | null
           car_id: string
           completed_at: string | null
           coverage_snapshot: Json | null
           created_at: string | null
           currency: string | null
           daily_rate: number | null
+          damage_amount_cents: number | null
+          damage_description: string | null
           deposit_amount_cents: number | null
           dispute_evidence: Json | null
           dispute_reason: string | null
@@ -924,6 +954,7 @@ export type Database = {
           dropoff_location_id: string | null
           end_at: string
           funds_released_at: string | null
+          has_damages: boolean | null
           id: string
           inspection_comment: string | null
           inspection_evidence: Json | null
@@ -932,11 +963,13 @@ export type Database = {
           is_instant_booking: boolean | null
           notes: string | null
           overdue_hours: number | null
+          owner_confirmed_at: string | null
           owner_confirmed_delivery: boolean | null
           owner_fee: number | null
           owner_id: string
           payment_mode: string | null
           pickup_location_id: string | null
+          renter_confirmed_at: string | null
           renter_confirmed_payment: boolean | null
           renter_id: string
           return_status: string
@@ -958,12 +991,15 @@ export type Database = {
           cancellation_reason?: string | null
           cancelled_at?: string | null
           cancelled_by?: string | null
+          cancelled_by_role?: string | null
           car_id: string
           completed_at?: string | null
           coverage_snapshot?: Json | null
           created_at?: string | null
           currency?: string | null
           daily_rate?: number | null
+          damage_amount_cents?: number | null
+          damage_description?: string | null
           deposit_amount_cents?: number | null
           dispute_evidence?: Json | null
           dispute_reason?: string | null
@@ -971,6 +1007,7 @@ export type Database = {
           dropoff_location_id?: string | null
           end_at: string
           funds_released_at?: string | null
+          has_damages?: boolean | null
           id?: string
           inspection_comment?: string | null
           inspection_evidence?: Json | null
@@ -979,11 +1016,13 @@ export type Database = {
           is_instant_booking?: boolean | null
           notes?: string | null
           overdue_hours?: number | null
+          owner_confirmed_at?: string | null
           owner_confirmed_delivery?: boolean | null
           owner_fee?: number | null
           owner_id: string
           payment_mode?: string | null
           pickup_location_id?: string | null
+          renter_confirmed_at?: string | null
           renter_confirmed_payment?: boolean | null
           renter_id: string
           return_status?: string
@@ -1005,12 +1044,15 @@ export type Database = {
           cancellation_reason?: string | null
           cancelled_at?: string | null
           cancelled_by?: string | null
+          cancelled_by_role?: string | null
           car_id?: string
           completed_at?: string | null
           coverage_snapshot?: Json | null
           created_at?: string | null
           currency?: string | null
           daily_rate?: number | null
+          damage_amount_cents?: number | null
+          damage_description?: string | null
           deposit_amount_cents?: number | null
           dispute_evidence?: Json | null
           dispute_reason?: string | null
@@ -1018,6 +1060,7 @@ export type Database = {
           dropoff_location_id?: string | null
           end_at?: string
           funds_released_at?: string | null
+          has_damages?: boolean | null
           id?: string
           inspection_comment?: string | null
           inspection_evidence?: Json | null
@@ -1026,11 +1069,13 @@ export type Database = {
           is_instant_booking?: boolean | null
           notes?: string | null
           overdue_hours?: number | null
+          owner_confirmed_at?: string | null
           owner_confirmed_delivery?: boolean | null
           owner_fee?: number | null
           owner_id?: string
           payment_mode?: string | null
           pickup_location_id?: string | null
+          renter_confirmed_at?: string | null
           renter_confirmed_payment?: boolean | null
           renter_id?: string
           return_status?: string
@@ -4179,6 +4224,126 @@ export type Database = {
         }
         Relationships: []
       }
+      fragment_distribution_payouts: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          distribution_id: string
+          fragments_held: number
+          id: string
+          status: string
+          user_id: string
+          wallet_ledger_ref: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          currency?: string
+          distribution_id: string
+          fragments_held: number
+          id?: string
+          status?: string
+          user_id: string
+          wallet_ledger_ref?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          distribution_id?: string
+          fragments_held?: number
+          id?: string
+          status?: string
+          user_id?: string
+          wallet_ledger_ref?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fragment_distribution_payouts_distribution_id_fkey"
+            columns: ["distribution_id"]
+            isOneToOne: false
+            referencedRelation: "fragment_distributions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fragment_distributions: {
+        Row: {
+          amount_per_fragment_cents: number
+          booking_id: string
+          created_at: string
+          currency: string
+          id: string
+          total_distributed_cents: number
+          total_fragments_snapshot: number
+          vehicle_asset_id: string
+        }
+        Insert: {
+          amount_per_fragment_cents: number
+          booking_id: string
+          created_at?: string
+          currency?: string
+          id?: string
+          total_distributed_cents: number
+          total_fragments_snapshot: number
+          vehicle_asset_id: string
+        }
+        Update: {
+          amount_per_fragment_cents?: number
+          booking_id?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          total_distributed_cents?: number
+          total_fragments_snapshot?: number
+          vehicle_asset_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fragment_distributions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fragment_distributions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fragment_distributions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fragment_distributions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "fragment_distributions_vehicle_asset_id_fkey"
+            columns: ["vehicle_asset_id"]
+            isOneToOne: false
+            referencedRelation: "v_vehicle_fragment_stats"
+            referencedColumns: ["vehicle_asset_id"]
+          },
+          {
+            foreignKeyName: "fragment_distributions_vehicle_asset_id_fkey"
+            columns: ["vehicle_asset_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fragment_holdings: {
         Row: {
           created_at: string
@@ -4713,6 +4878,90 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      kyc_user_blocks: {
+        Row: {
+          block_type: string
+          blocked_at: string
+          created_at: string
+          details: Json | null
+          id: string
+          reason: string
+          unblock_reason: string | null
+          unblocked_at: string | null
+          unblocked_by: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          block_type: string
+          blocked_at?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          reason: string
+          unblock_reason?: string | null
+          unblocked_at?: string | null
+          unblocked_by?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          block_type?: string
+          blocked_at?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          reason?: string
+          unblock_reason?: string | null
+          unblocked_at?: string | null
+          unblocked_by?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      manual_identity_review_email_requests: {
+        Row: {
+          decided_at: string | null
+          decision_notes: string | null
+          expires_at: string
+          fingerprint: string
+          id: string
+          metadata: Json
+          requested_at: string
+          reviewer_email: string
+          status: string
+          token_hash: string
+          user_id: string
+        }
+        Insert: {
+          decided_at?: string | null
+          decision_notes?: string | null
+          expires_at: string
+          fingerprint: string
+          id?: string
+          metadata?: Json
+          requested_at?: string
+          reviewer_email: string
+          status?: string
+          token_hash: string
+          user_id: string
+        }
+        Update: {
+          decided_at?: string | null
+          decision_notes?: string | null
+          expires_at?: string
+          fingerprint?: string
+          id?: string
+          metadata?: Json
+          requested_at?: string
+          reviewer_email?: string
+          status?: string
+          token_hash?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       marketing_alerts: {
         Row: {
@@ -5593,69 +5842,6 @@ export type Database = {
             columns: ["queue_id"]
             isOneToOne: false
             referencedRelation: "marketing_content_queue"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      mercadopago_accounts: {
-        Row: {
-          access_token: string
-          collector_id: number | null
-          created_at: string | null
-          disconnected_at: string | null
-          disconnection_reason: string | null
-          expires_at: string | null
-          id: string
-          last_synced_at: string | null
-          public_key: string | null
-          refresh_token: string | null
-          status: string | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          access_token: string
-          collector_id?: number | null
-          created_at?: string | null
-          disconnected_at?: string | null
-          disconnection_reason?: string | null
-          expires_at?: string | null
-          id?: string
-          last_synced_at?: string | null
-          public_key?: string | null
-          refresh_token?: string | null
-          status?: string | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          access_token?: string
-          collector_id?: number | null
-          created_at?: string | null
-          disconnected_at?: string | null
-          disconnection_reason?: string | null
-          expires_at?: string | null
-          id?: string
-          last_synced_at?: string | null
-          public_key?: string | null
-          refresh_token?: string | null
-          status?: string | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "mercadopago_accounts_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "me_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "mercadopago_accounts_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -7104,6 +7290,13 @@ export type Database = {
             referencedRelation: "payment_intents"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "payments_payment_intent_id_fkey"
+            columns: ["payment_intent_id"]
+            isOneToOne: false
+            referencedRelation: "v_expiring_preauthorizations"
+            referencedColumns: ["intent_id"]
+          },
         ]
       }
       payouts: {
@@ -7650,6 +7843,13 @@ export type Database = {
             referencedRelation: "payment_intents"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "preauthorizations_payment_intent_id_fkey"
+            columns: ["payment_intent_id"]
+            isOneToOne: false
+            referencedRelation: "v_expiring_preauthorizations"
+            referencedColumns: ["intent_id"]
+          },
         ]
       }
       pricing_class_factors: {
@@ -7850,19 +8050,40 @@ export type Database = {
           cancelled_rentals_count: number | null
           completed_rentals_count: number | null
           created_at: string
+          date_of_birth: string | null
           default_currency: string
           disputes_count: number | null
           email_verified: boolean | null
           email_verified_at: string | null
           full_name: string
+          gov_id_number: string | null
+          gov_id_type: string | null
           id: string
           id_verified: boolean | null
+          identity_country: string | null
+          identity_document_number: string | null
+          identity_locked: boolean | null
+          identity_verified_at: string | null
           is_admin: boolean
           last_cancellation_check: string | null
+          mercadopago_access_token: string | null
+          mercadopago_access_token_expires_at: string | null
+          mercadopago_account_type: string | null
+          mercadopago_collector_id: string | null
+          mercadopago_connected: boolean | null
+          mercadopago_connected_at: string | null
+          mercadopago_country: string | null
+          mercadopago_customer_id: string | null
+          mercadopago_oauth_state: string | null
+          mercadopago_public_key: string | null
+          mercadopago_refresh_token: string | null
+          mercadopago_site_id: string | null
           onboarding: Database["public"]["Enums"]["onboarding_status"]
+          pending_debt_cents: number
           phone: string | null
           phone_verified: boolean | null
           phone_verified_at: string | null
+          platform_blocked: boolean
           rating_avg: number | null
           rating_count: number | null
           renter_level: string | null
@@ -7870,6 +8091,7 @@ export type Database = {
           risk_score: number | null
           risk_score_updated_at: string | null
           role: string
+          selfie_verified_at: string | null
           updated_at: string | null
           visibility_penalty_until: string | null
         }
@@ -7880,19 +8102,40 @@ export type Database = {
           cancelled_rentals_count?: number | null
           completed_rentals_count?: number | null
           created_at?: string
+          date_of_birth?: string | null
           default_currency?: string
           disputes_count?: number | null
           email_verified?: boolean | null
           email_verified_at?: string | null
           full_name: string
+          gov_id_number?: string | null
+          gov_id_type?: string | null
           id: string
           id_verified?: boolean | null
+          identity_country?: string | null
+          identity_document_number?: string | null
+          identity_locked?: boolean | null
+          identity_verified_at?: string | null
           is_admin?: boolean
           last_cancellation_check?: string | null
+          mercadopago_access_token?: string | null
+          mercadopago_access_token_expires_at?: string | null
+          mercadopago_account_type?: string | null
+          mercadopago_collector_id?: string | null
+          mercadopago_connected?: boolean | null
+          mercadopago_connected_at?: string | null
+          mercadopago_country?: string | null
+          mercadopago_customer_id?: string | null
+          mercadopago_oauth_state?: string | null
+          mercadopago_public_key?: string | null
+          mercadopago_refresh_token?: string | null
+          mercadopago_site_id?: string | null
           onboarding?: Database["public"]["Enums"]["onboarding_status"]
+          pending_debt_cents?: number
           phone?: string | null
           phone_verified?: boolean | null
           phone_verified_at?: string | null
+          platform_blocked?: boolean
           rating_avg?: number | null
           rating_count?: number | null
           renter_level?: string | null
@@ -7900,6 +8143,7 @@ export type Database = {
           risk_score?: number | null
           risk_score_updated_at?: string | null
           role?: string
+          selfie_verified_at?: string | null
           updated_at?: string | null
           visibility_penalty_until?: string | null
         }
@@ -7910,19 +8154,40 @@ export type Database = {
           cancelled_rentals_count?: number | null
           completed_rentals_count?: number | null
           created_at?: string
+          date_of_birth?: string | null
           default_currency?: string
           disputes_count?: number | null
           email_verified?: boolean | null
           email_verified_at?: string | null
           full_name?: string
+          gov_id_number?: string | null
+          gov_id_type?: string | null
           id?: string
           id_verified?: boolean | null
+          identity_country?: string | null
+          identity_document_number?: string | null
+          identity_locked?: boolean | null
+          identity_verified_at?: string | null
           is_admin?: boolean
           last_cancellation_check?: string | null
+          mercadopago_access_token?: string | null
+          mercadopago_access_token_expires_at?: string | null
+          mercadopago_account_type?: string | null
+          mercadopago_collector_id?: string | null
+          mercadopago_connected?: boolean | null
+          mercadopago_connected_at?: string | null
+          mercadopago_country?: string | null
+          mercadopago_customer_id?: string | null
+          mercadopago_oauth_state?: string | null
+          mercadopago_public_key?: string | null
+          mercadopago_refresh_token?: string | null
+          mercadopago_site_id?: string | null
           onboarding?: Database["public"]["Enums"]["onboarding_status"]
+          pending_debt_cents?: number
           phone?: string | null
           phone_verified?: boolean | null
           phone_verified_at?: string | null
+          platform_blocked?: boolean
           rating_avg?: number | null
           rating_count?: number | null
           renter_level?: string | null
@@ -7930,6 +8195,7 @@ export type Database = {
           risk_score?: number | null
           risk_score_updated_at?: string | null
           role?: string
+          selfie_verified_at?: string | null
           updated_at?: string | null
           visibility_penalty_until?: string | null
         }
@@ -8206,6 +8472,7 @@ export type Database = {
           reward_type: string | null
           status: string | null
           user_id: string
+          wallet_transaction_id: string | null
         }
         Insert: {
           amount_cents: number
@@ -8220,6 +8487,7 @@ export type Database = {
           reward_type?: string | null
           status?: string | null
           user_id: string
+          wallet_transaction_id?: string | null
         }
         Update: {
           amount_cents?: number
@@ -8234,6 +8502,7 @@ export type Database = {
           reward_type?: string | null
           status?: string | null
           user_id?: string
+          wallet_transaction_id?: string | null
         }
         Relationships: [
           {
@@ -8247,8 +8516,10 @@ export type Database = {
       }
       referrals: {
         Row: {
+          eligible_at: string | null
           first_booking_at: string | null
           first_car_at: string | null
+          first_published_car_id: string | null
           id: string
           referral_code_id: string
           referred_id: string
@@ -8257,14 +8528,17 @@ export type Database = {
           reward_paid_at: string | null
           source: string | null
           status: string
+          trigger_booking_id: string | null
           utm_campaign: string | null
           utm_medium: string | null
           utm_source: string | null
           verified_at: string | null
         }
         Insert: {
+          eligible_at?: string | null
           first_booking_at?: string | null
           first_car_at?: string | null
+          first_published_car_id?: string | null
           id?: string
           referral_code_id: string
           referred_id: string
@@ -8273,14 +8547,17 @@ export type Database = {
           reward_paid_at?: string | null
           source?: string | null
           status?: string
+          trigger_booking_id?: string | null
           utm_campaign?: string | null
           utm_medium?: string | null
           utm_source?: string | null
           verified_at?: string | null
         }
         Update: {
+          eligible_at?: string | null
           first_booking_at?: string | null
           first_car_at?: string | null
+          first_published_car_id?: string | null
           id?: string
           referral_code_id?: string
           referred_id?: string
@@ -8289,6 +8566,7 @@ export type Database = {
           reward_paid_at?: string | null
           source?: string | null
           status?: string
+          trigger_booking_id?: string | null
           utm_campaign?: string | null
           utm_medium?: string | null
           utm_source?: string | null
@@ -9202,6 +9480,7 @@ export type Database = {
       }
       subscriptions: {
         Row: {
+          cancellable_after: string | null
           coverage_limit_cents: number
           created_at: string
           expires_at: string
@@ -9211,6 +9490,7 @@ export type Database = {
           payment_provider: string
           payment_transaction_id: string | null
           plan_id: string | null
+          purchase_amount_cents: number | null
           remaining_balance_cents: number
           starts_at: string
           status: Database["public"]["Enums"]["subscription_status"]
@@ -9219,6 +9499,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          cancellable_after?: string | null
           coverage_limit_cents: number
           created_at?: string
           expires_at: string
@@ -9228,6 +9509,7 @@ export type Database = {
           payment_provider: string
           payment_transaction_id?: string | null
           plan_id?: string | null
+          purchase_amount_cents?: number | null
           remaining_balance_cents: number
           starts_at?: string
           status?: Database["public"]["Enums"]["subscription_status"]
@@ -9236,6 +9518,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          cancellable_after?: string | null
           coverage_limit_cents?: number
           created_at?: string
           expires_at?: string
@@ -9245,6 +9528,7 @@ export type Database = {
           payment_provider?: string
           payment_transaction_id?: string | null
           plan_id?: string | null
+          purchase_amount_cents?: number | null
           remaining_balance_cents?: number
           starts_at?: string
           status?: Database["public"]["Enums"]["subscription_status"]
@@ -9638,13 +9922,18 @@ export type Database = {
           extracted_gender: string | null
           extracted_nationality: string | null
           face_match_score: number | null
+          face_verification_attempts: number | null
+          face_verification_last_failed_at: string | null
           id_verified_at: string | null
+          kyc_blocked_at: string | null
+          kyc_blocked_reason: string | null
           last_ocr_confidence: number | null
           last_ocr_face_confidence: number | null
           last_ocr_has_face: boolean | null
           last_ocr_text_preview: string | null
           liveness_score: number | null
           manual_review_decision: string | null
+          manual_review_notes: string | null
           manual_review_required: boolean | null
           manual_reviewed_at: string | null
           manual_reviewed_by: string | null
@@ -9678,13 +9967,18 @@ export type Database = {
           extracted_gender?: string | null
           extracted_nationality?: string | null
           face_match_score?: number | null
+          face_verification_attempts?: number | null
+          face_verification_last_failed_at?: string | null
           id_verified_at?: string | null
+          kyc_blocked_at?: string | null
+          kyc_blocked_reason?: string | null
           last_ocr_confidence?: number | null
           last_ocr_face_confidence?: number | null
           last_ocr_has_face?: boolean | null
           last_ocr_text_preview?: string | null
           liveness_score?: number | null
           manual_review_decision?: string | null
+          manual_review_notes?: string | null
           manual_review_required?: boolean | null
           manual_reviewed_at?: string | null
           manual_reviewed_by?: string | null
@@ -9718,13 +10012,18 @@ export type Database = {
           extracted_gender?: string | null
           extracted_nationality?: string | null
           face_match_score?: number | null
+          face_verification_attempts?: number | null
+          face_verification_last_failed_at?: string | null
           id_verified_at?: string | null
+          kyc_blocked_at?: string | null
+          kyc_blocked_reason?: string | null
           last_ocr_confidence?: number | null
           last_ocr_face_confidence?: number | null
           last_ocr_has_face?: boolean | null
           last_ocr_text_preview?: string | null
           liveness_score?: number | null
           manual_review_decision?: string | null
+          manual_review_notes?: string | null
           manual_review_required?: boolean | null
           manual_reviewed_at?: string | null
           manual_reviewed_by?: string | null
@@ -10018,6 +10317,69 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      vehicle_asset_nav_snapshots: {
+        Row: {
+          cash_balance_cents: number
+          created_at: string
+          depreciation_cents: number
+          id: string
+          nav_per_fragment_cents: number | null
+          nav_total_cents: number | null
+          pending_claims_cents: number
+          pending_maintenance_cents: number
+          period: string
+          reserve_fund_cents: number
+          total_fragments: number
+          vehicle_asset_id: string
+          vehicle_market_value_cents: number
+        }
+        Insert: {
+          cash_balance_cents?: number
+          created_at?: string
+          depreciation_cents?: number
+          id?: string
+          nav_per_fragment_cents?: number | null
+          nav_total_cents?: number | null
+          pending_claims_cents?: number
+          pending_maintenance_cents?: number
+          period: string
+          reserve_fund_cents?: number
+          total_fragments: number
+          vehicle_asset_id: string
+          vehicle_market_value_cents: number
+        }
+        Update: {
+          cash_balance_cents?: number
+          created_at?: string
+          depreciation_cents?: number
+          id?: string
+          nav_per_fragment_cents?: number | null
+          nav_total_cents?: number | null
+          pending_claims_cents?: number
+          pending_maintenance_cents?: number
+          period?: string
+          reserve_fund_cents?: number
+          total_fragments?: number
+          vehicle_asset_id?: string
+          vehicle_market_value_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_asset_nav_snapshots_vehicle_asset_id_fkey"
+            columns: ["vehicle_asset_id"]
+            isOneToOne: false
+            referencedRelation: "v_vehicle_fragment_stats"
+            referencedColumns: ["vehicle_asset_id"]
+          },
+          {
+            foreignKeyName: "vehicle_asset_nav_snapshots_vehicle_asset_id_fkey"
+            columns: ["vehicle_asset_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_assets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       vehicle_assets: {
         Row: {
@@ -12106,6 +12468,57 @@ export type Database = {
         }
         Relationships: []
       }
+      v_expiring_preauthorizations: {
+        Row: {
+          amount: number | null
+          booking_end_date: string | null
+          booking_id: string | null
+          booking_status: string | null
+          can_auto_renew: boolean | null
+          card_last4: string | null
+          days_until_expiry: number | null
+          email: string | null
+          full_name: string | null
+          intent_id: string | null
+          mp_card_id: string | null
+          mp_customer_id: string | null
+          mp_payment_id: string | null
+          preauth_expires_at: string | null
+          profile_customer_id: string | null
+          renter_id: string | null
+          saved_card_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_intents_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_intents_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_intents_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_intents_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_pending_approvals"
+            referencedColumns: ["booking_id"]
+          },
+        ]
+      }
       v_fgo_parameters_summary: {
         Row: {
           alpha_pct: number | null
@@ -12374,6 +12787,39 @@ export type Database = {
           total_gmv: number | null
         }
         Relationships: []
+      }
+      v_my_fragment_portfolio: {
+        Row: {
+          asset_code: string | null
+          current_nav_cents: number | null
+          distribution_count: number | null
+          held_since: string | null
+          nav_period: string | null
+          purchase_price_cents: number | null
+          quantity: number | null
+          total_distributions_cents: number | null
+          user_id: string | null
+          vehicle_asset_id: string | null
+          vehicle_name: string | null
+          vehicle_status: string | null
+          vehicle_year: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fragment_holdings_vehicle_asset_id_fkey"
+            columns: ["vehicle_asset_id"]
+            isOneToOne: false
+            referencedRelation: "v_vehicle_fragment_stats"
+            referencedColumns: ["vehicle_asset_id"]
+          },
+          {
+            foreignKeyName: "fragment_holdings_vehicle_asset_id_fkey"
+            columns: ["vehicle_asset_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_assets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       v_outreach_daily_summary: {
         Row: {
@@ -12930,10 +13376,18 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: number
       }
-      calculate_subscription_upgrade: {
-        Args: { p_current_plan: string; p_target_plan: string }
-        Returns: Json
-      }
+      calculate_subscription_upgrade:
+        | {
+            Args: { p_current_plan: string; p_target_plan: string }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_new_tier: Database["public"]["Enums"]["subscription_tier"]
+              p_user_id: string
+            }
+            Returns: Json
+          }
       calculate_suggested_daily_rate: {
         Args: { p_category_id: string; p_country?: string; p_value_usd: number }
         Returns: Json
@@ -12959,6 +13413,14 @@ export type Database = {
       calculate_user_risk_score: { Args: { p_user_id: string }; Returns: Json }
       calculate_vehicle_base_price: {
         Args: { p_car_id: string; p_region_id: string }
+        Returns: Json
+      }
+      calculate_vehicle_nav: {
+        Args: {
+          p_period: string
+          p_vehicle_asset_id: string
+          p_vehicle_market_value_cents: number
+        }
         Returns: Json
       }
       can_instant_book: {
@@ -13028,7 +13490,6 @@ export type Database = {
         Args: { p_amount: number; p_intent_id: string }
         Returns: undefined
       }
-      check_abandoned_bookings: { Args: never; Returns: undefined }
       check_booking_overlap: {
         Args: { p_car_id: string; p_end_date: string; p_start_date: string }
         Returns: boolean
@@ -13070,10 +13531,12 @@ export type Database = {
           status: string
         }[]
       }
-      check_subscription_coverage: {
-        Args: { p_franchise_amount_cents: number; p_user_id: string }
-        Returns: Json
-      }
+      check_subscription_coverage:
+        | { Args: { p_franchise_amount_cents: number }; Returns: Json }
+        | {
+            Args: { p_franchise_amount_cents: number; p_user_id: string }
+            Returns: Json
+          }
       check_user_pending_deposits_limit: {
         Args: { p_user_id: string }
         Returns: boolean
@@ -13330,6 +13793,14 @@ export type Database = {
         Returns: Json
       }
       disconnect_mercadopago: { Args: never; Returns: Json }
+      distribute_booking_to_fragments: {
+        Args: {
+          p_booking_id: string
+          p_currency?: string
+          p_reward_pool_cents: number
+        }
+        Returns: Json
+      }
       distribute_monthly_rewards: {
         Args: { p_pool_id: string }
         Returns: {
@@ -14261,6 +14732,14 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: Json
       }
+      increment_face_verification_attempts: {
+        Args: { p_face_match_score?: number; p_user_id: string }
+        Returns: {
+          block_reason: string
+          is_now_blocked: boolean
+          new_attempts: number
+        }[]
+      }
       ingest_iot_data: {
         Args: {
           p_api_key: string
@@ -14296,7 +14775,16 @@ export type Database = {
         Args: { p_car_id?: string; p_owner_id: string }
         Returns: boolean
       }
-      is_kyc_blocked: { Args: { p_user_id?: string }; Returns: Json }
+      is_kyc_blocked: {
+        Args: { p_user_id: string }
+        Returns: {
+          attempts: number
+          blocked: boolean
+          blocked_at: string
+          last_failed_at: string
+          reason: string
+        }[]
+      }
       is_verified_owner: { Args: never; Returns: boolean }
       issue_autorentar_credit: {
         Args: { p_amount_cents?: number; p_user_id: string }
@@ -14443,7 +14931,11 @@ export type Database = {
         Returns: Json
       }
       pay_fgo_siniestro: {
-        Args: { p_amount: number; p_claim_id: string }
+        Args: {
+          p_amount_cents: number
+          p_booking_id: string
+          p_description?: string
+        }
         Returns: Json
       }
       populate_car_estimates: { Args: { p_car_id: string }; Returns: undefined }
@@ -14473,7 +14965,6 @@ export type Database = {
         }[]
       }
       pricing_recalculate: { Args: { p_booking_id: string }; Returns: Json }
-      process_booking_v2_timeouts: { Args: never; Returns: Json }
       process_claim_charge:
         | {
             Args: {
@@ -14520,6 +15011,10 @@ export type Database = {
           p_renter_id: string
           p_start_at: string
         }
+        Returns: Json
+      }
+      process_manual_identity_review_email: {
+        Args: { p_decision: string; p_notes?: string; p_token_hash: string }
         Returns: Json
       }
       process_marketing_retries: { Args: never; Returns: undefined }
@@ -14661,6 +15156,7 @@ export type Database = {
         Args: { p_lock_key: number }
         Returns: boolean
       }
+      release_expired_activation_locks: { Args: never; Returns: Json }
       release_mp_preauth_order: {
         Args: { p_description: string; p_mp_order_id: string }
         Returns: {
@@ -14707,12 +15203,15 @@ export type Database = {
               cancellation_reason: string | null
               cancelled_at: string | null
               cancelled_by: string | null
+              cancelled_by_role: string | null
               car_id: string
               completed_at: string | null
               coverage_snapshot: Json | null
               created_at: string | null
               currency: string | null
               daily_rate: number | null
+              damage_amount_cents: number | null
+              damage_description: string | null
               deposit_amount_cents: number | null
               dispute_evidence: Json | null
               dispute_reason: string | null
@@ -14720,6 +15219,7 @@ export type Database = {
               dropoff_location_id: string | null
               end_at: string
               funds_released_at: string | null
+              has_damages: boolean | null
               id: string
               inspection_comment: string | null
               inspection_evidence: Json | null
@@ -14728,11 +15228,13 @@ export type Database = {
               is_instant_booking: boolean | null
               notes: string | null
               overdue_hours: number | null
+              owner_confirmed_at: string | null
               owner_confirmed_delivery: boolean | null
               owner_fee: number | null
               owner_id: string
               payment_mode: string | null
               pickup_location_id: string | null
+              renter_confirmed_at: string | null
               renter_confirmed_payment: boolean | null
               renter_id: string
               return_status: string
@@ -14782,6 +15284,10 @@ export type Database = {
           p_reason: string
         }
         Returns: Json
+      }
+      reset_face_verification_attempts: {
+        Args: { p_admin_id: string; p_reason?: string; p_user_id: string }
+        Returns: boolean
       }
       reset_marketing_daily_counters: { Args: never; Returns: undefined }
       resolve_dispute: {
@@ -14848,11 +15354,7 @@ export type Database = {
           variant_name: string
         }[]
       }
-      send_booking_completion_reminders: { Args: never; Returns: undefined }
-      send_booking_reminders: { Args: never; Returns: undefined }
       send_car_recommendations: { Args: never; Returns: undefined }
-      send_car_views_milestone_notification: { Args: never; Returns: undefined }
-      send_document_expiry_reminders: { Args: never; Returns: undefined }
       send_encrypted_message: {
         Args: {
           p_body?: string
@@ -14868,9 +15370,7 @@ export type Database = {
         Args: never
         Returns: undefined
       }
-      send_nearby_cars_notifications: { Args: never; Returns: undefined }
       send_optimization_tips: { Args: never; Returns: undefined }
-      send_pending_requests_reminder: { Args: never; Returns: undefined }
       send_phone_otp: { Args: { p_phone_number: string }; Returns: Json }
       send_renter_tips: { Args: never; Returns: undefined }
       send_system_message: {
@@ -14890,6 +15390,7 @@ export type Database = {
         }
         Returns: Json
       }
+      snapshot_all_vehicle_navs: { Args: never; Returns: Json }
       start_location_tracking: {
         Args: { p_booking_id: string; p_tracking_type: string }
         Returns: string
@@ -15021,17 +15522,30 @@ export type Database = {
         Args: { p_action_type: string; p_persona_id: string }
         Returns: undefined
       }
-      update_profile_from_ocr: {
-        Args: {
-          p_country: string
-          p_date_of_birth: string
-          p_document_number: string
-          p_full_name: string
-          p_ocr_confidence: number
-          p_user_id: string
-        }
-        Returns: Json
-      }
+      update_profile_from_ocr:
+        | {
+            Args: {
+              p_country: string
+              p_date_of_birth: string
+              p_document_number: string
+              p_full_name: string
+              p_ocr_confidence: number
+              p_user_id: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_country: string
+              p_date_of_birth: string
+              p_document_number: string
+              p_full_name: string
+              p_gov_id_type?: string
+              p_ocr_confidence: number
+              p_user_id: string
+            }
+            Returns: Json
+          }
       update_user_cars_payment_status: {
         Args: { p_user_id: string }
         Returns: number
@@ -15455,6 +15969,7 @@ export type Database = {
         | "protector_expiring_tomorrow"
         | "protector_expired"
         | "pending_requests_reminder"
+        | "fragment_distribution"
       onboarding_status: "incomplete" | "complete" | "skipped"
       payment_event_type:
         | "payment_initiated"
@@ -15518,7 +16033,7 @@ export type Database = {
         | "depleted"
         | "expired"
         | "cancelled"
-      subscription_tier: "club_standard" | "club_black"
+      subscription_tier: "club_standard" | "club_black" | "club_luxury"
       transmission_type: "manual" | "automatico"
       vehicle_tier:
         | "starter"
@@ -15756,6 +16271,7 @@ export const Constants = {
         "protector_expiring_tomorrow",
         "protector_expired",
         "pending_requests_reminder",
+        "fragment_distribution",
       ],
       onboarding_status: ["incomplete", "complete", "skipped"],
       payment_event_type: [
@@ -15825,7 +16341,7 @@ export const Constants = {
         "expired",
         "cancelled",
       ],
-      subscription_tier: ["club_standard", "club_black"],
+      subscription_tier: ["club_standard", "club_black", "club_luxury"],
       transmission_type: ["manual", "automatico"],
       vehicle_tier: [
         "starter",
