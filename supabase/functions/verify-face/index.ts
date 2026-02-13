@@ -21,7 +21,7 @@ import { compareFaces, isRekognitionConfigured, detectFaces } from "../_shared/a
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+    "authorization, x-client-info, apikey, content-type, baggage, sentry-trace",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
@@ -327,17 +327,15 @@ serve(async (req) => {
         }
       } else {
         // Update identity levels with successful verification
+        const now = new Date().toISOString();
         await supabase
           .from('user_identity_levels')
           .upsert({
             user_id,
             face_match_score: response.face_match_score,
             liveness_score: response.liveness_score,
-            face_verification_method: response.verification_method,
-            face_verified_at: response.success ? new Date().toISOString() : null,
-            // Reset attempts on success
-            face_verification_attempts: response.success ? 0 : undefined,
-            updated_at: new Date().toISOString(),
+            selfie_verified_at: response.success ? now : null,
+            updated_at: now,
           }, {
             onConflict: 'user_id',
           });
@@ -347,8 +345,7 @@ serve(async (req) => {
           await supabase
             .from('profiles')
             .update({
-              face_verified: true,
-              face_verified_at: new Date().toISOString(),
+              selfie_verified_at: now,
             })
             .eq('id', user_id);
 
