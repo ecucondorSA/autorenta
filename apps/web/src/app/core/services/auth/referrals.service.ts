@@ -36,6 +36,9 @@ export interface Referral {
   first_booking_at: string | null;
   reward_paid_at: string | null;
   source: string | null;
+  first_published_car_id: string | null;
+  trigger_booking_id: string | null;
+  eligible_at: string | null;
 }
 
 export interface ReferralReward {
@@ -56,6 +59,7 @@ export interface ReferralReward {
   paid_at: string | null;
   expires_at: string | null;
   notes: string | null;
+  wallet_transaction_id: string | null;
 }
 
 export interface ReferralStats {
