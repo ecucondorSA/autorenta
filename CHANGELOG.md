@@ -1,3 +1,9 @@
+## 3.97.0 (2026-02-13)
+
+* chore(tools): update investor campaign script types ([1c6d386](https://github.com/ecucondorSA/autorenta/commit/1c6d386))
+* fix(security): harden KYC flow, patch edge functions & update deps ([3cb0285](https://github.com/ecucondorSA/autorenta/commit/3cb0285))
+* feat(marketing): add Tino Partnership Pitch landing pages ([8bc5cae](https://github.com/ecucondorSA/autorenta/commit/8bc5cae))
+
 ## 3.96.0 (2026-02-13)
 
 * feat(pitch): add static pitch pages for investor campaign ([1098206](https://github.com/ecucondorSA/autorenta/commit/1098206))
