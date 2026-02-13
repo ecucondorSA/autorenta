@@ -124,9 +124,6 @@ export type {
   WalletLockResult,
 } from './booking-detail-payment.model';
 
-// Tripo AI models
-export type { TripoTaskRequest, TripoTaskResponse, TripoTaskStatusResponse } from './tripo.models';
-
 // Re-export for backward compatibility
 export type Role = UserRole;
 
