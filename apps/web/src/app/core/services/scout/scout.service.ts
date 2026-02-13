@@ -1,4 +1,5 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, type OnDestroy } from '@angular/core';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { Bounty } from '@core/models/bounty.model';
@@ -9,16 +10,18 @@ export type { Bounty };
 @Injectable({
   providedIn: 'root',
 })
-export class ScoutService {
+export class ScoutService implements OnDestroy {
   private supabase = inject(SupabaseClientService).getClient();
   private alarm = inject(ScoutAlarmService);
   private logger = inject(LoggerService);
+  private realtimeChannel: RealtimeChannel | null = null;
 
   readonly activeMissions = signal<Bounty[]>([]);
 
-  // Iniciar escucha de misiones críticas
   setupRealtimeListener() {
-    this.supabase
+    if (this.realtimeChannel) return;
+
+    this.realtimeChannel = this.supabase
       .channel('public:bounties')
       .on(
         'postgres_changes',
@@ -26,7 +29,6 @@ export class ScoutService {
         async (payload: { new: { id: string } }) => {
           this.logger.info('NUEVA MISIÓN DETECTADA:', payload.new);
 
-          // Cargar datos completos del auto para la alerta
           const { data: mission } = await this.supabase
             .from('bounties')
             .select('*, cars(brand, model, color, license_plate, photos)')
@@ -35,12 +37,22 @@ export class ScoutService {
 
           if (mission) {
             this.activeMissions.update((prev) => [mission, ...prev]);
-            // ¡DISPARAR ALARMA NUCLEAR!
             this.alarm.triggerMissionAlert(mission);
           }
         },
       )
       .subscribe();
+  }
+
+  cleanup() {
+    if (this.realtimeChannel) {
+      this.supabase.removeChannel(this.realtimeChannel);
+      this.realtimeChannel = null;
+    }
+  }
+
+  ngOnDestroy() {
+    this.cleanup();
   }
 
   async getNearbyMissions(lat: number, lng: number) {
