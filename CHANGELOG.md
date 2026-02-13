@@ -1,3 +1,7 @@
+## <small>3.95.5 (2026-02-13)</small>
+
+* fix(verify-face): correct column names and CORS headers ([49b47db](https://github.com/ecucondorSA/autorenta/commit/49b47db))
+
 ## <small>3.95.4 (2026-02-13)</small>
 
 * fix(verification): prevent camera auto-open and fix Level 3 progress RPC ([b8615fd](https://github.com/ecucondorSA/autorenta/commit/b8615fd))
