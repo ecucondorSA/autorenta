@@ -53,6 +53,7 @@ export class DepositPage implements OnInit {
 
   // Form state (usuario ingresa en USD, convertimos a ARS para MP)
   usdAmountValue = 0;
+  descriptionValue = '';
   readonly usdAmountInput = signal<number>(0);
   readonly description = signal<string>('');
   readonly isProcessing = signal<boolean>(false);
@@ -116,7 +117,8 @@ export class DepositPage implements OnInit {
       if (!isNaN(prefillAmount) && prefillAmount > 0) {
         this.usdAmountInput.set(prefillAmount);
         this.usdAmountValue = prefillAmount; // Update non-signal property for input binding
-        this.description.set('Pago de deuda del wallet');
+        this.descriptionValue = 'Pago de deuda del wallet';
+        this.description.set(this.descriptionValue);
         this.formError.set(null); // Clear any initial form errors
       }
     }
@@ -178,6 +180,7 @@ export class DepositPage implements OnInit {
    * Update description
    */
   updateDescription(value: string): void {
+    this.descriptionValue = value;
     this.description.set(value);
   }
 
