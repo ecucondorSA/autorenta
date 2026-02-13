@@ -26,7 +26,75 @@ Contexto: en 2025-2026 el repo acumuló ruido por artefactos temporales, reporte
 - `pnpm docs:ttl:check`
 - `pnpm docs:ttl:apply`
 
-## 1. Contexto & Memorias Activas
+---
+
+## 1. 🛡️ Reglas Operativas Inquebrantables (Core Protocol)
+
+> Estas reglas tienen precedencia sobre cualquier otra instrucción. Son el "sistema operativo" del agente.
+
+### REGLA #0: Cero Código sin Integración
+- **Prohibido** generar código que no tenga consumidor real en el mismo PR/commit.
+- Si al borrar ese código no se rompe nada, probablemente no debía existir.
+- **Checklist:**
+  - [ ] Hay al menos un consumidor real (UI, cron, webhook o servicio).
+  - [ ] Flujo completo trazable: trigger → resultado visible.
+
+### REGLA #1: Workflows Orquestan, Edge Functions Ejecutan
+- **GitHub Actions:** trigger/schedule/retry/alerta.
+- **Edge Functions:** lógica de negocio, queries, cálculos, mutaciones.
+- **Prohibido** duplicar lógica crítica en workflows (bash scripts complejos).
+
+### REGLA #3: Validación Cross-Layer (UI ↔ DB)
+- **Nunca asumir** que el código local coincide con producción.
+- **Antes de codificar:** Verificar nombres reales de columnas (`information_schema`) y RPCs (`pg_proc`) en prod.
+- **Durante:** Si Edge Function escribe `col_x`, el RPC que lee debe leer `col_x`.
+- **Después:** Validar end-to-end (trigger real → DB state → UI update).
+
+### REGLA #4: Prohibido Stubs Destructivos
+- **Problema:** Migraciones que reemplazan lógica real con `RETURN {blocked: false}` (Stubs).
+- **Mandato:**
+  1. NUNCA usar `CREATE OR REPLACE` sobre funciones existentes sin leer su código actual.
+  2. Migraciones `DROP/CREATE TABLE` deben preservar TODAS las columnas existentes.
+  3. Verificar post-deploy que la lógica crítica (ej: KYC) sigue activa.
+
+### REGLA #5: Todo se Hace AHORA (Cero Deuda Diferida)
+- Prohibido dejar TODOs, FIXMEs o "para el próximo sprint".
+- Si algo está roto, se arregla HOY o se escala como blocker.
+- Una tarea termina solo con: **código + migración + deploy + tipos + verificación**.
+
+---
+
+## 2. 🔒 Supabase & DB Hardening (Dos Planos)
+
+### El Principio de los "Dos Planos"
+Para cualquier feature o bug de datos, analizar y validar siempre en dos niveles:
+
+1.  **Plano UI/Client Gating:**
+    - Guards, filtros, estados disabled, overlays visuales.
+    - *Objetivo:* UX y feedback al usuario.
+2.  **Plano DB Enforcement:**
+    - Enums, Constraints, Triggers, RLS Policies, RPC logic.
+    - *Objetivo:* Integridad de datos y seguridad real.
+
+**Regla:** Las reglas de negocio críticas (ej: "No activar auto sin KYC") se **enforcean en DB** y se **reflejan en UI**.
+
+### Auth Context
+- `auth.uid()` en Postgres/RLS solo funciona si se reenvía el JWT del usuario.
+- En Edge Functions: usar `supabaseClient` con `Authorization` header del request original para operaciones user-scoped.
+
+---
+
+## 3. 🧠 Insights Operativos (Gotchas)
+
+- **MCP Migration Drift:** Si los timestamps de migraciones locales difieren de `supabase_migrations.schema_migrations` en prod, `db push` fallará. Alinear manualmente si es necesario.
+- **PL/pgSQL Lazy Validation:** Postgres no valida nombres de columnas en el cuerpo de funciones hasta el tiempo de ejecución. **Siempre** verificar nombres de columnas contra la DB real antes de deployar.
+- **Supabase UPDATE:** Requiere `WHERE` explícito. Usar `WHERE true` si se desea afectar toda la tabla.
+- **FGO Funds:** Viven en `fgo_subfunds` (liquidity, capitalization, profitability), NO en `user_wallets`.
+- **Wallet Transactions:** Columnas clave: `provider_metadata` (no `metadata`), `reference_id` (no `booking_id`), `amount` (numeric).
+
+---
+
+## 4. Contexto & Memorias Activas
 
 ### Perfil del Proyecto
 - **Proyecto:** AutoRenta
@@ -322,40 +390,62 @@ pkill -f "pnpm.*build"
 
 ---
 
-## 11. Comportamiento del Agente
+## 11. 🤖 Comportamiento del Agente (SENIOR PROFESSIONAL MODE)
 
-- **Claridad:** Preguntar antes de asumir en tareas ambiguas.
-- **Proactividad:** Corregir errores obvios (typos, imports) sin preguntar.
-- **Contexto:** Leer siempre `task.md` y `implementation_plan.md` antes de escribir código.
-- **Acción Directa:** Ejecutar tareas simples y bien definidas inmediatamente.
-- **Confirmación:** Cambios complejos (refactors, migraciones de BD) requieren un plan y aprobación del usuario.
-- **CERO DEUDA TÉCNICA (NO FLOJERA):** No existe "lo optimizo después". El código se escribe **perfecto y optimizado HOY**. Si ves algo mal, arréglalo AHORA. Prohibido dejar `TODO` para "el futuro" en lógica crítica.
-- **Dos planos (UI vs DB):** Ante bugs de datos, separar y validar UI gating vs DB enforcement (RLS/triggers/constraints). Si es regla crítica, enforce en DB y reflejadas en UI.
+### 🧠 Mentalidad: "Deep Context & Zero Debt"
 
-### Prompt Senior (Debug/Hardening)
-```text
-Contexto: AutoRenta. Necesito que analices [BUG/FEATURE] con enfoque senior y sin whack-a-mole.
+Tu objetivo no es "escribir código rápido", es **construir sistemas robustos**. Tienes una ventana de contexto de 1 millón de tokens: **ÚSALA**.
 
-Regla: separá el análisis en 2 planos:
-1) UI/Client gating: guards, filters, overlays/disabled, queries en services, estados en UI.
-2) DB enforcement: enum values, triggers/constraints, RLS policies, RPCs.
+#### 1. PROHIBIDO SER PEREZOSO (Zero Laziness)
+- **Lectura Profunda (Deep Read):** No leas solo el archivo que vas a editar. Lee sus importaciones, sus definiciones de tipos, y los archivos que lo invocan.
+- **Investigación Recursiva:** Si ves una llamada a `invoke('payment-process')`, **DEBES** leer el código de esa Edge Function. No asumas qué hace ni qué devuelve.
+- **Sin Excusas:** Nunca digas "asumo que la base de datos está bien". Verifica. Nunca digas "esto lo puedes configurar tú". Hazlo tú.
 
-Pre-check (obligatorio):
-- Confirmar el schema real (generated DB types o `information_schema`). No asumir columnas.
-- Listar invariantes y detectar datos legacy que las violan (SQL).
+#### 2. INTEGRACIÓN OBLIGATORIA (End-to-End)
+- **Regla:** Código huérfano = Basura.
+- Cada cambio debe estar conectado de punta a punta:
+  - ¿La UI llama al Servicio?
+  - ¿El Servicio llama a la API correcta?
+  - ¿La API tiene permisos (RLS) en la DB?
+  - ¿La DB tiene la columna creada?
+- Si rompes la cadena en algún punto, el trabajo está incompleto.
 
-Entregables:
-- Hipótesis por plano + cómo validarlas (comandos/SQL concretos).
-- Causa raíz confirmada.
-- Fix mínimo (DB primero si es regla de negocio), con migración si aplica.
-- Verificación: queries, unit tests/E2E y evidencia visual (Patchright Streaming).
-```
+#### 3. ANTI-PROCRASTINACIÓN (Do It Now)
+- **Cero TODOs:** Prohibido dejar `// TODO: Implementar después`, `// FIXME`, o "esto requiere una migración futura".
+- **Resolución Inmediata:** Si detectas un problema, arréglalo AHORA. Si falta una tabla, crea la migración AHORA. Si falta un tipo, genéralo AHORA.
+- **Escalabilidad:** Escribe código como si no fueras a volver a tocarlo en 6 meses. Hazlo bien la primera vez.
 
-### Checklist de Drift (Producción vs Código)
-- Enum `status` consistente con DB (ej: `database.types.ts` vs `pg_enum`).
-- RPCs usados existen en DB (ej: `supabase.rpc('fn')` / `supabase.schema('public').rpc('fn')` vs `pg_proc`).
-- Tablas/views referenciadas existen y están en el schema correcto.
-- Reglas críticas enforce en DB (RLS/triggers/constraints) y reflejadas en UI (filters/overlays).
+#### 4. USO MÁXIMO DE CONTEXTO
+- Antes de responder, pregúntate: *¿Tengo toda la información?*
+- Si la respuesta es "No", usa `search_file_content` o `read_file` masivamente.
+- Prefiere "perder" tiempo leyendo 20 archivos para dar una solución quirúrgica, que dar una solución rápida que rompa algo que no viste.
+
+#### 5. DEFINITION OF DONE (DoD)
+Una tarea solo se considera terminada cuando:
+1. El código está escrito y sigue los patrones.
+2. La base de datos está migrada y sincronizada.
+3. Los tipos de TypeScript coinciden con la DB.
+4. Se ha verificado que no rompe dependencias (referencias cruzadas).
+5. Se ha realizado (o intentado) el deploy si aplica.
+
+#### 6. 🛠️ ARSENAL DE HERRAMIENTAS (¡ÚSALAS!)
+No eres un editor de texto pasivo. Tienes brazos y ojos. Úsalos.
+
+- **GitHub CLI (`gh`):**
+  - No adivines si el CI pasó. Ejecuta `gh run list` o `gh run view`.
+  - Diagnostica errores de deploy leyendo logs remotos.
+  - Verifica el estado de PRs y workflows sin salir de la terminal.
+
+- **MCP (Supabase & Tools):**
+  - Interactúa directo con la infraestructura.
+  - Usa `list_tables` o `execute_sql` para validar que tus migraciones impactaron la DB real.
+  - No pidas al usuario "chequear la base de datos" si puedes hacerlo tú.
+
+- **Patchright Streaming (Navegador Real):**
+  - **Verificación Visual:** No entregues UI diciendo "debería funcionar".
+  - Navega (`stream_navigate`), haz click y verifica.
+  - Toma capturas (`stream_screenshot`) para confirmar que el CSS no está roto.
+  - Valida flujos críticos (Login, Checkout) como un usuario real.
 
 ---
 
@@ -1372,6 +1462,87 @@ El RPC `get_verification_progress()` calcula el nivel actual:
 
 ---
 
-**© 2026 AutoRenta | Gemini Agent Configuration v3.4**
+## 35. Hardening Extendido (Rules from AGENTS-2.md)
+
+> Reglas de nivel senior para prevenir drift de esquema, bypass de auth y errores de runtime.
+
+### 17. Database-Code Contract Enforcement
+
+#### 17.1 Enum Sync Protocol (Mandatory)
+**Problema:** Tipos TypeScript desincronizados de ENUMs de DB causan errores en runtime.
+**Protocolo:**
+1. Verificar valores actuales en DB: `SELECT unnest(enum_range(NULL::public.car_status));`
+2. Comparar con `apps/web/src/app/core/models/index.ts`.
+3. Si hay mismatch: Update DB primero (migration) -> Update TS type -> Replace usages.
+4. **Script de validación:** `bun scripts/maintenance/validate-enum-sync.ts`.
+
+#### 17.2 Schema Verification Before Coding (Critical)
+**Problema:** Asumir columnas que no existen (ej: `profiles.kyc_status`).
+**Protocolo:**
+1. Regenerar tipos: `supabase gen types typescript ... > /tmp/fresh-db-types.ts`
+2. Buscar la tabla y verificar columnas en `Row`.
+3. Si la columna es `never` o no está, NO usarla.
+
+#### 17.3 Migration Idempotency Standards
+**Mandatory Template:**
+- `CREATE TABLE IF NOT EXISTS`
+- `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` (wrapped in DO block)
+- `CREATE OR REPLACE FUNCTION`
+- `DROP POLICY IF EXISTS` + `CREATE POLICY` (wrapped in check)
+
+### 18. Edge Function Security Standards
+
+#### 18.1 Auth-First Pattern (Mandatory)
+Todas las Edge Functions deben seguir este patrón:
+```typescript
+Deno.serve(async (req) => {
+  try {
+    // 1. AUTH FIRST
+    const { user, supabase } = await requireAuth(req); // throws 401 if fail
+
+    // 2. AUTHORIZATION (Admin/Owner)
+    if (isAdminOp) await requireAdmin(user.id, supabase); // throws 403
+
+    // 3. LOGIC
+    // ...
+  } catch (error) {
+    if (error instanceof Response) return error; // Return auth errors as is
+    // ... handle internal errors
+  }
+});
+```
+
+#### 18.2 Security Checklist
+- [ ] Auth verificado ANTES de lógica de negocio.
+- [ ] `requireAuth` helper usado.
+- [ ] Validación de inputs (tipos, required).
+- [ ] Secretos vía `Deno.env.get()`.
+- [ ] Logs estructurados sin data sensible.
+
+### 19. RLS & Storage Policy Enforcement
+
+#### 19.1 RLS Coverage Requirements
+**Regla:** Toda nueva tabla y bucket DEBE tener políticas RLS en la misma migración.
+**Matriz de Acceso:** Definir explícitamente permisos para `anon`, `authenticated`, `service_role`.
+
+#### 19.2 Audit Script
+Ejecutar `bun scripts/maintenance/audit-rls-coverage.ts` para detectar tablas/buckets desprotegidos.
+
+### 20. Type Safety for Status Updates
+
+#### 20.1 Typed Status Functions
+**Prohibido:** `updateStatus(id, status: string)`
+**Requerido:** `updateStatus(id, status: BookingStatus)`
+Validar transiciones de estado permitidas en lógica de negocio antes de llamar a DB.
+
+#### 20.2 Default Values Safety
+**Regla de Oro:** Defaults deben ser el estado MÁS RESTRICTIVO.
+- Status: `draft` / `pending` (nunca `active`).
+- Visibility: `false` (nunca `true`).
+- Permissions: `false`.
+
+---
+
+**© 2026 AutoRenta | Gemini Agent Configuration v3.5**
 
 ```
