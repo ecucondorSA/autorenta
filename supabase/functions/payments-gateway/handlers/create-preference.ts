@@ -39,6 +39,7 @@ export async function createBookingPreference(req: Request): Promise<Response> {
     }
 
     const authenticated_user_id = verificationResult.user!.id;
+    const authenticated_user_email = verificationResult.user!.email;
     const { booking_id, use_split_payment = false }: CreateBookingPreferenceRequest = await req.json();
 
     if (!booking_id) return new Response(JSON.stringify({ error: 'Missing booking_id' }), { status: 400, headers: corsHeaders });
@@ -101,7 +102,7 @@ export async function createBookingPreference(req: Request): Promise<Response> {
         const fullName = profile?.full_name || 'Usuario AutoRenta';
         const [firstName, ...rest] = fullName.split(' ');
         const lastName = rest.join(' ') || 'User';
-        const customerData = { email: profile?.email, first_name: firstName, last_name: lastName };
+        const customerData = { email: authenticated_user_email, first_name: firstName, last_name: lastName };
         
         const newCustomer = await mpClient.createCustomer(customerData);
         if (newCustomer?.id) {
@@ -145,7 +146,7 @@ export async function createBookingPreference(req: Request): Promise<Response> {
         currency_id: 'ARS',
       }],
       payer: {
-          email: profile?.email,
+          email: authenticated_user_email,
           ...(customerId && { id: customerId })
       },
       back_urls: {
@@ -201,7 +202,7 @@ export async function createBookingPreference(req: Request): Promise<Response> {
   } catch (error) {
     console.error('Error creating preference:', error);
     return new Response(JSON.stringify({ 
-        error: error instanceof Error ? error.message : 'Internal Server Error' 
+        error: 'Internal server error'
     }), { status: 500, headers: corsHeaders });
   }
 }
