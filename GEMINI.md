@@ -82,6 +82,15 @@ Para cualquier feature o bug de datos, analizar y validar siempre en dos niveles
 - `auth.uid()` en Postgres/RLS solo funciona si se reenvía el JWT del usuario.
 - En Edge Functions: usar `supabaseClient` con `Authorization` header del request original para operaciones user-scoped.
 
+### Diagnóstico de Auth (No culpes al Token)
+- 🚫 **Anti-Patrón:** Ver un 401/403 y decir "El token expiró, logueate de nuevo".
+- ✅ **Investigación:**
+  1. ¿El header `Authorization` llegó a la Edge Function? (Logs)
+  2. ¿El usuario existe en `auth.users`? (DB)
+  3. ¿El usuario está baneado o bloqueado por KYC? (DB)
+  4. ¿El RLS permite la operación? (Policy Audit)
+  5. Solo después de descartar todo esto, sugiere refresh de token.
+
 ---
 
 ## 3. 🧠 Insights Operativos (Gotchas)
