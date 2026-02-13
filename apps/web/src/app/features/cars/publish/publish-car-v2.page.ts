@@ -178,7 +178,7 @@ export class PublishCarV2Page implements OnInit {
   // Visual Selector Options
   readonly transmissionOptions: VisualOption[] = [
     { value: 'manual', label: 'Manual', icon: 'manual' },
-    { value: 'automatic', label: 'Automática', icon: 'automatic' },
+    { value: 'automatico', label: 'Automática', icon: 'automatic' },
   ];
 
   readonly fuelOptions: VisualOption[] = [

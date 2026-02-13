@@ -88,7 +88,7 @@ import { SoundService } from '@core/services/ui/sound.service';
                 Caja
               </div>
               <div class="text-white font-bold text-sm">
-                {{ car.transmission === 'automatic' ? 'Auto' : 'Manual' }}
+                {{ car.transmission === 'automatico' ? 'Auto' : 'Manual' }}
               </div>
             </div>
             <div

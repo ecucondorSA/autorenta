@@ -151,7 +151,7 @@ export class CarsCompareService {
     rows.push({
       label: 'Transmisión',
       category: 'specs',
-      values: cars.map((c) => (c.transmission === 'automatic' ? 'Automática' : 'Manual')),
+      values: cars.map((c) => (c.transmission === 'automatico' ? 'Automática' : 'Manual')),
     });
     rows.push({
       label: 'Combustible',
@@ -159,14 +159,16 @@ export class CarsCompareService {
       values: cars.map((c) => {
         const fuelType = String(c.fuel);
         switch (fuelType) {
-          case 'gasoline':
+          case 'nafta':
             return 'Nafta';
-          case 'diesel':
+          case 'gasoil':
             return 'Diesel';
-          case 'electric':
+          case 'electrico':
             return 'Eléctrico';
-          case 'hybrid':
+          case 'hibrido':
             return 'Híbrido';
+          case 'gnc':
+            return 'GNC';
           default:
             return fuelType;
         }

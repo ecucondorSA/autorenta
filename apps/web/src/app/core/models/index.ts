@@ -16,10 +16,13 @@ export type PaymentStatus =
   | 'rejected'
   | 'refunded'
   | 'cancelled';
-export type Transmission = 'manual' | 'automatic';
+// Must match DB enum: public.transmission_type (manual, automatico)
+export type Transmission = 'manual' | 'automatico';
 export type UserRole = 'renter' | 'owner' | 'both';
-export type FuelType = 'gasoline' | 'diesel' | 'electric' | 'electrico' | 'hybrid' | 'gnc' | 'flex';
-export type CancelPolicy = 'flexible' | 'moderate' | 'strict';
+// Must match DB enum: public.fuel_type (nafta, gasoil, gnc, electrico, hibrido)
+export type FuelType = 'nafta' | 'gasoil' | 'gnc' | 'electrico' | 'hibrido';
+// Must match DB enum: public.cancel_policy (flex, moderate, strict)
+export type CancelPolicy = 'flex' | 'moderate' | 'strict';
 // Must match DB enum: public.car_status (draft, active, paused, deleted, pending)
 export type CarStatus = 'draft' | 'active' | 'paused' | 'deleted' | 'pending';
 
@@ -168,7 +171,8 @@ export type { UpdateProfileData } from '../services/auth/profile.service';
 export * from './participation.model';
 
 // Nuevos tipos para perfil expandido
-type OnboardingStatus = 'incomplete' | 'complete';
+// Must match DB enum: public.onboarding_status (incomplete, complete, skipped)
+type OnboardingStatus = 'incomplete' | 'complete' | 'skipped';
 
 export interface NotificationChannelPrefs {
   bookings: boolean;

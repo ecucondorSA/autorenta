@@ -129,7 +129,7 @@ export class ConversationalFormService {
 
       // Technical (with smart defaults)
       mileage: [null, [Validators.required, Validators.min(0)]],
-      transmission: ['automatic'],
+      transmission: ['automatico'],
       fuel: ['nafta'],
       color: [''],
       description: [''],
@@ -301,8 +301,7 @@ export class ConversationalFormService {
       year: year || rawValue.year,
       color: rawValue.color || 'No especificado',
       mileage: rawValue.mileage,
-      // Map transmission to DB enum values (manual, automatico)
-      transmission: rawValue.transmission === 'automatic' ? 'automatico' : rawValue.transmission,
+      transmission: rawValue.transmission,
       // fuel_type is set below in Generated section
 
       // Rental rules (smart defaults - unlimited km)

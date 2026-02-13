@@ -123,7 +123,7 @@ export class MapFiltersComponent implements OnInit, OnDestroy {
 
   readonly transmissionOptions = [
     { id: 'manual', label: 'Manual' },
-    { id: 'automatic', label: 'Automático' },
+    { id: 'automatico', label: 'Automático' },
   ];
 
   readonly activeFilterCount = computed(() => {

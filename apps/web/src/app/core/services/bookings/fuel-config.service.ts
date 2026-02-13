@@ -6,7 +6,7 @@ export interface FuelConfig {
   tankLiters: number;
   pricePerLiterUsd: number;
   serviceMargin: number;
-  fuelType: 'gasoline' | 'diesel' | 'premium' | 'electric';
+  fuelType: 'nafta' | 'gasoil' | 'gnc' | 'electrico' | 'hibrido';
 }
 
 /**
@@ -24,11 +24,13 @@ export class FuelConfigService {
   private readonly DEFAULT_SERVICE_MARGIN = 1.2;
 
   // Regional fuel prices (USD per liter) - Updated periodically
+  // Must match DB enum: public.fuel_type (nafta, gasoil, gnc, electrico, hibrido)
   private readonly FUEL_PRICES: Record<string, number> = {
-    gasoline: 1.35,
-    diesel: 1.25,
-    premium: 1.55,
-    electric: 0, // No fuel penalty for electric vehicles
+    nafta: 1.35,
+    gasoil: 1.25,
+    gnc: 0.85,
+    electrico: 0, // No fuel penalty for electric vehicles
+    hibrido: 1.35,
   };
 
   /**
@@ -48,7 +50,7 @@ export class FuelConfigService {
         return this.getDefaultConfig();
       }
 
-      const fuelType = (data.fuel_type as FuelConfig['fuelType']) || 'gasoline';
+      const fuelType = (data.fuel_type as FuelConfig['fuelType']) || 'nafta';
 
       return {
         tankLiters: data.fuel_tank_liters ?? this.DEFAULT_TANK_LITERS,
@@ -71,7 +73,7 @@ export class FuelConfigService {
    */
   calculatePenalty(config: FuelConfig, checkInLevel: number, checkOutLevel: number): number {
     // Electric vehicles don't have fuel penalties
-    if (config.fuelType === 'electric') {
+    if (config.fuelType === 'electrico') {
       return 0;
     }
 
@@ -101,7 +103,7 @@ export class FuelConfigService {
       tankLiters: this.DEFAULT_TANK_LITERS,
       pricePerLiterUsd: this.DEFAULT_PRICE_PER_LITER_USD,
       serviceMargin: this.DEFAULT_SERVICE_MARGIN,
-      fuelType: 'gasoline',
+      fuelType: 'nafta',
     };
   }
 

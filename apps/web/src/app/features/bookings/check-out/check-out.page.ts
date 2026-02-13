@@ -185,7 +185,7 @@ export class CheckOutPage implements OnInit {
       baseCost: Math.round(baseCost * 100) / 100,
       totalCost: Math.round(totalCost * 100) / 100,
       percentageMissing: Math.abs(diff),
-      fuelType: 'gasoline' as const,
+      fuelType: 'nafta' as const,
     };
   });
 
