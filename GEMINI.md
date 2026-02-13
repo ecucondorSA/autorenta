@@ -330,7 +330,7 @@ pkill -f "pnpm.*build"
 - **Acción Directa:** Ejecutar tareas simples y bien definidas inmediatamente.
 - **Confirmación:** Cambios complejos (refactors, migraciones de BD) requieren un plan y aprobación del usuario.
 - **CERO DEUDA TÉCNICA (NO FLOJERA):** No existe "lo optimizo después". El código se escribe **perfecto y optimizado HOY**. Si ves algo mal, arréglalo AHORA. Prohibido dejar `TODO` para "el futuro" en lógica crítica.
-- **Dos planos (UI vs DB):** Ante bugs de datos, separar y validar UI gating vs DB enforcement (RLS/triggers/constraints). Si es regla crítica, enforce en DB y reflejar en UI.
+- **Dos planos (UI vs DB):** Ante bugs de datos, separar y validar UI gating vs DB enforcement (RLS/triggers/constraints). Si es regla crítica, enforce en DB y reflejadas en UI.
 
 ### Prompt Senior (Debug/Hardening)
 ```text
@@ -1290,4 +1290,88 @@ grep -r "sk_live\|APP_USR" .github/workflows/
 
 ---
 
-**© 2026 AutoRenta | Gemini Agent Configuration v3.3**
+## 34. Sistema de Verificación de Identidad (KYC)
+
+**Fuente de Verdad Técnica y Operativa (Actualizado 2026-02-13)**
+
+### Arquitectura: Dos Sistemas Coexistentes
+
+AutoRenta opera con dos sistemas de verificación en paralelo que convergen en un único *gate* crítico.
+
+| Sistema | Tabla Principal | Gate Clave (Source of Truth) | Propósito |
+|---------|-----------------|------------------------------|-----------|
+| **Legacy** | `user_verifications` | `status` (VERIFICADO/PENDIENTE) | Compatibilidad histórica |
+| **Niveles Progresivos** | `user_identity_levels` | `current_level` (0–3) | Gamificación y desbloqueo de features |
+| **Gate Final** | `profiles` | `id_verified` (boolean) | **Permite activar autos en Marketplace** |
+
+### Los 3 Niveles de Verificación
+
+El RPC `get_verification_progress()` calcula el nivel actual:
+
+- **Level 0 (Sin verificar):** Usuario nuevo.
+- **Level 1 (Básico):** Email confirmado **O** teléfono verificado. (50% progreso).
+- **Level 2 (Documentado):** DNI/Cédula verificado + Licencia de conducir verificada. (80% progreso). **Requerido para publicar autos.**
+- **Level 3 (Biometría):** Selfie/Prueba de vida aprobada. (100% progreso). **Requerido para alquilar autos de lujo.**
+
+### Flujos de Verificación
+
+#### 1. Upload + OCR (Automático)
+- **Servicio:** `VerificationService.uploadAndVerifyDocument()`
+- **Edge Function:** `verify-document`
+- **Lógica:**
+  - Sube archivo a bucket `identity-documents`.
+  - Llama a Google Cloud Vision API.
+  - Valida reglas específicas por país (Argentina/Ecuador).
+  - **Auto-Aprobación:** Si OCR confidence >= 70% en DNI Frontal:
+    - `profiles.id_verified = true` (LOCK inmediato).
+    - `user_identity_levels.id_verified_at = now()`.
+
+#### 2. Prueba de Vida (Face Verification)
+- **Requisito:** Level 2 completo.
+- **Servicio:** `FaceVerificationService.verifyFace()`
+- **Edge Function:** `verify-face`
+- **Lógica:**
+  - Graba video de 3 segundos en frontend.
+  - Compara frame del video vs. foto del DNI usando AWS Rekognition (preferido) o Google Vision.
+  - **Threshold:** Match Score >= 70%.
+  - **Bloqueo:** Si falla 5 veces, la cuenta se bloquea (`is_kyc_blocked = true`).
+  - **Seguridad:** Requiere JWT de usuario (`requireAuth`), ignora `user_id` del payload.
+
+#### 3. Revisión Manual (Human-in-the-loop)
+- **Trigger:** OCR con confianza < 70%.
+- **Proceso:**
+  - Edge Function `verify-user-docs` envía email al equipo de soporte.
+  - Email contiene "Magic Links" firmados (Approve/Reject).
+  - Al hacer click, Edge Function `manual-identity-review` actualiza la DB sin login de admin requerido.
+
+### Gates de Negocio Críticos (DB Enforcement)
+
+1.  **Activación de Autos (Trigger):**
+    ```sql
+    -- ERRCODE 23514
+    IF NEW.status = 'active' AND (SELECT id_verified FROM profiles WHERE id = NEW.owner_id) IS NOT TRUE THEN
+      RAISE EXCEPTION 'Owner must be verified to activate car';
+    END IF;
+    ```
+    *Efecto:* Autos en `pending` son visibles en marketplace (con overlay) pero no reservables.
+
+2.  **Bloqueo por Fraude (RPC):**
+    ```sql
+    -- is_kyc_blocked(user_id)
+    IF face_verification_attempts >= 5 THEN
+      RETURN blocked = true;
+    END IF;
+    ```
+
+### Incidentes y Hallazgos (Post-Audit 2026-02-13)
+
+- **Stub Bug:** Migración `20260210...` anuló accidentalmente el bloqueo KYC. Restaurado con `20260213055555`.
+- **Legacy Columns:** `profiles` NO tiene columna `kyc_status`. El estado real vive en `user_documents` y `profiles.id_verified`.
+- **Security Patch:** `verify-face` ahora usa `requireAuth` para prevenir suplantación de identidad en el payload.
+- **Error Handling:** `verify-document` ahora propaga errores de OCR reales al frontend (no solo "Unknown error").
+
+---
+
+**© 2026 AutoRenta | Gemini Agent Configuration v3.4**
+
+```

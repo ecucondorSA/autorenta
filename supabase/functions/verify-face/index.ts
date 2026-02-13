@@ -14,6 +14,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { requireAuth } from '../_shared/auth-helpers.ts';
 import { callVisionApi } from "../_shared/vision-api.ts";
 import { fetchWithTimeout } from "../_shared/fetch-utils.ts";
 import { compareFaces, isRekognitionConfigured, detectFaces } from "../_shared/aws-rekognition.ts";
@@ -177,14 +178,25 @@ serve(async (req) => {
   }
 
   try {
-    const { video_url, document_url, user_id, selfie_frame_base64 } =
+    // Verify auth first - SECURITY CRITICAL
+    const { user } = await requireAuth(req);
+    const authenticatedUserId = user.id;
+
+    const { video_url, document_url, user_id: payloadUserId, selfie_frame_base64 } =
       (await req.json()) as VerifyFaceRequest;
 
-    if (!video_url || !document_url || !user_id) {
+    // Use authenticated user ID always
+    const user_id = authenticatedUserId;
+
+    if (payloadUserId && payloadUserId !== authenticatedUserId) {
+      console.warn(`[verify-face] Ignoring mismatched payload user_id=${payloadUserId}, using auth user_id=${authenticatedUserId}`);
+    }
+
+    if (!video_url || !document_url) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: "Missing required fields: video_url, document_url, user_id",
+          error: "Missing required fields: video_url, document_url",
         } as VerifyFaceResponse),
         {
           status: 400,

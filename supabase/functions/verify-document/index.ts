@@ -56,7 +56,7 @@ const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 function mapOcrFailure(error: unknown, retries: number): OcrFailureResponse {
-  const message = 'Unknown error';
+  const message = error instanceof Error ? error.message : String(error);
 
   if (message.includes('OCR_PROVIDER_UNAVAILABLE:')) {
     return {
