@@ -40,6 +40,43 @@ Checklist:
 - [ ] Constantes de negocio no hardcodeadas en CI.
 - [ ] No hay duplicación workflow <-> edge.
 
+### REGLA #3: Validación de Integración Cross-Layer (Antes / Durante / Después)
+
+Generar código que compila en cada capa pero nunca se valida end-to-end es construir una casa de madera al lado de un volcán: se ve bien hasta que explota. **Nunca asumir que un nombre de columna, un RPC o una Edge Function en el repo coincide con lo que está en producción. Verificar contra prod ANTES de escribir una sola línea.**
+
+Cada feature toca múltiples capas (DB → RPC → Edge Function → Service → UI).
+Código que compila en cada capa pero no conecta entre capas = bug invisible.
+
+**ANTES de codificar** (mapeo del flujo):
+- [ ] Trazar ruta completa: trigger → cada capa intermedia → resultado visible al usuario.
+- [ ] Verificar nombres reales de columnas en prod: `SELECT column_name FROM information_schema.columns WHERE table_name = '...'`.
+- [ ] Verificar versión actual de RPCs en prod: `SELECT prosrc FROM pg_proc WHERE proname = '...'`.
+- [ ] Verificar que Edge Functions deployadas matchean el código local (comparar con `supabase functions list`).
+- [ ] Si una migración existe en el repo pero no se aplicó en prod → APLICARLA PRIMERO.
+
+**DURANTE la codificación** (validación por capa):
+- [ ] Cada write a DB usa nombres de columnas verificados contra `information_schema` (NUNCA asumir).
+- [ ] Cross-reference explícito: si Edge Function escribe `col_x`, el RPC que lee debe leer `col_x` (mismo nombre exacto).
+- [ ] Si el frontend lee un signal que viene de un RPC → verificar que el RPC retorna ese campo con ese nombre.
+- [ ] CORS headers: incluir `baggage, sentry-trace` en toda Edge Function frontend-facing.
+
+**DESPUÉS de codificar** (validación end-to-end):
+- [ ] Ejecutar el flujo completo: trigger real → verificar estado en DB → verificar que UI refleja el cambio.
+- [ ] Query de verificación SQL post-cambio: `SELECT [campos_relevantes] FROM [tabla] WHERE user_id = '...'`.
+- [ ] Si el flujo involucra Edge Function: verificar logs en Supabase Dashboard o con `supabase functions logs`.
+- [ ] Si hay deploy de Edge Function + migración: AMBOS deben aplicarse antes de declarar "listo".
+
+> Si algún paso falla, NO avanzar al siguiente. Corregir la capa rota primero.
+
+### REGLA #4: Prohibido Stubs que Sobrescriben Implementaciones Reales
+
+**Problema real (Feb 2026):** Una migración de stubs usó `CREATE OR REPLACE FUNCTION is_kyc_blocked()` con `RETURN {blocked: false}`. Se aplicó DESPUÉS de la migración real con lógica KYC completa. Resultado: bloqueo KYC completamente nulo durante semanas, cero errores visibles.
+
+Tres reglas concretas:
+1. **NUNCA `CREATE OR REPLACE` para funciones que ya existen con lógica real.** Verificar antes: `SELECT proname, LEFT(prosrc, 100) FROM pg_proc WHERE proname = '...'`.
+2. **Migraciones que recrean tablas DEBEN incluir TODAS las columnas** de migraciones anteriores. `DROP TABLE + CREATE TABLE` borra columnas agregadas por `ALTER TABLE ADD COLUMN` previos — silenciosamente.
+3. **Post-migración: verificar que funciones y columnas existentes siguen intactas.** Query: `SELECT proname, pg_get_function_result(oid) FROM pg_proc WHERE proname IN (...)`.
+
 ### REGLA #2: Higiene de Repo (Nunca Regresivo)
 - Root solo para runtime/config/docs core.
 - Prohibido versionar ruido: `tmp-*`, logs, screenshots, `*.pid`, dumps, outputs ad-hoc.
