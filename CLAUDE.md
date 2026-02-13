@@ -15,7 +15,8 @@
 4. Supabase y DB Hardening
 5. Flujo de Trabajo del Agente
 6. Calidad y Gates
-7. Referencias y Anexos
+7. Insights Operativos
+8. Referencias y Anexos
 
 ---
 
@@ -196,7 +197,25 @@ Checklist de entrega:
 
 ---
 
-## 7) Referencias y Anexos
+## 7) Insights Operativos
+
+- **MCP migration drift:** `mcp__supabase__apply_migration` genera timestamps propios en `schema_migrations`. Si el repo tiene archivos con timestamps diferentes, `supabase db push` falla. Fix: alinear `supabase_migrations.schema_migrations` con los timestamps locales. Preferir siempre `db push` via CI.
+
+- **Guardrails baseline:** Migraciones correctivas (`CREATE OR REPLACE`) duplican RPCs legítimamente. Agregar la función al array `rpcFunctions` en `scripts/maintenance/guardrails.baseline.json` para que `--strict` no falle.
+
+- **PL/pgSQL lazy validation:** PostgreSQL NO valida nombres de columnas al crear funciones — solo al ejecutarlas. Una función con `INSERT INTO ... (metadata)` compila OK pero falla en runtime si la columna real es `provider_metadata`.
+
+- **Supabase UPDATE sin WHERE:** Supabase bloquea `UPDATE tabla SET ...` sin `WHERE`. Fix: agregar `WHERE true` si el UPDATE es intencional sobre toda la tabla.
+
+- **wallet_transactions columnas reales:** `provider_metadata` (no `metadata`), `reference_id` (no `booking_id`), `amount` es `numeric`. Verificar siempre contra `information_schema` antes de escribir RPCs.
+
+- **FGO subfunds:** Fondos FGO viven en `fgo_subfunds` (3 pools: `liquidity`, `capitalization`, `profitability`), NO en `user_wallets`. Nunca buscar FGO en wallets de usuario.
+
+- **Edge Function auth (ES256):** Tras migración ES256, todas las Edge Functions pueden necesitar `--no-verify-jwt`. Las que usan `auth.getUser()` internamente no necesitan verificación en el gateway.
+
+---
+
+## 8) Referencias y Anexos
 
 ### Referencias rápidas
 - Política de higiene: `docs/ROOT_HYGIENE.md`
@@ -215,6 +234,7 @@ Checklist de entrega:
 - `docs/agents/claude/CLAUDE_REFERENCE_FULL_2026-02-12.md`
 
 ### Ingeniería
+- `docs/engineering/MEMBERSHIP_SYSTEM.md`
 - `docs/engineering/API_REFERENCE.md`
 - `docs/engineering/DATABASE_SCHEMA.md`
 - `docs/engineering/EDGE_FUNCTIONS.md`
