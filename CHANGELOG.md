@@ -1,3 +1,7 @@
+## <small>3.98.3 (2026-02-14)</small>
+
+* fix(build): expose clearStaleSession in AuthService and update BookingsService signature ([0386607](https://github.com/ecucondorSA/autorenta/commit/0386607))
+
 ## <small>3.98.2 (2026-02-14)</small>
 
 * refactor(auth): decompose AuthService into facade and secure edge functions ([8b1660a](https://github.com/ecucondorSA/autorenta/commit/8b1660a))
