@@ -1,3 +1,7 @@
+## <small>3.98.2 (2026-02-14)</small>
+
+* refactor(auth): decompose AuthService into facade and secure edge functions ([8b1660a](https://github.com/ecucondorSA/autorenta/commit/8b1660a))
+
 ## <small>3.98.1 (2026-02-14)</small>
 
 * fix(build): resolve compilation errors in FgoOverview and BookingRequest ([07b06dd](https://github.com/ecucondorSA/autorenta/commit/07b06dd))
