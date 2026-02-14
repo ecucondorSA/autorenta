@@ -1,3 +1,7 @@
+## <small>3.98.1 (2026-02-14)</small>
+
+* fix(build): resolve compilation errors in FgoOverview and BookingRequest ([07b06dd](https://github.com/ecucondorSA/autorenta/commit/07b06dd))
+
 ## 3.98.0 (2026-02-14)
 
 * feat(booking): overhaul booking request UX and refactor core services ([eec8841](https://github.com/ecucondorSA/autorenta/commit/eec8841))
