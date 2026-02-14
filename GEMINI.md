@@ -1607,3 +1607,56 @@ Lista de Model Context Protocols (MCP) y herramientas activas en el agente:
 - **Deep Research:** `research_start`, `file_search_*`.
 
 ---
+
+
+---
+
+## 37. 🧠 Lecciones Aprendidas (Prevención de Deuda Técnica)
+
+> **Diagnóstico Forense (Feb 2026):** Análisis de causas raíz de la degradación del código y protocolos para evitar recurrencia.
+
+### 1. El Dilema de la Velocidad ("God Objects")
+- **Patrón Tóxico:** Añadir métodos infinitos a servicios centrales (ej: `BookingsService` > 1400 líneas) para cerrar tickets rápido.
+- **Solución:** Si un servicio supera 400 líneas o maneja más de una responsabilidad, **refactorizar a Facade** y delegar a servicios especializados (ej: `BookingWalletService`).
+
+### 2. Conflicto de Paradigmas (RxJS vs Signals)
+- **Patrón Tóxico:** Mezcla de suscripciones manuales (`.subscribe`) con lógica de UI, causando fugas de memoria y "Zombie UI" (botones que no responden).
+- **Solución:** UI State siempre con **Signals** (`signal`, `computed`). RxJS solo para streams de eventos. Prohibido `subscribe()` sin `takeUntilDestroyed`.
+
+### 3. Fuga de Lógica (Frontend Overreach)
+- **Patrón Tóxico:** Frontend calculando precios o haciendo inserts directos (`fallbackDirectBookingInsert`) porque el Backend "no estaba listo".
+- **Solución:** **El Backend es la autoridad.** Si falta un RPC, se crea el RPC. Nunca emular lógica financiera o de seguridad en el cliente.
+
+### 4. Desarrollo en Silos (Desktop-centric)
+- **Patrón Tóxico:** Componentes (ej: Calendario) con `position: absolute` que funcionan en monitor grande pero rompen el flujo en móviles.
+- **Solución:** Diseño **Mobile-First** estricto. Preferir navegación lineal y `BottomSheets` sobre modales/overlays complejos.
+
+### 5. Falta de Automatización (Guardrails)
+- **Patrón Tóxico:** Confiar solo en la disciplina humana para sincronizar Enums o tipos.
+- **Solución:** Los scripts de validación (`validate-enum-sync`, `pre-push`) son obligatorios. Si el CI falla, el código no existe.
+
+---
+
+## 38. Protocolos de Hardening (Implementados Feb 2026)
+
+### 1. Descomposición de God Objects (Service Facades)
+**Problema:** Servicios monolíticos (`AuthService`) dificultan el mantenimiento y testing.
+**Protocolo:**
+- **Facade Pattern:** Mantener el servicio original como orquestador público.
+- **Delegación:** Mover lógica a servicios de dominio (`SessionService`, `OAuthService`, `ReferralsService`).
+- **Beneficio:** API pública estable, implementación modular.
+
+### 2. Seguridad Zero-Trust en Edge Functions
+**Mandato:** NUNCA confiar en headers manuales.
+**Implementación:**
+- **Auth:** Usar `requireAuth(req)` de `_shared/auth-helpers.ts` al inicio de cada función.
+- **Privilegios:** Usar `createServiceClient()` SOLO para operaciones RPC administrativas explícitas.
+- **Validación:** No confiar en el payload (`user_id`). Usar siempre el ID del token JWT (`user.id`).
+
+### 3. Patrón Reactivo de Carga (RxJS Cleanup)
+**Problema:** Suscripciones manuales (`.subscribe()`) causan memory leaks y race conditions.
+**Estándar:**
+- **Trigger:** `private readonly refreshTrigger$ = new BehaviorSubject<void>(void 0);`
+- **State:** `private readonly state = toSignal(this.refreshTrigger$.pipe(switchMap(...)));`
+- **View:** `readonly data = computed(() => this.state().data);`
+- **Acción:** `refresh() { this.refreshTrigger$.next(); }`

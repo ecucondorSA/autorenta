@@ -1,5 +1,6 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * Referral Service
@@ -79,6 +80,7 @@ export interface ReferralStats {
 })
 export class ReferralsService {
   private readonly supabase = injectSupabase();
+  private readonly logger = inject(LoggerService);
 
   // State
   readonly myReferralCode = signal<ReferralCode | null>(null);
@@ -103,6 +105,49 @@ export class ReferralsService {
     if (!code) return null;
     return `${window.location.origin}/ref/${code.code}`;
   });
+
+  /**
+   * Procesa cualquier código de referido pendiente en sessionStorage
+   * Se llama automáticamente al iniciar sesión
+   */
+  async checkAndApplyPendingReferral(userId: string): Promise<void> {
+    const REFERRAL_CODE_KEY = 'referral_code';
+
+    try {
+      const code = sessionStorage.getItem(REFERRAL_CODE_KEY);
+      if (!code) return;
+
+      this.logger.debug('Applying pending referral code', 'ReferralsService', { code });
+
+      // Clear immediately to prevent duplicate applications
+      sessionStorage.removeItem(REFERRAL_CODE_KEY);
+
+      // Apply the referral code via RPC
+      const { error } = await this.supabase.rpc('apply_referral_code', {
+        p_referred_user_id: userId,
+        p_code: code.toUpperCase(),
+        p_source: 'web_auto',
+      });
+
+      if (error) {
+        // Common expected errors - don't log as errors
+        if (error.message?.includes('already referred')) {
+          this.logger.debug('User already referred, skipping', 'ReferralsService');
+          return;
+        }
+        if (error.message?.includes('Invalid or expired')) {
+          this.logger.debug('Referral code invalid or expired', 'ReferralsService', { code });
+          return;
+        }
+        this.logger.warn('Failed to apply referral code', 'ReferralsService', error);
+        return;
+      }
+
+      this.logger.info('Referral code applied successfully', 'ReferralsService', { code });
+    } catch (err) {
+      this.logger.warn('Error applying referral code', 'ReferralsService', err);
+    }
+  }
 
   /**
    * Obtener o generar código de referido del usuario actual

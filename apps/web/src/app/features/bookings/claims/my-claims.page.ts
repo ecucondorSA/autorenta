@@ -1,15 +1,15 @@
 import {
   Component,
-  OnInit,
   inject,
   signal,
   computed,
   ChangeDetectionStrategy,
-  DestroyRef,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { BehaviorSubject, of } from 'rxjs';
+import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
 import { InsuranceClaim } from '@core/models/insurance.model';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
@@ -36,15 +36,35 @@ import { NotificationManagerService } from '@core/services/infrastructure/notifi
   templateUrl: './my-claims.page.html',
   styleUrls: ['./my-claims.page.css'],
 })
-export class MyClaimsPage implements OnInit {
+export class MyClaimsPage {
   private readonly router = inject(Router);
   private readonly insuranceService = inject(InsuranceService);
   private readonly toastService = inject(NotificationManagerService);
-  private readonly destroyRef = inject(DestroyRef);
 
-  readonly claims = signal<InsuranceClaim[]>([]);
-  readonly loading = signal(true);
   readonly filterStatus = signal<InsuranceClaim['status'] | 'all'>('all');
+
+  // Reactive Data Source
+  private readonly refreshTrigger$ = new BehaviorSubject<void>(void 0);
+
+  private readonly claimsState = toSignal(
+    this.refreshTrigger$.pipe(
+      switchMap(() =>
+        this.insuranceService.getMyClaims().pipe(
+          map((data) => ({ data, loading: false, error: null })),
+          startWith({ data: [], loading: true, error: null }),
+          catchError((error) => {
+            console.error('Error loading claims:', error);
+            this.toastService.error('Error al cargar siniestros', '');
+            return of({ data: [], loading: false, error });
+          }),
+        ),
+      ),
+    ),
+    { initialValue: { data: [], loading: true, error: null } },
+  );
+
+  readonly claims = computed(() => this.claimsState().data || []);
+  readonly loading = computed(() => this.claimsState().loading);
 
   // Computed: Claims filtrados
   readonly filteredClaims = computed(() => {
@@ -86,32 +106,8 @@ export class MyClaimsPage implements OnInit {
     { value: 'paid' as const, label: 'Pagados', icon: '💰' },
   ];
 
-  async ngOnInit() {
-    await this.loadClaims();
-  }
-
-  async loadClaims() {
-    this.loading.set(true);
-    try {
-      this.insuranceService
-        .getMyClaims()
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: (claims) => {
-            this.claims.set(claims);
-            this.loading.set(false);
-          },
-          error: (error) => {
-            console.error('Error loading claims:', error);
-            this.toastService.error('Error al cargar siniestros', '');
-            this.loading.set(false);
-          },
-        });
-    } catch (error) {
-      console.error('Error loading claims:', error);
-      this.toastService.error('Error al cargar siniestros', '');
-      this.loading.set(false);
-    }
+  refresh() {
+    this.refreshTrigger$.next();
   }
 
   setFilter(status: InsuranceClaim['status'] | 'all') {

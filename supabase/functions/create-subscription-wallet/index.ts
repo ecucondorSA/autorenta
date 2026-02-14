@@ -1,20 +1,12 @@
-/**
- * Supabase Edge Function: create-subscription-wallet
- *
- * Charges the user's wallet balance and creates an Autorentar Club subscription.
- * Uses wallet_transfer to move funds to the platform account and then calls
- * create_subscription via RPC.
- */
-
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { createChildLogger } from '../_shared/logger.ts';
+import { requireAuth, createServiceClient } from '../_shared/auth-helpers.ts';
 
 const log = createChildLogger('CreateSubscriptionWallet');
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 // Subscription tier configurations - MONTHLY billing
 // Source of truth: apps/web/src/app/core/models/subscription.model.ts
@@ -63,28 +55,13 @@ serve(async (req) => {
   }
 
   try {
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
+    // 1. AUTHENTICATION (Using shared helper)
+    const { user } = await requireAuth(req);
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    const token = authHeader.replace('Bearer ', '');
-
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
+    // 2. PRIVILEGED CLIENT (For RPC execution)
+    // We use service client to ensure we have permissions to execute the wallet transaction
+    // The previous implementation used service role, so we maintain that privilege level.
+    const supabaseAdmin = createServiceClient();
 
     const body: CreateSubscriptionWalletRequest = await req.json();
     const { tier } = body;
@@ -111,7 +88,8 @@ serve(async (req) => {
     // Call RPC function with error handling for the RPC call itself
     let result, chargeError;
     try {
-      const response = await supabase.rpc('create_subscription_with_wallet', {
+      // Execute as Admin to ensure permissions
+      const response = await supabaseAdmin.rpc('create_subscription_with_wallet', {
         p_user_id: user.id,
         p_tier: tier,
         p_ref: idempotencyKey,
@@ -195,6 +173,9 @@ serve(async (req) => {
       { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
+    // Auth errors are handled by requireAuth (returns Response)
+    if (error instanceof Response) return error;
+
     log.error('Error creating subscription with wallet', error);
     return new Response(
       JSON.stringify({

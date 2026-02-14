@@ -7,6 +7,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { requireAuth, createServiceClient } from '../_shared/auth-helpers.ts';
 
 interface DeleteRequest {
   confirm: boolean;
@@ -22,36 +23,11 @@ serve(async (req) => {
   try {
     console.log('[Delete Account] Starting account deletion');
 
-    // Authenticate user
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Authorization header required' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    // 1. AUTHENTICATION (Using shared helper)
+    const { user } = await requireAuth(req);
 
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-
-    // Client with user's JWT for auth
-    const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
-
-    // Service client for admin operations
-    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
-
-    // Get authenticated user
-    const { data: { user }, error: userError } = await supabaseUser.auth.getUser();
-
-    if (userError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    // 2. ADMIN CLIENT (For privileged operations)
+    const supabaseAdmin = createServiceClient();
 
     // Parse request body
     let body: DeleteRequest = { confirm: false };
@@ -237,11 +213,14 @@ serve(async (req) => {
     );
 
   } catch (error: unknown) {
-    const errorMessage = 'Internal server error';
-    console.error('[Delete Account] Error:', errorMessage);
+    // Auth errors are handled by requireAuth (returns Response)
+    if (error instanceof Response) return error;
+
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    console.error('[Delete Account] Error:', error);
 
     return new Response(
-      JSON.stringify({ error: 'Failed to delete account' }),
+      JSON.stringify({ error: 'Failed to delete account', details: errorMessage }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
