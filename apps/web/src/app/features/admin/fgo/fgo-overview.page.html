@@ -11,11 +11,11 @@
         <span class="icon">💸</span>
         Pagar Siniestro
       </button>
-      <button class="btn-refresh" (click)="refreshData()" [disabled]="loadingStatus">
+      <button class="btn-refresh" (click)="refreshData()" [disabled]="loadingStatus()">
         <span class="icon">🔄</span>
         Actualizar
       </button>
-      <button class="btn-recalculate" (click)="recalculateMetrics()" [disabled]="loadingStatus">
+      <button class="btn-recalculate" (click)="recalculateMetrics()" [disabled]="loadingStatus()">
         <span class="icon">🧮</span>
         Recalcular Métricas
       </button>
@@ -26,14 +26,14 @@
   <section class="fgo-status-section">
     <h2>Estado General</h2>
 
-    @if (loadingStatus) {
+    @if (loadingStatus()) {
       <div class="loading-state">
         <div class="spinner"></div>
         <p>Cargando estado del FGO...</p>
       </div>
     }
 
-    @if (!loadingStatus && fgoStatus) {
+    @if (!loadingStatus() && fgoStatus(); as status) {
       <div class="status-grid">
         <!-- Balance Total -->
         <div class="status-card card-primary">
@@ -42,24 +42,24 @@
             <span class="icon">💰</span>
           </div>
           <div class="card-body">
-            <div class="main-value">{{ formatUsd(fgoStatus.totalBalance) }}</div>
+            <div class="main-value">{{ formatUsd(status.totalBalance) }}</div>
             <div class="card-meta">
               <div class="meta-item">
                 <span class="label">Meta:</span>
-                <span class="value">{{ formatUsd(fgoStatus.targetBalance) }}</span>
+                <span class="value">{{ formatUsd(status.targetBalance) }}</span>
               </div>
             </div>
           </div>
         </div>
         <!-- Ratio de Cobertura (RC) -->
-        <div class="status-card" [ngClass]="getStatusClass(fgoStatus.status)">
+        <div class="status-card" [ngClass]="getStatusClass(status.status)">
           <div class="card-header">
             <h3>Cobertura (RC)</h3>
-            <span class="status-icon">{{ getStatusIcon(fgoStatus.status) }}</span>
+            <span class="status-icon">{{ getStatusIcon(status.status) }}</span>
           </div>
           <div class="card-body">
-            <div class="main-value">{{ formatRatio(fgoStatus.coverageRatio) }}</div>
-            <div class="status-label">{{ getStatusMessage(fgoStatus.status) }}</div>
+            <div class="main-value">{{ formatRatio(status.coverageRatio) }}</div>
+            <div class="status-label">{{ getStatusMessage(status.status) }}</div>
           </div>
         </div>
         <!-- Loss Ratio (LR) -->
@@ -69,11 +69,11 @@
             <span class="icon">📊</span>
           </div>
           <div class="card-body">
-            <div class="main-value">{{ formatRatio(fgoStatus.lossRatio) }}</div>
+            <div class="main-value">{{ formatRatio(status.lossRatio) }}</div>
             <div class="card-meta">
               <div class="meta-item">
                 <span class="label">Siniestros pagados:</span>
-                <span class="value">{{ formatUsd(fgoStatus.totalSiniestrosPaid) }}</span>
+                <span class="value">{{ formatUsd(status.totalSiniestrosPaid) }}</span>
               </div>
             </div>
           </div>
@@ -85,11 +85,11 @@
             <span class="icon">⚙️</span>
           </div>
           <div class="card-body">
-            <div class="main-value">{{ fgoStatus.alphaPercentage }}%</div>
+            <div class="main-value">{{ status.alphaPercentage }}%</div>
             <div class="card-meta">
               <div class="meta-item">
                 <span class="label">Total aportes:</span>
-                <span class="value">{{ formatUsd(fgoStatus.totalContributions) }}</span>
+                <span class="value">{{ formatUsd(status.totalContributions) }}</span>
               </div>
             </div>
           </div>
@@ -102,16 +102,16 @@
   <section class="subfunds-section">
     <h2>Distribución por Subfondo</h2>
 
-    @if (loadingSubfunds) {
+    @if (loadingSubfunds()) {
       <div class="loading-state">
         <div class="spinner"></div>
         <p>Cargando subfondos...</p>
       </div>
     }
 
-    @if (!loadingSubfunds && subfunds.length > 0) {
+    @if (!loadingSubfunds() && subfunds().length > 0) {
       <div class="subfunds-grid">
-        @for (subfund of subfunds; track subfund) {
+        @for (subfund of subfunds(); track subfund.type) {
           <div class="subfund-card">
             <div class="subfund-header">
               <h3>{{ getSubfundName(subfund.type) }}</h3>
@@ -135,7 +135,7 @@
       </div>
     }
 
-    @if (!loadingSubfunds && subfunds.length === 0) {
+    @if (!loadingSubfunds() && subfunds().length === 0) {
       <div class="empty-state">
         <p>No se encontraron subfondos</p>
       </div>
@@ -147,18 +147,18 @@
     <div class="section-header">
       <h2>Movimientos Recientes</h2>
       <div class="section-actions">
-        <span class="movement-count">{{ recentMovements.length }} movimientos</span>
+        <span class="movement-count">{{ recentMovements().length }} movimientos</span>
       </div>
     </div>
 
-    @if (loadingMovements) {
+    @if (loadingMovements()) {
       <div class="loading-state">
         <div class="spinner"></div>
         <p>Cargando movimientos...</p>
       </div>
     }
 
-    @if (!loadingMovements && recentMovements.length > 0) {
+    @if (!loadingMovements() && recentMovements().length > 0) {
       <div class="movements-table-container overflow-x-auto">
         <table class="movements-table min-w-full">
           <thead>
@@ -173,7 +173,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (movement of recentMovements; track movement) {
+            @for (movement of recentMovements(); track movement.id) {
               <tr
                 [class.movement-credit]="movement.operation === 'credit'"
                 [class.movement-debit]="movement.operation === 'debit'"
@@ -211,7 +211,7 @@
       </div>
     }
 
-    @if (!loadingMovements && recentMovements.length === 0) {
+    @if (!loadingMovements() && recentMovements().length === 0) {
       <div class="empty-state">
         <p>No se encontraron movimientos recientes</p>
       </div>
@@ -220,20 +220,20 @@
 
   <!-- Footer Info -->
   <div class="page-footer">
-    @if (fgoStatus) {
+    @if (fgoStatus(); as status) {
       <div class="footer-info">
         <span class="info-item">
-          <strong>Última actualización:</strong> {{ formatDate(fgoStatus.updatedAt) }}
+          <strong>Última actualización:</strong> {{ formatDate(status.updatedAt) }}
         </span>
         <span class="info-item">
-          <strong>Métricas calculadas:</strong> {{ formatDate(fgoStatus.lastCalculatedAt) }}
+          <strong>Métricas calculadas:</strong> {{ formatDate(status.lastCalculatedAt) }}
         </span>
       </div>
     }
   </div>
 
   <!-- Modal: Transferir entre Subfondos -->
-  @if (showTransferModal) {
+  @if (showTransferModal()) {
     <div class="modal-overlay" (click)="closeTransferModal()">
       <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
@@ -290,9 +290,9 @@
           <button
             class="btn-primary"
             (click)="submitTransfer()"
-            [disabled]="!isTransferFormValid() || processingTransfer"
+            [disabled]="!isTransferFormValid() || processingTransfer()"
           >
-            {{ processingTransfer ? 'Procesando...' : 'Transferir' }}
+            {{ processingTransfer() ? 'Procesando...' : 'Transferir' }}
           </button>
         </div>
       </div>
@@ -300,7 +300,7 @@
   }
 
   <!-- Modal: Pagar Siniestro -->
-  @if (showSiniestroModal) {
+  @if (showSiniestroModal()) {
     <div class="modal-overlay" (click)="closeSiniestroModal()">
       <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
@@ -354,9 +354,9 @@
           <button
             class="btn-danger"
             (click)="submitSiniestro()"
-            [disabled]="!isSiniestroFormValid() || processingSiniestro"
+            [disabled]="!isSiniestroFormValid() || processingSiniestro()"
           >
-            {{ processingSiniestro ? 'Procesando...' : 'Pagar Siniestro' }}
+            {{ processingSiniestro() ? 'Procesando...' : 'Pagar Siniestro' }}
           </button>
         </div>
       </div>

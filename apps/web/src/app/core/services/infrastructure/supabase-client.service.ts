@@ -378,6 +378,20 @@ export class SupabaseClientService {
   ): Promise<'ok' | 'timed out' | 'error'> {
     return this.getClient().removeChannel(channel);
   }
+
+  /**
+   * Invoke a Supabase Edge Function
+   */
+  invoke(
+    functionName: string,
+    invokeOptions?: {
+      headers?: { [key: string]: string };
+      body?: any;
+      method?: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
+    },
+  ): Promise<{ data: any; error: any }> {
+    return this.getClient().functions.invoke(functionName, invokeOptions);
+  }
 }
 
 /**

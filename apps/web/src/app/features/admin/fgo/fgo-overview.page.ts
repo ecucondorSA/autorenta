@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, switchMap, interval, merge, tap, catchError, of } from 'rxjs';
+import { BehaviorSubject, switchMap, interval, merge, tap, catchError, of, firstValueFrom } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
@@ -365,9 +365,6 @@ export class FgoOverviewPage {
     this.processingSiniestro.set(true);
 
     try {
-      // Import firstValueFrom inside method to avoid global scope issues if not imported
-      const { firstValueFrom } = await import('rxjs');
-      
       const result = await firstValueFrom(
         this.fgoService.paySiniestro({
           bookingId: this.siniestroForm.bookingId,
