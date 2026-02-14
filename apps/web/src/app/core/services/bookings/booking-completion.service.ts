@@ -7,6 +7,7 @@ import { BookingWalletService } from '@core/services/bookings/booking-wallet.ser
 import { DriverProfileService } from '@core/services/auth/driver-profile.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { PaymentsService } from '@core/services/payments/payments.service'; // NUEVO: Importar PaymentsService
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * Service for managing booking completion
@@ -20,6 +21,7 @@ export class BookingCompletionService {
   private readonly driverProfileService = inject(DriverProfileService);
   private readonly logger = inject(LoggerService);
   private readonly paymentsService = inject(PaymentsService); // NUEVO: Inyectar PaymentsService
+  private readonly supabaseService = injectSupabase();
 
   /**
    * Complete booking without damages (clean booking)
@@ -189,11 +191,32 @@ export class BookingCompletionService {
   }
 
   /**
+   * Calculate late fees via RPC
+   */
+  async calculateLateFees(
+    bookingId: string,
+    actualReturnDate: Date,
+  ): Promise<number> {
+    try {
+      const { data, error } = await this.supabaseService.rpc('calculate_late_fees', {
+        p_booking_id: bookingId,
+        p_actual_return_time: actualReturnDate.toISOString(),
+      });
+
+      if (error) throw error;
+      return data.late_fee_cents || 0;
+    } catch (err) {
+      this.logger.error('Error calculating late fees', err);
+      return 0;
+    }
+  }
+
+  /**
    * Check-out Inteligente (Smart Checkout)
    * Procesa el cierre de reserva considerando:
    * - Diferencia de combustible
    * - Daños reportados
-   * - Multas tardías (TODO: mecanismo de retención parcial)
+   * - Multas tardías (Calculadas automáticamente)
    */
   async finishBookingWithInspection(
     booking: Booking,
@@ -202,13 +225,21 @@ export class BookingCompletionService {
       damageAmountCents: number;
       damageDescription?: string;
       lateFeesCents?: number;
+      actualReturnDate?: Date; // Added to support auto-calc
     },
     onUpdateBooking: (bookingId: string, updates: Partial<Booking>) => Promise<Booking>,
   ): Promise<{ success: boolean; remaining_deposit?: number; error?: string }> {
+    let lateFees = inspectionData.lateFeesCents || 0;
+
+    // Auto-calculate late fees if return date is provided and no manual fee override
+    if (!inspectionData.lateFeesCents && inspectionData.actualReturnDate) {
+      lateFees = await this.calculateLateFees(booking.id, inspectionData.actualReturnDate);
+    }
+
     const totalCharges =
       (inspectionData.fuelDifferenceCents || 0) +
       (inspectionData.damageAmountCents || 0) +
-      (inspectionData.lateFeesCents || 0);
+      lateFees;
 
     // Caso 1: Cierre limpio (sin cargos extra)
     if (totalCharges === 0) {
@@ -225,8 +256,8 @@ export class BookingCompletionService {
     if (inspectionData.damageAmountCents > 0) {
       descriptionParts.push(`Daños: $${(inspectionData.damageAmountCents / 100).toFixed(2)}`);
     }
-    if (inspectionData.lateFeesCents && inspectionData.lateFeesCents > 0) {
-      descriptionParts.push(`Recargos: $${(inspectionData.lateFeesCents / 100).toFixed(2)}`);
+    if (lateFees > 0) {
+      descriptionParts.push(`Recargos por retraso: $${(lateFees / 100).toFixed(2)}`);
     }
 
     const description = `Cargos al cierre: ${descriptionParts.join(', ')}`;
@@ -242,7 +273,7 @@ export class BookingCompletionService {
       metadata: {
         ...(booking.metadata || {}),
         pending_fuel_charge: inspectionData.fuelDifferenceCents,
-        pending_late_fee_charge: inspectionData.lateFeesCents,
+        pending_late_fee_charge: lateFees,
         total_pending_charges_cents: totalCharges,
       },
       // La deducción/captura real se hará después de la resolución de la disputa

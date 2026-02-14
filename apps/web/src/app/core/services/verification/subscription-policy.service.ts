@@ -103,8 +103,42 @@ export class SubscriptionPolicyService {
     }
 
     // 3. Aggregate Limit Check (The "Solvency" Gate)
-    // TODO: Check user_risk_stats.gap_coverage_used_usd vs policy.max_gap_coverage_annual_usd
+    // Check if user has exceeded their annual coverage limit
+    if (policy.max_gap_coverage_annual_usd > 0) {
+      const limitCheck = await this.checkAggregateLimit(userId, policy.max_gap_coverage_annual_usd);
+      if (!limitCheck.eligible) {
+        return {
+          eligible: false,
+          reason: `Límite anual de cobertura excedido. Disponible: $${limitCheck.remaining.toFixed(2)} USD.`,
+        };
+      }
+    }
 
     return { eligible: true };
+  }
+
+  /**
+   * Verify if user is within their aggregate risk limit
+   */
+  async checkAggregateLimit(
+    userId: string,
+    limitUsd: number,
+  ): Promise<{ eligible: boolean; usage: number; remaining: number }> {
+    const { data, error } = await this.supabaseService.rpc('check_subscription_risk_limit', {
+      p_user_id: userId,
+      p_policy_limit_usd: limitUsd,
+    });
+
+    if (error) {
+      console.error('Error checking subscription limit:', error);
+      // Fail open (allow access) if check fails, but log error
+      return { eligible: true, usage: 0, remaining: limitUsd };
+    }
+
+    return {
+      eligible: !data.is_limit_exceeded,
+      usage: data.usage_usd,
+      remaining: data.remaining_usd,
+    };
   }
 }
