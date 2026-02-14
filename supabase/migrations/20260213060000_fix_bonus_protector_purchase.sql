@@ -8,6 +8,8 @@
 -- 3. Registro en wallet_ledger (doble partida)
 -- ============================================================================
 
+DROP FUNCTION IF EXISTS public.purchase_bonus_protector(UUID, INTEGER);
+
 CREATE OR REPLACE FUNCTION public.purchase_bonus_protector(
     p_user_id UUID,
     p_protection_level INTEGER
