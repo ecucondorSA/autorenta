@@ -59,6 +59,10 @@ export class AuthService {
     return this.sessionService.refreshSession();
   }
 
+  async clearStaleSession(): Promise<void> {
+    return this.sessionService.clearStaleSession();
+  }
+
   async getCurrentUser(): Promise<{ id: string; email: string } | null> {
     const session = await this.ensureSession();
     if (!session?.user) return null;

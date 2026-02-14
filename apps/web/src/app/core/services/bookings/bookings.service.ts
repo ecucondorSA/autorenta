@@ -20,6 +20,7 @@ import { PwaService } from '@core/services/infrastructure/pwa.service';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 import { getErrorMessage } from '@core/utils/type-guards';
+import type { BookingLocationData } from '@features/bookings/components/booking-location-form/booking-location-form.component';
 
 // Validation Regex for UUIDs
 const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -657,15 +658,35 @@ export class BookingsService {
     carId: string,
     startDate: string,
     endDate: string,
-    requestBookingCallback?: (carId: string, start: string, end: string) => Promise<Booking>
+    locationDataOrCallback?:
+      | BookingLocationData
+      | ((carId: string, start: string, end: string) => Promise<Booking>),
   ): Promise<{
     success: boolean;
     booking?: Booking;
     error?: string;
     canWaitlist?: boolean;
   }> {
-    // Default to this.requestBooking if no callback provided
-    const callback = requestBookingCallback || this.requestBooking.bind(this);
+    let callback: (carId: string, start: string, end: string) => Promise<Booking>;
+
+    if (locationDataOrCallback && typeof locationDataOrCallback === 'function') {
+      callback = locationDataOrCallback;
+    } else {
+      const locationData = locationDataOrCallback as BookingLocationData | undefined;
+      if (locationData) {
+        callback = (cid, s, e) =>
+          this.requestBookingWithLocation(cid, s, e, {
+            pickupLat: locationData.pickupLat,
+            pickupLng: locationData.pickupLng,
+            dropoffLat: locationData.dropoffLat,
+            dropoffLng: locationData.dropoffLng,
+            deliveryRequired: locationData.deliveryRequired,
+          });
+      } else {
+        callback = this.requestBooking.bind(this);
+      }
+    }
+
     return this.validationService.createBookingWithValidation(carId, startDate, endDate, callback);
   }
 
