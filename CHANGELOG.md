@@ -1,3 +1,10 @@
+## 3.98.0 (2026-02-14)
+
+* feat(booking): overhaul booking request UX and refactor core services ([eec8841](https://github.com/ecucondorSA/autorenta/commit/eec8841))
+* feat(core): implement smart checkout logic and rentarfast-agent refactor ([752894a](https://github.com/ecucondorSA/autorenta/commit/752894a))
+* fix(lint): resolve linting and guardrails warnings ([5972370](https://github.com/ecucondorSA/autorenta/commit/5972370))
+* docs(governance): update GEMINI.md with senior insights and operational excellence policy ([f84fa14](https://github.com/ecucondorSA/autorenta/commit/f84fa14))
+
 ## <small>3.97.2 (2026-02-13)</small>
 
 * fix(core): remove critical technical debt in wallet, auth and fgo ([4acee95](https://github.com/ecucondorSA/autorenta/commit/4acee95))
