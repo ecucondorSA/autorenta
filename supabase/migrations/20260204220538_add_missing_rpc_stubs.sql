@@ -6,74 +6,18 @@
 -- These functions are called from frontend but were missing in the database.
 -- Each stub returns appropriate default values to prevent runtime errors.
 -- TODO: Implement actual logic for each function as needed.
+--
+-- UPDATE 2026-02-13: Removed stubs for functions that are now fully implemented:
+-- - send_phone_otp / verify_phone_otp (otp_functions.sql)
+-- - calculate_user_bonus_malus (bonus_malus_logic.sql)
+-- - recalculate_fgo_metrics / report_insurance_claim (fgo_rpcs.sql)
 -- ============================================================================
 
 -- ============================================================================
 -- PHONE VERIFICATION FUNCTIONS
 -- ============================================================================
 
--- send_phone_otp: Sends OTP to phone number
-CREATE OR REPLACE FUNCTION send_phone_otp(
-  p_phone_number TEXT
-)
-RETURNS JSONB
-LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public
-AS $$
-BEGIN
-  -- TODO: Implement actual OTP sending via Twilio/WhatsApp
-  -- For now, return success stub
-  RETURN jsonb_build_object(
-    'success', true,
-    'message', 'OTP enviado (stub)',
-    'expires_at', (NOW() + INTERVAL '5 minutes')::TEXT
-  );
-END;
-$$;
-
--- verify_phone_otp: Verifies OTP code
-CREATE OR REPLACE FUNCTION verify_phone_otp(
-  p_phone_number TEXT,
-  p_otp_code TEXT
-)
-RETURNS JSONB
-LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public
-AS $$
-DECLARE
-  v_user_id UUID;
-BEGIN
-  v_user_id := auth.uid();
-  IF v_user_id IS NULL THEN
-    RETURN jsonb_build_object('success', false, 'error', 'Usuario no autenticado');
-  END IF;
-
-  -- TODO: Implement actual OTP verification
-  RETURN jsonb_build_object(
-    'success', true,
-    'message', 'Teléfono verificado exitosamente'
-  );
-END;
-$$;
-
--- verify_phone_otp_code: Alternative OTP verification
-CREATE OR REPLACE FUNCTION verify_phone_otp_code(
-  p_phone TEXT,
-  p_code TEXT
-)
-RETURNS JSONB
-LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public
-AS $$
-BEGIN
-  -- Delegate to verify_phone_otp
-  RETURN verify_phone_otp(p_phone, p_code);
-END;
-$$;
-
+-- NOTE: otp functions moved to proper migration files.
 -- sync_fcm_token: Syncs Firebase Cloud Messaging token
 CREATE OR REPLACE FUNCTION sync_fcm_token(
   p_token TEXT,
@@ -700,10 +644,6 @@ CREATE OR REPLACE FUNCTION calculate_subscription_upgrade(p_current_plan TEXT, p
 RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN RETURN jsonb_build_object('success', true, 'price_difference', 0); END; $$;
 
-CREATE OR REPLACE FUNCTION calculate_user_bonus_malus(p_user_id UUID DEFAULT NULL)
-RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
-BEGIN RETURN jsonb_build_object('bonus', 0, 'malus', 0, 'net', 0); END; $$;
-
 CREATE OR REPLACE FUNCTION execute_period_closure(p_period_end DATE)
 RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN RETURN jsonb_build_object('success', true); END; $$;
@@ -728,17 +668,9 @@ CREATE OR REPLACE FUNCTION recalculate_all_bonus_malus()
 RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN RETURN jsonb_build_object('success', true, 'updated_count', 0); END; $$;
 
-CREATE OR REPLACE FUNCTION recalculate_fgo_metrics()
-RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
-BEGIN RETURN jsonb_build_object('success', true); END; $$;
-
 CREATE OR REPLACE FUNCTION record_telemetry_for_user(p_user_id UUID, p_data JSONB)
 RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN RETURN jsonb_build_object('success', true); END; $$;
-
-CREATE OR REPLACE FUNCTION report_insurance_claim(p_booking_id UUID, p_description TEXT)
-RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
-BEGIN RETURN jsonb_build_object('success', true, 'claim_id', gen_random_uuid()); END; $$;
 
 CREATE OR REPLACE FUNCTION report_owner_no_show(p_booking_id UUID, p_evidence JSONB DEFAULT '{}'::JSONB)
 RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER AS $$
@@ -768,10 +700,7 @@ BEGIN RETURN jsonb_build_object('valid', true); END; $$;
 -- GRANT EXECUTE PERMISSIONS
 -- ============================================================================
 
--- Phone verification
-GRANT EXECUTE ON FUNCTION send_phone_otp(TEXT) TO authenticated;
-GRANT EXECUTE ON FUNCTION verify_phone_otp(TEXT, TEXT) TO authenticated;
-GRANT EXECUTE ON FUNCTION verify_phone_otp_code(TEXT, TEXT) TO authenticated;
+-- Phone verification (sync only)
 GRANT EXECUTE ON FUNCTION sync_fcm_token(TEXT, JSONB) TO authenticated;
 GRANT EXECUTE ON FUNCTION remove_fcm_token(TEXT) TO authenticated;
 
@@ -802,16 +731,13 @@ GRANT EXECUTE ON FUNCTION suspend_account_manual(UUID, TEXT, INTEGER) TO service
 
 -- Simple stubs
 GRANT EXECUTE ON FUNCTION calculate_subscription_upgrade(TEXT, TEXT) TO authenticated;
-GRANT EXECUTE ON FUNCTION calculate_user_bonus_malus(UUID) TO authenticated;
 GRANT EXECUTE ON FUNCTION execute_period_closure(DATE) TO service_role;
 GRANT EXECUTE ON FUNCTION get_expiring_credits(INTEGER) TO authenticated;
 GRANT EXECUTE ON FUNCTION get_telemetry_summary(UUID) TO authenticated;
 GRANT EXECUTE ON FUNCTION increment_driver_good_years(UUID) TO service_role;
 GRANT EXECUTE ON FUNCTION pay_fgo_siniestro(UUID, NUMERIC) TO service_role;
 GRANT EXECUTE ON FUNCTION recalculate_all_bonus_malus() TO service_role;
-GRANT EXECUTE ON FUNCTION recalculate_fgo_metrics() TO service_role;
 GRANT EXECUTE ON FUNCTION record_telemetry_for_user(UUID, JSONB) TO service_role;
-GRANT EXECUTE ON FUNCTION report_insurance_claim(UUID, TEXT) TO authenticated;
 GRANT EXECUTE ON FUNCTION report_owner_no_show(UUID, JSONB) TO authenticated;
 GRANT EXECUTE ON FUNCTION report_renter_no_show(UUID, JSONB) TO authenticated;
 GRANT EXECUTE ON FUNCTION resolve_traffic_infraction_dispute(UUID, TEXT) TO service_role;

@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { ParticipationService } from './participation.service';
-import { SupabaseClientService } from '../infrastructure/supabase-client.service';
 import { of } from 'rxjs';
+import { SupabaseClientService } from '../infrastructure/supabase-client.service';
+import { ParticipationService } from './participation.service';
 
 describe('ParticipationService', () => {
   let service: ParticipationService;
