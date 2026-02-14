@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   Component,
@@ -26,6 +26,7 @@ import { SubscriptionService } from '@core/services/subscriptions/subscription.s
 import { EmailVerificationService } from '@core/services/auth/email-verification.service';
 import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 import { DynamicRiskCalculatorService } from '@core/services/verification/dynamic-risk-calculator.service';
+import { ToastService } from '@core/services/ui/toast.service';
 
 // Models
 import {
@@ -53,8 +54,8 @@ import { CardHoldPanelComponent } from './components/card-hold-panel.component';
 
 // Extended FxSnapshot with dual rates
 interface DualRateFxSnapshot extends FxSnapshot {
-  binanceRate: number; // Raw Binance rate (no margin) - for price conversions
-  platformRate: number; // Binance + 10% margin - for guarantees only
+  binanceRate: number;
+  platformRate: number;
 }
 
 interface BookingInputData {
@@ -86,9 +87,10 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private pollInterval?: ReturnType<typeof setInterval>;
 
-  // ... (services remain the same)
+  // Services
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private location = inject(Location);
   private fxService = inject(FxService);
   readonly authService = inject(AuthService);
   private bookingsService = inject(BookingsService);
@@ -101,108 +103,58 @@ export class BookingRequestPage implements OnInit, OnDestroy {
   private distanceCalculator = inject(DistanceCalculatorService);
   private riskCalculatorV2 = inject(DynamicRiskCalculatorService);
   private featureData = inject(FeatureDataFacadeService);
+  private toastService = inject(ToastService);
   private logger = inject(LoggerService).createChildLogger('BookingRequestPage');
 
-  // State
+  // State Signals
   readonly car = signal<Car | null>(null);
   readonly fxSnapshot = signal<DualRateFxSnapshot | null>(null);
   readonly loading = signal(false);
-  readonly processingPayment = signal(false); // Submitting request
+  readonly processingPayment = signal(false);
   readonly error = signal<string | null>(null);
 
-  // Edit Mode State
+  // UI State
   readonly isEditingDates = signal(false);
   readonly showPhotoGallery = signal(false);
+  readonly showP2PDetails = signal(false);
+  readonly activeTab = signal<'vehicle' | 'details' | 'guarantee'>('vehicle');
 
-  // ... (rest of the state properties)
+  // Booking State
   readonly bookingCreated = signal(false);
   readonly bookingId = signal<string | null>(null);
-  readonly fxRateLocked = signal(false); // FX rate is locked after booking creation
-
-  // Preauthorization state
+  readonly fxRateLocked = signal(false);
+  
+  // Risk & Payment State
   readonly riskSnapshot = signal<RiskSnapshot | null>(null);
   readonly subscriptionCoverage = signal<SubscriptionCoverageCheck | null>(null);
   readonly preauthCalculation = signal<PreauthorizationCalculation | null>(null);
-
-  // V2 UI Feedback Signals
+  
+  // V2 UI Feedback
   readonly discountApplied = signal(false);
   readonly eligibilityReason = signal<string>('');
-
+  
   readonly currentAuthorization = signal<PaymentAuthorization | null>(null);
   readonly currentUserId = signal<string>('');
-
-  // Guarantee mode
+  
+  // Payment Config
   readonly paymentMode = signal<PaymentMode>('card');
   readonly walletLockId = signal<string | null>(null);
   readonly lockingWallet = signal(false);
-
-  // Coverage Upgrade
   readonly coverageUpgrade = signal<CoverageUpgrade>('standard');
-
-  // P2P Message to host
-  messageToHost = '';
   readonly termsAccepted = signal(false);
 
-  // UI state
-  readonly showP2PDetails = signal(false);
-  readonly activeTab = signal<'vehicle' | 'details' | 'guarantee'>('vehicle');
+  // Input Data
+  readonly bookingInput = signal<BookingInputData | null>(null);
+  messageToHost = '';
+
+  // Wallet Store
+  readonly walletBalance = this.walletService.balance;
+  readonly walletBalanceLoading = this.walletService.loading;
 
   // Constants
   readonly PRE_AUTH_AMOUNT_USD_DEFAULT = 600;
 
-  // Booking Input
-  readonly bookingInput = signal<BookingInputData | null>(null);
-
-  // Wallet state (units, as returned by wallet_get_balance)
-  readonly walletBalance = this.walletService.balance;
-  readonly walletBalanceLoading = this.walletService.loading;
-
-  // ... (rest of the component logic)
-
-  // Edit Logic
-  toggleEditDates() {
-    this.isEditingDates.update((v) => !v);
-  }
-
-  async onDatesChanged(range: DateRange) {
-    if (range.from && range.to) {
-      const startDate = new Date(range.from);
-      const endDate = new Date(range.to);
-      const currentInput = this.bookingInput();
-
-      if (currentInput && !isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
-        this.bookingInput.set({
-          ...currentInput,
-          startDate: startDate,
-          endDate: endDate,
-        });
-
-        // Recalculate risks/costs
-        await this.calculateRiskSnapshot();
-
-        // Update URL query params without reloading to keep state consistent
-        this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: {
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString(),
-          },
-          queryParamsHandling: 'merge',
-        });
-      }
-    }
-  }
-
-  openPhotoGallery() {
-    this.showPhotoGallery.set(true);
-  }
-
-  closePhotoGallery() {
-    this.showPhotoGallery.set(false);
-  }
-
-  // ... (rest of methods)
-
+  // Computed Values
   readonly walletAvailableBalance = computed(() => this.walletBalance()?.available_balance ?? 0);
   readonly walletCurrency = computed(() => this.walletBalance()?.currency ?? 'USD');
 
@@ -218,10 +170,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     return balance;
   });
 
-  // Required guarantee in USD (platform base currency)
   readonly walletRequiredUsd = computed(() => this.riskSnapshot()?.holdEstimatedUsd ?? 0);
 
-  // Distance & Delivery Calculations
   readonly distanceKm = computed(() => {
     const input = this.bookingInput();
     const car = this.car();
@@ -238,7 +188,6 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     return this.distanceCalculator.calculateDistanceMetadata(this.distanceKm());
   });
 
-  // Subscription savings calculation
   readonly subscriptionSavings = computed(() => {
     const preauth = this.preauthCalculation();
     if (!preauth) return null;
@@ -337,6 +286,55 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     return guaranteeArs + rentalArs;
   });
 
+  // UI Actions
+  goBack(): void {
+    this.location.back();
+  }
+
+  toggleEditDates() {
+    this.isEditingDates.update((v) => !v);
+  }
+
+  async onDatesChanged(range: DateRange) {
+    if (range.from && range.to) {
+      const startDate = new Date(range.from);
+      const endDate = new Date(range.to);
+      const currentInput = this.bookingInput();
+
+      if (currentInput && !isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+        this.bookingInput.set({
+          ...currentInput,
+          startDate: startDate,
+          endDate: endDate,
+        });
+
+        // Update URL query params without reloading
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString(),
+          },
+          queryParamsHandling: 'merge',
+        });
+
+        // Recalculate risks/costs
+        await this.calculateRiskSnapshot();
+        
+        // Auto-close calendar if needed (optional UX)
+        // this.toggleEditDates(); 
+      }
+    }
+  }
+
+  openPhotoGallery() {
+    this.showPhotoGallery.set(true);
+  }
+
+  closePhotoGallery() {
+    this.showPhotoGallery.set(false);
+  }
+
   hasCarFeatures(): boolean {
     const features = this.getCarFeatures();
     return features.length > 0;
@@ -408,8 +406,8 @@ export class BookingRequestPage implements OnInit, OnDestroy {
 
     this.currentUserId.set(session.user.id);
 
+    // Initial load
     this.walletService.fetchBalance().catch(() => {});
-
     await this.loadParams();
 
     if (this.bookingInput()) {
@@ -467,7 +465,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         const validStates = ['pending', 'pending_payment', 'draft'];
         if (!validStates.includes(booking.status)) {
           this.error.set(
-            `Este booking está en estado "${booking.status}" y no se puede modificar.`,
+            `Este booking está en estado "\${booking.status}" y no se puede modificar.`,
           );
           return;
         }
@@ -648,35 +646,31 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     const mode = this.paymentMode();
 
     if (!input || !car) {
-      this.error.set('Faltan datos para enviar la solicitud. Volvé a seleccionar fechas.');
+      this.toastService.error('Faltan datos', 'Por favor selecciona un vehículo y fechas.');
       return;
     }
 
-    // P0-013: Check email verification before booking
+    // P0-013: Check email verification
     const emailStatus = await this.emailVerificationService.checkStatus();
     if (!emailStatus.isVerified) {
-      this.error.set(
-        'Por favor verifica tu email antes de reservar. Revisa tu bandeja de entrada.',
-      );
+      this.toastService.error('Verificación requerida', 'Verifica tu email antes de reservar.');
       return;
     }
 
     if (!this.termsAccepted()) {
-      this.error.set('Debes aceptar los Términos y Condiciones para continuar.');
+      this.toastService.warning('Términos y condiciones', 'Debes aceptar los términos para continuar.');
       return;
     }
 
     if (mode === 'card') {
       if (!authorization || authorization.status !== 'authorized') {
-        this.error.set(
-          'Debes completar la pre-autorización de la garantía antes de enviar la solicitud.',
-        );
+        this.toastService.error('Garantía incompleta', 'Completa la pre-autorización de la tarjeta.');
         return;
       }
     } else {
       const required = this.walletRequiredUsd();
       if (!required) {
-        this.error.set('No se pudo calcular el monto de la garantía para wallet.');
+        this.toastService.error('Error', 'No se pudo calcular la garantía.');
         return;
       }
     }
@@ -687,6 +681,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
     try {
       let bookingId = this.bookingId();
 
+      // Create Booking if not exists
       if (!bookingId) {
         const result = await this.bookingsService.createBookingWithValidation(
           input.carId,
@@ -711,9 +706,10 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         this.bookingId.set(bookingId);
       }
 
+      // Process Payment/Guarantee
       if (mode === 'card') {
         const depositAmountCents = Math.max(0, Math.round((authorization?.amountArs ?? 0) * 100));
-        await this.featureData.updateBooking(bookingId, {
+        await this.bookingsService.updateBooking(bookingId, {
           status: 'pending',
           payment_mode: 'card',
           currency: 'ARS',
@@ -722,11 +718,10 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         });
       } else {
         const walletLockId = await this.ensureWalletLock(bookingId!);
-
         const requiredUsd = this.walletRequiredUsd();
         const guaranteeAmountCents = Math.round(requiredUsd * 100);
 
-        await this.featureData.updateBooking(bookingId, {
+        await this.bookingsService.updateBooking(bookingId, {
           status: 'pending',
           payment_mode: 'wallet',
           currency: 'USD',
@@ -735,6 +730,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         });
       }
 
+      // Send message to host
       const message = this.messageToHost.trim();
       if (message) {
         await this.messagesService.sendMessage({
@@ -745,12 +741,16 @@ export class BookingRequestPage implements OnInit, OnDestroy {
         });
       }
 
+      this.toastService.success('Solicitud enviada', 'El propietario revisará tu pedido.');
+      
       await this.router.navigate(['/bookings', 'success', bookingId], {
         queryParams: { flow: 'request' },
       });
     } catch (err) {
       this.logger.error('Error submitting booking request', { error: err });
-      this.error.set(err instanceof Error ? err.message : 'Error al enviar la solicitud');
+      const msg = err instanceof Error ? err.message : 'Error al enviar la solicitud';
+      this.toastService.error('Error', msg);
+      this.error.set(msg);
     } finally {
       this.processingPayment.set(false);
     }

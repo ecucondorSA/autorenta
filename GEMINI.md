@@ -1567,3 +1567,43 @@ Validar transiciones de estado permitidas en lógica de negocio antes de llamar 
 **© 2026 AutoRenta | Gemini Agent Configuration v3.5**
 
 ```
+
+---
+
+## 36. MCP Disponibles
+
+Lista de Model Context Protocols (MCP) y herramientas activas en el agente:
+
+### 1. Core & Filesystem
+- **Navegación:** `list_directory`, `glob`.
+- **Lectura/Escritura:** `read_file`, `write_file`, `replace`, `search_file_content`.
+- **Sistema:** `run_shell_command` (Bash), `save_memory`.
+- **Web:** `web_fetch`, `google_web_search`.
+
+### 2. Agentes Especializados
+- **Codebase Investigator:** Análisis profundo de arquitectura y dependencias.
+- **Introspection:** Auto-análisis de capacidades del CLI.
+
+### 3. Computer Use (Browser Automation)
+- **Control:** `initialize_browser`, `close_browser`.
+- **Interacción:** `click_selector`, `fill_selector`, `execute_action`.
+- **Visión:** `capture_state` (Screenshots + Análisis).
+
+### 4. Google Workspace
+- **Docs/Drive:** `docs.*`, `drive.*`, `slides.*`, `sheets.*`.
+- **Comunicación:** `gmail.*`, `chat.*`.
+- **Organización:** `calendar.*`, `people.*`.
+
+### 5. Firebase
+- **Gestión:** `firebase_login`, `firebase_init`, `firebase_deploy`.
+- **Recursos:** `firebase_list_projects`, `firebase_get_environment`.
+
+### 6. Nano Banana (GenAI Media)
+- **Imágenes:** `generate_image`, `edit_image`, `restore_image`.
+- **Diseño:** `generate_icon`, `generate_pattern`, `generate_diagram`.
+
+### 7. Security & Research
+- **Vulnerabilidades:** `scan_vulnerable_dependencies`, `get_vulnerability_details`.
+- **Deep Research:** `research_start`, `file_search_*`.
+
+---

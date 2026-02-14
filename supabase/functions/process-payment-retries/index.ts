@@ -341,11 +341,10 @@ async function notifyUser(
       },
     });
 
-    // Update notification count
+    // Update notification record
     await supabase
       .from('payment_retry_queue')
       .update({
-        user_notified_count: supabase.sql`user_notified_count + 1`,
         last_notified_at: new Date().toISOString(),
       })
       .eq('user_id', userId)

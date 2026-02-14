@@ -1,14 +1,20 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  inject,
+  DestroyRef,
+  signal,
+  computed,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, takeUntil, interval, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, switchMap, interval, merge, tap, catchError, of } from 'rxjs';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
 import { RealtimeConnectionService } from '@core/services/infrastructure/realtime-connection.service';
 import {
-  FgoStatus,
   SubfundBalance,
-  FgoMovementView,
   getStatusIcon,
   getStatusMessage,
   getStatusColor,
@@ -16,10 +22,9 @@ import {
   getMovementTypeName,
   formatRatio,
 } from '@core/models/fgo.model';
-import { FgoStatusV1_1 } from '@core/models/fgo-v1-1.model';
 
 /**
- * Componente de vista general del FGO
+ * Componente de vista general del FGO (Refactorizado con Signals)
  * Muestra el estado del fondo, saldos por subfondo y movimientos recientes
  */
 @Component({
@@ -30,211 +35,188 @@ import { FgoStatusV1_1 } from '@core/models/fgo-v1-1.model';
   templateUrl: './fgo-overview.page.html',
   styleUrls: ['./fgo-overview.page.css'],
 })
-export class FgoOverviewPage implements OnInit, OnDestroy {
-  private destroy$ = new Subject<void>();
+export class FgoOverviewPage {
+  // Dependencies
+  private readonly fgoService = inject(FgoV1_1Service);
+  private readonly realtimeConnection = inject(RealtimeConnectionService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  // State Triggers
+  private readonly refreshTrigger$ = new BehaviorSubject<void>(undefined);
+  private readonly POLLING_INTERVAL_MS = 30000;
+
+  // Realtime Channels (tracked for cleanup)
   private realtimeMovementsChannel: RealtimeChannel | null = null;
   private realtimeMetricsChannel: RealtimeChannel | null = null;
 
-  // Estado del FGO
-  fgoStatus: FgoStatus | null = null;
-  subfunds: SubfundBalance[] = [];
-  recentMovements: FgoMovementView[] = [];
+  // Helpers for template
+  readonly getStatusIcon = getStatusIcon;
+  readonly getStatusMessage = getStatusMessage;
+  readonly getStatusColor = getStatusColor;
+  readonly getSubfundName = getSubfundName;
+  readonly getMovementTypeName = getMovementTypeName;
+  readonly formatRatio = formatRatio;
 
-  // Estados de carga
-  loadingStatus = true;
-  loadingSubfunds = true;
-  loadingMovements = true;
+  // Loading States (Signals)
+  readonly loadingStatus = signal<boolean>(true);
+  readonly loadingMovements = signal<boolean>(true);
 
-  // Helpers para templates
-  getStatusIcon = getStatusIcon;
-  getStatusMessage = getStatusMessage;
-  getStatusColor = getStatusColor;
-  getSubfundName = getSubfundName;
-  getMovementTypeName = getMovementTypeName;
-  formatRatio = formatRatio;
+  // Data Streams (Signals)
+  // Combines manual refresh + polling interval
+  private readonly dataLoadTrigger$ = merge(
+    this.refreshTrigger$,
+    interval(this.POLLING_INTERVAL_MS)
+  );
 
-  constructor(
-    private readonly fgoService: FgoV1_1Service,
-    private readonly realtimeConnection: RealtimeConnectionService,
-  ) {}
+  // 1. FGO Status Signal
+  readonly fgoStatus = toSignal(
+    this.dataLoadTrigger$.pipe(
+      tap(() => this.loadingStatus.set(true)),
+      switchMap(() =>
+        this.fgoService.getStatusV1_1().pipe(
+          catchError((err) => {
+            console.error('Error loading FGO status:', err);
+            return of(null);
+          })
+        )
+      ),
+      tap(() => this.loadingStatus.set(false))
+    ),
+    { initialValue: null }
+  );
 
-  ngOnInit(): void {
-    this.loadFgoStatus();
-    this.loadSubfunds();
-    this.loadRecentMovements();
+  // 2. Recent Movements Signal
+  readonly recentMovements = toSignal(
+    this.dataLoadTrigger$.pipe(
+      tap(() => this.loadingMovements.set(true)),
+      switchMap(() =>
+        this.fgoService.getMovements(10, 0).pipe(
+          catchError((err) => {
+            console.error('Error loading movements:', err);
+            return of([]);
+          })
+        )
+      ),
+      tap(() => this.loadingMovements.set(false))
+    ),
+    { initialValue: [] }
+  );
+
+  // 3. Subfunds Computed Signal (derived from fgoStatus)
+  readonly subfunds = computed<SubfundBalance[]>(() => {
+    const status = this.fgoStatus();
+    if (!status) return [];
+
+    const total = status.totalBalance || 1; // Prevent division by zero
+
+    return [
+      {
+        type: 'liquidity',
+        balanceCents: status.liquidityBalance * 100,
+        balanceUsd: status.liquidityBalance,
+        percentage: (status.liquidityBalance / total) * 100,
+        description: 'Liquidez',
+        purpose: 'Fondos disponibles para pagos inmediatos',
+      },
+      {
+        type: 'capitalization',
+        balanceCents: status.capitalizationBalance * 100,
+        balanceUsd: status.capitalizationBalance,
+        percentage: (status.capitalizationBalance / total) * 100,
+        description: 'Capitalización',
+        purpose: 'Fondos acumulados para crecimiento',
+      },
+      {
+        type: 'profitability',
+        balanceCents: status.profitabilityBalance * 100,
+        balanceUsd: status.profitabilityBalance,
+        percentage: (status.profitabilityBalance / total) * 100,
+        description: 'Rentabilidad',
+        purpose: 'Fondos para generar intereses',
+      },
+    ];
+  });
+
+  // Derived Loading State for Subfunds
+  readonly loadingSubfunds = computed(() => this.loadingStatus());
+
+  constructor() {
     this.setupRealtimeSubscription();
-
-    // Fallback: Actualizar cada 30 segundos por si falla realtime
-    interval(30000)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.refreshData();
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-
-    // Cleanup realtime subscription
-    if (this.realtimeMovementsChannel) {
-      this.realtimeConnection.unsubscribe(this.realtimeMovementsChannel.topic);
-      this.realtimeMovementsChannel = null;
-    }
-    if (this.realtimeMetricsChannel) {
-      this.realtimeConnection.unsubscribe(this.realtimeMetricsChannel.topic);
-      this.realtimeMetricsChannel = null;
-    }
   }
 
   /**
-   * Configura suscripción a cambios en tiempo real
+   * Configures realtime subscriptions with automatic cleanup
    */
   private setupRealtimeSubscription(): void {
+    // 1. Movements Channel
     this.realtimeMovementsChannel = this.realtimeConnection.subscribeWithRetry<
       Record<string, unknown>
     >(
       'fgo-movements-changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'fgo_movements',
-      },
-      () => {
-        this.refreshData();
-      },
+      { event: '*', schema: 'public', table: 'fgo_movements' },
+      () => this.refreshData()
     );
 
+    // 2. Metrics Channel
     this.realtimeMetricsChannel = this.realtimeConnection.subscribeWithRetry<
       Record<string, unknown>
     >(
       'fgo-metrics-changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'fgo_metrics',
-      },
-      () => {
-        this.loadFgoStatus();
-      },
+      { event: '*', schema: 'public', table: 'fgo_metrics' },
+      () => this.refreshData()
     );
+
+    // Register cleanup logic
+    this.destroyRef.onDestroy(() => {
+      if (this.realtimeMovementsChannel) {
+        this.realtimeConnection.unsubscribe(this.realtimeMovementsChannel.topic);
+      }
+      if (this.realtimeMetricsChannel) {
+        this.realtimeConnection.unsubscribe(this.realtimeMetricsChannel.topic);
+      }
+    });
   }
 
   /**
-   * Carga el estado del FGO (métricas, RC, LR)
-   */
-  private loadFgoStatus(): void {
-    this.loadingStatus = true;
-    this.fgoService
-      .getStatusV1_1()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (status: FgoStatusV1_1 | null) => {
-          this.fgoStatus = status;
-          this.loadingStatus = false;
-        },
-        error: (_error) => {
-          this.loadingStatus = false;
-        },
-      });
-  }
-
-  /**
-   * Carga los saldos de cada subfondo
-   */
-  private loadSubfunds(): void {
-    this.loadingSubfunds = true;
-    if (this.fgoStatus) {
-      this.subfunds = [
-        {
-          type: 'liquidity',
-          balanceCents: this.fgoStatus.liquidityBalance * 100,
-          balanceUsd: this.fgoStatus.liquidityBalance,
-          percentage: (this.fgoStatus.liquidityBalance / this.fgoStatus.totalBalance) * 100,
-          description: 'Liquidez',
-          purpose: 'Fondos disponibles para pagos inmediatos',
-        },
-        {
-          type: 'capitalization',
-          balanceCents: this.fgoStatus.capitalizationBalance * 100,
-          balanceUsd: this.fgoStatus.capitalizationBalance,
-          percentage: (this.fgoStatus.capitalizationBalance / this.fgoStatus.totalBalance) * 100,
-          description: 'Capitalización',
-          purpose: 'Fondos acumulados para crecimiento',
-        },
-        {
-          type: 'profitability',
-          balanceCents: this.fgoStatus.profitabilityBalance * 100,
-          balanceUsd: this.fgoStatus.profitabilityBalance,
-          percentage: (this.fgoStatus.profitabilityBalance / this.fgoStatus.totalBalance) * 100,
-          description: 'Rentabilidad',
-          purpose: 'Fondos para generar intereses',
-        },
-      ];
-      this.loadingSubfunds = false;
-    } else {
-      this.loadingSubfunds = false;
-    }
-  }
-
-  /**
-   * Carga los movimientos recientes
-   */
-  private loadRecentMovements(): void {
-    this.loadingMovements = true;
-    this.fgoService
-      .getMovements(10, 0)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (movements: FgoMovementView[]) => {
-          this.recentMovements = movements;
-          this.loadingMovements = false;
-        },
-        error: (_error: unknown) => {
-          this.loadingMovements = false;
-        },
-      });
-  }
-
-  /**
-   * Refresca todos los datos
+   * Triggers a data refresh across all signals
    */
   refreshData(): void {
-    this.loadFgoStatus();
-    this.loadSubfunds();
-    this.loadRecentMovements();
+    this.refreshTrigger$.next();
   }
 
   /**
-   * Recalcula las métricas manualmente
+   * Manually recalculates metrics via service
    */
   recalculateMetrics(): void {
+    this.loadingStatus.set(true);
     this.fgoService
       .recalculateMetrics()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (result: { ok: boolean; error?: string } | null) => {
+        next: (result) => {
           if (result?.ok) {
             this.refreshData();
+          } else {
+            console.error('Failed to recalculate metrics');
+            this.loadingStatus.set(false);
           }
         },
-        error: (error: unknown) => {
+        error: (error) => {
           console.error('Error recalculating metrics:', error);
+          this.loadingStatus.set(false);
         },
       });
   }
 
-  /**
-   * Formatea un monto en USD
-   */
+  // ============================================================================
+  // UI Formatters
+  // ============================================================================
+
   formatUsd(amount: number | null | undefined): string {
     if (amount === null || amount === undefined) return 'USD 0.00';
     return `USD ${amount.toFixed(2)}`;
   }
 
-  /**
-   * Formatea una fecha
-   */
   formatDate(date: Date | null | undefined): string {
     if (!date) return 'N/A';
     return new Date(date).toLocaleDateString('es-AR', {
@@ -246,9 +228,6 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Obtiene la clase CSS según el estado
-   */
   getStatusClass(status: string): string {
     const classes: Record<string, string> = {
       healthy: 'status-healthy',
@@ -258,9 +237,6 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
     return classes[status] || 'status-unknown';
   }
 
-  /**
-   * Obtiene el color del subfondo
-   */
   getSubfundColor(type: string): string {
     const colors: Record<string, string> = {
       liquidity: '#3b82f6',
@@ -271,16 +247,16 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
   }
 
   // ============================================================================
-  // ACCIONES DE ADMINISTRADOR
+  // ADMIN ACTIONS (Modals & Forms)
   // ============================================================================
 
-  // Estados de modales
-  showTransferModal = false;
-  showSiniestroModal = false;
-  processingTransfer = false;
-  processingSiniestro = false;
+  // State Signals for Modals
+  readonly showTransferModal = signal(false);
+  readonly showSiniestroModal = signal(false);
+  readonly processingTransfer = signal(false);
+  readonly processingSiniestro = signal(false);
 
-  // Formularios
+  // Forms (Kept as mutable objects for simple ngModel binding)
   transferForm = {
     fromSubfund: '',
     toSubfund: '',
@@ -294,30 +270,20 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
     description: '',
   };
 
-  /**
-   * Abre modal de transferencia
-   */
   openTransferModal(): void {
-    this.showTransferModal = true;
-    // Reset form
     this.transferForm = {
       fromSubfund: '',
       toSubfund: '',
       amount: 0,
       reason: '',
     };
+    this.showTransferModal.set(true);
   }
 
-  /**
-   * Cierra modal de transferencia
-   */
   closeTransferModal(): void {
-    this.showTransferModal = false;
+    this.showTransferModal.set(false);
   }
 
-  /**
-   * Valida formulario de transferencia
-   */
   isTransferFormValid(): boolean {
     return (
       !!this.transferForm.fromSubfund &&
@@ -328,13 +294,10 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Envía transferencia entre subfondos
-   */
   async submitTransfer(): Promise<void> {
     if (!this.isTransferFormValid()) return;
 
-    this.processingTransfer = true;
+    this.processingTransfer.set(true);
 
     try {
       const adminId = await this.fgoService.getCurrentUserId();
@@ -343,6 +306,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
         return;
       }
 
+      // Convert Observable to Promise for async/await flow
       const result = await firstValueFrom(
         this.fgoService.transferBetweenSubfunds({
           fromSubfund: this.transferForm.fromSubfund,
@@ -350,7 +314,7 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
           amountCents: Math.round(this.transferForm.amount * 100),
           reason: this.transferForm.reason,
           adminId,
-        }),
+        })
       );
 
       if (result?.ok) {
@@ -360,36 +324,27 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
       } else {
         alert(`❌ Error: ${result?.error || 'Transferencia fallida'}`);
       }
-    } catch (error: unknown) {
-      alert(`❌ Error: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Error desconocido';
+      alert(`❌ Error: ${msg}`);
     } finally {
-      this.processingTransfer = false;
+      this.processingTransfer.set(false);
     }
   }
 
-  /**
-   * Abre modal de pago de siniestro
-   */
   openSiniestroModal(): void {
-    this.showSiniestroModal = true;
-    // Reset form
     this.siniestroForm = {
       bookingId: '',
       amount: 0,
       description: '',
     };
+    this.showSiniestroModal.set(true);
   }
 
-  /**
-   * Cierra modal de pago de siniestro
-   */
   closeSiniestroModal(): void {
-    this.showSiniestroModal = false;
+    this.showSiniestroModal.set(false);
   }
 
-  /**
-   * Valida formulario de siniestro
-   */
   isSiniestroFormValid(): boolean {
     return (
       !!this.siniestroForm.bookingId.trim() &&
@@ -398,27 +353,27 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Envía pago de siniestro
-   */
   async submitSiniestro(): Promise<void> {
     if (!this.isSiniestroFormValid()) return;
 
     const confirmed = confirm(
-      `⚠️ ¿Confirmas el pago de ${this.formatUsd(this.siniestroForm.amount)} para el siniestro?\n\nEsto debitará el subfondo de Liquidez.`,
+      `⚠️ ¿Confirmas el pago de ${this.formatUsd(this.siniestroForm.amount)} para el siniestro?\n\nEsto debitará el subfondo de Liquidez.`
     );
 
     if (!confirmed) return;
 
-    this.processingSiniestro = true;
+    this.processingSiniestro.set(true);
 
     try {
+      // Import firstValueFrom inside method to avoid global scope issues if not imported
+      const { firstValueFrom } = await import('rxjs');
+      
       const result = await firstValueFrom(
         this.fgoService.paySiniestro({
           bookingId: this.siniestroForm.bookingId,
           amountCents: Math.round(this.siniestroForm.amount * 100),
           description: this.siniestroForm.description,
-        }),
+        })
       );
 
       if (result?.ok) {
@@ -428,10 +383,11 @@ export class FgoOverviewPage implements OnInit, OnDestroy {
       } else {
         alert(`❌ Error: ${result?.error || 'Pago fallido'}`);
       }
-    } catch (error: unknown) {
-      alert(`❌ Error: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Error desconocido';
+      alert(`❌ Error: ${msg}`);
     } finally {
-      this.processingSiniestro = false;
+      this.processingSiniestro.set(false);
     }
   }
 }

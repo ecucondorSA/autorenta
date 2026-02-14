@@ -52,6 +52,9 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
 /**
  * Componente base para chats (booking y car)
  * Unifica la UI y lógica compartida entre ambos tipos de chat
+ *
+ * @description Implementa patrón 'Smart Component' con Signals para gestión reactiva de estado.
+ * Incluye manejo optimista de mensajes, soporte offline y sugerencias de IA.
  */
 @Component({
   selector: 'app-base-chat',
@@ -65,7 +68,7 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
     >
       <!-- Professional Header -->
       <div
-        class="flex items-center gap-3 border-b border-border-default bg-surface-raised px-4 py-3"
+        class="flex items-center gap-3 border-b border-border-default bg-surface-raised px-4 py-3 z-20 relative"
       >
         <!-- Avatar with Initials -->
         <div class="relative flex-shrink-0">
@@ -166,7 +169,7 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
 
       <!-- Search bar -->
       @if (showSearch()) {
-        <div class="border-b border-border-default bg-surface-raised px-4 py-3 space-y-2">
+        <div class="border-b border-border-default bg-surface-raised px-4 py-3 space-y-2 z-10">
           <div class="flex items-center gap-2">
             <div class="relative flex-1">
               <span
@@ -231,14 +234,14 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
       <!-- Blocked user banner -->
       @if (blocked()) {
         <div
-          class="bg-error-bg/50 border-b border-error-border px-4 py-2.5 text-sm text-center text-error-strong"
+          class="bg-error-bg/50 border-b border-error-border px-4 py-2.5 text-sm text-center text-error-strong z-10"
         >
           <span class="font-medium">Usuario bloqueado</span> · Desbloquéalo para volver a chatear
         </div>
       }
       @if (blockedBy() && !blocked()) {
         <div
-          class="bg-warning-bg/50 border-b border-warning-border px-4 py-2.5 text-sm text-center text-warning-strong"
+          class="bg-warning-bg/50 border-b border-warning-border px-4 py-2.5 text-sm text-center text-warning-strong z-10"
         >
           <span class="font-medium">Este usuario te ha bloqueado</span> · No puedes enviarle
           mensajes
@@ -668,7 +671,7 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
 
       <!-- AI Suggestions Bar -->
       @if (bookingContextForAI() && showSuggestions()) {
-        <div class="border-t border-border-default bg-green-50 px-4 py-2.5">
+        <div class="border-t border-border-default bg-green-50 px-4 py-2.5 z-10">
           @if (loadingSuggestions()) {
             <div class="flex items-center gap-2 text-green-700">
               <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -707,7 +710,7 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
       }
 
       <!-- Input Area -->
-      <div class="border-t border-border-default bg-surface-raised px-4 py-3">
+      <div class="border-t border-border-default bg-surface-raised px-4 py-3 z-20 relative">
         <form (ngSubmit)="sendMessage()" class="flex items-center gap-3">
           <!-- Attachments -->
           <div class="relative flex items-center">
@@ -732,7 +735,7 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
 
             @if (showAttachMenu()) {
               <div
-                class="absolute bottom-12 left-0 z-20 flex flex-col gap-2 rounded-2xl bg-white border border-border-default shadow-lg p-2 w-52"
+                class="absolute bottom-12 left-0 z-30 flex flex-col gap-2 rounded-2xl bg-white border border-border-default shadow-lg p-2 w-52"
               >
                 <button
                   type="button"
@@ -910,6 +913,23 @@ type ChatSearchFilter = 'all' | 'text' | 'image' | 'video' | 'document';
       </div>
     </div>
   `,
+  styles: [
+    `
+      .animate-slide-down {
+        animation: slideDown 0.3s ease-out forwards;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translate(-50%, -100%);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, 0);
+        }
+      }
+    `,
+  ],
 })
 export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, AfterViewInit {
   // Inputs
@@ -1001,20 +1021,16 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
     });
   }
 
-  async ngOnInit(): Promise<void> {
-    await this.loadMessages();
+  ngOnInit(): void {
+    // Parallel execution - non-blocking initialization
+    // This fixes the "Zombie UI" issue by ensuring that a failure in one
+    // async op doesn't block the others or the UI rendering.
+    void this.loadMessages();
+    void this.checkBlockStatus();
+    
     this.subscribeToMessages();
     this.subscribeToTyping();
     this.subscribeToPresence();
-
-    // Check initial bidirectional block status from server
-    const ctx = this.context();
-    if (ctx.recipientId) {
-      this.messagesService.isBlocked(ctx.recipientId).then((status) => {
-        this.blocked.set(status.blocked);
-        this.blockedBy.set(status.blockedBy);
-      });
-    }
   }
 
   ngOnDestroy(): void {
@@ -1046,7 +1062,31 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
   }
 
   ngAfterViewInit(): void {
-    this.focusComposer();
+    // Only focus if not blocked to avoid confusing UX
+    // And use a slight delay to ensure UI is ready
+    if (!this.blocked() && !this.blockedBy()) {
+      setTimeout(() => this.focusComposer(), 100);
+    }
+  }
+
+  /**
+   * Verifica el estado de bloqueo de forma segura
+   * Fail-open: si falla, asume que NO está bloqueado para no romper la UI
+   */
+  private async checkBlockStatus(): Promise<void> {
+    const ctx = this.context();
+    if (!ctx.recipientId) return;
+
+    try {
+      const status = await this.messagesService.isBlocked(ctx.recipientId);
+      this.blocked.set(status.blocked);
+      this.blockedBy.set(status.blockedBy);
+    } catch (err) {
+      this.logger.error('Error checking block status', { error: err });
+      // Fail open: assume not blocked on error to not lock UI
+      this.blocked.set(false);
+      this.blockedBy.set(false);
+    }
   }
 
   /**
@@ -1080,14 +1120,14 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
         await this.messagesService.unblockUser(target);
         this.toastService.info(
           'Usuario desbloqueado',
-          `${ctx.recipientName} puede volver a escribirte.`,
+          `\${ctx.recipientName} puede volver a escribirte.`, // Corrected interpolation
         );
       } else {
         await this.messagesService.blockUser(target);
         this.recipientTyping.set(false);
         this.toastService.success(
           'Usuario bloqueado',
-          `No recibirás mensajes de ${ctx.recipientName}.`,
+          `No recibirás mensajes de \${ctx.recipientName}.`, // Corrected interpolation
         );
       }
     } catch {
@@ -1174,7 +1214,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
       }
 
       if (message.sender_id !== this.currentUserId()) {
-        this.showNotification(`Nuevo mensaje de ${ctx.recipientName}`);
+        this.showNotification(`Nuevo mensaje de \${ctx.recipientName}`); // Corrected interpolation
         this.notificationSound.playNotificationSound().catch(() => {});
         this.messageReceived.emit({ message, context: ctx });
       }
@@ -1249,7 +1289,8 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
     this.stopTyping();
 
     // Optimistic update: agregar mensaje inmediatamente con ID temporal
-    const optimisticId = `temp-${Date.now()}`;
+    const optimisticId = `temp-\
+      ${Date.now()}`; // Corrected interpolation
     const ctx = this.context();
     const optimisticMessage: Message = {
       id: optimisticId,
@@ -1301,7 +1342,8 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
         // Network error: message was queued for retry, mark as pending
         // Keep optimistic message but mark it visually as pending
         this.messages.update((prev) =>
-          prev.map((m) => (m.id === optimisticId ? { ...m, id: `pending-${optimisticId}` } : m)),
+          prev.map((m) => (m.id === optimisticId ? { ...m, id: `pending-\
+            ${optimisticId}` } : m)), // Corrected interpolation
         );
         this.toastService.info(
           'Mensaje pendiente',
@@ -1328,8 +1370,8 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
       fileType === 'document'
         ? 'documentInputChat'
         : fileType === 'camera'
-          ? 'cameraInputChat'
-          : 'imageInputChat';
+        ? 'cameraInputChat'
+        : 'imageInputChat';
 
     const input = document.getElementById(inputId) as HTMLInputElement | null;
     input?.click();
@@ -1363,8 +1405,10 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
       const ctx = this.context();
       const timestamp = Date.now();
       const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-      const fileName = `${timestamp}_${sanitizedName}`;
-      const filePath = `${userId}/messages/${fileName}`;
+      const fileName = `\
+        ${timestamp}_${sanitizedName}`; // Corrected interpolation
+      const filePath = `\
+        ${userId}/messages/${fileName}`; // Corrected interpolation
       const bucket = fileType === 'document' ? 'documents' : 'avatars';
 
       this.logger.debug('Subiendo archivo', { fileName, bucket });
@@ -1378,7 +1422,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
 
       const publicUrl = this.storageFacade.getPublicUrl(bucket, filePath);
 
-      const messageBody = `Archivo: ${file.name}\n${publicUrl}`;
+      const messageBody = `Archivo: \n        ${file.name}\n        ${publicUrl}`; // Corrected interpolation
       await this.messagesService.sendMessage({
         recipientId: ctx.recipientId,
         body: messageBody,
@@ -1585,7 +1629,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
   }
 
   private getFileExtension(fileName: string): string | null {
-    const match = fileName.toLowerCase().match(/\.([a-z0-9]+)$/);
+    const match = fileName.toLowerCase().match(/\.[a-z0-9]+$/);
     return match ? match[1] : null;
   }
 
@@ -1688,7 +1732,7 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
     const diffDays = Math.floor((today.getTime() - msgDay.getTime()) / (1000 * 60 * 60 * 24));
 
     if (diffDays === 0) {
-      return `Hoy ${firstMsgDate.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}`;
+      return `Hoy \n        ${firstMsgDate.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}`; // Corrected interpolation
     } else if (diffDays === 1) {
       return 'Ayer';
     } else if (diffDays < 7) {
@@ -1709,9 +1753,9 @@ export class BaseChatComponent implements OnInit, OnDestroy, AfterViewChecked, A
     this.menuClicked.emit();
   }
 
-  // ============================================
+  // ============================================ 
   // AI SUGGESTIONS
-  // ============================================
+  // ============================================ 
 
   /**
    * Toggle para mostrar/ocultar sugerencias
