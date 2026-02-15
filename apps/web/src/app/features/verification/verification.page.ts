@@ -479,7 +479,7 @@ type VerificationStatus = 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO'; // Using loc
               <h3 class="text-lg font-semibold text-text-primary">¿Necesitas ayuda?</h3>
               <p class="text-sm text-text-secondary">¿Hubo problemas? Escribinos.</p>
               <a
-                href="mailto:hola@autorenta.com"
+                href="mailto:soporte@autorentar.com"
                 class="mt-4 inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors"
               >
                 Escribir a soporte

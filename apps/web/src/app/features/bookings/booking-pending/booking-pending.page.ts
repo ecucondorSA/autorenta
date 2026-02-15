@@ -207,7 +207,7 @@ export class BookingPendingPage implements OnInit, OnDestroy {
   contactSupport(): void {
     // Open support chat or email
     window.open(
-      'mailto:soporte@autorenta.com?subject=Pago pendiente - Reserva ' + this.booking()?.id,
+      'mailto:soporte@autorentar.com?subject=Pago pendiente - Reserva ' + this.booking()?.id,
       '_blank',
     );
   }

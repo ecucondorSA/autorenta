@@ -284,7 +284,7 @@ export class VerificationBlockedPage implements OnInit {
     const message = encodeURIComponent(
       `Hola, necesito ayuda para desbloquear mi verificación facial en AutoRenta. Mi cuenta fue bloqueada después de múltiples intentos fallidos.`,
     );
-    window.open(`https://wa.me/5491123456789?text=${message}`, '_blank');
+    window.open(`https://wa.me/5491144096440?text=${message}`, '_blank');
   }
 
   openEmail(): void {
@@ -292,6 +292,6 @@ export class VerificationBlockedPage implements OnInit {
     const body = encodeURIComponent(
       `Hola equipo de soporte,\n\nMi cuenta ha sido bloqueada para verificación facial después de múltiples intentos fallidos.\n\nSolicito ayuda para desbloquear mi cuenta.\n\nGracias.`,
     );
-    window.open(`mailto:soporte@autorenta.com?subject=${subject}&body=${body}`);
+    window.open(`mailto:soporte@autorentar.com?subject=${subject}&body=${body}`);
   }
 }
