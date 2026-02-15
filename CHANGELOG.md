@@ -1,3 +1,7 @@
+## <small>3.99.1 (2026-02-15)</small>
+
+* fix(ui): remove hardcoded fake data and broken download button ([b2cfe6e](https://github.com/ecucondorSA/autorenta/commit/b2cfe6e))
+
 ## 3.99.0 (2026-02-15)
 
 * fix(ui): remove fake 4.9 rating from car cards — show "Nuevo" badge instead ([49722da](https://github.com/ecucondorSA/autorenta/commit/49722da))
