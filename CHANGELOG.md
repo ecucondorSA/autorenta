@@ -1,3 +1,7 @@
+## <small>3.99.2 (2026-02-15)</small>
+
+* fix(p0): fix fake WhatsApp number and wrong email domain across support links ([71e57cd](https://github.com/ecucondorSA/autorenta/commit/71e57cd))
+
 ## <small>3.99.1 (2026-02-15)</small>
 
 * fix(ui): remove hardcoded fake data and broken download button ([b2cfe6e](https://github.com/ecucondorSA/autorenta/commit/b2cfe6e))
