@@ -54,7 +54,7 @@ import { BookingsListComponent } from './bookings-list.component';
             >
             <div class="flex items-center gap-1.5 text-slate-700 font-bold text-xs">
               <ion-icon name="star" class="text-amber-400"></ion-icon>
-              {{ role() === 'owner' ? '4.9 (Flota)' : '5.0 (Renter)' }}
+              Sin reviews aún
             </div>
           </div>
         </div>

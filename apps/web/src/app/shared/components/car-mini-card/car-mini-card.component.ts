@@ -85,16 +85,18 @@ import { CarMapLocation } from '@core/services/cars/car-locations.service';
                 <p class="text-[10px] text-zinc-400 truncate uppercase tracking-wide font-bold">
                   {{ car.city }}
                 </p>
-                <!-- Rating Stars -->
+                <!-- New badge (no reviews yet in platform) -->
                 <div
                   class="flex items-center gap-0.5 bg-zinc-950 px-1.5 py-0.5 rounded border border-white/5"
                 >
-                  <svg class="w-2.5 h-2.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-2.5 h-2.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                     <path
-                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                      clip-rule="evenodd"
                     />
                   </svg>
-                  <span class="text-[10px] text-zinc-300 font-bold">4.9</span>
+                  <span class="text-[10px] text-emerald-400 font-bold">Nuevo</span>
                 </div>
               </div>
             </div>
