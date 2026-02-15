@@ -1660,3 +1660,78 @@ Lista de Model Context Protocols (MCP) y herramientas activas en el agente:
 - **State:** `private readonly state = toSignal(this.refreshTrigger$.pipe(switchMap(...)));`
 - **View:** `readonly data = computed(() => this.state().data);`
 - **Acción:** `refresh() { this.refreshTrigger$.next(); }`
+
+---
+
+## 39. Troubleshooting & Operaciones de Agentes (OpenClaw)
+
+> **Contexto:** Aprendizajes de la depuración de API Keys y configuración persistente (Feb 2026).
+
+### 1. Persistencia de Estado (The State Trap)
+Los agentes como OpenClaw tienen memoria persistente que **sobreescribe** la configuración en disco.
+- **Síntoma:** Cambias `openclaw.json` o variables de entorno, pero el agente sigue usando credenciales viejas.
+- **Causa:** El agente guarda sesiones exitosas en `~/.openclaw/agents/<id>/agent/auth-profiles.json`.
+- **Solución:** No basta con configurar lo nuevo; hay que buscar y eliminar lo viejo.
+  ```bash
+  grep -r "OLD_KEY_PREFIX" ~/.openclaw  # Encontrar archivo culpable
+  rm ~/.openclaw/agents/main/agent/auth-profiles.json # Purga quirúrgica
+  ```
+
+### 2. Compatibilidad Estricta de Modelos
+Las API Keys de Google pueden tener scopes específicos por modelo.
+- **Hecho:** Una key puede funcionar para `gemini-3-flash-preview` pero fallar para `gemini-1.5-flash`.
+- **Protocolo de Prueba:** Siempre validar con `curl` contra el modelo **exacto** que usa el software.
+  ```bash
+  # Prueba Real
+  curl .../models/gemini-3-flash-preview:generateContent?key=...
+  ```
+
+### 3. Protocolo "Hard-Reset"
+Cuando un agente se comporta de forma errática o ignora cambios:
+1.  **STOP:** `systemctl --user stop openclaw-gateway`
+2.  **PURGE:** Borrar archivos de estado (`auth-profiles.json`, sesiones corruptas).
+3.  **CONFIG:** Verificar `openclaw.json` y `systemd` environments.
+4.  **START:** `systemctl --user start openclaw-gateway`
+
+---
+
+## 40. Integración WhatsApp (OpenClaw)
+
+> **Estado (Feb 2026):** Operativo (Native Plugin).
+
+### 1. Arquitectura: Pure OpenClaw
+Hemos migrado de un modelo híbrido/complejo a una arquitectura nativa simplificada.
+
+**Lo que TIENES funcionando AHORA:**
+- **OpenClaw (Edison):** Cerebro central.
+- **WhatsApp plugin nativo:** Conectado ✅ (Health OK).
+- **Telegram bot:** Running ✅.
+- **Modelo:** Gemini 3 Flash.
+
+**Lo que NO necesitas (DEPRECATED):**
+- `whatsapp-bot/index.ts` (Script Baileys standalone): **REDUNDANTE**. OpenClaw ya maneja la conexión, QR y eventos de mensajes internamente. Código muerto.
+- `WAHA`: Redundante para la lógica conversacional del bot (solo útil si necesitas webhooks crudos a Supabase para otra cosa).
+- Script "listener" separado: OpenClaw ya escucha todos los mensajes entrantes.
+
+### 2. Flujo de Trabajo (The Real Flow)
+OpenClaw actúa como **Listener + Brain + Speaker** en un solo paquete.
+
+1.  **Input (Listener):** El plugin nativo recibe el mensaje de WhatsApp.
+2.  **Process (Brain):** Edison procesa el texto usando su System Prompt (instrucciones de negocio, ej: "Ofrecer cupón LOVE10 si menciona 'cena'").
+3.  **Output (Speaker):** Edison responde directamente por el mismo canal (WhatsApp) usando la herramienta `send_message` interna del plugin.
+
+### 3. Acción Requerida
+- **Configuración:** Enfocarse 100% en el **System Prompt** de Edison para definir su comportamiento de ventas.
+- **Limpieza:** Asegurar que `whatsapp-bot/index.ts` NO esté corriendo para evitar conflictos de sesión.
+
+### 4. Protocolo de Reactivación (Battle-Tested Feb 14)
+Si el stack se cae o se cambia de número, seguir este orden estricto:
+1. **Docker Layer:** `sudo systemctl start docker` (Prerrequisito WAHA).
+2. **Config Layer:** `~/.openclaw/openclaw.json` -> `"whatsapp": { "enabled": true }`.
+3. **WAHA Layer:** `docker start waha`. Verificar QR si la sesión expiró (estado `SCAN_QR_CODE`).
+4. **Gateway Layer:** `systemctl --user restart openclaw-gateway`.
+5. **Dashboard Fix:** Si pide token y no conecta, inyectar en Browser Console: `localStorage.setItem('openclaw.control.settings.v1', JSON.stringify({token: 'AIzaSy...'}))`.
+6. **Session Swap:** Dashboard -> Channels -> Logout (Old) -> Relink (New QR).
+
+
+
