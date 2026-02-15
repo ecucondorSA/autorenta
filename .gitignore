@@ -115,6 +115,7 @@ debug-artifacts/
 .wrangler/
 
 # Temporary root-level output files
+/report_*.txt
 /screenshot-*.png
 /deployment-*.png
 /homepage-*.png
