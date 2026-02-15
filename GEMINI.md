@@ -1733,5 +1733,91 @@ Si el stack se cae o se cambia de número, seguir este orden estricto:
 5. **Dashboard Fix:** Si pide token y no conecta, inyectar en Browser Console: `localStorage.setItem('openclaw.control.settings.v1', JSON.stringify({token: 'AIzaSy...'}))`.
 6. **Session Swap:** Dashboard -> Channels -> Logout (Old) -> Relink (New QR).
 
+---
 
+## 41. Deploy Edison en Railway — Lecciones (Feb 15, 2026)
+
+> 7 deploys, 3 horas de debugging, 1 insight principal: **"Conectado" ≠ "Funcional"**.
+
+### Contexto
+Migrar Edison (OpenClaw + WhatsApp via Baileys) de una máquina local a Railway requirió transferir ~900 archivos de credenciales del Signal Protocol. Lo que parecía un deploy simple se convirtió en una sesión de debugging de múltiples capas.
+
+### Insight 1: "Conectado" ≠ "Funcional" (El Bug Silencioso)
+Baileys (la lib de WhatsApp) usa el **Signal Protocol** con un key store de ~900 archivos (pre-keys, sessions, app-state-sync). Con solo `creds.json`, el WebSocket **conecta OK** — health checks pasan, logs muestran "connected" — pero los mensajes **no se pueden descifrar**. Sin pre-keys no hay handshake de mensaje.
+
+**Lección:** En protocolos E2E como Signal, la conexión de transporte (WebSocket) es independiente de la capacidad de procesar mensajes (key store). Un health check de conectividad no prueba funcionalidad.
+
+### Insight 2: `registered: false` es Normal (Red Herring Costoso)
+Se gastaron 3 deploys intentando manejar `registered: false` en `creds.json` — limpiando credenciales, forzando QR pairing, agregando lógica condicional al startup. En realidad es el estado normal de Baileys para dispositivos multi-device vinculados. El flag no afecta la funcionalidad.
+
+**Lección:** Antes de escribir código defensivo alrededor de un valor, verificar que el valor sea realmente un problema. Testear con la instancia local primero (costo: 0 deploys, 30 segundos).
+
+### Insight 3: Railway Tiene 3 Tipos de Deploy
+| Mutación | Efecto |
+|---|---|
+| `serviceInstanceRedeploy` | Reinicia el container con la **misma imagen** Docker. No toma código nuevo. |
+| `serviceInstanceDeployV2(commitSha)` | **Rebuild completo** desde un commit específico de GitHub. |
+| Cambiar una env var | Trigger automático de rebuild + redeploy. |
+
+**Trampas:**
+- `serviceInstanceRedeploy` suena a "re-deploy" pero NO rebuilds — solo restart.
+- `serviceInstanceDeployV2` requiere el SHA completo (40 chars). SHA corto (7 chars) → `FAILED`.
+
+### Insight 4: Límites de Plataforma se Resuelven con Creatividad
+Railway limita env vars a **32KB**. Las credenciales completas pesan **225KB en base64**. Solución:
+
+```
+894 archivos (3.7MB) → tar.gz (165KB) → base64 (225KB) → split en 8 vars de 32KB
+```
+
+En `start.mjs` se reconstruyen al boot:
+```javascript
+let b64 = '';
+for (let i = 1; i <= tarballParts; i++) {
+  b64 += process.env[`WHATSAPP_CREDS_TARBALL_P${i}`];
+}
+const tarball = Buffer.from(b64, 'base64');
+writeFileSync('/tmp/whatsapp-creds.tar.gz', tarball);
+execFileSync('tar', ['xzf', '/tmp/whatsapp-creds.tar.gz', '-C', credsDir]);
+```
+
+**Lección:** `compress → encode → split → reconstruct` es un patrón universal para mover blobs grandes a través de canales con límites de tamaño.
+
+### Insight 5: Dos Instancias + Mismas Credenciales = Conflicto Silencioso
+WhatsApp permite **una sola conexión** por device ID. Con Edison corriendo en local + Railway simultáneamente:
+- Error 440 (conflict) en ambas instancias intermitentemente.
+- WhatsApp no da un error claro — simplemente desconecta una y reconecta la otra en loop.
+
+**Trampa adicional:** `kill` del proceso local no alcanzó — `systemd` lo reinició automáticamente en < 1 segundo. Se necesitó `systemctl --user disable openclaw-gateway`.
+
+**Lección:** Al migrar un servicio con sesión exclusiva, deshabilitar el origen ANTES de activar el destino.
+
+### Insight 6: Debugging en Cascada es Caro
+El ciclo fue: cambiar código → push → build (2-3 min) → verificar logs → descubrir nuevo problema → repetir. Resultado: **7 deploys × 3 minutos = 21 minutos solo de builds**, más el tiempo de análisis entre cada uno.
+
+**Lección:** Máximizar la verificación local antes de cada deploy remoto. La instancia local de OpenClaw permitió descartar hipótesis en segundos (ej: confirmar que `registered: false` no era el problema) sin gastar un ciclo de deploy.
+
+### Insight 7: GraphQL API > CLI Cuando Auth es Limitada
+Railway CLI (`railway login`) solo acepta tokens formato `rw_*` (browser OAuth). El token de servicio (`e438a8d...`) solo funciona con la GraphQL API directa.
+
+```bash
+curl -s https://backboard.railway.com/graphql/v2 \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "mutation { serviceInstanceDeployV2(...) { id } }"}'
+```
+
+**Lección:** Cuando un CLI no acepta tu auth, ir directo a la API subyacente. Las APIs GraphQL de Railway son completas y bien documentadas.
+
+### Resumen: Checklist para Deploy de Bot WhatsApp en Railway
+
+```
+□ Credential store COMPLETO (no solo creds.json) — ~900 archivos Signal Protocol
+□ Comprimir + split si excede 32KB por env var
+□ start.mjs reconstruye tarball antes de lanzar gateway
+□ Instancia local DESHABILITADA (systemd disable, no solo stop/kill)
+□ Usar serviceInstanceDeployV2 con SHA completo para rebuild
+□ tail -F del log interno a stdout para visibilidad en Railway
+□ Verificar con mensaje real (no solo health check de conexión)
+```
 
