@@ -575,7 +575,7 @@ interface Milestone {
                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
               />
             </svg>
-            <span class="text-sm">4.8/5 rating</span>
+            <span class="text-sm">Usuarios verificados</span>
           </div>
         </div>
       </div>
@@ -602,17 +602,17 @@ export class AboutPage {
     .get<PlatformStats>(`${environment.supabaseUrl}/functions/v1/public-investor-stats`)
     .pipe(
       map((data) => ({
-        active_cars: data.active_cars || 28,
-        total_users: data.total_users || 350,
-        completed_trips: data.completed_trips || 120,
-        cities: data.cities || 5,
+        active_cars: data.active_cars || 0,
+        total_users: data.total_users || 0,
+        completed_trips: data.completed_trips || 0,
+        cities: data.cities || 0,
       })),
       catchError(() =>
         of({
-          active_cars: 28,
-          total_users: 350,
-          completed_trips: 120,
-          cities: 5,
+          active_cars: 0,
+          total_users: 0,
+          completed_trips: 0,
+          cities: 0,
         }),
       ),
       shareReplay(1),

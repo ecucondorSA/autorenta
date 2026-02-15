@@ -113,14 +113,6 @@ import { AuthService } from '@core/services/auth/auth.service';
                   }
                 </div>
                 <div class="flex flex-col items-end gap-2">
-                  @if (payout.status === 'completed') {
-                    <button
-                      (click)="downloadReceipt(payout)"
-                      class="text-xs px-3 py-1 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default transition-colors"
-                    >
-                      Descargar
-                    </button>
-                  }
                 </div>
               </div>
             </div>
@@ -284,10 +276,4 @@ export class PayoutsHistoryComponent implements OnInit {
     }).format(amount);
   }
 
-  downloadReceipt(payout: Payout): void {
-    // TODO: Implementar descarga de comprobante PDF
-    this.logger.debug('Descargar comprobante para payout:', payout.id);
-    // Por ahora solo mostramos un mensaje
-    alert('Funcionalidad de descarga de comprobante próximamente disponible');
-  }
 }

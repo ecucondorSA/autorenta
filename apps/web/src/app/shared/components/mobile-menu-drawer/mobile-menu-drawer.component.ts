@@ -86,7 +86,7 @@ export class MobileMenuDrawerComponent implements OnDestroy {
   readonly walletBalance = signal(0);
   readonly unreadMessages = signal(0);
   readonly pendingNotifications = signal(0);
-  readonly verificationProgress = signal(60); // Mock: 60% verified
+  readonly verificationProgress = signal(0);
 
   // Avatar colors for initials
   private readonly avatarColors = [

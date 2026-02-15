@@ -77,7 +77,7 @@ import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
                 </svg>
               </div>
               <div class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded-full">
-                +12%
+                —
               </div>
             </div>
             <div class="text-2xl font-black text-text-primary mb-1">{{ data().upcoming }}</div>
@@ -112,7 +112,7 @@ import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
                 </svg>
               </div>
               <div class="text-xs text-green-600 font-semibold bg-green-50 px-2 py-1 rounded-full">
-                +8%
+                —
               </div>
             </div>
             <div class="text-2xl font-black text-text-primary mb-1">
@@ -151,7 +151,7 @@ import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
               <div
                 class="text-xs text-purple-600 font-semibold bg-purple-50 px-2 py-1 rounded-full"
               >
-                +5%
+                —
               </div>
             </div>
             <div class="text-2xl font-black text-text-primary mb-1">{{ data().occupancy }}%</div>
@@ -192,7 +192,7 @@ import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
                 </svg>
               </div>
               <div class="text-xs text-red-600 font-semibold bg-red-50 px-2 py-1 rounded-full">
-                -2%
+                —
               </div>
             </div>
             <div class="text-2xl font-black text-text-primary mb-1">{{ data().cancellations }}</div>
@@ -224,6 +224,5 @@ import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
   styles: [``],
 })
 export class StatisticsWidgetComponent {
-  // Signals / mock state — replace with real store/service integration
-  data = signal({ upcoming: 3, income30d: 42350, occupancy: 72, cancellations: 1 });
+  data = signal({ upcoming: 0, income30d: 0, occupancy: 0, cancellations: 0 });
 }
