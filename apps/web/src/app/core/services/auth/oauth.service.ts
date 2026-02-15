@@ -1,6 +1,6 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Router } from '@angular/router';
+
 import { Capacitor } from '@capacitor/core';
 import { GoogleOneTapAuth } from 'capacitor-native-google-one-tap-signin';
 import { Session } from '@supabase/supabase-js';

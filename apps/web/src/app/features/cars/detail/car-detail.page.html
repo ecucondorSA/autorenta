@@ -361,6 +361,29 @@
           </div>
         }
 
+        <!-- WhatsApp Direct Contact -->
+        <div
+          appStaggerEnter
+          [staggerIndex]="1"
+          class="glass-card rounded-2xl overflow-hidden border border-[#25D366]/30 hover:border-[#25D366]/60 transition-all shadow-sm"
+        >
+          <button
+            (click)="contactViaWhatsApp()"
+            class="flex items-center gap-4 w-full p-5 hover:bg-[#25D366]/5 transition-all"
+          >
+            <div
+              class="w-12 h-12 rounded-2xl bg-[#25D366] flex items-center justify-center text-white"
+            >
+              <ion-icon name="logo-whatsapp" class="text-2xl"></ion-icon>
+            </div>
+            <div class="text-left flex-1">
+              <h3 class="font-black text-sm uppercase tracking-wider">Chatear por WhatsApp</h3>
+              <p class="text-xs text-text-muted">Respuesta inmediata del equipo AutoRenta</p>
+            </div>
+            <app-icon name="chevron-right" [size]="16" cssClass="text-text-muted" />
+          </button>
+        </div>
+
         <!-- Description & Key Features -->
         <div appStaggerEnter [staggerIndex]="2" class="glass-card rounded-2xl p-6 sm:p-8 space-y-8">
           <div>

@@ -9,7 +9,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { BehaviorSubject, of } from 'rxjs';
-import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { InsuranceService } from '@core/services/bookings/insurance.service';
 import { InsuranceClaim } from '@core/models/insurance.model';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';

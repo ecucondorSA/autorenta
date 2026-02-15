@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
   inject,
   OnDestroy,
@@ -34,6 +35,7 @@ import { WalletService } from '@core/services/payments/wallet.service';
 import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { EDISON_WHATSAPP_NUMBER } from '@core/constants';
 import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
 import { WaitlistService } from '@core/services/bookings/waitlist.service';
@@ -129,6 +131,7 @@ interface CarDetailState {
   ],
   templateUrl: './car-detail.page.html',
   styleUrls: ['./car-detail.page.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
@@ -1698,6 +1701,21 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
 
     // Update current photo index for any other components that might need it
     this.currentPhotoIndex.set(event.index);
+  }
+
+  contactViaWhatsApp(): void {
+    const car = this.car();
+    const title = this.displayTitle();
+    const carUrl = `https://autorentar.com/cars/${car?.id ?? ''}`;
+    const text = `Hola! Me interesa el ${title} en ${carUrl}`;
+    const url = `https://wa.me/${EDISON_WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+
+    this.analytics.trackEvent('cta_clicked', {
+      car_id: car?.id,
+      cta_type: 'whatsapp_contact',
+    });
+
+    window.open(url, '_blank');
   }
 
   ngOnDestroy(): void {

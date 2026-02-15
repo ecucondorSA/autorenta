@@ -386,9 +386,11 @@ export class SupabaseClientService {
     functionName: string,
     invokeOptions?: {
       headers?: { [key: string]: string };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- matches Supabase SDK signature
       body?: any;
       method?: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- matches Supabase SDK FunctionsResponse<any>
   ): Promise<{ data: any; error: any }> {
     return this.getClient().functions.invoke(functionName, invokeOptions);
   }

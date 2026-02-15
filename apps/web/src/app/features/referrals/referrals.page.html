@@ -36,6 +36,13 @@
             <button (click)="copyLink()" class="btn-secondary">
               {{ copiedLink() ? 'Copiado!' : 'Copiar link' }}
             </button>
+            <button
+              (click)="shareViaWhatsApp()"
+              class="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#25D366] text-white font-semibold text-sm hover:bg-[#1DA851] transition-all active:scale-95"
+            >
+              <ion-icon name="logo-whatsapp"></ion-icon>
+              Compartir
+            </button>
           </div>
         </div>
       }

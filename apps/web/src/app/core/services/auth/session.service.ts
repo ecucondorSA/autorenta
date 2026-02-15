@@ -1,11 +1,11 @@
-import { Injectable, Injector, OnDestroy, PLATFORM_ID, computed, effect, inject, signal } from '@angular/core';
+import { Injectable, Injector, OnDestroy, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { Session, AuthChangeEvent } from '@supabase/supabase-js';
 import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { isProtectedUrl } from '@core/config/protected-routes';
-import { getErrorMessage } from '@core/utils/type-guards';
+
 
 interface AuthState {
   session: Session | null;

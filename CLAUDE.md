@@ -113,14 +113,40 @@ Modelo operativo (resumen):
 
 ## 3) Convenciones Técnicas
 
-- TypeScript estricto: no `any`; `unknown` solo con validación.
-- API de Angular moderna: `inject()`, `@if`, `@for`, standalone components.
-- Reglas de ownership:
-  - Supabase solo en `apps/web/src/app/core/services/*.service.ts`.
-  - `features/` y `shared/` no llaman `supabase.*` directamente.
-- Dinero:
-  - DB en integer minor units.
-  - UI solo formatea, no define reglas financieras.
+### TypeScript Estricto (ZERO TOLERANCE)
+- **PROHIBIDO `any`:** Nunca usar `any` para silenciar errores. Es deuda técnica inaceptable.
+- **Usar `unknown`:** Para datos inciertos (errores, API responses), usar `unknown` y validar con Type Guards (`instanceof Error`, `zod`, etc.).
+- **Interfaces explícitas:** Tipar siempre respuestas de APIs y objetos globales.
+- **`null` vs `undefined`:** `undefined` para opcionales no cargados, `null` para valores explícitamente vacíos.
+
+### Zero Debt Policy (Tolerancia Cero)
+- **PROHIBIDO:** `// TODO`, `// FIXME`, `// HACK`, `// TEMP`, `any`, warnings de lint sin resolver.
+- **Lint DEBE pasar siempre:** `pnpm lint` con 0 errores Y 0 warnings. Warnings son errores diferidos.
+- **Excepciones únicas** (formato obligatorio `// TODO(tipo): [Contexto] Razón`):
+  - `blocked`: Bloqueo externo real (API de terceros caída/inexistente).
+  - `risk`: Migración masiva peligrosa que requiere planificación.
+  - `flag`: Código detrás de Feature Flag explícito.
+- **Cualquier otro TODO se considera error.**
+
+### Anti-Patrones Prohibidos
+- `console.log` en prod → usar `LoggerService`.
+- `.subscribe()` sin `takeUntilDestroyed` → memory leaks.
+- Lógica financiera en frontend → el backend es la autoridad.
+- `supabase.*` fuera de `core/services/` → usar facades.
+- Hardcoded strings → usar constantes o i18n.
+
+### API Angular Moderna
+- `inject()`, `@if`, `@for`, standalone components.
+- Signals (`signal()`, `computed()`) sobre `BehaviorSubject` para estado de vista.
+- `OnPush` en todo componente de presentación.
+
+### Reglas de Ownership
+- Supabase solo en `apps/web/src/app/core/services/*.service.ts`.
+- `features/` y `shared/` no llaman `supabase.*` directamente.
+
+### Dinero
+- DB en integer minor units.
+- UI solo formatea, no define reglas financieras.
 
 Estructura canónica:
 - `apps/web/src/app/core`
@@ -199,16 +225,23 @@ Obligatorio:
 
 ## 6) Calidad y Gates
 
+### Lint = Ley (Zero Warnings)
+- `pnpm lint` DEBE dar **0 errores Y 0 warnings**.
+- Si hay warnings pre-existentes en archivos que tocás, **arreglarlos en el mismo commit**.
+- No dejar warnings como "deuda aceptable". Un warning es un error que no explotó todavía.
+
 Comandos base:
-- `pnpm lint`
+- `pnpm lint` (zero tolerance)
 - `pnpm test:unit`
 - `pnpm build:web`
 
-Pre-push recomendado:
+Pre-push obligatorio:
 - `pnpm lint && pnpm test:unit && pnpm build:web`
 
 Checklist de entrega:
-- [ ] Sin TODOs críticos nuevos.
+- [ ] `pnpm lint` con 0 errores y 0 warnings.
+- [ ] `pnpm build:web` exitoso.
+- [ ] Sin `any`, `TODO`, `FIXME`, `HACK`, `TEMP` nuevos.
 - [ ] Sin archivos fuera de lugar en `git status`.
 - [ ] Si hubo cambio de comportamiento: tests/validación actualizados.
 - [ ] Si hubo cambio DB: verificación SQL explícita.

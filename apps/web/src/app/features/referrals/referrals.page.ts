@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReferralsService } from '@core/services/auth/referrals.service';
@@ -9,6 +9,7 @@ import { MEDIUM_TIMEOUT_MS } from '@core/constants/timing.constants';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './referrals.page.html',
 })
 export class ReferralsPage implements OnInit {
@@ -47,5 +48,13 @@ export class ReferralsPage implements OnInit {
       this.copiedLink.set(true);
       setTimeout(() => this.copiedLink.set(false), MEDIUM_TIMEOUT_MS);
     }
+  }
+
+  shareViaWhatsApp(): void {
+    const link = this.shareableLink();
+    if (!link) return;
+    const text = `Publicá tu auto en AutoRenta y ganá dinero. Registrate con mi link: ${link}`;
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
   }
 }

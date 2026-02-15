@@ -57,6 +57,9 @@ export const DEFAULT_MAP_CENTER_LNG = -78.4678;
 export const DEFAULT_MAP_ZOOM = 12;
 export const DEFAULT_SEARCH_RADIUS_KM = 50;
 
+// WhatsApp
+export const EDISON_WHATSAPP_NUMBER = '5491144096440';
+
 // Validation
 export const MIN_CAR_PRICE_USD = 10;
 export const MAX_CAR_PRICE_USD = 500;

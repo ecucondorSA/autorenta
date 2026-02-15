@@ -8,7 +8,7 @@ import { BookingDataLoaderService } from '@core/services/bookings/booking-data-l
 import { BookingDisputeService } from '@core/services/bookings/booking-dispute.service';
 import { BookingExtensionService } from '@core/services/bookings/booking-extension.service';
 import { BookingInsuranceHelperService } from '@core/services/bookings/booking-insurance-helper.service';
-import { BookingNotificationsService } from '@core/services/bookings/booking-notifications.service';
+
 import { BookingOwnerPenaltyService } from '@core/services/bookings/booking-owner-penalty.service';
 import { BookingUtilsService } from '@core/services/bookings/booking-utils.service';
 import { BookingValidationService } from '@core/services/bookings/booking-validation.service';
@@ -736,8 +736,8 @@ export class BookingsService {
     totalAmount: number;
     currency: string;
     paymentMode: string;
-    riskSnapshot: any; // Keep permissive to avoid breaking changes in callers
-    [key: string]: any;
+    riskSnapshot: Record<string, unknown>;
+    [key: string]: unknown;
   }): Promise<{
     success: boolean;
     bookingId?: string;
