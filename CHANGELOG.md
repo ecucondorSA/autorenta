@@ -1,5 +1,14 @@
 ## 3.99.0 (2026-02-15)
 
+* fix(ui): remove fake 4.9 rating from car cards — show "Nuevo" badge instead ([49722da](https://github.com/ecucondorSA/autorenta/commit/49722da))
+* chore(gitignore): add report_*.txt to ignored output files ([a59d7f9](https://github.com/ecucondorSA/autorenta/commit/a59d7f9))
+* chore(release): 3.99.0 [skip ci] ([5268993](https://github.com/ecucondorSA/autorenta/commit/5268993))
+* docs(gemini): add OpenClaw troubleshooting and WhatsApp integration sections ([b7db2cd](https://github.com/ecucondorSA/autorenta/commit/b7db2cd))
+* docs(gemini): add Railway deployment lessons and WhatsApp credential migration insights ([502db4b](https://github.com/ecucondorSA/autorenta/commit/502db4b))
+* feat(whatsapp): add WhatsApp CTAs to car-detail, referrals and owners-landing ([312c8be](https://github.com/ecucondorSA/autorenta/commit/312c8be))
+
+## 3.99.0 (2026-02-15)
+
 * docs(gemini): add OpenClaw troubleshooting and WhatsApp integration sections ([b7db2cd](https://github.com/ecucondorSA/autorenta/commit/b7db2cd))
 * feat(whatsapp): add WhatsApp CTAs to car-detail, referrals and owners-landing ([312c8be](https://github.com/ecucondorSA/autorenta/commit/312c8be))
 
