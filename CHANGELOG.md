@@ -1,3 +1,8 @@
+## 3.99.0 (2026-02-15)
+
+* docs(gemini): add OpenClaw troubleshooting and WhatsApp integration sections ([b7db2cd](https://github.com/ecucondorSA/autorenta/commit/b7db2cd))
+* feat(whatsapp): add WhatsApp CTAs to car-detail, referrals and owners-landing ([312c8be](https://github.com/ecucondorSA/autorenta/commit/312c8be))
+
 ## <small>3.98.4 (2026-02-14)</small>
 
 * fix(db): add DROP FUNCTION to bonus protector migration to allow return type change ([02f6621](https://github.com/ecucondorSA/autorenta/commit/02f6621))
